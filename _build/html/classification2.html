@@ -1,0 +1,1938 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classification II: evaluation &amp; tuning {#classification2} &#8212; My sample book</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Regression I: K-nearest neighbors {#regression1}" href="regression1.html" />
+    <link rel="prev" title="Classification I: training &amp; predicting {#classification}" href="classification1.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">My sample book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   R and the Tidyverse {#intro}
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="foreword-text.html">
+   Foreword {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="preface-text.html">
+   Preface {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="setup.html">
+   Setting up your computer {#move-to-your-own-machine}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="reading.html">
+   Reading in data locally and from the web {#reading}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="wrangling.html">
+   Cleaning and wrangling data {#wrangling}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="viz.html">
+   Effective data visualization {#viz}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="version-control.html">
+   Collaboration with version control {#Getting-started-with-version-control}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="classification1.html">
+   Classification I: training &amp; predicting {#classification}
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Classification II: evaluation &amp; tuning {#classification2}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression1.html">
+   Regression I: K-nearest neighbors {#regression1}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression2.html">
+   Regression II: linear regression {#regression2}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="clustering.html">
+   Clustering {#clustering}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="inference.html">
+   Statistical inference {#inference}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="acknowledgements.html">
+   Acknowledgments {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="authors.html">
+   About the authors {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixA.html">
+   (APPENDIX) Appendix {-}
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/classification2.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fclassification2.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview">
+   Overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chapter-learning-objectives">
+   Chapter learning objectives
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluating-accuracy">
+   Evaluating accuracy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#randomness-and-seeds-randomseeds">
+   Randomness and seeds {#randomseeds}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluating-accuracy-with-tidymodels">
+   Evaluating accuracy with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-train-test-split">
+     Create the train / test split
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#preprocess-the-data">
+     Preprocess the data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-classifier">
+     Train the classifier
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predict-the-labels-in-the-test-set">
+     Predict the labels in the test set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compute-the-accuracy">
+     Compute the accuracy
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#critically-analyze-performance">
+     Critically analyze performance
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tuning-the-classifier">
+   Tuning the classifier
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cross-validation">
+     Cross-validation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameter-value-selection">
+     Parameter value selection
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#under-overfitting">
+     Under/Overfitting
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summary">
+   Summary
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictor-variable-selection">
+   Predictor variable selection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-effect-of-irrelevant-predictors">
+     The effect of irrelevant predictors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#finding-a-good-subset-of-predictors">
+     Finding a good subset of predictors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forward-selection-in-r">
+     Forward selection in R
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercises">
+   Exercises
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#additional-resources">
+   Additional resources
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Classification II: evaluation & tuning {#classification2}</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview">
+   Overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chapter-learning-objectives">
+   Chapter learning objectives
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluating-accuracy">
+   Evaluating accuracy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#randomness-and-seeds-randomseeds">
+   Randomness and seeds {#randomseeds}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluating-accuracy-with-tidymodels">
+   Evaluating accuracy with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-train-test-split">
+     Create the train / test split
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#preprocess-the-data">
+     Preprocess the data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-classifier">
+     Train the classifier
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predict-the-labels-in-the-test-set">
+     Predict the labels in the test set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compute-the-accuracy">
+     Compute the accuracy
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#critically-analyze-performance">
+     Critically analyze performance
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tuning-the-classifier">
+   Tuning the classifier
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cross-validation">
+     Cross-validation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameter-value-selection">
+     Parameter value selection
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#under-overfitting">
+     Under/Overfitting
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summary">
+   Summary
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictor-variable-selection">
+   Predictor variable selection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-effect-of-irrelevant-predictors">
+     The effect of irrelevant predictors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#finding-a-good-subset-of-predictors">
+     Finding a good subset of predictors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forward-selection-in-r">
+     Forward selection in R
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercises">
+   Exercises
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#additional-resources">
+   Additional resources
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="classification-ii-evaluation-tuning-classification2">
+<h1>Classification II: evaluation &amp; tuning {#classification2}<a class="headerlink" href="#classification-ii-evaluation-tuning-classification2" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(gridExtra)
+library(cowplot)
+library(stringr)
+library(knitr)
+library(ggplot2)
+
+knitr::opts_chunk$set(fig.align = &quot;center&quot;)
+
+print_tidymodels &lt;- function(tidymodels_object) {
+  if(!is_latex_output()) {
+    tidymodels_object
+  } else {
+    output &lt;- capture.output(tidymodels_object)
+    
+    for (i in seq_along(output)) {
+      if (nchar(output[i]) &lt;= 80) {
+        cat(output[i], sep = &quot;\n&quot;)
+      } else {
+        cat(str_sub(output[i], start = 1, end = 80), sep = &quot;\n&quot;)
+        cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = &quot;\n&quot;)
+      }
+    }
+  }
+}
+
+theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
+
+</pre></div>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>This chapter continues the introduction to predictive modeling through
+classification. While the previous chapter covered training and data
+preprocessing, this chapter focuses on how to evaluate the accuracy of
+a classifier, as well as how to improve the classifier (where possible)
+to maximize its accuracy.</p>
+</div>
+<div class="section" id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul class="simple">
+<li><p>Describe what training, validation, and test data sets are and how they are used in classification.</p></li>
+<li><p>Split data into training, validation, and test data sets.</p></li>
+<li><p>Describe what a random seed is and its importance in reproducible data analysis.</p></li>
+<li><p>Set the random seed in R using the <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function.</p></li>
+<li><p>Evaluate classification accuracy in R using a validation data set and appropriate metrics.</p></li>
+<li><p>Execute cross-validation in R to choose the number of neighbors in a <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier.</p></li>
+<li><p>Describe the advantages and disadvantages of the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification algorithm.</p></li>
+</ul>
+</div>
+<div class="section" id="evaluating-accuracy">
+<h2>Evaluating accuracy<a class="headerlink" href="#evaluating-accuracy" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes our classifier might make the wrong prediction. A classifier does not
+need to be right 100% of the time to be useful, though we don’t want the
+classifier to make too many wrong predictions. How do we measure how “good” our
+classifier is? Let’s revisit the \index{breast cancer}
+<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29">breast cancer images data</a> [&#64;streetbreastcancer]
+and think about how our classifier will be used in practice. A biopsy will be
+performed on a <em>new</em> patient’s tumor, the resulting image will be analyzed,
+and the classifier will be asked to decide whether the tumor is benign or
+malignant. The key word here is <em>new</em>: our classifier is “good” if it provides
+accurate predictions on data <em>not seen during training</em>. But then, how can we
+evaluate our classifier without visiting the hospital to collect more
+tumor images?</p>
+<p>The trick is to split the data into a <strong>training set</strong> \index{training set} and <strong>test set</strong> \index{test set} (Figure &#64;ref(fig:06-training-test))
+and use only the <strong>training set</strong> when building the classifier.
+Then, to evaluate the accuracy of the classifier, we first set aside the true labels from the <strong>test set</strong>,
+and then use the classifier to predict the labels in the <strong>test set</strong>. If our predictions match the true
+labels for the observations in the <strong>test set</strong>, then we have some
+confidence that our classifier might also accurately predict the class
+labels for new observations without known class labels.</p>
+<blockquote>
+<div><p><strong>Note:</strong> If there were a golden rule of machine learning, \index{golden rule of machine learning} it might be this:
+<em>you cannot use the test data to build the model!</em> If you do, the model gets to
+“see” the test data in advance, making it look more accurate than it really
+is. Imagine how bad it would be to overestimate your classifier’s accuracy
+when predicting whether a patient’s tumor is malignant or benign!</p>
+</div></blockquote>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/training_test.jpeg&quot;)
+</pre></div>
+</div>
+<p>How exactly can we assess how well our predictions match the true labels for
+the observations in the test set? One way we can do this is to calculate the
+<strong>prediction accuracy</strong>. \index{prediction accuracy|see{accuracy}}\index{accuracy} This is the fraction of examples for which the
+classifier made the correct prediction. To calculate this, we divide the number
+of correct predictions by the number of predictions made.</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{prediction \; accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}}\]</div>
+<p>The process for assessing if our predictions match the true labels in the
+test set is illustrated in Figure &#64;ref(fig:06-ML-paradigm-test). Note that there
+are other measures for how well classifiers perform, such as <em>precision</em> and <em>recall</em>;
+these will not be discussed here, but you will likely encounter them in other more advanced
+books on this topic.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/ML-paradigm-test.png&quot;)
+</pre></div>
+</div>
+</div>
+<div class="section" id="randomness-and-seeds-randomseeds">
+<h2>Randomness and seeds {#randomseeds}<a class="headerlink" href="#randomness-and-seeds-randomseeds" title="Permalink to this headline">¶</a></h2>
+<p>Beginning in this chapter, our data analyses will often involve the use
+of <em>randomness</em>. \index{random} We use randomness any time we need to make a decision in our
+analysis that needs to be fair, unbiased, and not influenced by human input.
+For example, in this chapter, we need to split
+a data set into a training set and test set to evaluate our classifier. We
+certainly do not want to choose how to split
+the data ourselves by hand, as we want to avoid accidentally influencing the result
+of the evaluation. So instead, we let R <em>randomly</em> split the data.
+In future chapters we will use randomness
+in many other ways, e.g., to help us select a small subset of data from a larger data set,
+to pick groupings of data, and more.</p>
+<p>However, the use of randomness runs counter to one of the main
+tenets of good data analysis practice: \index{reproducible} <em>reproducibility</em>. Recall that a reproducible
+analysis produces the same result each time it is run; if we include randomness
+in the analysis, would we not get a different result each time?
+The trick is that in R—and other programming languages—randomness
+is not actually random! Instead, R uses a <em>random number generator</em> that
+produces a sequence of numbers that
+are completely determined by a \index{seed} \index{random seed|see{seed}}
+<em>seed value</em>. Once you set the seed value
+using the \index{seed!set.seed} <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function, everything after that point may <em>look</em> random,
+but is actually totally reproducible. As long as you pick the same seed
+value, you get the same result!</p>
+<p>Let’s use an example to investigate how seeds work in R. Say we want
+to randomly pick 10 numbers from 0 to 9 in R using the <code class="docutils literal notranslate"><span class="pre">sample</span></code> \index{sample!function} function,
+but we want it to be reproducible. Before using the sample function,
+we call <code class="docutils literal notranslate"><span class="pre">set.seed</span></code>, and pass it any integer as an argument.
+Here, we pass in the number <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<p>You can see that <code class="docutils literal notranslate"><span class="pre">random_numbers</span></code> is a list of 10 numbers
+from 0 to 9 that, from all appearances, looks random. If
+we run the <code class="docutils literal notranslate"><span class="pre">sample</span></code> function again, we will
+get a fresh batch of 10 numbers that also look random.</p>
+<p>If we want to force R to produce the same sequences of random numbers,
+we can simply call the <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function again with the same argument
+value.</p>
+<p>And if we choose
+a different value for the seed—say, 4235—we
+obtain a different sequence of random numbers.</p>
+<p>In other words, even though the sequences of numbers that R is generating <em>look</em>
+random, they are totally determined when we set a seed value!</p>
+<p>So what does this mean for data analysis? Well, <code class="docutils literal notranslate"><span class="pre">sample</span></code> is certainly
+not the only function that uses randomness in R. Many of the functions
+that we use in <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>, <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code>, and beyond use randomness—many of them
+without even telling you about it. So at the beginning of every data analysis you
+do, right after loading packages, you should call the <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function and
+pass it an integer that you pick.
+Also note that when R starts up, it creates its own seed to use. So if you do not
+explicitly call the <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function in your code, your results will
+likely not be reproducible.
+And finally, be careful to set the seed <em>only once</em> at the beginning of a data
+analysis. Each time you set the seed, you are inserting your own human input,
+thereby influencing the analysis. If you use <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> many times
+throughout your analysis, the randomness that R uses will not look
+as random as it should.</p>
+<p>In summary: if you want your analysis to be reproducible, i.e., produce <em>the same result</em> each time you
+run it, make sure to use <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> exactly once at the beginning of the analysis.
+Different argument values in <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> lead to different patterns of randomness, but as long as
+you pick the same argument value your result will be the same.
+In the remainder of the textbook, we will set the seed once at the beginning of each chapter.</p>
+</div>
+<div class="section" id="evaluating-accuracy-with-tidymodels">
+<h2>Evaluating accuracy with <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code><a class="headerlink" href="#evaluating-accuracy-with-tidymodels" title="Permalink to this headline">¶</a></h2>
+<p>Back to evaluating classifiers now!
+In R, we can use the <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> package \index{tidymodels} not only to perform <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors
+classification, but also to assess how well our classification worked.
+Let’s work through an example of how to use tools from <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> to evaluate a classifier
+using the breast cancer data set from the previous chapter.
+We begin the analysis by loading the packages we require,
+reading in the breast cancer data,
+and then making a quick scatter plot visualization \index{visualization!scatter} of
+tumor cell concavity versus smoothness colored by diagnosis in Figure &#64;ref(fig:06-precode).
+You will also notice that we set the random seed here at the beginning of the analysis
+using the <code class="docutils literal notranslate"><span class="pre">set.seed</span></code> function, as described in Section &#64;ref(randomseeds).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># load packages
+library(tidyverse)
+library(tidymodels)
+
+# set the seed
+set.seed(1)
+
+# load data
+cancer &lt;- read_csv(&quot;data/unscaled_wdbc.csv&quot;) |&gt;
+  # convert the character Class variable to the factor datatype
+  mutate(Class = as_factor(Class)) 
+
+# create scatter plot of tumor cell concavity versus smoothness,
+# labeling the points be diagnosis class
+perim_concav &lt;- cancer |&gt;
+  ggplot(aes(x = Smoothness, y = Concavity, color = Class)) +
+  geom_point(alpha = 0.5) +
+  labs(color = &quot;Diagnosis&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;)) + 
+  theme(text = element_text(size = 12))
+
+perim_concav
+</pre></div>
+</div>
+<div class="section" id="create-the-train-test-split">
+<h3>Create the train / test split<a class="headerlink" href="#create-the-train-test-split" title="Permalink to this headline">¶</a></h3>
+<p>Once we have decided on a predictive question to answer and done some
+preliminary exploration, the very next thing to do is to split the data into
+the training and test sets. Typically, the training set is between 50% and 95% of
+the data, while the test set is the remaining 5% to 50%; the intuition is that
+you want to trade off between training an accurate model (by using a larger
+training data set) and getting an accurate evaluation of its performance (by
+using a larger test data set). Here, we will use 75% of the data for training,
+and 25% for testing.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">initial_split</span></code> function \index{tidymodels!initial_split} from <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> handles the procedure of splitting
+the data for us. It also applies two very important steps when splitting to ensure
+that the accuracy estimates from the test data are reasonable. First, it
+<strong>shuffles</strong> the \index{shuffling} data before splitting, which ensures that any ordering present
+in the data does not influence the data that ends up in the training and testing sets.
+Second, it <strong>stratifies</strong> the \index{stratification} data by the class label, to ensure that roughly
+the same proportion of each class ends up in both the training and testing sets. For example,
+in our data set, roughly 63% of the
+observations are from the benign class (<code class="docutils literal notranslate"><span class="pre">B</span></code>), and 37% are from the malignant class (<code class="docutils literal notranslate"><span class="pre">M</span></code>),
+so <code class="docutils literal notranslate"><span class="pre">initial_split</span></code> ensures that roughly 63% of the training data are benign,
+37% of the training data are malignant,
+and the same proportions exist in the testing data.</p>
+<p>Let’s use the <code class="docutils literal notranslate"><span class="pre">initial_split</span></code> function to create the training and testing sets.
+We will specify that <code class="docutils literal notranslate"><span class="pre">prop</span> <span class="pre">=</span> <span class="pre">0.75</span></code> so that 75% of our original data set ends up
+in the training set. We will also set the <code class="docutils literal notranslate"><span class="pre">strata</span></code> argument to the categorical label variable
+(here, <code class="docutils literal notranslate"><span class="pre">Class</span></code>) to ensure that the training and testing subsets contain the
+right proportions of each category of observation.
+The <code class="docutils literal notranslate"><span class="pre">training</span></code> and <code class="docutils literal notranslate"><span class="pre">testing</span></code> functions then extract the training and testing
+data sets into two separate data frames.
+Note that the <code class="docutils literal notranslate"><span class="pre">initial_split</span></code> function uses randomness, but since we set the
+seed earlier in the chapter, the split will be reproducible.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_split &lt;- initial_split(cancer, prop = 0.75, strata = Class)
+cancer_train &lt;- training(cancer_split)
+cancer_test &lt;- testing(cancer_split) 
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>glimpse(cancer_train)
+glimpse(cancer_test)
+</pre></div>
+</div>
+<p>We can see from <code class="docutils literal notranslate"><span class="pre">glimpse</span></code> in \index{glimpse} the code above that the training set contains <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">nrow(cancer_train)</span></code>
+observations, while the test set contains <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">nrow(cancer_test)</span></code> observations. This corresponds to
+a train / test split of 75% / 25%, as desired. Recall from Chapter &#64;ref(classification)
+that we use the <code class="docutils literal notranslate"><span class="pre">glimpse</span></code> function to view data with a large number of columns,
+as it prints the data such that the columns go down the page (instead of across).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>train_prop &lt;- cancer_train |&gt; 
+  group_by(Class) |&gt;
+  summarize(proportion = n()/nrow(cancer_train))
+</pre></div>
+</div>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">group_by</span></code> and <code class="docutils literal notranslate"><span class="pre">summarize</span></code> to \index{group_by}\index{summarize} find the percentage of malignant and benign classes
+in <code class="docutils literal notranslate"><span class="pre">cancer_train</span></code> and we see about <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(filter(train_prop,</span> <span class="pre">Class</span> <span class="pre">==</span> <span class="pre">&quot;B&quot;)$proportion,</span> <span class="pre">2)*100</span></code>% of the training
+data are benign and <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(filter(train_prop,</span> <span class="pre">Class</span> <span class="pre">==</span> <span class="pre">&quot;M&quot;)$proportion,</span> <span class="pre">2)*100</span></code>%
+are malignant, indicating that our class proportions were roughly preserved when we split the data.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_proportions &lt;- cancer_train |&gt;
+                      group_by(Class) |&gt;
+                      summarize(n = n()) |&gt;
+                      mutate(percent = 100*n/nrow(cancer_train))
+
+cancer_proportions
+</pre></div>
+</div>
+</div>
+<div class="section" id="preprocess-the-data">
+<h3>Preprocess the data<a class="headerlink" href="#preprocess-the-data" title="Permalink to this headline">¶</a></h3>
+<p>As we mentioned in the last chapter, <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors is sensitive to the scale of the predictors,
+so we should perform some preprocessing to standardize them. An
+additional consideration we need to take when doing this is that we should
+create the standardization preprocessor using <strong>only the training data</strong>. This ensures that
+our test data does not influence any aspect of our model training. Once we have
+created the standardization preprocessor, we can then apply it separately to both the
+training and test data sets.</p>
+<p>Fortunately, the <code class="docutils literal notranslate"><span class="pre">recipe</span></code> framework from <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> helps us handle \index{recipe}\index{recipe!step_scale}\index{recipe!step_center}
+this properly. Below we construct and prepare the recipe using only the training
+data (due to <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">cancer_train</span></code> in the first line).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_recipe &lt;- recipe(Class ~ Smoothness + Concavity, data = cancer_train) |&gt;
+  step_scale(all_predictors()) |&gt;
+  step_center(all_predictors())
+</pre></div>
+</div>
+</div>
+<div class="section" id="train-the-classifier">
+<h3>Train the classifier<a class="headerlink" href="#train-the-classifier" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have split our original data set into training and test sets, we
+can create our <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier with only the training set using
+the technique we learned in the previous chapter. For now, we will just choose
+the number <span class="math notranslate nohighlight">\(K\)</span> of neighbors to be 3, and use concavity and smoothness as the
+predictors. As before we need to create a model specification, combine
+the model specification and recipe into a workflow, and then finally
+use <code class="docutils literal notranslate"><span class="pre">fit</span></code> with the training data <code class="docutils literal notranslate"><span class="pre">cancer_train</span></code> to build the classifier.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, neighbors = 3) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+
+knn_fit &lt;- workflow() |&gt;
+  add_recipe(cancer_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  fit(data = cancer_train)
+
+knn_fit
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>print_tidymodels(knn_fit)
+</pre></div>
+</div>
+</div>
+<div class="section" id="predict-the-labels-in-the-test-set">
+<h3>Predict the labels in the test set<a class="headerlink" href="#predict-the-labels-in-the-test-set" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have a <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier object, we can use it to
+predict the class labels for our test set.  We use the <code class="docutils literal notranslate"><span class="pre">bind_cols</span></code> \index{bind_cols} to add the
+column of predictions to the original test data, creating the
+<code class="docutils literal notranslate"><span class="pre">cancer_test_predictions</span></code> data frame.  The <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable contains the true
+diagnoses, while the <code class="docutils literal notranslate"><span class="pre">.pred_class</span></code> contains the predicted diagnoses from the
+classifier.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_test_predictions &lt;- predict(knn_fit, cancer_test) |&gt;
+  bind_cols(cancer_test)
+
+cancer_test_predictions
+</pre></div>
+</div>
+</div>
+<div class="section" id="compute-the-accuracy">
+<h3>Compute the accuracy<a class="headerlink" href="#compute-the-accuracy" title="Permalink to this headline">¶</a></h3>
+<p>Finally, we can assess our classifier’s accuracy. To do this we use the <code class="docutils literal notranslate"><span class="pre">metrics</span></code> function \index{tidymodels!metrics}
+from <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> to get the statistics about the quality of our model, specifying
+the <code class="docutils literal notranslate"><span class="pre">truth</span></code> and <code class="docutils literal notranslate"><span class="pre">estimate</span></code> arguments:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_test_predictions |&gt;
+  metrics(truth = Class, estimate = .pred_class) |&gt;
+  filter(.metric == &quot;accuracy&quot;)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_acc_1 &lt;- cancer_test_predictions |&gt; 
+                metrics(truth = Class, estimate = .pred_class) |&gt; 
+                filter(.metric == &#39;accuracy&#39;)
+</pre></div>
+</div>
+<p>In the metrics data frame, we filtered the <code class="docutils literal notranslate"><span class="pre">.metric</span></code> column since we are
+interested in the <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> row. Other entries involve more advanced metrics that
+are beyond the scope of this book. Looking at the value of the <code class="docutils literal notranslate"><span class="pre">.estimate</span></code> variable
+shows that the estimated accuracy of the classifier on the test data
+was <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*cancer_acc_1$.estimate,</span> <span class="pre">0)</span></code>%.</p>
+<p>We can also look at the <em>confusion matrix</em> for the classifier, which shows
+the table of predicted labels and correct labels, using the <code class="docutils literal notranslate"><span class="pre">conf_mat</span></code> function:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>confusion &lt;- cancer_test_predictions |&gt;
+             conf_mat(truth = Class, estimate = .pred_class)
+
+confusion
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>confusionmt &lt;- confusion |&gt; tidy()
+confu11 &lt;- (confusionmt |&gt; filter(name == &quot;cell_1_1&quot;))$value
+confu12 &lt;- (confusionmt |&gt; filter(name == &quot;cell_1_2&quot;))$value
+confu21 &lt;- (confusionmt |&gt; filter(name == &quot;cell_2_1&quot;))$value
+confu22 &lt;- (confusionmt |&gt; filter(name == &quot;cell_2_2&quot;))$value
+</pre></div>
+</div>
+<p>The confusion matrix shows <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu11</span></code> observations were correctly predicted
+as malignant, and <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu22</span></code> were correctly predicted as benign. Therefore the classifier labeled
+<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu11</span></code> + <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu22</span></code> = <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu11+confu22</span></code> observations
+correctly. It also shows that the classifier made some mistakes; in particular,
+it classified  <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu21</span></code> observations as benign when they were truly malignant,
+and <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu12</span></code> observations as malignant when they were truly benign.</p>
+</div>
+<div class="section" id="critically-analyze-performance">
+<h3>Critically analyze performance<a class="headerlink" href="#critically-analyze-performance" title="Permalink to this headline">¶</a></h3>
+<p>We now know that the classifier was <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*cancer_acc_1$.estimate,0)</span></code>% accurate
+on the test data set. That sounds pretty good! Wait, <em>is</em> it good?
+Or do we need something higher?</p>
+<p>In general, what a <em>good</em> value for accuracy \index{accuracy!assessment} is depends on the application.
+For instance, suppose you are predicting whether a tumor is benign or malignant
+for a type of tumor that is benign 99% of the time. It is very easy to obtain
+a 99% accuracy just by guessing benign for every observation. In this case,
+99% accuracy is probably not good enough.  And beyond just accuracy,
+sometimes the <em>kind</em> of mistake the classifier makes is important as well. In
+the previous example, it might be very bad for the classifier to predict
+“benign” when the true class is “malignant”, as this might result in a patient
+not receiving appropriate medical attention. On the other hand, it might be
+less bad for the classifier to guess “malignant” when the true class is
+“benign”, as the patient will then likely see a doctor who can provide an
+expert diagnosis. This is why it is important not only to look at accuracy, but
+also the confusion matrix.</p>
+<p>However, there is always an easy baseline that you can compare to for any
+classification problem: the <em>majority classifier</em>. The majority classifier \index{classification!majority}
+<em>always</em> guesses the majority class label from the training data, regardless of
+the predictor variables’ values.  It helps to give you a sense of
+scale when considering accuracies. If the majority classifier obtains a 90%
+accuracy on a problem, then you might hope for your <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors
+classifier to do better than that. If your classifier provides a significant
+improvement upon the majority classifier, this means that at least your method
+is extracting some useful information from your predictor variables.  Be
+careful though: improving on the majority classifier does not <em>necessarily</em>
+mean the classifier is working well enough for your application.</p>
+<p>As an example, in the breast cancer data, recall the proportions of benign and malignant
+observations in the training data are as follows:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_proportions
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_propn_1 &lt;- cancer_proportions |&gt;
+                filter(Class == &#39;B&#39;) |&gt;
+                select(percent)
+</pre></div>
+</div>
+<p>Since the benign class represents the majority of the training data,
+the majority classifier would <em>always</em> predict that a new observation
+is benign. The estimated accuracy of the majority classifier is usually
+fairly close to the majority class proportion in the training data.
+In this case, we would suspect that the majority classifier will have
+an accuracy of around <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(cancer_propn_1[1,1],</span> <span class="pre">0)</span></code>%.
+The <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier we built does quite a bit better than this,
+with an accuracy of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*cancer_acc_1$.estimate,</span> <span class="pre">0)</span></code>%.
+This means that from the perspective of accuracy,
+the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier improved quite a bit on the basic
+majority classifier. Hooray! But we still need to be cautious; in
+this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
+patients who actually need medical care. The confusion matrix above shows
+that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign (<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu21</span></code>
+out of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">confu11+confu21</span></code> malignant tumors, or <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*(confu21)/(confu11+confu21))</span></code>%!).
+Therefore, even though the accuracy improved upon the majority classifier,
+our critical analysis suggests that this classifier may not have appropriate performance
+for the application.</p>
+</div>
+</div>
+<div class="section" id="tuning-the-classifier">
+<h2>Tuning the classifier<a class="headerlink" href="#tuning-the-classifier" title="Permalink to this headline">¶</a></h2>
+<p>The vast majority of predictive models in statistics and machine learning have
+<em>parameters</em>. A <em>parameter</em> \index{parameter}\index{tuning parameter|see{parameter}}
+is a number you have to pick in advance that determines
+some aspect of how the model behaves. For example, in the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors
+classification algorithm, <span class="math notranslate nohighlight">\(K\)</span> is a parameter that we have to pick
+that determines how many neighbors participate in the class vote.
+By picking different values of <span class="math notranslate nohighlight">\(K\)</span>, we create different classifiers
+that make different predictions.</p>
+<p>So then, how do we pick the <em>best</em> value of <span class="math notranslate nohighlight">\(K\)</span>, i.e., <em>tune</em> the model?
+And is it possible to make this selection in a principled way?  Ideally,
+we want somehow to maximize the performance of our classifier on data <em>it
+hasn’t seen yet</em>. But we cannot use our test data set in the process of building
+our model. So we will play the same trick we did before when evaluating
+our classifier: we’ll split our <em>training data itself</em> into two subsets,
+use one to train the model, and then use the other to evaluate it.
+In this section, we will cover the details of this procedure, as well as
+how to use it to help you pick a good parameter value for your classifier.</p>
+<p><strong>And remember:</strong> don’t touch the test set during the tuning process. Tuning is a part of model training!</p>
+<div class="section" id="cross-validation">
+<h3>Cross-validation<a class="headerlink" href="#cross-validation" title="Permalink to this headline">¶</a></h3>
+<p>The first step in choosing the parameter <span class="math notranslate nohighlight">\(K\)</span> is to be able to evaluate the
+classifier using only the training data. If this is possible, then we can compare
+the classifier’s performance for different values of <span class="math notranslate nohighlight">\(K\)</span>—and pick the best—using
+only the training data. As suggested at the beginning of this section, we will
+accomplish this by splitting the training data, training on one subset, and evaluating
+on the other. The subset of training data used for evaluation is often called the <strong>validation set</strong>. \index{validation set}</p>
+<p>There is, however, one key difference from the train/test split
+that we performed earlier. In particular, we were forced to make only a <em>single split</em>
+of the data. This is because at the end of the day, we have to produce a single classifier.
+If we had multiple different splits of the data into training and testing data,
+we would produce multiple different classifiers.
+But while we are tuning the classifier, we are free to create multiple classifiers
+based on multiple splits of the training data, evaluate them, and then choose a parameter
+value based on <strong><em>all</em></strong> of the different results. If we just split our overall training
+data <em>once</em>, our best parameter choice will depend strongly on whatever data
+was lucky enough to end up in the validation set. Perhaps using multiple
+different train/validation splits, we’ll get a better estimate of accuracy,
+which will lead to a better choice of the number of neighbors <span class="math notranslate nohighlight">\(K\)</span> for the
+overall set of training data.</p>
+<p>Let’s investigate this idea in R! In particular, we will generate five different train/validation
+splits of our overall training data, train five different <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors
+models, and evaluate their accuracy. We will start with just a single
+split.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># create the 25/75 split of the training data into training and validation
+cancer_split &lt;- initial_split(cancer_train, prop = 0.75, strata = Class)
+cancer_subtrain &lt;- training(cancer_split)
+cancer_validation &lt;- testing(cancer_split)
+
+# recreate the standardization recipe from before 
+# (since it must be based on the training data)
+cancer_recipe &lt;- recipe(Class ~ Smoothness + Concavity, 
+                        data = cancer_subtrain) |&gt;
+  step_scale(all_predictors()) |&gt;
+  step_center(all_predictors())
+
+# fit the knn model (we can reuse the old knn_spec model from before)
+knn_fit &lt;- workflow() |&gt;
+  add_recipe(cancer_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  fit(data = cancer_subtrain)
+
+# get predictions on the validation data
+validation_predicted &lt;- predict(knn_fit, cancer_validation) |&gt;
+  bind_cols(cancer_validation)
+
+# compute the accuracy
+acc &lt;- validation_predicted |&gt;
+  metrics(truth = Class, estimate = .pred_class) |&gt;
+  filter(.metric == &quot;accuracy&quot;) |&gt;
+  select(.estimate) |&gt;
+  pull()
+
+acc
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>accuracies &lt;- c()
+for (i in 1:5) {
+  set.seed(i) # makes the random selection of rows reproducible
+
+  # create the 25/75 split of the training data into training and validation
+  cancer_split &lt;- initial_split(cancer_train, prop = 0.75, strata = Class)
+  cancer_subtrain &lt;- training(cancer_split)
+  cancer_validation &lt;- testing(cancer_split)
+
+  # recreate the standardization recipe from before 
+  # (since it must be based on the training data)
+  cancer_recipe &lt;- recipe(Class ~ Smoothness + Concavity, 
+                          data = cancer_subtrain) |&gt;
+    step_scale(all_predictors()) |&gt;
+    step_center(all_predictors())
+
+  # fit the knn model (we can reuse the old knn_spec model from before)
+  knn_fit &lt;- workflow() |&gt;
+    add_recipe(cancer_recipe) |&gt;
+    add_model(knn_spec) |&gt;
+    fit(data = cancer_subtrain)
+
+  # get predictions on the validation data
+  validation_predicted &lt;- predict(knn_fit, cancer_validation) |&gt;
+    bind_cols(cancer_validation)
+
+  # compute the accuracy
+  acc_ &lt;- validation_predicted |&gt;
+    metrics(truth = Class, estimate = .pred_class) |&gt;
+    filter(.metric == &quot;accuracy&quot;) |&gt;
+    select(.estimate) |&gt;
+    pull()
+  accuracies &lt;- append(accuracies, acc_)
+}
+</pre></div>
+</div>
+<p>The accuracy estimate using this split is <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*acc,1)</span></code>%.
+Now we repeat the above code 4 more times, which generates 4 more splits.
+Therefore we get five different shuffles of the data, and therefore five different values for
+accuracy: <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">sprintf(&quot;%.1f%%&quot;,</span> <span class="pre">round(100*accuracies,1))</span></code>. None of these values are
+necessarily “more correct” than any other; they’re
+just five estimates of the true, underlying accuracy of our classifier built
+using our overall training data. We can combine the estimates by taking their
+average (here <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*mean(accuracies),0)</span></code>%) to try to get a single assessment of our
+classifier’s accuracy; this has the effect of reducing the influence of any one
+(un)lucky validation set on the estimate.</p>
+<p>In practice, we don’t use random splits, but rather use a more structured
+splitting procedure so that each observation in the data set is used in a
+validation set only a single time. The name for this strategy is
+<strong>cross-validation</strong>.  In <strong>cross-validation</strong>, \index{cross-validation} we split our <strong>overall training
+data</strong> into <span class="math notranslate nohighlight">\(C\)</span> evenly sized chunks. Then, iteratively use <span class="math notranslate nohighlight">\(1\)</span> chunk as the
+<strong>validation set</strong> and combine the remaining <span class="math notranslate nohighlight">\(C-1\)</span> chunks
+as the <strong>training set</strong>.
+This procedure is shown in Figure &#64;ref(fig:06-cv-image).
+Here, <span class="math notranslate nohighlight">\(C=5\)</span> different chunks of the data set are used,
+resulting in 5 different choices for the <strong>validation set</strong>; we call this
+<em>5-fold</em> cross-validation.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/cv.png&quot;)
+</pre></div>
+</div>
+<p>To perform 5-fold cross-validation in R with <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>, we use another
+function: <code class="docutils literal notranslate"><span class="pre">vfold_cv</span></code>. \index{tidymodels!vfold_cv}\index{cross-validation!vfold_cv} This function splits our training data into <code class="docutils literal notranslate"><span class="pre">v</span></code> folds
+automatically. We set the <code class="docutils literal notranslate"><span class="pre">strata</span></code> argument to the categorical label variable
+(here, <code class="docutils literal notranslate"><span class="pre">Class</span></code>) to ensure that the training and validation subsets contain the
+right proportions of each category of observation.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(14) 
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_vfold &lt;- vfold_cv(cancer_train, v = 5, strata = Class)
+cancer_vfold
+</pre></div>
+</div>
+<p>Then, when we create our data analysis workflow, we use the <code class="docutils literal notranslate"><span class="pre">fit_resamples</span></code> function \index{cross-validation!fit_resamples}\index{tidymodels!fit_resamples}
+instead of the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function for training. This runs cross-validation on each
+train/validation split.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># recreate the standardization recipe from before 
+# (since it must be based on the training data)
+cancer_recipe &lt;- recipe(Class ~ Smoothness + Concavity, 
+                        data = cancer_train) |&gt;
+  step_scale(all_predictors()) |&gt;
+  step_center(all_predictors())
+
+# fit the knn model (we can reuse the old knn_spec model from before)
+knn_fit &lt;- workflow() |&gt;
+  add_recipe(cancer_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  fit_resamples(resamples = cancer_vfold)
+
+knn_fit
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">collect_metrics</span></code> \index{tidymodels!collect_metrics}\index{cross-validation!collect_metrics} function is used to aggregate the <em>mean</em> and <em>standard error</em>
+of the classifier’s validation accuracy across the folds. You will find results
+related to the accuracy in the row with <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> listed under the <code class="docutils literal notranslate"><span class="pre">.metric</span></code> column.
+You should consider the mean (<code class="docutils literal notranslate"><span class="pre">mean</span></code>) to be the estimated accuracy, while the standard
+error (<code class="docutils literal notranslate"><span class="pre">std_err</span></code>) is a measure of how uncertain we are in the mean value. A detailed treatment of this
+is beyond the scope of this chapter; but roughly, if your estimated mean is <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$mean,2)</span></code> and standard
+error is <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$std_err,2)</span></code>, you can expect the <em>true</em> average accuracy of the
+classifier to be somewhere roughly between <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$mean,2)</span> <span class="pre">-</span> <span class="pre">round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$std_err,2))*100</span></code>% and <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$mean,2)</span> <span class="pre">+</span> <span class="pre">round(filter(collect_metrics(knn_fit),</span> <span class="pre">.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;)$std_err,2))*100</span></code>% (although it may
+fall outside this range). You may ignore the other columns in the metrics data frame,
+as they do not provide any additional insight.
+You can also ignore the entire second row with <code class="docutils literal notranslate"><span class="pre">roc_auc</span></code> in the <code class="docutils literal notranslate"><span class="pre">.metric</span></code> column,
+as it is beyond the scope of this book.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_fit |&gt; 
+  collect_metrics() 
+</pre></div>
+</div>
+<p>We can choose any number of folds, and typically the more we use the better our
+accuracy estimate will be (lower standard error). However, we are limited
+by computational power: the
+more folds we choose, the  more computation it takes, and hence the more time
+it takes to run the analysis. So when you do cross-validation, you need to
+consider the size of the data, the speed of the algorithm (e.g., <span class="math notranslate nohighlight">\(K\)</span>-nearest
+neighbors), and the speed of your computer. In practice, this is a
+trial-and-error process, but typically <span class="math notranslate nohighlight">\(C\)</span> is chosen to be either 5 or 10. Here
+we will try 10-fold cross-validation to see if we get a lower standard error:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_vfold &lt;- vfold_cv(cancer_train, v = 10, strata = Class)
+
+vfold_metrics &lt;- workflow() |&gt;
+                  add_recipe(cancer_recipe) |&gt;
+                  add_model(knn_spec) |&gt;
+                  fit_resamples(resamples = cancer_vfold) |&gt;
+                  collect_metrics()
+
+vfold_metrics
+</pre></div>
+</div>
+<p>In this case, using 10-fold instead of 5-fold cross validation did reduce the standard error, although
+by only an insignificant amount. In fact, due to the randomness in how the data are split, sometimes
+you might even end up with a <em>higher</em> standard error when increasing the number of folds!
+We can make the reduction in standard error more dramatic by increasing the number of folds
+by a large amount. In the following code we show the result when <span class="math notranslate nohighlight">\(C = 50\)</span>;
+picking such a large number of folds often takes a long time to run in practice,
+so we usually stick to 5 or 10.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_vfold_50 &lt;- vfold_cv(cancer_train, v = 50, strata = Class)
+
+vfold_metrics_50 &lt;- workflow() |&gt;
+                  add_recipe(cancer_recipe) |&gt;
+                  add_model(knn_spec) |&gt;
+                  fit_resamples(resamples = cancer_vfold_50) |&gt;
+                  collect_metrics()
+vfold_metrics_50
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameter-value-selection">
+<h3>Parameter value selection<a class="headerlink" href="#parameter-value-selection" title="Permalink to this headline">¶</a></h3>
+<p>Using 5- and 10-fold cross-validation, we have estimated that the prediction
+accuracy of our classifier is somewhere around <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*(vfold_metrics</span> <span class="pre">|&gt;</span> <span class="pre">filter(.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;))$mean,0)</span></code>%.
+Whether that is good or not
+depends entirely on the downstream application of the data analysis. In the
+present situation, we are trying to predict a tumor diagnosis, with expensive,
+damaging chemo/radiation therapy or patient death as potential consequences of
+misprediction. Hence, we might like to
+do better than <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(100*(vfold_metrics</span> <span class="pre">|&gt;</span> <span class="pre">filter(.metric</span> <span class="pre">==</span> <span class="pre">&quot;accuracy&quot;))$mean,0)</span></code>% for this application.</p>
+<p>In order to improve our classifier, we have one choice of parameter: the number of
+neighbors, <span class="math notranslate nohighlight">\(K\)</span>. Since cross-validation helps us evaluate the accuracy of our
+classifier, we can use cross-validation to calculate an accuracy for each value
+of <span class="math notranslate nohighlight">\(K\)</span> in a reasonable range, and then pick the value of <span class="math notranslate nohighlight">\(K\)</span> that gives us the
+best accuracy. The <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> package collection provides a very simple
+syntax for tuning models: each parameter in the model to be tuned should be specified
+as <code class="docutils literal notranslate"><span class="pre">tune()</span></code> in the model specification rather than given a particular value.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, 
+                             neighbors = tune()) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+</pre></div>
+</div>
+<p>Then instead of using <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fit_resamples</span></code>, we will use the <code class="docutils literal notranslate"><span class="pre">tune_grid</span></code> function \index{cross-validation!tune_grid}\index{tidymodels!tune_grid}
+to fit the model for each value in a range of parameter values.
+In particular, we first create a data frame with a <code class="docutils literal notranslate"><span class="pre">neighbors</span></code>
+variable that contains the sequence of values of <span class="math notranslate nohighlight">\(K\)</span> to try; below we create the <code class="docutils literal notranslate"><span class="pre">k_vals</span></code>
+data frame with the <code class="docutils literal notranslate"><span class="pre">neighbors</span></code> variable containing values from 1 to 100 (stepping by 5) using
+the <code class="docutils literal notranslate"><span class="pre">seq</span></code> function.
+Then we pass that data frame to the <code class="docutils literal notranslate"><span class="pre">grid</span></code> argument of <code class="docutils literal notranslate"><span class="pre">tune_grid</span></code>.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>k_vals &lt;- tibble(neighbors = seq(from = 1, to = 100, by = 5))
+
+knn_results &lt;- workflow() |&gt;
+  add_recipe(cancer_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  tune_grid(resamples = cancer_vfold, grid = k_vals) |&gt;
+  collect_metrics() 
+
+accuracies &lt;- knn_results |&gt;
+  filter(.metric == &quot;accuracy&quot;)
+
+accuracies
+</pre></div>
+</div>
+<p>We can decide which number of neighbors is best by plotting the accuracy versus <span class="math notranslate nohighlight">\(K\)</span>,
+as shown in Figure &#64;ref(fig:06-find-k).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>accuracy_vs_k &lt;- ggplot(accuracies, aes(x = neighbors, y = mean)) +
+  geom_point() +
+  geom_line() +
+  labs(x = &quot;Neighbors&quot;, y = &quot;Accuracy Estimate&quot;) + 
+  theme(text = element_text(size = 12))
+
+accuracy_vs_k
+</pre></div>
+</div>
+<p>Setting the number of
+neighbors to <span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code>
+provides the highest accuracy (<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">slice(1)</span> <span class="pre">|&gt;</span> <span class="pre">pull(mean)</span> <span class="pre">|&gt;</span> <span class="pre">round(4))*100</span></code>%). But there is no exact or perfect answer here;
+any selection from <span class="math notranslate nohighlight">\(K = 30\)</span> and <span class="math notranslate nohighlight">\(60\)</span> would be reasonably justified, as all
+of these differ in classifier accuracy by a small amount. Remember: the
+values you see on this plot are <em>estimates</em> of the true accuracy of our
+classifier. Although the
+<span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code> value is
+higher than the others on this plot,
+that doesn’t mean the classifier is actually more accurate with this parameter
+value! Generally, when selecting <span class="math notranslate nohighlight">\(K\)</span> (and other parameters for other predictive
+models), we are looking for a value where:</p>
+<ul class="simple">
+<li><p>we get roughly optimal accuracy, so that our model will likely be accurate;</p></li>
+<li><p>changing the value to a nearby one (e.g., adding or subtracting a small number) doesn’t decrease accuracy too much, so that our choice is reliable in the presence of uncertainty;</p></li>
+<li><p>the cost of training the model is not prohibitive (e.g., in our situation, if <span class="math notranslate nohighlight">\(K\)</span> is too large, predicting becomes expensive!).</p></li>
+</ul>
+<p>We know that <span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code>
+provides the highest estimated accuracy. Further, Figure &#64;ref(fig:06-find-k) shows that the estimated accuracy
+changes by only a small amount if we increase or decrease <span class="math notranslate nohighlight">\(K\)</span> near <span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code>.
+And finally, <span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code> does not create a prohibitively expensive
+computational cost of training. Considering these three points, we would indeed select
+<span class="math notranslate nohighlight">\(K =\)</span> <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">(accuracies</span> <span class="pre">|&gt;</span> <span class="pre">arrange(desc(mean))</span> <span class="pre">|&gt;</span> <span class="pre">head(1))$neighbors</span></code> for the classifier.</p>
+</div>
+<div class="section" id="under-overfitting">
+<h3>Under/Overfitting<a class="headerlink" href="#under-overfitting" title="Permalink to this headline">¶</a></h3>
+<p>To build a bit more intuition, what happens if we keep increasing the number of
+neighbors <span class="math notranslate nohighlight">\(K\)</span>? In fact, the accuracy actually starts to decrease!
+Let’s specify a much larger range of values of <span class="math notranslate nohighlight">\(K\)</span> to try in the <code class="docutils literal notranslate"><span class="pre">grid</span></code>
+argument of <code class="docutils literal notranslate"><span class="pre">tune_grid</span></code>. Figure &#64;ref(fig:06-lots-of-ks) shows a plot of estimated accuracy as
+we vary <span class="math notranslate nohighlight">\(K\)</span> from 1 to almost the number of observations in the data set.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>k_lots &lt;- tibble(neighbors = seq(from = 1, to = 385, by = 10))
+
+knn_results &lt;- workflow() |&gt;
+  add_recipe(cancer_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  tune_grid(resamples = cancer_vfold, grid = k_lots) |&gt;
+  collect_metrics()
+
+accuracies &lt;- knn_results |&gt;
+  filter(.metric == &quot;accuracy&quot;)
+
+accuracy_vs_k_lots &lt;- ggplot(accuracies, aes(x = neighbors, y = mean)) +
+  geom_point() +
+  geom_line() +
+  labs(x = &quot;Neighbors&quot;, y = &quot;Accuracy Estimate&quot;) + 
+  theme(text = element_text(size = 12))
+
+accuracy_vs_k_lots
+</pre></div>
+</div>
+<p><strong>Underfitting:</strong> \index{underfitting!classification} What is actually happening to our classifier that causes
+this? As we increase the number of neighbors, more and more of the training
+observations (and those that are farther and farther away from the point) get a
+“say” in what the class of a new observation is. This causes a sort of
+“averaging effect” to take place, making the boundary between where our
+classifier would predict a tumor to be malignant versus benign to smooth out
+and become <em>simpler.</em> If you take this to the extreme, setting <span class="math notranslate nohighlight">\(K\)</span> to the total
+training data set size, then the classifier will always predict the same label
+regardless of what the new observation looks like. In general, if the model
+<em>isn’t influenced enough</em> by the training data, it is said to <strong>underfit</strong> the
+data.</p>
+<p><strong>Overfitting:</strong> \index{overfitting!classification} In contrast, when we decrease the number of neighbors, each
+individual data point has a stronger and stronger vote regarding nearby points.
+Since the data themselves are noisy, this causes a more “jagged” boundary
+corresponding to a <em>less simple</em> model.  If you take this case to the extreme,
+setting <span class="math notranslate nohighlight">\(K = 1\)</span>, then the classifier is essentially just matching each new
+observation to its closest neighbor in the training data set. This is just as
+problematic as the large <span class="math notranslate nohighlight">\(K\)</span> case, because the classifier becomes unreliable on
+new data: if we had a different training set, the predictions would be
+completely different.  In general, if the model <em>is influenced too much</em> by the
+training data, it is said to <strong>overfit</strong> the data.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>ks &lt;- c(1, 7, 20, 300)
+plots &lt;- list()
+
+for (i in 1:length(ks)) {
+  knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, 
+                               neighbors = ks[[i]]) |&gt;
+    set_engine(&quot;kknn&quot;) |&gt;
+    set_mode(&quot;classification&quot;)
+
+  knn_fit &lt;- workflow() |&gt;
+    add_recipe(cancer_recipe) |&gt;
+    add_model(knn_spec) |&gt;
+    fit(data = cancer_train)
+
+  # create a prediction pt grid
+  smo_grid &lt;- seq(min(cancer_train$Smoothness), 
+                  max(cancer_train$Smoothness), 
+                  length.out = 100)
+  con_grid &lt;- seq(min(cancer_train$Concavity), 
+                  max(cancer_train$Concavity), 
+                  length.out = 100)
+  scgrid &lt;- as_tibble(expand.grid(Smoothness = smo_grid, 
+                                  Concavity = con_grid))
+  knnPredGrid &lt;- predict(knn_fit, scgrid)
+  prediction_table &lt;- bind_cols(knnPredGrid, scgrid) |&gt; 
+    rename(Class = .pred_class)
+
+  # plot
+  plots[[i]] &lt;-
+    ggplot() +
+    geom_point(data = cancer_train, 
+               mapping = aes(x = Smoothness, 
+                             y = Concavity, 
+                             color = Class), 
+               alpha = 0.75) +
+    geom_point(data = prediction_table, 
+               mapping = aes(x = Smoothness, 
+                             y = Concavity, 
+                             color = Class), 
+               alpha = 0.02, 
+               size = 5.) +
+    labs(color = &quot;Diagnosis&quot;) +
+    ggtitle(paste(&quot;K = &quot;, ks[[i]])) +
+    scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                       values = c(&quot;orange2&quot;, &quot;steelblue2&quot;))  +
+  theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
+  }
+
+p_no_legend &lt;- lapply(plots, function(x) x + theme(legend.position = &quot;none&quot;))
+legend &lt;- get_legend(plots[[1]] + theme(legend.position = &quot;bottom&quot;))
+p_grid &lt;- plot_grid(plotlist = p_no_legend, ncol = 2)
+plot_grid(p_grid, legend, ncol = 1, rel_heights = c(1, 0.2))
+</pre></div>
+</div>
+<p>Both overfitting and underfitting are problematic and will lead to a model
+that does not generalize well to new data. When fitting a model, we need to strike
+a balance between the two. You can see these two effects in Figure
+&#64;ref(fig:06-decision-grid-K), which shows how the classifier changes as
+we set the number of neighbors <span class="math notranslate nohighlight">\(K\)</span> to 1, 7, 20, and 300.</p>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Classification algorithms use one or more quantitative variables to predict the
+value of another categorical variable. In particular, the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm
+does this by first finding the <span class="math notranslate nohighlight">\(K\)</span> points in the training data nearest
+to the new observation, and then returning the majority class vote from those
+training observations. We can evaluate a classifier by splitting the data
+randomly into a training and test data set, using the training set to build the
+classifier, and using the test set to estimate its accuracy. Finally, we
+can tune the classifier (e.g., select the number of neighbors <span class="math notranslate nohighlight">\(K\)</span> in <span class="math notranslate nohighlight">\(K\)</span>-NN)
+by maximizing estimated accuracy via cross-validation. The overall
+process is summarized in Figure &#64;ref(fig:06-overview).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/train-test-overview.jpeg&quot;)
+</pre></div>
+</div>
+<p>The overall workflow for performing <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification using <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> is as follows:
+\index{tidymodels}\index{recipe}\index{cross-validation}\index{K-nearest neighbors!classification}\index{classification}</p>
+<ol class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">initial_split</span></code> function to split the data into a training and test set. Set the <code class="docutils literal notranslate"><span class="pre">strata</span></code> argument to the class label variable. Put the test set aside for now.</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">vfold_cv</span></code> function to split up the training data for cross-validation.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">recipe</span></code> that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the <code class="docutils literal notranslate"><span class="pre">data</span></code> argument of the recipe.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">nearest_neighbors</span></code> model specification, with <code class="docutils literal notranslate"><span class="pre">neighbors</span> <span class="pre">=</span> <span class="pre">tune()</span></code>.</p></li>
+<li><p>Add the recipe and model specification to a <code class="docutils literal notranslate"><span class="pre">workflow()</span></code>, and use the <code class="docutils literal notranslate"><span class="pre">tune_grid</span></code> function on the train/validation splits to estimate the classifier accuracy for a range of <span class="math notranslate nohighlight">\(K\)</span> values.</p></li>
+<li><p>Pick a value of <span class="math notranslate nohighlight">\(K\)</span> that yields a high accuracy estimate that doesn’t change much if you change <span class="math notranslate nohighlight">\(K\)</span> to a nearby value.</p></li>
+<li><p>Make a new model specification for the best parameter value (i.e., <span class="math notranslate nohighlight">\(K\)</span>), and retrain the classifier using the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function.</p></li>
+<li><p>Evaluate the estimated accuracy of the classifier on the test set using the <code class="docutils literal notranslate"><span class="pre">predict</span></code> function.</p></li>
+</ol>
+<p>In these last two chapters, we focused on the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor algorithm,
+but there are many other methods we could have used to predict a categorical label.
+All algorithms have their strengths and weaknesses, and we summarize these for
+the <span class="math notranslate nohighlight">\(K\)</span>-NN here.</p>
+<p><strong>Strengths:</strong> <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification</p>
+<ol class="simple">
+<li><p>is a simple, intuitive algorithm,</p></li>
+<li><p>requires few assumptions about what the data must look like, and</p></li>
+<li><p>works for binary (two-class) and multi-class (more than 2 classes) classification problems.</p></li>
+</ol>
+<p><strong>Weaknesses:</strong> <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification</p>
+<ol class="simple">
+<li><p>becomes very slow as the training data gets larger,</p></li>
+<li><p>may not perform well with a large number of predictors, and</p></li>
+<li><p>may not perform well when classes are imbalanced.</p></li>
+</ol>
+</div>
+<div class="section" id="predictor-variable-selection">
+<h2>Predictor variable selection<a class="headerlink" href="#predictor-variable-selection" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><strong>Note:</strong> This section is not required reading for the remainder of the textbook. It is included for those readers
+interested in learning how irrelevant variables can influence the performance of a classifier, and how to
+pick a subset of useful variables to include as predictors.</p>
+</div></blockquote>
+<p>Another potentially important part of tuning your classifier is to choose which
+variables from your data will be treated as predictor variables. Technically, you can choose
+anything from using a single predictor variable to using every variable in your
+data; the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm accepts any number of
+predictors. However, it is <strong>not</strong> the case that using more predictors always
+yields better predictions! In fact, sometimes including irrelevant predictors \index{irrelevant predictors} can
+actually negatively affect classifier performance.</p>
+<div class="section" id="the-effect-of-irrelevant-predictors">
+<h3>The effect of irrelevant predictors<a class="headerlink" href="#the-effect-of-irrelevant-predictors" title="Permalink to this headline">¶</a></h3>
+<p>Let’s take a look at an example where <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors performs
+worse when given more predictors to work with. In this example, we modified
+the breast cancer data to have only the <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code>, <code class="docutils literal notranslate"><span class="pre">Concavity</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">Perimeter</span></code> variables from the original data. Then, we added irrelevant
+variables that we created ourselves using a random number generator.
+The irrelevant variables each take a value of 0 or 1 with equal probability for each observation, regardless
+of what the value <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable takes. In other words, the irrelevant variables have
+no meaningful relationship with the <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>set.seed(4)
+cancer_irrelevant &lt;- cancer |&gt; select(Class, Smoothness, Concavity, Perimeter)
+
+for (i in 1:500) {
+    # create column
+    col = (sample(2, size=nrow(cancer_irrelevant), replace=TRUE)-1)
+    cancer_irrelevant &lt;- cancer_irrelevant |&gt; 
+	add_column( !!paste(&quot;Irrelevant&quot;, i, sep=&quot;&quot;) := col)
+}
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_irrelevant |&gt; 
+      select(Class, Smoothness, Concavity, Perimeter, Irrelevant1, Irrelevant2)
+</pre></div>
+</div>
+<p>Next, we build a sequence of <span class="math notranslate nohighlight">\(K\)</span>-NN classifiers that include <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Concavity</span></code>, and <code class="docutils literal notranslate"><span class="pre">Perimeter</span></code> as predictor variables, but also increasingly many irrelevant
+variables. In particular, we create 6 data sets with 0, 5, 10, 15, 20, and 40 irrelevant predictors.
+Then we build a model, tuned via 5-fold cross-validation, for each data set.
+Figure &#64;ref(fig:06-performance-irrelevant-features) shows
+the estimated cross-validation accuracy versus the number of irrelevant predictors.  As
+we add more irrelevant predictor variables, the estimated accuracy of our
+classifier decreases. This is because the irrelevant variables add a random
+amount to the distance between each pair of observations; the more irrelevant
+variables there are, the more (random) influence they have, and the more they
+corrupt the set of nearest neighbors that vote on the class of the new
+observation to predict.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># get accuracies after including k irrelevant features
+ks &lt;- c(0, 5, 10, 15, 20, 40)
+fixedaccs &lt;- list()
+accs &lt;- list()
+nghbrs &lt;- list()
+
+for (i in 1:length(ks)) {
+  knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, 
+                               neighbors = tune()) |&gt;
+     set_engine(&quot;kknn&quot;) |&gt;
+     set_mode(&quot;classification&quot;)
+
+  cancer_irrelevant_subset &lt;- cancer_irrelevant |&gt; select(1:(3+ks[[i]]))
+
+  cancer_vfold &lt;- vfold_cv(cancer_irrelevant_subset, v = 5, strata = Class)
+
+  cancer_recipe &lt;- recipe(Class ~ ., data = cancer_irrelevant_subset) |&gt;
+      step_scale(all_predictors()) |&gt;
+      step_center(all_predictors())
+  
+  res &lt;- workflow() |&gt;
+    add_recipe(cancer_recipe) |&gt;
+    add_model(knn_spec) |&gt;
+    tune_grid(resamples = cancer_vfold, grid = 20) |&gt;
+    collect_metrics() |&gt;
+    filter(.metric == &quot;accuracy&quot;) |&gt;
+    arrange(desc(mean)) |&gt;
+    head(1)
+  accs[[i]] &lt;- res$mean
+  nghbrs[[i]] &lt;- res$neighbors
+
+  knn_spec_fixed &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, 
+                                     neighbors = 3) |&gt;
+     set_engine(&quot;kknn&quot;) |&gt;
+     set_mode(&quot;classification&quot;)
+
+  res &lt;- workflow() |&gt;
+    add_recipe(cancer_recipe) |&gt;
+    add_model(knn_spec_fixed) |&gt;
+    tune_grid(resamples = cancer_vfold, grid = 1) |&gt;
+    collect_metrics() |&gt;
+    filter(.metric == &quot;accuracy&quot;) |&gt;
+    arrange(desc(mean)) |&gt;
+    head(1)
+  fixedaccs[[i]] &lt;- res$mean
+}
+accs &lt;- accs |&gt; unlist()
+nghbrs &lt;- nghbrs |&gt; unlist()
+fixedaccs &lt;- fixedaccs |&gt; unlist()
+
+## get accuracy if we always just guess the most frequent label
+#base_acc &lt;- cancer_irrelevant |&gt;
+#                group_by(Class) |&gt;
+#                summarize(n = n()) |&gt;
+#                mutate(frac = n/sum(n)) |&gt;
+#                summarize(mx = max(frac)) |&gt;
+#                select(mx)
+#base_acc &lt;- base_acc$mx |&gt; unlist()
+
+# plot
+res &lt;- tibble(ks = ks, accs = accs, fixedaccs = fixedaccs, nghbrs = nghbrs)
+#res &lt;- res |&gt; mutate(base_acc = base_acc)
+#plt_irrelevant_accuracies &lt;- res |&gt;
+#  ggplot() +
+#  geom_line(mapping = aes(x=ks, y=accs, linetype=&quot;Tuned KNN&quot;)) +
+#  geom_hline(data=res, mapping=aes(yintercept=base_acc, linetype=&quot;Always Predict Benign&quot;)) +
+#  labs(x = &quot;Number of Irrelevant Predictors&quot;, y = &quot;Model Accuracy Estimate&quot;) + 
+#  scale_linetype_manual(name=&quot;Method&quot;, values = c(&quot;dashed&quot;, &quot;solid&quot;))
+
+plt_irrelevant_accuracies &lt;- ggplot(res) +
+              geom_line(mapping = aes(x=ks, y=accs)) +
+              labs(x = &quot;Number of Irrelevant Predictors&quot;, 
+                   y = &quot;Model Accuracy Estimate&quot;) + 
+  theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
+
+plt_irrelevant_accuracies
+</pre></div>
+</div>
+<p>Although the accuracy decreases as expected, one surprising thing about
+Figure &#64;ref(fig:06-performance-irrelevant-features) is that it shows that the method
+still outperforms the baseline majority classifier (with about <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(cancer_propn_1[1,1],</span> <span class="pre">0)</span></code>% accuracy)
+even with 40 irrelevant variables.
+How could that be? Figure &#64;ref(fig:06-neighbors-irrelevant-features) provides the answer:
+the tuning procedure for the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier combats the extra randomness from the irrelevant variables
+by increasing the number of neighbors. Of course, because of all the extra noise in the data from the irrelevant
+variables, the number of neighbors does not increase smoothly; but the general trend is increasing.
+Figure &#64;ref(fig:06-fixed-irrelevant-features) corroborates
+this evidence; if we fix the number of neighbors to <span class="math notranslate nohighlight">\(K=3\)</span>, the accuracy falls off more quickly.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>plt_irrelevant_nghbrs &lt;- ggplot(res) +
+              geom_line(mapping = aes(x=ks, y=nghbrs)) +
+              labs(x = &quot;Number of Irrelevant Predictors&quot;, 
+                   y = &quot;Number of neighbors&quot;) + 
+  theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
+
+plt_irrelevant_nghbrs
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>res_tmp &lt;- res %&gt;% pivot_longer(cols=c(&quot;accs&quot;, &quot;fixedaccs&quot;), 
+                                names_to=&quot;Type&quot;, 
+                                values_to=&quot;accuracy&quot;)
+
+plt_irrelevant_nghbrs &lt;- ggplot(res_tmp) +
+              geom_line(mapping = aes(x=ks, y=accuracy, color=Type)) +
+              labs(x = &quot;Number of Irrelevant Predictors&quot;, y = &quot;Accuracy&quot;) + 
+              scale_color_discrete(labels= c(&quot;Tuned K&quot;, &quot;K = 3&quot;)) + 
+  theme(text = element_text(size = 17), axis.title=element_text(size=17)) 
+
+plt_irrelevant_nghbrs
+</pre></div>
+</div>
+</div>
+<div class="section" id="finding-a-good-subset-of-predictors">
+<h3>Finding a good subset of predictors<a class="headerlink" href="#finding-a-good-subset-of-predictors" title="Permalink to this headline">¶</a></h3>
+<p>So then, if it is not ideal to use all of our variables as predictors without consideration, how
+do we choose which variables we <em>should</em> use?  A simple method is to rely on your scientific understanding
+of the data to tell you which variables are not likely to be useful predictors. For example, in the cancer
+data that we have been studying, the <code class="docutils literal notranslate"><span class="pre">ID</span></code> variable is just a unique identifier for the observation.
+As it is not related to any measured property of the cells, the <code class="docutils literal notranslate"><span class="pre">ID</span></code> variable should therefore not be used
+as a predictor. That is, of course, a very clear-cut case. But the decision for the remaining variables
+is less obvious, as all seem like reasonable candidates. It
+is not clear which subset of them will create the best classifier. One could use visualizations and
+other exploratory analyses to try to help understand which variables are potentially relevant, but
+this process is both time-consuming and error-prone when there are many variables to consider.
+Therefore we need a more systematic and programmatic way of choosing variables.
+This is a very difficult problem to solve in
+general, and there are a number of methods that have been developed that apply
+in particular cases of interest. Here we will discuss two basic
+selection methods as an introduction to the topic. See the additional resources at the end of
+this chapter to find out where you can learn more about variable selection, including more advanced methods.</p>
+<p>The first idea you might think of for a systematic way to select predictors
+is to try all possible subsets of predictors and then pick the set that results in the “best” classifier.
+This procedure is indeed a well-known variable selection method referred to
+as <em>best subset selection</em> [&#64;bealesubset; &#64;hockingsubset]. \index{variable selection!best subset}\index{predictor selection|see{variable selection}}
+In particular, you</p>
+<ol class="simple">
+<li><p>create a separate model for every possible subset of predictors,</p></li>
+<li><p>tune each one using cross-validation, and</p></li>
+<li><p>pick the subset of predictors that gives you the highest cross-validation accuracy.</p></li>
+</ol>
+<p>Best subset selection is applicable to any classification method (<span class="math notranslate nohighlight">\(K\)</span>-NN or otherwise).
+However, it becomes very slow when you have even a moderate
+number of predictors to choose from (say, around 10). This is because the number of possible predictor subsets
+grows very quickly with the number of predictors, and you have to train the model (itself
+a slow process!) for each one. For example, if we have <span class="math notranslate nohighlight">\(2\)</span> predictors—let’s call
+them A and B—then we have 3 variable sets to try: A alone, B alone, and finally A
+and B together. If we have <span class="math notranslate nohighlight">\(3\)</span> predictors—A, B, and C—then we have 7
+to try: A, B, C, AB, BC, AC, and ABC. In general, the number of models
+we have to train for <span class="math notranslate nohighlight">\(m\)</span> predictors is <span class="math notranslate nohighlight">\(2^m-1\)</span>; in other words, when we
+get to <span class="math notranslate nohighlight">\(10\)</span> predictors we have over <em>one thousand</em> models to train, and
+at <span class="math notranslate nohighlight">\(20\)</span> predictors we have over <em>one million</em> models to train!
+So although it is a simple method, best subset selection is usually too computationally
+expensive to use in practice.</p>
+<p>Another idea is to iteratively build up a model by adding one predictor variable
+at a time. This method—known as <em>forward selection</em> [&#64;forwardefroymson; &#64;forwarddraper]—is also widely \index{variable selection!forward}
+applicable and fairly straightforward. It involves the following steps:</p>
+<ol class="simple">
+<li><p>Start with a model having no predictors.</p></li>
+<li><p>Run the following 3 steps until you run out of predictors:</p>
+<ol class="simple">
+<li><p>For each unused predictor, add it to the model to form a <em>candidate model</em>.</p></li>
+<li><p>Tune all of the candidate models.</p></li>
+<li><p>Update the model to be the candidate model with the highest cross-validation accuracy.</p></li>
+</ol>
+</li>
+<li><p>Select the model that provides the best trade-off between accuracy and simplicity.</p></li>
+</ol>
+<p>Say you have <span class="math notranslate nohighlight">\(m\)</span> total predictors to work with. In the first iteration, you have to make
+<span class="math notranslate nohighlight">\(m\)</span> candidate models, each with 1 predictor. Then in the second iteration, you have
+to make <span class="math notranslate nohighlight">\(m-1\)</span> candidate models, each with 2 predictors (the one you chose before and a new one).
+This pattern continues for as many iterations as you want. If you run the method
+all the way until you run out of predictors to choose, you will end up training
+<span class="math notranslate nohighlight">\(\frac{1}{2}m(m+1)\)</span> separate models. This is a <em>big</em> improvement from the <span class="math notranslate nohighlight">\(2^m-1\)</span>
+models that best subset selection requires you to train! For example, while best subset selection requires
+training over 1000 candidate models with <span class="math notranslate nohighlight">\(m=10\)</span> predictors, forward selection requires training only 55 candidate models.
+Therefore we will continue the rest of this section using forward selection.</p>
+<blockquote>
+<div><p><strong>Note:</strong> One word of caution before we move on. Every additional model that you train
+increases the likelihood that you will get unlucky and stumble
+on a model that has a high cross-validation accuracy estimate, but a low true
+accuracy on the test data and other future observations.
+Since forward selection involves training a lot of models, you run a fairly
+high risk of this happening. To keep this risk low, only use forward selection
+when you have a large amount of data and a relatively small total number of
+predictors. More advanced methods do not suffer from this
+problem as much; see the additional resources at the end of this chapter for
+where to learn more about advanced predictor selection methods.</p>
+</div></blockquote>
+</div>
+<div class="section" id="forward-selection-in-r">
+<h3>Forward selection in R<a class="headerlink" href="#forward-selection-in-r" title="Permalink to this headline">¶</a></h3>
+<p>We now turn to implementing forward selection in R.
+Unfortunately there is no built-in way to do this using the <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> framework,
+so we will have to code it ourselves. First we will use the <code class="docutils literal notranslate"><span class="pre">select</span></code> function
+to extract the “total” set of predictors that we are willing to work with.
+Here we will load the modified version of the cancer data with irrelevant
+predictors, and select <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code>, <code class="docutils literal notranslate"><span class="pre">Concavity</span></code>, <code class="docutils literal notranslate"><span class="pre">Perimeter</span></code>, <code class="docutils literal notranslate"><span class="pre">Irrelevant1</span></code>, <code class="docutils literal notranslate"><span class="pre">Irrelevant2</span></code>, and <code class="docutils literal notranslate"><span class="pre">Irrelevant3</span></code>
+as potential predictors, and the <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable as the label.
+We will also extract the column names for the full set of predictor variables.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_subset &lt;- cancer_irrelevant |&gt; 
+  select(Class, 
+         Smoothness, 
+         Concavity, 
+         Perimeter, 
+         Irrelevant1, 
+         Irrelevant2, 
+         Irrelevant3)
+
+names &lt;- colnames(cancer_subset |&gt; select(-Class))
+
+cancer_subset
+</pre></div>
+</div>
+<p>The key idea of the forward selection code is to use the <code class="docutils literal notranslate"><span class="pre">paste</span></code> function (which concatenates strings
+separated by spaces) to create a model formula for each subset of predictors for which we want to build a model.
+The <code class="docutils literal notranslate"><span class="pre">collapse</span></code> argument tells <code class="docutils literal notranslate"><span class="pre">paste</span></code> what to put between the items in the list;
+to make a formula, we need to put a <code class="docutils literal notranslate"><span class="pre">+</span></code> symbol between each variable.
+As an example, let’s make a model formula for all the predictors,
+which should output something like
+<code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">Smoothness</span> <span class="pre">+</span> <span class="pre">Concavity</span> <span class="pre">+</span> <span class="pre">Perimeter</span> <span class="pre">+</span> <span class="pre">Irrelevant1</span> <span class="pre">+</span> <span class="pre">Irrelevant2</span> <span class="pre">+</span> <span class="pre">Irrelevant3</span></code>:</p>
+<p>Finally, we need to write some code that performs the task of sequentially
+finding the best predictor to add to the model.
+If you recall the end of the wrangling chapter, we mentioned
+that sometimes one needs more flexible forms of iteration than what
+we have used earlier, and in these cases one typically resorts to
+a <em>for loop</em>; see <a class="reference external" href="https://r4ds.had.co.nz/iteration.html">the chapter on iteration</a> in <em>R for Data Science</em> [&#64;wickham2016r].
+Here we will use two for loops:
+one over increasing predictor set sizes
+(where you see <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(i</span> <span class="pre">in</span> <span class="pre">1:length(names))</span></code> below),
+and another to check which predictor to add in each round (where you see <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(j</span> <span class="pre">in</span> <span class="pre">1:length(names))</span></code> below).
+For each set of predictors to try, we construct a model formula,
+pass it into a <code class="docutils literal notranslate"><span class="pre">recipe</span></code>, build a <code class="docutils literal notranslate"><span class="pre">workflow</span></code> that tunes
+a <span class="math notranslate nohighlight">\(K\)</span>-NN classifier using 5-fold cross-validation,
+and finally records the estimated accuracy.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed
+set.seed(1)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># create an empty tibble to store the results
+accuracies &lt;- tibble(size = integer(), 
+                     model_string = character(), 
+                     accuracy = numeric())
+
+# create a model specification
+knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, 
+                             neighbors = tune()) |&gt;
+     set_engine(&quot;kknn&quot;) |&gt;
+     set_mode(&quot;classification&quot;)
+
+# create a 5-fold cross-validation object
+cancer_vfold &lt;- vfold_cv(cancer_subset, v = 5, strata = Class)
+
+# store the total number of predictors
+n_total &lt;- length(names)
+
+# stores selected predictors
+selected &lt;- c()
+
+# for every size from 1 to the total number of predictors
+for (i in 1:n_total) {
+    # for every predictor still not added yet
+    accs &lt;- list()
+    models &lt;- list()
+    for (j in 1:length(names)) {
+        # create a model string for this combination of predictors
+        preds_new &lt;- c(selected, names[[j]])
+        model_string &lt;- paste(&quot;Class&quot;, &quot;~&quot;, paste(preds_new, collapse=&quot;+&quot;))
+
+        # create a recipe from the model string
+        cancer_recipe &lt;- recipe(as.formula(model_string), 
+                                data = cancer_subset) |&gt;
+                          step_scale(all_predictors()) |&gt;
+                          step_center(all_predictors())
+
+        # tune the KNN classifier with these predictors, 
+        # and collect the accuracy for the best K
+        acc &lt;- workflow() |&gt;
+          add_recipe(cancer_recipe) |&gt;
+          add_model(knn_spec) |&gt;
+          tune_grid(resamples = cancer_vfold, grid = 10) |&gt;
+          collect_metrics() |&gt;
+          filter(.metric == &quot;accuracy&quot;) |&gt;
+          summarize(mx = max(mean))
+        acc &lt;- acc$mx |&gt; unlist()
+
+        # add this result to the dataframe
+        accs[[j]] &lt;- acc
+        models[[j]] &lt;- model_string
+    }
+    jstar &lt;- which.max(unlist(accs))
+    accuracies &lt;- accuracies |&gt; 
+      add_row(size = i, 
+              model_string = models[[jstar]], 
+              accuracy = accs[[jstar]])
+    selected &lt;- c(selected, names[[jstar]])
+    names &lt;- names[-jstar]
+}
+accuracies
+</pre></div>
+</div>
+<p>Interesting! The forward selection procedure first added the three meaningful variables <code class="docutils literal notranslate"><span class="pre">Perimeter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Concavity</span></code>, and <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code>, followed by the irrelevant variables. Figure &#64;ref(fig:06-fwdsel-3)
+visualizes the accuracy versus the number of predictors in the model. You can see that
+as meaningful predictors are added, the estimated accuracy increases substantially; and as you add irrelevant
+variables, the accuracy either exhibits small fluctuations or decreases as the model attempts to tune the number
+of neighbors to account for the extra noise. In order to pick the right model from the sequence, you have
+to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting). The
+way to find that balance is to look for the <em>elbow</em> \index{variable selection!elbow method}
+in Figure &#64;ref(fig:06-fwdsel-3), i.e., the place on the plot where the accuracy stops increasing dramatically and
+levels off or begins to decrease. The elbow in Figure &#64;ref(fig:06-fwdsel-3) appears to occur at the model with
+3 predictors; after that point the accuracy levels off. So here the right trade-off of accuracy and number of predictors
+occurs with 3 variables: <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">Perimeter</span> <span class="pre">+</span> <span class="pre">Concavity</span> <span class="pre">+</span> <span class="pre">Smoothness</span></code>. In other words, we have successfully removed irrelevant
+predictors from the model! It is always worth remembering, however, that what cross-validation gives you
+is an <em>estimate</em> of the true accuracy; you have to use your judgement when looking at this plot to decide
+where the elbow occurs, and whether adding a variable provides a meaningful increase in accuracy.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>
+fwd_sel_accuracies_plot &lt;- accuracies |&gt;
+  ggplot(aes(x = size, y = accuracy)) +
+  geom_line() +
+  labs(x = &quot;Number of Predictors&quot;, y = &quot;Estimated Accuracy&quot;)  +
+  theme(text = element_text(size = 20), axis.title=element_text(size=20)) 
+
+fwd_sel_accuracies_plot
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Note:</strong> Since the choice of which variables to include as predictors is
+part of tuning your classifier, you <em>cannot use your test data</em> for this
+process!</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<p>Practice exercises for the material covered in this chapter
+can be found in the accompanying
+<a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
+in the “Classification II: evaluation and tuning” row.
+You can launch an interactive version of the worksheet in your browser by clicking the “launch binder” button.
+You can also preview a non-interactive version of the worksheet by clicking “view worksheet.”
+If you instead decide to download the worksheet and run it on your own machine,
+make sure to follow the instructions for computer setup
+found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
+and guidance that the worksheets provide will function as intended.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://tidymodels.org/packages"><code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> website</a> is an excellent
+reference for more details on, and advanced usage of, the functions and
+packages in the past two chapters. Aside from that, it also has a <a class="reference external" href="https://www.tidymodels.org/start/">nice
+beginner’s tutorial</a> and <a class="reference external" href="https://www.tidymodels.org/learn/">an extensive list
+of more advanced examples</a> that you can use
+to continue learning beyond the scope of this book. It’s worth noting that the
+<code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> package does a lot more than just classification, and so the
+examples on the website similarly go beyond classification as well. In the next
+two chapters, you’ll learn about another kind of predictive modeling setting,
+so it might be worth visiting the website only after reading through those
+chapters.</p></li>
+<li><p><em>An Introduction to Statistical Learning</em> [&#64;james2013introduction] provides
+a great next stop in the process of
+learning about classification. Chapter 4 discusses additional basic techniques
+for classification that we do not cover, such as logistic regression, linear
+discriminant analysis, and naive Bayes. Chapter 5 goes into much more detail
+about cross-validation. Chapters 8 and 9 cover decision trees and support
+vector machines, two very popular but more advanced classification methods.
+Finally, Chapter 6 covers a number of methods for selecting predictor
+variables. Note that while this book is still a very accessible introductory
+text, it requires a bit more mathematical background than we require.</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="classification1.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Classification I: training &amp; predicting {#classification}</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="regression1.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Regression I: K-nearest neighbors {#regression1}</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By The Jupyter Book Community<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

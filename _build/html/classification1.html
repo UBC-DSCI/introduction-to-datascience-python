@@ -1,0 +1,1925 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classification I: training &amp; predicting {#classification} &#8212; My sample book</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Classification II: evaluation &amp; tuning {#classification2}" href="classification2.html" />
+    <link rel="prev" title="Collaboration with version control {#Getting-started-with-version-control}" href="version-control.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">My sample book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   R and the Tidyverse {#intro}
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="foreword-text.html">
+   Foreword {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="preface-text.html">
+   Preface {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="setup.html">
+   Setting up your computer {#move-to-your-own-machine}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="reading.html">
+   Reading in data locally and from the web {#reading}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="wrangling.html">
+   Cleaning and wrangling data {#wrangling}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="viz.html">
+   Effective data visualization {#viz}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="version-control.html">
+   Collaboration with version control {#Getting-started-with-version-control}
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Classification I: training &amp; predicting {#classification}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="classification2.html">
+   Classification II: evaluation &amp; tuning {#classification2}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression1.html">
+   Regression I: K-nearest neighbors {#regression1}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression2.html">
+   Regression II: linear regression {#regression2}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="clustering.html">
+   Clustering {#clustering}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="inference.html">
+   Statistical inference {#inference}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="acknowledgements.html">
+   Acknowledgments {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="authors.html">
+   About the authors {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixA.html">
+   (APPENDIX) Appendix {-}
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/classification1.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fclassification1.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview">
+   Overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chapter-learning-objectives">
+   Chapter learning objectives
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-classification-problem">
+   The classification problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exploring-a-data-set">
+   Exploring a data set
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loading-the-cancer-data">
+     Loading the cancer data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#describing-the-variables-in-the-cancer-data-set">
+     Describing the variables in the cancer data set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exploring-the-cancer-data">
+     Exploring the cancer data
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#classification-with-k-nearest-neighbors">
+   Classification with
+   <span class="math notranslate nohighlight">
+    \(K\)
+   </span>
+   -nearest neighbors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-between-points">
+     Distance between points
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#more-than-two-explanatory-variables">
+     More than two explanatory variables
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary-of-k-nearest-neighbors-algorithm">
+     Summary of
+     <span class="math notranslate nohighlight">
+      \(K\)
+     </span>
+     -nearest neighbors algorithm
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-nearest-neighbors-with-tidymodels">
+   <span class="math notranslate nohighlight">
+    \(K\)
+   </span>
+   -nearest neighbors with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-preprocessing-with-tidymodels">
+   Data preprocessing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#centering-and-scaling">
+     Centering and scaling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#balancing">
+     Balancing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#putting-it-together-in-a-workflow-puttingittogetherworkflow">
+   Putting it together in a
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     workflow
+    </span>
+   </code>
+   {#puttingittogetherworkflow}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercises">
+   Exercises
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Classification I: training & predicting {#classification}</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview">
+   Overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chapter-learning-objectives">
+   Chapter learning objectives
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-classification-problem">
+   The classification problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exploring-a-data-set">
+   Exploring a data set
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loading-the-cancer-data">
+     Loading the cancer data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#describing-the-variables-in-the-cancer-data-set">
+     Describing the variables in the cancer data set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exploring-the-cancer-data">
+     Exploring the cancer data
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#classification-with-k-nearest-neighbors">
+   Classification with
+   <span class="math notranslate nohighlight">
+    \(K\)
+   </span>
+   -nearest neighbors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-between-points">
+     Distance between points
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#more-than-two-explanatory-variables">
+     More than two explanatory variables
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary-of-k-nearest-neighbors-algorithm">
+     Summary of
+     <span class="math notranslate nohighlight">
+      \(K\)
+     </span>
+     -nearest neighbors algorithm
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-nearest-neighbors-with-tidymodels">
+   <span class="math notranslate nohighlight">
+    \(K\)
+   </span>
+   -nearest neighbors with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-preprocessing-with-tidymodels">
+   Data preprocessing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     tidymodels
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#centering-and-scaling">
+     Centering and scaling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#balancing">
+     Balancing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#putting-it-together-in-a-workflow-puttingittogetherworkflow">
+   Putting it together in a
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     workflow
+    </span>
+   </code>
+   {#puttingittogetherworkflow}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercises">
+   Exercises
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="classification-i-training-predicting-classification">
+<h1>Classification I: training &amp; predicting {#classification}<a class="headerlink" href="#classification-i-training-predicting-classification" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(formatR)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(ggpubr)
+library(stringr)
+library(ggplot2)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      fig.align = &quot;center&quot;)
+options(knitr.table.format = function() {
+  if (knitr::is_latex_output()) &#39;latex&#39; else &#39;pandoc&#39;
+})
+reticulate::use_miniconda(&#39;r-reticulate&#39;)
+
+print_tidymodels &lt;- function(tidymodels_object) {
+  if(!is_latex_output()) {
+    tidymodels_object
+  } else {
+    output &lt;- capture.output(tidymodels_object)
+    
+    for (i in seq_along(output)) {
+      if (nchar(output[i]) &lt;= 80) {
+        cat(output[i], sep = &quot;\n&quot;)
+      } else {
+        cat(str_sub(output[i], start = 1, end = 80), sep = &quot;\n&quot;)
+        cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = &quot;\n&quot;)
+      }
+    }
+  }
+}
+
+theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
+</pre></div>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>In previous chapters, we focused solely on descriptive and exploratory
+data analysis questions.
+This chapter and the next together serve as our first
+foray into answering <em>predictive</em> questions about data. In particular, we will
+focus on <em>classification</em>, i.e., using one or more
+variables to predict the value of a categorical variable of interest. This chapter
+will cover the basics of classification, how to preprocess data to make it
+suitable for use in a classifier, and how to use our observed data to make
+predictions. The next chapter will focus on how to evaluate how accurate the
+predictions from our classifier are, as well as how to improve our classifier
+(where possible) to maximize its accuracy.</p>
+</div>
+<div class="section" id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul class="simple">
+<li><p>Recognize situations where a classifier would be appropriate for making predictions.</p></li>
+<li><p>Describe what a training data set is and how it is used in classification.</p></li>
+<li><p>Interpret the output of a classifier.</p></li>
+<li><p>Compute, by hand, the straight-line (Euclidean) distance between points on a graph when there are two predictor variables.</p></li>
+<li><p>Explain the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification algorithm.</p></li>
+<li><p>Perform <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification in R using <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>.</p></li>
+<li><p>Use a <code class="docutils literal notranslate"><span class="pre">recipe</span></code> to preprocess data to be centered, scaled, and balanced.</p></li>
+<li><p>Combine preprocessing and model training using a <code class="docutils literal notranslate"><span class="pre">workflow</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="the-classification-problem">
+<h2>The classification problem<a class="headerlink" href="#the-classification-problem" title="Permalink to this headline">¶</a></h2>
+<p>In many situations, we want to make predictions \index{predictive question} based on the current situation
+as well as past experiences. For instance, a doctor may want to diagnose a
+patient as either diseased or healthy based on their symptoms and the doctor’s
+past experience with patients; an email provider might want to tag a given
+email as “spam” or “not spam” based on the email’s text and past email text data;
+or a credit card company may want to predict whether a purchase is fraudulent based
+on the current purchase item, amount, and location as well as past purchases.
+These tasks are all examples of \index{classification} <strong>classification</strong>, i.e., predicting a
+categorical class (sometimes called a <em>label</em>) \index{class}\index{categorical variable} for an observation given its
+other variables (sometimes called <em>features</em>). \index{feature|see{predictor}}</p>
+<p>Generally, a classifier assigns an observation without a known class (e.g., a new patient)
+to a class (e.g., diseased or healthy) on the basis of how similar it is to other observations
+for which we do know the class (e.g., previous patients with known diseases and
+symptoms). These observations with known classes that we use as a basis for
+prediction are called a <strong>training set</strong>; \index{training set} this name comes from the fact that
+we use these data to train, or teach, our classifier. Once taught, we can use
+the classifier to make predictions on new data for which we do not know the class.</p>
+<p>There are many possible methods that we could use to predict
+a categorical class/label for an observation. In this book, we will
+focus on the widely used <strong><span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors</strong> \index{K-nearest neighbors} algorithm [&#64;knnfix; &#64;knncover].
+In your future studies, you might encounter decision trees, support vector machines (SVMs),
+logistic regression, neural networks, and more; see the additional resources
+section at the end of the next chapter for where to begin learning more about
+these other methods. It is also worth mentioning that there are many
+variations on the basic classification problem. For example,
+we focus on the setting of <strong>binary classification</strong> \index{classification!binary} where only two
+classes are involved (e.g., a diagnosis of either healthy or diseased), but you may
+also run into multiclass classification problems with more than two
+categories (e.g., a diagnosis of healthy, bronchitis, pneumonia, or a common cold).</p>
+</div>
+<div class="section" id="exploring-a-data-set">
+<h2>Exploring a data set<a class="headerlink" href="#exploring-a-data-set" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter and the next, we will study a data set of
+<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29">digitized breast cancer image features</a>,
+created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian [&#64;streetbreastcancer]. \index{breast cancer}
+Each row in the data set represents an
+image of a tumor sample, including the diagnosis (benign or malignant) and
+several other measurements (nucleus texture, perimeter, area, and more).
+Diagnosis for each image was conducted by physicians.</p>
+<p>As with all data analyses, we first need to formulate a precise question that
+we want to answer. Here, the question is <em>predictive</em>: \index{question!classification} can
+we use the tumor
+image measurements available to us to predict whether a future tumor image
+(with unknown diagnosis) shows a benign or malignant tumor? Answering this
+question is important because traditional, non-data-driven methods for tumor
+diagnosis are quite subjective and dependent upon how skilled and experienced
+the diagnosing physician is. Furthermore, benign tumors are not normally
+dangerous; the cells stay in the same place, and the tumor stops growing before
+it gets very large. By contrast, in malignant tumors, the cells invade the
+surrounding tissue and spread into nearby organs, where they can cause serious
+damage [&#64;stanfordhealthcare].
+Thus, it is important to quickly and accurately diagnose the tumor type to
+guide patient treatment.</p>
+<div class="section" id="loading-the-cancer-data">
+<h3>Loading the cancer data<a class="headerlink" href="#loading-the-cancer-data" title="Permalink to this headline">¶</a></h3>
+<p>Our first step is to load, wrangle, and explore the data using visualizations
+in order to better understand the data we are working with. We start by
+loading the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> package needed for our analysis.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(tidyverse)
+</pre></div>
+</div>
+<p>In this case, the file containing the breast cancer data set is a <code class="docutils literal notranslate"><span class="pre">.csv</span></code>
+file with headers. We’ll use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function with no additional
+arguments, and then inspect its contents:</p>
+<p>\index{read function!read_csv}</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer &lt;- read_csv(&quot;data/wdbc.csv&quot;)
+cancer
+</pre></div>
+</div>
+</div>
+<div class="section" id="describing-the-variables-in-the-cancer-data-set">
+<h3>Describing the variables in the cancer data set<a class="headerlink" href="#describing-the-variables-in-the-cancer-data-set" title="Permalink to this headline">¶</a></h3>
+<p>Breast tumors can be diagnosed by performing a <em>biopsy</em>, a process where
+tissue is removed from the body and examined for the presence of disease.
+Traditionally these procedures were quite invasive; modern methods such as fine
+needle aspiration, used to collect the present data set, extract only a small
+amount of tissue and are less invasive. Based on a digital image of each breast
+tissue sample collected for this data set, ten different variables were measured
+for each cell nucleus in the image (items 3–12 of the list of variables below), and then the mean
+for each variable across the nuclei was recorded. As part of the
+data preparation, these values have been <em>standardized (centered and scaled)</em>; we will discuss what this
+means and why we do it later in this chapter. Each image additionally was given
+a unique ID and a diagnosis by a physician.  Therefore, the
+total set of variables per image in this data set is:</p>
+<ol class="simple">
+<li><p>ID: identification number</p></li>
+<li><p>Class: the diagnosis (M = malignant or B = benign)</p></li>
+<li><p>Radius: the mean of distances from center to points on the perimeter</p></li>
+<li><p>Texture: the standard deviation of gray-scale values</p></li>
+<li><p>Perimeter: the length of the surrounding contour</p></li>
+<li><p>Area: the area inside the contour</p></li>
+<li><p>Smoothness: the local variation in radius lengths</p></li>
+<li><p>Compactness: the ratio of squared perimeter and area</p></li>
+<li><p>Concavity: severity of concave portions of the contour</p></li>
+<li><p>Concave Points: the number of concave portions of the contour</p></li>
+<li><p>Symmetry: how similar the nucleus is when mirrored</p></li>
+<li><p>Fractal Dimension: a measurement of how “rough” the perimeter is</p></li>
+</ol>
+<p>Below we use <code class="docutils literal notranslate"><span class="pre">glimpse</span></code> \index{glimpse} to preview the data frame. This function can
+make it easier to inspect the data when we have a lot of columns,
+as it prints the data such that the columns go down
+the page (instead of across).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>glimpse(cancer)
+</pre></div>
+</div>
+<p>From the summary of the data above, we can see that <code class="docutils literal notranslate"><span class="pre">Class</span></code> is of type character
+(denoted by <code class="docutils literal notranslate"><span class="pre">&lt;chr&gt;</span></code>). Since we will be working with <code class="docutils literal notranslate"><span class="pre">Class</span></code> as a
+categorical statistical variable, we will convert it to a factor using the
+function <code class="docutils literal notranslate"><span class="pre">as_factor</span></code>. \index{factor!as_factor}</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer &lt;- cancer |&gt;
+  mutate(Class = as_factor(Class))
+glimpse(cancer)
+</pre></div>
+</div>
+<p>Recall that factors have what are called “levels”, which you can think of as categories. We
+can verify the levels of the <code class="docutils literal notranslate"><span class="pre">Class</span></code> column by using the <code class="docutils literal notranslate"><span class="pre">levels</span></code> \index{levels}\index{factor!levels} function.
+This function should return the name of each category in that column. Given
+that we only have two different values in our <code class="docutils literal notranslate"><span class="pre">Class</span></code> column (B for benign and M
+for malignant), we only expect to get two names back.  Note that the <code class="docutils literal notranslate"><span class="pre">levels</span></code> function requires a <em>vector</em> argument;
+so we use the <code class="docutils literal notranslate"><span class="pre">pull</span></code> function to extract a single column (<code class="docutils literal notranslate"><span class="pre">Class</span></code>) and
+pass that into the <code class="docutils literal notranslate"><span class="pre">levels</span></code> function to see the categories
+in the <code class="docutils literal notranslate"><span class="pre">Class</span></code> column.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer |&gt;
+  pull(Class) |&gt;
+  levels()
+</pre></div>
+</div>
+</div>
+<div class="section" id="exploring-the-cancer-data">
+<h3>Exploring the cancer data<a class="headerlink" href="#exploring-the-cancer-data" title="Permalink to this headline">¶</a></h3>
+<p>Before we start doing any modeling, let’s explore our data set. Below we use
+the <code class="docutils literal notranslate"><span class="pre">group_by</span></code>, <code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">n</span></code> \index{group_by}\index{summarize} functions to find the number and percentage
+of benign and malignant tumor observations in our data set. The <code class="docutils literal notranslate"><span class="pre">n</span></code> function within
+<code class="docutils literal notranslate"><span class="pre">summarize</span></code>, when paired with <code class="docutils literal notranslate"><span class="pre">group_by</span></code>, counts the number of observations in each <code class="docutils literal notranslate"><span class="pre">Class</span></code> group.
+Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63%) benign and 212 (37%) malignant tumor observations.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>num_obs &lt;- nrow(cancer)
+cancer |&gt;
+  group_by(Class) |&gt;
+  summarize(
+    count = n(),
+    percentage = n() / num_obs * 100
+  )
+</pre></div>
+</div>
+<p>Next, let’s draw a scatter plot \index{visualization!scatter} to visualize the relationship between the
+perimeter and concavity variables. Rather than use <code class="docutils literal notranslate"><span class="pre">ggplot's</span></code> default palette,
+we select our own colorblind-friendly colors—<code class="docutils literal notranslate"><span class="pre">&quot;orange2&quot;</span></code>
+for light orange and <code class="docutils literal notranslate"><span class="pre">&quot;steelblue2&quot;</span></code> for light blue—and
+pass them as the <code class="docutils literal notranslate"><span class="pre">values</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">scale_color_manual</span></code> function.
+We also make the category labels (“B” and “M”) more readable by
+changing them to “Benign” and “Malignant” using the <code class="docutils literal notranslate"><span class="pre">labels</span></code> argument.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav &lt;- cancer |&gt;
+  ggplot(aes(x = Perimeter, y = Concavity, color = Class)) +
+  geom_point(alpha = 0.6) +
+  labs(x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;,
+       color = &quot;Diagnosis&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;)) +
+  theme(text = element_text(size = 12))
+perim_concav
+</pre></div>
+</div>
+<p>In Figure &#64;ref(fig:05-scatter), we can see that malignant observations typically fall in
+the upper right-hand corner of the plot area. By contrast, benign
+observations typically fall in the lower left-hand corner of the plot. In other words,
+benign observations tend to have lower concavity and perimeter values, and malignant
+ones tend to have larger values. Suppose we
+obtain a new observation not in the current data set that has all the variables
+measured <em>except</em> the label (i.e., an image without the physician’s diagnosis
+for the tumor class). We could compute the standardized perimeter and concavity values,
+resulting in values of, say, 1 and 1. Could we use this information to classify
+that observation as benign or malignant? Based on the scatter plot, how might
+you classify that new observation? If the standardized concavity and perimeter
+values are 1 and 1 respectively, the point would lie in the middle of the
+orange cloud of malignant points and thus we could probably classify it as
+malignant. Based on our visualization, it seems like
+the <em>prediction of an unobserved label</em> might be possible.</p>
+</div>
+</div>
+<div class="section" id="classification-with-k-nearest-neighbors">
+<h2>Classification with <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors<a class="headerlink" href="#classification-with-k-nearest-neighbors" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>## Find the distance between new point and all others in data set
+euclidDist &lt;- function(point1, point2) {
+  # Returns the Euclidean distance between point1 and point2.
+  # Each argument is an array containing the coordinates of a point.&quot;&quot;&quot;
+  (sqrt(sum((point1 - point2)^2)))
+}
+distance_from_point &lt;- function(row) {
+  euclidDist(new_point, row)
+}
+all_distances &lt;- function(training, new_point) {
+  # Returns an array of distances
+  # between each point in the training set
+  # and the new point (which is a row of attributes)
+  distance_from_point &lt;- function(row) {
+    euclidDist(new_point, row)
+  }
+  apply(training, MARGIN = 1, distance_from_point)
+}
+table_with_distances &lt;- function(training, new_point) {
+  # Augments the training table
+  # with a column of distances from new_point
+  data.frame(training, Distance = all_distances(training, new_point))
+}
+new_point &lt;- c(2, 4)
+attrs &lt;- c(&quot;Perimeter&quot;, &quot;Concavity&quot;)
+my_distances &lt;- table_with_distances(cancer[, attrs], new_point)
+neighbors &lt;- cancer[order(my_distances$Distance), ]
+</pre></div>
+</div>
+<p>In order to actually make predictions for new observations in practice, we
+will need a classification algorithm.
+In this book, we will use the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors \index{K-nearest neighbors!classification} classification algorithm.
+To predict the label of a new observation (here, classify it as either benign
+or malignant), the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classifier generally finds the <span class="math notranslate nohighlight">\(K\)</span>
+“nearest” or “most similar” observations in our training set, and then uses
+their diagnoses to make a prediction for the new observation’s diagnosis. <span class="math notranslate nohighlight">\(K\)</span>
+is a number that we must choose in advance; for now, we will assume that someone has chosen
+<span class="math notranslate nohighlight">\(K\)</span> for us. We will cover how to choose <span class="math notranslate nohighlight">\(K\)</span> ourselves in the next chapter.</p>
+<p>To illustrate the concept of <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification, we
+will walk through an example.  Suppose we have a
+new observation, with standardized perimeter of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[1]</span></code> and standardized concavity of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[2]</span></code>, whose
+diagnosis “Class” is unknown. This new observation is depicted by the red, diamond point in
+Figure &#64;ref(fig:05-knn-1).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav_with_new_point &lt;-  bind_rows(cancer, 
+                                          tibble(Perimeter = new_point[1], 
+                                                 Concavity = new_point[2], 
+                                                 Class = &quot;unknown&quot;)) |&gt;
+  ggplot(aes(x = Perimeter, 
+             y = Concavity, 
+             color = Class, 
+             shape = Class, 
+             size = Class)) +
+  geom_point(alpha = 0.6) +
+  labs(color = &quot;Diagnosis&quot;, x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;) +
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18))+ 
+  scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(2, 2, 2.5))
+perim_concav_with_new_point
+</pre></div>
+</div>
+<p>Figure &#64;ref(fig:05-knn-2) shows that the nearest point to this new observation is <strong>malignant</strong> and
+located at the coordinates (<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(neighbors[1,</span> <span class="pre">c(attrs[1],</span> <span class="pre">attrs[2])],</span> <span class="pre">1)</span></code>). The idea here is that if a point is close to another in the scatter plot,
+then the perimeter and concavity values are similar, and so we may expect that
+they would have the same diagnosis.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav_with_new_point +
+  geom_segment(aes(
+    x = new_point[1],
+    y = new_point[2],
+    xend = pull(neighbors[1, attrs[1]]),
+    yend = pull(neighbors[1, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_point &lt;- c(0.2, 3.3)
+attrs &lt;- c(&quot;Perimeter&quot;, &quot;Concavity&quot;)
+my_distances &lt;- table_with_distances(cancer[, attrs], new_point)
+neighbors &lt;- cancer[order(my_distances$Distance), ]
+</pre></div>
+</div>
+<p>Suppose we have another new observation with standardized perimeter <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[1]</span></code> and
+concavity of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[2]</span></code>. Looking at the scatter plot in Figure &#64;ref(fig:05-knn-4), how would you
+classify this red, diamond observation? The nearest neighbor to this new point is a
+<strong>benign</strong> observation at (<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">round(neighbors[1,</span> <span class="pre">c(attrs[1],</span> <span class="pre">attrs[2])],</span> <span class="pre">1)</span></code>).
+Does this seem like the right prediction to make for this observation? Probably
+not, if you consider the other nearby points.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>
+perim_concav_with_new_point2 &lt;- bind_rows(cancer, 
+                                          tibble(Perimeter = new_point[1], 
+                                                 Concavity = new_point[2], 
+                                                 Class = &quot;unknown&quot;)) |&gt;
+  ggplot(aes(x = Perimeter, 
+             y = Concavity, 
+             color = Class, 
+             shape = Class, size = Class)) +
+  geom_point(alpha = 0.6) +
+  labs(color = &quot;Diagnosis&quot;, 
+       x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;) +
+ scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18))+ 
+  scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(2, 2, 2.5))
+perim_concav_with_new_point2 +  
+  geom_segment(aes(
+    x = new_point[1],
+    y = new_point[2],
+    xend = pull(neighbors[1, attrs[1]]),
+    yend = pull(neighbors[1, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5)
+</pre></div>
+</div>
+<p>To improve the prediction we can consider several
+neighboring points, say <span class="math notranslate nohighlight">\(K = 3\)</span>, that are closest to the new observation
+to predict its diagnosis class. Among those 3 closest points, we use the
+<em>majority class</em> as our prediction for the new observation. As shown in Figure &#64;ref(fig:05-knn-5), we
+see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
+are malignant. Therefore we take majority vote and classify our new red, diamond
+observation as malignant.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav_with_new_point2 + 
+  geom_segment(aes(
+    x = new_point[1], y = new_point[2],
+    xend = pull(neighbors[1, attrs[1]]),
+    yend = pull(neighbors[1, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = new_point[1], y = new_point[2],
+    xend = pull(neighbors[2, attrs[1]]),
+    yend = pull(neighbors[2, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = new_point[1], y = new_point[2],
+    xend = pull(neighbors[3, attrs[1]]),
+    yend = pull(neighbors[3, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5)
+</pre></div>
+</div>
+<p>Here we chose the <span class="math notranslate nohighlight">\(K=3\)</span> nearest observations, but there is nothing special
+about <span class="math notranslate nohighlight">\(K=3\)</span>. We could have used <span class="math notranslate nohighlight">\(K=4, 5\)</span> or more (though we may want to choose
+an odd number to avoid ties). We will discuss more about choosing <span class="math notranslate nohighlight">\(K\)</span> in the
+next chapter.</p>
+<div class="section" id="distance-between-points">
+<h3>Distance between points<a class="headerlink" href="#distance-between-points" title="Permalink to this headline">¶</a></h3>
+<p>We decide which points are the <span class="math notranslate nohighlight">\(K\)</span> “nearest” to our new observation
+using the <em>straight-line distance</em> (we will often just refer to this as <em>distance</em>). \index{distance!K-nearest neighbors}\index{straight line!distance}
+Suppose we have two observations <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, each having two predictor variables, <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.
+Denote <span class="math notranslate nohighlight">\(a_x\)</span> and <span class="math notranslate nohighlight">\(a_y\)</span> to be the values of variables <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> for observation <span class="math notranslate nohighlight">\(a\)</span>;
+<span class="math notranslate nohighlight">\(b_x\)</span> and <span class="math notranslate nohighlight">\(b_y\)</span> have similar definitions for observation <span class="math notranslate nohighlight">\(b\)</span>.
+Then the straight-line distance between observation <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> on the x-y plane can
+be computed using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{Distance} = \sqrt{(a_x -b_x)^2 + (a_y - b_y)^2}\]</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_point &lt;- c(0, 3.5)
+</pre></div>
+</div>
+<p>To find the <span class="math notranslate nohighlight">\(K\)</span> nearest neighbors to our new observation, we compute the distance
+from that new observation to each observation in our training data, and select the <span class="math notranslate nohighlight">\(K\)</span> observations corresponding to the
+<span class="math notranslate nohighlight">\(K\)</span> <em>smallest</em> distance values. For example, suppose we want to use <span class="math notranslate nohighlight">\(K=5\)</span> neighbors to classify a new
+observation with perimeter of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[1]</span></code> and
+concavity of <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">new_point[2]</span></code>, shown as a red diamond in Figure &#64;ref(fig:05-multiknn-1). Let’s calculate the distances
+between our new point and each of the observations in the training set to find
+the <span class="math notranslate nohighlight">\(K=5\)</span> neighbors that are nearest to our new point.
+You will see in the <code class="docutils literal notranslate"><span class="pre">mutate</span></code> \index{mutate} step below, we compute the straight-line
+distance using the formula above: we square the differences between the two observations’ perimeter
+and concavity coordinates, add the squared differences, and then take the square root.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav &lt;- bind_rows(cancer, 
+                          tibble(Perimeter = new_point[1], 
+                                 Concavity = new_point[2], 
+                                 Class = &quot;unknown&quot;)) |&gt;
+  ggplot(aes(x = Perimeter, 
+             y = Concavity, 
+             color = Class, 
+             shape = Class, 
+             size = Class)) +
+  geom_point(aes(x = new_point[1], 
+                 y = new_point[2]), 
+             color = &quot;red&quot;, 
+             size = 2.5, 
+             pch = 18) + 
+  geom_point(alpha = 0.5) +
+  scale_x_continuous(name = &quot;Perimeter (standardized)&quot;, 
+                     breaks = seq(-2, 4, 1)) +
+  scale_y_continuous(name = &quot;Concavity (standardized)&quot;, 
+                     breaks = seq(-2, 4, 1)) +
+  labs(color = &quot;Diagnosis&quot;) + 
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18))+ 
+  scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(2, 2, 2.5))
+
+perim_concav
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_obs_Perimeter &lt;- 0
+new_obs_Concavity &lt;- 3.5
+cancer |&gt;
+  select(ID, Perimeter, Concavity, Class) |&gt;
+  mutate(dist_from_new = sqrt((Perimeter - new_obs_Perimeter)^2 + 
+                              (Concavity - new_obs_Concavity)^2)) |&gt;
+  arrange(dist_from_new) |&gt;
+  slice(1:5) # take the first 5 rows
+</pre></div>
+</div>
+<p>In Table &#64;ref(tab:05-multiknn-mathtable) we show in mathematical detail how
+the <code class="docutils literal notranslate"><span class="pre">mutate</span></code> step was used to compute the <code class="docutils literal notranslate"><span class="pre">dist_from_new</span></code> variable (the
+distance to the new observation) for each of the 5 nearest neighbors in the
+training data.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>my_distances &lt;- table_with_distances(cancer[, attrs], new_point)
+neighbors &lt;- my_distances[order(my_distances$Distance), ]
+k &lt;- 5
+tab &lt;- data.frame(neighbors[1:k, ], 
+                  cancer[order(my_distances$Distance), ][1:k, c(&quot;ID&quot;, &quot;Class&quot;)])
+
+
+math_table &lt;- tibble(Perimeter = round(tab[1:5,1],2), 
+                     Concavity = round(tab[1:5,2],2), 
+                          dist = round(neighbors[1:5, &quot;Distance&quot;], 2)
+                    )
+math_table &lt;- math_table |&gt; 
+                    mutate(Distance = paste0(&quot;$\\sqrt{(&quot;, new_obs_Perimeter, &quot; - &quot;, ifelse(Perimeter &lt; 0, &quot;(&quot;, &quot;&quot;), Perimeter, ifelse(Perimeter &lt; 0,&quot;)&quot;,&quot;&quot;), &quot;)^2&quot;,
+                                             &quot; + &quot;,
+                                             &quot;(&quot;, new_obs_Concavity, &quot; - &quot;, ifelse(Concavity &lt; 0,&quot;(&quot;,&quot;&quot;), Concavity, ifelse(Concavity &lt; 0,&quot;)&quot;,&quot;&quot;), &quot;)^2} = &quot;, dist, &quot;$&quot;)) |&gt;
+                    select(-dist) |&gt;
+                    mutate(Class= tab[1:5, &quot;Class&quot;])
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>kable(math_table, booktabs = TRUE, 
+      caption = &quot;Evaluating the distances from the new observation to each of its 5 nearest neighbors&quot;, 
+      escape = FALSE) |&gt;
+  kable_styling(latex_options = &quot;hold_position&quot;)
+</pre></div>
+</div>
+<p>The result of this computation shows that 3 of the 5 nearest neighbors to our new observation are
+malignant (<code class="docutils literal notranslate"><span class="pre">M</span></code>); since this is the majority, we classify our new observation as malignant.
+These 5 neighbors are circled in Figure &#64;ref(fig:05-multiknn-3).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>perim_concav + annotate(&quot;path&quot;,
+  x = new_point[1] + 1.4 * cos(seq(0, 2 * pi,
+    length.out = 100
+  )),
+  y = new_point[2] + 1.4 * sin(seq(0, 2 * pi,
+    length.out = 100
+  ))
+)
+</pre></div>
+</div>
+</div>
+<div class="section" id="more-than-two-explanatory-variables">
+<h3>More than two explanatory variables<a class="headerlink" href="#more-than-two-explanatory-variables" title="Permalink to this headline">¶</a></h3>
+<p>Although the above description is directed toward two predictor variables,
+exactly the same <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm applies when you
+have a higher number of predictor variables.  Each predictor variable may give us new
+information to help create our classifier.  The only difference is the formula
+for the distance between points. Suppose we have <span class="math notranslate nohighlight">\(m\)</span> predictor
+variables for two observations <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, i.e.,
+<span class="math notranslate nohighlight">\(a = (a_{1}, a_{2}, \dots, a_{m})\)</span> and
+<span class="math notranslate nohighlight">\(b = (b_{1}, b_{2}, \dots, b_{m})\)</span>.</p>
+<p>The distance formula becomes \index{distance!more than two variables}</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{Distance} = \sqrt{(a_{1} -b_{1})^2 + (a_{2} - b_{2})^2 + \dots + (a_{m} - b_{m})^2}.\]</div>
+<p>This formula still corresponds to a straight-line distance, just in a space
+with more dimensions. Suppose we want to calculate the distance between a new
+observation with a perimeter of 0, concavity of 3.5, and symmetry of 1, and
+another observation with a perimeter, concavity, and symmetry of 0.417, 2.31, and
+0.837 respectively. We have two observations with three predictor variables:
+perimeter, concavity, and symmetry. Previously, when we had two variables, we
+added up the squared difference between each of our (two) variables, and then
+took the square root. Now we will do the same, except for our three variables.
+We calculate the distance as follows</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{Distance} =\sqrt{(0 - 0.417)^2 + (3.5 - 2.31)^2 + (1 - 0.837)^2} = 1.27.\]</div>
+<p>Let’s calculate the distances between our new observation and each of the
+observations in the training set to find the <span class="math notranslate nohighlight">\(K=5\)</span> neighbors when we have these
+three predictors.</p>
+<p>Based on <span class="math notranslate nohighlight">\(K=5\)</span> nearest neighbors with these three predictors we would classify the new observation as malignant since 4 out of 5 of the nearest neighbors are malignant class.
+Figure &#64;ref(fig:05-more) shows what the data look like when we visualize them
+as a 3-dimensional scatter with lines from the new observation to its five nearest neighbors.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>attrs &lt;- c(&quot;Perimeter&quot;, &quot;Concavity&quot;, &quot;Symmetry&quot;)
+
+# create new scaled obs and get NNs
+new_obs_3 &lt;- tibble(Perimeter = 0, 
+                    Concavity = 3.5, 
+                    Symmetry = 1, 
+                    Class = &quot;Unknown&quot;)
+my_distances_3 &lt;- table_with_distances(cancer[, attrs], 
+                                       new_obs_3[, attrs])
+neighbors_3 &lt;- cancer[order(my_distances_3$Distance), ]
+
+data &lt;- neighbors_3 |&gt; select(Perimeter, Concavity, Symmetry) |&gt; slice(1:5)
+
+# add to the df
+scaled_cancer_3 &lt;- bind_rows(cancer, new_obs_3) |&gt; 
+  mutate(Class = fct_recode(Class, &quot;Benign&quot; = &quot;B&quot;, &quot;Malignant&quot;= &quot;M&quot;))
+
+plot_3d &lt;- scaled_cancer_3 |&gt;
+  plot_ly() |&gt;
+  layout(scene = list(
+    xaxis = list(title = &quot;Perimeter&quot;, titlefont = list(size = 14)),
+    yaxis = list(title = &quot;Concavity&quot;, titlefont = list(size = 14)),
+    zaxis = list(title = &quot;Symmetry&quot;, titlefont = list(size = 14))
+  )) |&gt; 
+  add_trace(x = ~Perimeter,
+            y = ~Concavity,
+            z = ~Symmetry,
+            color = ~Class,
+            opacity = 0.4,
+            size = 2,
+            colors = c(&quot;orange2&quot;, &quot;steelblue2&quot;, &quot;red&quot;), 
+            symbol = ~Class, symbols = c(&#39;circle&#39;,&#39;circle&#39;,&#39;diamond&#39;))
+
+x1 &lt;- c(pull(new_obs_3[1]), data$Perimeter[1])
+y1 &lt;- c(pull(new_obs_3[2]), data$Concavity[1])
+z1 &lt;- c(pull(new_obs_3[3]), data$Symmetry[1])
+
+x2 &lt;- c(pull(new_obs_3[1]), data$Perimeter[2])
+y2 &lt;- c(pull(new_obs_3[2]), data$Concavity[2])
+z2 &lt;- c(pull(new_obs_3[3]), data$Symmetry[2])
+
+x3 &lt;- c(pull(new_obs_3[1]), data$Perimeter[3])
+y3 &lt;- c(pull(new_obs_3[2]), data$Concavity[3])
+z3 &lt;- c(pull(new_obs_3[3]), data$Symmetry[3])
+
+x4 &lt;- c(pull(new_obs_3[1]), data$Perimeter[4])
+y4 &lt;- c(pull(new_obs_3[2]), data$Concavity[4])
+z4 &lt;- c(pull(new_obs_3[3]), data$Symmetry[4])
+
+x5 &lt;- c(pull(new_obs_3[1]), data$Perimeter[5])
+y5 &lt;- c(pull(new_obs_3[2]), data$Concavity[5])
+z5 &lt;- c(pull(new_obs_3[3]), data$Symmetry[5])
+
+plot_3d &lt;- plot_3d  |&gt;
+  add_trace(x = x1, y = y1, z = z1, type = &quot;scatter3d&quot;, mode = &quot;lines&quot;, 
+            name = &quot;lines&quot;, showlegend = FALSE, color = I(&quot;steelblue2&quot;)) |&gt;
+  add_trace(x = x2, y = y2, z = z2, type = &quot;scatter3d&quot;, mode = &quot;lines&quot;, 
+            name = &quot;lines&quot;, showlegend = FALSE, color =  I(&quot;steelblue2&quot;)) |&gt;
+  add_trace(x = x3, y = y3, z = z3, type = &quot;scatter3d&quot;, mode = &quot;lines&quot;, 
+            name = &quot;lines&quot;, showlegend = FALSE, color =  I(&quot;steelblue2&quot;)) |&gt;
+  add_trace(x = x4, y = y4, z = z4, type = &quot;scatter3d&quot;, mode = &quot;lines&quot;, 
+            name = &quot;lines&quot;, showlegend = FALSE, color =  I(&quot;orange2&quot;)) |&gt;
+  add_trace(x = x5, y = y5, z = z5, type = &quot;scatter3d&quot;, mode = &quot;lines&quot;, 
+            name = &quot;lines&quot;, showlegend = FALSE, color =  I(&quot;steelblue2&quot;))
+
+if(!is_latex_output()){  
+  plot_3d
+} else {
+  # scene = list(camera = list(eye = list(x=2, y=2, z = 1.5)))
+  # plot_3d &lt;- plot_3d  |&gt; layout(scene = scene)
+  # save_image(plot_3d, &quot;img/plot3d_knn_classification.png&quot;, scale = 10)
+  # cannot adjust size of points in this plot for pdf 
+  # so using a screenshot for now instead
+  knitr::include_graphics(&quot;img/plot3d_knn_classification.png&quot;)
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="summary-of-k-nearest-neighbors-algorithm">
+<h3>Summary of <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm<a class="headerlink" href="#summary-of-k-nearest-neighbors-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>In order to classify a new observation using a <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classifier, we have to do the following:</p>
+<ol class="simple">
+<li><p>Compute the distance between the new observation and each observation in the training set.</p></li>
+<li><p>Sort the data table in ascending order according to the distances.</p></li>
+<li><p>Choose the top <span class="math notranslate nohighlight">\(K\)</span> rows of the sorted table.</p></li>
+<li><p>Classify the new observation based on a majority vote of the neighbor classes.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="k-nearest-neighbors-with-tidymodels">
+<h2><span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors with <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code><a class="headerlink" href="#k-nearest-neighbors-with-tidymodels" title="Permalink to this headline">¶</a></h2>
+<p>Coding the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm in R ourselves can get complicated,
+especially if we want to handle multiple classes, more than two variables,
+or predict the class for multiple new observations. Thankfully, in R,
+the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors algorithm is
+implemented in <a class="reference external" href="https://parsnip.tidymodels.org/">the <code class="docutils literal notranslate"><span class="pre">parsnip</span></code> R package</a> [&#64;parsnip]
+included in <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>, along with
+many <a class="reference external" href="https://www.tidymodels.org/find/parsnip/">other models</a> \index{tidymodels}\index{parsnip}
+that you will encounter in this and future chapters of the book. The <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> collection
+provides tools to help make and use models, such as classifiers.  Using the packages
+in this collection will help keep our code simple, readable and accurate; the
+less we have to code ourselves, the fewer mistakes we will likely make. We
+start by loading <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(tidymodels)
+</pre></div>
+</div>
+<p>Let’s walk through how to use <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> to perform <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification.
+We will use the <code class="docutils literal notranslate"><span class="pre">cancer</span></code> data set from above, with
+perimeter and concavity as predictors and <span class="math notranslate nohighlight">\(K = 5\)</span> neighbors to build our classifier. Then
+we will use the classifier to predict the diagnosis label for a new observation with
+perimeter 0, concavity 3.5, and an unknown diagnosis label. Let’s pick out our two desired
+predictor variables and class label and store them as a new data set named <code class="docutils literal notranslate"><span class="pre">cancer_train</span></code>:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>cancer_train &lt;- cancer |&gt;
+  select(Class, Perimeter, Concavity)
+cancer_train
+</pre></div>
+</div>
+<p>Next, we create a <em>model specification</em> for \index{tidymodels!model specification} <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification
+by calling the <code class="docutils literal notranslate"><span class="pre">nearest_neighbor</span></code> function, specifying that we want to use <span class="math notranslate nohighlight">\(K = 5\)</span> neighbors
+(we will discuss how to choose <span class="math notranslate nohighlight">\(K\)</span> in the next chapter) and the straight-line
+distance (<code class="docutils literal notranslate"><span class="pre">weight_func</span> <span class="pre">=</span> <span class="pre">&quot;rectangular&quot;</span></code>). The <code class="docutils literal notranslate"><span class="pre">weight_func</span></code> argument controls
+how neighbors vote when classifying a new observation; by setting it to <code class="docutils literal notranslate"><span class="pre">&quot;rectangular&quot;</span></code>,
+each of the <span class="math notranslate nohighlight">\(K\)</span> nearest neighbors gets exactly 1 vote as described above. Other choices,
+which weigh each neighbor’s vote differently, can be found on
+<a class="reference external" href="https://parsnip.tidymodels.org/reference/nearest_neighbor.html">the <code class="docutils literal notranslate"><span class="pre">parsnip</span></code> website</a>.
+In the <code class="docutils literal notranslate"><span class="pre">set_engine</span></code> \index{tidymodels!engine} argument, we specify which package or system will be used for training
+the model. Here <code class="docutils literal notranslate"><span class="pre">kknn</span></code> is the R package we will use for performing <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification.
+Finally, we specify that this is a classification problem with the <code class="docutils literal notranslate"><span class="pre">set_mode</span></code> function.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, neighbors = 5) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+knn_spec
+</pre></div>
+</div>
+<p>In order to fit the model on the breast cancer data, we need to pass the model specification
+and the data set to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function. We also need to specify what variables to use as predictors
+and what variable to use as the target. Below, the <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">Perimeter</span> <span class="pre">+</span> <span class="pre">Concavity</span></code> argument specifies
+that <code class="docutils literal notranslate"><span class="pre">Class</span></code> is the target variable (the one we want to predict),
+and both <code class="docutils literal notranslate"><span class="pre">Perimeter</span></code> and <code class="docutils literal notranslate"><span class="pre">Concavity</span></code> are to be used as the predictors.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_fit &lt;- knn_spec |&gt;
+  fit(Class ~ Perimeter + Concavity, data = cancer_train)
+</pre></div>
+</div>
+<p>We can also use a convenient shorthand syntax using a period, <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">.</span></code>, to indicate
+that we want to use every variable <em>except</em> <code class="docutils literal notranslate"><span class="pre">Class</span></code> \index{tidymodels!model formula} as a predictor in the model.
+In this particular setup, since <code class="docutils literal notranslate"><span class="pre">Concavity</span></code> and <code class="docutils literal notranslate"><span class="pre">Perimeter</span></code> are the only two predictors in the <code class="docutils literal notranslate"><span class="pre">cancer_train</span></code>
+data frame, <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">Perimeter</span> <span class="pre">+</span> <span class="pre">Concavity</span></code> and <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">.</span></code> are equivalent.
+In general, you can choose individual predictors using the <code class="docutils literal notranslate"><span class="pre">+</span></code> symbol, or you can specify to
+use <em>all</em> predictors using the <code class="docutils literal notranslate"><span class="pre">.</span></code> symbol.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_fit &lt;- knn_spec |&gt;
+  fit(Class ~ ., data = cancer_train)
+knn_fit
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>print_tidymodels(knn_fit)
+</pre></div>
+</div>
+<p>Here you can see the final trained model summary. It confirms that the computational engine used
+to train the model  was <code class="docutils literal notranslate"><span class="pre">kknn::train.kknn</span></code>. It also shows the fraction of errors made by
+the nearest neighbor model, but we will ignore this for now and discuss it in more detail
+in the next chapter.
+Finally, it shows (somewhat confusingly) that the “best” weight function
+was “rectangular” and “best” setting of <span class="math notranslate nohighlight">\(K\)</span> was 5; but since we specified these earlier,
+R is just repeating those settings to us here. In the next chapter, we will actually
+let R find the value of <span class="math notranslate nohighlight">\(K\)</span> for us.</p>
+<p>Finally, we make the prediction on the new observation by calling the <code class="docutils literal notranslate"><span class="pre">predict</span></code> \index{tidymodels!predict} function,
+passing both the fit object we just created and the new observation itself. As above,
+when we ran the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors
+classification algorithm manually, the <code class="docutils literal notranslate"><span class="pre">knn_fit</span></code> object classifies the new observation as
+malignant (“M”). Note that the <code class="docutils literal notranslate"><span class="pre">predict</span></code> function outputs a data frame with a single
+variable named <code class="docutils literal notranslate"><span class="pre">.pred_class</span></code>.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_obs &lt;- tibble(Perimeter = 0, Concavity = 3.5)
+predict(knn_fit, new_obs)
+</pre></div>
+</div>
+<p>Is this predicted malignant label the true class for this observation?
+Well, we don’t know because we do not have this
+observation’s diagnosis— that is what we were trying to predict! The
+classifier’s prediction is not necessarily correct, but in the next chapter, we will
+learn ways to quantify how accurate we think our predictions are.</p>
+</div>
+<div class="section" id="data-preprocessing-with-tidymodels">
+<h2>Data preprocessing with <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code><a class="headerlink" href="#data-preprocessing-with-tidymodels" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="centering-and-scaling">
+<h3>Centering and scaling<a class="headerlink" href="#centering-and-scaling" title="Permalink to this headline">¶</a></h3>
+<p>When using <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification, the <em>scale</em> \index{scaling} of each variable
+(i.e., its size and range of values) matters. Since the classifier predicts
+classes by identifying observations nearest to it, any variables with
+a large scale will have a much larger effect than variables with a small
+scale. But just because a variable has a large scale <em>doesn’t mean</em> that it is
+more important for making accurate predictions. For example, suppose you have a
+data set with two features, salary (in dollars) and years of education, and
+you want to predict the corresponding type of job. When we compute the
+neighbor distances, a difference of $1000 is huge compared to a difference of
+10 years of education. But for our conceptual understanding and answering of
+the problem, it’s the opposite; 10 years of education is huge compared to a
+difference of $1000 in yearly salary!</p>
+<p>In many other predictive models, the <em>center</em> of each variable (e.g., its mean)
+matters as well. For example, if we had a data set with a temperature variable
+measured in degrees Kelvin, and the same data set with temperature measured in
+degrees Celsius, the two variables would differ by a constant shift of 273
+(even though they contain exactly the same information). Likewise, in our
+hypothetical job classification example, we would likely see that the center of
+the salary variable is in the tens of thousands, while the center of the years
+of education variable is in the single digits. Although this doesn’t affect the
+<span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification algorithm, this large shift can change the
+outcome of using many other predictive models.  \index{centering}</p>
+<p>To scale and center our data, we need to find
+our variables’ <em>mean</em> (the average, which quantifies the “central” value of a
+set of numbers) and <em>standard deviation</em> (a number quantifying how spread out values are).
+For each observed value of the variable, we subtract the mean (i.e., center the variable)
+and divide by the standard deviation (i.e., scale the variable). When we do this, the data
+is said to be <em>standardized</em>, \index{standardization!K-nearest neighbors} and all variables in a data set will have a mean of 0
+and a standard deviation of 1. To illustrate the effect that standardization can have on the <span class="math notranslate nohighlight">\(K\)</span>-nearest
+neighbor algorithm, we will read in the original, unstandardized Wisconsin breast
+cancer data set; we have been using a standardized version of the data set up
+until now. To keep things simple, we will just use the <code class="docutils literal notranslate"><span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code>, and <code class="docutils literal notranslate"><span class="pre">Class</span></code>
+variables:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>unscaled_cancer &lt;- read_csv(&quot;data/unscaled_wdbc.csv&quot;) |&gt;
+  mutate(Class = as_factor(Class)) |&gt;
+  select(Class, Area, Smoothness)
+unscaled_cancer
+</pre></div>
+</div>
+<p>Looking at the unscaled and uncentered data above, you can see that the differences
+between the values for area measurements are much larger than those for
+smoothness. Will this affect
+predictions? In order to find out, we will create a scatter plot of these two
+predictors (colored by diagnosis) for both the unstandardized data we just
+loaded, and the standardized version of that same data. But first, we need to
+standardize the <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> data set with <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code>.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> framework, all data preprocessing happens
+using a <code class="docutils literal notranslate"><span class="pre">recipe</span></code> from <a class="reference external" href="https://recipes.tidymodels.org/">the <code class="docutils literal notranslate"><span class="pre">recipes</span></code> R package</a> [&#64;recipes]
+Here we will initialize a recipe \index{recipe} \index{tidymodels!recipe|see{recipe}} for
+the <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> data above, specifying
+that the <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable is the target, and all other variables are predictors:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>uc_recipe &lt;- recipe(Class ~ ., data = unscaled_cancer)
+print(uc_recipe)
+</pre></div>
+</div>
+<p>So far, there is not much in the recipe; just a statement about the number of targets
+and predictors. Let’s add
+scaling (<code class="docutils literal notranslate"><span class="pre">step_scale</span></code>) \index{recipe!step_scale} and
+centering (<code class="docutils literal notranslate"><span class="pre">step_center</span></code>) \index{recipe!step_center} steps for
+all of the predictors so that they each have a mean of 0 and standard deviation of 1.
+Note that <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> actually provides <code class="docutils literal notranslate"><span class="pre">step_normalize</span></code>, which does both centering and scaling in
+a single recipe step; in this book we will keep <code class="docutils literal notranslate"><span class="pre">step_scale</span></code> and <code class="docutils literal notranslate"><span class="pre">step_center</span></code> separate
+to emphasize conceptually that there are two steps happening.
+The <code class="docutils literal notranslate"><span class="pre">prep</span></code> function finalizes the recipe by using the data (here, <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code>)  \index{tidymodels!prep}\index{prep|see{tidymodels}}
+to compute anything necessary to run the recipe (in this case, the column means and standard
+deviations):</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>uc_recipe &lt;- uc_recipe |&gt;
+  step_scale(all_predictors()) |&gt;
+  step_center(all_predictors()) |&gt;
+  prep()
+uc_recipe
+</pre></div>
+</div>
+<p>You can now see that the recipe includes a scaling and centering step for all predictor variables.
+Note that when you add a step to a recipe, you must specify what columns to apply the step to.
+Here we used the <code class="docutils literal notranslate"><span class="pre">all_predictors()</span></code> \index{recipe!all_predictors} function to specify that each step should be applied to
+all predictor variables. However, there are a number of different arguments one could use here,
+as well as naming particular columns with the same syntax as the <code class="docutils literal notranslate"><span class="pre">select</span></code> function.
+For example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">all_nominal()</span></code> and <code class="docutils literal notranslate"><span class="pre">all_numeric()</span></code>: specify all categorical or all numeric variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all_predictors()</span></code> and <code class="docutils literal notranslate"><span class="pre">all_outcomes()</span></code>: specify all predictor or all target variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Area,</span> <span class="pre">Smoothness</span></code>: specify both the <code class="docutils literal notranslate"><span class="pre">Area</span></code> and <code class="docutils literal notranslate"><span class="pre">Smoothness</span></code> variable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-Class</span></code>: specify everything except the <code class="docutils literal notranslate"><span class="pre">Class</span></code> variable</p></li>
+</ul>
+<p>You can find a full set of all the steps and variable selection functions
+on the <a class="reference external" href="https://recipes.tidymodels.org/reference/index.html"><code class="docutils literal notranslate"><span class="pre">recipes</span></code> reference page</a>.</p>
+<p>At this point, we have calculated the required statistics based on the data input into the
+recipe, but the data are not yet scaled and centered. To actually scale and center
+the data, we need to apply the <code class="docutils literal notranslate"><span class="pre">bake</span></code> \index{tidymodels!bake} \index{bake|see{tidymodels}} function to the unscaled data.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>scaled_cancer &lt;- bake(uc_recipe, unscaled_cancer)
+scaled_cancer
+</pre></div>
+</div>
+<p>It may seem redundant that we had to both <code class="docutils literal notranslate"><span class="pre">bake</span></code> <em>and</em> <code class="docutils literal notranslate"><span class="pre">prep</span></code> to scale and center the data.
+However, we do this in two steps so we can specify a different data set in the <code class="docutils literal notranslate"><span class="pre">bake</span></code> step if we want.
+For example, we may want to specify new data that were not part of the training set.</p>
+<p>You may wonder why we are doing so much work just to center and
+scale our variables. Can’t we just manually scale and center the <code class="docutils literal notranslate"><span class="pre">Area</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Smoothness</span></code> variables ourselves before building our <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor model? Well,
+technically <em>yes</em>; but doing so is error-prone.  In particular, we might
+accidentally forget to apply the same centering / scaling when making
+predictions, or accidentally apply a <em>different</em> centering / scaling than what
+we used while training. Proper use of a <code class="docutils literal notranslate"><span class="pre">recipe</span></code> helps keep our code simple,
+readable, and error-free. Furthermore, note that using <code class="docutils literal notranslate"><span class="pre">prep</span></code> and <code class="docutils literal notranslate"><span class="pre">bake</span></code> is
+required only when you want to inspect the result of the preprocessing steps
+yourself. You will see further on in Section
+&#64;ref(puttingittogetherworkflow) that <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> provides tools to
+automatically apply <code class="docutils literal notranslate"><span class="pre">prep</span></code> and <code class="docutils literal notranslate"><span class="pre">bake</span></code> as necessary without additional coding effort.</p>
+<p>Figure &#64;ref(fig:05-scaling-plt) shows the two scatter plots side-by-side—one for <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> and one for
+<code class="docutils literal notranslate"><span class="pre">scaled_cancer</span></code>. Each has the same new observation annotated with its <span class="math notranslate nohighlight">\(K=3\)</span> nearest neighbors.
+In the original unstandardized data plot, you can see some odd choices
+for the three nearest neighbors. In particular, the “neighbors” are visually
+well within the cloud of benign observations, and the neighbors are all nearly
+vertically aligned with the new observation (which is why it looks like there
+is only one black line on this plot). Figure &#64;ref(fig:05-scaling-plt-zoomed)
+shows a close-up of that region on the unstandardized plot. Here the computation of nearest
+neighbors is dominated by the much larger-scale area variable. The plot for standardized data
+on the right in Figure &#64;ref(fig:05-scaling-plt) shows a much more intuitively reasonable
+selection of nearest neighbors. Thus, standardizing the data can change things
+in an important way when we are using predictive algorithms.
+Standardizing your data should be a part of the preprocessing you do
+before predictive modeling and you should always think carefully about your problem domain and
+whether you need to standardize your data.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>
+attrs &lt;- c(&quot;Area&quot;, &quot;Smoothness&quot;)
+
+# create a new obs and get its NNs
+new_obs &lt;- tibble(Area = 400, Smoothness = 0.135, Class = &quot;unknown&quot;)
+my_distances &lt;- table_with_distances(unscaled_cancer[, attrs], 
+                                     new_obs[, attrs])
+neighbors &lt;- unscaled_cancer[order(my_distances$Distance), ]
+
+# add the new obs to the df
+unscaled_cancer &lt;- bind_rows(unscaled_cancer, new_obs)
+
+# plot the scatter
+unscaled &lt;- ggplot(unscaled_cancer, aes(x = Area, 
+                                        y = Smoothness, 
+                                        group = Class, 
+                                        color = Class, 
+                                        shape = Class, size = Class)) +
+  geom_point(alpha = 0.6) + 
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18)) +
+    scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values=c(2,2,2.5)) + 
+  ggtitle(&quot;Unstandardized Data&quot;) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[1, attrs[1]]),
+    yend = unlist(neighbors[1, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[2, attrs[1]]),
+    yend = unlist(neighbors[2, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[3, attrs[1]]),
+    yend = unlist(neighbors[3, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5)
+
+# create new scaled obs and get NNs
+new_obs_scaled &lt;- tibble(Area = -0.72, Smoothness = 2.8, Class = &quot;unknown&quot;)
+my_distances_scaled &lt;- table_with_distances(scaled_cancer[, attrs], 
+                                            new_obs_scaled[, attrs])
+neighbors_scaled &lt;- scaled_cancer[order(my_distances_scaled$Distance), ]
+
+# add to the df
+scaled_cancer &lt;- bind_rows(scaled_cancer, new_obs_scaled)
+
+# plot the scatter
+scaled &lt;- ggplot(scaled_cancer, aes(x = Area, 
+                                    y = Smoothness, 
+                                    group = Class, 
+                                    color = Class, 
+                                    shape = Class, 
+                                    size = Class)) +
+  geom_point(alpha = 0.6) + 
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18)) +
+  scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                    values=c(2,2,2.5)) + 
+  ggtitle(&quot;Standardized Data&quot;) +
+  labs(x = &quot;Area (standardized)&quot;, y = &quot;Smoothness (standardized)&quot;) + 
+  # coord_equal(ratio = 1) +
+  geom_segment(aes(
+    x = unlist(new_obs_scaled[1]), y = unlist(new_obs_scaled[2]),
+    xend = unlist(neighbors_scaled[1, attrs[1]]),
+    yend = unlist(neighbors_scaled[1, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = unlist(new_obs_scaled[1]), y = unlist(new_obs_scaled[2]),
+    xend = unlist(neighbors_scaled[2, attrs[1]]),
+    yend = unlist(neighbors_scaled[2, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5) +
+  geom_segment(aes(
+    x = unlist(new_obs_scaled[1]), y = unlist(new_obs_scaled[2]),
+    xend = unlist(neighbors_scaled[3, attrs[1]]),
+    yend = unlist(neighbors_scaled[3, attrs[2]])
+  ), color = &quot;black&quot;, size = 0.5)
+
+ggarrange(unscaled, scaled, ncol = 2, common.legend = TRUE, legend = &quot;bottom&quot;)
+
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(ggforce)
+ggplot(unscaled_cancer, aes(x = Area, 
+                            y = Smoothness, 
+                            group = Class, 
+                            color = Class, 
+                            shape = Class)) +
+  geom_point(size = 2.5, alpha = 0.6) + 
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                   labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18)) +
+    scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values = c(1, 1, 2.5)) + 
+  ggtitle(&quot;Unstandardized Data&quot;) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[1, attrs[1]]),
+    yend = unlist(neighbors[1, attrs[2]])
+  ), color = &quot;black&quot;) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[2, attrs[1]]),
+    yend = unlist(neighbors[2, attrs[2]])
+  ), color = &quot;black&quot;) +
+  geom_segment(aes(
+    x = unlist(new_obs[1]), y = unlist(new_obs[2]),
+    xend = unlist(neighbors[3, attrs[1]]),
+    yend = unlist(neighbors[3, attrs[2]])
+  ), color = &quot;black&quot;) +  
+   facet_zoom(x = ( Area &gt; 380 &amp; Area &lt; 420) , 
+              y = (Smoothness &gt; 0.08 &amp; Smoothness &lt; 0.14), zoom.size = 2) + 
+    theme_bw() + 
+    theme(text = element_text(size = 18), axis.title=element_text(size=18), legend.position=&quot;bottom&quot;)
+</pre></div>
+</div>
+</div>
+<div class="section" id="balancing">
+<h3>Balancing<a class="headerlink" href="#balancing" title="Permalink to this headline">¶</a></h3>
+<p>Another potential issue in a data set for a classifier is <em>class imbalance</em>, \index{balance}\index{imbalance}
+i.e., when one label is much more common than another. Since classifiers like
+the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor algorithm use the labels of nearby points to predict
+the label of a new point, if there are many more data points with one label
+overall, the algorithm is more likely to pick that label in general (even if
+the “pattern” of data suggests otherwise). Class imbalance is actually quite a
+common and important problem: from rare disease diagnosis to malicious email
+detection, there are many cases in which the “important” class to identify
+(presence of disease, malicious email) is much rarer than the “unimportant”
+class (no disease, normal email).</p>
+<p>To better illustrate the problem, let’s revisit the scaled breast cancer data,
+<code class="docutils literal notranslate"><span class="pre">cancer</span></code>; except now we will remove many of the observations of malignant tumors, simulating
+what the data would look like if the cancer was rare. We will do this by
+picking only 3 observations from the malignant group, and keeping all
+of the benign observations. We choose these 3 observations using the <code class="docutils literal notranslate"><span class="pre">slice_head</span></code>
+function, which takes two arguments: a data frame-like object,
+and the number of rows to select from the top (<code class="docutils literal notranslate"><span class="pre">n</span></code>).
+The new imbalanced data is shown in Figure &#64;ref(fig:05-unbalanced).</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># hidden seed here for reproducibility 
+# randomness shouldn&#39;t affect much in this use of step_upsample,
+# but just in case...
+set.seed(3)
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>rare_cancer &lt;- bind_rows(
+      filter(cancer, Class == &quot;B&quot;),
+      cancer |&gt; filter(Class == &quot;M&quot;) |&gt; slice_head(n = 3)
+    ) |&gt;
+    select(Class, Perimeter, Concavity)
+
+rare_plot &lt;- rare_cancer |&gt;
+  ggplot(aes(x = Perimeter, y = Concavity, color = Class)) +
+  geom_point(alpha = 0.5) +
+  labs(x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;,
+       color = &quot;Diagnosis&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;)) +
+  theme(text = element_text(size = 12))
+
+rare_plot
+</pre></div>
+</div>
+<p>Suppose we now decided to use <span class="math notranslate nohighlight">\(K = 7\)</span> in <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification.
+With only 3 observations of malignant tumors, the classifier
+will <em>always predict that the tumor is benign, no matter what its concavity and perimeter
+are!</em> This is because in a majority vote of 7 observations, at most 3 will be
+malignant (we only have 3 total malignant observations), so at least 4 must be
+benign, and the benign vote will always win. For example, Figure &#64;ref(fig:05-upsample)
+shows what happens for a new tumor observation that is quite close to three observations
+in the training data that were tagged as malignant.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_point &lt;- c(2, 2)
+attrs &lt;- c(&quot;Perimeter&quot;, &quot;Concavity&quot;)
+my_distances &lt;- table_with_distances(rare_cancer[, attrs], new_point)
+my_distances &lt;- bind_cols(my_distances, select(rare_cancer, Class))
+neighbors &lt;- rare_cancer[order(my_distances$Distance), ]
+
+
+rare_plot &lt;- bind_rows(rare_cancer, 
+                       tibble(Perimeter = new_point[1], 
+                              Concavity = new_point[2], 
+                              Class = &quot;unknown&quot;)) |&gt;
+  ggplot(aes(x = Perimeter, y = Concavity, color = Class, shape = Class)) +
+  geom_point(alpha = 0.5) +
+  labs(color = &quot;Diagnosis&quot;, 
+       x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;) + 
+  scale_color_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;), 
+                     values = c(&quot;steelblue2&quot;, &quot;orange2&quot;, &quot;red&quot;)) +
+  scale_shape_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(16, 16, 18))+ 
+  scale_size_manual(name = &quot;Diagnosis&quot;, 
+                     labels = c(&quot;Benign&quot;, &quot;Malignant&quot;, &quot;Unknown&quot;),
+                     values= c(2, 2, 2.5))
+
+for (i in 1:7) {
+  clr &lt;- &quot;steelblue2&quot;
+  if (neighbors$Class[i] == &quot;M&quot;) {
+    clr &lt;- &quot;orange2&quot;
+  }
+  rare_plot &lt;- rare_plot +
+    geom_segment(
+      x = new_point[1],
+      y = new_point[2],
+      xend = pull(neighbors[i, attrs[1]]),
+      yend = pull(neighbors[i, attrs[2]]), color = clr
+    )
+}
+rare_plot + geom_point(aes(x = new_point[1], y = new_point[2]),
+  color = &quot;red&quot;,
+  size = 2.5,
+  pch = 18
+)
+</pre></div>
+</div>
+<p>Figure &#64;ref(fig:05-upsample-2) shows what happens if we set the background color of
+each area of the plot to the predictions the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor
+classifier would make. We can see that the decision is
+always “benign,” corresponding to the blue color.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>
+knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, neighbors = 7) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+
+knn_fit &lt;- knn_spec |&gt;
+  fit(Class ~ ., data = rare_cancer)
+
+# create a prediction pt grid
+per_grid &lt;- seq(min(rare_cancer$Perimeter), 
+                max(rare_cancer$Perimeter), 
+                length.out = 100)
+con_grid &lt;- seq(min(rare_cancer$Concavity), 
+                max(rare_cancer$Concavity), 
+                length.out = 100)
+pcgrid &lt;- as_tibble(expand.grid(Perimeter = per_grid, Concavity = con_grid))
+knnPredGrid &lt;- predict(knn_fit, pcgrid)
+prediction_table &lt;- bind_cols(knnPredGrid, pcgrid) |&gt; 
+  rename(Class = .pred_class)
+
+# create the basic plt
+rare_plot &lt;-
+  ggplot() +
+  geom_point(data = rare_cancer, 
+             mapping = aes(x = Perimeter, 
+                           y = Concavity, 
+                           color = Class), 
+             alpha = 0.75) +
+  geom_point(data = prediction_table, 
+             mapping = aes(x = Perimeter, 
+                           y = Concavity, 
+                           color = Class), 
+             alpha = 0.02, 
+             size = 5.) +
+  labs(color = &quot;Diagnosis&quot;, 
+       x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;))
+
+rare_plot
+</pre></div>
+</div>
+<p>Despite the simplicity of the problem, solving it in a statistically sound manner is actually
+fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
+For the present purposes, it will suffice to rebalance the data by <em>oversampling</em> the rare class. \index{oversampling}
+In other words, we will replicate rare observations multiple times in our data set to give them more
+voting power in the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor algorithm. In order to do this, we will add an oversampling
+step to the earlier <code class="docutils literal notranslate"><span class="pre">uc_recipe</span></code> recipe with the <code class="docutils literal notranslate"><span class="pre">step_upsample</span></code> function from the <code class="docutils literal notranslate"><span class="pre">themis</span></code> R package. \index{recipe!step_upsample}
+We show below how to do this, and also
+use the <code class="docutils literal notranslate"><span class="pre">group_by</span></code> and <code class="docutils literal notranslate"><span class="pre">summarize</span></code> functions to see that our classes are now balanced:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(themis)
+
+ups_recipe &lt;- recipe(Class ~ ., data = rare_cancer) |&gt;
+  step_upsample(Class, over_ratio = 1, skip = FALSE) |&gt;
+  prep()
+
+ups_recipe
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>upsampled_cancer &lt;- bake(ups_recipe, rare_cancer)
+
+upsampled_cancer |&gt;
+  group_by(Class) |&gt;
+  summarize(n = n())
+</pre></div>
+</div>
+<p>Now suppose we train our <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classifier with <span class="math notranslate nohighlight">\(K=7\)</span> on this <em>balanced</em> data.
+Figure &#64;ref(fig:05-upsample-plot) shows what happens now when we set the background color
+of each area of our scatter plot to the decision the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor
+classifier would make. We can see that the decision is more reasonable; when the points are close
+to those labeled malignant, the classifier predicts a malignant tumor, and vice versa when they are
+closer to the benign tumor observations.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, neighbors = 7) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+
+knn_fit &lt;- knn_spec |&gt;
+  fit(Class ~ ., data = upsampled_cancer)
+
+# create a prediction pt grid
+knnPredGrid &lt;- predict(knn_fit, pcgrid)
+prediction_table &lt;- bind_cols(knnPredGrid, pcgrid) |&gt; 
+  rename(Class = .pred_class)
+
+# create the basic plt
+upsampled_plot &lt;-
+  ggplot() +
+  geom_point(data = prediction_table, 
+             mapping = aes(x = Perimeter, 
+                           y = Concavity, 
+                           color = Class), 
+             alpha = 0.02, size = 5.) +
+  geom_point(data = rare_cancer, 
+             mapping = aes(x = Perimeter, 
+                           y = Concavity, 
+                           color = Class), 
+             alpha = 0.75) +
+  labs(color = &quot;Diagnosis&quot;, 
+       x = &quot;Perimeter (standardized)&quot;, 
+       y = &quot;Concavity (standardized)&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;))
+
+upsampled_plot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="putting-it-together-in-a-workflow-puttingittogetherworkflow">
+<h2>Putting it together in a <code class="docutils literal notranslate"><span class="pre">workflow</span></code> {#puttingittogetherworkflow}<a class="headerlink" href="#putting-it-together-in-a-workflow-puttingittogetherworkflow" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">tidymodels</span></code> package collection also provides the <code class="docutils literal notranslate"><span class="pre">workflow</span></code>, a way to chain\index{tidymodels!workflow}\index{workflow|see{tidymodels}} together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
+To illustrate the whole pipeline, let’s start from scratch with the <code class="docutils literal notranslate"><span class="pre">unscaled_wdbc.csv</span></code> data.
+First we will load the data, create a model, and specify a recipe for how the data should be preprocessed:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># load the unscaled cancer data 
+# and make sure the target Class variable is a factor
+unscaled_cancer &lt;- read_csv(&quot;data/unscaled_wdbc.csv&quot;) |&gt;
+  mutate(Class = as_factor(Class))
+
+# create the KNN model
+knn_spec &lt;- nearest_neighbor(weight_func = &quot;rectangular&quot;, neighbors = 7) |&gt;
+  set_engine(&quot;kknn&quot;) |&gt;
+  set_mode(&quot;classification&quot;)
+
+# create the centering / scaling recipe
+uc_recipe &lt;- recipe(Class ~ Area + Smoothness, data = unscaled_cancer) |&gt;
+  step_scale(all_predictors()) |&gt;
+  step_center(all_predictors())
+</pre></div>
+</div>
+<p>Note that each of these steps is exactly the same as earlier, except for one major difference:
+we did not use the <code class="docutils literal notranslate"><span class="pre">select</span></code> function to extract the relevant variables from the data frame,
+and instead simply specified the relevant variables to use via the
+formula <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">Area</span> <span class="pre">+</span> <span class="pre">Smoothness</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">Class</span> <span class="pre">~</span> <span class="pre">.</span></code>) in the recipe.
+You will also notice that we did not call <code class="docutils literal notranslate"><span class="pre">prep()</span></code> on the recipe; this is unnecessary when it is
+placed in a workflow.</p>
+<p>We will now place these steps in a <code class="docutils literal notranslate"><span class="pre">workflow</span></code> using the <code class="docutils literal notranslate"><span class="pre">add_recipe</span></code> and <code class="docutils literal notranslate"><span class="pre">add_model</span></code> functions, \index{tidymodels!add_recipe}\index{tidymodels!add_model}
+and finally we will use the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function to run the whole workflow on the <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> data.
+Note another difference from earlier here: we do not include a formula in the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function. This \index{tidymodels!fit}
+is again because we included the formula in the recipe, so there is no need to respecify it:</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knn_fit &lt;- workflow() |&gt;
+  add_recipe(uc_recipe) |&gt;
+  add_model(knn_spec) |&gt;
+  fit(data = unscaled_cancer)
+
+knn_fit
+</pre></div>
+</div>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>print_tidymodels(knn_fit)
+</pre></div>
+</div>
+<p>As before, the fit object lists the function that trains the model as well as the “best” settings
+for the number of neighbors and weight function (for now, these are just the values we chose
+manually when we created <code class="docutils literal notranslate"><span class="pre">knn_spec</span></code> above). But now the fit object also includes information about
+the overall workflow, including the centering and scaling preprocessing steps.
+In other words, when we use the <code class="docutils literal notranslate"><span class="pre">predict</span></code> function with the <code class="docutils literal notranslate"><span class="pre">knn_fit</span></code> object to make a prediction for a new
+observation, it will first apply the same recipe steps to the new observation.
+As an example, we will predict the class label of two new observations:
+one with <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">=</span> <span class="pre">500</span></code> and <code class="docutils literal notranslate"><span class="pre">Smoothness</span> <span class="pre">=</span> <span class="pre">0.075</span></code>, and one with <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">=</span> <span class="pre">1500</span></code> and <code class="docutils literal notranslate"><span class="pre">Smoothness</span> <span class="pre">=</span> <span class="pre">0.1</span></code>.</p>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>new_observation &lt;- tibble(Area = c(500, 1500), Smoothness = c(0.075, 0.1))
+prediction &lt;- predict(knn_fit, new_observation)
+
+prediction
+</pre></div>
+</div>
+<p>The classifier predicts that the first observation is benign (“B”), while the second is
+malignant (“M”). Figure &#64;ref(fig:05-workflow-plot-show) visualizes the predictions that this
+trained <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor model will make on a large range of new observations.
+Although you have seen colored prediction map visualizations like this a few times now,
+we have not included the code to generate them, as it is a little bit complicated.
+For the interested reader who wants a learning challenge, we now include it below.
+The basic idea is to create a grid of synthetic new observations using the <code class="docutils literal notranslate"><span class="pre">expand.grid</span></code> function,
+predict the label of each, and visualize the predictions with a colored scatter having a very high transparency
+(low <code class="docutils literal notranslate"><span class="pre">alpha</span></code> value) and large point radius. See if you can figure out what each line is doing!</p>
+<blockquote>
+<div><p><strong>Note:</strong> Understanding this code is not required for the remainder of the
+textbook. It is included for those readers who would like to use similar
+visualizations in their own data analyses.</p>
+</div></blockquote>
+<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span># create the grid of area/smoothness vals, and arrange in a data frame
+are_grid &lt;- seq(min(unscaled_cancer$Area), 
+                max(unscaled_cancer$Area), 
+                length.out = 100)
+smo_grid &lt;- seq(min(unscaled_cancer$Smoothness), 
+                max(unscaled_cancer$Smoothness), 
+                length.out = 100)
+asgrid &lt;- as_tibble(expand.grid(Area = are_grid, 
+                                Smoothness = smo_grid))
+
+# use the fit workflow to make predictions at the grid points
+knnPredGrid &lt;- predict(knn_fit, asgrid)
+
+# bind the predictions as a new column with the grid points
+prediction_table &lt;- bind_cols(knnPredGrid, asgrid) |&gt; 
+  rename(Class = .pred_class)
+
+# plot:
+# 1. the colored scatter of the original data
+# 2. the faded colored scatter for the grid points
+wkflw_plot &lt;-
+  ggplot() +
+  geom_point(data = unscaled_cancer, 
+             mapping = aes(x = Area, 
+                           y = Smoothness, 
+                           color = Class), 
+             alpha = 0.75) +
+  geom_point(data = prediction_table, 
+             mapping = aes(x = Area, 
+                           y = Smoothness, 
+                           color = Class), 
+             alpha = 0.02, 
+             size = 5) +
+  labs(color = &quot;Diagnosis&quot;, 
+       x = &quot;Area (standardized)&quot;, 
+       y = &quot;Smoothness (standardized)&quot;) +
+  scale_color_manual(labels = c(&quot;Malignant&quot;, &quot;Benign&quot;), 
+                     values = c(&quot;orange2&quot;, &quot;steelblue2&quot;)) +
+  theme(text = element_text(size = 12))
+
+wkflw_plot
+</pre></div>
+</div>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<p>Practice exercises for the material covered in this chapter
+can be found in the accompanying
+<a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
+in the “Classification I: training and predicting” row.
+You can launch an interactive version of the worksheet in your browser by clicking the “launch binder” button.
+You can also preview a non-interactive version of the worksheet by clicking “view worksheet.”
+If you instead decide to download the worksheet and run it on your own machine,
+make sure to follow the instructions for computer setup
+found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
+and guidance that the worksheets provide will function as intended.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="version-control.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Collaboration with version control {#Getting-started-with-version-control}</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="classification2.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Classification II: evaluation &amp; tuning {#classification2}</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By The Jupyter Book Community<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

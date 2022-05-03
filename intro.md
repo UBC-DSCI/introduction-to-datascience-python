@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 \mainmatter
 
 # R and the Tidyverse {#intro}
@@ -211,6 +226,7 @@ use-case, `read_csv` expects that the data file:
 - uses a comma (`,`) to separate the columns, and
 - does not have row names.
 
++++
 
 Below you'll see the code used to load the data into R using the `read_csv`
 function. Note that the `read_csv` function is not included in the base
@@ -439,6 +455,7 @@ image_read("img/select_function.jpeg") |>
   image_crop("1625x1900")
 ```
 
++++
 
 ```{r}
 selected_lang <- select(aboriginal_lang, language, mother_tongue)
@@ -696,6 +713,7 @@ you about the different arguments and usage of functions that you have already l
 
 (ref:01-help) The documentation for the `filter` function, including a high-level description, a list of arguments and their meanings, and more.
 
++++
 
 ```{r 01-help, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:01-help)", fig.retina = 2, out.width="80%"}
 knitr::include_graphics("img/help-filter.png")

@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Cleaning and wrangling data {#wrangling}
 
 ``` {r wrangling-setup, include=FALSE}
@@ -384,6 +399,7 @@ lang_mother_tidy <- pivot_longer(lang_wide,
 lang_mother_tidy
 ```
 
++++
 
 > **Note**: In the code above, the call to the
 > `pivot_longer` function is split across several lines. This is allowed in
@@ -465,6 +481,7 @@ knitr::include_graphics("img/pivot_functions/pivot_functions.004.jpeg")
 Figure \@ref(fig:img-pivot-wider) details the arguments that we need to specify 
 in the `pivot_wider` function.
 
++++
 
 (ref:img-pivot-wider) Syntax for the `pivot_wider` function.
 
@@ -483,6 +500,7 @@ lang_home_tidy <- pivot_wider(lang_long,
 lang_home_tidy
 ```
 
++++
 
 The data above is now tidy! We can go through the three criteria again to check
 that this data is a tidy data set.
@@ -557,6 +575,7 @@ tidy_lang <- separate(lang_messy_longer,
 tidy_lang
 ```
 
++++
 
 Is this data set now tidy? If we recall the three criteria for tidy data:
 
@@ -727,6 +746,7 @@ function interchangeably.
 filter(official_langs, region == "Montréal" & language == "French")
 ```
 
++++
 
 ### Extracting rows satisfying at least one condition using `|`
 
@@ -973,6 +993,7 @@ Failing to do this would have resulted in the incorrect math being performed.
 > We link to resources that discuss this in the additional
 > resources at the end of this chapter.
 
++++
 
 <!--
 #### Creating a visualization with tidy data {-}
@@ -1341,6 +1362,7 @@ First we will see how we can do this using `summarize` + `across`.
 Then we will also explore how we can use a more general iteration function, 
 `map`, to also accomplish this.
 
++++
 
 (ref:summarize-across) `summarize` + `across` or `map` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
 
@@ -1625,7 +1647,7 @@ make sure to follow the instructions for computer setup
 found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-
++++
 
 ## Additional resources 
 

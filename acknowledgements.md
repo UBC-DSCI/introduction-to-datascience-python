@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Acknowledgments {-}
 
 We'd like to thank everyone that has contributed to the development of 
@@ -27,4 +42,4 @@ they found bugs for us (and stood by very patiently in class while
 we frantically fixed those bugs); and they brought a level of enthusiasm to the class
 that sustained us during the hard work of creating a new course and writing a textbook.
 Our interactions with them taught us how to teach data science, and that learning
-is reflected in the content of this book. 
+is reflected in the content of this book.

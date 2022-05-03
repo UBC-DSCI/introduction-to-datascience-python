@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Collaboration with version control {#Getting-started-with-version-control}
 
 ```{r 12-getting-started-with-version-control, echo = FALSE, message = FALSE, warning = FALSE}
@@ -16,6 +31,7 @@ knitr::opts_chunk$set(message = FALSE,
 > 
 > --Mark T. Holder
 
++++
 
 ## Overview
 
@@ -93,7 +109,8 @@ collaboration via tools to share edits with others and resolve conflicting
 edits.  But even if you're working on a project alone, you should still use
 version control.  It helps you keep track of what you've done, when you did it,
 and what you're planning to do next!
- 
+
++++
 
 To version control a project, you generally need two things: 
 a *version control system* \index{version control!system} and a *repository hosting service*. \index{version control!repository hosting}
@@ -351,6 +368,7 @@ image_read("img/version_control/new_repository_03.png") |>
   image_flop()
 ```
 
++++
 
 ### Editing files on GitHub with the pen tool
 

@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Clustering {#clustering}
 
 ```{r setup-clustering, echo = FALSE, message = FALSE, warning = FALSE}
@@ -1122,4 +1137,4 @@ and guidance that the worksheets provide will function as intended.
   clustering for when you expect there to be subgroups, and then subgroups within
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
-  popular technique for reducing the number of predictors in a dataset. 
+  popular technique for reducing the number of predictors in a dataset.

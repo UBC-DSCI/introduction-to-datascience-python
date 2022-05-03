@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Combining code and text with Jupyter {#getting-started-with-jupyter}
 
 ```{r jupyter-setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -89,6 +104,7 @@ image_read("img/code-cell-run.png") |>
   image_crop("3632x2000")
 ```
 
++++
 
 ### Executing code cells
 
@@ -262,6 +278,7 @@ image_read("img/out-of-order-2.png") |>
   image_crop("3632x800")
 ```
 
++++
 
 (ref:out-of-order-3) Code that was written out of order, and was executed in a linear order using "Restart Kernel and Run All Cells..." This resulted in an error at the execution of the second code cell and it failed to run all code cells in the notebook.
 
@@ -402,6 +419,7 @@ image_read("img/launcher-annotated.png") |>
   image_crop("3632x2000")
 ```
 
++++
 
 Once you have created a new Jupyter notebook, be sure to give it a descriptive 
 name, as the default file name is `Untitled.ipynb`. You can rename files by 

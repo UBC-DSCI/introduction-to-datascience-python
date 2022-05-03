@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Classification I: training & predicting {#classification}
 
 ```{r classification1-setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -62,6 +77,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use a `recipe` to preprocess data to be centered, scaled, and balanced.
 - Combine preprocessing and model training using a `workflow`.
 
++++
 
 ## The classification problem
 In many situations, we want to make predictions \index{predictive question} based on the current situation
@@ -170,6 +186,7 @@ total set of variables per image in this data set is:
 11. Symmetry: how similar the nucleus is when mirrored 
 12. Fractal Dimension: a measurement of how "rough" the perimeter is 
 
++++
 
 Below we use `glimpse` \index{glimpse} to preview the data frame. This function can 
 make it easier to inspect the data when we have a lot of columns, 
@@ -339,6 +356,7 @@ located at the coordinates (`r round(neighbors[1, c(attrs[1], attrs[2])],
 then the perimeter and concavity values are similar, and so we may expect that
 they would have the same diagnosis. 
 
++++
 
 ```{r 05-knn-2, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label."}
 perim_concav_with_new_point +
@@ -364,6 +382,7 @@ classify this red, diamond observation? The nearest neighbor to this new point i
 Does this seem like the right prediction to make for this observation? Probably 
 not, if you consider the other nearby points.
 
++++
 
 ```{r 05-knn-4, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label."}
 
@@ -505,6 +524,7 @@ the `mutate` step was used to compute the `dist_from_new` variable (the
 distance to the new observation) for each of the 5 nearest neighbors in the
 training data.
 
++++
 
 ```{r 05-multiknn-4, echo = FALSE}
 my_distances <- table_with_distances(cancer[, attrs], new_point)
@@ -683,6 +703,7 @@ In order to classify a new observation using a $K$-nearest neighbor classifier, 
 3. Choose the top $K$ rows of the sorted table.
 4. Classify the new observation based on a majority vote of the neighbor classes.
 
++++
 
 ## $K$-nearest neighbors with `tidymodels`
 
@@ -1424,5 +1445,3 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
-
-

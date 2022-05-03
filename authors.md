@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # About the authors {-}
 
 **Tiffany Timbers** is an Assistant Professor of Teaching in the Department of
@@ -8,6 +23,7 @@ real-world problems. One of her favorite courses she teaches is a graduate
 course on collaborative software development, which focuses on teaching how to
 create R and Python packages using modern tools and workflows.
 
++++
 
 **Trevor Campbell** is an Assistant Professor in the Department of Statistics at
 the University of British Columbia. His research focuses on automated, scalable
@@ -19,6 +35,7 @@ candidate under Jonathan How in the Laboratory for Information and Decision
 Systems (LIDS) at MIT, and before that he was in the Engineering Science
 program at the University of Toronto.
 
++++
 
 **Melissa Lee** is an Assistant Professor of Teaching in the Department of
 Statistics at the University of British Columbia. She teaches and develops

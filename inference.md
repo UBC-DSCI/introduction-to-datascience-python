@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Statistical inference {#inference}
 
 ```{r inference-setup, include = FALSE}
@@ -666,6 +681,7 @@ taken from the population in Figure \@ref(fig:11-example-bootstrapping0). We
 see that the sample’s distribution looks like that of the population for a
 large enough sample.
 
++++
 
 ```{r 11-example-bootstrapping0, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 6.8, fig.cap = "Comparison of samples of different sizes from the population."}
 sample_10 <- airbnb |>

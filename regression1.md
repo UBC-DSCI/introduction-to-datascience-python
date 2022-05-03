@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Regression I: K-nearest neighbors {#regression1}
 
 ```{r regression1-setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -879,5 +894,3 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
-
-

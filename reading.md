@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Reading in data locally and from the web {#reading}
 
 ```{r reading-setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -357,6 +372,7 @@ canlang_data <- read_delim("data/can_lang.tsv",
 canlang_data
 ```
 
++++
 
 Data frames in R need to have column names.  Thus if you read in data that
 don't have column names, R will assign names automatically. In the example
@@ -423,6 +439,7 @@ plain text files, where the characters you see when you open the file in a text
 editor are exactly the data they represent, this is not the case for `.xlsx`
 files. Take a look at a snippet of what a `.xlsx` file would look like in a text editor: 
 
++++
 
 ```
 ,?'O
@@ -876,7 +893,7 @@ display for us. We show a snippet of it below; the
 entire source 
 is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt):
 
-```html
+```{code-cell}
         <span class="result-meta">
                 <span class="result-price">$800</span>
 
@@ -916,9 +933,10 @@ will find that the information we're interested in is hidden among the muck.
 For example, near the top of the snippet
 above you can see a line that looks like
 
-```html
+```{code-cell}
 <span class="result-price">$800</span>
 ```
+
 That is definitely storing the price of a particular apartment. With some more
 investigation, you should be able to find things like the date and time of the
 listing, the address of the listing, and more. So this source code most likely
@@ -938,7 +956,7 @@ apartment prices, maybe we can look for all the tags with the `"result-price"`
 class, and grab the information between the opening and closing tag. Indeed,
 take a look at another line of the source snippet above:
 
-```html
+```{code-cell}
 <span class="result-price">$2285</span>
 ```
 
@@ -1061,7 +1079,7 @@ match the CSS selectors you specified.  A *node* is an HTML tag pair (e.g.,
 stored between the tags. For our CSS selector `td:nth-child(5)`, an example
 node that would be selected would be:
 
-```html
+```{code-cell}
 <td style="text-align:left;background:#f0f0f0;">
 <a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
 </td>
@@ -1281,4 +1299,4 @@ and guidance that the worksheets provide will function as intended.
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
     - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
 - The [`polite` R package](https://dmi3kno.github.io/polite/) [@polite] provides
-  a set of tools for responsibly scraping data from websites. 
+  a set of tools for responsibly scraping data from websites.

@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Effective data visualization {#viz}
 
 ```{r viz-setup, include = FALSE}
@@ -139,6 +154,7 @@ numerical comparisons; humans are much better at quickly processing visual
 information than text and math. Bar plots are again typically a better
 alternative.
 
++++
 
 ## Refining the visualization
 #### *Convey the message, minimize noise* {-}
@@ -181,6 +197,7 @@ understand and remember your message quickly.
 - Only make the plot area (where the dots, lines, bars are) as big as needed. Simple plots can be made small.
 - Don't adjust the axes to zoom in on small differences. If the difference is small, show that it's small!
 
++++
 
 ## Creating visualizations with `ggplot2` 
 #### *Build the visualization iteratively* {-}
@@ -485,6 +502,7 @@ faithful_scatter <- ggplot(faithful, aes(x = waiting, y = eruptions)) +
 faithful_scatter
 ```
 
++++
 
 \newpage
 
@@ -841,6 +859,7 @@ can_lang <- bind_rows(
 )
 ```
 
++++
 
 We have added a few more layers to make the data visualization in Figure \@ref(fig:03-nachos-to-cheesecake) even more effective. Specifically, we used have improved the visualizations accessibility by choosing colors that are easier to distinguish, mapped category to shape, and handled the problem of overlapping data points by making them slightly transparent. \index{ggplot!transparency}\index{alpha|see{ggplot}}
 
@@ -1135,6 +1154,7 @@ of the most incorrect measurements), it isn't the clearest way to convey our
 message and answer the question. Let's try a different strategy of creating
 grid of separate histogram plots.
 
++++
 
 We use the `facet_grid` function to create a plot 
 that has multiple subplots arranged in a grid.

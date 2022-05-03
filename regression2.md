@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+
 # Regression II: linear regression {#regression2}
 
 ```{r regression2-setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -875,6 +890,7 @@ predictive performance.
 > to evaluate the quality of the features you produce. You are free to use
 > cross-validation, though!
 
++++
 
 ## The other sides of regression
 
@@ -905,7 +921,7 @@ make sure to follow the instructions for computer setup
 found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-
++++
 
 ## Additional resources
 - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent

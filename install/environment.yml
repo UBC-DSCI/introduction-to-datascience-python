@@ -1,0 +1,22 @@
+name: dsci100
+channels:
+  - eoas_ubc
+  - conda-forge
+  - defaults
+dependencies:
+  - altair
+  - conda-lock
+  - ghp-import
+  - git
+  - jupyterlab
+  - jupytext
+  - jupyter-book>0.12
+  - jupyter_contrib_nbextensions
+  - mamba
+  - notebook
+  - numpy
+  - pandas
+  - python<3.10
+  - jinja2==3.0.3
+  - scikit-learn
+# conda-lock --kind explicit --file environment.yml -p linux-64

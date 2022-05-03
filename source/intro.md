@@ -15,7 +15,7 @@ kernelspec:
 
 \mainmatter
 
-# R and the Tidyverse {#intro}
+# R and the Tidyverse hello worldV
 
 ```{r intro-setup, include=FALSE}
 library(magick)

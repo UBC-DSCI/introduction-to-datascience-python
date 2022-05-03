@@ -1,0 +1,22 @@
+format: jb-book
+root: intro.md
+parts:
+- caption: First draft
+  chapters:
+    - file: preface-text
+    - file: setup
+    - file: reading
+    - file: wrangling
+    - file: viz
+    - file: version-control
+    - file: classification1
+    - file: classification2
+    - file: regression1
+    - file: regression2
+    - file: clustering
+    - file: inference
+    - file: references
+    - file: acknowledgements
+    - file: authors
+    - file: appendixA
+

@@ -5,6 +5,7 @@ channels:
   - defaults
 dependencies:
   - altair
+  - click
   - conda-lock
   - ghp-import
   - git
@@ -13,10 +14,13 @@ dependencies:
   - jupyter-book>0.12
   - jupyter_contrib_nbextensions
   - mamba
+  - nodejs
   - notebook
   - numpy
   - pandas
+  - pip
   - python<3.10
   - jinja2==3.0.3
   - scikit-learn
+  - watchdog
 # conda-lock --kind explicit --file environment.yml -p linux-64

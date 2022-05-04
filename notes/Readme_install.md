@@ -2,7 +2,7 @@
 
 ## fork or clone the repository
 
-    git clone https://github.com/phaustin/introduction-to-datascience-python.git
+* git clone https://github.com/UBC-DSCI/introduction-to-datascience-python.git
     cd introduction-to-datascience-python
     git checkout -b myst
 

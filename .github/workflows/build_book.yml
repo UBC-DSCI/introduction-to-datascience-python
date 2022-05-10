@@ -1,15 +1,15 @@
 on:
-  push:  # match this branch name with the checkout: with: ref: key below
+  push:
     branches:
-      - test
-  paths:   # only build when book source changes
+      - myst
+  paths:
     - source/**
   pull_request: null
 
 jobs:
   deploy-book:
     runs-on: ${{ matrix.os }}
-    permissions:  #https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
+    permissions:
       contents: write
       packages: write
 
@@ -27,7 +27,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          ref: 'test'
+          ref: 'myst'
 
       - name: install from lockfile
         uses: mamba-org/provision-with-micromamba@main

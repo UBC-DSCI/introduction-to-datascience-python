@@ -1,25 +1,15 @@
 on:
-  #
-  # match this branch name with the checkout: with: ref: key below
-  #
-  push:
+  push:  # match this branch name with the checkout: with: ref: key below
     branches:
       - test
-  #
-  # only build when book source changes
-  #
-  paths:
+  paths:   # only build when book source changes
     - source/**
   pull_request: null
 
 jobs:
   deploy-book:
     runs-on: ${{ matrix.os }}
-    #
-    # not sure why permissions are needed
-    # https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
-    #
-    permissions:
+    permissions:  #https://stackoverflow.com/questions/70374602/getting-error-while-pushing-changes-to-my-own-public-repo-through-github-actions
       contents: write
       packages: write
 

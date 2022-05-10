@@ -2,8 +2,8 @@ on:
   push:
     branches:
       - myst
-  paths:
-    - source/**
+    paths:
+      - source/**
   pull_request: null
 
 jobs:

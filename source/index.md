@@ -52,7 +52,7 @@ output:
 ---
 ```
 
-# Welcome! {-}
+# Welcome! {-}  --- update
 
 This is the [website](https://datasciencebook.ca/) for *Data Science: A First Introduction*. 
 You can read the web version of the book on this site. Click a section in the table of contents

@@ -7,52 +7,33 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.10.3
+#       jupytext_version: 1.13.5
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python [conda env:dsci100]
 #     language: python
-#     name: python3
+#     name: conda-env-dsci100-py
 # ---
 
 # %% [markdown]
 # # Classification I: training & predicting {#classification}
-#
-# ```{r classification1-setup, echo = FALSE, message = FALSE, warning = FALSE}
-# library(formatR)
-# library(plotly)
-# library(knitr)
-# library(kableExtra)
-# library(ggpubr)
-# library(stringr)
-# library(ggplot2)
-#
-# knitr::opts_chunk$set(echo = TRUE, 
-#                       fig.align = "center")
-# options(knitr.table.format = function() {
-#   if (knitr::is_latex_output()) 'latex' else 'pandoc'
-# })
-# reticulate::use_miniconda('r-reticulate')
-#
-# print_tidymodels <- function(tidymodels_object) {
-#   if(!is_latex_output()) {
-#     tidymodels_object
-#   } else {
-#     output <- capture.output(tidymodels_object)
-#     
-#     for (i in seq_along(output)) {
-#       if (nchar(output[i]) <= 80) {
-#         cat(output[i], sep = "\n")
-#       } else {
-#         cat(str_sub(output[i], start = 1, end = 80), sep = "\n")
-#         cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = "\n")
-#       }
-#     }
-#   }
-# }
-#
-# theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
-# ```
-#
+
+# %%
+import random
+
+import altair as alt
+import pandas as pd
+import sklearn
+from sklearn.compose import make_column_transformer
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline, make_pipeline
+
+alt.data_transformers.disable_max_rows()
+alt.renderers.enable("mimetype")
+
+# reduces the size of the notebooks with altair plots
+alt.data_transformers.enable("data_server")
+
+# %% [markdown]
 # ## Overview 
 # In previous chapters, we focused solely on descriptive and exploratory
 # data analysis questions. 

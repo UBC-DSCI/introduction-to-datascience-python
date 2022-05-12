@@ -7,9 +7,9 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.13.5
 kernelspec:
-  display_name: Python 3 (ipykernel)
+  display_name: Python [conda env:dsci100]
   language: python
-  name: python3
+  name: conda-env-dsci100-py
 ---
 
 # Classification I: training & predicting {#classification}
@@ -24,11 +24,12 @@ from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 
-# Handle large data sets by not embedding them in the notebook
-alt.data_transformers.enable('data_server')
+alt.data_transformers.disable_max_rows()
+# # Handle large data sets by not embedding them in the notebook
+# alt.data_transformers.enable('data_server')
 
-# Save a PNG blob as a backup for when the Altair plots do not render
-alt.renderers.enable('mimetype')
+# # Save a PNG blob as a backup for when the Altair plots do not render
+# alt.renderers.enable('mimetype')
 ```
 
 ## Overview 
@@ -226,11 +227,11 @@ perim_concav = (
         cancer,
         title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
     )
-    .mark_point(opacity=0.6)
+    .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors)),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
 perim_concav
@@ -288,6 +289,10 @@ the *prediction of an unobserved label* might be possible.
 # neighbors <- cancer[order(my_distances$Distance), ]
 ```
 
+```{code-cell} ipython3
+new_point = [2, 4]
+```
+
 In order to actually make predictions for new observations in practice, we
 will need a classification algorithm. 
 In this book, we will use the $K$-nearest neighbors \index{K-nearest neighbors!classification} classification algorithm.
@@ -304,28 +309,38 @@ new observation, with standardized perimeter of `r new_point[1]` and standardize
 diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in
 Figure \@ref(fig:05-knn-1).
 
-```{r 05-knn-1, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter with new observation represented as a red diamond."}
-perim_concav_with_new_point <-  bind_rows(cancer, 
-                                          tibble(Perimeter = new_point[1], 
-                                                 Concavity = new_point[2], 
-                                                 Class = "unknown")) |>
-  ggplot(aes(x = Perimeter, 
-             y = Concavity, 
-             color = Class, 
-             shape = Class, 
-             size = Class)) +
-  geom_point(alpha = 0.6) +
-  labs(color = "Diagnosis", x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)") +
-  scale_color_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"), 
-                     values = c("steelblue2", "orange2", "red")) +
-  scale_shape_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"),
-                     values= c(16, 16, 18))+ 
-  scale_size_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"),
-                     values= c(2, 2, 2.5))
+```{code-cell} ipython3
+perim_concav
+```
+
+```{code-cell} ipython3
+points_df = pd.DataFrame({
+    'Perimeter': [2],
+    'Concavity': [4],
+    'Class': ['unknown']
+})
+perim_concav_with_new_point_df = pd.concat((cancer, points_df))
+
+perim_concav_with_new_point = (
+    alt.Chart(
+        perim_concav_with_new_point_df,
+        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color(
+            "Class",
+            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
+            title="Diagnosis",
+        ),
+        shape=alt.Shape(
+            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
+        ),
+        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+    )
+)
 perim_concav_with_new_point
 ```
 

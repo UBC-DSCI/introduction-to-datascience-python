@@ -1,7 +1,6 @@
 # ---
 # jupyter:
 #   jupytext:
-#     cell_metadata_filter: -all
 #     formats: py:percent,md:myst,ipynb
 #     text_representation:
 #       extension: .py
@@ -27,11 +26,12 @@ from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 
-# Handle large data sets by not embedding them in the notebook
-alt.data_transformers.enable('data_server')
+alt.data_transformers.disable_max_rows()
+# # Handle large data sets by not embedding them in the notebook
+# alt.data_transformers.enable('data_server')
 
-# Save a PNG blob as a backup for when the Altair plots do not render
-alt.renderers.enable('mimetype')
+# # Save a PNG blob as a backup for when the Altair plots do not render
+# alt.renderers.enable('mimetype')
 
 # %% [markdown]
 # ## Overview 
@@ -226,11 +226,11 @@ perim_concav = (
         cancer,
         title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
     )
-    .mark_point(opacity=0.6)
+    .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors)),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
 perim_concav
@@ -286,6 +286,9 @@ perim_concav
 # my_distances <- table_with_distances(cancer[, attrs], new_point)
 # neighbors <- cancer[order(my_distances$Distance), ]
 
+# %%
+new_point = [2, 4]
+
 # %% [markdown]
 # In order to actually make predictions for new observations in practice, we
 # will need a classification algorithm. 
@@ -302,32 +305,41 @@ perim_concav
 # new observation, with standardized perimeter of `r new_point[1]` and standardized concavity of `r new_point[2]`, whose 
 # diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in
 # Figure \@ref(fig:05-knn-1).
-#
-# ```{r 05-knn-1, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter with new observation represented as a red diamond."}
-# perim_concav_with_new_point <-  bind_rows(cancer, 
-#                                           tibble(Perimeter = new_point[1], 
-#                                                  Concavity = new_point[2], 
-#                                                  Class = "unknown")) |>
-#   ggplot(aes(x = Perimeter, 
-#              y = Concavity, 
-#              color = Class, 
-#              shape = Class, 
-#              size = Class)) +
-#   geom_point(alpha = 0.6) +
-#   labs(color = "Diagnosis", x = "Perimeter (standardized)", 
-#        y = "Concavity (standardized)") +
-#   scale_color_manual(name = "Diagnosis", 
-#                      labels = c("Benign", "Malignant", "Unknown"), 
-#                      values = c("steelblue2", "orange2", "red")) +
-#   scale_shape_manual(name = "Diagnosis", 
-#                      labels = c("Benign", "Malignant", "Unknown"),
-#                      values= c(16, 16, 18))+ 
-#   scale_size_manual(name = "Diagnosis", 
-#                      labels = c("Benign", "Malignant", "Unknown"),
-#                      values= c(2, 2, 2.5))
-# perim_concav_with_new_point
-# ```
-#
+
+# %%
+perim_concav
+
+# %%
+points_df = pd.DataFrame({
+    'Perimeter': [2],
+    'Concavity': [4],
+    'Class': ['unknown']
+})
+perim_concav_with_new_point_df = pd.concat((cancer, points_df))
+
+perim_concav_with_new_point = (
+    alt.Chart(
+        perim_concav_with_new_point_df,
+        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color(
+            "Class",
+            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
+            title="Diagnosis",
+        ),
+        shape=alt.Shape(
+            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
+        ),
+        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+    )
+)
+perim_concav_with_new_point
+
+# %% [markdown]
 # Figure \@ref(fig:05-knn-2) shows that the nearest point to this new observation is **malignant** and
 # located at the coordinates (`r round(neighbors[1, c(attrs[1], attrs[2])],
 # 1)`). The idea here is that if a point is close to another in the scatter plot,

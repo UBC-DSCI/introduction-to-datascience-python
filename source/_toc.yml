@@ -13,9 +13,8 @@ parts:
     - file: intro.md
     - file: reading.md
     - file: wrangling.md
-    # - file: viz
-    # - file: version-control
-    # - file: classification1
+    - file: viz.md
+    - file: classification1.md
     # - file: classification2
     # - file: regression1
     # - file: regression2

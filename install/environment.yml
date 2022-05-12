@@ -5,6 +5,7 @@ channels:
   - defaults
 dependencies:
   - altair
+  - altair_data_server
   - click
   - conda-lock
   - ghp-import
@@ -19,6 +20,7 @@ dependencies:
   - numpy
   - pandas
   - pip
+  - pooch
   - python<3.10
   - jinja2==3.0.3
   - scikit-learn

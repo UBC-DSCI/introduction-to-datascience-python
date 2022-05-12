@@ -9,7 +9,7 @@ parts:
     - file: wrangling
     - file: viz
     - file: version-control
-    - file: classification1
+    - file: classification1.ipynb
     - file: classification2
     - file: regression1
     - file: regression2

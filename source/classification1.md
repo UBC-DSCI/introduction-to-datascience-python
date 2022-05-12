@@ -1,6 +1,5 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
@@ -8,15 +7,14 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.13.5
 kernelspec:
-  display_name: Python [conda env:dsci100]
+  display_name: Python 3 (ipykernel)
   language: python
-  name: conda-env-dsci100-py
+  name: python3
 ---
 
 # Classification I: training & predicting {#classification}
 
 ```{code-cell} ipython3
-:tags: ["remove-input"]
 import random
 
 import altair as alt
@@ -26,11 +24,11 @@ from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 
-alt.data_transformers.disable_max_rows()
-alt.renderers.enable("mimetype")
+# Handle large data sets by not embedding them in the notebook
+alt.data_transformers.enable('data_server')
 
-# reduces the size of the notebooks with altair plots
-alt.data_transformers.enable("data_server")
+# Save a PNG blob as a backup for when the Altair plots do not render
+alt.renderers.enable('mimetype')
 ```
 
 ## Overview 
@@ -120,14 +118,16 @@ damage [@stanfordhealthcare].
 Thus, it is important to quickly and accurately diagnose the tumor type to
 guide patient treatment.
 
++++
+
 ### Loading the cancer data
 
 Our first step is to load, wrangle, and explore the data using visualizations
 in order to better understand the data we are working with. We start by
-loading the `tidyverse` package needed for our analysis. 
+loading the `pandas` package needed for our analysis.
 
-```{r 05-load-libraries, warning = FALSE, message = FALSE}
-library(tidyverse)
+```{code-cell} ipython3
+import pandas as pd
 ```
 
 In this case, the file containing the breast cancer data set is a `.csv`
@@ -136,8 +136,8 @@ arguments, and then inspect its contents:
 
 \index{read function!read\_csv}
 
-```{r 05-read-data, message = FALSE}
-cancer <- read_csv("data/wdbc.csv")
+```{code-cell} ipython3
+cancer = pd.read_csv("data/wdbc.csv")
 cancer
 ```
 
@@ -171,76 +171,68 @@ total set of variables per image in this data set is:
 
 +++
 
-Below we use `glimpse` \index{glimpse} to preview the data frame. This function can 
+Below we use `.info()` \index{glimpse} to preview the data frame. This function can 
 make it easier to inspect the data when we have a lot of columns, 
 as it prints the data such that the columns go down 
 the page (instead of across).
 
-```{r 05-glimpse}
-glimpse(cancer)
+```{code-cell} ipython3
+cancer.info()
 ```
 
-From the summary of the data above, we can see that `Class` is of type character
-(denoted by `<chr>`). Since we will be working with `Class` as a
-categorical statistical variable, we will convert it to a factor using the
-function `as_factor`. \index{factor!as\_factor}
+From the summary of the data above, we can see that `Class` is of type object.
 
-```{r 05-class}
-cancer <- cancer |>
-  mutate(Class = as_factor(Class))
-glimpse(cancer)
+```{code-cell} ipython3
+# cancer <- cancer |>
+#   mutate(Class = as_factor(Class))
+# glimpse(cancer)
 ```
 
-Recall that factors have what are called "levels", which you can think of as categories. We
-can verify the levels of the `Class` column by using the `levels` \index{levels}\index{factor!levels} function.
-This function should return the name of each category in that column. Given
-that we only have two different values in our `Class` column (B for benign and M 
-for malignant), we only expect to get two names back.  Note that the `levels` function requires a *vector* argument; 
-so we use the `pull` function to extract a single column (`Class`) and 
-pass that into the `levels` function to see the categories 
-in the `Class` column. 
+Given that we only have two different values in our `Class` column (B for benign and M 
+for malignant), we only expect to get two names back.
 
-```{r 05-levels}
-cancer |>
-  pull(Class) |>
-  levels()
+```{code-cell} ipython3
+cancer['Class'].unique()
 ```
 
 ### Exploring the cancer data
 
 Before we start doing any modeling, let's explore our data set. Below we use
-the `group_by`, `summarize` and `n` \index{group\_by}\index{summarize} functions to find the number and percentage 
-of benign and malignant tumor observations in our data set. The `n` function within
-`summarize`, when paired with `group_by`, counts the number of observations in each `Class` group. 
+the `groupby`, `count` methods to find the number and percentage 
+of benign and malignant tumor observations in our data set. When paired with `groupby`, `count` counts the number of observations in each `Class` group. 
 Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
-```{r 05-tally}
-num_obs <- nrow(cancer)
-cancer |>
-  group_by(Class) |>
-  summarize(
-    count = n(),
-    percentage = n() / num_obs * 100
-  )
+
+```{code-cell} ipython3
+num_obs = len(cancer)
+explore_cancer = pd.DataFrame()
+explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
+explore_cancer['percentage'] = explore_cancer['count'] / num_obs * 100
+explore_cancer
 ```
 
 Next, let's draw a scatter plot \index{visualization!scatter} to visualize the relationship between the
-perimeter and concavity variables. Rather than use `ggplot's` default palette,
-we select our own colorblind-friendly colors&mdash;`"orange2"` 
-for light orange and `"steelblue2"` for light blue&mdash;and
- pass them as the `values` argument to the `scale_color_manual` function. 
+perimeter and concavity variables. Rather than use `altair's` default palette,
+we select our own colorblind-friendly colors&mdash;`"#efb13f"` 
+for light orange and `"#86bfef"` for light blue&mdash;and
+ pass them as the `scale` argument in the `color` argument. 
 We also make the category labels ("B" and "M") more readable by 
-changing them to "Benign" and "Malignant" using the `labels` argument.
+changing them to "Benign" and "Malignant".
 
-```{r 05-scatter, fig.height = 3.5, fig.width = 4.5, fig.cap= "Scatter plot of concavity versus perimeter colored by diagnosis label."}
-perim_concav <- cancer |>
-  ggplot(aes(x = Perimeter, y = Concavity, color = Class)) +
-  geom_point(alpha = 0.6) +
-  labs(x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)",
-       color = "Diagnosis") +
-  scale_color_manual(labels = c("Malignant", "Benign"), 
-                     values = c("orange2", "steelblue2")) +
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+colors = ["#86bfef", "#efb13f"]
+cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
+perim_concav = (
+    alt.Chart(
+        cancer,
+        title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
+    )
+    .mark_point(opacity=0.6)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors)),
+    )
+)
 perim_concav
 ```
 
@@ -260,36 +252,40 @@ orange cloud of malignant points and thus we could probably classify it as
 malignant. Based on our visualization, it seems like 
 the *prediction of an unobserved label* might be possible.
 
++++
+
 ## Classification with $K$-nearest neighbors
 
-```{r 05-knn-0, echo = FALSE}
-## Find the distance between new point and all others in data set
-euclidDist <- function(point1, point2) {
-  # Returns the Euclidean distance between point1 and point2.
-  # Each argument is an array containing the coordinates of a point."""
-  (sqrt(sum((point1 - point2)^2)))
-}
-distance_from_point <- function(row) {
-  euclidDist(new_point, row)
-}
-all_distances <- function(training, new_point) {
-  # Returns an array of distances
-  # between each point in the training set
-  # and the new point (which is a row of attributes)
-  distance_from_point <- function(row) {
-    euclidDist(new_point, row)
-  }
-  apply(training, MARGIN = 1, distance_from_point)
-}
-table_with_distances <- function(training, new_point) {
-  # Augments the training table
-  # with a column of distances from new_point
-  data.frame(training, Distance = all_distances(training, new_point))
-}
-new_point <- c(2, 4)
-attrs <- c("Perimeter", "Concavity")
-my_distances <- table_with_distances(cancer[, attrs], new_point)
-neighbors <- cancer[order(my_distances$Distance), ]
+```{code-cell} ipython3
+## HELPER functions, decide later whether need them
+
+# ## Find the distance between new point and all others in data set
+# euclidDist <- function(point1, point2) {
+#   # Returns the Euclidean distance between point1 and point2.
+#   # Each argument is an array containing the coordinates of a point."""
+#   (sqrt(sum((point1 - point2)^2)))
+# }
+# distance_from_point <- function(row) {
+#   euclidDist(new_point, row)
+# }
+# all_distances <- function(training, new_point) {
+#   # Returns an array of distances
+#   # between each point in the training set
+#   # and the new point (which is a row of attributes)
+#   distance_from_point <- function(row) {
+#     euclidDist(new_point, row)
+#   }
+#   apply(training, MARGIN = 1, distance_from_point)
+# }
+# table_with_distances <- function(training, new_point) {
+#   # Augments the training table
+#   # with a column of distances from new_point
+#   data.frame(training, Distance = all_distances(training, new_point))
+# }
+# new_point <- c(2, 4)
+# attrs <- c("Perimeter", "Concavity")
+# my_distances <- table_with_distances(cancer[, attrs], new_point)
+# neighbors <- cancer[order(my_distances$Distance), ]
 ```
 
 In order to actually make predictions for new observations in practice, we

@@ -27,11 +27,11 @@ from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 
-alt.data_transformers.disable_max_rows()
-alt.renderers.enable("mimetype")
+# Handle large data sets by not embedding them in the notebook
+alt.data_transformers.enable('data_server')
 
-# reduces the size of the notebooks with altair plots
-alt.data_transformers.enable("data_server")
+# Save a PNG blob as a backup for when the Altair plots do not render
+alt.renderers.enable('mimetype')
 
 # %% [markdown]
 # ## Overview 
@@ -56,12 +56,13 @@ alt.data_transformers.enable("data_server")
 # - Interpret the output of a classifier.
 # - Compute, by hand, the straight-line (Euclidean) distance between points on a graph when there are two predictor variables.
 # - Explain the $K$-nearest neighbor classification algorithm.
-# - Perform $K$-nearest neighbor classification in R using `tidymodels`.
-# - Use a `recipe` to preprocess data to be centered, scaled, and balanced.
-# - Combine preprocessing and model training using a `workflow`.
+# - Perform $K$-nearest neighbor classification in Python using `scikit-learn`.
+# - Use `StandardScaler` to preprocess data to be centered, scaled, and balanced.
+# - Combine preprocessing and model training using `make_pipeline`.
 
 # %% [markdown]
 # ## The classification problem
+#
 # In many situations, we want to make predictions \index{predictive question} based on the current situation
 # as well as past experiences. For instance, a doctor may want to diagnose a
 # patient as either diseased or healthy based on their symptoms and the doctor's
@@ -118,28 +119,29 @@ alt.data_transformers.enable("data_server")
 # damage [@stanfordhealthcare].
 # Thus, it is important to quickly and accurately diagnose the tumor type to
 # guide patient treatment.
-#
+
+# %% [markdown]
 # ### Loading the cancer data
 #
 # Our first step is to load, wrangle, and explore the data using visualizations
 # in order to better understand the data we are working with. We start by
-# loading the `tidyverse` package needed for our analysis. 
-#
-# ```{r 05-load-libraries, warning = FALSE, message = FALSE}
-# library(tidyverse)
-# ```
-#
+# loading the `pandas` package needed for our analysis.
+
+# %%
+import pandas as pd
+
+# %% [markdown]
 # In this case, the file containing the breast cancer data set is a `.csv`
 # file with headers. We'll use the `read_csv` function with no additional
 # arguments, and then inspect its contents:
 #
 # \index{read function!read\_csv}
-#
-# ```{r 05-read-data, message = FALSE}
-# cancer <- read_csv("data/wdbc.csv")
-# cancer
-# ```
-#
+
+# %%
+cancer = pd.read_csv("data/wdbc.csv")
+cancer
+
+# %% [markdown]
 # ### Describing the variables in the cancer data set
 #
 # Breast tumors can be diagnosed by performing a *biopsy*, a process where
@@ -169,79 +171,71 @@ alt.data_transformers.enable("data_server")
 # 12. Fractal Dimension: a measurement of how "rough" the perimeter is
 
 # %% [markdown]
-# Below we use `glimpse` \index{glimpse} to preview the data frame. This function can 
+# Below we use `.info()` \index{glimpse} to preview the data frame. This function can 
 # make it easier to inspect the data when we have a lot of columns, 
 # as it prints the data such that the columns go down 
 # the page (instead of across).
-#
-# ```{r 05-glimpse}
-# glimpse(cancer)
-# ```
-#
-# From the summary of the data above, we can see that `Class` is of type character
-# (denoted by `<chr>`). Since we will be working with `Class` as a
-# categorical statistical variable, we will convert it to a factor using the
-# function `as_factor`. \index{factor!as\_factor}
-#
-# ```{r 05-class}
+
+# %%
+cancer.info()
+
+# %% [markdown]
+# From the summary of the data above, we can see that `Class` is of type object.
+
+# %%
 # cancer <- cancer |>
 #   mutate(Class = as_factor(Class))
 # glimpse(cancer)
-# ```
-#
-# Recall that factors have what are called "levels", which you can think of as categories. We
-# can verify the levels of the `Class` column by using the `levels` \index{levels}\index{factor!levels} function.
-# This function should return the name of each category in that column. Given
-# that we only have two different values in our `Class` column (B for benign and M 
-# for malignant), we only expect to get two names back.  Note that the `levels` function requires a *vector* argument; 
-# so we use the `pull` function to extract a single column (`Class`) and 
-# pass that into the `levels` function to see the categories 
-# in the `Class` column. 
-#
-# ```{r 05-levels}
-# cancer |>
-#   pull(Class) |>
-#   levels()
-# ```
-#
+
+# %% [markdown]
+# Given that we only have two different values in our `Class` column (B for benign and M 
+# for malignant), we only expect to get two names back.
+
+# %%
+cancer['Class'].unique()
+
+# %% [markdown]
 # ### Exploring the cancer data
 #
 # Before we start doing any modeling, let's explore our data set. Below we use
-# the `group_by`, `summarize` and `n` \index{group\_by}\index{summarize} functions to find the number and percentage 
-# of benign and malignant tumor observations in our data set. The `n` function within
-# `summarize`, when paired with `group_by`, counts the number of observations in each `Class` group. 
+# the `groupby`, `count` methods to find the number and percentage 
+# of benign and malignant tumor observations in our data set. When paired with `groupby`, `count` counts the number of observations in each `Class` group. 
 # Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
-# ```{r 05-tally}
-# num_obs <- nrow(cancer)
-# cancer |>
-#   group_by(Class) |>
-#   summarize(
-#     count = n(),
-#     percentage = n() / num_obs * 100
-#   )
-# ```
-#
+
+# %%
+num_obs = len(cancer)
+explore_cancer = pd.DataFrame()
+explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
+explore_cancer['percentage'] = explore_cancer['count'] / num_obs * 100
+explore_cancer
+
+# %% [markdown]
 # Next, let's draw a scatter plot \index{visualization!scatter} to visualize the relationship between the
-# perimeter and concavity variables. Rather than use `ggplot's` default palette,
-# we select our own colorblind-friendly colors&mdash;`"orange2"` 
-# for light orange and `"steelblue2"` for light blue&mdash;and
-#  pass them as the `values` argument to the `scale_color_manual` function. 
+# perimeter and concavity variables. Rather than use `altair's` default palette,
+# we select our own colorblind-friendly colors&mdash;`"#efb13f"` 
+# for light orange and `"#86bfef"` for light blue&mdash;and
+#  pass them as the `scale` argument in the `color` argument. 
 # We also make the category labels ("B" and "M") more readable by 
-# changing them to "Benign" and "Malignant" using the `labels` argument.
-#
-# ```{r 05-scatter, fig.height = 3.5, fig.width = 4.5, fig.cap= "Scatter plot of concavity versus perimeter colored by diagnosis label."}
-# perim_concav <- cancer |>
-#   ggplot(aes(x = Perimeter, y = Concavity, color = Class)) +
-#   geom_point(alpha = 0.6) +
-#   labs(x = "Perimeter (standardized)", 
-#        y = "Concavity (standardized)",
-#        color = "Diagnosis") +
-#   scale_color_manual(labels = c("Malignant", "Benign"), 
-#                      values = c("orange2", "steelblue2")) +
-#   theme(text = element_text(size = 12))
-# perim_concav
-# ```
-#
+# changing them to "Benign" and "Malignant".
+
+# %%
+colors = ["#86bfef", "#efb13f"]
+cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
+perim_concav = (
+    alt.Chart(
+        cancer,
+        title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
+    )
+    .mark_point(opacity=0.6)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors)),
+    )
+)
+perim_concav
+
+# %% [markdown]
 # In Figure \@ref(fig:05-scatter), we can see that malignant observations typically fall in
 # the upper right-hand corner of the plot area. By contrast, benign
 # observations typically fall in the lower left-hand corner of the plot. In other words,
@@ -257,10 +251,13 @@ alt.data_transformers.enable("data_server")
 # orange cloud of malignant points and thus we could probably classify it as
 # malignant. Based on our visualization, it seems like 
 # the *prediction of an unobserved label* might be possible.
-#
+
+# %% [markdown]
 # ## Classification with $K$-nearest neighbors
-#
-# ```{r 05-knn-0, echo = FALSE}
+
+# %%
+## HELPER functions, decide later whether need them
+
 # ## Find the distance between new point and all others in data set
 # euclidDist <- function(point1, point2) {
 #   # Returns the Euclidean distance between point1 and point2.
@@ -288,8 +285,8 @@ alt.data_transformers.enable("data_server")
 # attrs <- c("Perimeter", "Concavity")
 # my_distances <- table_with_distances(cancer[, attrs], new_point)
 # neighbors <- cancer[order(my_distances$Distance), ]
-# ```
-#
+
+# %% [markdown]
 # In order to actually make predictions for new observations in practice, we
 # will need a classification algorithm. 
 # In this book, we will use the $K$-nearest neighbors \index{K-nearest neighbors!classification} classification algorithm.

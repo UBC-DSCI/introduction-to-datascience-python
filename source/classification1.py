@@ -28,10 +28,10 @@ from sklearn.pipeline import Pipeline, make_pipeline
 
 alt.data_transformers.disable_max_rows()
 # # Handle large data sets by not embedding them in the notebook
-# alt.data_transformers.enable('data_server')
+alt.data_transformers.enable('data_server')
 
 # # Save a PNG blob as a backup for when the Altair plots do not render
-# alt.renderers.enable('mimetype')
+alt.renderers.enable('mimetype')
 
 # %% [markdown]
 # ## Overview 

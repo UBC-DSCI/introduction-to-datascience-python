@@ -11,9 +11,8 @@ parts:
     - file: authors.md
     - file: setup.md
     - file: intro.md
-    # - file: setup
-    # - file: reading
-    # - file: wrangling
+    - file: reading
+    - file: wrangling
     # - file: viz
     # - file: version-control
     # - file: classification1
@@ -26,4 +25,3 @@ parts:
     # - file: acknowledgements
     # - file: authors
     # - file: appendixA
-

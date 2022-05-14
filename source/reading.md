@@ -15,28 +15,8 @@ kernelspec:
 
 # Reading in data locally and from the web {#reading}
 
-```{r reading-setup, echo = FALSE, message = FALSE, warning = FALSE}
-library(magick)
-library(magrittr)
-library(knitr)
-knitr::opts_chunk$set(message = FALSE,
-                      fig.align = "center")
-
-print_html_nodes <- function(html_nodes_object) {
-  if(!is_latex_output()) {
-    html_nodes_object
-  } else {
-    output <- capture.output(html_nodes_object)
-    
-    for (i in seq_along(output)) {
-      if (nchar(output[i]) <= 79) {
-        cat(output[i], sep = "\n")
-      } else {
-        cat(str_sub(output[i], start = 1, end = 79), sep = "\n")
-      }
-    }
-  }
-}
+```{code-cell} ipython3
+import pandas as pd 
 ```
 
 ## Overview 
@@ -109,20 +89,23 @@ read the `.csv` file named `happiness_report.csv` into R, we could do this
 using either a relative or an absolute path.  We show both choices
 below.\index{Happiness Report}
 
-```{r file-system-for-export-to-intro-datascience, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Example file system.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/filesystem.jpeg")
+```{figure} img/filesystem.jpeg
+:height: 500px
+:name: filesystem
+
+
 ```
 
 **Reading `happiness_report.csv` using a relative path:**
 
-```{r eval = FALSE}
-happy_data <- read_csv("data/happiness_report.csv")
+```{code-cell} ipython3
+happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 
 **Reading `happiness_report.csv` using an absolute path:**
 
-```{r eval = FALSE}
-happy_data <- read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
+```{code-cell} ipython3
+happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
 
 So which one should you use? Generally speaking, to ensure your code can be run 
@@ -204,15 +187,12 @@ And here is a review of how we can use `read_csv` to load it into R. First we
 load the `tidyverse` \index{tidyverse} package to gain access to useful
 functions for reading the data. 
 
-```{r, message = FALSE}
-library(tidyverse)
-```
 
 Next we use `read_csv` to load the data into R, and in that call we specify the
 relative path to the file.
 
-```{r load-data, message = TRUE}
-canlang_data <- read_csv("data/can_lang.csv")
+```{code-cell} ipython3
+canlang_data = pd.read_csv("data/can_lang.csv")
 ```
 
 \newpage
@@ -224,9 +204,9 @@ canlang_data <- read_csv("data/can_lang.csv")
 > future when we use this and related functions to load data in this book, we will
 > silence these messages to help with the readability of the book.
 
-```{r view-data}
+
 canlang_data
-```
+
 
 ### Skipping rows when reading in data
 
@@ -259,15 +239,15 @@ With this extra information being present at the top of the file, using
 into R. In the case of this file we end up only reading in one column of the
 data set:
 
-```{r}
-canlang_data <- read_csv("data/can_lang_meta-data.csv")
+```{code-cell} ipython3
+canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ```
 
 > **Note:** In contrast to the normal and expected messages above, this time R 
 > printed out a warning for us indicating that there might be a problem with how
 > our data is being read in. \index{warning}
 
-```{r}
+```{code-cell} ipython3
 canlang_data
 ```
 
@@ -277,9 +257,9 @@ how many lines to skip before
 it should start reading in the data. In the example above, we would set this
 value to 3.
 
-```{r}
-canlang_data <- read_csv("data/can_lang_meta-data.csv", 
-                         skip = 3)
+```{code-cell} ipython3
+canlang_data = pd.read_csv("data/can_lang_meta-data.csv", 
+                         skiprows=3)
 canlang_data
 ```
 
@@ -365,10 +345,10 @@ specify that there are no column names to assign, and give it the value of
 > Escaped characters are used to represent non-printing characters 
 > (like the tab) or characters with special meanings (such as quotation marks). 
 
-```{r}
-canlang_data <- read_delim("data/can_lang.tsv", 
-                           delim = "\t", 
-                           col_names = FALSE)
+```{code-cell} ipython3
+canlang_data =  pd.read_csv("data/can_lang.tsv", 
+                           delimiter = "\t", 
+                           names = None)
 canlang_data
 ```
 
@@ -464,10 +444,9 @@ editor, we can read Excel spreadsheets into R using the `readxl` package
 developed specifically for this 
 purpose. \index{readxl}\index{read function!read\_excel}
 
-```{r}
-library(readxl)
+```{code-cell} ipython3
 
-canlang_data <- read_excel("data/can_lang.xlsx")
+canlang_data <- pd.read_excel("data/can_lang.xlsx")
 canlang_data
 ```
 

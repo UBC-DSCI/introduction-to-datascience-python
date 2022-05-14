@@ -20,18 +20,20 @@
 import random
 
 import altair as alt
+import numpy as np
 import pandas as pd
 import sklearn
 from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.metrics.pairwise import euclidean_distances
 
 alt.data_transformers.disable_max_rows()
 # # Handle large data sets by not embedding them in the notebook
-alt.data_transformers.enable('data_server')
+# alt.data_transformers.enable('data_server')
 
 # # Save a PNG blob as a backup for when the Altair plots do not render
-alt.renderers.enable('mimetype')
+# alt.renderers.enable('mimetype')
 
 # %% [markdown]
 # ## Overview 
@@ -256,9 +258,7 @@ perim_concav
 # ## Classification with $K$-nearest neighbors
 
 # %%
-## HELPER functions, decide later whether need them
-
-# ## Find the distance between new point and all others in data set
+## Find the distance between new point and all others in data set
 # euclidDist <- function(point1, point2) {
 #   # Returns the Euclidean distance between point1 and point2.
 #   # Each argument is an array containing the coordinates of a point."""
@@ -288,6 +288,16 @@ perim_concav
 
 # %%
 new_point = [2, 4]
+attrs = ["Perimeter", "Concavity"]
+points_df = pd.DataFrame(
+    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["unknown"]}
+)
+perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=True)
+# Find the euclidean distances from the new point to each of the points
+# in the orginal dataset
+my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
+    len(cancer)
+][:-1]
 
 # %% [markdown]
 # In order to actually make predictions for new observations in practice, we
@@ -306,17 +316,7 @@ new_point = [2, 4]
 # diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in
 # Figure \@ref(fig:05-knn-1).
 
-# %%
-perim_concav
-
-# %%
-points_df = pd.DataFrame({
-    'Perimeter': [2],
-    'Concavity': [4],
-    'Class': ['unknown']
-})
-perim_concav_with_new_point_df = pd.concat((cancer, points_df))
-
+# %% render={"image": {"width": "200px", "alt": "fun-fish", "classes": "shadow bg-primary"}, "figure": {"caption": "Hey everyone its **party** time!\n", "name": "fun-fish"}}
 perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
@@ -346,30 +346,128 @@ perim_concav_with_new_point
 # then the perimeter and concavity values are similar, and so we may expect that
 # they would have the same diagnosis.
 
+# %%
+near_neighbor_df = pd.concat(
+    (
+        cancer.loc[np.argmin(my_distances), attrs],
+        perim_concav_with_new_point_df.loc[len(cancer), attrs],
+    ),
+    axis=1,
+).T
+line = (
+    alt.Chart(near_neighbor_df)
+    .mark_line()
+    .encode(x="Perimeter", y="Concavity", color=alt.value("black"))
+)
+
+
+## In the figure caption, 
+## "with a line to the one nearest neighbor, which has a malignant label." is missing
+perim_concav_with_new_point + line
+
 # %% [markdown]
-# ```{r 05-knn-2, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label."}
-# perim_concav_with_new_point +
-#   geom_segment(aes(
-#     x = new_point[1],
-#     y = new_point[2],
-#     xend = pull(neighbors[1, attrs[1]]),
-#     yend = pull(neighbors[1, attrs[2]])
-#   ), color = "black", size = 0.5)
-# ```
-#
-# ```{r 05-knn-3, echo = FALSE}
-# new_point <- c(0.2, 3.3)
-# attrs <- c("Perimeter", "Concavity")
-# my_distances <- table_with_distances(cancer[, attrs], new_point)
-# neighbors <- cancer[order(my_distances$Distance), ]
-# ```
-#
 # Suppose we have another new observation with standardized perimeter `r new_point[1]` and
 # concavity of `r new_point[2]`. Looking at the scatter plot in Figure \@ref(fig:05-knn-4), how would you
 # classify this red, diamond observation? The nearest neighbor to this new point is a
 # **benign** observation at (`r round(neighbors[1, c(attrs[1], attrs[2])], 1)`).
 # Does this seem like the right prediction to make for this observation? Probably 
 # not, if you consider the other nearby points.
+
+# %%
+new_point = [0.2, 3.3]
+attrs = ["Perimeter", "Concavity"]
+points_df2 = pd.DataFrame(
+    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["unknown"]}
+)
+perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=True)
+# Find the euclidean distances from the new point to each of the points
+# in the orginal dataset
+my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
+    len(cancer)
+][:-1]
+
+# %%
+perim_concav_with_new_point2 = (
+    alt.Chart(
+        perim_concav_with_new_point_df2,
+        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color(
+            "Class",
+            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
+            title="Diagnosis",
+        ),
+        shape=alt.Shape(
+            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
+        ),
+        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+    )
+)
+
+near_neighbor_df2 = pd.concat(
+    (
+        cancer.loc[np.argmin(my_distances2), attrs],
+        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
+    ),
+    axis=1,
+).T
+line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
+    x='Perimeter',
+    y='Concavity',
+    color=alt.value('black')
+)
+
+## In the figure caption, 
+# "with a line to the one nearest neighbor, which has a benign label." is missing
+perim_concav_with_new_point2 + line2
+
+# %% [markdown]
+#
+#
+# To improve the prediction we can consider several
+# neighboring points, say $K = 3$, that are closest to the new observation
+# to predict its diagnosis class. Among those 3 closest points, we use the
+# *majority class* as our prediction for the new observation. As shown in Figure \@ref(fig:05-knn-5), we
+# see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
+# are malignant. Therefore we take majority vote and classify our new red, diamond
+# observation as malignant. 
+
+# %%
+# The index of 3 rows that has smallest distance to the new point
+min_3_idx = np.argpartition(my_distances2, 3)[:3]
+near_neighbor_df3 = pd.concat(
+    (
+        cancer.loc[min_3_idx[1], attrs],
+        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
+    ),
+    axis=1,
+).T
+near_neighbor_df4 = pd.concat(
+    (
+        cancer.loc[min_3_idx[2], attrs],
+        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
+    ),
+    axis=1,
+).T
+
+# %%
+line3 = alt.Chart(near_neighbor_df3).mark_line().encode(
+    x='Perimeter',
+    y='Concavity',
+    color=alt.value('black')
+)
+line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
+    x='Perimeter',
+    y='Concavity',
+    color=alt.value('black')
+)
+perim_concav_with_new_point2 + line2 + line3 + line4
+
+# %%
 
 # %% [markdown]
 # ```{r 05-knn-4, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label."}
@@ -403,38 +501,17 @@ perim_concav_with_new_point
 #     yend = pull(neighbors[1, attrs[2]])
 #   ), color = "black", size = 0.5)
 # ```
-#
-# To improve the prediction we can consider several
-# neighboring points, say $K = 3$, that are closest to the new observation
-# to predict its diagnosis class. Among those 3 closest points, we use the
-# *majority class* as our prediction for the new observation. As shown in Figure \@ref(fig:05-knn-5), we
-# see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
-# are malignant. Therefore we take majority vote and classify our new red, diamond
-# observation as malignant. 
-#
-# ```{r 05-knn-5, echo =  FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of concavity versus perimeter with three nearest neighbors."}
-# perim_concav_with_new_point2 + 
-#   geom_segment(aes(
-#     x = new_point[1], y = new_point[2],
-#     xend = pull(neighbors[1, attrs[1]]),
-#     yend = pull(neighbors[1, attrs[2]])
-#   ), color = "black", size = 0.5) +
-#   geom_segment(aes(
-#     x = new_point[1], y = new_point[2],
-#     xend = pull(neighbors[2, attrs[1]]),
-#     yend = pull(neighbors[2, attrs[2]])
-#   ), color = "black", size = 0.5) +
-#   geom_segment(aes(
-#     x = new_point[1], y = new_point[2],
-#     xend = pull(neighbors[3, attrs[1]]),
-#     yend = pull(neighbors[3, attrs[2]])
-#   ), color = "black", size = 0.5)
-# ```
-#
+
+# %%
+
+# %% [markdown]
 # Here we chose the $K=3$ nearest observations, but there is nothing special
 # about $K=3$. We could have used $K=4, 5$ or more (though we may want to choose
 # an odd number to avoid ties). We will discuss more about choosing $K$ in the
 # next chapter. 
+
+# %% [markdown]
+#
 #
 # ### Distance between points
 #

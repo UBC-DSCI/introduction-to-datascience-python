@@ -4,7 +4,7 @@ parts:
 - caption: First draft
   chapters:
     - file: preface-text
-    - file: setup.ipynb
+    - file: setup
     - file: reading
     - file: wrangling
     - file: viz

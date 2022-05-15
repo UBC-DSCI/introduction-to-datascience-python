@@ -5,6 +5,7 @@ options:
 parts:
 - caption: First draft
   chapters:
+<<<<<<< HEAD
     - file: preface-text.md
     - file: foreword-text.md
     - file: acknowledgements.md

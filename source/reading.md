@@ -204,9 +204,9 @@ canlang_data = pd.read_csv("data/can_lang.csv")
 > future when we use this and related functions to load data in this book, we will
 > silence these messages to help with the readability of the book.
 
-
+```{code-cell} ipython3
 canlang_data
-
+```
 
 ### Skipping rows when reading in data
 
@@ -240,7 +240,7 @@ into R. In the case of this file we end up only reading in one column of the
 data set:
 
 ```{code-cell} ipython3
-canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
+canlang_data = pd.read_csv("data/can_lang-meta-data.csv")
 ```
 
 > **Note:** In contrast to the normal and expected messages above, this time R 
@@ -258,8 +258,7 @@ it should start reading in the data. In the example above, we would set this
 value to 3.
 
 ```{code-cell} ipython3
-canlang_data = pd.read_csv("data/can_lang_meta-data.csv", 
-                         skiprows=3)
+canlang_data = pd.read_csv("data/can_lang-meta-data.csv", skiprows=2, header=None)
 canlang_data
 ```
 
@@ -277,7 +276,7 @@ The column names began at line 4, so we skipped the first three lines.
 ### `read_tsv` to read in tab-separated files
 
 Another common way data is stored is with tabs as the delimiter. Notice the
-data file, `can_lang_tab.tsv`, has tabs in between the columns instead of
+data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas. 
 
 ```code
@@ -297,8 +296,8 @@ To read in this type of data, we can use the `read_tsv`
 \index{tab-separated values|see{tsv}}\index{tsv}\index{read function!read\_tsv}
 to read in .tsv (**t**ab **s**eparated **v**alues) files. 
 
-```{r 01-read-tab}
-canlang_data <- read_tsv("data/can_lang_tab.tsv")
+```{code-cell} ipython3
+canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t", header=None)
 canlang_data
 ```
 
@@ -347,8 +346,8 @@ specify that there are no column names to assign, and give it the value of
 
 ```{code-cell} ipython3
 canlang_data =  pd.read_csv("data/can_lang.tsv", 
-                           delimiter = "\t", 
-                           names = None)
+                           sep = "\t", 
+                           header = None)
 canlang_data
 ```
 
@@ -369,14 +368,21 @@ write `new_name = old_name` for the selected variables to
 rename. We rename the `X1, X2, ..., X6`
 columns in the `canlang_data` data frame to more descriptive names below. 
 
-```{r 01-rename-columns}
-canlang_data <- rename(canlang_data,
-       category = X1, 
-       language = X2, 
-       mother_tongue = X3,
-       most_at_home = X4, 
-       most_at_work = X5, 
-       lang_known = X6)
+```{code-cell} ipython3
+
+canlang_data.rename(columns = {0:'category', 
+                               1:'language',
+                               2:'mother_tongue',
+                               3:'most_at_home',
+                               4:'most_at_work',
+                               5:'lang_known'}, inplace = True)
+                               
+                               
+canlang_data
+```
+
+```{code-cell} ipython3
+canlang_data.columns = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known']
 canlang_data
 ```
 

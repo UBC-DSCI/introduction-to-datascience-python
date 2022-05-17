@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - myst
+    paths:
+      - source/**
+  pull_request: null
+
+jobs:
+  deploy-book:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            lock-file: conda-linux-64.lock
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'myst'
+
+      - name: install from lockfile
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-name: lock_test
+          environment-file: .github/workflows/lockfiles/${{ matrix.lock-file }}
+
+      - name: Build the book
+        run: |
+          jupyter-book build source
+
+       # Push the book's HTML to github-pages
+      - name: GitHub Pages action
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: source/_build/html
+          force_orphan: true
+

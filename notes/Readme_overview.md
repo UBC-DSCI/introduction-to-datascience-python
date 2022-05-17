@@ -19,9 +19,11 @@
 * chapter 2 (reading,navya): https://github.com/ubc-dsci/introduction-to-datascience-python/tree/reading
    * tutorial: https://github.ubc.ca/UBC-DSCI/dsci-100-instructor/tree/py_tutorial_reading
    * worksheet: https://github.ubc.ca/UBC-DSCI/dsci-100-instructor/tree/py_worksheet_reading
+   * issue: https://github.com/UBC-DSCI/introduction-to-datascience-python/issues/4
 * chapter 5 (classification1, gloria): https://github.com/ubc-dsci/introduction-to-datascience-python/tree/classification1
    * tutorial: https://github.ubc.ca/UBC-DSCI/dsci-100-instructor/tree/py_tutorial_classification1
    * worksheet: https://github.ubc.ca/UBC-DSCI/dsci-100-instructor/tree/py_worksheet_classification1
+   * issue: https://github.com/UBC-DSCI/introduction-to-datascience-python/issues/3
 
 
 ### R textbook

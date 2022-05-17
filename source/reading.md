@@ -386,6 +386,16 @@ canlang_data.columns = ['category', 'language', 'mother_tongue', 'most_at_home',
 canlang_data
 ```
 
+
+```{code-cell} ipython3
+
+canlang_data =  pd.read_csv("data/can_lang.tsv", 
+                           sep = "\t", 
+                           header = None, 
+                           names = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+canlang_data
+```
+
 ### Reading tabular data directly from a URL
 We can also use `read_csv`, `read_tsv` or `read_delim` (and related functions)
 to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
@@ -395,9 +405,10 @@ computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
 
-```{r}
-url <- "https://raw.githubusercontent.com/UBC-DSCI/data/main/can_lang.csv"
-canlang_data <- read_csv(url)
+```{code-cell} ipython3
+url = "https://raw.githubusercontent.com/UBC-DSCI/introduction-to-datascience-python/reading/source/data/can_lang.csv"
+pd.read_csv(url)
+canlang_data = pd.read_csv(url)
 
 canlang_data
 ```
@@ -451,8 +462,8 @@ developed specifically for this
 purpose. \index{readxl}\index{read function!read\_excel}
 
 ```{code-cell} ipython3
-
-canlang_data <- pd.read_excel("data/can_lang.xlsx")
+#!pip install openpyxl
+canlang_data = pd.read_excel("data/can_lang.xlsx")
 canlang_data
 ```
 
@@ -516,10 +527,13 @@ connect to the database. We do that using the `dbConnect` function from the
 in the data, but simply tells R where the database is and opens up a
 communication channel that R can use to send SQL commands to the database.
 
-```{r}
-library(DBI)
+```{code-cell} ipython3
+import sqlalchemy as sal
+from sqlalchemy import create_engine
 
-conn_lang_data <- dbConnect(RSQLite::SQLite(), "data/can_lang.db")
+db = sal.create_engine("sqlite:///data/can_lang.db")
+conn = db.connect()
+
 ```
 
 Often relational databases have many tables; thus, in order to retrieve
@@ -528,8 +542,8 @@ in which the data is stored. You can get the names of
 all the tables in the database using the `dbListTables` \index{database!tables}
 function:
 
-```{r}
-tables <- dbListTables(conn_lang_data)
+```{code-cell} ipython3
+tables = db.table_names()
 tables
 ```
 
@@ -541,6 +555,10 @@ by the `tbl` function \index{dbplyr|see{database}}\index{database!dbplyr} allows
 stored in databases as if they were just regular data frames; but secretly, behind
 the scenes, `dbplyr` is turning your function calls (e.g., `select` and `filter`)
 into SQL queries!
+
+```{code-cell} ipython3
+table_name = 'can_lang'
+```
 
 ```{r}
 library(dbplyr)
@@ -562,6 +580,14 @@ on the right, the first two lines of the output indicate the source is SQL. The
 last line doesn't show how many rows there are (R is trying to avoid performing
 expensive query operations), whereas the output for the `tibble` object does. 
 
+```{figure} img/ref_vs_tibble/ref_vs_tibble.001.jpeg
+:height: 500px
+:name: database reference
+Comparison of a reference to data in a database and a tibble in R
+
+
+```
+
 ```{r 01-ref-vs-tibble, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "Comparison of a reference to data in a database and a tibble in R.", fig.retina = 2, out.width="80%"}
 image_read("img/ref_vs_tibble/ref_vs_tibble.001.jpeg") |>
   image_crop("3632x1600")
@@ -571,8 +597,10 @@ We can look at the SQL commands that are sent to the database when we write
 `tbl(conn_lang_data, "lang")` in R with the `show_query` function from the
 `dbplyr` package. \index{database!show\_query}
 
-```{r}
-show_query(tbl(conn_lang_data, "lang"))
+```{code-cell} ipython3
+canlang_data = pd.read_sql("select * from can_lang", con=db)
+canlang_data
+
 ```
 
 The output above shows the SQL code that is sent to the database. When we
@@ -586,8 +614,12 @@ can mostly continue onward as if it were a regular data frame. For example,
 we can use the `filter` function
 to obtain only certain rows. Below we filter the data to include only Aboriginal languages.
 
-```{r}
-aboriginal_lang_db <- filter(lang_db, category == "Aboriginal languages")
+
+
+
+```{code-cell} ipython3
+aboriginal_lang_db = canlang_data[canlang_data['category']=='Aboriginal languages']
+
 aboriginal_lang_db 
 ```
 
@@ -661,20 +693,29 @@ Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
 `password` (`abc123`) below are *not real*; you will not actually 
 be able to connect to a database using this information.
 
-```{r, eval = FALSE}
-library(RPostgres)
-conn_mov_data <- dbConnect(RPostgres::Postgres(), dbname = "can_mov_db",
-                        host = "fakeserver.stat.ubc.ca", port = 5432,
-                        user = "user0001", password = "abc123")
+
+```{code-cell} ipython3
+# !pip install pgdb
+import pgdb
+import sqlalchemy
+from sqlalchemy import create_engine
+
+# connection_str = "postgresql://<USERNAME>:<PASSWORD>@<IP_ADDRESS>:<PORT>/<DATABASE_NAME>"
+connection_str = "postgresql://user0001:abc123@fakeserver.stat.ubc.ca:5432/can_mov_db"
+db = create_engine(connection_str)
+conn_mov_data = db.connect()
+
 ```
 
 After opening the connection, everything looks and behaves almost identically
 to when we were using an SQLite database in R. For example, we can again use
 `dbListTables` to find out what tables are in the `can_mov_db` database:
 
-```{r, eval = FALSE}
-dbListTables(conn_mov_data)
+```{code-cell} ipython3
+tables = conn_mov_data.table_names()
+tables
 ```
+
 
 ```
  [1] "themes"            "medium"           "titles"     "title_aliases"       "forms"            
@@ -684,6 +725,11 @@ dbListTables(conn_mov_data)
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
 database:
+
+```{code-cell} ipython3
+ratings_db = pd.read_sql("select * from ratings", con=conn_mov_data)
+ratings_db
+```
 
 ```{r, eval = FALSE}
 ratings_db <- tbl(conn_mov_data, "ratings")
@@ -712,8 +758,8 @@ To find the lowest rating that exists in the data base, we first need to
 extract the `average_rating` column using `select`:
 \index{select}
 
-```{r, eval = FALSE}
-avg_rating_db <- select(ratings_db, average_rating)
+```{code-cell} ipython3
+avg_rating_db = pd.read_sql("select average_rating from ratings", con=conn_mov_data)
 avg_rating_db
 ```
 
@@ -750,9 +796,9 @@ Instead of the minimum, we get an error! This is another example of when we
 need to use the `collect` function to bring the data into R for further
 computation:
 
-```{r, eval = FALSE}
-avg_rating_data <- collect(avg_rating_db)
-min(avg_rating_data)
+```{code-cell} ipython3
+min_avg_rating_data = pd.read_sql("select min(average_rating) from ratings", con=conn_mov_data)
+min_avg_rating_data
 ```
 
 ```
@@ -797,9 +843,10 @@ column names. Below we demonstrate creating a new version of the Canadian
 languages data set without the official languages category according to the
 Canadian 2016 Census, and then writing this to a `.csv` file:
 
-```{r, eval = FALSE}
-no_official_lang_data <- filter(can_lang, category != "Official languages")
-write_csv(no_official_lang_data, "data/no_official_languages.csv")
+```{code-cell} ipython3
+no_official_lang_data = canlang_data[canlang_data['category'] != 'Official languages']
+no_official_lang_data.to_csv("data/no_official_languages.csv")
+
 ```
 
 ## Obtaining data from the web 
@@ -868,6 +915,13 @@ we should see something similar to Figure \@ref(fig:craigslist-human).
 
 ```{r craigslist-human, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Craigslist webpage of advertisements for one-bedroom apartments.", fig.retina = 2, out.width="100%"}
 knitr::include_graphics("img/craigslist_human.png")
+```
+
+
+```{figure} img/craigslist_human.png
+:height: 500px
+:name: craigslist-human
+Craigslist webpage of advertisements for one-bedroom apartments.
 ```
 
 Based on what our browser shows us, it's pretty easy to find the size and price
@@ -973,6 +1027,15 @@ prices that would be obtained using that selector (Figure \@ref(fig:sg1)).
 knitr::include_graphics("img/sg1.png")
 ```
 
+```{figure} img/sg1.png
+:height: 500px
+:name: sg1
+Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
+```
+
+
+
+
 If we then click the size of an apartment listing, SelectorGadget shows us
 the `span` selector, and highlights many of the lines on the page; this indicates that the
 `span` selector is not specific enough to capture only apartment sizes (Figure \@ref(fig:sg3)). 
@@ -981,12 +1044,27 @@ the `span` selector, and highlights many of the lines on the page; this indicate
 knitr::include_graphics("img/sg3.png")
 ```
 
+
+```{figure} img/sg3.png
+:height: 500px
+:name: sg3
+Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
+```
+
+
 To narrow the selector, we can click one of the highlighted elements that
 we *do not* want. For example, we can deselect the "pic/map" links, 
 resulting in only the data we want highlighted using the `.housing` selector (Figure \@ref(fig:sg2)).
 
 ```{r sg2, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.", fig.retina = 2, out.width="100%"}
 knitr::include_graphics("img/sg2.png")
+```
+
+
+```{figure} img/sg2.png
+:height: 500px
+:name: sg2
+Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
 ```
 
 So to scrape information about the square footage and rental price
@@ -1019,6 +1097,12 @@ interested in them (province names), as shown in Figure \@ref(fig:sg4).
 
 ```{r sg4, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Wikipedia webpage.", fig.retina = 2, out.width="100%"}
 knitr::include_graphics("img/sg4.png")
+```
+
+```{figure} img/sg4.png
+:height: 500px
+:name: sg4
+Using the SelectorGadget on a Wikipedia webpage.
 ```
 
 We include a link to a short video tutorial on this process at the end of the chapter
@@ -1147,6 +1231,12 @@ are shown in Figure \@ref(fig:01-tidyverse-twitter).
 knitr::include_graphics("img/tidyverse_twitter.png")
 ```
 
+```{figure} img/tidyverse_twitter.png
+:height: 500px
+:name: 01-tidyverse-twitter
+The tidyverse account Twitter feed.
+```
+
 **Stop! Think about your API usage carefully!**
 
 When you access an API, you are initiating a transfer of data from a web server
@@ -1179,6 +1269,13 @@ you will see a browser pop-up that looks something like Figure \@ref(fig:01-tidy
 ```{r 01-tidyverse-authorize, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:01-tidyverse-authorize)", fig.retina = 2, out.width="100%"}
 knitr::include_graphics("img/authorize_question.png")
 ```
+
+```{figure} img/tidyverse_twitter.png
+:height: 500px
+:name: 01-tidyverse-authorize
+ref:01-tidyverse-authorize
+```
+
 
 This is the `rtweet` package asking you to provide your own Twitter account's login information.
 When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;

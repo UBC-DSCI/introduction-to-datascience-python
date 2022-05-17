@@ -921,7 +921,7 @@ learn ways to quantify how accurate we think our predictions are.
 
 ### Centering and scaling
 
-When using $K$-nearest neighbor classification, the *scale* \index{scaling} of each variable
+When using $K$-nearest neighbor classification, the *scale* of each variable
 (i.e., its size and range of values) matters. Since the classifier predicts
 classes by identifying observations nearest to it, any variables with 
 a large scale will have a much larger effect than variables with a small
@@ -929,10 +929,10 @@ scale. But just because a variable has a large scale *doesn't mean* that it is
 more important for making accurate predictions. For example, suppose you have a
 data set with two features, salary (in dollars) and years of education, and
 you want to predict the corresponding type of job. When we compute the
-neighbor distances, a difference of \\$1000 is huge compared to a difference of
+neighbor distances, a difference of \$1000 is huge compared to a difference of
 10 years of education. But for our conceptual understanding and answering of
 the problem, it's the opposite; 10 years of education is huge compared to a
-difference of \\$1000 in yearly salary!
+difference of \$1000 in yearly salary!
 
 +++
 
@@ -1240,33 +1240,27 @@ function, which takes two arguments: a data frame-like object,
 and the number of rows to select from the top (`n`).
 The new imbalanced data is shown in Figure \@ref(fig:05-unbalanced).
 
-+++
-
-
-```{r 05-unbalanced-seed, echo = FALSE, fig.height = 3.5, fig.width = 4.5, warning = FALSE, message = FALSE}
-# hidden seed here for reproducibility 
-# randomness shouldn't affect much in this use of step_upsample,
-# but just in case...
-set.seed(3)
-```
-
-```{r 05-unbalanced, fig.height = 3.5, fig.width = 4.5, fig.pos = "H", out.extra="", fig.cap = "Imbalanced data."}
-rare_cancer <- bind_rows(
-      filter(cancer, Class == "B"),
-      cancer |> filter(Class == "M") |> slice_head(n = 3)
-    ) |>
-    select(Class, Perimeter, Concavity)
-
-rare_plot <- rare_cancer |>
-  ggplot(aes(x = Perimeter, y = Concavity, color = Class)) +
-  geom_point(alpha = 0.5) +
-  labs(x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)",
-       color = "Diagnosis") +
-  scale_color_manual(labels = c("Malignant", "Benign"), 
-                     values = c("orange2", "steelblue2")) +
-  theme(text = element_text(size = 12))
-
+```{code-cell} ipython3
+cancer = pd.read_csv("data/wdbc.csv")
+rare_cancer = pd.concat(
+    (cancer.query("Class == 'B'"), cancer.query("Class == 'M'").head(3))
+)
+colors = ["#86bfef", "#efb13f"]
+rare_cancer["Class"] = rare_cancer["Class"].apply(
+    lambda x: "Malignant" if (x == "M") else "Benign"
+)
+rare_plot = (
+    alt.Chart(
+        rare_cancer,
+        title="Imbalanced data",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
 rare_plot
 ```
 
@@ -1279,51 +1273,62 @@ benign, and the benign vote will always win. For example, Figure \@ref(fig:05-up
 shows what happens for a new tumor observation that is quite close to three observations
 in the training data that were tagged as malignant.
 
-```{r 05-upsample, echo=FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Imbalanced data with 7 nearest neighbors to a new observation highlighted."}
-new_point <- c(2, 2)
-attrs <- c("Perimeter", "Concavity")
-my_distances <- table_with_distances(rare_cancer[, attrs], new_point)
-my_distances <- bind_cols(my_distances, select(rare_cancer, Class))
-neighbors <- rare_cancer[order(my_distances$Distance), ]
-
-
-rare_plot <- bind_rows(rare_cancer, 
-                       tibble(Perimeter = new_point[1], 
-                              Concavity = new_point[2], 
-                              Class = "unknown")) |>
-  ggplot(aes(x = Perimeter, y = Concavity, color = Class, shape = Class)) +
-  geom_point(alpha = 0.5) +
-  labs(color = "Diagnosis", 
-       x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)") + 
-  scale_color_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"), 
-                     values = c("steelblue2", "orange2", "red")) +
-  scale_shape_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"),
-                     values= c(16, 16, 18))+ 
-  scale_size_manual(name = "Diagnosis", 
-                     labels = c("Benign", "Malignant", "Unknown"),
-                     values= c(2, 2, 2.5))
-
-for (i in 1:7) {
-  clr <- "steelblue2"
-  if (neighbors$Class[i] == "M") {
-    clr <- "orange2"
-  }
-  rare_plot <- rare_plot +
-    geom_segment(
-      x = new_point[1],
-      y = new_point[2],
-      xend = pull(neighbors[i, attrs[1]]),
-      yend = pull(neighbors[i, attrs[2]]), color = clr
-    )
-}
-rare_plot + geom_point(aes(x = new_point[1], y = new_point[2]),
-  color = "red",
-  size = 2.5,
-  pch = 18
+```{code-cell} ipython3
+attrs = ["Perimeter", "Concavity"]
+new_point = [2, 2]
+new_point_df = pd.DataFrame(
+    {"Class": ["unknwon"], "Perimeter": new_point[0], "Concavity": new_point[1]}
 )
+rare_cancer["Class"] = rare_cancer["Class"].apply(class_dscp)
+rare_cancer_with_new_df = pd.concat((rare_cancer, new_point_df), ignore_index=True)
+my_distances = euclidean_distances(rare_cancer_with_new_df.loc[:, attrs])[
+    len(rare_cancer)
+][:-1]
+
+# First layer: scatter plot, with unknwon point labeled as red "unknown" diamond
+rare_plot = (
+    alt.Chart(
+        rare_cancer_with_new_df,
+        title="Imbalanced data with 7 nearest neighbors to a new observation highlighted."
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color(
+            "Class",
+            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
+            title="Diagnosis",
+        ),
+        shape=alt.Shape(
+            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
+        ),
+        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 100]))
+    )
+)
+
+# Find the 7 NNs
+min_7_idx = np.argpartition(my_distances, 7)[:7]
+
+# For loop: each iteration adds a line segment of corresponding color
+for i in range(7):
+    clr = "#86bfef"
+    if rare_cancer.iloc[min_7_idx[i], :]["Class"] == "Malignant":
+        clr = "#efb13f"
+    neighbor = pd.concat(
+        (
+            rare_cancer.iloc[min_7_idx[i], :][attrs],
+            new_point_df[attrs].T,
+        ),
+        axis=1,
+    ).T
+    rare_plot = rare_plot + (
+        alt.Chart(neighbor)
+        .mark_line(opacity=0.3)
+        .encode(x="Perimeter", y="Concavity", color=alt.value(clr))
+    )
+
+rare_plot
 ```
 
 Figure \@ref(fig:05-upsample-2) shows what happens if we set the background color of 
@@ -1331,48 +1336,47 @@ each area of the plot to the predictions the $K$-nearest neighbor
 classifier would make. We can see that the decision is 
 always "benign," corresponding to the blue color.
 
-```{r 05-upsample-2, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data."}
-
-knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 7) |>
-  set_engine("kknn") |>
-  set_mode("classification")
-
-knn_fit <- knn_spec |>
-  fit(Class ~ ., data = rare_cancer)
+```{code-cell} ipython3
+knn_spec = KNeighborsClassifier(n_neighbors=7)
+knn_spec.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"]);
 
 # create a prediction pt grid
-per_grid <- seq(min(rare_cancer$Perimeter), 
-                max(rare_cancer$Perimeter), 
-                length.out = 100)
-con_grid <- seq(min(rare_cancer$Concavity), 
-                max(rare_cancer$Concavity), 
-                length.out = 100)
-pcgrid <- as_tibble(expand.grid(Perimeter = per_grid, Concavity = con_grid))
-knnPredGrid <- predict(knn_fit, pcgrid)
-prediction_table <- bind_cols(knnPredGrid, pcgrid) |> 
-  rename(Class = .pred_class)
+per_grid = np.linspace(rare_cancer['Perimeter'].min(), rare_cancer['Perimeter'].max(), 100)
+con_grid = np.linspace(rare_cancer['Concavity'].min(), rare_cancer['Concavity'].max(), 100)
+pcgrid = np.array(np.meshgrid(per_grid, con_grid)).reshape(2, -1).T
+pcgrid = pd.DataFrame(pcgrid, columns=['Perimeter', 'Concavity'])
+knnPredGrid = knn_spec.predict(pcgrid)
+prediction_table = pcgrid.copy()
+prediction_table['Class'] = knnPredGrid
 
-# create the basic plt
-rare_plot <-
-  ggplot() +
-  geom_point(data = rare_cancer, 
-             mapping = aes(x = Perimeter, 
-                           y = Concavity, 
-                           color = Class), 
-             alpha = 0.75) +
-  geom_point(data = prediction_table, 
-             mapping = aes(x = Perimeter, 
-                           y = Concavity, 
-                           color = Class), 
-             alpha = 0.02, 
-             size = 5.) +
-  labs(color = "Diagnosis", 
-       x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)") +
-  scale_color_manual(labels = c("Malignant", "Benign"), 
-                     values = c("orange2", "steelblue2"))
+# create the scatter plot
+rare_plot = (
+    alt.Chart(
+        rare_cancer,
+        title="Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
 
-rare_plot
+# add a prediction layer, also scatter plot
+prediction_plot = (
+    alt.Chart(
+        prediction_table,
+        title="Imbalanced data",
+    )
+    .mark_point(opacity=0.02, filled=True, size=200)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+rare_plot + prediction_plot
 ```
 
 Despite the simplicity of the problem, solving it in a statistically sound manner is actually
@@ -1384,22 +1388,20 @@ step to the earlier `uc_recipe` recipe with the `step_upsample` function from th
 We show below how to do this, and also
 use the `group_by` and `summarize` functions to see that our classes are now balanced:
 
-```{r 05-upsample-cancer, warning = FALSE, message = FALSE}
-library(themis)
-
-ups_recipe <- recipe(Class ~ ., data = rare_cancer) |>
-  step_upsample(Class, over_ratio = 1, skip = FALSE) |>
-  prep()
-
-ups_recipe
+```{code-cell} ipython3
+rare_cancer['Class'].value_counts()
 ```
 
-```{r 05-upsample-cancer-2}
-upsampled_cancer <- bake(ups_recipe, rare_cancer)
+```{code-cell} ipython3
+from sklearn.utils import resample
 
-upsampled_cancer |>
-  group_by(Class) |>
-  summarize(n = n())
+malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
+benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
+malignant_cancer_upsample = resample(
+    malignant_cancer, n_samples=len(benign_cancer), random_state=100
+)
+upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
+upsampled_cancer.groupby(by='Class')['Class'].count()
 ```
 
 Now suppose we train our $K$-nearest neighbor classifier with $K=7$ on this *balanced* data. 
@@ -1409,62 +1411,61 @@ classifier would make. We can see that the decision is more reasonable; when the
 to those labeled malignant, the classifier predicts a malignant tumor, and vice versa when they are 
 closer to the benign tumor observations.
 
-```{r 05-upsample-plot, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.pos = "H", out.extra="", fig.cap = "Upsampled data with background color indicating the decision of the classifier."}
-knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 7) |>
-  set_engine("kknn") |>
-  set_mode("classification")
-
-knn_fit <- knn_spec |>
-  fit(Class ~ ., data = upsampled_cancer)
+```{code-cell} ipython3
+knn_spec = KNeighborsClassifier(n_neighbors=7)
+knn_spec.fit(
+    X=upsampled_cancer.loc[:, ["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
+)
 
 # create a prediction pt grid
-knnPredGrid <- predict(knn_fit, pcgrid)
-prediction_table <- bind_cols(knnPredGrid, pcgrid) |> 
-  rename(Class = .pred_class)
+knnPredGrid = knn_spec.predict(pcgrid)
+prediction_table = pcgrid
+prediction_table["Class"] = knnPredGrid
 
-# create the basic plt
-upsampled_plot <-
-  ggplot() +
-  geom_point(data = prediction_table, 
-             mapping = aes(x = Perimeter, 
-                           y = Concavity, 
-                           color = Class), 
-             alpha = 0.02, size = 5.) +
-  geom_point(data = rare_cancer, 
-             mapping = aes(x = Perimeter, 
-                           y = Concavity, 
-                           color = Class), 
-             alpha = 0.75) +
-  labs(color = "Diagnosis", 
-       x = "Perimeter (standardized)", 
-       y = "Concavity (standardized)") +
-  scale_color_manual(labels = c("Malignant", "Benign"), 
-                     values = c("orange2", "steelblue2"))
+# create the scatter plot
+rare_plot = (
+    alt.Chart(
+        rare_cancer,
+        title="Upsampled data with background color indicating the decision of the classifier.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
 
-upsampled_plot
+# add a prediction layer, also scatter plot
+upsampled_plot = (
+    alt.Chart(prediction_table)
+    .mark_point(opacity=0.02, filled=True, size=200)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+rare_plot + upsampled_plot
 ```
 
-## Putting it together in a `workflow` {#puttingittogetherworkflow}
+## Putting it together in a `pipeline` {#puttingittogetherworkflow}
 
-The `tidymodels` package collection also provides the `workflow`, a way to chain\index{tidymodels!workflow}\index{workflow|see{tidymodels}} together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
+The `scikit-learn` package collection also provides the `pipeline`, a way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
 To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
 First we will load the data, create a model, and specify a recipe for how the data should be preprocessed:
 
-```{r 05-workflow}
-# load the unscaled cancer data 
-# and make sure the target Class variable is a factor
-unscaled_cancer <- read_csv("data/unscaled_wdbc.csv") |>
-  mutate(Class = as_factor(Class))
+```{code-cell} ipython3
+# load the unscaled cancer data
+unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
 
 # create the KNN model
-knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 7) |>
-  set_engine("kknn") |>
-  set_mode("classification")
+knn_spec = KNeighborsClassifier(n_neighbors=7)
 
-# create the centering / scaling recipe
-uc_recipe <- recipe(Class ~ Area + Smoothness, data = unscaled_cancer) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
+# create the centering / scaling preprocessor
+preprocessor = make_column_transformer(
+    (StandardScaler(), ["Area", "Smoothness"]),
+)
 ```
 
 Note that each of these steps is exactly the same as earlier, except for one major difference:
@@ -1474,37 +1475,31 @@ formula `Class ~ Area + Smoothness` (instead of `Class ~ .`) in the recipe.
 You will also notice that we did not call `prep()` on the recipe; this is unnecessary when it is
 placed in a workflow.
 
-We will now place these steps in a `workflow` using the `add_recipe` and `add_model` functions, \index{tidymodels!add\_recipe}\index{tidymodels!add\_model}
-and finally we will use the `fit` function to run the whole workflow on the `unscaled_cancer` data.
-Note another difference from earlier here: we do not include a formula in the `fit` function. This \index{tidymodels!fit}
-is again because we included the formula in the recipe, so there is no need to respecify it:
+We will now place these steps in a `pipeline` using the `make_pipeline` function, 
+and finally we will use the `fit` function to run the whole `pipeline` on the `unscaled_cancer` data.
 
-```{r 05-workflow-add, results = 'hide', echo = TRUE}
-knn_fit <- workflow() |>
-  add_recipe(uc_recipe) |>
-  add_model(knn_spec) |>
-  fit(data = unscaled_cancer)
+```{code-cell} ipython3
+unscaled_cancer
+```
+
+```{code-cell} ipython3
+knn_fit = make_pipeline(preprocessor, knn_spec).fit(
+    X=unscaled_cancer.loc[:, ["Area", "Smoothness"]], y=unscaled_cancer["Class"]
+)
 
 knn_fit
 ```
 
-```{r echo = FALSE}
-print_tidymodels(knn_fit)
-```
-
-As before, the fit object lists the function that trains the model as well as the "best" settings
-for the number of neighbors and weight function (for now, these are just the values we chose
- manually when we created `knn_spec` above). But now the fit object also includes information about
-the overall workflow, including the centering and scaling preprocessing steps.
+As before, the fit object lists the function that trains the model. But now the fit object also includes information about
+the overall workflow, including the standardizing preprocessing step.
 In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
 observation, it will first apply the same recipe steps to the new observation. 
 As an example, we will predict the class label of two new observations:
 one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
 
-```{r 05-workflow-predict}
-new_observation <- tibble(Area = c(500, 1500), Smoothness = c(0.075, 0.1))
-prediction <- predict(knn_fit, new_observation)
-
+```{code-cell} ipython3
+new_observation = pd.DataFrame({"Area": [500, 1500], "Smoothness": [0.075, 0.1]})
+prediction = knn_fit.predict(new_observation)
 prediction
 ```
 
@@ -1521,6 +1516,55 @@ predict the label of each, and visualize the predictions with a colored scatter 
 > **Note:** Understanding this code is not required for the remainder of the
 > textbook. It is included for those readers who would like to use similar
 > visualizations in their own data analyses. 
+
+```{code-cell} ipython3
+# create the grid of area/smoothness vals, and arrange in a data frame
+are_grid = np.linspace(
+    unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 100
+)
+smo_grid = np.linspace(
+    unscaled_cancer["Smoothness"].min(), unscaled_cancer["Smoothness"].max(), 100
+)
+asgrid = np.array(np.meshgrid(are_grid, smo_grid)).reshape(2, -1).T
+asgrid = pd.DataFrame(asgrid, columns=["Area", "Smoothness"])
+
+# use the fit workflow to make predictions at the grid points
+knnPredGrid = knn_fit.predict(asgrid)
+
+# bind the predictions as a new column with the grid points
+prediction_table = asgrid.copy()
+prediction_table["Class"] = knnPredGrid
+
+# plot:
+# 1. the colored scatter of the original data
+unscaled_plot = (
+    alt.Chart(
+        unscaled_cancer,
+        title="Scatter plot of smoothness versus area where background color indicates the decision of the classifier.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Area", title="Area (standardized)"),
+        y=alt.Y("Smoothness", title="Smoothness (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+
+# 2. the faded colored scatter for the grid points
+prediction_plot = (
+    alt.Chart(
+        prediction_table
+    )
+    .mark_point(opacity=0.02, filled=True, size=200)
+    .encode(
+        x=alt.X("Area"),
+        y=alt.Y("Smoothness"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+
+unscaled_plot + prediction_plot
+```
 
 ```{r 05-workflow-plot-show, fig.height = 3.5, fig.width = 4.6, fig.cap = "Scatter plot of smoothness versus area where background color indicates the decision of the classifier."}
 # create the grid of area/smoothness vals, and arrange in a data frame
@@ -1565,6 +1609,8 @@ wkflw_plot <-
 
 wkflw_plot
 ```
+
++++
 
 ## Exercises
 

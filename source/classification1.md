@@ -15,9 +15,12 @@ kernelspec:
 # Classification I: training & predicting {#classification}
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 import random
 
 import altair as alt
+from altair_saver import save
 import numpy as np
 import pandas as pd
 import sklearn
@@ -30,8 +33,12 @@ import plotly.express as px
 import plotly.graph_objs as go
 from plotly.offline import iplot, plot
 from IPython.display import HTML
+from myst_nb import glue
 
 alt.data_transformers.disable_max_rows()
+
+# alt.renderers.enable('altair_saver', fmts=['vega-lite', 'png'])
+
 # # Handle large data sets by not embedding them in the notebook
 # alt.data_transformers.enable('data_server')
 
@@ -190,11 +197,7 @@ cancer.info()
 
 From the summary of the data above, we can see that `Class` is of type object.
 
-```{code-cell} ipython3
-# cancer <- cancer |>
-#   mutate(Class = as_factor(Class))
-# glimpse(cancer)
-```
++++
 
 Given that we only have two different values in our `Class` column (B for benign and M 
 for malignant), we only expect to get two names back.
@@ -227,12 +230,33 @@ We also make the category labels ("B" and "M") more readable by
 changing them to "Benign" and "Malignant".
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 colors = ["#86bfef", "#efb13f"]
 cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
 perim_concav = (
     alt.Chart(
         cancer,
-        title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
+        # title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Perimeter", title="Perimeter (standardized)"),
+        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+# perim_concav.save("img/classification1/fig05-scatter.svg")
+glue('fig:05-scatter', perim_concav, display=True)
+```
+
+```python
+colors = ["#86bfef", "#efb13f"]
+cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
+perim_concav = (
+    alt.Chart(
+        cancer,
+        # title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -244,7 +268,17 @@ perim_concav = (
 perim_concav
 ```
 
-In Figure \@ref(fig:05-scatter), we can see that malignant observations typically fall in
++++
+
+:::{glue:figure} fig:05-scatter
+:name: fig:05-scatter
+
+Scatter plot of concavity versus perimeter colored by diagnosis label.
+:::
+
++++
+
+In {numref}`fig:05-scatter`, we can see that malignant observations typically fall in
 the upper right-hand corner of the plot area. By contrast, benign
 observations typically fall in the lower left-hand corner of the plot. In other words,
 benign observations tend to have lower concavity and perimeter values, and malignant
@@ -265,40 +299,12 @@ the *prediction of an unobserved label* might be possible.
 ## Classification with $K$-nearest neighbors
 
 ```{code-cell} ipython3
-## Find the distance between new point and all others in data set
-# euclidDist <- function(point1, point2) {
-#   # Returns the Euclidean distance between point1 and point2.
-#   # Each argument is an array containing the coordinates of a point."""
-#   (sqrt(sum((point1 - point2)^2)))
-# }
-# distance_from_point <- function(row) {
-#   euclidDist(new_point, row)
-# }
-# all_distances <- function(training, new_point) {
-#   # Returns an array of distances
-#   # between each point in the training set
-#   # and the new point (which is a row of attributes)
-#   distance_from_point <- function(row) {
-#     euclidDist(new_point, row)
-#   }
-#   apply(training, MARGIN = 1, distance_from_point)
-# }
-# table_with_distances <- function(training, new_point) {
-#   # Augments the training table
-#   # with a column of distances from new_point
-#   data.frame(training, Distance = all_distances(training, new_point))
-# }
-# new_point <- c(2, 4)
-# attrs <- c("Perimeter", "Concavity")
-# my_distances <- table_with_distances(cancer[, attrs], new_point)
-# neighbors <- cancer[order(my_distances$Distance), ]
-```
+:tags: [remove-cell]
 
-```{code-cell} ipython3
 new_point = [2, 4]
 attrs = ["Perimeter", "Concavity"]
 points_df = pd.DataFrame(
-    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["unknown"]}
+    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["Unknown"]}
 )
 perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
@@ -306,6 +312,8 @@ perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=Tru
 my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
     len(cancer)
 ][:-1]
+glue("new_point_0", new_point[0])
+glue("new_point_1", new_point[1])
 ```
 
 In order to actually make predictions for new observations in practice, we
@@ -320,27 +328,16 @@ $K$ for us. We will cover how to choose $K$ ourselves in the next chapter.
 
 To illustrate the concept of $K$-nearest neighbors classification, we 
 will walk through an example.  Suppose we have a
-new observation, with standardized perimeter of `r new_point[1]` and standardized concavity of `r new_point[2]`, whose 
-diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in
-Figure \@ref(fig:05-knn-1).
+new observation, with standardized perimeter of {glue:}`new_point_0` and standardized concavity of {glue:}`new_point_1`, whose 
+diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 
 ```{code-cell} ipython3
----
-render:
-  figure:
-    caption: 'Hey everyone its **party** time!
+:tags: [remove-cell]
 
-      '
-    name: fun-fish
-  image:
-    alt: fun-fish
-    classes: shadow bg-primary
-    width: 200px
----
 perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
-        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
+        # title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -357,16 +354,18 @@ perim_concav_with_new_point = (
         # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
     )
 )
-perim_concav_with_new_point
+glue('fig:05-knn-2', perim_concav_with_new_point, display=True)
 ```
 
-Figure \@ref(fig:05-knn-2) shows that the nearest point to this new observation is **malignant** and
-located at the coordinates (`r round(neighbors[1, c(attrs[1], attrs[2])],
-1)`). The idea here is that if a point is close to another in the scatter plot,
-then the perimeter and concavity values are similar, and so we may expect that
-they would have the same diagnosis.
+:::{glue:figure} fig:05-knn-2
+:name: fig:05-knn-2
+
+Scatter plot of concavity versus perimeter with new observation represented as a red diamond.
+:::
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 near_neighbor_df = pd.concat(
     (
         cancer.loc[np.argmin(my_distances), attrs],
@@ -374,30 +373,41 @@ near_neighbor_df = pd.concat(
     ),
     axis=1,
 ).T
+glue("neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
+glue("neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
+```
+
+{numref}`fig:05-knn-3` shows that the nearest point to this new observation is **malignant** and
+located at the coordinates ({glue:}`neighbor_per`, {glue:}`neighbor_con`). The idea here is that if a point is close to another in the scatter plot,
+then the perimeter and concavity values are similar, and so we may expect that
+they would have the same diagnosis.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
 line = (
     alt.Chart(near_neighbor_df)
     .mark_line()
     .encode(x="Perimeter", y="Concavity", color=alt.value("black"))
 )
 
-
-## In the figure caption, 
-## "with a line to the one nearest neighbor, which has a malignant label." is missing
-perim_concav_with_new_point + line
+# (perim_concav_with_new_point + line).save("img/classification1/fig05-knn-3.svg")
+glue('fig:05-knn-3', (perim_concav_with_new_point + line), display=True)
 ```
 
-Suppose we have another new observation with standardized perimeter `r new_point[1]` and
-concavity of `r new_point[2]`. Looking at the scatter plot in Figure \@ref(fig:05-knn-4), how would you
-classify this red, diamond observation? The nearest neighbor to this new point is a
-**benign** observation at (`r round(neighbors[1, c(attrs[1], attrs[2])], 1)`).
-Does this seem like the right prediction to make for this observation? Probably 
-not, if you consider the other nearby points.
+:::{glue:figure} fig:05-knn-3
+:name: fig:05-knn-3
+
+Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label.
+:::
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 new_point = [0.2, 3.3]
 attrs = ["Perimeter", "Concavity"]
 points_df2 = pd.DataFrame(
-    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["unknown"]}
+    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["Unknown"]}
 )
 perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
@@ -405,13 +415,17 @@ perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=T
 my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
     len(cancer)
 ][:-1]
+glue("new_point_0", new_point[0])
+glue("new_point_1", new_point[1])
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 perim_concav_with_new_point2 = (
     alt.Chart(
         perim_concav_with_new_point_df2,
-        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
+        # title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -442,20 +456,29 @@ line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
     color=alt.value('black')
 )
 
-## In the figure caption, 
-# "with a line to the one nearest neighbor, which has a benign label." is missing
-perim_concav_with_new_point2 + line2
+glue("neighbor_per", round(near_neighbor_df2.iloc[0, :]['Perimeter'], 1))
+glue("neighbor_con", round(near_neighbor_df2.iloc[0, :]['Concavity'], 1))
+glue('fig:05-knn-4', (perim_concav_with_new_point2 + line2), display=True)
 ```
 
-To improve the prediction we can consider several
-neighboring points, say $K = 3$, that are closest to the new observation
-to predict its diagnosis class. Among those 3 closest points, we use the
-*majority class* as our prediction for the new observation. As shown in Figure \@ref(fig:05-knn-5), we
-see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
-are malignant. Therefore we take majority vote and classify our new red, diamond
-observation as malignant.
+Suppose we have another new observation with standardized perimeter {glue:}`new_point_0` and
+concavity of {glue:}`new_point_1`. Looking at the scatter plot in {numref}`fig:05-knn-4`, how would you
+classify this red, diamond observation? The nearest neighbor to this new point is a
+**benign** observation at ({glue:}`neighbor_per`, {glue:}`neighbor_con`).
+Does this seem like the right prediction to make for this observation? Probably 
+not, if you consider the other nearby points.
+
++++
+
+:::{glue:figure} fig:05-knn-4
+:name: fig:05-knn-4
+
+Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label.
+:::
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 # The index of 3 rows that has smallest distance to the new point
 min_3_idx = np.argpartition(my_distances2, 3)[:3]
 near_neighbor_df3 = pd.concat(
@@ -475,6 +498,8 @@ near_neighbor_df4 = pd.concat(
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 line3 = alt.Chart(near_neighbor_df3).mark_line().encode(
     x='Perimeter',
     y='Concavity',
@@ -485,8 +510,27 @@ line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
     y='Concavity',
     color=alt.value('black')
 )
-perim_concav_with_new_point2 + line2 + line3 + line4
+(perim_concav_with_new_point2 + line2 + line3 + line4).save("img/classification1/fig05-knn-5.svg")
 ```
+
+To improve the prediction we can consider several
+neighboring points, say $K = 3$, that are closest to the new observation
+to predict its diagnosis class. Among those 3 closest points, we use the
+*majority class* as our prediction for the new observation. As shown in {numref}`fig:05-knn-5`, we
+see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
+are malignant. Therefore we take majority vote and classify our new red, diamond
+observation as malignant.
+
++++
+
+```{figure} img/classification1/fig05-knn-5.svg
+:height: 500px
+:name: fig:05-knn-5
+
+Scatter plot of concavity versus perimeter with three nearest neighbors.
+```
+
++++
 
 Here we chose the $K=3$ nearest observations, but there is nothing special
 about $K=3$. We could have used $K=4, 5$ or more (though we may want to choose
@@ -524,7 +568,7 @@ and concavity coordinates, add the squared differences, and then take the square
 new_point = [0, 3.5]
 attrs = ["Perimeter", "Concavity"]
 points_df3 = pd.DataFrame(
-    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["unknown"]}
+    {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["Unknown"]}
 )
 perim_concav_with_new_point_df3 = pd.concat((cancer, points_df3), ignore_index=True)
 perim_concav_with_new_point3 = (
@@ -564,6 +608,8 @@ cancer_dist
 ```
 
 ```{code-cell} ipython3
+## Couldn't find ways to have nice Latex equations in pandas dataframe
+
 cancer_dist_eq = cancer_dist.copy()
 cancer_dist_eq['Perimeter'] = round(cancer_dist_eq['Perimeter'], 2)
 cancer_dist_eq['Concavity'] = round(cancer_dist_eq['Concavity'], 2)
@@ -574,8 +620,8 @@ for i in list(cancer_dist_eq.index):
 cancer_dist_eq[["Perimeter", "Concavity", "Distance", "Class"]]
 ```
 
-Table 5.1: Evaluating the distances from the new observation to each of its 5 nearest neighbors
-
+```{table} Evaluating the distances from the new observation to each of its 5 nearest neighbors
+:name: tab:05-multiknn-mathtable
 | Perimeter | Concavity | Distance            | Class |
 |-----------|-----------|----------------------------------------|-------|
 | 0.24      | 2.65      | $$\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$$| B     |
@@ -583,10 +629,11 @@ Table 5.1: Evaluating the distances from the new observation to each of its 5 ne
 | 0.62      | 2.54      | $$\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$$| M     |
 | 0.42      | 2.31      | $$\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$$| M     |
 | -1.16     | 4.04      | $$\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$$| B     |
+```
 
 +++
 
-In Table \@ref(tab:05-multiknn-mathtable) we show in mathematical detail how
+In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how
 the `mutate` step was used to compute the `dist_from_new` variable (the
 distance to the new observation) for each of the 5 nearest neighbors in the
 training data.
@@ -663,22 +710,13 @@ Figure \@ref(fig:05-more) shows what the data look like when we visualize them
 as a 3-dimensional scatter with lines from the new observation to its five nearest neighbors.
 
 ```{code-cell} ipython3
-from mpl_toolkits import mplot3d
-```
-
-```{code-cell} ipython3
-%matplotlib inline
-import matplotlib.pyplot as plt
-```
-
-```{code-cell} ipython3
 new_point = [0, 3.5, 1]
 attrs = ["Perimeter", "Concavity", "Symmetry"]
 points_df4 = pd.DataFrame(
     {"Perimeter": new_point[0], 
      "Concavity": new_point[1], 
      "Symmetry": new_point[2],
-     "Class": ["unknown"]}
+     "Class": ["Unknown"]}
 )
 perim_concav_with_new_point_df4 = pd.concat((cancer, points_df4), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
@@ -733,8 +771,8 @@ neighbor5 = pd.concat(
 ```
 
 ```{code-cell} ipython3
-colors = {'Malignant':'blue', 'Benign':'orange', 'unknown':'red'}
-symbols = {'Malignant':'circle', 'Benign':'circle', 'unknown':'diamond'}
+colors = {'Malignant':'blue', 'Benign':'orange', 'Unknown':'red'}
+symbols = {'Malignant':'circle', 'Benign':'circle', 'Unknown':'diamond'}
 
 trace = go.Scatter3d(
     x=perim_concav_with_new_point_df4["Perimeter"],
@@ -1034,7 +1072,7 @@ selection of nearest neighbors. Thus, standardizing the data can change things
 in an important way when we are using predictive algorithms. 
 Standardizing your data should be a part of the preprocessing you do
 before predictive modeling and you should always think carefully about your problem domain and
-whether you need to standardize your data. 
+whether you need to standardize your data.
 
 ```{code-cell} ipython3
 unscaled_cancer
@@ -1051,7 +1089,7 @@ def class_dscp(x):
 
 
 attrs = ["Area", "Smoothness"]
-new_obs = pd.DataFrame({"Class": ["unknwon"], "Area": 400, "Smoothness": 0.135})
+new_obs = pd.DataFrame({"Class": ["Unknwon"], "Area": 400, "Smoothness": 0.135})
 unscaled_cancer["Class"] = unscaled_cancer["Class"].apply(class_dscp)
 area_smoothness_new_df = pd.concat((unscaled_cancer, new_obs), ignore_index=True)
 my_distances = euclidean_distances(area_smoothness_new_df.loc[:, attrs])[
@@ -1120,7 +1158,7 @@ area_smoothness_new_point = area_smoothness_new_point + line1 + line2 + line3
 
 ```{code-cell} ipython3
 attrs = ["Area", "Smoothness"]
-new_obs_scaled = pd.DataFrame({"Class": ["unknwon"], "Area": -0.72, "Smoothness": 2.8})
+new_obs_scaled = pd.DataFrame({"Class": ["Unknwon"], "Area": -0.72, "Smoothness": 2.8})
 scaled_cancer["Class"] = scaled_cancer["Class"].apply(class_dscp)
 area_smoothness_new_df_scaled = pd.concat(
     (scaled_cancer, new_obs_scaled), ignore_index=True
@@ -1277,7 +1315,7 @@ in the training data that were tagged as malignant.
 attrs = ["Perimeter", "Concavity"]
 new_point = [2, 2]
 new_point_df = pd.DataFrame(
-    {"Class": ["unknwon"], "Perimeter": new_point[0], "Concavity": new_point[1]}
+    {"Class": ["Unknwon"], "Perimeter": new_point[0], "Concavity": new_point[1]}
 )
 rare_cancer["Class"] = rare_cancer["Class"].apply(class_dscp)
 rare_cancer_with_new_df = pd.concat((rare_cancer, new_point_df), ignore_index=True)
@@ -1515,7 +1553,7 @@ predict the label of each, and visualize the predictions with a colored scatter 
 
 > **Note:** Understanding this code is not required for the remainder of the
 > textbook. It is included for those readers who would like to use similar
-> visualizations in their own data analyses. 
+> visualizations in their own data analyses.
 
 ```{code-cell} ipython3
 # create the grid of area/smoothness vals, and arrange in a data frame
@@ -1565,52 +1603,6 @@ prediction_plot = (
 
 unscaled_plot + prediction_plot
 ```
-
-```{r 05-workflow-plot-show, fig.height = 3.5, fig.width = 4.6, fig.cap = "Scatter plot of smoothness versus area where background color indicates the decision of the classifier."}
-# create the grid of area/smoothness vals, and arrange in a data frame
-are_grid <- seq(min(unscaled_cancer$Area), 
-                max(unscaled_cancer$Area), 
-                length.out = 100)
-smo_grid <- seq(min(unscaled_cancer$Smoothness), 
-                max(unscaled_cancer$Smoothness), 
-                length.out = 100)
-asgrid <- as_tibble(expand.grid(Area = are_grid, 
-                                Smoothness = smo_grid))
-
-# use the fit workflow to make predictions at the grid points
-knnPredGrid <- predict(knn_fit, asgrid)
-
-# bind the predictions as a new column with the grid points
-prediction_table <- bind_cols(knnPredGrid, asgrid) |> 
-  rename(Class = .pred_class)
-
-# plot:
-# 1. the colored scatter of the original data
-# 2. the faded colored scatter for the grid points
-wkflw_plot <-
-  ggplot() +
-  geom_point(data = unscaled_cancer, 
-             mapping = aes(x = Area, 
-                           y = Smoothness, 
-                           color = Class), 
-             alpha = 0.75) +
-  geom_point(data = prediction_table, 
-             mapping = aes(x = Area, 
-                           y = Smoothness, 
-                           color = Class), 
-             alpha = 0.02, 
-             size = 5) +
-  labs(color = "Diagnosis", 
-       x = "Area (standardized)", 
-       y = "Smoothness (standardized)") +
-  scale_color_manual(labels = c("Malignant", "Benign"), 
-                     values = c("orange2", "steelblue2")) +
-  theme(text = element_text(size = 12))
-
-wkflw_plot
-```
-
-+++
 
 ## Exercises
 

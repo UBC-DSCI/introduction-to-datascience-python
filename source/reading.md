@@ -21,14 +21,14 @@ import pandas as pd
 
 ## Overview 
 
-In this chapter, you’ll learn to read tabular data of various formats into R
+n this chapter, you’ll learn to read tabular data of various formats into Python
 from your local device (e.g., your laptop) and the web. “Reading” (or “loading”)
 \index{loading|see{reading}}\index{reading!definition} is the process of
 converting data (stored as plain text, a database, HTML, etc.) into an object
-(e.g., a data frame) that R can easily access and manipulate. Thus reading data
+(e.g., a data frame) that Python can easily access and manipulate. Thus reading data
 is the gateway to any data analysis; you won’t be able to analyze data unless
 you’ve loaded it first. And because there are many ways to store data, there
-are similarly many ways to read data into R. The more time you spend upfront
+are similarly many ways to read data into Python. The more time you spend upfront
 matching the data reading method to the type of data you have, the less time
 you will have to devote to re-formatting, cleaning and wrangling your data (the
 second step to all data analyses). It’s like making sure your shoelaces are
@@ -41,36 +41,33 @@ By the end of the chapter, readers will be able to do the following:
     - absolute file path
     - relative file path
     - **U**niform **R**esource **L**ocator (URL)
-- Read data into R using a relative path and a URL.
+- Read data into Python using an absolute path, relative path and a URL.
 - Compare and contrast the following functions:
     - `read_csv` 
-    - `read_tsv`
-    - `read_csv2`
-    - `read_delim`
+    - `read_table`
     - `read_excel`
-- Match the following `tidyverse` `read_*` function arguments to their descriptions:
-    - `file` 
-    - `delim`
-    - `col_names`
-    - `skip`
-- Choose the appropriate `tidyverse` `read_*` function and function arguments to load a given plain text tabular data set into R.
-- Use `readxl` package's `read_excel` function and arguments to load a sheet from an excel file into R.
-- Connect to a database using the `DBI` package's `dbConnect` function.
-- List the tables in a database using the `DBI` package's `dbListTables` function.
-- Create a reference to a database table that is queriable using the `tbl` from the `dbplyr` package.
-- Retrieve data from a database query and bring it into R using the `collect` function from the `dbplyr` package.
-- Use `write_csv` to save a data frame to a `.csv` file.
+- Match the following `pandas` `.read_*` function arguments to their descriptions:
+    - `filepath_or_buffer` 
+    - `sep`
+    - `names`
+    - `skiprows`
+
+- Choose the appropriate `pandas` `.read_*` function and function arguments to load a given plain text tabular data set into Python.
+- Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
+- Connect to a database using the `SQLAlchemy` library.
+- List the tables in a database using `SQLAlchemy` library's `table_names` function
+- Create a reference to a database table that is queriable using the `pd.read_sql` from the `pandas` library
+- Use `.to_csv` to save a data frame to a csv file
 - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
-    - Read HTML source code from a URL using the `rvest` package.
-    - Read data from the Twitter API using the `rtweet` package.
-    - Compare downloading tabular data from a plain text file (e.g., `.csv`), accessing data from an API, and scraping the HTML source code from a website.
+    - Read/scrape data from an internet URL using the `BeautifulSoup` package
+    - Compare downloading tabular data from a plain text file (e.g. *.csv) from the web versus scraping data from a .html file
 
 ## Absolute and relative file paths
 
 This chapter will discuss the different functions we can use to import data
-into R, but before we can talk about *how* we read the data into R with these
+into Python, but before we can talk about *how* we read the data into Python with these
 functions, we first need to talk about *where* the data lives. When you load a
-data set into R, you first need to tell R where those files live. The file
+data set into Python, you first need to tell Python where those files live. The file
 could live on your  computer (*local*) 
 \index{location|see{path}} \index{path!local, remote, relative, absolute} 
 or somewhere on the internet (*remote*). 
@@ -85,26 +82,30 @@ in respect to the computer's filesystem base (or root) folder.
 Suppose our computer's filesystem looks like the picture in Figure
 \@ref(fig:file-system-for-export-to-intro-datascience), and we are working in a
 file titled `worksheet_02.ipynb`. If we want to 
-read the `.csv` file named `happiness_report.csv` into R, we could do this
+read the `.csv` file named `happiness_report.csv` into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.\index{Happiness Report}
 
-```{figure} img/filesystem.jpeg
-:height: 500px
-:name: filesystem
 
 
-```
+:::{figure-md} markdown-fig
+<img src="img/filesystem.jpeg" alt="filesystem" class="bg-primary mb-2" width="600px" height="500px">
+
+Filesystem
+:::
+
+
+
 
 **Reading `happiness_report.csv` using a relative path:**
 
-```{code-cell} ipython3
+```{code-cell eval=False} ipython3
 happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 
 **Reading `happiness_report.csv` using an absolute path:**
 
-```{code-cell} ipython3
+```{code-cell eval=False} ipython3
 happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
 
@@ -130,27 +131,23 @@ Fatima's computer.  But the relative path from inside the `project` folder
 (`data/happiness_report.csv`) is the same on both computers; any code that uses
 relative paths will work on both!
 
-In the additional resources section, we include a link to a short video on the
-difference between absolute and relative paths. You can also check out the
-`here` package, which provides methods for finding and constructing file paths
-in R.  
 
 Your file could be stored locally, as we discussed, or it could also be
 somewhere on the internet (remotely). A *Uniform Resource Locator (URL)* (web
 address) \index{URL} indicates the location of a resource on the internet and
 helps us retrieve that resource. Next, we will discuss how to get either
-locally or remotely stored data into R. 
+locally or remotely stored data into Python. 
 
-## Reading tabular data from a plain text file into R
+## Reading tabular data from a plain text file into Python
 
 ### `read_csv` to read in comma-separated files {#readcsv}
 
 Now that we have learned about *where* data could be, we will learn about *how*
-to import data into R using various functions. Specifically, we will learn how 
+to import data into Python using various functions. Specifically, we will learn how 
 to *read* tabular data from a plain text file (a document containing only text)
-*into* R and *write* tabular data to a file *out of* R. The function we use to do this
+*into* Python and *write* tabular data to a file *out of* Python. The function we use to do this
 depends on the file's format. For example, in the last chapter, we learned about using
-the `tidyverse` `read_csv` function when reading .csv (**c**omma-**s**eparated **v**alues)
+the `pandas` `read_csv` function when reading .csv (**c**omma-**s**eparated **v**alues)
 files. \index{csv} In that case, the separator or *delimiter* \index{reading!delimiter} that divided our columns was a
 comma (`,`). We only learned the case where the data matched the expected defaults 
 of the `read_csv` function \index{read function!read\_csv}
@@ -159,13 +156,13 @@ In this section, we will learn how to read
 files that do not satisfy the default expectations of `read_csv`.
 
 Before we jump into the cases where the data aren't in the expected default format 
-for `tidyverse` and `read_csv`, let's revisit the more straightforward
+for `pandas` and `read_csv`, let's revisit the more straightforward
 case where the defaults hold, and the only argument we need to give to the function
 is the path to the file, `data/can_lang.csv`. The `can_lang` data set contains 
 language data from the 2016 Canadian census. \index{Canadian languages!canlang data} 
 We put `data/` before the file's
 name when we are loading the data set because this data set is located in a
-sub-folder, named `data`, relative to where we are running our R code.
+sub-folder, named `data`, relative to where we are running our Python code.
 
 Here is what the file would look like in a plain text editor (a program that removes
 all formatting, like bolding or different fonts):
@@ -183,12 +180,12 @@ Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
-And here is a review of how we can use `read_csv` to load it into R. First we 
-load the `tidyverse` \index{tidyverse} package to gain access to useful
+And here is a review of how we can use `read_csv` to load it into Python. First we 
+load the `pandas` \index{tidyverse} package to gain access to useful
 functions for reading the data. 
 
 
-Next we use `read_csv` to load the data into R, and in that call we specify the
+Next we use `read_csv` to load the data into Python, and in that call we specify the
 relative path to the file.
 
 ```{code-cell} ipython3
@@ -200,7 +197,7 @@ canlang_data = pd.read_csv("data/can_lang.csv")
 > **Note:** It is also normal and expected that \index{warning} a message is
 > printed out after using
 > the `read_csv` and related functions. This message lets you know the data types
-> of each of the columns that R inferred while reading the data into R.  In the
+> of each of the columns that Python inferred while reading the data into Python.  In the
 > future when we use this and related functions to load data in this book, we will
 > silence these messages to help with the readability of the book.
 
@@ -236,44 +233,41 @@ Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 
 With this extra information being present at the top of the file, using
 `read_csv` as we did previously does not allow us to correctly load the data
-into R. In the case of this file we end up only reading in one column of the
+into Python. In the case of this file we end up only reading in one column of the
 data set:
 
 ```{code-cell} ipython3
 canlang_data = pd.read_csv("data/can_lang-meta-data.csv")
 ```
 
-> **Note:** In contrast to the normal and expected messages above, this time R 
-> printed out a warning for us indicating that there might be a problem with how
+> **Note:** In contrast to the normal and expected messages above, this time Python 
+> printed out a Parsing error for us indicating that there might be a problem with how
 > our data is being read in. \index{warning}
 
-```{code-cell} ipython3
-canlang_data
-```
 
-To successfully read data like this into R, the `skip` 
-argument \index{read function!skip argument} can be useful to tell R 
+
+To successfully read data like this into Python, the `skiprows` 
+argument \index{read function!skip argument} can be useful to tell Python 
 how many lines to skip before
 it should start reading in the data. In the example above, we would set this
-value to 3.
+value to 2 and pass `header` as None to read and load the data correctly.
 
 ```{code-cell} ipython3
 canlang_data = pd.read_csv("data/can_lang-meta-data.csv", skiprows=2, header=None)
 canlang_data
 ```
 
-How did we know to skip three lines? We looked at the data! The first three lines
+How did we know to skip two lines? We looked at the data! The first two lines
 of the data had information we didn't need to import: 
 
 ```code
-Data source: https://ttimbers.github.io/canlang/
-Data originally published in: Statistics Canada Census of Population 2016.
-Reproduced and distributed on an as-is basis with their permission.
+Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an "as is" basis with the permission of Statistics Canada.
+Date collected: 2020/07/09
 ```
 
-The column names began at line 4, so we skipped the first three lines. 
+The column names began at line 3, so we skipped the first two lines. 
 
-### `read_tsv` to read in tab-separated files
+### `read_csv` with `sep` argument to read in tab-separated files
 
 Another common way data is stored is with tabs as the delimiter. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
@@ -292,7 +286,7 @@ Non-Official & Non-Aboriginal languages American Sign Language  2685    3020
 Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
 ```
 
-To read in this type of data, we can use the `read_tsv` 
+To read in this type of data, we can use the `read_csv` with `sep` argument 
 \index{tab-separated values|see{tsv}}\index{tsv}\index{read function!read\_tsv}
 to read in .tsv (**t**ab **s**eparated **v**alues) files. 
 
@@ -307,11 +301,11 @@ same number of columns/rows and column names! So we needed to use different
 tools for the job depending on the file format and our resulting table
 (`canlang_data`) in both cases was the same! 
 
-### `read_delim` as a more flexible method to get tabular data into R
+### `read_table` as a more flexible method to get tabular data into Python
 
-`read_csv` and `read_tsv` are actually just special cases of the more general
-`read_delim` \index{read function!read\_delim} function. We can use
-`read_delim` to import both comma and tab-separated files (and more), we just
+`read_csv` and `read_csv` with argument `sep` are actually just special cases of the more general
+`read_table` \index{read function!read\_delim} function. We can use
+`read_table` to import both comma and tab-separated files (and more), we just
 have to specify the delimiter. The `can_lang.tsv` is a different version of
 this same data set with no column names and uses tabs as the delimiter
 \index{reading!delimiter} instead of commas. 
@@ -331,13 +325,11 @@ Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
 Non-Official & Non-Aboriginal languages Arabic  419890  223535  5585    629055
 ```
 
-To get this into R using the `read_delim` function, we specify the first
+To get this into Python using the `read_table` function, we specify the first
 argument as the path to the file (as done with `read_csv`), and then provide
-values to the `delim` \index{read function!delim argument} argument (here a
-tab, which we represent by `"\t"`) and the `col_names` argument (here we
-specify that there are no column names to assign, and give it the value of
-`FALSE`). `read_csv`, `read_tsv` and `read_delim` have a `col_names` argument
-\index{read function!col\_names argument} and the default is `TRUE`. 
+values to the `sep` \index{read function!delim argument} argument (here a
+tab, which we represent by `"\t"`). 
+ 
 
 > **Note:** `\t` is an example of an *escaped character*, 
 > which always starts with a backslash (`\`). \index{escape character}
@@ -353,20 +345,23 @@ canlang_data
 
 +++
 
-Data frames in R need to have column names.  Thus if you read in data that
-don't have column names, R will assign names automatically. In the example
-above, R assigns each column a name of `X1, X2, X3, X4, X5, X6`.
+Data frames in Python need to have column names.  Thus if you read in data that
+don't have column names, Python will assign names automatically. In the example
+above, Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
+
+
 
 It is best to rename your columns to help differentiate between them 
-(e.g., `X1, X2`, etc., are not very descriptive names and will make it more confusing as
+(e.g., `0, 1`, etc., are not very descriptive names and will make it more confusing as
 you code). To rename your columns, you can use the `rename` function
 \index{rename} from [the `dplyr` R package](https://dplyr.tidyverse.org/) [@dplyr]
  \index{dplyr} (one of the packages
-loaded with `tidyverse`, so we don't need to load it separately). The first
-argument is the data set, and in the subsequent arguments you 
-write `new_name = old_name` for the selected variables to 
-rename. We rename the `X1, X2, ..., X6`
-columns in the `canlang_data` data frame to more descriptive names below. 
+loaded with `tidyverse`, so we don't need to load it separately). The argument
+of the `rename` function is `columns`, which is a dictionary of old column 
+names as keys of the dictionary and new column names as values of the dictionary.
+We rename the `0, 1, ..., 5`
+columns in the `canlang_data` data frame to more descriptive names below, with the 
+`inplace` argument as `True`, so that the columns are renamed in place. 
 
 ```{code-cell} ipython3
 
@@ -381,10 +376,9 @@ canlang_data.rename(columns = {0:'category',
 canlang_data
 ```
 
-```{code-cell} ipython3
-canlang_data.columns = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known']
-canlang_data
-```
+The column names can also be assigned to the dataframe while reading it from the file by passing a 
+list of column names to the `names` argument. `read_csv` and `read_table` have a `names` argument, 
+\index{read function!col\_names argument} whose default value is `[]`.
 
 
 ```{code-cell} ipython3
@@ -397,7 +391,7 @@ canlang_data
 ```
 
 ### Reading tabular data directly from a URL
-We can also use `read_csv`, `read_tsv` or `read_delim` (and related functions)
+We can also use `read_csv`, `read_table`(and related functions)
 to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
 contains tabular data. \index{URL!reading from} Here, we provide the URL to
 `read_*` as the path to the file instead of a path to a local file on our
@@ -413,10 +407,10 @@ canlang_data = pd.read_csv(url)
 canlang_data
 ```
 
-### Previewing a data file before reading it into R
+### Previewing a data file before reading it into Python
 
 In all the examples above, we gave you previews of the data file before we read
-it into R. Previewing data is essential to see whether or not there are column
+it into Python. Previewing data is essential to see whether or not there are column
 names, what the delimiters are, and if there are lines you need to skip. You
 should do this yourself when trying to read in data files. You can preview
 files in a plain text editor by right-clicking on the file, selecting "Open
@@ -425,8 +419,8 @@ With," and choosing a plain text editor (e.g., Notepad).
 ## Reading tabular data from a Microsoft Excel file
 
 There are many other ways to store tabular data sets beyond plain text files,
-and similarly, many ways to load those data sets into R. For example, it is
-very common to encounter, and need to load into R, data stored as a Microsoft
+and similarly, many ways to load those data sets into Python. For example, it is
+very common to encounter, and need to load into Python, data stored as a Microsoft
 Excel \index{Excel spreadsheet}\index{Microsoft Excel|see{Excel
 spreadsheet}}\index{xlsx|see{Excel spreadsheet}} spreadsheet (with the file name
 extension `.xlsx`).  To be able to do this, a key thing to know is that even
@@ -457,25 +451,25 @@ X?a??4VT?,D?Jq
 This type of file representation allows Excel files to store additional things
 that you cannot store in a `.csv` file, such as fonts, text formatting,
 graphics, multiple sheets and more. And despite looking odd in a plain text
-editor, we can read Excel spreadsheets into R using the `readxl` package
-developed specifically for this 
+editor, we can read Excel spreadsheets into Python using the `pandas` package's `read_excel` 
+function developed specifically for this 
 purpose. \index{readxl}\index{read function!read\_excel}
 
 ```{code-cell} ipython3
-#!pip install openpyxl
 canlang_data = pd.read_excel("data/can_lang.xlsx")
 canlang_data
 ```
 
-If the `.xlsx` file has multiple sheets, you have to use the `sheet` argument
+If the `.xlsx` file has multiple sheets, you have to use the `sheet_name` argument
 to specify the sheet number or name. You can also specify cell ranges using the
-`range` argument. This functionality is useful when a single sheet contains
+`usecols` argument(Example:  `usecols="A:D"` for including cells from `A` to `D`). 
+This functionality is useful when a single sheet contains
 multiple tables (a sad thing that happens to many Excel spreadsheets since this
 makes reading in data more difficult). 
 
 As with plain text files, you should always explore the data file before
-importing it into R. Exploring the data beforehand helps you decide which
-arguments you need to load the data into R successfully. If you do not have
+importing it into Python. Exploring the data beforehand helps you decide which
+arguments you need to load the data into Python successfully. If you do not have
 the Excel program on your computer, you can use other programs to preview the
 file. Examples include Google Sheets and Libre Office. 
 
@@ -487,16 +481,15 @@ European countries).
 
 Table: (\#tab:read-table) Summary of `read_*` functions
 
-Data File Type | R Function | R Package
+Data File Type | Python Function | Python Package
 -- | -- | --
-Comma (`,`) separated files | `read_csv` | `readr`
-Tab (`\t`) separated files  | `read_tsv` | `readr`
-Semicolon (`;`) separated files |  `read_csv2` | `readr`
-Various formats (`.csv`, `.tsv`)   | `read_delim` | `readr`
-Excel files (`.xlsx`) | `read_excel` | `readxl`
+Comma (`,`) separated files | `read_csv` | `pandas`
+Tab (`\t`) separated files  | `read_csv` with `sep` argument  | `pandas`
+Semicolon (`;`) separated files |  `read_csv` with `sep` argument | `pandas`
+Various formats (`.csv`, `.tsv`)   | `read_table` | `pandas`
+Excel files (`.xlsx`) | `read_excel` | `pandas`
 
-> **Note:** `readr` is a part of the `tidyverse` package so we did not need to load
-> this package separately since we loaded `tidyverse`.
+
 
 ## Reading data from a database
 
@@ -509,23 +502,23 @@ different relational database management systems each have their own advantages
 and limitations. Almost all employ SQL (*structured query language*) to obtain
 data from the database. But you don't need to know SQL to analyze data from
 a database; several packages have been written that allow you to connect to
-relational databases and use the R programming language 
+relational databases and use the Python programming language 
 to obtain data. In this book, we will give examples of how to do this
-using R with SQLite and PostgreSQL databases.
+using Python with SQLite and PostgreSQL databases.
 
 ### Reading data from a SQLite database
 
 SQLite \index{database!SQLite} is probably the simplest relational database system
-that one can use in combination with R. SQLite databases are self-contained and
+that one can use in combination with Python. SQLite databases are self-contained and
 usually stored and accessed locally on one computer. Data is usually stored in
 a file with a `.db` extension. Similar to Excel files, these are not plain text
 files and cannot be read in a plain text editor. 
 
-The first thing you need to do to read data into R from a database is to
-connect to the database. We do that using the `dbConnect` function from the
-`DBI` (database interface) package. \index{database!connect} This does not read
-in the data, but simply tells R where the database is and opens up a
-communication channel that R can use to send SQL commands to the database.
+The first thing you need to do to read data into Python from a database is to
+connect to the database. We do that using the `create_engine` function from the
+`sal` (SQLAlchemy) package. \index{database!connect} This does not read
+in the data, but simply tells Python where the database is and opens up a
+communication channel that Python can use to send SQL commands to the database.
 
 ```{code-cell} ipython3
 import sqlalchemy as sal
@@ -539,7 +532,7 @@ conn = db.connect()
 Often relational databases have many tables; thus, in order to retrieve
 data from a database, you need to know the name of the table 
 in which the data is stored. You can get the names of
-all the tables in the database using the `dbListTables` \index{database!tables}
+all the tables in the database using the `table_names` \index{database!tables}
 function:
 
 ```{code-cell} ipython3
@@ -547,7 +540,7 @@ tables = db.table_names()
 tables
 ```
 
-The `dbListTables` function returned only one name, which tells us
+The `table_names` function returned only one name, which tells us
 that there is only one table in this database. To reference a table in the
 database (so that we can perform operations like selecting columns and filtering rows), we 
 use the `tbl` function \index{database!tbl} from the `dbplyr` package. The object returned

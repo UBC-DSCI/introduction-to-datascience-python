@@ -202,7 +202,7 @@ cancer.info()
 # %%
 cancer['Class'].unique()
 
-# %%
+# %% tags=["remove-cell"]
 ## The above was based on the following text and code in R textbook. ##
 #######################################################################
 # Below we use `glimpse` \index{glimpse} to preview the data frame. This function can
@@ -264,14 +264,13 @@ explore_cancer
 # We also make the category labels ("B" and "M") more readable by 
 # changing them to "Benign" and "Malignant" using `.apply()` method on the dataframe.
 
-# %% tags=["remove-cell"]
+# %% tags=[]
 colors = ["#86bfef", "#efb13f"]
-cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
+cancer["Class"] = cancer["Class"].apply(
+    lambda x: "Malignant" if (x == "M") else "Benign"
+)
 perim_concav = (
-    alt.Chart(
-        cancer,
-        # title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
-    )
+    alt.Chart(cancer)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
@@ -279,34 +278,15 @@ perim_concav = (
         color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
-# perim_concav.save("img/classification1/fig05-scatter.svg")
-glue('fig:05-scatter', perim_concav, display=True)
+perim_concav
 
 # %% [markdown]
-# ```python
-# colors = ["#86bfef", "#efb13f"]
-# cancer['Class'] = cancer['Class'].apply(lambda x: 'Malignant' if (x == 'M') else 'Benign')
-# perim_concav = (
-#     alt.Chart(
-#         cancer,
-#         # title="Scatter plot of concavity versus perimeter colored by diagnosis label.",
-#     )
-#     .mark_point(opacity=0.6, filled=True, size=40)
-#     .encode(
-#         x=alt.X("Perimeter", title="Perimeter (standardized)"),
-#         y=alt.Y("Concavity", title="Concavity (standardized)"),
-#         color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
-#     )
-# )
-# perim_concav
-# ```
-
-# %% [markdown]
-# :::{glue:figure} fig:05-scatter
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 # :name: fig:05-scatter
+# :figclass: caption-hack
 #
 # Scatter plot of concavity versus perimeter colored by diagnosis label.
-# :::
+# ```
 
 # %% [markdown]
 # In {numref}`fig:05-scatter`, we can see that malignant observations typically fall in
@@ -1154,6 +1134,7 @@ scaled_cancer = pd.DataFrame(scaled_cancer, columns=['Area', 'Smoothness'])
 scaled_cancer['Class'] = unscaled_cancer['Class']
 scaled_cancer
 
+
 # %% [markdown]
 # It may seem redundant that we had to both `fit` *and* `transform` to scale and center the data.
 #  However, we do this in two steps so we can specify a different data set in the `transform` step if we want. 
@@ -1167,8 +1148,8 @@ scaled_cancer
 # predictions, or accidentally apply a *different* centering / scaling than what
 # we used while training. Proper use of a `ColumnTransformer` helps keep our code simple,
 # readable, and error-free. Furthermore, note that using `fit` and `transform` on the preprocessor is required only when you want to inspect the result of the preprocessing steps
-# yourself. You will see further on in Section
-# {ref}`content:puttingittogetherworkflow` that `scikit-learn` provides tools to
+# yourself. You will see further on in
+# Section {ref}`08:puttingittogetherworkflow` that `scikit-learn` provides tools to
 # automatically streamline the preprocesser and the model so that you can call`fit` 
 # and `transform` on the `Pipeline` as necessary without additional coding effort.
 
@@ -1189,7 +1170,6 @@ scaled_cancer
 # yourself. You will see further on in Section
 # \@ref(puttingittogetherworkflow) that `tidymodels` provides tools to
 # automatically apply `prep` and `bake` as necessary without additional coding effort.
-
 
 # %% [markdown]
 # {numref}`fig:05-scaling-plt` shows the two scatter plots side-by-side&mdash;one for `unscaled_cancer` and one for
@@ -1489,11 +1469,11 @@ rare_plot
 # will *always predict that the tumor is benign, no matter what its concavity and perimeter
 # are!* This is because in a majority vote of 7 observations, at most 3 will be
 # malignant (we only have 3 total malignant observations), so at least 4 must be
-# benign, and the benign vote will always win. For example, Figure \@ref(fig:05-upsample)
+# benign, and the benign vote will always win. For example, {numref}`fig:05-upsample`
 # shows what happens for a new tumor observation that is quite close to three observations
 # in the training data that were tagged as malignant.
 
-# %%
+# %% tags=["remove-cell"]
 attrs = ["Perimeter", "Concavity"]
 new_point = [2, 2]
 new_point_df = pd.DataFrame(
@@ -1508,8 +1488,7 @@ my_distances = euclidean_distances(rare_cancer_with_new_df.loc[:, attrs])[
 # First layer: scatter plot, with unknwon point labeled as red "unknown" diamond
 rare_plot = (
     alt.Chart(
-        rare_cancer_with_new_df,
-        title="Imbalanced data with 7 nearest neighbors to a new observation highlighted."
+        rare_cancer_with_new_df
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -1548,32 +1527,42 @@ for i in range(7):
         .encode(x="Perimeter", y="Concavity", color=alt.value(clr))
     )
 
-rare_plot
+glue('fig:05-upsample', rare_plot)
 
 # %% [markdown]
-# Figure \@ref(fig:05-upsample-2) shows what happens if we set the background color of 
+# :::{glue:figure} fig:05-upsample
+# :name: fig:05-upsample
+#
+# Imbalanced data with 7 nearest neighbors to a new observation highlighted.
+# :::
+
+# %% [markdown]
+# {numref}`fig:05-upsample-2` shows what happens if we set the background color of 
 # each area of the plot to the predictions the $K$-nearest neighbor 
 # classifier would make. We can see that the decision is 
 # always "benign," corresponding to the blue color.
 
-# %%
+# %% tags=["remove-cell"]
 knn_spec = KNeighborsClassifier(n_neighbors=7)
-knn_spec.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"]);
+knn_spec.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"])
 
 # create a prediction pt grid
-per_grid = np.linspace(rare_cancer['Perimeter'].min(), rare_cancer['Perimeter'].max(), 100)
-con_grid = np.linspace(rare_cancer['Concavity'].min(), rare_cancer['Concavity'].max(), 100)
+per_grid = np.linspace(
+    rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max(), 100
+)
+con_grid = np.linspace(
+    rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max(), 100
+)
 pcgrid = np.array(np.meshgrid(per_grid, con_grid)).reshape(2, -1).T
-pcgrid = pd.DataFrame(pcgrid, columns=['Perimeter', 'Concavity'])
+pcgrid = pd.DataFrame(pcgrid, columns=["Perimeter", "Concavity"])
 knnPredGrid = knn_spec.predict(pcgrid)
 prediction_table = pcgrid.copy()
-prediction_table['Class'] = knnPredGrid
+prediction_table["Class"] = knnPredGrid
 
 # create the scatter plot
 rare_plot = (
     alt.Chart(
         rare_cancer,
-        title="Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -1591,14 +1580,44 @@ prediction_plot = (
     )
     .mark_point(opacity=0.02, filled=True, size=200)
     .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        x=alt.X(
+            "Perimeter",
+            title="Perimeter (standardized)",
+            scale=alt.Scale(
+                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+            ),
+        ),
+        y=alt.Y(
+            "Concavity",
+            title="Concavity (standardized)",
+            scale=alt.Scale(
+                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+            ),
+        ),
         color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
 rare_plot + prediction_plot
+glue("fig:05-upsample-2", (rare_plot + prediction_plot))
 
 # %% [markdown]
+# :::{glue:figure} fig:05-upsample-2
+# :name: fig:05-upsample-2
+#
+# Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data.
+# :::
+
+# %% [markdown]
+# Despite the simplicity of the problem, solving it in a statistically sound manner is actually
+# fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
+# For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. \index{oversampling}
+# In other words, we will replicate rare observations multiple times in our data set to give them more
+# voting power in the $K$-nearest neighbor algorithm. In order to do this, we will need an oversampling
+# step with the `resample` function from the `sklearn` Python package. \index{recipe!step\_upsample}
+# We show below how to do this, and also
+# use the `.groupby()` and `.count()` methods to see that our classes are now balanced:
+
+# %% tags=["remove-cell"]
 # Despite the simplicity of the problem, solving it in a statistically sound manner is actually
 # fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
 # For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. \index{oversampling}
@@ -1624,13 +1643,13 @@ upsampled_cancer.groupby(by='Class')['Class'].count()
 
 # %% [markdown]
 # Now suppose we train our $K$-nearest neighbor classifier with $K=7$ on this *balanced* data. 
-# Figure \@ref(fig:05-upsample-plot) shows what happens now when we set the background color 
+# {numref}`fig:05-upsample-plot` shows what happens now when we set the background color 
 # of each area of our scatter plot to the decision the $K$-nearest neighbor 
 # classifier would make. We can see that the decision is more reasonable; when the points are close
 # to those labeled malignant, the classifier predicts a malignant tumor, and vice versa when they are 
 # closer to the benign tumor observations.
 
-# %%
+# %% tags=["remove-cell"]
 knn_spec = KNeighborsClassifier(n_neighbors=7)
 knn_spec.fit(
     X=upsampled_cancer.loc[:, ["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
@@ -1643,14 +1662,23 @@ prediction_table["Class"] = knnPredGrid
 
 # create the scatter plot
 rare_plot = (
-    alt.Chart(
-        rare_cancer,
-        title="Upsampled data with background color indicating the decision of the classifier.",
-    )
+    alt.Chart(rare_cancer)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
+        x=alt.X(
+            "Perimeter",
+            title="Perimeter (standardized)",
+            scale=alt.Scale(
+                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+            ),
+        ),
+        y=alt.Y(
+            "Concavity",
+            title="Concavity (standardized)",
+            scale=alt.Scale(
+                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+            ),
+        ),
         color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
@@ -1666,14 +1694,31 @@ upsampled_plot = (
     )
 )
 rare_plot + upsampled_plot
+glue("fig:05-upsample-plot", (rare_plot + upsampled_plot))
 
 # %% [markdown]
-# (content:puttingittogetherworkflow)=
-# ## Putting it together in a `pipeline` {#puttingittogetherworkflow}
+# :::{glue:figure} fig:05-upsample-plot
+# :name: fig:05-upsample-plot
+#
+# Upsampled data with background color indicating the decision of the classifier.
+# :::
+
+# %% [markdown]
+# (08:puttingittogetherworkflow)=
+# ## Putting it together in a `pipeline`
 #
 # The `scikit-learn` package collection also provides the `pipeline`, a way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
 # To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
-# First we will load the data, create a model, and specify a recipe for how the data should be preprocessed:
+# First we will load the data, create a model, and specify a preprocessor for how the data should be preprocessed:
+
+# %% tags=["remove-cell"]
+# The `tidymodels` package collection also provides the `workflow`, 
+# a way to chain\index{tidymodels!workflow}\index{workflow|see{tidymodels}} 
+# together multiple data analysis steps without a lot of otherwise necessary code 
+# for intermediate steps.
+# To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
+# First we will load the data, create a model, 
+# and specify a recipe for how the data should be preprocessed:
 
 # %%
 # load the unscaled cancer data
@@ -1688,18 +1733,24 @@ preprocessor = make_column_transformer(
 )
 
 # %% [markdown]
+# You will also notice that we did not call `.fit()` on the preprocessor; this is unnecessary when it is
+# placed in a `Pipeline`.
+#
+# We will now place these steps in a `Pipeline` using the `make_pipeline` function, 
+# and finally we will call `.fit()` to run the whole `Pipeline` on the `unscaled_cancer` data.
+
+# %% tags=["remove-cell"]
 # Note that each of these steps is exactly the same as earlier, except for one major difference:
 # we did not use the `select` function to extract the relevant variables from the data frame,
 # and instead simply specified the relevant variables to use via the 
 # formula `Class ~ Area + Smoothness` (instead of `Class ~ .`) in the recipe.
 # You will also notice that we did not call `prep()` on the recipe; this is unnecessary when it is
 # placed in a workflow.
-#
-# We will now place these steps in a `pipeline` using the `make_pipeline` function, 
-# and finally we will use the `fit` function to run the whole `pipeline` on the `unscaled_cancer` data.
 
-# %%
-unscaled_cancer
+# We will now place these steps in a `workflow` using the `add_recipe` and `add_model` functions, \index{tidymodels!add\_recipe}\index{tidymodels!add\_model}
+# and finally we will use the `fit` function to run the whole workflow on the `unscaled_cancer` data.
+# Note another difference from earlier here: we do not include a formula in the `fit` function. This \index{tidymodels!fit}
+# is again because we included the formula in the recipe, so there is no need to respecify it:
 
 # %%
 knn_fit = make_pipeline(preprocessor, knn_spec).fit(
@@ -1712,6 +1763,16 @@ knn_fit
 # As before, the fit object lists the function that trains the model. But now the fit object also includes information about
 # the overall workflow, including the standardizing preprocessing step.
 # In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
+# observation, it will first apply the same preprocessing steps to the new observation. 
+# As an example, we will predict the class label of two new observations:
+# one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
+
+# %% tags=["remove-cell"]
+# As before, the fit object lists the function that trains the model as well as the "best" settings
+# for the number of neighbors and weight function (for now, these are just the values we chose
+#  manually when we created `knn_spec` above). But now the fit object also includes information about
+# the overall workflow, including the centering and scaling preprocessing steps.
+# In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
 # observation, it will first apply the same recipe steps to the new observation. 
 # As an example, we will predict the class label of two new observations:
 # one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
@@ -1723,14 +1784,14 @@ prediction
 
 # %% [markdown]
 # The classifier predicts that the first observation is benign ("B"), while the second is
-# malignant ("M"). Figure \@ref(fig:05-workflow-plot-show) visualizes the predictions that this 
+# malignant ("M"). {numref}`fig:05-workflow-plot-show` visualizes the predictions that this 
 # trained $K$-nearest neighbor model will make on a large range of new observations.
 # Although you have seen colored prediction map visualizations like this a few times now,
 # we have not included the code to generate them, as it is a little bit complicated.
 # For the interested reader who wants a learning challenge, we now include it below. 
-# The basic idea is to create a grid of synthetic new observations using the `expand.grid` function, 
+# The basic idea is to create a grid of synthetic new observations using the `numpy.meshgrid` function, 
 # predict the label of each, and visualize the predictions with a colored scatter having a very high transparency 
-# (low `alpha` value) and large point radius. See if you can figure out what each line is doing!
+# (low `opacity` value) and large point radius. See if you can figure out what each line is doing!
 #
 # > **Note:** Understanding this code is not required for the remainder of the
 # > textbook. It is included for those readers who would like to use similar
@@ -1759,21 +1820,33 @@ prediction_table["Class"] = knnPredGrid
 unscaled_plot = (
     alt.Chart(
         unscaled_cancer,
-        title="Scatter plot of smoothness versus area where background color indicates the decision of the classifier.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Area", title="Area (standardized)"),
-        y=alt.Y("Smoothness", title="Smoothness (standardized)"),
+        x=alt.X(
+            "Area",
+            title="Area (standardized)",
+            scale=alt.Scale(
+                domain=(unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max())
+            ),
+        ),
+        y=alt.Y(
+            "Smoothness",
+            title="Smoothness (standardized)",
+            scale=alt.Scale(
+                domain=(
+                    unscaled_cancer["Smoothness"].min(),
+                    unscaled_cancer["Smoothness"].max(),
+                )
+            ),
+        ),
         color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
     )
 )
 
 # 2. the faded colored scatter for the grid points
 prediction_plot = (
-    alt.Chart(
-        prediction_table
-    )
+    alt.Chart(prediction_table)
     .mark_point(opacity=0.02, filled=True, size=200)
     .encode(
         x=alt.X("Area"),
@@ -1783,6 +1856,14 @@ prediction_plot = (
 )
 
 unscaled_plot + prediction_plot
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:05-workflow-plot-show
+# :figclass: caption-hack
+#
+# Scatter plot of smoothness versus area where background color indicates the decision of the classifier.
+# ```
 
 # %% [markdown]
 # ## Exercises
@@ -1801,5 +1882,3 @@ unscaled_plot + prediction_plot
 # %% [markdown]
 # ```{bibliography}
 # ```
-
-# %%

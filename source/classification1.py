@@ -30,7 +30,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.preprocessing import StandardScaler
-import plotly.express as px
+# import plotly.express as px
 import plotly.graph_objs as go
 from plotly.offline import iplot, plot
 from IPython.display import HTML
@@ -97,7 +97,7 @@ alt.data_transformers.disable_max_rows()
 #
 # There are many possible methods that we could use to predict
 # a categorical class/label for an observation. In this book, we will
-# focus on the widely used **$K$-nearest neighbors** \index{K-nearest neighbors} algorithm [@knnfix; @knncover].
+# focus on the widely used **$K$-nearest neighbors** \index{K-nearest neighbors} algorithm {cite:p}`knnfix,knncover`.
 # In your future studies, you might encounter decision trees, support vector machines (SVMs),
 # logistic regression, neural networks, and more; see the additional resources
 # section at the end of the next chapter for where to begin learning more about
@@ -112,7 +112,7 @@ alt.data_transformers.disable_max_rows()
 #
 # In this chapter and the next, we will study a data set of 
 # [digitized breast cancer image features](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29),
-# created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian [@streetbreastcancer]. \index{breast cancer} 
+# created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian {cite:p}`streetbreastcancer`. \index{breast cancer} 
 # Each row in the data set represents an
 # image of a tumor sample, including the diagnosis (benign or malignant) and
 # several other measurements (nucleus texture, perimeter, area, and more).
@@ -129,7 +129,7 @@ alt.data_transformers.disable_max_rows()
 # dangerous; the cells stay in the same place, and the tumor stops growing before
 # it gets very large. By contrast, in malignant tumors, the cells invade the
 # surrounding tissue and spread into nearby organs, where they can cause serious
-# damage [@stanfordhealthcare].
+# damage {cite:p}`streetbreastcancer`.
 # Thus, it is important to quickly and accurately diagnose the tumor type to
 # guide patient treatment.
 
@@ -184,7 +184,7 @@ cancer
 # 12. Fractal Dimension: a measurement of how "rough" the perimeter is
 
 # %% [markdown]
-# Below we use `.info()` \index{glimpse} to preview the data frame. This function can 
+# Below we use `.info()` \index{glimpse} to preview the data frame. This method can 
 # make it easier to inspect the data when we have a lot of columns, 
 # as it prints the data such that the columns go down 
 # the page (instead of across).
@@ -202,12 +202,50 @@ cancer.info()
 # %%
 cancer['Class'].unique()
 
+# %%
+## The above was based on the following text and code in R textbook. ##
+#######################################################################
+# Below we use `glimpse` \index{glimpse} to preview the data frame. This function can
+# make it easier to inspect the data when we have a lot of columns,
+# as it prints the data such that the columns go down
+# the page (instead of across).
+
+# ```{r 05-glimpse}
+# glimpse(cancer)
+# ```
+
+# From the summary of the data above, we can see that `Class` is of type character
+# (denoted by `<chr>`). Since we will be working with `Class` as a
+# categorical statistical variable, we will convert it to a factor using the
+# function `as_factor`. \index{factor!as\_factor}
+
+# ```{r 05-class}
+# cancer <- cancer |>
+#   mutate(Class = as_factor(Class))
+# glimpse(cancer)
+# ```
+
+# Recall that factors have what are called "levels", which you can think of as categories. We
+# can verify the levels of the `Class` column by using the `levels` \index{levels}\index{factor!levels} function.
+# This function should return the name of each category in that column. Given
+# that we only have two different values in our `Class` column (B for benign and M
+# for malignant), we only expect to get two names back.  Note that the `levels` function requires a *vector* argument;
+# so we use the `pull` function to extract a single column (`Class`) and
+# pass that into the `levels` function to see the categories
+# in the `Class` column.
+
+# ```{r 05-levels}
+# cancer |>
+#   pull(Class) |>
+#   levels()
+# ```
+
 # %% [markdown]
 # ### Exploring the cancer data
 #
 # Before we start doing any modeling, let's explore our data set. Below we use
-# the `groupby`, `count` methods to find the number and percentage 
-# of benign and malignant tumor observations in our data set. When paired with `groupby`, `count` counts the number of observations in each `Class` group. 
+# the `.groupby()`, `.count()` \index{group\_by}\index{summarize} methods to find the number and percentage 
+# of benign and malignant tumor observations in our data set. When paired with `.groupby()`, `.count()` counts the number of observations in each `Class` group. 
 # Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
 
 # %%
@@ -224,7 +262,7 @@ explore_cancer
 # for light orange and `"#86bfef"` for light blue&mdash;and
 #  pass them as the `scale` argument in the `color` argument. 
 # We also make the category labels ("B" and "M") more readable by 
-# changing them to "Benign" and "Malignant".
+# changing them to "Benign" and "Malignant" using `.apply()` method on the dataframe.
 
 # %% tags=["remove-cell"]
 colors = ["#86bfef", "#efb13f"]
@@ -302,8 +340,8 @@ perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=Tru
 my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
     len(cancer)
 ][:-1]
-glue("new_point_0", new_point[0])
-glue("new_point_1", new_point[1])
+glue("1-new_point_0", new_point[0])
+glue("1-new_point_1", new_point[1])
 
 # %% [markdown]
 # In order to actually make predictions for new observations in practice, we
@@ -318,7 +356,7 @@ glue("new_point_1", new_point[1])
 #
 # To illustrate the concept of $K$-nearest neighbors classification, we 
 # will walk through an example.  Suppose we have a
-# new observation, with standardized perimeter of {glue:}`new_point_0` and standardized concavity of {glue:}`new_point_1`, whose 
+# new observation, with standardized perimeter of {glue:}`1-new_point_0` and standardized concavity of {glue:}`1-new_point_1`, whose 
 # diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 
 # %% tags=["remove-cell"]
@@ -359,12 +397,12 @@ near_neighbor_df = pd.concat(
     ),
     axis=1,
 ).T
-glue("neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
-glue("neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
+glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
+glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
 
 # %% [markdown]
 # {numref}`fig:05-knn-3` shows that the nearest point to this new observation is **malignant** and
-# located at the coordinates ({glue:}`neighbor_per`, {glue:}`neighbor_con`). The idea here is that if a point is close to another in the scatter plot,
+# located at the coordinates ({glue:}`1-neighbor_per`, {glue:}`1-neighbor_con`). The idea here is that if a point is close to another in the scatter plot,
 # then the perimeter and concavity values are similar, and so we may expect that
 # they would have the same diagnosis.
 
@@ -375,7 +413,6 @@ line = (
     .encode(x="Perimeter", y="Concavity", color=alt.value("black"))
 )
 
-# (perim_concav_with_new_point + line).save("img/classification1/fig05-knn-3.svg")
 glue('fig:05-knn-3', (perim_concav_with_new_point + line), display=True)
 
 # %% [markdown]
@@ -397,8 +434,8 @@ perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=T
 my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
     len(cancer)
 ][:-1]
-glue("new_point_0", new_point[0])
-glue("new_point_1", new_point[1])
+glue("2-new_point_0", new_point[0])
+glue("2-new_point_1", new_point[1])
 
 # %% tags=["remove-cell"]
 perim_concav_with_new_point2 = (
@@ -435,15 +472,15 @@ line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
     color=alt.value('black')
 )
 
-glue("neighbor_per", round(near_neighbor_df2.iloc[0, :]['Perimeter'], 1))
-glue("neighbor_con", round(near_neighbor_df2.iloc[0, :]['Concavity'], 1))
+glue("2-neighbor_per", round(near_neighbor_df2.iloc[0, :]['Perimeter'], 1))
+glue("2-neighbor_con", round(near_neighbor_df2.iloc[0, :]['Concavity'], 1))
 glue('fig:05-knn-4', (perim_concav_with_new_point2 + line2), display=True)
 
 # %% [markdown]
-# Suppose we have another new observation with standardized perimeter {glue:}`new_point_0` and
-# concavity of {glue:}`new_point_1`. Looking at the scatter plot in {numref}`fig:05-knn-4`, how would you
+# Suppose we have another new observation with standardized perimeter {glue:}`2-new_point_0` and
+# concavity of {glue:}`2-new_point_1`. Looking at the scatter plot in {numref}`fig:05-knn-4`, how would you
 # classify this red, diamond observation? The nearest neighbor to this new point is a
-# **benign** observation at ({glue:}`neighbor_per`, {glue:}`neighbor_con`).
+# **benign** observation at ({glue:}`2-neighbor_per`, {glue:}`2-neighbor_con`).
 # Does this seem like the right prediction to make for this observation? Probably 
 # not, if you consider the other nearby points.
 
@@ -483,7 +520,7 @@ line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
     y='Concavity',
     color=alt.value('black')
 )
-(perim_concav_with_new_point2 + line2 + line3 + line4).save("img/classification1/fig05-knn-5.svg")
+glue('fig:05-knn-5', (perim_concav_with_new_point2 + line2 + line3 + line4), display=True)
 
 # %% [markdown]
 # To improve the prediction we can consider several
@@ -495,12 +532,11 @@ line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
 # observation as malignant.
 
 # %% [markdown]
-# ```{figure} img/classification1/fig05-knn-5.svg
-# :height: 500px
+# :::{glue:figure} fig:05-knn-5
 # :name: fig:05-knn-5
 #
 # Scatter plot of concavity versus perimeter with three nearest neighbors.
-# ```
+# :::
 
 # %% [markdown]
 # Here we chose the $K=3$ nearest observations, but there is nothing special
@@ -525,15 +561,15 @@ line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
 # To find the $K$ nearest neighbors to our new observation, we compute the distance
 # from that new observation to each observation in our training data, and select the $K$ observations corresponding to the
 # $K$ *smallest* distance values. For example, suppose we want to use $K=5$ neighbors to classify a new 
-# observation with perimeter of `r new_point[1]` and 
-# concavity of `r new_point[2]`, shown as a red diamond in Figure \@ref(fig:05-multiknn-1). Let's calculate the distances
+# observation with perimeter of {glue:}`3-new_point_0` and 
+# concavity of {glue:}`3-new_point_1`, shown as a red diamond in {numref}`fig:05-multiknn-1`. Let's calculate the distances
 # between our new point and each of the observations in the training set to find
 # the $K=5$ neighbors that are nearest to our new point. 
-# You will see in the code below, we compute the straight-line
+# You will see in the code below \index{mutate}, we compute the straight-line
 # distance using the formula above: we square the differences between the two observations' perimeter 
 # and concavity coordinates, add the squared differences, and then take the square root.
 
-# %%
+# %% tags=["remove-cell"]
 new_point = [0, 3.5]
 attrs = ["Perimeter", "Concavity"]
 points_df3 = pd.DataFrame(
@@ -543,7 +579,6 @@ perim_concav_with_new_point_df3 = pd.concat((cancer, points_df3), ignore_index=T
 perim_concav_with_new_point3 = (
     alt.Chart(
         perim_concav_with_new_point_df3,
-        title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -560,7 +595,17 @@ perim_concav_with_new_point3 = (
         # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
     )
 )
-perim_concav_with_new_point3
+
+glue("3-new_point_0", new_point[0])
+glue("3-new_point_1", new_point[1])
+glue("fig:05-multiknn-1", perim_concav_with_new_point3)
+
+# %% [markdown]
+# :::{glue:figure} fig:05-multiknn-1
+# :name: fig:05-multiknn-1
+#
+# Scatter plot of concavity versus perimeter with new observation represented as a red diamond.
+# :::
 
 # %%
 new_obs_Perimeter = 0
@@ -574,54 +619,62 @@ cancer_dist["dist_from_new"] = np.sqrt(
 cancer_dist = cancer_dist.sort_values(by="dist_from_new").head(5)
 cancer_dist
 
-# %%
+# %% [markdown]
+# In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how
+# we computed the `dist_from_new` variable (the
+# distance to the new observation) for each of the 5 nearest neighbors in the
+# training data.
+
+# %% tags=["remove-cell"]
 ## Couldn't find ways to have nice Latex equations in pandas dataframe
 
-cancer_dist_eq = cancer_dist.copy()
-cancer_dist_eq['Perimeter'] = round(cancer_dist_eq['Perimeter'], 2)
-cancer_dist_eq['Concavity'] = round(cancer_dist_eq['Concavity'], 2)
-for i in list(cancer_dist_eq.index):
-    cancer_dist_eq.loc[
-        i, "Distance"
-    ] = f"[({new_obs_Perimeter} - {round(cancer_dist_eq.loc[i, 'Perimeter'], 2)})² + ({new_obs_Concavity} - {round(cancer_dist_eq.loc[i, 'Concavity'], 2)})²]¹/² = {round(cancer_dist_eq.loc[i, 'dist_from_new'], 2)}"
-cancer_dist_eq[["Perimeter", "Concavity", "Distance", "Class"]]
+# cancer_dist_eq = cancer_dist.copy()
+# cancer_dist_eq['Perimeter'] = round(cancer_dist_eq['Perimeter'], 2)
+# cancer_dist_eq['Concavity'] = round(cancer_dist_eq['Concavity'], 2)
+# for i in list(cancer_dist_eq.index):
+#     cancer_dist_eq.loc[
+#         i, "Distance"
+#     ] = f"[({new_obs_Perimeter} - {round(cancer_dist_eq.loc[i, 'Perimeter'], 2)})² + ({new_obs_Concavity} - {round(cancer_dist_eq.loc[i, 'Concavity'], 2)})²]¹/² = {round(cancer_dist_eq.loc[i, 'dist_from_new'], 2)}"
+# cancer_dist_eq[["Perimeter", "Concavity", "Distance", "Class"]]
 
 # %% [markdown]
 # ```{table} Evaluating the distances from the new observation to each of its 5 nearest neighbors
 # :name: tab:05-multiknn-mathtable
 # | Perimeter | Concavity | Distance            | Class |
 # |-----------|-----------|----------------------------------------|-------|
-# | 0.24      | 2.65      | $$\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$$| B     |
-# | 0.75      | 2.87      | $$\sqrt{(0-0.75)^2+(3.5-2.87)^2}=0.98$$| M     |
-# | 0.62      | 2.54      | $$\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$$| M     |
-# | 0.42      | 2.31      | $$\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$$| M     |
-# | -1.16     | 4.04      | $$\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$$| B     |
+# | 0.24      | 2.65      | $\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$| B     |
+# | 0.75      | 2.87      | $\sqrt{(0-0.75)^2+(3.5-2.87)^2}=0.98$| M     |
+# | 0.62      | 2.54      | $\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$| M     |
+# | 0.42      | 2.31      | $\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$| M     |
+# | -1.16     | 4.04      | $\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$| B     |
 # ```
-
-# %% [markdown]
-# In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how
-# the `mutate` step was used to compute the `dist_from_new` variable (the
-# distance to the new observation) for each of the 5 nearest neighbors in the
-# training data.
 
 # %% [markdown]
 # The result of this computation shows that 3 of the 5 nearest neighbors to our new observation are
 # malignant (`M`); since this is the majority, we classify our new observation as malignant. 
-# These 5 neighbors are circled in Figure \@ref(fig:05-multiknn-3).
+# These 5 neighbors are circled in {numref}`fig:05-multiknn-3`.
 
-# %%
+# %% tags=["remove-cell"]
 circle_path_df = pd.DataFrame(
     {
         "Perimeter": new_point[0] + 1.4 * np.cos(np.linspace(0, 2 * np.pi, 100)),
         "Concavity": new_point[1] + 1.4 * np.sin(np.linspace(0, 2 * np.pi, 100)),
     }
 )
-circle = alt.Chart(circle_path_df.reset_index()).mark_line().encode(
+circle = alt.Chart(circle_path_df.reset_index()).mark_line(color='black').encode(
     x='Perimeter',
     y='Concavity',
     order='index'
 )
-perim_concav_with_new_point3 + circle
+
+glue("fig:05-multiknn-3", (perim_concav_with_new_point3 + circle))
+
+# %% [markdown]
+# :::{glue:figure} fig:05-multiknn-3
+# :name: fig:05-multiknn-3
+#
+# Scatter plot of concavity versus perimeter with 5 nearest neighbors circled.
+# :::
 
 # %% [markdown]
 # ### More than two explanatory variables 
@@ -671,10 +724,10 @@ cancer_dist2
 
 # %% [markdown]
 # Based on $K=5$ nearest neighbors with these three predictors we would classify the new observation as malignant since 4 out of 5 of the nearest neighbors are malignant class. 
-# Figure \@ref(fig:05-more) shows what the data look like when we visualize them 
+# {numref}`fig:05-more` shows what the data look like when we visualize them 
 # as a 3-dimensional scatter with lines from the new observation to its five nearest neighbors.
 
-# %%
+# %% tags=["remove-cell"]
 new_point = [0, 3.5, 1]
 attrs = ["Perimeter", "Concavity", "Symmetry"]
 points_df4 = pd.DataFrame(
@@ -690,7 +743,7 @@ my_distances4 = euclidean_distances(perim_concav_with_new_point_df4.loc[:, attrs
     len(cancer)
 ][:-1]
 
-# %%
+# %% tags=["remove-cell"]
 # The index of 5 rows that has smallest distance to the new point
 min_5_idx = np.argpartition(my_distances4, 5)[:5]
 neighbor1 = pd.concat(
@@ -733,9 +786,9 @@ neighbor5 = pd.concat(
     axis=1,
 ).T
 
-# %%
-colors = {'Malignant':'blue', 'Benign':'orange', 'Unknown':'red'}
-symbols = {'Malignant':'circle', 'Benign':'circle', 'Unknown':'diamond'}
+# %% tags=["remove-input"]
+colors = {"Malignant": "#86bfef", "Benign": "#efb13f", "Unknown": "red"}
+symbols = {"Malignant": "circle", "Benign": "circle", "Unknown": "diamond"}
 
 trace = go.Scatter3d(
     x=perim_concav_with_new_point_df4["Perimeter"],
@@ -769,8 +822,8 @@ fig.add_trace(
         x=neighbor1["Perimeter"],
         y=neighbor1["Concavity"],
         z=neighbor1["Symmetry"],
-        line_color="blue",
-        name='Malignant',
+        line_color=colors["Malignant"],
+        name="Malignant",
         mode="lines",
         line=dict(width=2),
     )
@@ -781,8 +834,8 @@ fig.add_trace(
         x=neighbor2["Perimeter"],
         y=neighbor2["Concavity"],
         z=neighbor2["Symmetry"],
-        line_color="orange",
-        name='Benign',
+        line_color=colors["Benign"],
+        name="Benign",
         mode="lines",
         line=dict(width=2),
     )
@@ -793,8 +846,8 @@ fig.add_trace(
         x=neighbor3["Perimeter"],
         y=neighbor3["Concavity"],
         z=neighbor3["Symmetry"],
-        line_color="blue",
-        name='Malignant',
+        line_color=colors["Malignant"],
+        name="Malignant",
         mode="lines",
         line=dict(width=2),
     )
@@ -805,8 +858,8 @@ fig.add_trace(
         x=neighbor4["Perimeter"],
         y=neighbor4["Concavity"],
         z=neighbor4["Symmetry"],
-        line_color="blue",
-        name='Malignant',
+        line_color=colors["Malignant"],
+        name="Malignant",
         mode="lines",
         line=dict(width=2),
     )
@@ -817,15 +870,26 @@ fig.add_trace(
         x=neighbor5["Perimeter"],
         y=neighbor5["Concavity"],
         z=neighbor5["Symmetry"],
-        line_color="blue",
-        name='Malignant',
+        line_color=colors["Malignant"],
+        name="Malignant",
         mode="lines",
         line=dict(width=2),
     )
 )
 
-# plot(fig, filename = 'figure_1.html')
-display(HTML('figure_1.html'))
+fig.update_layout(template="plotly_white")
+
+plot(fig, filename="img/classification1/fig05-more.html", auto_open=False)
+display(HTML("img/classification1/fig05-more.html"))
+# glue("fig:05-more", fig)
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:05-more
+# :figclass: caption-hack
+#
+# 3D scatter plot of the standardized symmetry, concavity, and perimeter variables. Note that in general we recommend against using 3D visualizations; here we show the data in 3D only to illustrate what higher dimensions and nearest neighbors look like, for learning purposes.
+# ```
 
 # %% [markdown]
 # ### Summary of $K$-nearest neighbors algorithm
@@ -845,10 +909,26 @@ display(HTML('figure_1.html'))
 # or predict the class for multiple new observations. Thankfully, in Python,
 # the $K$-nearest neighbors algorithm is 
 # implemented in [the `scikit-learn` package](https://scikit-learn.org/stable/index.html) along with 
-# many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions in 
+# many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions 
 # in the `scikit-learn` package will help keep our code simple, readable and accurate; the 
 # less we have to code ourselves, the fewer mistakes we will likely make. We 
 # start by importing `KNeighborsClassifier` from the `sklearn.neighbors` module.
+
+# %% tags=["remove-cell"]
+## The above was based on:
+
+# Coding the $K$-nearest neighbors algorithm in R ourselves can get complicated,
+# especially if we want to handle multiple classes, more than two variables,
+# or predict the class for multiple new observations. Thankfully, in R,
+# the $K$-nearest neighbors algorithm is
+# implemented in [the `parsnip` R package](https://parsnip.tidymodels.org/) [@parsnip]
+# included in `tidymodels`, along with
+# many [other models](https://www.tidymodels.org/find/parsnip/) \index{tidymodels}\index{parsnip}
+#  that you will encounter in this and future chapters of the book. The `tidymodels` collection
+# provides tools to help make and use models, such as classifiers.  Using the packages
+# in this collection will help keep our code simple, readable and accurate; the
+# less we have to code ourselves, the fewer mistakes we will likely make. We
+# start by loading `tidymodels`.
 
 # %%
 from sklearn.neighbors import KNeighborsClassifier
@@ -869,25 +949,57 @@ cancer_train
 # Next, we create a *model specification* for $K$-nearest neighbors classification
 # by creating a `KNeighborsClassifier` object, specifying that we want to use $K = 5$ neighbors
 # (we will discuss how to choose $K$ in the next chapter) and the straight-line 
-# distance (`weights="uniform""`). The `weights` argument controls
+# distance (`weights="uniform"`). The `weights` argument controls
 # how neighbors vote when classifying a new observation; by setting it to `"uniform"`,
 # each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
 # which weigh each neighbor's vote differently, can be found on 
 # [the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
+
+# %% tags=["remove-cell"]
+## The above was based on:
+
+# Next, we create a *model specification* for \index{tidymodels!model specification} $K$-nearest neighbors classification
+# by calling the `nearest_neighbor` function, specifying that we want to use $K = 5$ neighbors
+# (we will discuss how to choose $K$ in the next chapter) and the straight-line 
+# distance (`weight_func = "rectangular"`). The `weight_func` argument controls
+# how neighbors vote when classifying a new observation; by setting it to `"rectangular"`,
+# each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
+# which weigh each neighbor's vote differently, can be found on 
+# [the `parsnip` website](https://parsnip.tidymodels.org/reference/nearest_neighbor.html).
+# In the `set_engine` \index{tidymodels!engine} argument, we specify which package or system will be used for training
+# the model. Here `kknn` is the R package we will use for performing $K$-nearest neighbors classification.
+# Finally, we specify that this is a classification problem with the `set_mode` function.
 
 # %%
 knn_spec = KNeighborsClassifier(n_neighbors=5)
 knn_spec
 
 # %% [markdown]
-# In order to fit the model on the breast cancer data, we need to call `fit` on the classifier object and pass the data in the argument. We also need to specify what variables to use as predictors and what variable to use as the target. Below, the `X=cancer_train.loc[:, ['Perimeter', 'Concavity']]` and the `y=cancer_train['Class']` argument specifies 
+# In order to fit the model on the breast cancer data, we need to call `fit` on the classifier object and pass the data in the argument. We also need to specify what variables to use as predictors and what variable to use as the target. Below, the `X=cancer_train[["Perimeter", "Concavity"]]` and the `y=cancer_train['Class']` argument specifies 
 # that `Class` is the target variable (the one we want to predict),
 # and both `Perimeter` and `Concavity` are to be used as the predictors.
 
-# %%
-knn_spec.fit(X=cancer_train.loc[:, ["Perimeter", "Concavity"]], y=cancer_train["Class"]);
+# %% tags=["remove-cell"]
+## The above was based on:
+
+# In order to fit the model on the breast cancer data, we need to pass the model specification
+# and the data set to the `fit` function. We also need to specify what variables to use as predictors
+# and what variable to use as the target. Below, the `Class ~ Perimeter + Concavity` argument specifies 
+# that `Class` is the target variable (the one we want to predict),
+# and both `Perimeter` and `Concavity` are to be used as the predictors.
+
+
+# We can also use a convenient shorthand syntax using a period, `Class ~ .`, to indicate
+# that we want to use every variable *except* `Class` \index{tidymodels!model formula} as a predictor in the model.
+# In this particular setup, since `Concavity` and `Perimeter` are the only two predictors in the `cancer_train`
+# data frame, `Class ~ Perimeter + Concavity` and `Class ~ .` are equivalent.
+# In general, you can choose individual predictors using the `+` symbol, or you can specify to
+# use *all* predictors using the `.` symbol.
 
 # %%
+knn_spec.fit(X=cancer_train[["Perimeter", "Concavity"]], y=cancer_train["Class"]);
+
+# %% tags=["remove-cell"]
 # Here you can see the final trained model summary. It confirms that the computational engine used
 # to train the model  was `kknn::train.kknn`. It also shows the fraction of errors made by
 # the nearest neighbor model, but we will ignore this for now and discuss it in more detail
@@ -898,7 +1010,7 @@ knn_spec.fit(X=cancer_train.loc[:, ["Perimeter", "Concavity"]], y=cancer_train["
 # let R find the value of $K$ for us. 
 
 # %% [markdown]
-# Finally, we make the prediction on the new observation by calling `predict` on the classifier object,
+# Finally, we make the prediction on the new observation by calling `predict` \index{tidymodels!predict} on the classifier object,
 # passing the new observation itself. As above, 
 # when we ran the $K$-nearest neighbors
 # classification algorithm manually, the `knn_fit` object classifies the new observation as "Malignant". Note that the `predict` function outputs a `numpy` array with the model's prediction.
@@ -915,11 +1027,11 @@ knn_spec.predict(new_obs)
 # learn ways to quantify how accurate we think our predictions are.
 
 # %% [markdown]
-# ## Data preprocessing with `tidymodels`
+# ## Data preprocessing with `scikit-learn`
 #
 # ### Centering and scaling
 #
-# When using $K$-nearest neighbor classification, the *scale* of each variable
+# When using $K$-nearest neighbor classification, the *scale* \index{scaling} of each variable
 # (i.e., its size and range of values) matters. Since the classifier predicts
 # classes by identifying observations nearest to it, any variables with 
 # a large scale will have a much larger effect than variables with a small
@@ -968,12 +1080,21 @@ unscaled_cancer
 # predictions? In order to find out, we will create a scatter plot of these two
 # predictors (colored by diagnosis) for both the unstandardized data we just
 # loaded, and the standardized version of that same data. But first, we need to
-# standardize the `unscaled_cancer` data set with `tidymodels`.
+# standardize the `unscaled_cancer` data set with `scikit-learn`.
 #
-# In the `scikit-learn` framework, all data preprocessing and modeling can be built using a [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), and a more convenient function [`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline) for simple pipeline construction.
+# In the `scikit-learn` framework, all data preprocessing and modeling can be built using a [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), or a more convenient function [`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline) for simple pipeline construction.
 # Here we will initialize a preprocessor using `make_column_transformer` for 
 # the `unscaled_cancer` data above, specifying
 # that we want to standardize the predictors `Area` and `Smoothness`:
+
+# %% tags=["remove-cell"]
+## The above was based on:
+
+# In the `tidymodels` framework, all data preprocessing happens 
+# using a `recipe` from [the `recipes` R package](https://recipes.tidymodels.org/) [@recipes]
+# Here we will initialize a recipe \index{recipe} \index{tidymodels!recipe|see{recipe}} for 
+# the `unscaled_cancer` data above, specifying
+# that the `Class` variable is the target, and all other variables are predictors:
 
 # %%
 preprocessor = make_column_transformer(
@@ -991,6 +1112,39 @@ preprocessor
 #
 # At this point, the data are not yet scaled and centered. To actually scale and center 
 # the data, we need to call `fit` and `transform` on the unscaled data ( can be combined into `fit_transform`).
+
+# %% tags=["remove-cell"]
+# So far, there is not much in the recipe; just a statement about the number of targets
+# and predictors. Let's add 
+# scaling (`step_scale`) \index{recipe!step\_scale} and 
+# centering (`step_center`) \index{recipe!step\_center} steps for 
+# all of the predictors so that they each have a mean of 0 and standard deviation of 1.
+# Note that `tidyverse` actually provides `step_normalize`, which does both centering and scaling in
+# a single recipe step; in this book we will keep `step_scale` and `step_center` separate
+# to emphasize conceptually that there are two steps happening. 
+# The `prep` function finalizes the recipe by using the data (here, `unscaled_cancer`)  \index{tidymodels!prep}\index{prep|see{tidymodels}}
+# to compute anything necessary to run the recipe (in this case, the column means and standard
+# deviations):
+
+# %% tags=["remove-cell"]
+# You can now see that the recipe includes a scaling and centering step for all predictor variables.
+# Note that when you add a step to a recipe, you must specify what columns to apply the step to.
+# Here we used the `all_predictors()` \index{recipe!all\_predictors} function to specify that each step should be applied to 
+# all predictor variables. However, there are a number of different arguments one could use here,
+# as well as naming particular columns with the same syntax as the `select` function. 
+# For example:
+
+# - `all_nominal()` and `all_numeric()`: specify all categorical or all numeric variables
+# - `all_predictors()` and `all_outcomes()`: specify all predictor or all target variables
+# - `Area, Smoothness`: specify both the `Area` and `Smoothness` variable
+# - `-Class`: specify everything except the `Class` variable
+
+# You can find a full set of all the steps and variable selection functions
+# on the [`recipes` reference page](https://recipes.tidymodels.org/reference/index.html).
+
+# At this point, we have calculated the required statistics based on the data input into the 
+# recipe, but the data are not yet scaled and centered. To actually scale and center 
+# the data, we need to apply the `bake` \index{tidymodels!bake} \index{bake|see{tidymodels}} function to the unscaled data.
 
 # %%
 preprocessor.fit(unscaled_cancer)
@@ -1014,30 +1168,47 @@ scaled_cancer
 # we used while training. Proper use of a `ColumnTransformer` helps keep our code simple,
 # readable, and error-free. Furthermore, note that using `fit` and `transform` on the preprocessor is required only when you want to inspect the result of the preprocessing steps
 # yourself. You will see further on in Section
-# \@ref(puttingittogetherworkflow) that `scikit-learn` provides tools to
+# {ref}`content:puttingittogetherworkflow` that `scikit-learn` provides tools to
+# automatically streamline the preprocesser and the model so that you can call`fit` 
+# and `transform` on the `Pipeline` as necessary without additional coding effort.
+
+# %% tags=["remove-cell"]
+# It may seem redundant that we had to both `bake` *and* `prep` to scale and center the data.
+#  However, we do this in two steps so we can specify a different data set in the `bake` step if we want. 
+#  For example, we may want to specify new data that were not part of the training set. 
+
+# You may wonder why we are doing so much work just to center and
+# scale our variables. Can't we just manually scale and center the `Area` and
+# `Smoothness` variables ourselves before building our $K$-nearest neighbor model? Well,
+# technically *yes*; but doing so is error-prone.  In particular, we might
+# accidentally forget to apply the same centering / scaling when making
+# predictions, or accidentally apply a *different* centering / scaling than what
+# we used while training. Proper use of a `recipe` helps keep our code simple,
+# readable, and error-free. Furthermore, note that using `prep` and `bake` is
+# required only when you want to inspect the result of the preprocessing steps
+# yourself. You will see further on in Section
+# \@ref(puttingittogetherworkflow) that `tidymodels` provides tools to
 # automatically apply `prep` and `bake` as necessary without additional coding effort.
-#
-# Figure \@ref(fig:05-scaling-plt) shows the two scatter plots side-by-side&mdash;one for `unscaled_cancer` and one for
+
+
+# %% [markdown]
+# {numref}`fig:05-scaling-plt` shows the two scatter plots side-by-side&mdash;one for `unscaled_cancer` and one for
 # `scaled_cancer`. Each has the same new observation annotated with its $K=3$ nearest neighbors.
 # In the original unstandardized data plot, you can see some odd choices
 # for the three nearest neighbors. In particular, the "neighbors" are visually
 # well within the cloud of benign observations, and the neighbors are all nearly
 # vertically aligned with the new observation (which is why it looks like there
-# is only one black line on this plot). Figure \@ref(fig:05-scaling-plt-zoomed)
+# is only one black line on this plot). {numref}`fig:05-scaling-plt-zoomed`
 # shows a close-up of that region on the unstandardized plot. Here the computation of nearest
 # neighbors is dominated by the much larger-scale area variable. The plot for standardized data 
-# on the right in Figure \@ref(fig:05-scaling-plt) shows a much more intuitively reasonable
+# on the right in {numref}`fig:05-scaling-plt` shows a much more intuitively reasonable
 # selection of nearest neighbors. Thus, standardizing the data can change things
 # in an important way when we are using predictive algorithms. 
 # Standardizing your data should be a part of the preprocessing you do
 # before predictive modeling and you should always think carefully about your problem domain and
 # whether you need to standardize your data.
 
-# %%
-unscaled_cancer
-
-
-# %%
+# %% tags=["remove-cell"]
 def class_dscp(x):
     if x == "M":
         return "Malignant"
@@ -1055,7 +1226,10 @@ my_distances = euclidean_distances(area_smoothness_new_df.loc[:, attrs])[
     len(unscaled_cancer)
 ][:-1]
 area_smoothness_new_point = (
-    alt.Chart(area_smoothness_new_df, title="Unstandardized data")
+    alt.Chart(
+        area_smoothness_new_df,
+        title=alt.TitleParams(text="Unstandardized data", anchor="start"),
+    )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Area"),
@@ -1114,7 +1288,7 @@ line3 = (
 
 area_smoothness_new_point = area_smoothness_new_point + line1 + line2 + line3
 
-# %%
+# %% tags=["remove-cell"]
 attrs = ["Area", "Smoothness"]
 new_obs_scaled = pd.DataFrame({"Class": ["Unknwon"], "Area": -0.72, "Smoothness": 2.8})
 scaled_cancer["Class"] = scaled_cancer["Class"].apply(class_dscp)
@@ -1125,11 +1299,14 @@ my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled.loc[:, a
     len(scaled_cancer)
 ][:-1]
 area_smoothness_new_point_scaled = (
-    alt.Chart(area_smoothness_new_df_scaled, title="Standardized data")
+    alt.Chart(
+        area_smoothness_new_df_scaled,
+        title=alt.TitleParams(text="Standardized data", anchor="start"),
+    )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Area", title='Area (standardized)'),
-        y=alt.Y("Smoothness", title='Smoothness (standardized)'),
+        x=alt.X("Area", title="Area (standardized)"),
+        y=alt.Y("Smoothness", title="Smoothness (standardized)"),
         color=alt.Color(
             "Class",
             scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
@@ -1184,31 +1361,65 @@ area_smoothness_new_point_scaled = (
     area_smoothness_new_point_scaled + line1_scaled + line2_scaled + line3_scaled
 )
 
-# %%
-(area_smoothness_new_point | area_smoothness_new_point_scaled).configure_legend(
-    # orient='bottom', titleAnchor='middle'
+# %% tags=["remove-cell"]
+glue(
+    "fig:05-scaling-plt",
+    (area_smoothness_new_point | area_smoothness_new_point_scaled).configure_legend(
+        orient="bottom", titleAnchor="middle"
+    ),
 )
 
-# %%
-# interactive plot
-area_smoothness_new_point.interactive()
+# %% [markdown]
+# :::{glue:figure} fig:05-scaling-plt
+# :name: fig:05-scaling-plt
+#
+# Comparison of K = 3 nearest neighbors with standardized and unstandardized data.
+# :::
 
-# %%
-# Zoom-in
-zoom_area_smoothness_new_point = alt.Chart(area_smoothness_new_df, title="Unstandardized data").mark_point(
-    clip=True, opacity=0.6, filled=True, size=40
-).encode(
-    x=alt.X("Area", scale=alt.Scale(domain=(380, 420))),
-    y=alt.Y("Smoothness", scale=alt.Scale(domain=(0.08, 0.14))),
-    color=alt.Color(
-        "Class",
-        scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
-        title="Diagnosis",
-    ),
-    shape=alt.Shape("Class", scale=alt.Scale(range=["circle", "circle", "diamond"])),
-    # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+# %% tags=["remove-cell"]
+# Could not find something mimicing `facet_zoom` in R, here are 2 plots trying to
+# illustrate similar points
+# 1. interactive plot which allows zooming in/out
+glue('fig:05-scaling-plt-interactive', area_smoothness_new_point.interactive())
+
+# %% [markdown] tags=["remove-cell"]
+# :::{glue:figure} fig:05-scaling-plt-interactive
+# :name: fig:05-scaling-plt-interactive
+#
+# Close-up of three nearest neighbors for unstandardized data.
+# :::
+
+# %% tags=["remove-cell"]
+# 2. Static plot, Zoom-in
+zoom_area_smoothness_new_point = (
+    alt.Chart(
+        area_smoothness_new_df,
+        title=alt.TitleParams(text="Unstandardized data", anchor="start"),
+    )
+    .mark_point(clip=True, opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X("Area", scale=alt.Scale(domain=(380, 420))),
+        y=alt.Y("Smoothness", scale=alt.Scale(domain=(0.08, 0.14))),
+        color=alt.Color(
+            "Class",
+            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
+            title="Diagnosis",
+        ),
+        shape=alt.Shape(
+            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
+        ),
+        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+    )
 )
 zoom_area_smoothness_new_point + line1 + line2 + line3
+glue("fig:05-scaling-plt-zoomed", (zoom_area_smoothness_new_point + line1 + line2 + line3))
+
+# %% [markdown]
+# :::{glue:figure} fig:05-scaling-plt-zoomed
+# :name: fig:05-scaling-plt-zoomed
+#
+# Close-up of three nearest neighbors for unstandardized data.
+# :::
 
 # %% [markdown]
 # ### Balancing
@@ -1224,6 +1435,15 @@ zoom_area_smoothness_new_point + line1 + line2 + line3
 # (presence of disease, malicious email) is much rarer than the "unimportant"
 # class (no disease, normal email).
 #
+# To better illustrate the problem, let's revisit the scaled breast cancer data, 
+# `cancer`; except now we will remove many of the observations of malignant tumors, simulating
+# what the data would look like if the cancer was rare. We will do this by
+# picking only 3 observations from the malignant group, and keeping all
+# of the benign observations. We choose these 3 observations using the `.head()`
+# method, which takes the number of rows to select from the top (`n`).
+# The new imbalanced data is shown in {numref}`fig:05-unbalanced`.
+
+# %% tags=["remove-cell"]
 # To better illustrate the problem, let's revisit the scaled breast cancer data, 
 # `cancer`; except now we will remove many of the observations of malignant tumors, simulating
 # what the data would look like if the cancer was rare. We will do this by
@@ -1244,8 +1464,7 @@ rare_cancer["Class"] = rare_cancer["Class"].apply(
 )
 rare_plot = (
     alt.Chart(
-        rare_cancer,
-        title="Imbalanced data",
+        rare_cancer
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -1255,6 +1474,14 @@ rare_plot = (
     )
 )
 rare_plot
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:05-unbalanced
+# :figclass: caption-hack
+#
+# Imbalanced data.
+# ```
 
 # %% [markdown]
 # Suppose we now decided to use $K = 7$ in $K$-nearest neighbor classification.
@@ -1441,6 +1668,7 @@ upsampled_plot = (
 rare_plot + upsampled_plot
 
 # %% [markdown]
+# (content:puttingittogetherworkflow)=
 # ## Putting it together in a `pipeline` {#puttingittogetherworkflow}
 #
 # The `scikit-learn` package collection also provides the `pipeline`, a way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
@@ -1569,5 +1797,9 @@ unscaled_plot + prediction_plot
 # make sure to follow the instructions for computer setup
 # found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
+
+# %% [markdown]
+# ```{bibliography}
+# ```
 
 # %%

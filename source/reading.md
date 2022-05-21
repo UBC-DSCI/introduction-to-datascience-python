@@ -21,7 +21,7 @@ import pandas as pd
 
 ## Overview 
 
-n this chapter, you’ll learn to read tabular data of various formats into Python
+In this chapter, you’ll learn to read tabular data of various formats into Python
 from your local device (e.g., your laptop) and the web. “Reading” (or “loading”)
 \index{loading|see{reading}}\index{reading!definition} is the process of
 converting data (stored as plain text, a database, HTML, etc.) into an object
@@ -522,10 +522,12 @@ communication channel that Python can use to send SQL commands to the database.
 
 ```{code-cell} ipython3
 import sqlalchemy as sal
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select, MetaData, Table
+
 
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
+
 
 ```
 
@@ -550,7 +552,24 @@ the scenes, `dbplyr` is turning your function calls (e.g., `select` and `filter`
 into SQL queries!
 
 ```{code-cell} ipython3
-table_name = 'can_lang'
+metadata = MetaData(bind=None)
+table = Table(
+    'can_lang', 
+    metadata, 
+    autoload=True, 
+    autoload_with=db
+)
+
+
+```
+
+```{code-cell} ipython3
+query = select([table])
+canlang_data = conn.execute(query).fetchall()
+
+
+canlang_data
+
 ```
 
 ```{r}
@@ -573,13 +592,11 @@ on the right, the first two lines of the output indicate the source is SQL. The
 last line doesn't show how many rows there are (R is trying to avoid performing
 expensive query operations), whereas the output for the `tibble` object does. 
 
-```{figure} img/ref_vs_tibble/ref_vs_tibble.001.jpeg
-:height: 500px
-:name: database reference
+
+:::{figure-md} markdown-fig
+<img src="img/ref_vs_tibble/ref_vs_tibble.001.jpeg" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Comparison of a reference to data in a database and a tibble in R
-
-
-```
+:::
 
 ```{r 01-ref-vs-tibble, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "Comparison of a reference to data in a database and a tibble in R.", fig.retina = 2, out.width="80%"}
 image_read("img/ref_vs_tibble/ref_vs_tibble.001.jpeg") |>
@@ -591,8 +608,10 @@ We can look at the SQL commands that are sent to the database when we write
 `dbplyr` package. \index{database!show\_query}
 
 ```{code-cell} ipython3
-canlang_data = pd.read_sql("select * from can_lang", con=db)
-canlang_data
+
+compiled = query.compile(db, compile_kwargs={"render_postcompile": True})
+
+print(str(compiled) % compiled.params)
 
 ```
 
@@ -611,9 +630,11 @@ to obtain only certain rows. Below we filter the data to include only Aboriginal
 
 
 ```{code-cell} ipython3
-aboriginal_lang_db = canlang_data[canlang_data['category']=='Aboriginal languages']
+query = select([table]).where(table.columns.category == 'Aboriginal languages')
+result_proxy = conn.execute(query)
 
-aboriginal_lang_db 
+
+
 ```
 
 Above you can again see the hints that this data is not actually stored in R yet:
@@ -625,10 +646,12 @@ we use the `collect` function. \index{filter}
 Below you will see that after running `collect`, R knows that the retrieved
 data has 67 rows, and there is no database listed any more.
 
-```{r}
-aboriginal_lang_data <- collect(aboriginal_lang_db)
+```{code-cell} ipython3
+aboriginal_lang_data = result_proxy.fetchall()
 aboriginal_lang_data
 ```
+
+
 
 Aside from knowing the number of rows, the data looks pretty similar in both
 outputs shown above. And `dbplyr` provides many more functions (not just `filter`) 
@@ -639,18 +662,21 @@ we do eventually need to call `collect`.
 For example, look what happens when we try to use `nrow` to count rows
 in a data frame: \index{nrow}
 
-```{r}
-nrow(aboriginal_lang_db)
-```
+
  
 or `tail` to preview the last six rows of a data frame:
 \index{tail}
 
-```{r, eval = FALSE}
-tail(aboriginal_lang_db)
+```{code-cell} ipython3
+aboriginal_lang_data.shape
 ```
 ```
 ## Error: tail() is not supported by sql sources
+```
+
+```{code-cell} ipython3
+aboriginal_lang_data = pd.DataFrame(aboriginal_lang_data, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+aboriginal_lang_data.shape
 ```
 \newpage
 
@@ -687,7 +713,7 @@ Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
 be able to connect to a database using this information.
 
 
-```{code-cell} ipython3
+```
 # !pip install pgdb
 import pgdb
 import sqlalchemy
@@ -704,30 +730,35 @@ After opening the connection, everything looks and behaves almost identically
 to when we were using an SQLite database in R. For example, we can again use
 `dbListTables` to find out what tables are in the `can_mov_db` database:
 
-```{code-cell} ipython3
+```
 tables = conn_mov_data.table_names()
 tables
 ```
 
 
 ```
- [1] "themes"            "medium"           "titles"     "title_aliases"       "forms"            
- [6] "episodes"          "names"      "names_occupations" "occupation"       "ratings" 
+['themes', 'medium', 'titles', 'title_aliases', 'forms', 'episodes', 'names', 'names_occupations', 'occupation', 'ratings']
+
 ```
 
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
 database:
 
-```{code-cell} ipython3
-ratings_db = pd.read_sql("select * from ratings", con=conn_mov_data)
-ratings_db
+```
+metadata = MetaData(bind=None)
+ratings = Table(
+    'ratings', 
+    metadata, 
+    autoload=True, 
+    autoload_with=db
+)
+
+query = select([ratings])
+ratings_proxy = conn_mov_data.execute(query).fetchall()
+
 ```
 
-```{r, eval = FALSE}
-ratings_db <- tbl(conn_mov_data, "ratings")
-ratings_db
-```
 
 ```
 # Source:   table<ratings> [?? x 3]
@@ -751,8 +782,8 @@ To find the lowest rating that exists in the data base, we first need to
 extract the `average_rating` column using `select`:
 \index{select}
 
-```{code-cell} ipython3
-avg_rating_db = pd.read_sql("select average_rating from ratings", con=conn_mov_data)
+```
+avg_rating_db = select([ratings.columns.average_rating])
 avg_rating_db
 ```
 
@@ -777,10 +808,12 @@ avg_rating_db
 Next we use `min` to find the minimum rating in that column:
 \index{min}
 
-```{r, eval = FALSE}
+```
 min(avg_rating_db)
 ```
-
+```
+ 1
+```
 ```
 Error in min(avg_rating_db) : invalid 'type' (list) of argument
 ```
@@ -789,14 +822,8 @@ Instead of the minimum, we get an error! This is another example of when we
 need to use the `collect` function to bring the data into R for further
 computation:
 
-```{code-cell} ipython3
-min_avg_rating_data = pd.read_sql("select min(average_rating) from ratings", con=conn_mov_data)
-min_avg_rating_data
-```
 
-```
-[1] 1
-```
+
 
 We see the lowest rating given to a movie is 1, indicating that it must have
 been a really bad movie...
@@ -804,7 +831,7 @@ been a really bad movie...
 ### Why should we bother with databases at all?
 
 Opening a database \index{database!reasons to use} stored in a `.db` file
-involved a lot more effort than just opening a `.csv`, `.tsv`, or any of the
+involved a lot more effort than just opening a `.csv`, or any of the
 other plain text or Excel formats. It was a bit of a pain to use a database in
 that setting since we had to use `dbplyr` to translate `tidyverse`-like
 commands (`filter`, `select`, `head`, etc.) into SQL commands that the database
@@ -824,13 +851,13 @@ Databases are beneficial in a large-scale setting:
   Can you imagine if Google stored all of the data 
   from those searches in a single `.csv` file!? Chaos would ensue! 
 
-## Writing data from R to a `.csv` file
+## Writing data from Python to a `.csv` file
 
 At the middle and end of a data analysis, we often want to write a data frame
 that has changed (either through filtering, selecting, mutating or summarizing)
 to a file to share it with others or use it for another step in the analysis.
-The most straightforward way to do this is to use the `write_csv` function
-\index{write function!write\_csv} from the `tidyverse` package.  The default
+The most straightforward way to do this is to use the `to_csv` function
+\index{write function!write\_csv} from the `pandas` package.  The default
 arguments for this file are to use a comma (`,`) as the delimiter and include
 column names. Below we demonstrate creating a new version of the Canadian
 languages data set without the official languages category according to the
@@ -906,16 +933,13 @@ on [Craiglist](https://vancouver.craigslist.org). When we visit the Vancouver Cr
 website \index{Craigslist} and search for one-bedroom apartments, 
 we should see something similar to Figure \@ref(fig:craigslist-human).
 
-```{r craigslist-human, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Craigslist webpage of advertisements for one-bedroom apartments.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/craigslist_human.png")
-```
 
 
-```{figure} img/craigslist_human.png
-:height: 500px
-:name: craigslist-human
+:::{figure-md} markdown-fig
+<img src="img/craigslist_human.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Craigslist webpage of advertisements for one-bedroom apartments.
-```
+:::
+
 
 Based on what our browser shows us, it's pretty easy to find the size and price
 for each apartment listed. But we would like to be able to obtain that information
@@ -1016,16 +1040,14 @@ find that SelectorGadget shows us the selector `.result-price`
 in its toolbar, and highlights all the other apartment
 prices that would be obtained using that selector (Figure \@ref(fig:sg1)).
 
-```{r sg1, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/sg1.png")
-```
 
-```{figure} img/sg1.png
-:height: 500px
-:name: sg1
+
+
+
+:::{figure-md} markdown-fig
+<img src="img/sg1.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
-```
-
+:::
 
 
 
@@ -1033,32 +1055,25 @@ If we then click the size of an apartment listing, SelectorGadget shows us
 the `span` selector, and highlights many of the lines on the page; this indicates that the
 `span` selector is not specific enough to capture only apartment sizes (Figure \@ref(fig:sg3)). 
 
-```{r sg3, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/sg3.png")
-```
 
-
-```{figure} img/sg3.png
-:height: 500px
-:name: sg3
-Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
-```
+:::{figure-md} markdown-fig
+<img src="img/sg3.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
+Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
+:::
 
 
 To narrow the selector, we can click one of the highlighted elements that
 we *do not* want. For example, we can deselect the "pic/map" links, 
 resulting in only the data we want highlighted using the `.housing` selector (Figure \@ref(fig:sg2)).
 
-```{r sg2, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/sg2.png")
-```
 
 
-```{figure} img/sg2.png
-:height: 500px
-:name: sg2
+
+
+:::{figure-md} markdown-fig
+<img src="img/sg2.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
-```
+:::
 
 So to scrape information about the square footage and rental price
 of apartment listings, we need to use
@@ -1088,15 +1103,12 @@ We will use the SelectorGadget tool to pick elements that we are interested in
 (city names and population counts) and deselect others to indicate that we are not 
 interested in them (province names), as shown in Figure \@ref(fig:sg4).
 
-```{r sg4, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Using the SelectorGadget on a Wikipedia webpage.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/sg4.png")
-```
 
-```{figure} img/sg4.png
-:height: 500px
-:name: sg4
+
+:::{figure-md} markdown-fig
+<img src="img/sg4.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Wikipedia webpage.
-```
+:::
 
 We include a link to a short video tutorial on this process at the end of the chapter
 in the additional resources section. SelectorGadget provides in its toolbar
@@ -1220,15 +1232,14 @@ Let's construct a small data set of the last 400 tweets and
 retweets from the \@tidyverse account. A few of the most recent tweets
 are shown in Figure \@ref(fig:01-tidyverse-twitter).
 
-```{r 01-tidyverse-twitter, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "The tidyverse account Twitter feed.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/tidyverse_twitter.png")
-```
 
-```{figure} img/tidyverse_twitter.png
-:height: 500px
-:name: 01-tidyverse-twitter
+:::{figure-md} markdown-fig
+<img src="img/tidyverse_twitter.png" alt="twitter feed" class="bg-primary mb-2" width="600px" height="500px">
+
 The tidyverse account Twitter feed.
-```
+:::
+
+
 
 **Stop! Think about your API usage carefully!**
 
@@ -1259,16 +1270,12 @@ you will see a browser pop-up that looks something like Figure \@ref(fig:01-tidy
 
 (ref:01-tidyverse-authorize) The `rtweet` authorization prompt.
 
-```{r 01-tidyverse-authorize, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:01-tidyverse-authorize)", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/authorize_question.png")
-```
 
-```{figure} img/tidyverse_twitter.png
-:height: 500px
-:name: 01-tidyverse-authorize
-ref:01-tidyverse-authorize
-```
+:::{figure-md} markdown-fig
+<img src="img/authorize_question.png" alt="authorize" class="bg-primary mb-2" width="600px" height="500px">
 
+(ref:01-tidyverse-authorize)
+:::
 
 This is the `rtweet` package asking you to provide your own Twitter account's login information.
 When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;

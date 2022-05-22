@@ -30,7 +30,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.preprocessing import StandardScaler
-# import plotly.express as px
+import plotly.express as px
 import plotly.graph_objs as go
 from plotly.offline import iplot, plot
 from IPython.display import HTML
@@ -76,7 +76,7 @@ alt.data_transformers.disable_max_rows()
 # %% [markdown]
 # ## The classification problem
 #
-# In many situations, we want to make predictions \index{predictive question} based on the current situation
+# In many situations, we want to make `predictions`\\index{predictive question} based on the current situation
 # as well as past experiences. For instance, a doctor may want to diagnose a
 # patient as either diseased or healthy based on their symptoms and the doctor's
 # past experience with patients; an email provider might want to tag a given
@@ -357,7 +357,7 @@ perim_concav_with_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 glue('fig:05-knn-2', perim_concav_with_new_point, display=True)
@@ -435,7 +435,7 @@ perim_concav_with_new_point2 = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 
@@ -572,7 +572,7 @@ perim_concav_with_new_point3 = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 
@@ -711,10 +711,12 @@ cancer_dist2
 new_point = [0, 3.5, 1]
 attrs = ["Perimeter", "Concavity", "Symmetry"]
 points_df4 = pd.DataFrame(
-    {"Perimeter": new_point[0], 
-     "Concavity": new_point[1], 
-     "Symmetry": new_point[2],
-     "Class": ["Unknown"]}
+    {
+        "Perimeter": new_point[0],
+        "Concavity": new_point[1],
+        "Symmetry": new_point[2],
+        "Class": ["Unknown"],
+    }
 )
 perim_concav_with_new_point_df4 = pd.concat((cancer, points_df4), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
@@ -726,142 +728,69 @@ my_distances4 = euclidean_distances(perim_concav_with_new_point_df4.loc[:, attrs
 # %% tags=["remove-cell"]
 # The index of 5 rows that has smallest distance to the new point
 min_5_idx = np.argpartition(my_distances4, 5)[:5]
-neighbor1 = pd.concat(
-    (
-        cancer.loc[min_5_idx[0], attrs],
-        perim_concav_with_new_point_df4.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
 
-neighbor2 = pd.concat(
-    (
-        cancer.loc[min_5_idx[1], attrs],
-        perim_concav_with_new_point_df4.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+neighbor_df_list = []
+for idx in min_5_idx:
+    neighbor_df = pd.concat(
+        (
+            cancer.loc[idx, attrs + ['Class']],
+            perim_concav_with_new_point_df4.loc[len(cancer), attrs + ['Class']],
+        ),
+        axis=1,
+    ).T
+    neighbor_df_list.append(neighbor_df)
 
-neighbor3 = pd.concat(
-    (
-        cancer.loc[min_5_idx[2], attrs],
-        perim_concav_with_new_point_df4.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
-
-neighbor4 = pd.concat(
-    (
-        cancer.loc[min_5_idx[3], attrs],
-        perim_concav_with_new_point_df4.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
-
-neighbor5 = pd.concat(
-    (
-        cancer.loc[min_5_idx[4], attrs],
-        perim_concav_with_new_point_df4.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
-
-# %% tags=["remove-input"]
-colors = {"Malignant": "#86bfef", "Benign": "#efb13f", "Unknown": "red"}
+# %% tags=["remove-cell"]
+fig = px.scatter_3d(
+    perim_concav_with_new_point_df4,
+    x="Perimeter",
+    y="Concavity",
+    z="Symmetry",
+    color="Class",
+    symbol="Class",
+    opacity=0.5,
+)
+# specify trace names and symbols in a dict
 symbols = {"Malignant": "circle", "Benign": "circle", "Unknown": "diamond"}
 
-trace = go.Scatter3d(
-    x=perim_concav_with_new_point_df4["Perimeter"],
-    y=perim_concav_with_new_point_df4["Concavity"],
-    z=perim_concav_with_new_point_df4["Symmetry"],
-    mode="markers",
-    name="markers",
-    marker=dict(
-        size=2,
-        color=perim_concav_with_new_point_df4["Class"].map(colors),
-        symbol=perim_concav_with_new_point_df4["Class"].map(symbols),
-        opacity=0.4,
-        # showscale=False
-    ),
-)
+# set all symbols in fig
+for i, d in enumerate(fig.data):
+    fig.data[i].marker.symbol = symbols[fig.data[i].name]
 
-layout = go.Layout(
-    showlegend=False,
-    scene=dict(
-        xaxis={"title": "Perimeter"},
-        yaxis={"title": "Concavity"},
-        zaxis={"title": "Symmetry"},
-    ),
-)
-fig = go.Figure(data=[trace], layout=layout)
-fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
+# specify trace names and colors in a dict
+colors = {"Malignant": "#86bfef", "Benign": "#efb13f", "Unknown": "red"}
 
+# set all colors in fig
+for i, d in enumerate(fig.data):
+    fig.data[i].marker.color = colors[fig.data[i].name]
 
-fig.add_trace(
-    go.Scatter3d(
-        x=neighbor1["Perimeter"],
-        y=neighbor1["Concavity"],
-        z=neighbor1["Symmetry"],
-        line_color=colors["Malignant"],
-        name="Malignant",
-        mode="lines",
-        line=dict(width=2),
+# set a fixed custom marker size
+fig.update_traces(marker={"size": 5})
+
+# add lines
+for neighbor_df in neighbor_df_list:
+    fig.add_trace(
+        go.Scatter3d(
+            x=neighbor_df["Perimeter"],
+            y=neighbor_df["Concavity"],
+            z=neighbor_df["Symmetry"],
+            line_color=colors[neighbor_df.iloc[0]["Class"]],
+            name=neighbor_df.iloc[0]["Class"],
+            mode="lines",
+            line=dict(width=2),
+            showlegend=False,
+        )
     )
-)
 
-fig.add_trace(
-    go.Scatter3d(
-        x=neighbor2["Perimeter"],
-        y=neighbor2["Concavity"],
-        z=neighbor2["Symmetry"],
-        line_color=colors["Benign"],
-        name="Benign",
-        mode="lines",
-        line=dict(width=2),
-    )
-)
 
-fig.add_trace(
-    go.Scatter3d(
-        x=neighbor3["Perimeter"],
-        y=neighbor3["Concavity"],
-        z=neighbor3["Symmetry"],
-        line_color=colors["Malignant"],
-        name="Malignant",
-        mode="lines",
-        line=dict(width=2),
-    )
-)
-
-fig.add_trace(
-    go.Scatter3d(
-        x=neighbor4["Perimeter"],
-        y=neighbor4["Concavity"],
-        z=neighbor4["Symmetry"],
-        line_color=colors["Malignant"],
-        name="Malignant",
-        mode="lines",
-        line=dict(width=2),
-    )
-)
-
-fig.add_trace(
-    go.Scatter3d(
-        x=neighbor5["Perimeter"],
-        y=neighbor5["Concavity"],
-        z=neighbor5["Symmetry"],
-        line_color=colors["Malignant"],
-        name="Malignant",
-        mode="lines",
-        line=dict(width=2),
-    )
-)
-
-fig.update_layout(template="plotly_white")
+# tight layout
+fig.update_layout(margin=dict(l=0, r=0, b=0, t=1), template="plotly_white")
 
 plot(fig, filename="img/classification1/fig05-more.html", auto_open=False)
+# display(HTML("img/classification1/fig05-more.html"))
+
+# %% tags=["remove-input"]
 display(HTML("img/classification1/fig05-more.html"))
-# glue("fig:05-more", fig)
 
 # %% [markdown]
 # ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -1222,7 +1151,7 @@ area_smoothness_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 
@@ -1295,7 +1224,7 @@ area_smoothness_new_point_scaled = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
@@ -1388,7 +1317,7 @@ zoom_area_smoothness_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 30]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 zoom_area_smoothness_new_point + line1 + line2 + line3
@@ -1502,7 +1431,7 @@ rare_plot = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        # size=alt.Size('Class', scale=alt.Scale(range=[30, 30, 100]))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
     )
 )
 

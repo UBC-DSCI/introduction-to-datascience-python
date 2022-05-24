@@ -12,7 +12,8 @@ kernelspec:
   name: python3
 ---
 
-# Classification I: training & predicting {#classification}
+(classification)=
+# Classification I: training & predicting
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

@@ -17,6 +17,15 @@ kernelspec:
 
 ```{code-cell} ipython3
 import pandas as pd 
+
+```
+
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+import warnings
+warnings.filterwarnings('ignore')
 ```
 
 ## Overview 
@@ -79,20 +88,22 @@ with respect to where you currently are on the computer (e.g., where the file
 you're working in is). On the other hand, an absolute path is where the file is
 in respect to the computer's filesystem base (or root) folder.
 
-Suppose our computer's filesystem looks like the picture in Figure
-\@ref(fig:file-system-for-export-to-intro-datascience), and we are working in a
+Suppose our computer's filesystem looks like the picture in
+{numref}`Filesystem`, and we are working in a
 file titled `worksheet_02.ipynb`. If we want to 
 read the `.csv` file named `happiness_report.csv` into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.\index{Happiness Report}
 
 
+```{figure} img/filesystem.jpeg
+---
+height: 400px
+name: Filesystem
+---
+Example file system
+```
 
-:::{figure-md} markdown-fig
-<img src="img/filesystem.jpeg" alt="filesystem" class="bg-primary mb-2" width="600px" height="500px">
-
-Filesystem
-:::
 
 
 
@@ -192,14 +203,6 @@ relative path to the file.
 canlang_data = pd.read_csv("data/can_lang.csv")
 ```
 
-\newpage
-
-> **Note:** It is also normal and expected that \index{warning} a message is
-> printed out after using
-> the `read_csv` and related functions. This message lets you know the data types
-> of each of the columns that Python inferred while reading the data into Python.  In the
-> future when we use this and related functions to load data in this book, we will
-> silence these messages to help with the readability of the book.
 
 ```{code-cell} ipython3
 canlang_data
@@ -237,7 +240,12 @@ into Python. In the case of this file we end up only reading in one column of th
 data set:
 
 ```{code-cell} ipython3
+:tags: ["remove-output"]
 canlang_data = pd.read_csv("data/can_lang-meta-data.csv")
+```
+
+```
+## ParserError: Error tokenizing data. C error: Expected 3 fields in line 3, saw 6
 ```
 
 > **Note:** In contrast to the normal and expected messages above, this time Python 
@@ -354,12 +362,10 @@ above, Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
 It is best to rename your columns to help differentiate between them 
 (e.g., `0, 1`, etc., are not very descriptive names and will make it more confusing as
 you code). To rename your columns, you can use the `rename` function
-\index{rename} from [the `dplyr` R package](https://dplyr.tidyverse.org/) [@dplyr]
- \index{dplyr} (one of the packages
-loaded with `tidyverse`, so we don't need to load it separately). The argument
-of the `rename` function is `columns`, which is a dictionary of old column 
-names as keys of the dictionary and new column names as values of the dictionary.
-We rename the `0, 1, ..., 5`
+\index{rename} from the [pandas package](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html#). 
+The argument of the `rename` function is `columns`, which is a dictionary, 
+where the keys are the old column names and values are the new column names.
+We rename the old `0, 1, ..., 5`
 columns in the `canlang_data` data frame to more descriptive names below, with the 
 `inplace` argument as `True`, so that the columns are renamed in place. 
 
@@ -473,22 +479,38 @@ arguments you need to load the data into Python successfully. If you do not have
 the Excel program on your computer, you can use other programs to preview the
 file. Examples include Google Sheets and Libre Office. 
 
-In Table \@ref(tab:read-table) we summarize the `read_*` functions we covered
+In {numref}`read_func` we summarize the `read_*` functions we covered
 in this chapter. We also include the `read_csv2` function for data separated by
 semicolons `;`, which you may run into with data sets where the decimal is
 represented by a comma instead of a period (as with some data sets from
 European countries).
 
-Table: (\#tab:read-table) Summary of `read_*` functions
 
-Data File Type | Python Function | Python Package
--- | -- | --
-Comma (`,`) separated files | `read_csv` | `pandas`
-Tab (`\t`) separated files  | `read_csv` with `sep` argument  | `pandas`
-Semicolon (`;`) separated files |  `read_csv` with `sep` argument | `pandas`
-Various formats (`.csv`, `.tsv`)   | `read_table` | `pandas`
-Excel files (`.xlsx`) | `read_excel` | `pandas`
+```{list-table} Summary of read_* functions
+:header-rows: 1
+:name: read_func
 
+* - Data File Type
+  - Python Function
+  - Python Package
+* - Comma (`,`) separated files
+  - `read_csv`
+  - `pandas`
+* - Tab (`\t`) separated files 
+  - `read_csv` with `sep` argument
+  - `pandas`
+* - Semicolon (`;`) separated files
+  - `read_csv` with `sep` argument
+  - `pandas`
+* - Various formats (`.csv`, `.tsv`) 
+  - `read_table`
+  - `pandas`
+* - Excel files (`.xlsx`)
+  - `read_excel`
+  - `pandas`
+  
+  
+```
 
 
 ## Reading data from a database
@@ -496,8 +518,7 @@ Excel files (`.xlsx`) | `read_excel` | `pandas`
 Another very common form of data storage is the relational database. Databases
 \index{database} are great when you have large data sets or multiple users
 working on a project. There are many relational database management systems,
-such as SQLite, MySQL, PostgreSQL, Oracle,
- and many more. These
+such as SQLite, MySQL, PostgreSQL, Oracle, and many more. These
 different relational database management systems each have their own advantages
 and limitations. Almost all employ SQL (*structured query language*) to obtain
 data from the database. But you don't need to know SQL to analyze data from
@@ -537,19 +558,22 @@ in which the data is stored. You can get the names of
 all the tables in the database using the `table_names` \index{database!tables}
 function:
 
+
 ```{code-cell} ipython3
 tables = db.table_names()
 tables
 ```
 
+
 The `table_names` function returned only one name, which tells us
 that there is only one table in this database. To reference a table in the
 database (so that we can perform operations like selecting columns and filtering rows), we 
-use the `tbl` function \index{database!tbl} from the `dbplyr` package. The object returned
-by the `tbl` function \index{dbplyr|see{database}}\index{database!dbplyr} allows us to work with data
+use the `select` function \index{database!tbl} from the `sqlalchemy` package. The object returned
+by the `select` function \index{dbplyr|see{database}}\index{database!dbplyr} allows us to work with data
 stored in databases as if they were just regular data frames; but secretly, behind
-the scenes, `dbplyr` is turning your function calls (e.g., `select` and `filter`)
-into SQL queries!
+the scenes, `sqlalchemy` is turning your function calls (e.g., `select`)
+into SQL queries! To access the table in the database, we first define the `metadata` of the table using
+`sqlalchemy` package and then access the table using `select` function from `sqlalchemy` package.
 
 ```{code-cell} ipython3
 metadata = MetaData(bind=None)
@@ -559,53 +583,50 @@ table = Table(
     autoload=True, 
     autoload_with=db
 )
-
-
 ```
 
 ```{code-cell} ipython3
 query = select([table])
-canlang_data = conn.execute(query).fetchall()
-
-
-canlang_data
+canlang_data_db = conn.execute(query)
+canlang_data_db
 
 ```
 
-```{r}
-library(dbplyr)
-
-lang_db <- tbl(conn_lang_data, "lang")
-lang_db 
-```
 
 Although it looks like we just got a data frame from the database, we didn't!
 It's a *reference*; the data is still stored only in the SQLite database. The
-`dbplyr` package works this way because databases are often more efficient at selecting, filtering
-and joining large data sets than R. And typically the database will not even
+`sqlalchemy` package works this way because databases are often more efficient at selecting, filtering
+and joining large data sets than Python. And typically the database will not even
 be stored on your computer, but rather a more powerful machine somewhere on the
-web. So R is lazy and waits to bring this data into memory until you explicitly
-tell it to using the `collect` \index{database!collect} function. 
-Figure \@ref(fig:01-ref-vs-tibble) highlights the difference
-between a `tibble` object in R and the output we just created. Notice in the table
+web. So Python is lazy and waits to bring this data into memory until you explicitly
+tell it to using the `fetchall` \index{database!collect} function. 
+
+
+```{code-cell} ipython3
+canlang_data_db = conn.execute(query).fetchall()
+canlang_data_db
+
+```
+
+
+Figure {numref}`data reference` highlights the difference
+between a `dataframe` object in Python and the output we just created. Notice in the table
 on the right, the first two lines of the output indicate the source is SQL. The
-last line doesn't show how many rows there are (R is trying to avoid performing
-expensive query operations), whereas the output for the `tibble` object does. 
+last line doesn't show how many rows there are (Python is trying to avoid performing
+expensive query operations), whereas the output for the `dataframe` object does. 
 
 
-:::{figure-md} markdown-fig
-<img src="img/ref_vs_tibble/ref_vs_tibble.001.jpeg" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
-Comparison of a reference to data in a database and a tibble in R
-:::
-
-```{r 01-ref-vs-tibble, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "Comparison of a reference to data in a database and a tibble in R.", fig.retina = 2, out.width="80%"}
-image_read("img/ref_vs_tibble/ref_vs_tibble.001.jpeg") |>
-  image_crop("3632x1600")
+```{figure} img/ref_vs_tibble/ref_vs_tibble.001.jpeg
+---
+height: 900px
+name: data reference
+---
+Comparison of a reference to data in a database and a dataframe in Python
 ```
 
 We can look at the SQL commands that are sent to the database when we write 
-`tbl(conn_lang_data, "lang")` in R with the `show_query` function from the
-`dbplyr` package. \index{database!show\_query}
+`conn.execute(query).fetchall()` in Python with the `query.compile` function from the
+`sqlalchemy` package. \index{database!show\_query}
 
 ```{code-cell} ipython3
 
@@ -616,14 +637,14 @@ print(str(compiled) % compiled.params)
 ```
 
 The output above shows the SQL code that is sent to the database. When we
-write `tbl(conn_lang_data, "lang")` in R, in the background, the function is
-translating the R code into SQL, sending that SQL to the database, and then translating the
-response for us. So `dbplyr` does all the hard work of translating from R to SQL and back for us; 
-we can just stick with R! 
+write `conn.execute(query).fetchall()` in Python, in the background, the function is
+translating the Python code into SQL, sending that SQL to the database, and then translating the
+response for us. So `sqlalchemy` does all the hard work of translating from Python to SQL and back for us; 
+we can just stick with Python! 
 
-With our `lang_db` table reference for the 2016 Canadian Census data in hand, we 
+With our `canlang_data_db` table reference for the 2016 Canadian Census data in hand, we 
 can mostly continue onward as if it were a regular data frame. For example, 
-we can use the `filter` function
+we can use the `select` function along with `where` function
 to obtain only certain rows. Below we filter the data to include only Aboriginal languages.
 
 
@@ -632,34 +653,31 @@ to obtain only certain rows. Below we filter the data to include only Aboriginal
 ```{code-cell} ipython3
 query = select([table]).where(table.columns.category == 'Aboriginal languages')
 result_proxy = conn.execute(query)
-
-
-
+result_proxy
 ```
 
-Above you can again see the hints that this data is not actually stored in R yet:
-the source is a `lazy query [?? x 6]` and the output says `... with more rows` at the end
-(both indicating that R does not know how many rows there are in total!),
-and a database type `sqlite 3.36.0` is listed.
-In order to actually retrieve this data in R as a data frame,
-we use the `collect` function. \index{filter}
-Below you will see that after running `collect`, R knows that the retrieved
-data has 67 rows, and there is no database listed any more.
+Above you can again see the hints that this data is not actually stored in Python yet:
+the output is a `CursorResult`(indicating that Python does not know how many rows 
+there are in total!)
+In order to actually retrieve this data in Python as a data frame,
+we use the `fetchall()` function. \index{filter}
+Below you will see that after running `fetchall()`, Python knows that the retrieved
+data has 67 rows, and there is no `CursorResult` listed any more.
 
 ```{code-cell} ipython3
-aboriginal_lang_data = result_proxy.fetchall()
-aboriginal_lang_data
+aboriginal_lang_data_db = result_proxy.fetchall()
+aboriginal_lang_data_db
 ```
 
 
 
 Aside from knowing the number of rows, the data looks pretty similar in both
-outputs shown above. And `dbplyr` provides many more functions (not just `filter`) 
-that you can use to directly feed the database reference (`lang_db`) into 
-downstream analysis functions (e.g., `ggplot2` for data visualization). 
-But `dbplyr` does not provide *every* function that we need for analysis;
-we do eventually need to call `collect`.
-For example, look what happens when we try to use `nrow` to count rows
+outputs shown above. And `sqlalchemy` provides many more functions (not just `select`, `where`) 
+that you can use to directly feed the database reference (`aboriginal_lang_data_db`) into 
+downstream analysis functions (e.g., `altair` for data visualization). 
+But `sqlalchemy` does not provide *every* function that we need for analysis;
+we do eventually need to call `fetchall`.
+For example, look what happens when we try to use `shape` to count rows
 in a data frame: \index{nrow}
 
 
@@ -668,26 +686,35 @@ or `tail` to preview the last six rows of a data frame:
 \index{tail}
 
 ```{code-cell} ipython3
-aboriginal_lang_data.shape
+:tags: ["remove-output"]
+aboriginal_lang_data_db.shape
 ```
 ```
-## Error: tail() is not supported by sql sources
+## AttributeError: 'list' object has no attribute 'shape'
 ```
 
 ```{code-cell} ipython3
-aboriginal_lang_data = pd.DataFrame(aboriginal_lang_data, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
-aboriginal_lang_data.shape
+:tags: ["remove-output"]
+aboriginal_lang_data_db.tail(6)
+```
+```
+## AttributeError: 'list' object has no attribute 'tail'
+```
+
+```{code-cell} ipython3
+aboriginal_lang_data_db = pd.DataFrame(aboriginal_lang_data_db, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+aboriginal_lang_data_db.shape
 ```
 \newpage
 
 Additionally, some operations will not work to extract columns or single values
-from the reference given by the `tbl` function. Thus, once you have finished
-your data wrangling of the `tbl` database reference object, it is advisable to
-bring it into R as a data frame using `collect`.
-But be very careful using `collect`: databases are often *very* big,
-and reading an entire table into R might take a long time to run or even possibly
-crash your machine. So make sure you use `filter` and `select` on the database table
-to reduce the data to a reasonable size before using `collect` to read it into R!
+from the reference. Thus, once you have finished
+your data wrangling of the database reference object, it is advisable to
+bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
+But be very careful using `fetchall`: databases are often *very* big,
+and reading an entire table into Python might take a long time to run or even possibly
+crash your machine. So make sure you use `where` and `select` on the database table
+to reduce the data to a reasonable size before using `fetchall` to read it into Python!
  
 ### Reading data from a PostgreSQL database 
 
@@ -696,8 +723,8 @@ and open-source option for relational database software.
 Unlike SQLite,
 PostgreSQL uses a client–server database engine, as it was designed to be used
 and accessed on a network. This means that you have to provide more information
-to R when connecting to Postgres databases. The additional information that you
-need to include when you call the `dbConnect` function is listed below:
+to Python when connecting to Postgres databases. The additional information that you
+need to include when you call the `create_engine` function is listed below:
 
 - `dbname`: the name of the database (a single PostgreSQL instance can host more than one database)
 - `host`: the URL pointing to where the database is located
@@ -705,13 +732,18 @@ need to include when you call the `dbConnect` function is listed below:
 - `user`: the username for accessing the database
 - `password`: the password for accessing the database
 
-Additionally, we must use the `RPostgres` package instead of `RSQLite` in the
-`dbConnect` function call.  Below we demonstrate how to connect to a version of
+Additionally, we must use the `pgdb` package instead of `sqlalchemy` in the
+`create_engine` function call.  Below we demonstrate how to connect to a version of
 the `can_mov_db` database, which contains information about Canadian movies.
 Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and 
 `password` (`abc123`) below are *not real*; you will not actually 
 be able to connect to a database using this information.
 
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+ !pip install pgdb
+```
 
 ```
 # !pip install pgdb
@@ -727,8 +759,8 @@ conn_mov_data = db.connect()
 ```
 
 After opening the connection, everything looks and behaves almost identically
-to when we were using an SQLite database in R. For example, we can again use
-`dbListTables` to find out what tables are in the `can_mov_db` database:
+to when we were using an SQLite database in Python. For example, we can again use
+`table_names` to find out what tables are in the `can_mov_db` database:
 
 ```
 tables = conn_mov_data.table_names()
@@ -814,16 +846,6 @@ min(avg_rating_db)
 ```
  1
 ```
-```
-Error in min(avg_rating_db) : invalid 'type' (list) of argument
-```
-
-Instead of the minimum, we get an error! This is another example of when we
-need to use the `collect` function to bring the data into R for further
-computation:
-
-
-
 
 We see the lowest rating given to a movie is 1, indicating that it must have
 been a really bad movie...
@@ -833,9 +855,9 @@ been a really bad movie...
 Opening a database \index{database!reasons to use} stored in a `.db` file
 involved a lot more effort than just opening a `.csv`, or any of the
 other plain text or Excel formats. It was a bit of a pain to use a database in
-that setting since we had to use `dbplyr` to translate `tidyverse`-like
+that setting since we had to use `sqlalchemy` to translate `pandas`-like
 commands (`filter`, `select`, `head`, etc.) into SQL commands that the database
-understands. Not all `tidyverse` commands can currently be translated with
+understands. Not all `pandas` commands can currently be translated with
 SQLite databases. For example, we can compute a mean with an SQLite database
 but can't easily compute a median. So you might be wondering: why should we use
 databases at all? 

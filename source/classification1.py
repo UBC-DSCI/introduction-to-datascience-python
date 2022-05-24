@@ -15,7 +15,8 @@
 # ---
 
 # %% [markdown]
-# # Classification I: training & predicting {#classification}
+# (classification)=
+# # Classification I: training & predicting
 
 # %% tags=["remove-cell"]
 import random

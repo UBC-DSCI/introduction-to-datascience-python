@@ -4,7 +4,7 @@
 
 1. Fork https://github.com/UBC-DSCI/introduction-to-datascience-python  
 2. Upload a ssh public key to your github account  
-3. Edit your .ssh/config to allow ssh read/write to github with your user id:  
+3. Edit your .ssh/config to allow ssh read/write to github with your user id -- using a nickname like phaustin for your github  host entry:  
 
 ```bash
       Host phaustin

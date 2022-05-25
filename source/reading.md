@@ -15,6 +15,8 @@ kernelspec:
 
 # Reading in data locally and from the web {#reading}
 
+We need to import the `pandas` package in order to read data into Python
+
 ```{code-cell} ipython3
 import pandas as pd 
 
@@ -65,7 +67,8 @@ By the end of the chapter, readers will be able to do the following:
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Connect to a database using the `SQLAlchemy` library.
 - List the tables in a database using `SQLAlchemy` library's `table_names` function
-- Create a reference to a database table that is queriable using the `pd.read_sql` from the `pandas` library
+- Create a reference to a database table that is queriable using the `SQLAlchemy` library's `select` 
+and `where` functions
 - Use `.to_csv` to save a data frame to a csv file
 - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
     - Read/scrape data from an internet URL using the `BeautifulSoup` package
@@ -239,13 +242,13 @@ With this extra information being present at the top of the file, using
 into Python. In the case of this file we end up only reading in one column of the
 data set:
 
-```{code-cell} ipython3
-:tags: ["remove-output"]
+```
+
 canlang_data = pd.read_csv("data/can_lang-meta-data.csv")
 ```
 
 ```
-## ParserError: Error tokenizing data. C error: Expected 3 fields in line 3, saw 6
+ParserError: Error tokenizing data. C error: Expected 3 fields in line 3, saw 6
 ```
 
 > **Note:** In contrast to the normal and expected messages above, this time Python 
@@ -572,7 +575,7 @@ use the `select` function \index{database!tbl} from the `sqlalchemy` package. Th
 by the `select` function \index{dbplyr|see{database}}\index{database!dbplyr} allows us to work with data
 stored in databases as if they were just regular data frames; but secretly, behind
 the scenes, `sqlalchemy` is turning your function calls (e.g., `select`)
-into SQL queries! To access the table in the database, we first define the `metadata` of the table using
+into SQL queries! To access the table in the database, we first declare the `metadata` of the table using
 `sqlalchemy` package and then access the table using `select` function from `sqlalchemy` package.
 
 ```{code-cell} ipython3
@@ -594,35 +597,26 @@ canlang_data_db
 
 
 Although it looks like we just got a data frame from the database, we didn't!
-It's a *reference*; the data is still stored only in the SQLite database. The
+It's a *reference*; the data is still stored only in the SQLite database. The output 
+is a `CursorResult`(indicating that Python does not know how many rows 
+there are in total!) object.
+In order to actually retrieve this data in Python,
+we use the `fetchall()` function. \index{filter}The
 `sqlalchemy` package works this way because databases are often more efficient at selecting, filtering
 and joining large data sets than Python. And typically the database will not even
 be stored on your computer, but rather a more powerful machine somewhere on the
 web. So Python is lazy and waits to bring this data into memory until you explicitly
-tell it to using the `fetchall` \index{database!collect} function. 
+tell it to using the `fetchall` \index{database!collect} function. The `fetchall` function returns the 
+result of the query in the form of a list, where each row in the table is an element in the list.
+Let's look at the first 10 rows in the table.
 
 
 ```{code-cell} ipython3
 canlang_data_db = conn.execute(query).fetchall()
-canlang_data_db
+canlang_data_db[:10]
 
 ```
 
-
-Figure {numref}`data reference` highlights the difference
-between a `dataframe` object in Python and the output we just created. Notice in the table
-on the right, the first two lines of the output indicate the source is SQL. The
-last line doesn't show how many rows there are (Python is trying to avoid performing
-expensive query operations), whereas the output for the `dataframe` object does. 
-
-
-```{figure} img/ref_vs_tibble/ref_vs_tibble.001.jpeg
----
-height: 900px
-name: data reference
----
-Comparison of a reference to data in a database and a dataframe in Python
-```
 
 We can look at the SQL commands that are sent to the database when we write 
 `conn.execute(query).fetchall()` in Python with the `query.compile` function from the
@@ -645,7 +639,8 @@ we can just stick with Python!
 With our `canlang_data_db` table reference for the 2016 Canadian Census data in hand, we 
 can mostly continue onward as if it were a regular data frame. For example, 
 we can use the `select` function along with `where` function
-to obtain only certain rows. Below we filter the data to include only Aboriginal languages.
+to obtain only certain rows. Below we filter the data to include only Aboriginal languages using 
+the `where` function of `sqlalchemy`
 
 
 
@@ -656,65 +651,73 @@ result_proxy = conn.execute(query)
 result_proxy
 ```
 
-Above you can again see the hints that this data is not actually stored in Python yet:
+Above you can again see that this data is not actually stored in Python yet:
 the output is a `CursorResult`(indicating that Python does not know how many rows 
-there are in total!)
+there are in total!) object.
 In order to actually retrieve this data in Python as a data frame,
-we use the `fetchall()` function. \index{filter}
+we again use the `fetchall()` function. \index{filter}
 Below you will see that after running `fetchall()`, Python knows that the retrieved
-data has 67 rows, and there is no `CursorResult` listed any more.
+data has 67 rows, and there is no `CursorResult` object listed any more. We will display only the first 10 
+rows of the table from the list returned by the query.
 
 ```{code-cell} ipython3
 aboriginal_lang_data_db = result_proxy.fetchall()
-aboriginal_lang_data_db
+aboriginal_lang_data_db[:10]
 ```
 
 
 
-Aside from knowing the number of rows, the data looks pretty similar in both
-outputs shown above. And `sqlalchemy` provides many more functions (not just `select`, `where`) 
+`sqlalchemy` provides many more functions (not just `select`, `where`) 
 that you can use to directly feed the database reference (`aboriginal_lang_data_db`) into 
 downstream analysis functions (e.g., `altair` for data visualization). 
 But `sqlalchemy` does not provide *every* function that we need for analysis;
 we do eventually need to call `fetchall`.
-For example, look what happens when we try to use `shape` to count rows
-in a data frame: \index{nrow}
+
+Does the result returned by `fetchall` function store it as a dataframe? Let's look 
+what happens when we try to use `shape` to count rows in a dataframe \index{nrow}
+
+
+
+
 
 
  
-or `tail` to preview the last six rows of a data frame:
-\index{tail}
 
-```{code-cell} ipython3
-:tags: ["remove-output"]
+```
 aboriginal_lang_data_db.shape
 ```
 ```
 ## AttributeError: 'list' object has no attribute 'shape'
 ```
 
-```{code-cell} ipython3
-:tags: ["remove-output"]
+or `tail` to preview the last six rows of a data frame:
+\index{tail}
+
+
+```
 aboriginal_lang_data_db.tail(6)
 ```
+
 ```
 ## AttributeError: 'list' object has no attribute 'tail'
 ```
+
+Oops! We cannot treat the result as a dataframe, hence we need to convert it 
+to a dataframe after calling `fetchall` function
 
 ```{code-cell} ipython3
 aboriginal_lang_data_db = pd.DataFrame(aboriginal_lang_data_db, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
 aboriginal_lang_data_db.shape
 ```
-\newpage
-
-Additionally, some operations will not work to extract columns or single values
-from the reference. Thus, once you have finished
-your data wrangling of the database reference object, it is advisable to
-bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
-But be very careful using `fetchall`: databases are often *very* big,
-and reading an entire table into Python might take a long time to run or even possibly
-crash your machine. So make sure you use `where` and `select` on the database table
-to reduce the data to a reasonable size before using `fetchall` to read it into Python!
+>
+> Additionally, some operations will not work to extract columns or single values
+> from the reference. Thus, once you have finished
+> your data wrangling of the database reference object, it is advisable to
+> bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
+> But be very careful using `fetchall`: databases are often *very* big,
+> and reading an entire table into Python might take a long time to run or even possibly
+> crash your machine. So make sure you use `where` and `select` on the database table
+> to reduce the data to a reasonable size before using `fetchall` to read it into Python!
  
 ### Reading data from a PostgreSQL database 
 
@@ -728,7 +731,7 @@ need to include when you call the `create_engine` function is listed below:
 
 - `dbname`: the name of the database (a single PostgreSQL instance can host more than one database)
 - `host`: the URL pointing to where the database is located
-- `port`: the communication endpoint between R and the PostgreSQL database (usually `5432`)
+- `port`: the communication endpoint between Python and the PostgreSQL database (usually `5432`)
 - `user`: the username for accessing the database
 - `password`: the password for accessing the database
 
@@ -742,7 +745,7 @@ be able to connect to a database using this information.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
- !pip install pgdb
+pip install pgdb
 ```
 
 ```
@@ -775,7 +778,10 @@ tables
 
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
-database:
+database. To access the table's contents we first need to declare the `metadata` of the table 
+and store it in a variable named `ratings`. Then, we can use the `select` function to 
+refer to the data in the table and return the result in python using `fetchall` function, just like 
+we did for the SQLite database.
 
 ```
 metadata = MetaData(bind=None)
@@ -793,21 +799,17 @@ ratings_proxy = conn_mov_data.execute(query).fetchall()
 
 
 ```
-# Source:   table<ratings> [?? x 3]
-# Database: postgres [user0001@fakeserver.stat.ubc.ca:5432/can_mov_db]
-   title              average_rating num_votes
-   <chr>                    <dbl>     <int>
- 1 The Grand Seduction       6.6       150
- 2 Rhymes for Young Ghouls   6.3      1685
- 3 Mommy                     7.5      1060
- 4 Incendies                 6.1      1101
- 5 Bon Cop, Bad Cop          7.0       894
- 6 Goon                      5.5      1111
- 7 Monsieur Lazhar           5.6       610
- 8 What if                   5.3      1401
- 9 The Barbarian Invations   5.8        99
-10 Away from Her             6.9      2311
-# … with more rows
+[('The Grand Seduction', 6.6, 150),
+('Rhymes for Young Ghouls', 6.3, 1685),
+('Mommy', 7.5, 1060),
+('Incendies', 6.1, 1101),
+('Bon Cop, Bad Cop', 7.0, 894),
+('Goon', 5.5, 1111),
+('Monsieur Lazhar', 5.6,610),
+('What if', 5.3, 1401),
+('The Barbarian Invations', 5.8, 99
+('Away from Her', 6.9, 2311)]
+
 ```
 
 To find the lowest rating that exists in the data base, we first need to
@@ -820,21 +822,17 @@ avg_rating_db
 ```
 
 ```
-# Source:   lazy query [?? x 1]
-# Database: postgres [user0001@fakeserver.stat.ubc.ca:5432/can_mov_db]
-   average_rating
-            <dbl>
- 1            6.6
- 2            6.3
- 3            7.5
- 4            6.1
- 5            7.0
- 6            5.5
- 7            5.6
- 8            5.3
- 9            5.8
-10            6.9
-# … with more rows
+
+[(6.6,),
+ (6.3,),
+ (7.5,),
+ (6.1,),
+ (7.0,),
+ (5.5,),
+ (5.6,),
+ (5.4,),
+ (5.8,),
+ (6.9,)]
 ```
 
 Next we use `min` to find the minimum rating in that column:
@@ -844,7 +842,7 @@ Next we use `min` to find the minimum rating in that column:
 min(avg_rating_db)
 ```
 ```
- 1
+(1.0,)
 ```
 
 We see the lowest rating given to a movie is 1, indicating that it must have
@@ -856,7 +854,7 @@ Opening a database \index{database!reasons to use} stored in a `.db` file
 involved a lot more effort than just opening a `.csv`, or any of the
 other plain text or Excel formats. It was a bit of a pain to use a database in
 that setting since we had to use `sqlalchemy` to translate `pandas`-like
-commands (`filter`, `select`, `head`, etc.) into SQL commands that the database
+commands (`where`, `select`, etc.) into SQL commands that the database
 understands. Not all `pandas` commands can currently be translated with
 SQLite databases. For example, we can compute a mean with an SQLite database
 but can't easily compute a median. So you might be wondering: why should we use
@@ -971,7 +969,7 @@ display for us. We show a snippet of it below; the
 entire source 
 is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt):
 
-```{code-cell}
+```
 <!--         <span class="result-meta"> -->
 <!--                 <span class="result-price">$800</span> -->
 
@@ -1011,7 +1009,7 @@ will find that the information we're interested in is hidden among the muck.
 For example, near the top of the snippet
 above you can see a line that looks like
 
-```{code-cell}
+```
 <span class="result-price">$800</span>
 ```
 
@@ -1034,7 +1032,7 @@ apartment prices, maybe we can look for all the tags with the `"result-price"`
 class, and grab the information between the opening and closing tag. Indeed,
 take a look at another line of the source snippet above:
 
-```{code-cell}
+```
 <span class="result-price">$2285</span>
 ```
 
@@ -1175,7 +1173,7 @@ match the CSS selectors you specified.  A *node* is an HTML tag pair (e.g.,
 stored between the tags. For our CSS selector `td:nth-child(5)`, an example
 node that would be selected would be:
 
-```{code-cell}
+```
 <td style="text-align:left;background:#f0f0f0;">
 <a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
 </td>

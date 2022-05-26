@@ -28,7 +28,6 @@
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/style.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
@@ -132,7 +131,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="classification1.html">
-   Classification I: training &amp; predicting
+   Classification I: training &amp; predicting {#classification}
   </a>
  </li>
  <li class="toctree-l1">
@@ -249,14 +248,14 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/reading.md"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/reading.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
                     alt="Interact on binder">Binder</button></a>
         
         
-        <a class="jupyterhub-button" href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/reading.md&branch=e211_live_main"><button type="button"
+        <a class="jupyterhub-button" href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/reading.ipynb&branch=e211_live_main"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch JupyterHub" data-toggle="tooltip"
                 data-placement="left"><img class="jupyterhub-button-logo"
                     src="_static/images/logo_jupyterhub.svg"
@@ -293,8 +292,8 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reading-tabular-data-from-a-plain-text-file-into-r">
-   Reading tabular data from a plain text file into R
+  <a class="reference internal nav-link" href="#reading-tabular-data-from-a-plain-text-file-into-python">
+   Reading tabular data from a plain text file into Python
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -313,23 +312,29 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#read-tsv-to-read-in-tab-separated-files">
+    <a class="reference internal nav-link" href="#read-csv-with-sep-argument-to-read-in-tab-separated-files">
      <code class="docutils literal notranslate">
       <span class="pre">
-       read_tsv
+       read_csv
       </span>
      </code>
-     to read in tab-separated files
+     with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       sep
+      </span>
+     </code>
+     argument to read in tab-separated files
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#read-delim-as-a-more-flexible-method-to-get-tabular-data-into-r">
+    <a class="reference internal nav-link" href="#read-table-as-a-more-flexible-method-to-get-tabular-data-into-python">
      <code class="docutils literal notranslate">
       <span class="pre">
-       read_delim
+       read_table
       </span>
      </code>
-     as a more flexible method to get tabular data into R
+     as a more flexible method to get tabular data into Python
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -338,8 +343,8 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#previewing-a-data-file-before-reading-it-into-r">
-     Previewing a data file before reading it into R
+    <a class="reference internal nav-link" href="#previewing-a-data-file-before-reading-it-into-python">
+     Previewing a data file before reading it into Python
     </a>
    </li>
   </ul>
@@ -372,8 +377,8 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#writing-data-from-r-to-a-csv-file">
-   Writing data from R to a
+  <a class="reference internal nav-link" href="#writing-data-from-python-to-a-csv-file">
+   Writing data from Python to a
    <code class="docutils literal notranslate">
     <span class="pre">
      .csv
@@ -452,8 +457,8 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reading-tabular-data-from-a-plain-text-file-into-r">
-   Reading tabular data from a plain text file into R
+  <a class="reference internal nav-link" href="#reading-tabular-data-from-a-plain-text-file-into-python">
+   Reading tabular data from a plain text file into Python
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -472,23 +477,29 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#read-tsv-to-read-in-tab-separated-files">
+    <a class="reference internal nav-link" href="#read-csv-with-sep-argument-to-read-in-tab-separated-files">
      <code class="docutils literal notranslate">
       <span class="pre">
-       read_tsv
+       read_csv
       </span>
      </code>
-     to read in tab-separated files
+     with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       sep
+      </span>
+     </code>
+     argument to read in tab-separated files
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#read-delim-as-a-more-flexible-method-to-get-tabular-data-into-r">
+    <a class="reference internal nav-link" href="#read-table-as-a-more-flexible-method-to-get-tabular-data-into-python">
      <code class="docutils literal notranslate">
       <span class="pre">
-       read_delim
+       read_table
       </span>
      </code>
-     as a more flexible method to get tabular data into R
+     as a more flexible method to get tabular data into Python
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -497,8 +508,8 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#previewing-a-data-file-before-reading-it-into-r">
-     Previewing a data file before reading it into R
+    <a class="reference internal nav-link" href="#previewing-a-data-file-before-reading-it-into-python">
+     Previewing a data file before reading it into Python
     </a>
    </li>
   </ul>
@@ -531,8 +542,8 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#writing-data-from-r-to-a-csv-file">
-   Writing data from R to a
+  <a class="reference internal nav-link" href="#writing-data-from-python-to-a-csv-file">
+   Writing data from Python to a
    <code class="docutils literal notranslate">
     <span class="pre">
      .csv
@@ -586,39 +597,24 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="reading-in-data-locally-and-from-the-web-reading">
 <h1>Reading in data locally and from the web {#reading}<a class="headerlink" href="#reading-in-data-locally-and-from-the-web-reading" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(magick)
-library(magrittr)
-library(knitr)
-knitr::opts_chunk$set(message = FALSE,
-                      fig.align = &quot;center&quot;)
-
-print_html_nodes &lt;- function(html_nodes_object) {
-  if(!is_latex_output()) {
-    html_nodes_object
-  } else {
-    output &lt;- capture.output(html_nodes_object)
-    
-    for (i in seq_along(output)) {
-      if (nchar(output[i]) &lt;= 79) {
-        cat(output[i], sep = &quot;\n&quot;)
-      } else {
-        cat(str_sub(output[i], start = 1, end = 79), sep = &quot;\n&quot;)
-      }
-    }
-  }
-}
+<p>We need to import the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package in order to read data into Python</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
 </pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>In this chapter, you’ll learn to read tabular data of various formats into R
+<p>In this chapter, you’ll learn to read tabular data of various formats into Python
 from your local device (e.g., your laptop) and the web. “Reading” (or “loading”)
 \index{loading|see{reading}}\index{reading!definition} is the process of
 converting data (stored as plain text, a database, HTML, etc.) into an object
-(e.g., a data frame) that R can easily access and manipulate. Thus reading data
+(e.g., a data frame) that Python can easily access and manipulate. Thus reading data
 is the gateway to any data analysis; you won’t be able to analyze data unless
 you’ve loaded it first. And because there are many ways to store data, there
-are similarly many ways to read data into R. The more time you spend upfront
+are similarly many ways to read data into Python. The more time you spend upfront
 matching the data reading method to the type of data you have, the less time
 you will have to devote to re-formatting, cleaning and wrangling your data (the
 second step to all data analyses). It’s like making sure your shoelaces are
@@ -635,36 +631,33 @@ tied well before going for a run so that you don’t trip later on!</p>
 <li><p><strong>U</strong>niform <strong>R</strong>esource <strong>L</strong>ocator (URL)</p></li>
 </ul>
 </li>
-<li><p>Read data into R using a relative path and a URL.</p></li>
+<li><p>Read data into Python using an absolute path, relative path and a URL.</p></li>
 <li><p>Compare and contrast the following functions:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">read_tsv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">read_csv2</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">read_delim</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read_table</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">read_excel</span></code></p></li>
 </ul>
 </li>
-<li><p>Match the following <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> <code class="docutils literal notranslate"><span class="pre">read_*</span></code> function arguments to their descriptions:</p>
+<li><p>Match the following <code class="docutils literal notranslate"><span class="pre">pandas</span></code> <code class="docutils literal notranslate"><span class="pre">.read_*</span></code> function arguments to their descriptions:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">file</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">delim</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">skip</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filepath_or_buffer</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sep</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">names</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skiprows</span></code></p></li>
 </ul>
 </li>
-<li><p>Choose the appropriate <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> <code class="docutils literal notranslate"><span class="pre">read_*</span></code> function and function arguments to load a given plain text tabular data set into R.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">readxl</span></code> package’s <code class="docutils literal notranslate"><span class="pre">read_excel</span></code> function and arguments to load a sheet from an excel file into R.</p></li>
-<li><p>Connect to a database using the <code class="docutils literal notranslate"><span class="pre">DBI</span></code> package’s <code class="docutils literal notranslate"><span class="pre">dbConnect</span></code> function.</p></li>
-<li><p>List the tables in a database using the <code class="docutils literal notranslate"><span class="pre">DBI</span></code> package’s <code class="docutils literal notranslate"><span class="pre">dbListTables</span></code> function.</p></li>
-<li><p>Create a reference to a database table that is queriable using the <code class="docutils literal notranslate"><span class="pre">tbl</span></code> from the <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> package.</p></li>
-<li><p>Retrieve data from a database query and bring it into R using the <code class="docutils literal notranslate"><span class="pre">collect</span></code> function from the <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> package.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">write_csv</span></code> to save a data frame to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file.</p></li>
+<li><p>Choose the appropriate <code class="docutils literal notranslate"><span class="pre">pandas</span></code> <code class="docutils literal notranslate"><span class="pre">.read_*</span></code> function and function arguments to load a given plain text tabular data set into Python.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package’s <code class="docutils literal notranslate"><span class="pre">read_excel</span></code> function and arguments to load a sheet from an excel file into Python.</p></li>
+<li><p>Connect to a database using the <code class="docutils literal notranslate"><span class="pre">SQLAlchemy</span></code> library.</p></li>
+<li><p>List the tables in a database using <code class="docutils literal notranslate"><span class="pre">SQLAlchemy</span></code> library’s <code class="docutils literal notranslate"><span class="pre">table_names</span></code> function</p></li>
+<li><p>Create a reference to a database table that is queriable using the <code class="docutils literal notranslate"><span class="pre">SQLAlchemy</span></code> library’s <code class="docutils literal notranslate"><span class="pre">select</span></code>
+and <code class="docutils literal notranslate"><span class="pre">where</span></code> functions</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">.to_csv</span></code> to save a data frame to a csv file</p></li>
 <li><p>(<em>Optional</em>) Obtain data using <strong>a</strong>pplication <strong>p</strong>rogramming <strong>i</strong>nterfaces (APIs) and web scraping.</p>
 <ul>
-<li><p>Read HTML source code from a URL using the <code class="docutils literal notranslate"><span class="pre">rvest</span></code> package.</p></li>
-<li><p>Read data from the Twitter API using the <code class="docutils literal notranslate"><span class="pre">rtweet</span></code> package.</p></li>
-<li><p>Compare downloading tabular data from a plain text file (e.g., <code class="docutils literal notranslate"><span class="pre">.csv</span></code>), accessing data from an API, and scraping the HTML source code from a website.</p></li>
+<li><p>Read/scrape data from an internet URL using the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> package</p></li>
+<li><p>Compare downloading tabular data from a plain text file (e.g. *.csv) from the web versus scraping data from a .html file</p></li>
 </ul>
 </li>
 </ul>
@@ -672,9 +665,9 @@ tied well before going for a run so that you don’t trip later on!</p>
 <div class="section" id="absolute-and-relative-file-paths">
 <h2>Absolute and relative file paths<a class="headerlink" href="#absolute-and-relative-file-paths" title="Permalink to this headline">¶</a></h2>
 <p>This chapter will discuss the different functions we can use to import data
-into R, but before we can talk about <em>how</em> we read the data into R with these
+into Python, but before we can talk about <em>how</em> we read the data into Python with these
 functions, we first need to talk about <em>where</em> the data lives. When you load a
-data set into R, you first need to tell R where those files live. The file
+data set into Python, you first need to tell Python where those files live. The file
 could live on your  computer (<em>local</em>)
 \index{location|see{path}} \index{path!local, remote, relative, absolute}
 or somewhere on the internet (<em>remote</em>).</p>
@@ -684,21 +677,22 @@ think of the path as directions to the file. There are two kinds of paths:
 with respect to where you currently are on the computer (e.g., where the file
 you’re working in is). On the other hand, an absolute path is where the file is
 in respect to the computer’s filesystem base (or root) folder.</p>
-<p>Suppose our computer’s filesystem looks like the picture in Figure
-&#64;ref(fig:file-system-for-export-to-intro-datascience), and we are working in a
+<p>Suppose our computer’s filesystem looks like the picture in
+<a class="reference internal" href="#filesystem"><span class="std std-numref">Fig. 1</span></a>, and we are working in a
 file titled <code class="docutils literal notranslate"><span class="pre">worksheet_02.ipynb</span></code>. If we want to
-read the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file named <code class="docutils literal notranslate"><span class="pre">happiness_report.csv</span></code> into R, we could do this
+read the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file named <code class="docutils literal notranslate"><span class="pre">happiness_report.csv</span></code> into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.\index{Happiness Report}</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/filesystem.jpeg&quot;)
-</pre></div>
+<div class="figure align-default" id="filesystem">
+<a class="reference internal image-reference" href="_images/filesystem.jpeg"><img alt="_images/filesystem.jpeg" src="_images/filesystem.jpeg" style="height: 400px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Example file system</span><a class="headerlink" href="#filesystem" title="Permalink to this image">¶</a></p>
 </div>
 <p><strong>Reading <code class="docutils literal notranslate"><span class="pre">happiness_report.csv</span></code> using a relative path:</strong></p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>happy_data &lt;- read_csv(&quot;data/happiness_report.csv&quot;)
+<div class="highlight-{code-cell notranslate"><div class="highlight"><pre><span></span>happy_data = pd.read_csv(&quot;data/happiness_report.csv&quot;)
 </pre></div>
 </div>
 <p><strong>Reading <code class="docutils literal notranslate"><span class="pre">happiness_report.csv</span></code> using an absolute path:</strong></p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>happy_data &lt;- read_csv(&quot;/home/dsci-100/worksheet_02/data/happiness_report.csv&quot;)
+<div class="highlight-{code-cell notranslate"><div class="highlight"><pre><span></span>happy_data = pd.read_csv(&quot;/home/dsci-100/worksheet_02/data/happiness_report.csv&quot;)
 </pre></div>
 </div>
 <p>So which one should you use? Generally speaking, to ensure your code can be run
@@ -718,26 +712,22 @@ their different usernames.  If Jayden has code that loads the
 Fatima’s computer.  But the relative path from inside the <code class="docutils literal notranslate"><span class="pre">project</span></code> folder
 (<code class="docutils literal notranslate"><span class="pre">data/happiness_report.csv</span></code>) is the same on both computers; any code that uses
 relative paths will work on both!</p>
-<p>In the additional resources section, we include a link to a short video on the
-difference between absolute and relative paths. You can also check out the
-<code class="docutils literal notranslate"><span class="pre">here</span></code> package, which provides methods for finding and constructing file paths
-in R.</p>
 <p>Your file could be stored locally, as we discussed, or it could also be
 somewhere on the internet (remotely). A <em>Uniform Resource Locator (URL)</em> (web
 address) \index{URL} indicates the location of a resource on the internet and
 helps us retrieve that resource. Next, we will discuss how to get either
-locally or remotely stored data into R.</p>
+locally or remotely stored data into Python.</p>
 </div>
-<div class="section" id="reading-tabular-data-from-a-plain-text-file-into-r">
-<h2>Reading tabular data from a plain text file into R<a class="headerlink" href="#reading-tabular-data-from-a-plain-text-file-into-r" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="reading-tabular-data-from-a-plain-text-file-into-python">
+<h2>Reading tabular data from a plain text file into Python<a class="headerlink" href="#reading-tabular-data-from-a-plain-text-file-into-python" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="read-csv-to-read-in-comma-separated-files-readcsv">
 <h3><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> to read in comma-separated files {#readcsv}<a class="headerlink" href="#read-csv-to-read-in-comma-separated-files-readcsv" title="Permalink to this headline">¶</a></h3>
 <p>Now that we have learned about <em>where</em> data could be, we will learn about <em>how</em>
-to import data into R using various functions. Specifically, we will learn how
+to import data into Python using various functions. Specifically, we will learn how
 to <em>read</em> tabular data from a plain text file (a document containing only text)
-<em>into</em> R and <em>write</em> tabular data to a file <em>out of</em> R. The function we use to do this
+<em>into</em> Python and <em>write</em> tabular data to a file <em>out of</em> Python. The function we use to do this
 depends on the file’s format. For example, in the last chapter, we learned about using
-the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function when reading .csv (<strong>c</strong>omma-<strong>s</strong>eparated <strong>v</strong>alues)
+the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function when reading .csv (<strong>c</strong>omma-<strong>s</strong>eparated <strong>v</strong>alues)
 files. \index{csv} In that case, the separator or <em>delimiter</em> \index{reading!delimiter} that divided our columns was a
 comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>). We only learned the case where the data matched the expected defaults
 of the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function \index{read function!read_csv}
@@ -745,13 +735,13 @@ of the <code class="docutils literal notranslate"><span class="pre">read_csv</sp
 In this section, we will learn how to read
 files that do not satisfy the default expectations of <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>.</p>
 <p>Before we jump into the cases where the data aren’t in the expected default format
-for <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> and <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, let’s revisit the more straightforward
+for <code class="docutils literal notranslate"><span class="pre">pandas</span></code> and <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, let’s revisit the more straightforward
 case where the defaults hold, and the only argument we need to give to the function
 is the path to the file, <code class="docutils literal notranslate"><span class="pre">data/can_lang.csv</span></code>. The <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data set contains
 language data from the 2016 Canadian census. \index{Canadian languages!canlang data}
 We put <code class="docutils literal notranslate"><span class="pre">data/</span></code> before the file’s
 name when we are loading the data set because this data set is located in a
-sub-folder, named <code class="docutils literal notranslate"><span class="pre">data</span></code>, relative to where we are running our R code.</p>
+sub-folder, named <code class="docutils literal notranslate"><span class="pre">data</span></code>, relative to where we are running our Python code.</p>
 <p>Here is what the file would look like in a plain text editor (a program that removes
 all formatting, like bolding or different fonts):</p>
 <div class="highlight-code notranslate"><div class="highlight"><pre><span></span>category,language,mother_tongue,most_at_home,most_at_work,lang_known
@@ -766,28 +756,155 @@ Non-Official &amp; Non-Aboriginal languages,American Sign Language,2685,3020,114
 Non-Official &amp; Non-Aboriginal languages,Amharic,22465,12785,200,33670
 </pre></div>
 </div>
-<p>And here is a review of how we can use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> to load it into R. First we
-load the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> \index{tidyverse} package to gain access to useful
+<p>And here is a review of how we can use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> to load it into Python. First we
+load the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> \index{tidyverse} package to gain access to useful
 functions for reading the data.</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>library(tidyverse)
-</pre></div>
-</div>
-<p>Next we use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> to load the data into R, and in that call we specify the
+<p>Next we use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> to load the data into Python, and in that call we specify the
 relative path to the file.</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>canlang_data &lt;- read_csv(&quot;data/can_lang.csv&quot;)
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>\newpage</p>
-<blockquote>
-<div><p><strong>Note:</strong> It is also normal and expected that \index{warning} a message is
-printed out after using
-the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> and related functions. This message lets you know the data types
-of each of the columns that R inferred while reading the data into R.  In the
-future when we use this and related functions to load data in this book, we will
-silence these messages to help with the readability of the book.</p>
-</div></blockquote>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>canlang_data
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
 </div>
 </div>
 <div class="section" id="skipping-rows-when-reading-in-data">
@@ -816,31 +933,176 @@ Non-Official &amp; Non-Aboriginal languages,Amharic,22465,12785,200,33670
 </div>
 <p>With this extra information being present at the top of the file, using
 <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> as we did previously does not allow us to correctly load the data
-into R. In the case of this file we end up only reading in one column of the
+into Python. In the case of this file we end up only reading in one column of the
 data set:</p>
-<blockquote>
-<div><p><strong>Note:</strong> In contrast to the normal and expected messages above, this time R
-printed out a warning for us indicating that there might be a problem with how
-our data is being read in. \index{warning}</p>
-</div></blockquote>
-<p>To successfully read data like this into R, the <code class="docutils literal notranslate"><span class="pre">skip</span></code>
-argument \index{read function!skip argument} can be useful to tell R
-how many lines to skip before
-it should start reading in the data. In the example above, we would set this
-value to 3.</p>
-<p>How did we know to skip three lines? We looked at the data! The first three lines
-of the data had information we didn’t need to import:</p>
-<div class="highlight-code notranslate"><div class="highlight"><pre><span></span>Data source: https://ttimbers.github.io/canlang/
-Data originally published in: Statistics Canada Census of Population 2016.
-Reproduced and distributed on an as-is basis with their permission.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang-meta-data.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The column names began at line 4, so we skipped the first three lines.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ParserError</span><span class="p">:</span> <span class="n">Error</span> <span class="n">tokenizing</span> <span class="n">data</span><span class="o">.</span> <span class="n">C</span> <span class="n">error</span><span class="p">:</span> <span class="n">Expected</span> <span class="mi">3</span> <span class="n">fields</span> <span class="ow">in</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">saw</span> <span class="mi">6</span>
+</pre></div>
 </div>
-<div class="section" id="read-tsv-to-read-in-tab-separated-files">
-<h3><code class="docutils literal notranslate"><span class="pre">read_tsv</span></code> to read in tab-separated files<a class="headerlink" href="#read-tsv-to-read-in-tab-separated-files" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p><strong>Note:</strong> In contrast to the normal and expected messages above, this time Python
+printed out a Parsing error for us indicating that there might be a problem with how
+our data is being read in. \index{warning}</p>
+</div></blockquote>
+<p>To successfully read data like this into Python, the <code class="docutils literal notranslate"><span class="pre">skiprows</span></code>
+argument \index{read function!skip argument} can be useful to tell Python
+how many lines to skip before
+it should start reading in the data. In the example above, we would set this
+value to 2 and pass <code class="docutils literal notranslate"><span class="pre">header</span></code> as None to read and load the data correctly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang-meta-data.csv&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">canlang_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>423</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>424</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>425</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>426</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>427</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>428 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>How did we know to skip two lines? We looked at the data! The first two lines
+of the data had information we didn’t need to import:</p>
+<div class="highlight-code notranslate"><div class="highlight"><pre><span></span>Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an &quot;as is&quot; basis with the permission of Statistics Canada.
+Date collected: 2020/07/09
+</pre></div>
+</div>
+<p>The column names began at line 3, so we skipped the first two lines.</p>
+</div>
+<div class="section" id="read-csv-with-sep-argument-to-read-in-tab-separated-files">
+<h3><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> with <code class="docutils literal notranslate"><span class="pre">sep</span></code> argument to read in tab-separated files<a class="headerlink" href="#read-csv-with-sep-argument-to-read-in-tab-separated-files" title="Permalink to this headline">¶</a></h3>
 <p>Another common way data is stored is with tabs as the delimiter. Notice the
-data file, <code class="docutils literal notranslate"><span class="pre">can_lang_tab.tsv</span></code>, has tabs in between the columns instead of
+data file, <code class="docutils literal notranslate"><span class="pre">can_lang.tsv</span></code>, has tabs in between the columns instead of
 commas.</p>
 <div class="highlight-code notranslate"><div class="highlight"><pre><span></span>category    language    mother_tongue   most_at_home    most_at_work    lang_kno
 Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
@@ -854,12 +1116,147 @@ Non-Official &amp; Non-Aboriginal languages American Sign Language  2685    3020
 Non-Official &amp; Non-Aboriginal languages Amharic 22465   12785   200 33670
 </pre></div>
 </div>
-<p>To read in this type of data, we can use the <code class="docutils literal notranslate"><span class="pre">read_tsv</span></code>
+<p>To read in this type of data, we can use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> with <code class="docutils literal notranslate"><span class="pre">sep</span></code> argument
 \index{tab-separated values|see{tsv}}\index{tsv}\index{read function!read_tsv}
 to read in .tsv (<strong>t</strong>ab <strong>s</strong>eparated <strong>v</strong>alues) files.</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>canlang_data &lt;- read_tsv(&quot;data/can_lang_tab.tsv&quot;)
-canlang_data
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.tsv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">canlang_data</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
 </div>
 <p>Let’s compare the data frame here to the resulting data frame in Section
 &#64;ref(readcsv) after using <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. Notice anything? They look the same! The
@@ -867,11 +1264,11 @@ same number of columns/rows and column names! So we needed to use different
 tools for the job depending on the file format and our resulting table
 (<code class="docutils literal notranslate"><span class="pre">canlang_data</span></code>) in both cases was the same!</p>
 </div>
-<div class="section" id="read-delim-as-a-more-flexible-method-to-get-tabular-data-into-r">
-<h3><code class="docutils literal notranslate"><span class="pre">read_delim</span></code> as a more flexible method to get tabular data into R<a class="headerlink" href="#read-delim-as-a-more-flexible-method-to-get-tabular-data-into-r" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> and <code class="docutils literal notranslate"><span class="pre">read_tsv</span></code> are actually just special cases of the more general
-<code class="docutils literal notranslate"><span class="pre">read_delim</span></code> \index{read function!read_delim} function. We can use
-<code class="docutils literal notranslate"><span class="pre">read_delim</span></code> to import both comma and tab-separated files (and more), we just
+<div class="section" id="read-table-as-a-more-flexible-method-to-get-tabular-data-into-python">
+<h3><code class="docutils literal notranslate"><span class="pre">read_table</span></code> as a more flexible method to get tabular data into Python<a class="headerlink" href="#read-table-as-a-more-flexible-method-to-get-tabular-data-into-python" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> and <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> with argument <code class="docutils literal notranslate"><span class="pre">sep</span></code> are actually just special cases of the more general
+<code class="docutils literal notranslate"><span class="pre">read_table</span></code> \index{read function!read_delim} function. We can use
+<code class="docutils literal notranslate"><span class="pre">read_table</span></code> to import both comma and tab-separated files (and more), we just
 have to specify the delimiter. The <code class="docutils literal notranslate"><span class="pre">can_lang.tsv</span></code> is a different version of
 this same data set with no column names and uses tabs as the delimiter
 \index{reading!delimiter} instead of commas.</p>
@@ -888,57 +1285,617 @@ Non-Official &amp; Non-Aboriginal languages Amharic 22465   12785   200 33670
 Non-Official &amp; Non-Aboriginal languages Arabic  419890  223535  5585    629055
 </pre></div>
 </div>
-<p>To get this into R using the <code class="docutils literal notranslate"><span class="pre">read_delim</span></code> function, we specify the first
+<p>To get this into Python using the <code class="docutils literal notranslate"><span class="pre">read_table</span></code> function, we specify the first
 argument as the path to the file (as done with <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>), and then provide
-values to the <code class="docutils literal notranslate"><span class="pre">delim</span></code> \index{read function!delim argument} argument (here a
-tab, which we represent by <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>) and the <code class="docutils literal notranslate"><span class="pre">col_names</span></code> argument (here we
-specify that there are no column names to assign, and give it the value of
-<code class="docutils literal notranslate"><span class="pre">FALSE</span></code>). <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, <code class="docutils literal notranslate"><span class="pre">read_tsv</span></code> and <code class="docutils literal notranslate"><span class="pre">read_delim</span></code> have a <code class="docutils literal notranslate"><span class="pre">col_names</span></code> argument
-\index{read function!col_names argument} and the default is <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>.</p>
+values to the <code class="docutils literal notranslate"><span class="pre">sep</span></code> \index{read function!delim argument} argument (here a
+tab, which we represent by <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>).</p>
 <blockquote>
 <div><p><strong>Note:</strong> <code class="docutils literal notranslate"><span class="pre">\t</span></code> is an example of an <em>escaped character</em>,
 which always starts with a backslash (<code class="docutils literal notranslate"><span class="pre">\</span></code>). \index{escape character}
 Escaped characters are used to represent non-printing characters
 (like the tab) or characters with special meanings (such as quotation marks).</p>
 </div></blockquote>
-<p>Data frames in R need to have column names.  Thus if you read in data that
-don’t have column names, R will assign names automatically. In the example
-above, R assigns each column a name of <code class="docutils literal notranslate"><span class="pre">X1,</span> <span class="pre">X2,</span> <span class="pre">X3,</span> <span class="pre">X4,</span> <span class="pre">X5,</span> <span class="pre">X6</span></code>.</p>
-<p>It is best to rename your columns to help differentiate between them
-(e.g., <code class="docutils literal notranslate"><span class="pre">X1,</span> <span class="pre">X2</span></code>, etc., are not very descriptive names and will make it more confusing as
-you code). To rename your columns, you can use the <code class="docutils literal notranslate"><span class="pre">rename</span></code> function
-\index{rename} from <a class="reference external" href="https://dplyr.tidyverse.org/">the <code class="docutils literal notranslate"><span class="pre">dplyr</span></code> R package</a> [&#64;dplyr]
-\index{dplyr} (one of the packages
-loaded with <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code>, so we don’t need to load it separately). The first
-argument is the data set, and in the subsequent arguments you
-write <code class="docutils literal notranslate"><span class="pre">new_name</span> <span class="pre">=</span> <span class="pre">old_name</span></code> for the selected variables to
-rename. We rename the <code class="docutils literal notranslate"><span class="pre">X1,</span> <span class="pre">X2,</span> <span class="pre">...,</span> <span class="pre">X6</span></code>
-columns in the <code class="docutils literal notranslate"><span class="pre">canlang_data</span></code> data frame to more descriptive names below.</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>canlang_data &lt;- rename(canlang_data,
-       category = X1, 
-       language = X2, 
-       mother_tongue = X3,
-       most_at_home = X4, 
-       most_at_work = X5, 
-       lang_known = X6)
-canlang_data
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.tsv&quot;</span><span class="p">,</span> 
+                           <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> 
+                           <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">canlang_data</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>Data frames in Python need to have column names.  Thus if you read in data that
+don’t have column names, Python will assign names automatically. In the example
+above, Python assigns each column a name of <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5</span></code>.</p>
+<p>It is best to rename your columns to help differentiate between them
+(e.g., <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1</span></code>, etc., are not very descriptive names and will make it more confusing as
+you code). To rename your columns, you can use the <code class="docutils literal notranslate"><span class="pre">rename</span></code> function
+\index{rename} from the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html">pandas package</a>.
+The argument of the <code class="docutils literal notranslate"><span class="pre">rename</span></code> function is <code class="docutils literal notranslate"><span class="pre">columns</span></code>, which is a dictionary,
+where the keys are the old column names and values are the new column names.
+We rename the old <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">5</span></code>
+columns in the <code class="docutils literal notranslate"><span class="pre">canlang_data</span></code> data frame to more descriptive names below, with the
+<code class="docutils literal notranslate"><span class="pre">inplace</span></code> argument as <code class="docutils literal notranslate"><span class="pre">True</span></code>, so that the columns are renamed in place.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> 
+                               <span class="mi">1</span><span class="p">:</span><span class="s1">&#39;language&#39;</span><span class="p">,</span>
+                               <span class="mi">2</span><span class="p">:</span><span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span>
+                               <span class="mi">3</span><span class="p">:</span><span class="s1">&#39;most_at_home&#39;</span><span class="p">,</span>
+                               <span class="mi">4</span><span class="p">:</span><span class="s1">&#39;most_at_work&#39;</span><span class="p">,</span>
+                               <span class="mi">5</span><span class="p">:</span><span class="s1">&#39;lang_known&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                               
+                               
+<span class="n">canlang_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>The column names can also be assigned to the dataframe while reading it from the file by passing a
+list of column names to the <code class="docutils literal notranslate"><span class="pre">names</span></code> argument. <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> and <code class="docutils literal notranslate"><span class="pre">read_table</span></code> have a <code class="docutils literal notranslate"><span class="pre">names</span></code> argument,
+\index{read function!col_names argument} whose default value is <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.tsv&quot;</span><span class="p">,</span> 
+                           <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> 
+                           <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                           <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="s1">&#39;most_at_home&#39;</span><span class="p">,</span> <span class="s1">&#39;most_at_work&#39;</span><span class="p">,</span> <span class="s1">&#39;lang_known&#39;</span><span class="p">])</span>
+<span class="n">canlang_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
 </div>
 </div>
 <div class="section" id="reading-tabular-data-directly-from-a-url">
 <h3>Reading tabular data directly from a URL<a class="headerlink" href="#reading-tabular-data-directly-from-a-url" title="Permalink to this headline">¶</a></h3>
-<p>We can also use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, <code class="docutils literal notranslate"><span class="pre">read_tsv</span></code> or <code class="docutils literal notranslate"><span class="pre">read_delim</span></code> (and related functions)
+<p>We can also use <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, <code class="docutils literal notranslate"><span class="pre">read_table</span></code>(and related functions)
 to read in data directly from a <strong>U</strong>niform <strong>R</strong>esource <strong>L</strong>ocator (URL) that
 contains tabular data. \index{URL!reading from} Here, we provide the URL to
 <code class="docutils literal notranslate"><span class="pre">read_*</span></code> as the path to the file instead of a path to a local file on our
 computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/UBC-DSCI/introduction-to-datascience-python/reading/source/data/can_lang.csv&quot;</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">canlang_data</span>
+</pre></div>
 </div>
-<div class="section" id="previewing-a-data-file-before-reading-it-into-r">
-<h3>Previewing a data file before reading it into R<a class="headerlink" href="#previewing-a-data-file-before-reading-it-into-r" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="previewing-a-data-file-before-reading-it-into-python">
+<h3>Previewing a data file before reading it into Python<a class="headerlink" href="#previewing-a-data-file-before-reading-it-into-python" title="Permalink to this headline">¶</a></h3>
 <p>In all the examples above, we gave you previews of the data file before we read
-it into R. Previewing data is essential to see whether or not there are column
+it into Python. Previewing data is essential to see whether or not there are column
 names, what the delimiters are, and if there are lines you need to skip. You
 should do this yourself when trying to read in data files. You can preview
 files in a plain text editor by right-clicking on the file, selecting “Open
@@ -948,8 +1905,8 @@ With,” and choosing a plain text editor (e.g., Notepad).</p>
 <div class="section" id="reading-tabular-data-from-a-microsoft-excel-file">
 <h2>Reading tabular data from a Microsoft Excel file<a class="headerlink" href="#reading-tabular-data-from-a-microsoft-excel-file" title="Permalink to this headline">¶</a></h2>
 <p>There are many other ways to store tabular data sets beyond plain text files,
-and similarly, many ways to load those data sets into R. For example, it is
-very common to encounter, and need to load into R, data stored as a Microsoft
+and similarly, many ways to load those data sets into Python. For example, it is
+very common to encounter, and need to load into Python, data stored as a Microsoft
 Excel \index{Excel spreadsheet}\index{Microsoft Excel|see{Excel
 spreadsheet}}\index{xlsx|see{Excel spreadsheet}} spreadsheet (with the file name
 extension <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code>).  To be able to do this, a key thing to know is that even
@@ -976,160 +1933,445 @@ X?a??4VT?,D?Jq
 <p>This type of file representation allows Excel files to store additional things
 that you cannot store in a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file, such as fonts, text formatting,
 graphics, multiple sheets and more. And despite looking odd in a plain text
-editor, we can read Excel spreadsheets into R using the <code class="docutils literal notranslate"><span class="pre">readxl</span></code> package
-developed specifically for this
+editor, we can read Excel spreadsheets into Python using the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package’s <code class="docutils literal notranslate"><span class="pre">read_excel</span></code>
+function developed specifically for this
 purpose. \index{readxl}\index{read function!read_excel}</p>
-<p>If the <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code> file has multiple sheets, you have to use the <code class="docutils literal notranslate"><span class="pre">sheet</span></code> argument
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;data/can_lang.xlsx&quot;</span><span class="p">)</span>
+<span class="n">canlang_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
+    </tr>
+  </tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code> file has multiple sheets, you have to use the <code class="docutils literal notranslate"><span class="pre">sheet_name</span></code> argument
 to specify the sheet number or name. You can also specify cell ranges using the
-<code class="docutils literal notranslate"><span class="pre">range</span></code> argument. This functionality is useful when a single sheet contains
+<code class="docutils literal notranslate"><span class="pre">usecols</span></code> argument(Example:  <code class="docutils literal notranslate"><span class="pre">usecols=&quot;A:D&quot;</span></code> for including cells from <code class="docutils literal notranslate"><span class="pre">A</span></code> to <code class="docutils literal notranslate"><span class="pre">D</span></code>).
+This functionality is useful when a single sheet contains
 multiple tables (a sad thing that happens to many Excel spreadsheets since this
 makes reading in data more difficult).</p>
 <p>As with plain text files, you should always explore the data file before
-importing it into R. Exploring the data beforehand helps you decide which
-arguments you need to load the data into R successfully. If you do not have
+importing it into Python. Exploring the data beforehand helps you decide which
+arguments you need to load the data into Python successfully. If you do not have
 the Excel program on your computer, you can use other programs to preview the
 file. Examples include Google Sheets and Libre Office.</p>
-<p>In Table &#64;ref(tab:read-table) we summarize the <code class="docutils literal notranslate"><span class="pre">read_*</span></code> functions we covered
+<p>In <a class="reference internal" href="#read-func"><span class="std std-numref">Table 1</span></a> we summarize the <code class="docutils literal notranslate"><span class="pre">read_*</span></code> functions we covered
 in this chapter. We also include the <code class="docutils literal notranslate"><span class="pre">read_csv2</span></code> function for data separated by
 semicolons <code class="docutils literal notranslate"><span class="pre">;</span></code>, which you may run into with data sets where the decimal is
 represented by a comma instead of a period (as with some data sets from
 European countries).</p>
-<p>Table: (#tab:read-table) Summary of <code class="docutils literal notranslate"><span class="pre">read_*</span></code> functions</p>
-<table class="colwidths-auto table">
+<table class="table" id="read-func">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Summary of read_* functions</span><a class="headerlink" href="#read-func" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Data File Type</p></th>
-<th class="head"><p>R Function</p></th>
-<th class="head"><p>R Package</p></th>
+<th class="head"><p>Python Function</p></th>
+<th class="head"><p>Python Package</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>) separated files</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">readr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Tab (<code class="docutils literal notranslate"><span class="pre">\t</span></code>) separated files</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">read_tsv</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">readr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> with <code class="docutils literal notranslate"><span class="pre">sep</span></code> argument</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Semicolon (<code class="docutils literal notranslate"><span class="pre">;</span></code>) separated files</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">read_csv2</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">readr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">read_csv</span></code> with <code class="docutils literal notranslate"><span class="pre">sep</span></code> argument</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Various formats (<code class="docutils literal notranslate"><span class="pre">.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">.tsv</span></code>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">read_delim</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">readr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">read_table</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Excel files (<code class="docutils literal notranslate"><span class="pre">.xlsx</span></code>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">read_excel</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">readxl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<div><p><strong>Note:</strong> <code class="docutils literal notranslate"><span class="pre">readr</span></code> is a part of the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> package so we did not need to load
-this package separately since we loaded <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code>.</p>
-</div></blockquote>
 </div>
 <div class="section" id="reading-data-from-a-database">
 <h2>Reading data from a database<a class="headerlink" href="#reading-data-from-a-database" title="Permalink to this headline">¶</a></h2>
 <p>Another very common form of data storage is the relational database. Databases
 \index{database} are great when you have large data sets or multiple users
 working on a project. There are many relational database management systems,
-such as SQLite, MySQL, PostgreSQL, Oracle,
-and many more. These
+such as SQLite, MySQL, PostgreSQL, Oracle, and many more. These
 different relational database management systems each have their own advantages
 and limitations. Almost all employ SQL (<em>structured query language</em>) to obtain
 data from the database. But you don’t need to know SQL to analyze data from
 a database; several packages have been written that allow you to connect to
-relational databases and use the R programming language
+relational databases and use the Python programming language
 to obtain data. In this book, we will give examples of how to do this
-using R with SQLite and PostgreSQL databases.</p>
+using Python with SQLite and PostgreSQL databases.</p>
 <div class="section" id="reading-data-from-a-sqlite-database">
 <h3>Reading data from a SQLite database<a class="headerlink" href="#reading-data-from-a-sqlite-database" title="Permalink to this headline">¶</a></h3>
 <p>SQLite \index{database!SQLite} is probably the simplest relational database system
-that one can use in combination with R. SQLite databases are self-contained and
+that one can use in combination with Python. SQLite databases are self-contained and
 usually stored and accessed locally on one computer. Data is usually stored in
 a file with a <code class="docutils literal notranslate"><span class="pre">.db</span></code> extension. Similar to Excel files, these are not plain text
 files and cannot be read in a plain text editor.</p>
-<p>The first thing you need to do to read data into R from a database is to
-connect to the database. We do that using the <code class="docutils literal notranslate"><span class="pre">dbConnect</span></code> function from the
-<code class="docutils literal notranslate"><span class="pre">DBI</span></code> (database interface) package. \index{database!connect} This does not read
-in the data, but simply tells R where the database is and opens up a
-communication channel that R can use to send SQL commands to the database.</p>
+<p>The first thing you need to do to read data into Python from a database is to
+connect to the database. We do that using the <code class="docutils literal notranslate"><span class="pre">create_engine</span></code> function from the
+<code class="docutils literal notranslate"><span class="pre">sal</span></code> (SQLAlchemy) package. \index{database!connect} This does not read
+in the data, but simply tells Python where the database is and opens up a
+communication channel that Python can use to send SQL commands to the database.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sal</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">select</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span> <span class="n">Table</span>
+
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">sal</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;sqlite:///data/can_lang.db&quot;</span><span class="p">)</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Often relational databases have many tables; thus, in order to retrieve
 data from a database, you need to know the name of the table
 in which the data is stored. You can get the names of
-all the tables in the database using the <code class="docutils literal notranslate"><span class="pre">dbListTables</span></code> \index{database!tables}
+all the tables in the database using the <code class="docutils literal notranslate"><span class="pre">table_names</span></code> \index{database!tables}
 function:</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">dbListTables</span></code> function returned only one name, which tells us
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">table_names</span><span class="p">()</span>
+<span class="n">tables</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;can_lang&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">table_names</span></code> function returned only one name, which tells us
 that there is only one table in this database. To reference a table in the
 database (so that we can perform operations like selecting columns and filtering rows), we
-use the <code class="docutils literal notranslate"><span class="pre">tbl</span></code> function \index{database!tbl} from the <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> package. The object returned
-by the <code class="docutils literal notranslate"><span class="pre">tbl</span></code> function \index{dbplyr|see{database}}\index{database!dbplyr} allows us to work with data
+use the <code class="docutils literal notranslate"><span class="pre">select</span></code> function \index{database!tbl} from the <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> package. The object returned
+by the <code class="docutils literal notranslate"><span class="pre">select</span></code> function \index{dbplyr|see{database}}\index{database!dbplyr} allows us to work with data
 stored in databases as if they were just regular data frames; but secretly, behind
-the scenes, <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> is turning your function calls (e.g., <code class="docutils literal notranslate"><span class="pre">select</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code>)
-into SQL queries!</p>
-<p>Although it looks like we just got a data frame from the database, we didn’t!
-It’s a <em>reference</em>; the data is still stored only in the SQLite database. The
-<code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> package works this way because databases are often more efficient at selecting, filtering
-and joining large data sets than R. And typically the database will not even
-be stored on your computer, but rather a more powerful machine somewhere on the
-web. So R is lazy and waits to bring this data into memory until you explicitly
-tell it to using the <code class="docutils literal notranslate"><span class="pre">collect</span></code> \index{database!collect} function.
-Figure &#64;ref(fig:01-ref-vs-tibble) highlights the difference
-between a <code class="docutils literal notranslate"><span class="pre">tibble</span></code> object in R and the output we just created. Notice in the table
-on the right, the first two lines of the output indicate the source is SQL. The
-last line doesn’t show how many rows there are (R is trying to avoid performing
-expensive query operations), whereas the output for the <code class="docutils literal notranslate"><span class="pre">tibble</span></code> object does.</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>image_read(&quot;img/ref_vs_tibble/ref_vs_tibble.001.jpeg&quot;) |&gt;
-  image_crop(&quot;3632x1600&quot;)
+the scenes, <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> is turning your function calls (e.g., <code class="docutils literal notranslate"><span class="pre">select</span></code>)
+into SQL queries! To access the table in the database, we first declare the <code class="docutils literal notranslate"><span class="pre">metadata</span></code> of the table using
+<code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> package and then access the table using <code class="docutils literal notranslate"><span class="pre">select</span></code> function from <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> package.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;can_lang&#39;</span><span class="p">,</span> 
+    <span class="n">metadata</span><span class="p">,</span> 
+    <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">autoload_with</span><span class="o">=</span><span class="n">db</span>
+<span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">table</span><span class="p">])</span>
+<span class="n">canlang_data_db</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">canlang_data_db</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;sqlalchemy.engine.cursor.LegacyCursorResult at 0x166b5dac0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Although it looks like we just got a data frame from the database, we didn’t!
+It’s a <em>reference</em>; the data is still stored only in the SQLite database. The output
+is a <code class="docutils literal notranslate"><span class="pre">CursorResult</span></code>(indicating that Python does not know how many rows
+there are in total!) object.
+In order to actually retrieve this data in Python,
+we use the <code class="docutils literal notranslate"><span class="pre">fetchall()</span></code> function. \index{filter}The
+<code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> package works this way because databases are often more efficient at selecting, filtering
+and joining large data sets than Python. And typically the database will not even
+be stored on your computer, but rather a more powerful machine somewhere on the
+web. So Python is lazy and waits to bring this data into memory until you explicitly
+tell it to using the <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> \index{database!collect} function. The <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> function returns the
+result of the query in the form of a list, where each row in the table is an element in the list.
+Let’s look at the first 10 rows in the table.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canlang_data_db</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="n">canlang_data_db</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;Aboriginal languages&#39;, &#39;Aboriginal languages, n.o.s.&#39;, 590.0, 235.0, 30.0, 665.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Afrikaans&#39;, 10260.0, 4785.0, 85.0, 23415.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Afro-Asiatic languages, n.i.e.&#39;, 1150.0, 445.0, 10.0, 2775.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Akan (Twi)&#39;, 13460.0, 5985.0, 25.0, 22150.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Albanian&#39;, 26895.0, 13135.0, 345.0, 31930.0),
+ (&#39;Aboriginal languages&#39;, &#39;Algonquian languages, n.i.e.&#39;, 45.0, 10.0, 0.0, 120.0),
+ (&#39;Aboriginal languages&#39;, &#39;Algonquin&#39;, 1260.0, 370.0, 40.0, 2480.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;American Sign Language&#39;, 2685.0, 3020.0, 1145.0, 21930.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Amharic&#39;, 22465.0, 12785.0, 200.0, 33670.0),
+ (&#39;Non-Official &amp; Non-Aboriginal languages&#39;, &#39;Arabic&#39;, 419890.0, 223535.0, 5585.0, 629055.0)]
+</pre></div>
+</div>
+</div>
 </div>
 <p>We can look at the SQL commands that are sent to the database when we write
-<code class="docutils literal notranslate"><span class="pre">tbl(conn_lang_data,</span> <span class="pre">&quot;lang&quot;)</span></code> in R with the <code class="docutils literal notranslate"><span class="pre">show_query</span></code> function from the
-<code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> package. \index{database!show_query}</p>
+<code class="docutils literal notranslate"><span class="pre">conn.execute(query).fetchall()</span></code> in Python with the <code class="docutils literal notranslate"><span class="pre">query.compile</span></code> function from the
+<code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> package. \index{database!show_query}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compiled</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">compile_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;render_postcompile&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">compiled</span><span class="p">)</span> <span class="o">%</span> <span class="n">compiled</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SELECT can_lang.category, can_lang.language, can_lang.mother_tongue, can_lang.most_at_home, can_lang.most_at_work, can_lang.lang_known 
+FROM can_lang
+</pre></div>
+</div>
+</div>
+</div>
 <p>The output above shows the SQL code that is sent to the database. When we
-write <code class="docutils literal notranslate"><span class="pre">tbl(conn_lang_data,</span> <span class="pre">&quot;lang&quot;)</span></code> in R, in the background, the function is
-translating the R code into SQL, sending that SQL to the database, and then translating the
-response for us. So <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> does all the hard work of translating from R to SQL and back for us;
-we can just stick with R!</p>
-<p>With our <code class="docutils literal notranslate"><span class="pre">lang_db</span></code> table reference for the 2016 Canadian Census data in hand, we
+write <code class="docutils literal notranslate"><span class="pre">conn.execute(query).fetchall()</span></code> in Python, in the background, the function is
+translating the Python code into SQL, sending that SQL to the database, and then translating the
+response for us. So <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> does all the hard work of translating from Python to SQL and back for us;
+we can just stick with Python!</p>
+<p>With our <code class="docutils literal notranslate"><span class="pre">canlang_data_db</span></code> table reference for the 2016 Canadian Census data in hand, we
 can mostly continue onward as if it were a regular data frame. For example,
-we can use the <code class="docutils literal notranslate"><span class="pre">filter</span></code> function
-to obtain only certain rows. Below we filter the data to include only Aboriginal languages.</p>
-<p>Above you can again see the hints that this data is not actually stored in R yet:
-the source is a <code class="docutils literal notranslate"><span class="pre">lazy</span> <span class="pre">query</span> <span class="pre">[??</span> <span class="pre">x</span> <span class="pre">6]</span></code> and the output says <code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">with</span> <span class="pre">more</span> <span class="pre">rows</span></code> at the end
-(both indicating that R does not know how many rows there are in total!),
-and a database type <code class="docutils literal notranslate"><span class="pre">sqlite</span> <span class="pre">3.36.0</span></code> is listed.
-In order to actually retrieve this data in R as a data frame,
-we use the <code class="docutils literal notranslate"><span class="pre">collect</span></code> function. \index{filter}
-Below you will see that after running <code class="docutils literal notranslate"><span class="pre">collect</span></code>, R knows that the retrieved
-data has 67 rows, and there is no database listed any more.</p>
-<p>Aside from knowing the number of rows, the data looks pretty similar in both
-outputs shown above. And <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> provides many more functions (not just <code class="docutils literal notranslate"><span class="pre">filter</span></code>)
-that you can use to directly feed the database reference (<code class="docutils literal notranslate"><span class="pre">lang_db</span></code>) into
-downstream analysis functions (e.g., <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> for data visualization).
-But <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> does not provide <em>every</em> function that we need for analysis;
-we do eventually need to call <code class="docutils literal notranslate"><span class="pre">collect</span></code>.
-For example, look what happens when we try to use <code class="docutils literal notranslate"><span class="pre">nrow</span></code> to count rows
-in a data frame: \index{nrow}</p>
+we can use the <code class="docutils literal notranslate"><span class="pre">select</span></code> function along with <code class="docutils literal notranslate"><span class="pre">where</span></code> function
+to obtain only certain rows. Below we filter the data to include only Aboriginal languages using
+the <code class="docutils literal notranslate"><span class="pre">where</span></code> function of <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">table</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="s1">&#39;Aboriginal languages&#39;</span><span class="p">)</span>
+<span class="n">result_proxy</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">result_proxy</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;sqlalchemy.engine.cursor.LegacyCursorResult at 0x169cb6c40&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Above you can again see that this data is not actually stored in Python yet:
+the output is a <code class="docutils literal notranslate"><span class="pre">CursorResult</span></code>(indicating that Python does not know how many rows
+there are in total!) object.
+In order to actually retrieve this data in Python as a data frame,
+we again use the <code class="docutils literal notranslate"><span class="pre">fetchall()</span></code> function. \index{filter}
+Below you will see that after running <code class="docutils literal notranslate"><span class="pre">fetchall()</span></code>, Python knows that the retrieved
+data has 67 rows, and there is no <code class="docutils literal notranslate"><span class="pre">CursorResult</span></code> object listed any more. We will display only the first 10
+rows of the table from the list returned by the query.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang_data_db</span> <span class="o">=</span> <span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="n">aboriginal_lang_data_db</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;Aboriginal languages&#39;, &#39;Aboriginal languages, n.o.s.&#39;, 590.0, 235.0, 30.0, 665.0),
+ (&#39;Aboriginal languages&#39;, &#39;Algonquian languages, n.i.e.&#39;, 45.0, 10.0, 0.0, 120.0),
+ (&#39;Aboriginal languages&#39;, &#39;Algonquin&#39;, 1260.0, 370.0, 40.0, 2480.0),
+ (&#39;Aboriginal languages&#39;, &#39;Athabaskan languages, n.i.e.&#39;, 50.0, 10.0, 0.0, 85.0),
+ (&#39;Aboriginal languages&#39;, &#39;Atikamekw&#39;, 6150.0, 5465.0, 1100.0, 6645.0),
+ (&#39;Aboriginal languages&#39;, &quot;Babine (Wetsuwet&#39;en)&quot;, 110.0, 20.0, 10.0, 210.0),
+ (&#39;Aboriginal languages&#39;, &#39;Beaver&#39;, 190.0, 50.0, 0.0, 340.0),
+ (&#39;Aboriginal languages&#39;, &#39;Blackfoot&#39;, 2815.0, 1110.0, 85.0, 5645.0),
+ (&#39;Aboriginal languages&#39;, &#39;Carrier&#39;, 1025.0, 250.0, 15.0, 2100.0),
+ (&#39;Aboriginal languages&#39;, &#39;Cayuga&#39;, 45.0, 10.0, 10.0, 125.0)]
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> provides many more functions (not just <code class="docutils literal notranslate"><span class="pre">select</span></code>, <code class="docutils literal notranslate"><span class="pre">where</span></code>)
+that you can use to directly feed the database reference (<code class="docutils literal notranslate"><span class="pre">aboriginal_lang_data_db</span></code>) into
+downstream analysis functions (e.g., <code class="docutils literal notranslate"><span class="pre">altair</span></code> for data visualization).
+But <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> does not provide <em>every</em> function that we need for analysis;
+we do eventually need to call <code class="docutils literal notranslate"><span class="pre">fetchall</span></code>.</p>
+<p>Does the result returned by <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> function store it as a dataframe? Let’s look
+what happens when we try to use <code class="docutils literal notranslate"><span class="pre">shape</span></code> to count rows in a dataframe \index{nrow}</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang_data_db</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## AttributeError: &#39;list&#39; object has no attribute &#39;shape&#39;</span>
+</pre></div>
+</div>
 <p>or <code class="docutils literal notranslate"><span class="pre">tail</span></code> to preview the last six rows of a data frame:
 \index{tail}</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>tail(aboriginal_lang_db)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang_data_db</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Error: tail() is not supported by sql sources</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## AttributeError: &#39;list&#39; object has no attribute &#39;tail&#39;</span>
 </pre></div>
 </div>
-<p>\newpage</p>
-<p>Additionally, some operations will not work to extract columns or single values
-from the reference given by the <code class="docutils literal notranslate"><span class="pre">tbl</span></code> function. Thus, once you have finished
-your data wrangling of the <code class="docutils literal notranslate"><span class="pre">tbl</span></code> database reference object, it is advisable to
-bring it into R as a data frame using <code class="docutils literal notranslate"><span class="pre">collect</span></code>.
-But be very careful using <code class="docutils literal notranslate"><span class="pre">collect</span></code>: databases are often <em>very</em> big,
-and reading an entire table into R might take a long time to run or even possibly
-crash your machine. So make sure you use <code class="docutils literal notranslate"><span class="pre">filter</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code> on the database table
-to reduce the data to a reasonable size before using <code class="docutils literal notranslate"><span class="pre">collect</span></code> to read it into R!</p>
+<p>Oops! We cannot treat the result as a dataframe, hence we need to convert it
+to a dataframe after calling <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> function</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang_data_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">aboriginal_lang_data_db</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="s1">&#39;most_at_home&#39;</span><span class="p">,</span> <span class="s1">&#39;most_at_work&#39;</span><span class="p">,</span> <span class="s1">&#39;lang_known&#39;</span><span class="p">])</span>
+<span class="n">aboriginal_lang_data_db</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(67, 6)
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Additionally, some operations will not work to extract columns or single values
+from the reference. Thus, once you have finished
+your data wrangling of the database reference object, it is advisable to
+bring it into Python using <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> and then converting it into the dataframe using <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package.
+But be very careful using <code class="docutils literal notranslate"><span class="pre">fetchall</span></code>: databases are often <em>very</em> big,
+and reading an entire table into Python might take a long time to run or even possibly
+crash your machine. So make sure you use <code class="docutils literal notranslate"><span class="pre">where</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code> on the database table
+to reduce the data to a reasonable size before using <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> to read it into Python!</p>
+</div></blockquote>
 </div>
 <div class="section" id="reading-data-from-a-postgresql-database">
 <h3>Reading data from a PostgreSQL database<a class="headerlink" href="#reading-data-from-a-postgresql-database" title="Permalink to this headline">¶</a></h3>
@@ -1138,101 +2380,102 @@ and open-source option for relational database software.
 Unlike SQLite,
 PostgreSQL uses a client–server database engine, as it was designed to be used
 and accessed on a network. This means that you have to provide more information
-to R when connecting to Postgres databases. The additional information that you
-need to include when you call the <code class="docutils literal notranslate"><span class="pre">dbConnect</span></code> function is listed below:</p>
+to Python when connecting to Postgres databases. The additional information that you
+need to include when you call the <code class="docutils literal notranslate"><span class="pre">create_engine</span></code> function is listed below:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">dbname</span></code>: the name of the database (a single PostgreSQL instance can host more than one database)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">host</span></code>: the URL pointing to where the database is located</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: the communication endpoint between R and the PostgreSQL database (usually <code class="docutils literal notranslate"><span class="pre">5432</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: the communication endpoint between Python and the PostgreSQL database (usually <code class="docutils literal notranslate"><span class="pre">5432</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">user</span></code>: the username for accessing the database</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">password</span></code>: the password for accessing the database</p></li>
 </ul>
-<p>Additionally, we must use the <code class="docutils literal notranslate"><span class="pre">RPostgres</span></code> package instead of <code class="docutils literal notranslate"><span class="pre">RSQLite</span></code> in the
-<code class="docutils literal notranslate"><span class="pre">dbConnect</span></code> function call.  Below we demonstrate how to connect to a version of
+<p>Additionally, we must use the <code class="docutils literal notranslate"><span class="pre">pgdb</span></code> package instead of <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">create_engine</span></code> function call.  Below we demonstrate how to connect to a version of
 the <code class="docutils literal notranslate"><span class="pre">can_mov_db</span></code> database, which contains information about Canadian movies.
 Note that the <code class="docutils literal notranslate"><span class="pre">host</span></code> (<code class="docutils literal notranslate"><span class="pre">fakeserver.stat.ubc.ca</span></code>), <code class="docutils literal notranslate"><span class="pre">user</span></code> (<code class="docutils literal notranslate"><span class="pre">user0001</span></code>), and
 <code class="docutils literal notranslate"><span class="pre">password</span></code> (<code class="docutils literal notranslate"><span class="pre">abc123</span></code>) below are <em>not real</em>; you will not actually
 be able to connect to a database using this information.</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>library(RPostgres)
-conn_mov_data &lt;- dbConnect(RPostgres::Postgres(), dbname = &quot;can_mov_db&quot;,
-                        host = &quot;fakeserver.stat.ubc.ca&quot;, port = 5432,
-                        user = &quot;user0001&quot;, password = &quot;abc123&quot;)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install pgdb</span>
+<span class="kn">import</span> <span class="nn">pgdb</span>
+<span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+
+<span class="c1"># connection_str = &quot;postgresql://&lt;USERNAME&gt;:&lt;PASSWORD&gt;@&lt;IP_ADDRESS&gt;:&lt;PORT&gt;/&lt;DATABASE_NAME&gt;&quot;</span>
+<span class="n">connection_str</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user0001:abc123@fakeserver.stat.ubc.ca:5432/can_mov_db&quot;</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">connection_str</span><span class="p">)</span>
+<span class="n">conn_mov_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
 </pre></div>
 </div>
 <p>After opening the connection, everything looks and behaves almost identically
-to when we were using an SQLite database in R. For example, we can again use
-<code class="docutils literal notranslate"><span class="pre">dbListTables</span></code> to find out what tables are in the <code class="docutils literal notranslate"><span class="pre">can_mov_db</span></code> database:</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>dbListTables(conn_mov_data)
+to when we were using an SQLite database in Python. For example, we can again use
+<code class="docutils literal notranslate"><span class="pre">table_names</span></code> to find out what tables are in the <code class="docutils literal notranslate"><span class="pre">can_mov_db</span></code> database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span> <span class="o">=</span> <span class="n">conn_mov_data</span><span class="o">.</span><span class="n">table_names</span><span class="p">()</span>
+<span class="n">tables</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="s2">&quot;themes&quot;</span>            <span class="s2">&quot;medium&quot;</span>           <span class="s2">&quot;titles&quot;</span>     <span class="s2">&quot;title_aliases&quot;</span>       <span class="s2">&quot;forms&quot;</span>            
- <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="s2">&quot;episodes&quot;</span>          <span class="s2">&quot;names&quot;</span>      <span class="s2">&quot;names_occupations&quot;</span> <span class="s2">&quot;occupation&quot;</span>       <span class="s2">&quot;ratings&quot;</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;themes&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;titles&#39;</span><span class="p">,</span> <span class="s1">&#39;title_aliases&#39;</span><span class="p">,</span> <span class="s1">&#39;forms&#39;</span><span class="p">,</span> <span class="s1">&#39;episodes&#39;</span><span class="p">,</span> <span class="s1">&#39;names&#39;</span><span class="p">,</span> <span class="s1">&#39;names_occupations&#39;</span><span class="p">,</span> <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;ratings&#39;</span><span class="p">]</span>
+
 </pre></div>
 </div>
 <p>We see that there are 10 tables in this database. Let’s first look at the
 <code class="docutils literal notranslate"><span class="pre">&quot;ratings&quot;</span></code> table to find the lowest rating that exists in the <code class="docutils literal notranslate"><span class="pre">can_mov_db</span></code>
-database:</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>ratings_db &lt;- tbl(conn_mov_data, &quot;ratings&quot;)
-ratings_db
+database. To access the table’s contents we first need to declare the <code class="docutils literal notranslate"><span class="pre">metadata</span></code> of the table
+and store it in a variable named <code class="docutils literal notranslate"><span class="pre">ratings</span></code>. Then, we can use the <code class="docutils literal notranslate"><span class="pre">select</span></code> function to
+refer to the data in the table and return the result in python using <code class="docutils literal notranslate"><span class="pre">fetchall</span></code> function, just like
+we did for the SQLite database.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;ratings&#39;</span><span class="p">,</span> 
+    <span class="n">metadata</span><span class="p">,</span> 
+    <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">autoload_with</span><span class="o">=</span><span class="n">db</span>
+<span class="p">)</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">ratings</span><span class="p">])</span>
+<span class="n">ratings_proxy</span> <span class="o">=</span> <span class="n">conn_mov_data</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Source:   table&lt;ratings&gt; [?? x 3]</span>
-<span class="c1"># Database: postgres [user0001@fakeserver.stat.ubc.ca:5432/can_mov_db]</span>
-   <span class="n">title</span>              <span class="n">average_rating</span> <span class="n">num_votes</span>
-   <span class="o">&lt;</span><span class="nb">chr</span><span class="o">&gt;</span>                    <span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span>     <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
- <span class="mi">1</span> <span class="n">The</span> <span class="n">Grand</span> <span class="n">Seduction</span>       <span class="mf">6.6</span>       <span class="mi">150</span>
- <span class="mi">2</span> <span class="n">Rhymes</span> <span class="k">for</span> <span class="n">Young</span> <span class="n">Ghouls</span>   <span class="mf">6.3</span>      <span class="mi">1685</span>
- <span class="mi">3</span> <span class="n">Mommy</span>                     <span class="mf">7.5</span>      <span class="mi">1060</span>
- <span class="mi">4</span> <span class="n">Incendies</span>                 <span class="mf">6.1</span>      <span class="mi">1101</span>
- <span class="mi">5</span> <span class="n">Bon</span> <span class="n">Cop</span><span class="p">,</span> <span class="n">Bad</span> <span class="n">Cop</span>          <span class="mf">7.0</span>       <span class="mi">894</span>
- <span class="mi">6</span> <span class="n">Goon</span>                      <span class="mf">5.5</span>      <span class="mi">1111</span>
- <span class="mi">7</span> <span class="n">Monsieur</span> <span class="n">Lazhar</span>           <span class="mf">5.6</span>       <span class="mi">610</span>
- <span class="mi">8</span> <span class="n">What</span> <span class="k">if</span>                   <span class="mf">5.3</span>      <span class="mi">1401</span>
- <span class="mi">9</span> <span class="n">The</span> <span class="n">Barbarian</span> <span class="n">Invations</span>   <span class="mf">5.8</span>        <span class="mi">99</span>
-<span class="mi">10</span> <span class="n">Away</span> <span class="kn">from</span> <span class="nn">Her</span>             <span class="mf">6.9</span>      <span class="mi">2311</span>
-<span class="c1"># … with more rows</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[(</span><span class="s1">&#39;The Grand Seduction&#39;</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Rhymes for Young Ghouls&#39;</span><span class="p">,</span> <span class="mf">6.3</span><span class="p">,</span> <span class="mi">1685</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Mommy&#39;</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mi">1060</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Incendies&#39;</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mi">1101</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Bon Cop, Bad Cop&#39;</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mi">894</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Goon&#39;</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mi">1111</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;Monsieur Lazhar&#39;</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span><span class="mi">610</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;What if&#39;</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1401</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">&#39;The Barbarian Invations&#39;</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">,</span> <span class="mi">99</span>
+<span class="p">(</span><span class="s1">&#39;Away from Her&#39;</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">2311</span><span class="p">)]</span>
+
 </pre></div>
 </div>
 <p>To find the lowest rating that exists in the data base, we first need to
 extract the <code class="docutils literal notranslate"><span class="pre">average_rating</span></code> column using <code class="docutils literal notranslate"><span class="pre">select</span></code>:
 \index{select}</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>avg_rating_db &lt;- select(ratings_db, average_rating)
-avg_rating_db
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">avg_rating_db</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">ratings</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">average_rating</span><span class="p">])</span>
+<span class="n">avg_rating_db</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Source:   lazy query [?? x 1]</span>
-<span class="c1"># Database: postgres [user0001@fakeserver.stat.ubc.ca:5432/can_mov_db]</span>
-   <span class="n">average_rating</span>
-            <span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span>
- <span class="mi">1</span>            <span class="mf">6.6</span>
- <span class="mi">2</span>            <span class="mf">6.3</span>
- <span class="mi">3</span>            <span class="mf">7.5</span>
- <span class="mi">4</span>            <span class="mf">6.1</span>
- <span class="mi">5</span>            <span class="mf">7.0</span>
- <span class="mi">6</span>            <span class="mf">5.5</span>
- <span class="mi">7</span>            <span class="mf">5.6</span>
- <span class="mi">8</span>            <span class="mf">5.3</span>
- <span class="mi">9</span>            <span class="mf">5.8</span>
-<span class="mi">10</span>            <span class="mf">6.9</span>
-<span class="c1"># … with more rows</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="p">[(</span><span class="mf">6.6</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">6.3</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">7.5</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">6.1</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">7.0</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">5.5</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">5.6</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">5.4</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">5.8</span><span class="p">,),</span>
+ <span class="p">(</span><span class="mf">6.9</span><span class="p">,)]</span>
 </pre></div>
 </div>
 <p>Next we use <code class="docutils literal notranslate"><span class="pre">min</span></code> to find the minimum rating in that column:
 \index{min}</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>min(avg_rating_db)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">min</span><span class="p">(</span><span class="n">avg_rating_db</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span> <span class="ow">in</span> <span class="nb">min</span><span class="p">(</span><span class="n">avg_rating_db</span><span class="p">)</span> <span class="p">:</span> <span class="n">invalid</span> <span class="s1">&#39;type&#39;</span> <span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="n">of</span> <span class="n">argument</span>
-</pre></div>
-</div>
-<p>Instead of the minimum, we get an error! This is another example of when we
-need to use the <code class="docutils literal notranslate"><span class="pre">collect</span></code> function to bring the data into R for further
-computation:</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>avg_rating_data &lt;- collect(avg_rating_db)
-min(avg_rating_data)
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">1.0</span><span class="p">,)</span>
 </pre></div>
 </div>
 <p>We see the lowest rating given to a movie is 1, indicating that it must have
@@ -1241,11 +2484,11 @@ been a really bad movie…</p>
 <div class="section" id="why-should-we-bother-with-databases-at-all">
 <h3>Why should we bother with databases at all?<a class="headerlink" href="#why-should-we-bother-with-databases-at-all" title="Permalink to this headline">¶</a></h3>
 <p>Opening a database \index{database!reasons to use} stored in a <code class="docutils literal notranslate"><span class="pre">.db</span></code> file
-involved a lot more effort than just opening a <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">.tsv</span></code>, or any of the
+involved a lot more effort than just opening a <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, or any of the
 other plain text or Excel formats. It was a bit of a pain to use a database in
-that setting since we had to use <code class="docutils literal notranslate"><span class="pre">dbplyr</span></code> to translate <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code>-like
-commands (<code class="docutils literal notranslate"><span class="pre">filter</span></code>, <code class="docutils literal notranslate"><span class="pre">select</span></code>, <code class="docutils literal notranslate"><span class="pre">head</span></code>, etc.) into SQL commands that the database
-understands. Not all <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> commands can currently be translated with
+that setting since we had to use <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> to translate <code class="docutils literal notranslate"><span class="pre">pandas</span></code>-like
+commands (<code class="docutils literal notranslate"><span class="pre">where</span></code>, <code class="docutils literal notranslate"><span class="pre">select</span></code>, etc.) into SQL commands that the database
+understands. Not all <code class="docutils literal notranslate"><span class="pre">pandas</span></code> commands can currently be translated with
 SQLite databases. For example, we can compute a mean with an SQLite database
 but can’t easily compute a median. So you might be wondering: why should we use
 databases at all?</p>
@@ -1262,20 +2505,24 @@ from those searches in a single <code class="docutils literal notranslate"><span
 </ul>
 </div>
 </div>
-<div class="section" id="writing-data-from-r-to-a-csv-file">
-<h2>Writing data from R to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file<a class="headerlink" href="#writing-data-from-r-to-a-csv-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="writing-data-from-python-to-a-csv-file">
+<h2>Writing data from Python to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file<a class="headerlink" href="#writing-data-from-python-to-a-csv-file" title="Permalink to this headline">¶</a></h2>
 <p>At the middle and end of a data analysis, we often want to write a data frame
 that has changed (either through filtering, selecting, mutating or summarizing)
 to a file to share it with others or use it for another step in the analysis.
-The most straightforward way to do this is to use the <code class="docutils literal notranslate"><span class="pre">write_csv</span></code> function
-\index{write function!write_csv} from the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> package.  The default
+The most straightforward way to do this is to use the <code class="docutils literal notranslate"><span class="pre">to_csv</span></code> function
+\index{write function!write_csv} from the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package.  The default
 arguments for this file are to use a comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>) as the delimiter and include
 column names. Below we demonstrate creating a new version of the Canadian
 languages data set without the official languages category according to the
 Canadian 2016 Census, and then writing this to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file:</p>
-<div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>no_official_lang_data &lt;- filter(can_lang, category != &quot;Official languages&quot;)
-write_csv(no_official_lang_data, &quot;data/no_official_languages.csv&quot;)
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">no_official_lang_data</span> <span class="o">=</span> <span class="n">canlang_data</span><span class="p">[</span><span class="n">canlang_data</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Official languages&#39;</span><span class="p">]</span>
+<span class="n">no_official_lang_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/no_official_languages.csv&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="obtaining-data-from-the-web">
@@ -1339,9 +2586,6 @@ available one-bedroom apartments in Vancouver
 on <a class="reference external" href="https://vancouver.craigslist.org">Craiglist</a>. When we visit the Vancouver Craigslist
 website \index{Craigslist} and search for one-bedroom apartments,
 we should see something similar to Figure &#64;ref(fig:craigslist-human).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/craigslist_human.png&quot;)
-</pre></div>
-</div>
 <p>Based on what our browser shows us, it’s pretty easy to find the size and price
 for each apartment listed. But we would like to be able to obtain that information
 using R, without any manual human effort or copying and pasting. We do this by
@@ -1349,70 +2593,46 @@ examining the <em>source code</em> that the web server actually sent our browser
 display for us. We show a snippet of it below; the
 entire source
 is <a class="reference external" href="https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt">included with the code for this book</a>:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;!</span>--         &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-meta&quot;</span>&gt; --&gt;
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-price&quot;</span>&gt;<span class="nv">$800</span>&lt;/span&gt; --&gt;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;!--         &lt;span class=&quot;result-meta&quot;&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;result-price&quot;&gt;$800&lt;/span&gt; --&gt;
 
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;housing&quot;</span>&gt; --&gt;
-<span class="o">&lt;!</span>--                     1br - --&gt;
-<span class="o">&lt;!</span>--                 &lt;/span&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;housing&quot;&gt; --&gt;
+&lt;!--                     1br - --&gt;
+&lt;!--                 &lt;/span&gt; --&gt;
 
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-hood&quot;</span>&gt; <span class="o">(</span><span class="m">13768</span> 108th Avenue<span class="o">)</span>&lt;/span&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;result-hood&quot;&gt; (13768 108th Avenue)&lt;/span&gt; --&gt;
 
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-tags&quot;</span>&gt; --&gt;
-<span class="o">&lt;!</span>--                     &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;maptag&quot;</span> data-pid<span class="o">=</span><span class="s2">&quot;6786042973&quot;</span>&gt;map&lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--                 &lt;/span&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;result-tags&quot;&gt; --&gt;
+&lt;!--                     &lt;span class=&quot;maptag&quot; data-pid=&quot;6786042973&quot;&gt;map&lt;/span&gt; --&gt;
+&lt;!--                 &lt;/span&gt; --&gt;
 
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;banish icon icon-trash&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;button&quot;</span>&gt; --&gt;
-<span class="o">&lt;!</span>--                     &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;screen-reader-text&quot;</span>&gt;hide this posting&lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--                 &lt;/span&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;banish icon icon-trash&quot; role=&quot;button&quot;&gt; --&gt;
+&lt;!--                     &lt;span class=&quot;screen-reader-text&quot;&gt;hide this posting&lt;/span&gt; --&gt;
+&lt;!--                 &lt;/span&gt; --&gt;
 
-<span class="o">&lt;!</span>--             &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;unbanish icon icon-trash red&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;button&quot;</span> aria-hidden --&gt;
-<span class="o">&lt;!</span>--             &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;#&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;restore-link&quot;</span>&gt; --&gt;
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;restore-narrow-text&quot;</span>&gt;restore&lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;restore-wide-text&quot;</span>&gt;restore this posting&lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--             &lt;/a&gt; --&gt;
+&lt;!--             &lt;span class=&quot;unbanish icon icon-trash red&quot; role=&quot;button&quot; aria-hidden --&gt;
+&lt;!--             &lt;a href=&quot;#&quot; class=&quot;restore-link&quot;&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;restore-narrow-text&quot;&gt;restore&lt;/span&gt; --&gt;
+&lt;!--                 &lt;span class=&quot;restore-wide-text&quot;&gt;restore this posting&lt;/span&gt; --&gt;
+&lt;!--             &lt;/a&gt; --&gt;
 
-<span class="o">&lt;!</span>--         &lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--     &lt;/p&gt; --&gt;
-<span class="o">&lt;!</span>-- &lt;/li&gt; --&gt;
-<span class="o">&lt;!</span>--          &lt;li <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-row&quot;</span> data-pid<span class="o">=</span><span class="s2">&quot;6788463837&quot;</span>&gt; --&gt;
+&lt;!--         &lt;/span&gt; --&gt;
+&lt;!--     &lt;/p&gt; --&gt;
+&lt;!-- &lt;/li&gt; --&gt;
+&lt;!--          &lt;li class=&quot;result-row&quot; data-pid=&quot;6788463837&quot;&gt; --&gt;
                   
-<span class="o">&lt;!</span>--         &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu --&gt;</span>
-<span class="o">&lt;!</span>--                 &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-price&quot;</span>&gt;<span class="nv">$2285</span>&lt;/span&gt; --&gt;
-<span class="o">&lt;!</span>--         &lt;/a&gt; --&gt;
+&lt;!--         &lt;a href=&quot;https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu --&gt;
+&lt;!--                 &lt;span class=&quot;result-price&quot;&gt;$2285&lt;/span&gt; --&gt;
+&lt;!--         &lt;/a&gt; --&gt;
 </pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  <span class="n">Input</span> <span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="o">&lt;!</span>--         &lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;result-meta&quot;</span>&gt; --&gt;
-    <span class="o">^</span>
-<span class="ne">SyntaxError</span>: invalid syntax
-</pre></div>
-</div>
-</div>
 </div>
 <p>Oof…you can tell that the source code for a web page is not really designed
 for humans to understand easily. However, if you look through it closely, you
 will find that the information we’re interested in is hidden among the muck.
 For example, near the top of the snippet
 above you can see a line that looks like</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;result-price&quot;&gt;$800&lt;/span&gt;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;result-price&quot;&gt;$800&lt;/span&gt;
 </pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  Input In [2]
-    &lt;span class=&quot;result-price&quot;&gt;$800&lt;/span&gt;
-    ^
-SyntaxError: invalid syntax
-</pre></div>
-</div>
-</div>
 </div>
 <p>That is definitely storing the price of a particular apartment. With some more
 investigation, you should be able to find things like the date and time of the
@@ -1431,20 +2651,8 @@ programmatically sort through all of the source code for the website to find
 apartment prices, maybe we can look for all the tags with the <code class="docutils literal notranslate"><span class="pre">&quot;result-price&quot;</span></code>
 class, and grab the information between the opening and closing tag. Indeed,
 take a look at another line of the source snippet above:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;result-price&quot;&gt;$2285&lt;/span&gt;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;result-price&quot;&gt;$2285&lt;/span&gt;
 </pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  Input In [3]
-    &lt;span class=&quot;result-price&quot;&gt;$2285&lt;/span&gt;
-    ^
-SyntaxError: invalid syntax
-</pre></div>
-</div>
-</div>
 </div>
 <p>It’s yet another price for an apartment listing, and the tags surrounding it
 have the <code class="docutils literal notranslate"><span class="pre">&quot;result-price&quot;</span></code> class. Wonderful! Now that we know what pattern we
@@ -1468,21 +2676,12 @@ example, if we click the price of an apartment listing, we
 find that SelectorGadget shows us the selector <code class="docutils literal notranslate"><span class="pre">.result-price</span></code>
 in its toolbar, and highlights all the other apartment
 prices that would be obtained using that selector (Figure &#64;ref(fig:sg1)).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/sg1.png&quot;)
-</pre></div>
-</div>
 <p>If we then click the size of an apartment listing, SelectorGadget shows us
 the <code class="docutils literal notranslate"><span class="pre">span</span></code> selector, and highlights many of the lines on the page; this indicates that the
 <code class="docutils literal notranslate"><span class="pre">span</span></code> selector is not specific enough to capture only apartment sizes (Figure &#64;ref(fig:sg3)).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/sg3.png&quot;)
-</pre></div>
-</div>
 <p>To narrow the selector, we can click one of the highlighted elements that
 we <em>do not</em> want. For example, we can deselect the “pic/map” links,
 resulting in only the data we want highlighted using the <code class="docutils literal notranslate"><span class="pre">.housing</span></code> selector (Figure &#64;ref(fig:sg2)).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/sg2.png&quot;)
-</pre></div>
-</div>
 <p>So to scrape information about the square footage and rental price
 of apartment listings, we need to use
 the two CSS selectors <code class="docutils literal notranslate"><span class="pre">.housing</span></code> and <code class="docutils literal notranslate"><span class="pre">.result-price</span></code>, respectively.
@@ -1508,9 +2707,6 @@ and it does not mention that web scraping is disallowed.
 We will use the SelectorGadget tool to pick elements that we are interested in
 (city names and population counts) and deselect others to indicate that we are not
 interested in them (province names), as shown in Figure &#64;ref(fig:sg4).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/sg4.png&quot;)
-</pre></div>
-</div>
 <p>We include a link to a short video tutorial on this process at the end of the chapter
 in the additional resources section. SelectorGadget provides in its toolbar
 the following list of CSS selectors to use:</p>
@@ -1545,22 +2741,10 @@ match the CSS selectors you specified.  A <em>node</em> is an HTML tag pair (e.g
 <code class="docutils literal notranslate"><span class="pre">&lt;td&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;/td&gt;</span></code> which defines the cell of a table) combined with the content
 stored between the tags. For our CSS selector <code class="docutils literal notranslate"><span class="pre">td:nth-child(5)</span></code>, an example
 node that would be selected would be:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">td</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;text-align:left;background:#f0f0f0;&quot;</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">td</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;text-align:left;background:#f0f0f0;&quot;</span><span class="o">&gt;</span>
 <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/wiki/London,_Ontario&quot;</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;London, Ontario&quot;</span><span class="o">&gt;</span><span class="n">London</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
 </pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  <span class="n">Input</span> <span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-    <span class="o">&lt;</span><span class="n">td</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;text-align:left;background:#f0f0f0;&quot;</span><span class="o">&gt;</span>
-    <span class="o">^</span>
-<span class="ne">SyntaxError</span>: invalid syntax
-</pre></div>
-</div>
-</div>
 </div>
 <p>We store the result of the <code class="docutils literal notranslate"><span class="pre">html_nodes</span></code> function in the <code class="docutils literal notranslate"><span class="pre">population_nodes</span></code> variable.
 Note that below we use the <code class="docutils literal notranslate"><span class="pre">paste</span></code> function with a comma separator (<code class="docutils literal notranslate"><span class="pre">sep=&quot;,&quot;</span></code>)
@@ -1627,8 +2811,9 @@ Twitter for tweets, users, their followers, and more.
 Let’s construct a small data set of the last 400 tweets and
 retweets from the &#64;tidyverse account. A few of the most recent tweets
 are shown in Figure &#64;ref(fig:01-tidyverse-twitter).</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/tidyverse_twitter.png&quot;)
-</pre></div>
+<div class="figure align-default" id="markdown-fig">
+<a class="bg-primary mb-2 reference internal image-reference" href="_images/tidyverse_twitter.png"><img alt="twitter feed" class="bg-primary mb-2" src="_images/tidyverse_twitter.png" style="width: 600px; height: 500px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">The tidyverse account Twitter feed.</span><a class="headerlink" href="#markdown-fig" title="Permalink to this image">¶</a></p>
 </div>
 <p><strong>Stop! Think about your API usage carefully!</strong></p>
 <p>When you access an API, you are initiating a transfer of data from a web server
@@ -1652,8 +2837,9 @@ So we can use the <code class="docutils literal notranslate"><span class="pre">g
 <p>When you call the <code class="docutils literal notranslate"><span class="pre">get_timelines</span></code> for the first time (or any other <code class="docutils literal notranslate"><span class="pre">rtweet</span></code> function that accesses the API),
 you will see a browser pop-up that looks something like Figure &#64;ref(fig:01-tidyverse-authorize).</p>
 <p>(ref:01-tidyverse-authorize) The <code class="docutils literal notranslate"><span class="pre">rtweet</span></code> authorization prompt.</p>
-<div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/authorize_question.png&quot;)
-</pre></div>
+<div class="figure align-default" id="id1">
+<a class="bg-primary mb-2 reference internal image-reference" href="_images/authorize_question.png"><img alt="authorize" class="bg-primary mb-2" src="_images/authorize_question.png" style="width: 600px; height: 500px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">(ref:01-tidyverse-authorize)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <p>This is the <code class="docutils literal notranslate"><span class="pre">rtweet</span></code> package asking you to provide your own Twitter account’s login information.
 When <code class="docutils literal notranslate"><span class="pre">rtweet</span></code> talks to the Twitter API, it uses your account information to authenticate requests;

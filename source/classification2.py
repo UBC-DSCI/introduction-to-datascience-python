@@ -14,7 +14,8 @@
 # ---
 
 # %% [markdown]
-# # Classification II: evaluation & tuning {#classification2}
+# (classification2)=
+# # Classification II: evaluation & tuning
 #
 # ```{r classification2-setup, echo = FALSE, message = FALSE, warning = FALSE}
 # library(gridExtra)
@@ -45,7 +46,31 @@
 # theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
 #
 # ```
-#
+
+# %% tags=["remove-cell"]
+import altair as alt
+import numpy as np
+import pandas as pd
+import sklearn
+from sklearn.compose import make_column_transformer
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.model_selection import (
+    GridSearchCV,
+    RandomizedSearchCV,
+    cross_validate,
+    train_test_split,
+)
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+alt.data_transformers.disable_max_rows()
+# alt.renderers.enable("mimetype")
+
+from myst_nb import glue
+
+# %% [markdown]
 # ## Overview 
 # This chapter continues the introduction to predictive modeling through
 # classification. While the previous chapter covered training and data
@@ -63,14 +88,15 @@
 # - Evaluate classification accuracy in R using a validation data set and appropriate metrics.
 # - Execute cross-validation in R to choose the number of neighbors in a $K$-nearest neighbors classifier.
 # - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
-#
+
+# %% [markdown]
 # ## Evaluating accuracy
 #
 # Sometimes our classifier might make the wrong prediction. A classifier does not
 # need to be right 100\% of the time to be useful, though we don't want the
 # classifier to make too many wrong predictions. How do we measure how "good" our
 # classifier is? Let's revisit the \index{breast cancer}
-# [breast cancer images data](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) [@streetbreastcancer]
+# [breast cancer images data](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) {cite:p}`streetbreastcancer`
 # and think about how our classifier will be used in practice. A biopsy will be
 # performed on a *new* patient's tumor, the resulting image will be analyzed,
 # and the classifier will be asked to decide whether the tumor is benign or
@@ -79,7 +105,7 @@
 # evaluate our classifier without visiting the hospital to collect more
 # tumor images? 
 #
-# The trick is to split the data into a **training set** \index{training set} and **test set** \index{test set} (Figure \@ref(fig:06-training-test))
+# The trick is to split the data into a **training set** \index{training set} and **test set** \index{test set} ({numref}`fig:06-training-test`)
 # and use only the **training set** when building the classifier.
 # Then, to evaluate the accuracy of the classifier, we first set aside the true labels from the **test set**,
 # and then use the classifier to predict the labels in the **test set**. If our predictions match the true
@@ -92,11 +118,16 @@
 # > "see" the test data in advance, making it look more accurate than it really
 # > is. Imagine how bad it would be to overestimate your classifier's accuracy
 # > when predicting whether a patient's tumor is malignant or benign!
+
+# %% [markdown]
+# ```{figure} img/training_test.jpeg
+# :name: fig:06-training-test
+# :figclass: caption-hack
 #
-# ```{r 06-training-test, echo = FALSE, warning = FALSE, fig.cap = "Splitting the data into training and testing sets.", fig.retina = 2, out.width = "100%"}
-# knitr::include_graphics("img/training_test.jpeg")
+# Splitting the data into training and testing sets.
 # ```
-#
+
+# %% [markdown]
 # How exactly can we assess how well our predictions match the true labels for
 # the observations in the test set? One way we can do this is to calculate the
 # **prediction accuracy**. \index{prediction accuracy|see{accuracy}}\index{accuracy} This is the fraction of examples for which the
@@ -107,16 +138,22 @@
 
 # %% [markdown]
 # The process for assessing if our predictions match the true labels in the 
-# test set is illustrated in Figure \@ref(fig:06-ML-paradigm-test). Note that there 
+# test set is illustrated in {numref}`fig:06-ML-paradigm-test`. Note that there 
 # are other measures for how well classifiers perform, such as *precision* and *recall*; 
 # these will not be discussed here, but you will likely encounter them in other more advanced
-# books on this topic. 
+# books on this topic.
+
+# %% [markdown]
+# ```{figure} img/ML-paradigm-test.png
+# :name: fig:06-ML-paradigm-test
+# :figclass: caption-hack
 #
-# ```{r 06-ML-paradigm-test, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Process for splitting the data and finding the prediction accuracy.", fig.retina = 2, out.width = "100%"}
-# knitr::include_graphics("img/ML-paradigm-test.png")
+# Process for splitting the data and finding the prediction accuracy.
 # ```
-#
-# ## Randomness and seeds {#randomseeds}
+
+# %% [markdown]
+# (randomseeds)=
+# ## Randomness and seeds
 # Beginning in this chapter, our data analyses will often involve the use
 # of *randomness*. \index{random} We use randomness any time we need to make a decision in our
 # analysis that needs to be fair, unbiased, and not influenced by human input.
@@ -124,7 +161,7 @@
 # a data set into a training set and test set to evaluate our classifier. We 
 # certainly do not want to choose how to split
 # the data ourselves by hand, as we want to avoid accidentally influencing the result
-# of the evaluation. So instead, we let R *randomly* split the data.
+# of the evaluation. So instead, we let Python *randomly* split the data.
 # In future chapters we will use randomness
 # in many other ways, e.g., to help us select a small subset of data from a larger data set, 
 # to pick groupings of data, and more.
@@ -133,66 +170,95 @@
 # tenets of good data analysis practice: \index{reproducible} *reproducibility*. Recall that a reproducible
 # analysis produces the same result each time it is run; if we include randomness
 # in the analysis, would we not get a different result each time?
-# The trick is that in R&mdash;and other programming languages&mdash;randomness 
-# is not actually random! Instead, R uses a *random number generator* that
+# The trick is that in Python&mdash;and other programming languages&mdash;randomness 
+# is not actually random! Instead, Python uses a *random number generator* that
 # produces a sequence of numbers that
 # are completely determined by a \index{seed} \index{random seed|see{seed}}
 #  *seed value*. Once you set the seed value 
-# using the \index{seed!set.seed} `set.seed` function, everything after that point may *look* random,
+# using the \index{seed!set.seed} `np.random.seed` function or the `random_state` argument, everything after that point may *look* random,
 # but is actually totally reproducible. As long as you pick the same seed
 # value, you get the same result!
 #
-# Let's use an example to investigate how seeds work in R. Say we want 
-# to randomly pick 10 numbers from 0 to 9 in R using the `sample` \index{sample!function} function,
+# Let's use an example to investigate how seeds work in Python. Say we want 
+# to randomly pick 10 numbers from 0 to 9 in Python using the `np.random.choice` \index{sample!function} function,
 # but we want it to be reproducible. Before using the sample function,
-# we call `set.seed`, and pass it any integer as an argument. 
+# we call `np.random.seed`, and pass it any integer as an argument. 
 # Here, we pass in the number `1`.
-#
-# ```{r}
-# set.seed(1)
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-# ```
-#
+
+# %%
+import numpy as np
+
+np.random.seed(1)
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %% [markdown]
 # You can see that `random_numbers` is a list of 10 numbers
 # from 0 to 9 that, from all appearances, looks random. If 
-# we run the `sample` function again, we will 
+# we run the `np.random.choice` function again, we will 
 # get a fresh batch of 10 numbers that also look random.
-#
-# ```{r}
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-# ```
-#
-# If we want to force R to produce the same sequences of random numbers,
-# we can simply call the `set.seed` function again with the same argument
+
+# %%
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %% [markdown]
+# If we want to force Python to produce the same sequences of random numbers,
+# we can simply call the `np.random.seed` function again with the same argument
 # value.
-#
-# ```{r}
-# set.seed(1)
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-#
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-# ```
-#
+
+# %%
+np.random.seed(1)
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %%
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %% [markdown]
 # And if we choose 
 # a different value for the seed&mdash;say, 4235&mdash;we
 # obtain a different sequence of random numbers.
-#
-# ```{r}
-# set.seed(4235)
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-#
-# random_numbers <- sample(0:9, 10, replace=TRUE)
-# random_numbers
-# ```
-#
-# In other words, even though the sequences of numbers that R is generating *look*
+
+# %%
+np.random.seed(4235)
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %%
+random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers
+
+# %% [markdown]
+# In other words, even though the sequences of numbers that Python is generating *look*
 # random, they are totally determined when we set a seed value! 
 #
+# So what does this mean for data analysis? Well, `np.random.choice` is certainly
+# not the only function that uses randomness in R. Many of the functions 
+# that we use in `scikit-learn`, `numpy`, and beyond use randomness&mdash;many of them
+# without even telling you about it. So at the beginning of every data analysis you
+# do, right after loading packages, you should call the `np.random.seed` function and
+# pass it an integer that you pick.
+# Also note that when Python starts up, it creates its own seed to use. So if you do not
+# explicitly call the `np.random.seed` function in your code, your results will 
+# likely not be reproducible.
+# And finally, be careful to set the seed *only once* at the beginning of a data
+# analysis. Each time you set the seed, you are inserting your own human input,
+# thereby influencing the analysis. If you use `np.random.choice` many times
+# throughout your analysis, the randomness that Python uses will not look 
+# as random as it should.
+#
+# In summary: if you want your analysis to be reproducible, i.e., produce *the same result* each time you
+# run it, make sure to use `np.random.seed` exactly once at the beginning of the analysis.
+# Different argument values in `np.random.seed` lead to different patterns of randomness, but as long as 
+# you pick the same argument value your result will be the same. 
+# In the remainder of the textbook, we will set the seed once at the beginning of each chapter.
+
+# %% tags=["remove-cell"]
+# In other words, even though the sequences of numbers that R is generating *look*
+# random, they are totally determined when we set a seed value! 
+
 # So what does this mean for data analysis? Well, `sample` is certainly
 # not the only function that uses randomness in R. Many of the functions 
 # that we use in `tidymodels`, `tidyverse`, and beyond use randomness&mdash;many of them
@@ -207,14 +273,15 @@
 # thereby influencing the analysis. If you use `set.seed` many times
 # throughout your analysis, the randomness that R uses will not look 
 # as random as it should.
-#
+
 # In summary: if you want your analysis to be reproducible, i.e., produce *the same result* each time you
 # run it, make sure to use `set.seed` exactly once at the beginning of the analysis.
 # Different argument values in `set.seed` lead to different patterns of randomness, but as long as 
 # you pick the same argument value your result will be the same. 
 # In the remainder of the textbook, we will set the seed once at the beginning of each chapter.
-#
-# ## Evaluating accuracy with `tidymodels`
+
+# %% [markdown]
+# ## Evaluating accuracy with `scikit-learn`
 # Back to evaluating classifiers now!
 # In R, we can use the `tidymodels` package \index{tidymodels} not only to perform $K$-nearest neighbors
 # classification, but also to assess how well our classification worked. 
@@ -223,36 +290,51 @@
 # We begin the analysis by loading the packages we require,
 # reading in the breast cancer data,
 # and then making a quick scatter plot visualization \index{visualization!scatter} of
-# tumor cell concavity versus smoothness colored by diagnosis in Figure \@ref(fig:06-precode).
+# tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
 # You will also notice that we set the random seed here at the beginning of the analysis
-# using the `set.seed` function, as described in Section \@ref(randomseeds).
+# using the `set.seed` function, as described in Section {ref}`randomseeds`.
+
+# %%
+# load packages
+import altair as alt
+import pandas as pd
+
+# set the seed
+np.random.seed(4235)
+
+# load data
+cancer = pd.read_csv("data/unscaled_wdbc.csv")
+## re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign'
+cancer["Class"] = cancer["Class"].apply(
+    lambda x: "Malignant" if (x == "M") else "Benign"
+)
+
+# create scatter plot of tumor cell concavity versus smoothness,
+# labeling the points be diagnosis class
+## create a list of colors that will be used to customize the color of points
+colors = ["#86bfef", "#efb13f"]
+
+perim_concav = (
+    alt.Chart(cancer)
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x="Smoothness",
+        y="Concavity",
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
+
+perim_concav
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:06-precode
+# :figclass: caption-hack
 #
-# ```{r 06-precode, fig.height = 3.5, fig.width = 4.5, fig.cap="Scatter plot of tumor cell concavity versus smoothness colored by diagnosis label.", message = F, warning = F}
-# # load packages
-# library(tidyverse)
-# library(tidymodels)
-#
-# # set the seed
-# set.seed(1)
-#
-# # load data
-# cancer <- read_csv("data/unscaled_wdbc.csv") |>
-#   # convert the character Class variable to the factor datatype
-#   mutate(Class = as_factor(Class)) 
-#
-# # create scatter plot of tumor cell concavity versus smoothness,
-# # labeling the points be diagnosis class
-# perim_concav <- cancer |>
-#   ggplot(aes(x = Smoothness, y = Concavity, color = Class)) +
-#   geom_point(alpha = 0.5) +
-#   labs(color = "Diagnosis") +
-#   scale_color_manual(labels = c("Malignant", "Benign"), 
-#                      values = c("orange2", "steelblue2")) + 
-#   theme(text = element_text(size = 12))
-#
-# perim_concav
+# Scatter plot of tumor cell concavity versus smoothness colored by diagnosis label.
 # ```
-#
+
+# %% [markdown]
 # ### Create the train / test split
 #
 # Once we have decided on a predictive question to answer and done some
@@ -262,8 +344,31 @@
 # you want to trade off between training an accurate model (by using a larger
 # training data set) and getting an accurate evaluation of its performance (by
 # using a larger test data set). Here, we will use 75% of the data for training,
-# and 25% for testing.  
+# and 25% for testing.
+
+# %% [markdown]
+# The `train_test_split` function \index{tidymodels!initial\_split} from `scikit-learn` handles the procedure of splitting
+# the data for us. We can specify two very important parameters when using `train_test_split` to ensure
+# that the accuracy estimates from the test data are reasonable. First, `shuffle=True` (default) \index{shuffling} means the data will be shuffled before splitting, which ensures that any ordering present
+# in the data does not influence the data that ends up in the training and testing sets.
+# Second, by specifying the `stratify` parameter to be the target column of the training set,
+# it **stratifies** the \index{stratification} data by the class label, to ensure that roughly
+# the same proportion of each class ends up in both the training and testing sets. For example,
+# in our data set, roughly 63% of the
+# observations are from the benign class (`B`), and 37% are from the malignant class (`M`),
+# so specifying `stratify` as the class column ensures that roughly 63% of the training data are benign, 
+# 37% of the training data are malignant,
+# and the same proportions exist in the testing data.
 #
+# Let's use the `train_test_split` function to create the training and testing sets.
+# We will specify that `train_size=0.75` so that 75% of our original data set ends up
+# in the training set. We will also set the `stratify` argument to the categorical label variable
+# (here, `cancer['Class']`) to ensure that the training and testing subsets contain the
+# right proportions of each category of observation.
+# Note that the `train_test_split` function uses randomness, so we shall set `random_state` to make
+# the split reproducible.
+
+# %% tags=["remove-cell"]
 # The `initial_split` function \index{tidymodels!initial\_split} from `tidymodels` handles the procedure of splitting
 # the data for us. It also applies two very important steps when splitting to ensure
 # that the accuracy estimates from the test data are reasonable. First, it
@@ -276,7 +381,7 @@
 # so `initial_split` ensures that roughly 63% of the training data are benign, 
 # 37% of the training data are malignant,
 # and the same proportions exist in the testing data.
-#
+
 # Let's use the `initial_split` function to create the training and testing sets.
 # We will specify that `prop = 0.75` so that 75% of our original data set ends up
 # in the training set. We will also set the `strata` argument to the categorical label variable
@@ -286,49 +391,51 @@
 # data sets into two separate data frames.
 # Note that the `initial_split` function uses randomness, but since we set the 
 # seed earlier in the chapter, the split will be reproducible.
-#
-# ```{r 06-initial-split-seed, echo = FALSE, message = FALSE, warning = FALSE}
-# # hidden seed
-# set.seed(1)
-# ```
-#
-# ```{r 06-initial-split}
-# cancer_split <- initial_split(cancer, prop = 0.75, strata = Class)
-# cancer_train <- training(cancer_split)
-# cancer_test <- testing(cancer_split) 
-# ```
-#
-# ```{r 06-glimpse-training-and-test-sets}
-# glimpse(cancer_train)
-# glimpse(cancer_test)
-# ```
-#
+
+# %%
+cancer_train, cancer_test = train_test_split(
+    cancer, train_size=0.75, stratify=cancer["Class"], random_state=1
+)
+cancer_train.info()
+
+# %%
+cancer_test.info()
+
+# %% tags=["remove-cell"]
+glue("cancer_train_nrow", len(cancer_train))
+glue("cancer_test_nrow", len(cancer_test))
+
+# %% [markdown]
+# We can see from `.info()` in \index{glimpse} the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
+# while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
+# a train / test split of 75% / 25%, as desired. Recall from Chapter {ref}`classification`
+# that we use the `.info()` method to view data with a large number of columns,
+# as it prints the data such that the columns go down the page (instead of across).
+
+# %% tags=["remove-cell"]
 # We can see from `glimpse` in \index{glimpse} the code above that the training set contains `r nrow(cancer_train)`
 # observations, while the test set contains `r nrow(cancer_test)` observations. This corresponds to
 # a train / test split of 75% / 25%, as desired. Recall from Chapter \@ref(classification)
 # that we use the `glimpse` function to view data with a large number of columns,
 # as it prints the data such that the columns go down the page (instead of across).
-#
-# ```{r 06-train-prop, echo = FALSE}
-# train_prop <- cancer_train |> 
-#   group_by(Class) |>
-#   summarize(proportion = n()/nrow(cancer_train))
-# ```
-#
-# We can use `group_by` and `summarize` to \index{group\_by}\index{summarize} find the percentage of malignant and benign classes 
-# in `cancer_train` and we see about `r round(filter(train_prop, Class == "B")$proportion, 2)*100`% of the training
-# data are benign and `r round(filter(train_prop, Class == "M")$proportion, 2)*100`% 
+
+# %% [markdown]
+# We can use `.groupby()` and `.count()` to \index{group\_by}\index{summarize} find the percentage of malignant and benign classes 
+# in `cancer_train` and we see about {glue:}`cancer_train_b_prop`% of the training
+# data are benign and {glue:}`cancer_train_m_prop`% 
 # are malignant, indicating that our class proportions were roughly preserved when we split the data.
-#
-# ```{r 06-train-proportion}
-# cancer_proportions <- cancer_train |>
-#                       group_by(Class) |>
-#                       summarize(n = n()) |>
-#                       mutate(percent = 100*n/nrow(cancer_train))
-#
-# cancer_proportions
-# ```
-#
+
+# %%
+cancer_proportions = pd.DataFrame()
+cancer_proportions['n'] = cancer_train.groupby('Class')['ID'].count()
+cancer_proportions['percent'] = 100 * cancer_proportions['n'] / len(cancer_train)
+cancer_proportions
+
+# %% tags=["remove-cell"]
+glue("cancer_train_b_prop", round(cancer_proportions.iloc[0, 1]))
+glue("cancer_train_m_prop", round(cancer_proportions.iloc[1, 1]))
+
+# %% [markdown]
 # ### Preprocess the data
 #
 # As we mentioned in the last chapter, $K$-nearest neighbors is sensitive to the scale of the predictors,
@@ -338,19 +445,33 @@
 # our test data does not influence any aspect of our model training. Once we have
 # created the standardization preprocessor, we can then apply it separately to both the
 # training and test data sets.
-#
+
+# %% [markdown]
+# Fortunately, the `Pipeline` framework (together with column transformer) from `scikit-learn` helps us handle this properly. Below we construct and prepare the preprocessor using `make_column_transformer`. Later after we construct a full `Pipeline`, we will only fit it with the training data.
+
+# %% tags=["remove-cell"]
 # Fortunately, the `recipe` framework from `tidymodels` helps us handle \index{recipe}\index{recipe!step\_scale}\index{recipe!step\_center}
 # this properly. Below we construct and prepare the recipe using only the training
 # data (due to `data = cancer_train` in the first line).
-#
-# ```{r 06-pre-process}
-# cancer_recipe <- recipe(Class ~ Smoothness + Concavity, data = cancer_train) |>
-#   step_scale(all_predictors()) |>
-#   step_center(all_predictors())
-# ```
-#
+
+# %%
+cancer_preprocessor = make_column_transformer(
+    (StandardScaler(), ["Smoothness", "Concavity"]),
+)
+
+# %% [markdown]
 # ### Train the classifier
 #
+# Now that we have split our original data set into training and test sets, we
+# can create our $K$-nearest neighbors classifier with only the training set using
+# the technique we learned in the previous chapter. For now, we will just choose
+# the number $K$ of neighbors to be 3. To fit the model with only concavity and smoothness as the
+# predictors, we need to explicitly create `X` (predictors) and `y` (target) based on `cancer_train`.
+# As before we need to create a model specification, combine
+# the model specification and recipe into a workflow, and then finally
+# use `fit` with `X` and `y` to build the classifier.
+
+# %% tags=["remove-cell"]
 # Now that we have split our original data set into training and test sets, we
 # can create our $K$-nearest neighbors classifier with only the training set using
 # the technique we learned in the previous chapter. For now, we will just choose
@@ -358,97 +479,136 @@
 # predictors. As before we need to create a model specification, combine
 # the model specification and recipe into a workflow, and then finally
 # use `fit` with the training data `cancer_train` to build the classifier.
-#
-# ```{r 06-create-K-nearest-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# # hidden seed
-# set.seed(1)
-# ```
-#
-# ```{r 06-create-K-nearest neighbor-classifier, results = 'hide', echo = TRUE}
-# knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 3) |>
-#   set_engine("kknn") |>
-#   set_mode("classification")
-#
-# knn_fit <- workflow() |>
-#   add_recipe(cancer_recipe) |>
-#   add_model(knn_spec) |>
-#   fit(data = cancer_train)
-#
-# knn_fit
-# ```
-#
-# ```{r echo = FALSE}
-# print_tidymodels(knn_fit)
-# ```
-#
+
+# %%
+# hidden seed
+np.random.seed(1)
+
+knn_spec = KNeighborsClassifier(n_neighbors=3, weights="uniform")
+
+X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_train["Class"]
+
+knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+
+knn_fit
+
+# %% [markdown]
 # ### Predict the labels in the test set
 #
+# Now that we have a $K$-nearest neighbors classifier object, we can use it to
+# predict the class labels for our test set.  We use the `pandas.concat()` to add the
+# column of predictions to the original test data, creating the
+# `cancer_test_predictions` data frame. The `Class` variable contains the true
+# diagnoses, while the `predicted` contains the predicted diagnoses from the
+# classifier.
+
+# %% tags=["remove-cell"]
 # Now that we have a $K$-nearest neighbors classifier object, we can use it to
 # predict the class labels for our test set.  We use the `bind_cols` \index{bind\_cols} to add the
 # column of predictions to the original test data, creating the
 # `cancer_test_predictions` data frame.  The `Class` variable contains the true
 # diagnoses, while the `.pred_class` contains the predicted diagnoses from the
 # classifier.
-#
-# ```{r 06-predict-test}
-# cancer_test_predictions <- predict(knn_fit, cancer_test) |>
-#   bind_cols(cancer_test)
-#
-# cancer_test_predictions
-# ```
-#
+
+# %%
+# np.random.seed(1)
+
+cancer_test_predictions = knn_fit.predict(
+    cancer_test.loc[:, ["Smoothness", "Concavity"]]
+)
+cancer_test_predictions = pd.concat(
+    [
+        pd.DataFrame(cancer_test_predictions, columns=["predicted"]),
+        cancer_test.reset_index(drop=True),
+    ],
+    axis=1,
+)  # to add the predictions column to the original test data
+
+cancer_test_predictions
+
+# %% [markdown]
 # ### Compute the accuracy
 #
+# Finally, we can assess our classifier's accuracy. To do this we use the `score` method 
+# from `scikit-learn` to get the statistics about the quality of our model, specifying
+# the `X` and `y` arguments based on `cancer_test`.
+
+# %% tags=["remove-cell"]
 # Finally, we can assess our classifier's accuracy. To do this we use the `metrics` function \index{tidymodels!metrics}
 # from `tidymodels` to get the statistics about the quality of our model, specifying
 # the `truth` and `estimate` arguments:
-#
-# ```{r 06-accuracy}
-# cancer_test_predictions |>
-#   metrics(truth = Class, estimate = .pred_class) |>
-#   filter(.metric == "accuracy")
-# ```
-#
-# ```{r 06-accuracy-2, echo = FALSE, warning = FALSE}
-# cancer_acc_1 <- cancer_test_predictions |> 
-#                 metrics(truth = Class, estimate = .pred_class) |> 
-#                 filter(.metric == 'accuracy')
-# ```
-#
+
+# %%
+# np.random.seed(1)
+
+X_test = cancer_test.loc[:, ["Smoothness", "Concavity"]]
+y_test = cancer_test["Class"]
+
+cancer_acc_1 = knn_fit.score(X_test, y_test)
+
+cancer_acc_1
+
+# %% tags=["remove-cell"]
+glue("cancer_acc_1", round(100*cancer_acc_1))
+
+# %% tags=["remove-cell"]
 # In the metrics data frame, we filtered the `.metric` column since we are 
 # interested in the `accuracy` row. Other entries involve more advanced metrics that
 # are beyond the scope of this book. Looking at the value of the `.estimate` variable
 #  shows that the estimated accuracy of the classifier on the test data 
 # was `r round(100*cancer_acc_1$.estimate, 0)`%.
-#
-# We can also look at the *confusion matrix* for the classifier, which shows
-# the table of predicted labels and correct labels, using the `conf_mat` function:
-#
-# ```{r 06-confusionmat}
-# confusion <- cancer_test_predictions |>
-#              conf_mat(truth = Class, estimate = .pred_class)
-#
-# confusion
-# ```
-#
-# ```{r 06-confusionmat-2, echo = FALSE}
-# confusionmt <- confusion |> tidy()
-# confu11 <- (confusionmt |> filter(name == "cell_1_1"))$value
-# confu12 <- (confusionmt |> filter(name == "cell_1_2"))$value
-# confu21 <- (confusionmt |> filter(name == "cell_2_1"))$value
-# confu22 <- (confusionmt |> filter(name == "cell_2_2"))$value
-# ```
-#
-# The confusion matrix shows `r confu11` observations were correctly predicted 
-# as malignant, and `r confu22` were correctly predicted as benign. Therefore the classifier labeled 
-# `r confu11` + `r confu22` = `r confu11+confu22` observations 
+
+# %% [markdown]
+# The output shows that the estimated accuracy of the classifier on the test data 
+# was {glue:}`cancer_acc_1`%.
+
+# %% [markdown]
+# We can also look at the *confusion matrix* for the classifier as a `numpy` array using the `confusion_matrix` function:
+
+# %%
+# np.random.seed(1)
+
+confusion = confusion_matrix(
+    cancer_test_predictions["Class"],
+    cancer_test_predictions["predicted"],
+    labels=knn_fit.classes_,
+)
+
+confusion
+
+# %% [markdown]
+# It is hard for us to interpret the confusion matrix as shown above. We could use the `ConfusionMatrixDisplay` function of the `scikit-learn` package to plot the confusion matrix.
+
+# %%
+from sklearn.metrics import ConfusionMatrixDisplay
+
+confusion_display = ConfusionMatrixDisplay(
+    confusion_matrix=confusion, display_labels=knn_fit.classes_
+)
+confusion_display.plot()
+
+# %% tags=["remove-cell"]
+glue("confu11", confusion[1, 1])
+glue("confu00", confusion[0, 0])
+glue("confu10", confusion[1, 0])
+glue("confu01", confusion[0, 1])
+glue("confu11_00", confusion[1, 1] + confusion[0, 0])
+glue("confu10_11", confusion[1, 0] + confusion[1, 1])
+glue("confu_fal_neg", round(100 * confusion[1, 0] / (confusion[1, 0] + confusion[1, 1])))
+
+# %% [markdown]
+# The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
+# as malignant, and {glue:}`confu00` were correctly predicted as benign. Therefore the classifier labeled 
+# {glue:}`confu11` + {glue:}`confu00` = {glue:}`confu11_00` observations 
 # correctly. It also shows that the classifier made some mistakes; in particular,
-# it classified  `r confu21` observations as benign when they were truly malignant,
-# and `r confu12` observations as malignant when they were truly benign. 
-#
+# it classified {glue:}`confu10` observations as benign when they were truly malignant,
+# and {glue:}`confu01` observations as malignant when they were truly benign.
+
+# %% [markdown]
 # ### Critically analyze performance
 #
-# We now know that the classifier was `r round(100*cancer_acc_1$.estimate,0)`% accurate
+# We now know that the classifier was {glue:}`cancer_acc_1`% accurate
 # on the test data set. That sounds pretty good! Wait, *is* it good? 
 # Or do we need something higher?
 #
@@ -480,36 +640,30 @@
 #
 # As an example, in the breast cancer data, recall the proportions of benign and malignant
 # observations in the training data are as follows:
-#
-# ```{r 06-proportions}
-# cancer_proportions
-# ```
-#
-# ```{r 06-proportions-2, echo = FALSE, warning = FALSE}
-# cancer_propn_1 <- cancer_proportions |>
-#                 filter(Class == 'B') |>
-#                 select(percent)
-# ```
-#
+
+# %%
+cancer_proportions
+
+# %% [markdown]
 # Since the benign class represents the majority of the training data,
 # the majority classifier would *always* predict that a new observation
 # is benign. The estimated accuracy of the majority classifier is usually
 # fairly close to the majority class proportion in the training data.
 # In this case, we would suspect that the majority classifier will have 
-# an accuracy of around `r round(cancer_propn_1[1,1], 0)`%.
+# an accuracy of around {glue:}`cancer_train_b_prop`%.
 # The $K$-nearest neighbors classifier we built does quite a bit better than this, 
-# with an accuracy of `r round(100*cancer_acc_1$.estimate, 0)`%. 
+# with an accuracy of {glue:}`cancer_acc_1`%. 
 # This means that from the perspective of accuracy,
 # the $K$-nearest neighbors classifier improved quite a bit on the basic
 # majority classifier. Hooray! But we still need to be cautious; in 
 # this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 # patients who actually need medical care. The confusion matrix above shows
-# that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign (`r confu21`
-# out of `r confu11+confu21` malignant tumors, or `r round(100*(confu21)/(confu11+confu21))`%!).
+# that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
 # Therefore, even though the accuracy improved upon the majority classifier,
 # our critical analysis suggests that this classifier may not have appropriate performance
 # for the application.
-#
+
+# %% [markdown]
 # ## Tuning the classifier
 #
 # The vast majority of predictive models in statistics and machine learning have
@@ -532,7 +686,8 @@
 # how to use it to help you pick a good parameter value for your classifier.
 #
 # **And remember:** don't touch the test set during the tuning process. Tuning is a part of model training!
-#
+
+# %% [markdown]
 # ### Cross-validation
 #
 # The first step in choosing the parameter $K$ is to be able to evaluate the 
@@ -559,8 +714,9 @@
 # Let's investigate this idea in R! In particular, we will generate five different train/validation
 # splits of our overall training data, train five different $K$-nearest neighbors
 # models, and evaluate their accuracy. We will start with just a single
-# split. 
-#
+# split.
+
+# %% [markdown]
 # ```{r 06-five-splits-seed, echo = FALSE, warning = FALSE, message = FALSE}
 # # hidden seed
 # set.seed(1)
@@ -598,7 +754,8 @@
 #
 # acc
 # ```
-#
+
+# %% [markdown]
 # ```{r 06-five-splits-loop, echo = FALSE, message = FALSE, warning = FALSE}
 # accuracies <- c()
 # for (i in 1:5) {
@@ -635,7 +792,8 @@
 #   accuracies <- append(accuracies, acc_)
 # }
 # ```
-#
+
+# %% [markdown]
 # The accuracy estimate using this split is `r round(100*acc,1)`%.
 # Now we repeat the above code 4 more times, which generates 4 more splits.
 # Therefore we get five different shuffles of the data, and therefore five different values for
@@ -657,18 +815,21 @@
 # This procedure is shown in Figure \@ref(fig:06-cv-image).
 # Here, $C=5$ different chunks of the data set are used,
 # resulting in 5 different choices for the **validation set**; we call this
-# *5-fold* cross-validation. 
-#
+# *5-fold* cross-validation.
+
+# %% [markdown]
 # ```{r 06-cv-image, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "5-fold cross-validation.", fig.pos = "H", out.extra="", fig.retina = 2, out.width = "100%"}
 # knitr::include_graphics("img/cv.png")
 # ```
-#
+
+# %% [markdown]
 # To perform 5-fold cross-validation in R with `tidymodels`, we use another
 # function: `vfold_cv`. \index{tidymodels!vfold\_cv}\index{cross-validation!vfold\_cv} This function splits our training data into `v` folds
 # automatically. We set the `strata` argument to the categorical label variable
 # (here, `Class`) to ensure that the training and validation subsets contain the
 # right proportions of each category of observation.
-#
+
+# %% [markdown]
 # ```{r 06-vfold-seed, echo = FALSE, warning = FALSE, message = FALSE}
 # # hidden seed
 # set.seed(14) 
@@ -678,7 +839,8 @@
 # cancer_vfold <- vfold_cv(cancer_train, v = 5, strata = Class)
 # cancer_vfold
 # ```
-#
+
+# %% [markdown]
 # Then, when we create our data analysis workflow, we use the `fit_resamples` function \index{cross-validation!fit\_resamples}\index{tidymodels!fit\_resamples}
 # instead of the `fit` function for training. This runs cross-validation on each
 # train/validation split. 

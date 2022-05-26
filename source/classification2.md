@@ -419,6 +419,8 @@ cancer_test.info()
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+
 glue("cancer_train_nrow", len(cancer_train))
 glue("cancer_test_nrow", len(cancer_test))
 ```
@@ -639,6 +641,8 @@ glue("confu00", confusion[0, 0])
 glue("confu10", confusion[1, 0])
 glue("confu01", confusion[0, 1])
 glue("confu11_00", confusion[1, 1] + confusion[0, 0])
+glue("confu10_11", confusion[1, 0] + confusion[1, 1])
+glue("confu_fal_neg", round(100 * confusion[1, 0] / (confusion[1, 0] + confusion[1, 1])))
 ```
 
 The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
@@ -652,7 +656,7 @@ and {glue:}`confu01` observations as malignant when they were truly benign.
 
 ### Critically analyze performance
 
-We now know that the classifier was `r round(100*cancer_acc_1$.estimate,0)`% accurate
+We now know that the classifier was {glue:}`cancer_acc_1`% accurate
 on the test data set. That sounds pretty good! Wait, *is* it good? 
 Or do we need something higher?
 
@@ -685,35 +689,24 @@ mean the classifier is working well enough for your application.
 As an example, in the breast cancer data, recall the proportions of benign and malignant
 observations in the training data are as follows:
 
-+++
-
-```{r 06-proportions}
+```{code-cell} ipython3
 cancer_proportions
 ```
-
-```{r 06-proportions-2, echo = FALSE, warning = FALSE}
-cancer_propn_1 <- cancer_proportions |>
-                filter(Class == 'B') |>
-                select(percent)
-```
-
-+++
 
 Since the benign class represents the majority of the training data,
 the majority classifier would *always* predict that a new observation
 is benign. The estimated accuracy of the majority classifier is usually
 fairly close to the majority class proportion in the training data.
 In this case, we would suspect that the majority classifier will have 
-an accuracy of around `r round(cancer_propn_1[1,1], 0)`%.
+an accuracy of around {glue:}`cancer_train_b_prop`%.
 The $K$-nearest neighbors classifier we built does quite a bit better than this, 
-with an accuracy of `r round(100*cancer_acc_1$.estimate, 0)`%. 
+with an accuracy of {glue:}`cancer_acc_1`%. 
 This means that from the perspective of accuracy,
 the $K$-nearest neighbors classifier improved quite a bit on the basic
 majority classifier. Hooray! But we still need to be cautious; in 
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
-that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign (`r confu21`
-out of `r confu11+confu21` malignant tumors, or `r round(100*(confu21)/(confu11+confu21))`%!).
+that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
 Therefore, even though the accuracy improved upon the majority classifier,
 our critical analysis suggests that this classifier may not have appropriate performance
 for the application.
@@ -1688,3 +1681,6 @@ and guidance that the worksheets provide will function as intended.
   Finally, Chapter 6 covers a number of methods for selecting predictor
   variables. Note that while this book is still a very accessible introductory
   text, it requires a bit more mathematical background than we require.
+
+```{bibliography}
+```

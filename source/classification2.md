@@ -293,24 +293,24 @@ In the remainder of the textbook, we will set the seed once at the beginning of 
 
 ## Evaluating accuracy with `scikit-learn`
 Back to evaluating classifiers now!
-In R, we can use the `tidymodels` package \index{tidymodels} not only to perform $K$-nearest neighbors
+In Python, we can use the `scikit-learn` package \index{tidymodels} not only to perform $K$-nearest neighbors
 classification, but also to assess how well our classification worked. 
-Let's work through an example of how to use tools from `tidymodels` to evaluate a classifier
+Let's work through an example of how to use tools from `scikit-learn` to evaluate a classifier
  using the breast cancer data set from the previous chapter.
 We begin the analysis by loading the packages we require,
 reading in the breast cancer data,
 and then making a quick scatter plot visualization \index{visualization!scatter} of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
-You will also notice that we set the random seed here at the beginning of the analysis
-using the `set.seed` function, as described in Section {ref}`randomseeds`.
+You will also notice that we set the random seed using either the `np.random.seed` function
+or `random_state` argument, as described in Section {ref}`randomseeds`.
 
 ```{code-cell} ipython3
 # load packages
 import altair as alt
 import pandas as pd
 
-# set the seed
-np.random.seed(4235)
+# # set the seed
+# np.random.seed(4235)
 
 # load data
 cancer = pd.read_csv("data/unscaled_wdbc.csv")
@@ -761,100 +761,108 @@ different train/validation splits, we'll get a better estimate of accuracy,
 which will lead to a better choice of the number of neighbors $K$ for the
 overall set of training data. 
 
-Let's investigate this idea in R! In particular, we will generate five different train/validation
+Let's investigate this idea in Python! In particular, we will generate five different train/validation
 splits of our overall training data, train five different $K$-nearest neighbors
 models, and evaluate their accuracy. We will start with just a single
 split.
 
-+++
+```{code-cell} ipython3
+# # hidden seed
+# np.random.seed(1)
 
-```{r 06-five-splits-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# hidden seed
-set.seed(1)
-```
-
-```{r 06-five-splits}
 # create the 25/75 split of the training data into training and validation
-cancer_split <- initial_split(cancer_train, prop = 0.75, strata = Class)
-cancer_subtrain <- training(cancer_split)
-cancer_validation <- testing(cancer_split)
+cancer_subtrain, cancer_validation = train_test_split(
+    cancer_train, test_size=0.25, random_state=1
+)
 
-# recreate the standardization recipe from before 
-# (since it must be based on the training data)
-cancer_recipe <- recipe(Class ~ Smoothness + Concavity, 
-                        data = cancer_subtrain) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
-
-# fit the knn model (we can reuse the old knn_spec model from before)
-knn_fit <- workflow() |>
-  add_recipe(cancer_recipe) |>
-  add_model(knn_spec) |>
-  fit(data = cancer_subtrain)
+# could reuse the standardization preprocessor from before
+# (but now we want to fit with the cancer_subtrain)
+X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_subtrain["Class"]
+knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
 
 # get predictions on the validation data
-validation_predicted <- predict(knn_fit, cancer_validation) |>
-  bind_cols(cancer_validation)
+validation_predicted = knn_fit.predict(
+    cancer_validation.loc[:, ["Smoothness", "Concavity"]]
+)
+validation_predicted = pd.concat(
+    [
+        pd.DataFrame(validation_predicted, columns=["predicted"]),
+        cancer_validation.reset_index(drop=True),
+    ],
+    axis=1,
+)  # to add the predictions column to the original test data
 
 # compute the accuracy
-acc <- validation_predicted |>
-  metrics(truth = Class, estimate = .pred_class) |>
-  filter(.metric == "accuracy") |>
-  select(.estimate) |>
-  pull()
+X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
+y_valid = cancer_validation["Class"]
+acc = knn_fit.score(X_valid, y_valid)
 
 acc
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 06-five-splits-loop, echo = FALSE, message = FALSE, warning = FALSE}
-accuracies <- c()
-for (i in 1:5) {
-  set.seed(i) # makes the random selection of rows reproducible
-
-  # create the 25/75 split of the training data into training and validation
-  cancer_split <- initial_split(cancer_train, prop = 0.75, strata = Class)
-  cancer_subtrain <- training(cancer_split)
-  cancer_validation <- testing(cancer_split)
-
-  # recreate the standardization recipe from before 
-  # (since it must be based on the training data)
-  cancer_recipe <- recipe(Class ~ Smoothness + Concavity, 
-                          data = cancer_subtrain) |>
-    step_scale(all_predictors()) |>
-    step_center(all_predictors())
-
-  # fit the knn model (we can reuse the old knn_spec model from before)
-  knn_fit <- workflow() |>
-    add_recipe(cancer_recipe) |>
-    add_model(knn_spec) |>
-    fit(data = cancer_subtrain)
-
-  # get predictions on the validation data
-  validation_predicted <- predict(knn_fit, cancer_validation) |>
-    bind_cols(cancer_validation)
-
-  # compute the accuracy
-  acc_ <- validation_predicted |>
-    metrics(truth = Class, estimate = .pred_class) |>
-    filter(.metric == "accuracy") |>
-    select(.estimate) |>
-    pull()
-  accuracies <- append(accuracies, acc_)
-}
+glue(f"acc_seed1", round(100 * acc, 1))
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-The accuracy estimate using this split is `r round(100*acc,1)`%.
+accuracies = []
+for i in range(1, 6):
+    # # hidden seed
+    # np.random.seed(i)
+
+    # create the 25/75 split of the training data into training and validation
+    cancer_subtrain, cancer_validation = train_test_split(
+        cancer_train, test_size=0.25, random_state=i
+    )
+
+    # could reuse the standardization preprocessor from before
+    # (but now we want to fit with the cancer_subtrain)
+    X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
+    y = cancer_subtrain["Class"]
+    knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+
+    # get predictions on the validation data
+    validation_predicted = knn_fit.predict(
+        cancer_validation.loc[:, ["Smoothness", "Concavity"]]
+    )
+    validation_predicted = pd.concat(
+        [
+            pd.DataFrame(validation_predicted, columns=["predicted"]),
+            cancer_validation.reset_index(drop=True),
+        ],
+        axis=1,
+    )  # to add the predictions column to the original test data
+
+    # compute the accuracy
+    X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
+    y_valid = cancer_validation["Class"]
+    acc_ = knn_fit.score(X_valid, y_valid)
+    accuracies.append(acc_)
+accuracies
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+for i in range(1, 6):
+    glue(f"acc_split{i}", round(100 * accuracies[i-1], 1))
+glue("avg_5_splits", round(100 * sum(accuracies) / len(accuracies)))
+```
+
+The accuracy estimate using this split is {glue:}`acc_seed1`%.
 Now we repeat the above code 4 more times, which generates 4 more splits.
 Therefore we get five different shuffles of the data, and therefore five different values for
-accuracy: `r sprintf("%.1f%%", round(100*accuracies,1))`. None of these values are
+accuracy: {glue:}`acc_split1`%, {glue:}`acc_split2`%, {glue:}`acc_split3`%, 
+{glue:}`acc_split4`%, {glue:}`acc_split5`%. None of these values are
 necessarily "more correct" than any other; they're
 just five estimates of the true, underlying accuracy of our classifier built
 using our overall training data. We can combine the estimates by taking their
-average (here `r round(100*mean(accuracies),0)`%) to try to get a single assessment of our
+average (here {glue:}`avg_5_splits`%) to try to get a single assessment of our
 classifier's accuracy; this has the effect of reducing the influence of any one
 (un)lucky validation set on the estimate. 
 
@@ -865,81 +873,123 @@ validation set only a single time. The name for this strategy is
 data** into $C$ evenly sized chunks. Then, iteratively use $1$ chunk as the
 **validation set** and combine the remaining $C-1$ chunks 
 as the **training set**. 
-This procedure is shown in Figure \@ref(fig:06-cv-image).
+This procedure is shown in {numref}`fig:06-cv-image`.
 Here, $C=5$ different chunks of the data set are used,
 resulting in 5 different choices for the **validation set**; we call this
 *5-fold* cross-validation.
 
 +++
 
-```{r 06-cv-image, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "5-fold cross-validation.", fig.pos = "H", out.extra="", fig.retina = 2, out.width = "100%"}
-knitr::include_graphics("img/cv.png")
+```{figure} img/cv.png
+:name: fig:06-cv-image
+:figclass: caption-hack
+
+5-fold cross-validation.
 ```
 
 +++
 
-To perform 5-fold cross-validation in R with `tidymodels`, we use another
-function: `vfold_cv`. \index{tidymodels!vfold\_cv}\index{cross-validation!vfold\_cv} This function splits our training data into `v` folds
-automatically. We set the `strata` argument to the categorical label variable
-(here, `Class`) to ensure that the training and validation subsets contain the
+To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
+function: `cross_validate`. This function splits our training data into `cv` folds
+automatically. 
+According to its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html), the parameter `cv`
+
+> For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, `StratifiedKFold` is used.
+
+This means `cross_validate` will ensure that the training and validation subsets contain the
 right proportions of each category of observation.
 
 +++
 
-```{r 06-vfold-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# hidden seed
-set.seed(14) 
+When we run the `cross_validate` function, cross-validation is carried out on each
+train/validation split. We can set `return_train_score=True` to obtain the training scores as well as the validation scores. The `cross_validate` function outputs a dictionary, and we use `pd.DataFrame` to convert it to a `pandas` dataframe for better visualization. (Noteworthy, the `test_score` column is actually the validation scores that we are interested in.)
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# To perform 5-fold cross-validation in R with `tidymodels`, we use another
+# function: `vfold_cv`. \index{tidymodels!vfold\_cv}\index{cross-validation!vfold\_cv} This function splits our training data into `v` folds
+# automatically. We set the `strata` argument to the categorical label variable
+# (here, `Class`) to ensure that the training and validation subsets contain the
+# right proportions of each category of observation.
 ```
 
-```{r 06-vfold}
-cancer_vfold <- vfold_cv(cancer_train, v = 5, strata = Class)
-cancer_vfold
+```{code-cell} ipython3
+cancer_pipe = make_pipeline(cancer_preprocessor, knn_spec)
+X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_subtrain["Class"]
+cv_5 = cross_validate(
+    estimator=cancer_pipe,
+    X=X,
+    y=y,
+    cv=5,
+    return_train_score=True,
+)
+
+cv_5_df = pd.DataFrame(cv_5)
+cv_5_df
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-Then, when we create our data analysis workflow, we use the `fit_resamples` function \index{cross-validation!fit\_resamples}\index{tidymodels!fit\_resamples}
-instead of the `fit` function for training. This runs cross-validation on each
-train/validation split. 
-
-```{r 06-vfold-workflow-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# hidden seed
-set.seed(1)
+# Then, when we create our data analysis workflow, we use the `fit_resamples` function \index{cross-validation!fit\_resamples}\index{tidymodels!fit\_resamples}
+# instead of the `fit` function for training. This runs cross-validation on each
+# train/validation split. 
 ```
 
-```{r 06-vfold-workflow}
-# recreate the standardization recipe from before 
-# (since it must be based on the training data)
-cancer_recipe <- recipe(Class ~ Smoothness + Concavity, 
-                        data = cancer_train) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
-
-# fit the knn model (we can reuse the old knn_spec model from before)
-knn_fit <- workflow() |>
-  add_recipe(cancer_recipe) |>
-  add_model(knn_spec) |>
-  fit_resamples(resamples = cancer_vfold)
-
-knn_fit
-```
-
-The `collect_metrics` \index{tidymodels!collect\_metrics}\index{cross-validation!collect\_metrics} function is used to aggregate the *mean* and *standard error*
-of the classifier's validation accuracy across the folds. You will find results
-related to the accuracy in the row with `accuracy` listed under the `.metric` column. 
+We can then aggregate the *mean* and *standard error*
+of the classifier's validation accuracy across the folds. 
 You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
-error (`std_err`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
-is beyond the scope of this chapter; but roughly, if your estimated mean is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2)` and standard
-error is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2)`, you can expect the *true* average accuracy of the 
-classifier to be somewhere roughly between `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) - round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% and `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) + round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% (although it may
-fall outside this range). You may ignore the other columns in the metrics data frame,
-as they do not provide any additional insight.
-You can also ignore the entire second row with `roc_auc` in the `.metric` column,
-as it is beyond the scope of this book.
+error (`std`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
+is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:}`cv_5_mean` and standard
+error is {glue:}`cv_5_std`, you can expect the *true* average accuracy of the 
+classifier to be somewhere roughly between {glue:}`cv_5_lower`% and {glue:}`cv_5_upper`% (although it may
+fall outside this range). You may ignore the other columns in the metrics data frame.
 
-```{r 06-vfold-metrics}
-knn_fit |> 
-  collect_metrics() 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# The `collect_metrics` \index{tidymodels!collect\_metrics}\index{cross-validation!collect\_metrics} function is used to aggregate the *mean* and *standard error*
+# of the classifier's validation accuracy across the folds. You will find results
+# related to the accuracy in the row with `accuracy` listed under the `.metric` column. 
+# You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
+# error (`std_err`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
+# is beyond the scope of this chapter; but roughly, if your estimated mean is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2)` and standard
+# error is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2)`, you can expect the *true* average accuracy of the 
+# classifier to be somewhere roughly between `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) - round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% and `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) + round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% (although it may
+# fall outside this range). You may ignore the other columns in the metrics data frame,
+# as they do not provide any additional insight.
+# You can also ignore the entire second row with `roc_auc` in the `.metric` column,
+# as it is beyond the scope of this book.
+```
+
+```{code-cell} ipython3
+cv_5_metrics = cv_5_df.aggregate(func=['mean', 'std'])
+cv_5_metrics
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("cv_5_mean", round(cv_5_metrics.loc["mean", "test_score"], 2))
+glue("cv_5_std", round(cv_5_metrics.loc["std", "test_score"], 2))
+glue(
+    "cv_5_upper",
+    round(100
+    * (
+        round(cv_5_metrics.loc["mean", "test_score"], 2)
+        + round(cv_5_metrics.loc["std", "test_score"], 2)
+    )),
+)
+glue(
+    "cv_5_lower",
+    round(100
+    * (
+        round(cv_5_metrics.loc["mean", "test_score"], 2)
+        - round(cv_5_metrics.loc["std", "test_score"], 2)
+    )),
+)
 ```
 
 We can choose any number of folds, and typically the more we use the better our
@@ -952,6 +1002,8 @@ neighbors), and the speed of your computer. In practice, this is a
 trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
 we will try 10-fold cross-validation to see if we get a lower standard error:
 
++++
+
 ```{r 06-10-fold}
 cancer_vfold <- vfold_cv(cancer_train, v = 10, strata = Class)
 
@@ -963,6 +1015,9 @@ vfold_metrics <- workflow() |>
 
 vfold_metrics
 ```
+
++++
+
 In this case, using 10-fold instead of 5-fold cross validation did reduce the standard error, although
 by only an insignificant amount. In fact, due to the randomness in how the data are split, sometimes
 you might even end up with a *higher* standard error when increasing the number of folds!
@@ -970,6 +1025,8 @@ We can make the reduction in standard error more dramatic by increasing the numb
 by a large amount. In the following code we show the result when $C = 50$; 
 picking such a large number of folds often takes a long time to run in practice, 
 so we usually stick to 5 or 10.
+
++++
 
 ```{r 06-50-fold-seed, echo = FALSE, warning = FALSE, message = FALSE}
 # hidden seed
@@ -986,6 +1043,8 @@ vfold_metrics_50 <- workflow() |>
                   collect_metrics()
 vfold_metrics_50
 ```
+
++++
 
 ### Parameter value selection
 

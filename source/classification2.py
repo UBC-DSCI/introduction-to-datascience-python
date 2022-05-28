@@ -84,9 +84,9 @@ from myst_nb import glue
 # - Describe what training, validation, and test data sets are and how they are used in classification.
 # - Split data into training, validation, and test data sets.
 # - Describe what a random seed is and its importance in reproducible data analysis.
-# - Set the random seed in R using the `set.seed` function.
-# - Evaluate classification accuracy in R using a validation data set and appropriate metrics.
-# - Execute cross-validation in R to choose the number of neighbors in a $K$-nearest neighbors classifier.
+# - Set the random seed in Python using the `numpy.random.seed` function or `random_state` argument in some of the `scikit-learn` functions.
+# - Evaluate classification accuracy in Python using a validation data set and appropriate metrics.
+# - Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
 # - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
 
 # %% [markdown]
@@ -484,7 +484,7 @@ cancer_preprocessor = make_column_transformer(
 # hidden seed
 np.random.seed(1)
 
-knn_spec = KNeighborsClassifier(n_neighbors=3, weights="uniform")
+knn_spec = KNeighborsClassifier(n_neighbors=3)  ## weights="uniform"
 
 X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
@@ -902,19 +902,23 @@ glue("cv_5_mean", round(cv_5_metrics.loc["mean", "test_score"], 2))
 glue("cv_5_std", round(cv_5_metrics.loc["std", "test_score"], 2))
 glue(
     "cv_5_upper",
-    round(100
-    * (
-        round(cv_5_metrics.loc["mean", "test_score"], 2)
-        + round(cv_5_metrics.loc["std", "test_score"], 2)
-    )),
+    round(
+        100
+        * (
+            round(cv_5_metrics.loc["mean", "test_score"], 2)
+            + round(cv_5_metrics.loc["std", "test_score"], 2)
+        )
+    ),
 )
 glue(
     "cv_5_lower",
-    round(100
-    * (
-        round(cv_5_metrics.loc["mean", "test_score"], 2)
-        - round(cv_5_metrics.loc["std", "test_score"], 2)
-    )),
+    round(
+        100
+        * (
+            round(cv_5_metrics.loc["mean", "test_score"], 2)
+            - round(cv_5_metrics.loc["std", "test_score"], 2)
+        )
+    ),
 )
 
 # %% [markdown]
@@ -928,20 +932,28 @@ glue(
 # trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
 # we will try 10-fold cross-validation to see if we get a lower standard error:
 
-# %% [markdown]
-# ```{r 06-10-fold}
-# cancer_vfold <- vfold_cv(cancer_train, v = 10, strata = Class)
-#
-# vfold_metrics <- workflow() |>
-#                   add_recipe(cancer_recipe) |>
-#                   add_model(knn_spec) |>
-#                   fit_resamples(resamples = cancer_vfold) |>
-#                   collect_metrics()
-#
-# vfold_metrics
-# ```
+# %%
+cv_10 = cross_validate(
+    estimator=cancer_pipe,
+    X=X,
+    y=y,
+    cv=10,
+    return_train_score=True,
+)
+
+cv_10_df = pd.DataFrame(cv_10)
+cv_10_metrics = cv_10_df.aggregate(func=['mean', 'std'])
+cv_10_metrics
 
 # %% [markdown]
+# In this case, using 10-fold instead of 5-fold cross validation did increase the standard error. In fact, due to the randomness in how the data are split, sometimes
+# you might even end up with a *lower* standard error when increasing the number of folds!
+# The increase in standard error can become more dramatic by increasing the number of folds 
+# by a large amount. In the following code we show the result when $C = 50$; 
+# picking such a large number of folds often takes a long time to run in practice, 
+# so we usually stick to 5 or 10.
+
+# %% tags=["remove-cell"]
 # In this case, using 10-fold instead of 5-fold cross validation did reduce the standard error, although
 # by only an insignificant amount. In fact, due to the randomness in how the data are split, sometimes
 # you might even end up with a *higher* standard error when increasing the number of folds!
@@ -950,35 +962,51 @@ glue(
 # picking such a large number of folds often takes a long time to run in practice, 
 # so we usually stick to 5 or 10.
 
-# %% [markdown]
-# ```{r 06-50-fold-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# # hidden seed
-# set.seed(1)
-# ```
-#
-# ```{r 06-50-fold}
-# cancer_vfold_50 <- vfold_cv(cancer_train, v = 50, strata = Class)
-#
-# vfold_metrics_50 <- workflow() |>
-#                   add_recipe(cancer_recipe) |>
-#                   add_model(knn_spec) |>
-#                   fit_resamples(resamples = cancer_vfold_50) |>
-#                   collect_metrics()
-# vfold_metrics_50
-# ```
+# %%
+cv_50 = cross_validate(
+    estimator=cancer_pipe,
+    X=X,
+    y=y,
+    cv=50,
+    return_train_score=True,
+)
+
+cv_50_df = pd.DataFrame(cv_50)
+cv_50_metrics = cv_50_df.aggregate(func=['mean', 'std'])
+cv_50_metrics
+
+# %% tags=["remove-cell"]
+glue("cv_10_mean", round(100 * cv_10_metrics.loc["mean", "test_score"]))
 
 # %% [markdown]
 # ### Parameter value selection
 #
 # Using 5- and 10-fold cross-validation, we have estimated that the prediction
-# accuracy of our classifier is somewhere around `r round(100*(vfold_metrics |> filter(.metric == "accuracy"))$mean,0)`%. 
+# accuracy of our classifier is somewhere around {glue:}`cv_10_mean`%. 
 # Whether that is good or not
 # depends entirely on the downstream application of the data analysis. In the
 # present situation, we are trying to predict a tumor diagnosis, with expensive,
 # damaging chemo/radiation therapy or patient death as potential consequences of
 # misprediction. Hence, we might like to 
-# do better than `r round(100*(vfold_metrics |> filter(.metric == "accuracy"))$mean,0)`% for this application.  
+# do better than {glue:}`cv_10_mean`% for this application.  
 #
+# In order to improve our classifier, we have one choice of parameter: the number of
+# neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
+# classifier, we can use cross-validation to calculate an accuracy for each value
+# of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
+# best accuracy. The `scikit-learn` package collection provides 2 build-in methods for tuning parameters. Each parameter in the model can be adjusted rather than given a specific value. We can define a set of values for each hyperparameters and find the best parameters in this set.
+#
+# - Exhaustive grid search
+#     - [`sklearn.model_selection.GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
+#     - A user specifies a set of values for each hyperparameter.
+#     - The method considers product of the sets and then evaluates each combination one by one.
+#     
+# - Randomized hyperparameter optimization
+#     - [`sklearn.model_selection.RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
+#     - Samples configurations at random until certain budget (e.g., time) is exhausted
+#
+
+# %% tags=["remove-cell"]
 # In order to improve our classifier, we have one choice of parameter: the number of
 # neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
 # classifier, we can use cross-validation to calculate an accuracy for each value
@@ -986,14 +1014,17 @@ glue(
 # best accuracy. The `tidymodels` package collection provides a very simple
 # syntax for tuning models: each parameter in the model to be tuned should be specified
 # as `tune()` in the model specification rather than given a particular value.
-#
-# ```{r 06-range-cross-val}
-# knn_spec <- nearest_neighbor(weight_func = "rectangular", 
-#                              neighbors = tune()) |>
-#   set_engine("kknn") |>
-#   set_mode("classification")
-# ```
-#
+
+# %% [markdown]
+# Before we use `GridSearchCV` or `RandomizedSearchCV`, we should define the parameter grid by passing the set of values for each parameters that you would like to tune in a Python dictionary; below we create the `param_grid` dictionary with `kneighborsclassifier__n_neighbors` as the key and pair it with the values we would like to tune from 1 to 100 (stepping by 5) using the `range` function.  We would also need to redefine the pipeline to use default values for parameters. 
+
+# %%
+param_grid = {
+    "kneighborsclassifier__n_neighbors": range(1, 100, 5),
+}
+cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+
+# %% tags=["remove-cell"]
 # Then instead of using `fit` or `fit_resamples`, we will use the `tune_grid` function \index{cross-validation!tune\_grid}\index{tidymodels!tune\_grid}
 # to fit the model for each value in a range of parameter values. 
 # In particular, we first create a data frame with a `neighbors`
@@ -1001,7 +1032,26 @@ glue(
 # data frame with the `neighbors` variable containing values from 1 to 100 (stepping by 5) using 
 # the `seq` function.
 # Then we pass that data frame to the `grid` argument of `tune_grid`.
-#
+
+# %% [markdown]
+# Then, let us create the `GridSearchCV` object and the `RandomizedSearchCV` object by passing the new pipeline `cancer_tune_pipe` and the `param_grid` dictionary to the respective functions. `n_jobs=-1` means using all the available processors.
+
+# %%
+cancer_tune_grid = GridSearchCV(
+    estimator=cancer_tune_pipe,
+    param_grid=param_grid,
+    n_jobs=-1,
+    return_train_score=True,
+)
+cancer_tune_random = RandomizedSearchCV(
+    estimator=cancer_tune_pipe,
+    param_distributions=param_grid,
+    n_jobs=-1,
+    n_iter=10,
+    return_train_score=True,
+)
+
+# %% [markdown]
 # ```{r 06-range-cross-val-2-seed, echo = FALSE, warning = FALSE, message = FALSE}
 # # hidden seed
 # set.seed(1)
@@ -1021,10 +1071,12 @@ glue(
 #
 # accuracies
 # ```
-#
+
+# %% [markdown]
 # We can decide which number of neighbors is best by plotting the accuracy versus $K$,
 # as shown in Figure \@ref(fig:06-find-k).
-#
+
+# %% [markdown]
 # ```{r 06-find-k,  fig.height = 3.5, fig.width = 4, fig.cap= "Plot of estimated accuracy versus the number of neighbors."}
 # accuracy_vs_k <- ggplot(accuracies, aes(x = neighbors, y = mean)) +
 #   geom_point() +
@@ -1034,7 +1086,8 @@ glue(
 #
 # accuracy_vs_k
 # ```
-#
+
+# %% [markdown]
 # Setting the number of 
 # neighbors to $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors`
 # provides the highest accuracy (`r (accuracies |> arrange(desc(mean)) |> slice(1) |> pull(mean) |> round(4))*100`%). But there is no exact or perfect answer here;
@@ -1058,7 +1111,8 @@ glue(
 # And finally, $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` does not create a prohibitively expensive
 # computational cost of training. Considering these three points, we would indeed select
 # $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` for the classifier.
-#
+
+# %% [markdown]
 # ### Under/Overfitting
 #
 # To build a bit more intuition, what happens if we keep increasing the number of
@@ -1066,7 +1120,8 @@ glue(
 # Let's specify a much larger range of values of $K$ to try in the `grid` 
 # argument of `tune_grid`. Figure \@ref(fig:06-lots-of-ks) shows a plot of estimated accuracy as 
 # we vary $K$ from 1 to almost the number of observations in the data set.
-#
+
+# %% [markdown]
 # ```{r 06-lots-of-ks-seed, message = FALSE, echo = FALSE, warning = FALSE}
 # # hidden seed
 # set.seed(1)
@@ -1092,7 +1147,8 @@ glue(
 #
 # accuracy_vs_k_lots
 # ```
-#
+
+# %% [markdown]
 # **Underfitting:** \index{underfitting!classification} What is actually happening to our classifier that causes
 # this? As we increase the number of neighbors, more and more of the training
 # observations (and those that are farther and farther away from the point) get a
@@ -1115,7 +1171,8 @@ glue(
 # new data: if we had a different training set, the predictions would be
 # completely different.  In general, if the model *is influenced too much* by the
 # training data, it is said to **overfit** the data.
-#
+
+# %% [markdown]
 # ```{r 06-decision-grid-K, echo = FALSE, message = FALSE, fig.height = 10, fig.width = 10, fig.pos = "H", out.extra="", fig.cap = "Effect of K in overfitting and underfitting."}
 # ks <- c(1, 7, 20, 300)
 # plots <- list()
@@ -1171,11 +1228,16 @@ glue(
 # plot_grid(p_grid, legend, ncol = 1, rel_heights = c(1, 0.2))
 # ```
 #
+
+# %% [markdown]
 # Both overfitting and underfitting are problematic and will lead to a model 
 # that does not generalize well to new data. When fitting a model, we need to strike
 # a balance between the two. You can see these two effects in Figure 
 # \@ref(fig:06-decision-grid-K), which shows how the classifier changes as 
 # we set the number of neighbors $K$ to 1, 7, 20, and 300.
+
+# %% [markdown]
+#
 #
 # ## Summary
 #

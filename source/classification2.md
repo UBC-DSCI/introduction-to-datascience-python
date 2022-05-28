@@ -1085,6 +1085,10 @@ best accuracy. The `scikit-learn` package collection provides 2 build-in methods
     - [`sklearn.model_selection.RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
     - Samples configurations at random until certain budget (e.g., time) is exhausted
 
++++
+
+Let us walk through how to use `GridSearchCV` to tune the model. `RandomizedSearchCV` follows a similar workflow, and you will get to practice both of them in the worksheet. 
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -1097,7 +1101,7 @@ best accuracy. The `scikit-learn` package collection provides 2 build-in methods
 # as `tune()` in the model specification rather than given a particular value.
 ```
 
-Before we use `GridSearchCV` or `RandomizedSearchCV`, we should define the parameter grid by passing the set of values for each parameters that you would like to tune in a Python dictionary; below we create the `param_grid` dictionary with `kneighborsclassifier__n_neighbors` as the key and pair it with the values we would like to tune from 1 to 100 (stepping by 5) using the `range` function.  We would also need to redefine the pipeline to use default values for parameters. 
+Before we use `GridSearchCV` (or `RandomizedSearchCV`), we should define the parameter grid by passing the set of values for each parameters that you would like to tune in a Python dictionary; below we create the `param_grid` dictionary with `kneighborsclassifier__n_neighbors` as the key and pair it with the values we would like to tune from 1 to 100 (stepping by 5) using the `range` function.  We would also need to redefine the pipeline to use default values for parameters.
 
 ```{code-cell} ipython3
 param_grid = {
@@ -1118,71 +1122,110 @@ cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
 # Then we pass that data frame to the `grid` argument of `tune_grid`.
 ```
 
-Then, let us create the `GridSearchCV` object and the `RandomizedSearchCV` object by passing the new pipeline `cancer_tune_pipe` and the `param_grid` dictionary to the respective functions. `n_jobs=-1` means using all the available processors.
+Now, let us create the `GridSearchCV` object and the `RandomizedSearchCV` object by passing the new pipeline `cancer_tune_pipe` and the `param_grid` dictionary to the respective functions. `n_jobs=-1` means using all the available processors.
 
 ```{code-cell} ipython3
 cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
     param_grid=param_grid,
+    cv=10,
     n_jobs=-1,
     return_train_score=True,
 )
-cancer_tune_random = RandomizedSearchCV(
-    estimator=cancer_tune_pipe,
-    param_distributions=param_grid,
-    n_jobs=-1,
-    n_iter=10,
-    return_train_score=True,
-)
 ```
 
-```{r 06-range-cross-val-2-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# hidden seed
-set.seed(1)
+Now, let us fit the model to the training data. The attribute `cv_results_` of the fitted model is a dictionary of `numpy` arrays containing all cross-validation results from different choices of parameters. We can visualize them more clearly through a dataframe.
+
+```{code-cell} ipython3
+X_tune = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+y_tune = cancer_train["Class"]
+
+cancer_model_grid = cancer_tune_grid.fit(X_tune, y_tune)
 ```
 
-```{r 06-range-cross-val-2}
-k_vals <- tibble(neighbors = seq(from = 1, to = 100, by = 5))
-
-knn_results <- workflow() |>
-  add_recipe(cancer_recipe) |>
-  add_model(knn_spec) |>
-  tune_grid(resamples = cancer_vfold, grid = k_vals) |>
-  collect_metrics() 
-
-accuracies <- knn_results |>
-  filter(.metric == "accuracy")
-
-accuracies
+```{code-cell} ipython3
+accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
 ```
 
-+++
+```{code-cell} ipython3
+accuracies_grid.info()
+```
+
+`cv_results_` gives abundant information, but for our purpose, we only focus on `param_kneighborsclassifier__n_neighbors` (the $K$, number of neighbors), `mean_test_score` (the mean validation score across all folds), and `std_test_score` (the standard deviation of the validation scores).
+
+```{code-cell} ipython3
+accuracies_grid[
+    ["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
+]
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+sorted_accuracies = accuracies_grid.sort_values(by='mean_test_score', ascending=False)
+best_k_list = sorted_accuracies[
+    sorted_accuracies["mean_test_score"]
+    == sorted_accuracies.iloc[0, :]["mean_test_score"]
+]["param_kneighborsclassifier__n_neighbors"].tolist()
+
+# If there are more than 1 hyperparameter yielding the highest validation score
+if len(best_k_list) > 1:
+    i = 1
+    for k in best_k_list:
+        glue(f"best_k_{i}", k)
+        i += 1
+else:
+    glue("best_k_unique", best_k_list[0])
+glue("best_acc", round(sorted_accuracies.iloc[0]["mean_test_score"] * 100, 2))
+```
 
 We can decide which number of neighbors is best by plotting the accuracy versus $K$,
-as shown in Figure \@ref(fig:06-find-k).
+as shown in {numref}`fig:06-find-k`.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-output]
 
-```{r 06-find-k,  fig.height = 3.5, fig.width = 4, fig.cap= "Plot of estimated accuracy versus the number of neighbors."}
-accuracy_vs_k <- ggplot(accuracies, aes(x = neighbors, y = mean)) +
-  geom_point() +
-  geom_line() +
-  labs(x = "Neighbors", y = "Accuracy Estimate") + 
-  theme(text = element_text(size = 12))
+accuracy_vs_k = (
+    alt.Chart(accuracies_grid)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X(
+            "param_kneighborsclassifier__n_neighbors",
+            title="Neighbors",
+        ),
+        y=alt.Y(
+            "mean_test_score",
+            title="Accuracy estimate",
+            scale=alt.Scale(domain=(0.85, 0.90)),
+        ),
+    )
+)
 
 accuracy_vs_k
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:06-find-k", accuracy_vs_k)
+```
+
+:::{glue:figure} fig:06-find-k
+:name: fig:06-find-k
+
+Plot of estimated accuracy versus the number of neighbors.
+:::
+
 +++
 
 Setting the number of 
-neighbors to $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors`
-provides the highest accuracy (`r (accuracies |> arrange(desc(mean)) |> slice(1) |> pull(mean) |> round(4))*100`%). But there is no exact or perfect answer here;
-any selection from $K = 30$ and $60$ would be reasonably justified, as all
+neighbors to $K =$ {glue:}`best_k_unique`
+provides the highest accuracy ({glue:}`best_acc`%). But there is no exact or perfect answer here;
+any selection from $K = 20$ and $60$ would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
 classifier. Although the 
-$K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` value is 
+$K =$ {glue:}`best_k_unique` value is 
 higher than the others on this plot,
 that doesn't mean the classifier is actually more accurate with this parameter
 value! Generally, when selecting $K$ (and other parameters for other predictive
@@ -1192,12 +1235,12 @@ models), we are looking for a value where:
 - changing the value to a nearby one (e.g., adding or subtracting a small number) doesn't decrease accuracy too much, so that our choice is reliable in the presence of uncertainty;
 - the cost of training the model is not prohibitive (e.g., in our situation, if $K$ is too large, predicting becomes expensive!).
 
-We know that $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` 
-provides the highest estimated accuracy. Further, Figure \@ref(fig:06-find-k) shows that the estimated accuracy 
-changes by only a small amount if we increase or decrease $K$ near $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors`.
-And finally, $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` does not create a prohibitively expensive
+We know that $K =$ {glue:}`best_k_unique` 
+provides the highest estimated accuracy. Further, {numref}`fig:06-find-k` shows that the estimated accuracy 
+changes by only a small amount if we increase or decrease $K$ near $K =$ {glue:}`best_k_unique`.
+And finally, $K =$ {glue:}`best_k_unique` does not create a prohibitively expensive
 computational cost of training. Considering these three points, we would indeed select
-$K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` for the classifier.
+$K =$ {glue:}`best_k_unique` for the classifier.
 
 +++
 
@@ -1205,37 +1248,58 @@ $K =$ `r (accuracies |> arrange(desc(mean)) |> head(1))$neighbors` for the class
 
 To build a bit more intuition, what happens if we keep increasing the number of
 neighbors $K$? In fact, the accuracy actually starts to decrease! 
-Let's specify a much larger range of values of $K$ to try in the `grid` 
-argument of `tune_grid`. Figure \@ref(fig:06-lots-of-ks) shows a plot of estimated accuracy as 
+Let's specify a much larger range of values of $K$ to try in the `param_grid` 
+argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as 
 we vary $K$ from 1 to almost the number of observations in the data set.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-output]
 
-```{r 06-lots-of-ks-seed, message = FALSE, echo = FALSE, warning = FALSE}
-# hidden seed
-set.seed(1)
-```
+param_grid_lots = {
+    "kneighborsclassifier__n_neighbors": range(1, 385, 10),
+}
 
-```{r 06-lots-of-ks, message = FALSE, fig.height = 3.5, fig.width = 4, fig.cap="Plot of accuracy estimate versus number of neighbors for many K values."}
-k_lots <- tibble(neighbors = seq(from = 1, to = 385, by = 10))
+cancer_tune_grid_lots = GridSearchCV(
+    estimator=cancer_tune_pipe,
+    param_grid=param_grid_lots,
+    cv=10,
+    n_jobs=-1,
+    return_train_score=True,
+)
 
-knn_results <- workflow() |>
-  add_recipe(cancer_recipe) |>
-  add_model(knn_spec) |>
-  tune_grid(resamples = cancer_vfold, grid = k_lots) |>
-  collect_metrics()
+cancer_model_grid_lots = cancer_tune_grid_lots.fit(X_tune, y_tune)
+accuracies_grid_lots = pd.DataFrame(cancer_model_grid_lots.cv_results_)
 
-accuracies <- knn_results |>
-  filter(.metric == "accuracy")
-
-accuracy_vs_k_lots <- ggplot(accuracies, aes(x = neighbors, y = mean)) +
-  geom_point() +
-  geom_line() +
-  labs(x = "Neighbors", y = "Accuracy Estimate") + 
-  theme(text = element_text(size = 12))
+accuracy_vs_k_lots = (
+    alt.Chart(accuracies_grid_lots)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X(
+            "param_kneighborsclassifier__n_neighbors",
+            title="Neighbors",
+        ),
+        y=alt.Y(
+            "mean_test_score",
+            title="Accuracy estimate",
+            scale=alt.Scale(domain=(0.60, 0.90)),
+        ),
+    )
+)
 
 accuracy_vs_k_lots
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:06-lots-of-ks", accuracy_vs_k_lots)
+```
+
+:::{glue:figure} fig:06-lots-of-ks
+:name: fig:06-lots-of-ks
+
+Plot of accuracy estimate versus number of neighbors for many K values.
+:::
 
 +++
 
@@ -1262,74 +1326,106 @@ new data: if we had a different training set, the predictions would be
 completely different.  In general, if the model *is influenced too much* by the
 training data, it is said to **overfit** the data.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 06-decision-grid-K, echo = FALSE, message = FALSE, fig.height = 10, fig.width = 10, fig.pos = "H", out.extra="", fig.cap = "Effect of K in overfitting and underfitting."}
-ks <- c(1, 7, 20, 300)
-plots <- list()
+# create the scatter plot
+colors = ["#86bfef", "#efb13f"]
 
-for (i in 1:length(ks)) {
-  knn_spec <- nearest_neighbor(weight_func = "rectangular", 
-                               neighbors = ks[[i]]) |>
-    set_engine("kknn") |>
-    set_mode("classification")
+cancer_plot = (
+    alt.Chart(
+        cancer_train,
+    )
+    .mark_point(opacity=0.6, filled=True, size=40)
+    .encode(
+        x=alt.X(
+            "Smoothness",
+            scale=alt.Scale(
+                domain=(
+                    cancer_train["Smoothness"].min(),
+                    cancer_train["Smoothness"].max(),
+                )
+            ),
+        ),
+        y=alt.Y(
+            "Concavity",
+            scale=alt.Scale(
+                domain=(
+                    cancer_train["Concavity"].min(),
+                    cancer_train["Concavity"].max(),
+                )
+            ),
+        ),
+        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+    )
+)
 
-  knn_fit <- workflow() |>
-    add_recipe(cancer_recipe) |>
-    add_model(knn_spec) |>
-    fit(data = cancer_train)
+X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_train["Class"]
 
-  # create a prediction pt grid
-  smo_grid <- seq(min(cancer_train$Smoothness), 
-                  max(cancer_train$Smoothness), 
-                  length.out = 100)
-  con_grid <- seq(min(cancer_train$Concavity), 
-                  max(cancer_train$Concavity), 
-                  length.out = 100)
-  scgrid <- as_tibble(expand.grid(Smoothness = smo_grid, 
-                                  Concavity = con_grid))
-  knnPredGrid <- predict(knn_fit, scgrid)
-  prediction_table <- bind_cols(knnPredGrid, scgrid) |> 
-    rename(Class = .pred_class)
+# create a prediction pt grid
+smo_grid = np.linspace(
+    cancer_train["Smoothness"].min(), cancer_train["Smoothness"].max(), 100
+)
+con_grid = np.linspace(
+    cancer_train["Concavity"].min(), cancer_train["Concavity"].max(), 100
+)
+scgrid = np.array(np.meshgrid(smo_grid, con_grid)).reshape(2, -1).T
+scgrid = pd.DataFrame(scgrid, columns=["Smoothness", "Concavity"])
 
-  # plot
-  plots[[i]] <-
-    ggplot() +
-    geom_point(data = cancer_train, 
-               mapping = aes(x = Smoothness, 
-                             y = Concavity, 
-                             color = Class), 
-               alpha = 0.75) +
-    geom_point(data = prediction_table, 
-               mapping = aes(x = Smoothness, 
-                             y = Concavity, 
-                             color = Class), 
-               alpha = 0.02, 
-               size = 5.) +
-    labs(color = "Diagnosis") +
-    ggtitle(paste("K = ", ks[[i]])) +
-    scale_color_manual(labels = c("Malignant", "Benign"), 
-                       values = c("orange2", "steelblue2"))  +
-  theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
-  }
-
-p_no_legend <- lapply(plots, function(x) x + theme(legend.position = "none"))
-legend <- get_legend(plots[[1]] + theme(legend.position = "bottom"))
-p_grid <- plot_grid(plotlist = p_no_legend, ncol = 2)
-plot_grid(p_grid, legend, ncol = 1, rel_heights = c(1, 0.2))
+plot_list = []
+for k in [1, 7, 20, 300]:
+    cancer_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier(n_neighbors=k))
+    cancer_pipe.fit(X, y)
+    
+    knnPredGrid = cancer_pipe.predict(scgrid)
+    prediction_table = scgrid.copy()
+    prediction_table["Class"] = knnPredGrid
+    
+    # add a prediction layer
+    prediction_plot = (
+        alt.Chart(
+            prediction_table,
+            title=f"K = {k}"
+        )
+        .mark_point(opacity=0.2, filled=True, size=20)
+        .encode(
+            x=alt.X("Smoothness"),
+            y=alt.Y("Concavity"),
+            color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        )
+    )
+    plot_list.append(cancer_plot + prediction_plot)
+    
+# (plot_list[0] | plot_list[1]) & (plot_list[2] | plot_list[3])
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue(
+    "fig:06-decision-grid-K",
+    ((plot_list[0] | plot_list[1])
+    & (plot_list[2] | plot_list[3])).configure_legend(
+        orient="bottom", titleAnchor="middle"
+    ),
+)
+```
+
+:::{glue:figure} fig:06-decision-grid-K
+:name: fig:06-decision-grid-K
+
+Effect of K in overfitting and underfitting.
+:::
 
 +++
 
 Both overfitting and underfitting are problematic and will lead to a model 
 that does not generalize well to new data. When fitting a model, we need to strike
-a balance between the two. You can see these two effects in Figure 
-\@ref(fig:06-decision-grid-K), which shows how the classifier changes as 
+a balance between the two. You can see these two effects in {numref}`fig:06-decision-grid-K`, which shows how the classifier changes as 
 we set the number of neighbors $K$ to 1, 7, 20, and 300.
 
 +++
-
-
 
 ## Summary
 
@@ -1342,23 +1438,47 @@ randomly into a training and test data set, using the training set to build the
 classifier, and using the test set to estimate its accuracy. Finally, we
 can tune the classifier (e.g., select the number of neighbors $K$ in $K$-NN)
 by maximizing estimated accuracy via cross-validation. The overall 
-process is summarized in Figure \@ref(fig:06-overview).
+process is summarized in {numref}`fig:06-overview`.
 
-```{r 06-overview, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Overview of KNN classification.", fig.retina = 2, out.width = "100%"}
-knitr::include_graphics("img/train-test-overview.jpeg")
++++
+
+```{figure} img/train-test-overview.jpeg
+:name: fig:06-overview
+:figclass: caption-hack
+
+Overview of KNN classification.
 ```
 
-The overall workflow for performing $K$-nearest neighbors classification using `tidymodels` is as follows:
-\index{tidymodels}\index{recipe}\index{cross-validation}\index{K-nearest neighbors!classification}\index{classification}
++++
 
-1. Use the `initial_split` function to split the data into a training and test set. Set the `strata` argument to the class label variable. Put the test set aside for now.
-2. Use the `vfold_cv` function to split up the training data for cross-validation.
-3. Create a `recipe` that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the `data` argument of the recipe.
-4. Create a `nearest_neighbors` model specification, with `neighbors = tune()`.
-5. Add the recipe and model specification to a `workflow()`, and use the `tune_grid` function on the train/validation splits to estimate the classifier accuracy for a range of $K$ values.
+The overall workflow for performing $K$-nearest neighbors classification using `scikit-learn` is as follows:
+
+1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
+2. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
+3. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
+4. Use the `GridSearchCV` function (or `RandomizedSearchCV`) to estimate the classifier accuracy for a range of $K$ values. Pass the parameter grid and the pipeline defined in step 2 and step 3 as the `param_grid` argument and the `estimator` argument, respectively.
+5. Call `fit` on the `GridSearchCV` instance created in step 4, passing the training data.
 6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
-7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier using the `fit` function.
-8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
+7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
+8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` method.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# The overall workflow for performing $K$-nearest neighbors classification using `tidymodels` is as follows:
+# \index{tidymodels}\index{recipe}\index{cross-validation}\index{K-nearest neighbors!classification}\index{classification}
+
+# 1. Use the `initial_split` function to split the data into a training and test set. Set the `strata` argument to the class label variable. Put the test set aside for now.
+# 2. Use the `vfold_cv` function to split up the training data for cross-validation.
+# 3. Create a `recipe` that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the `data` argument of the recipe.
+# 4. Create a `nearest_neighbors` model specification, with `neighbors = tune()`.
+# 5. Add the recipe and model specification to a `workflow()`, and use the `tune_grid` function on the train/validation splits to estimate the classifier accuracy for a range of $K$ values.
+# 6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
+# 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier using the `fit` function.
+# 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
+```
+
+
 
 In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 
 but there are many other methods we could have used to predict a categorical label. 
@@ -1377,6 +1497,8 @@ the $K$-NN here.
 2. may not perform well with a large number of predictors, and
 3. may not perform well when classes are imbalanced.
 
++++
+
 ## Predictor variable selection
 
 > **Note:** This section is not required reading for the remainder of the textbook. It is included for those readers 
@@ -1391,6 +1513,8 @@ predictors. However, it is **not** the case that using more predictors always
 yields better predictions! In fact, sometimes including irrelevant predictors \index{irrelevant predictors} can
 actually negatively affect classifier performance.
 
++++
+
 ### The effect of irrelevant predictors
 
 Let's take a look at an example where $K$-nearest neighbors performs
@@ -1401,6 +1525,8 @@ variables that we created ourselves using a random number generator.
 The irrelevant variables each take a value of 0 or 1 with equal probability for each observation, regardless
 of what the value `Class` variable takes. In other words, the irrelevant variables have 
 no meaningful relationship with the `Class` variable.
+
++++
 
 ```{r 06-irrelevant-gendata, echo = FALSE, warning = FALSE}
 set.seed(4)
@@ -1419,6 +1545,8 @@ cancer_irrelevant |>
       select(Class, Smoothness, Concavity, Perimeter, Irrelevant1, Irrelevant2)
 ```
 
++++
+
 Next, we build a sequence of $K$-NN classifiers that include `Smoothness`,
 `Concavity`, and `Perimeter` as predictor variables, but also increasingly many irrelevant
 variables. In particular, we create 6 data sets with 0, 5, 10, 15, 20, and 40 irrelevant predictors.
@@ -1431,6 +1559,8 @@ amount to the distance between each pair of observations; the more irrelevant
 variables there are, the more (random) influence they have, and the more they
 corrupt the set of nearest neighbors that vote on the class of the new
 observation to predict.  
+
++++
 
 ```{r 06-performance-irrelevant-features, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Effect of inclusion of irrelevant predictors."}
 # get accuracies after including k irrelevant features
@@ -1511,6 +1641,9 @@ plt_irrelevant_accuracies <- ggplot(res) +
 plt_irrelevant_accuracies
 ```
 
++++
+
+
 Although the accuracy decreases as expected, one surprising thing about 
 Figure \@ref(fig:06-performance-irrelevant-features) is that it shows that the method
 still outperforms the baseline majority classifier (with about `r round(cancer_propn_1[1,1], 0)`% accuracy) 
@@ -1521,6 +1654,9 @@ by increasing the number of neighbors. Of course, because of all the extra noise
 variables, the number of neighbors does not increase smoothly; but the general trend is increasing.
 Figure \@ref(fig:06-fixed-irrelevant-features) corroborates
 this evidence; if we fix the number of neighbors to $K=3$, the accuracy falls off more quickly.
+
++++
+
 
 ```{r 06-neighbors-irrelevant-features, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Tuned number of neighbors for varying number of irrelevant predictors."}
 plt_irrelevant_nghbrs <- ggplot(res) +
@@ -1545,6 +1681,8 @@ plt_irrelevant_nghbrs <- ggplot(res_tmp) +
 
 plt_irrelevant_nghbrs
 ```
+
++++
 
 ### Finding a good subset of predictors
 
@@ -1621,6 +1759,8 @@ training over 1000 candidate models with $m=10$ predictors, forward selection re
 > problem as much; see the additional resources at the end of this chapter for
 > where to learn more about advanced predictor selection methods. 
 
++++
+
 ### Forward selection in R
  
 We now turn to implementing forward selection in R.
@@ -1631,6 +1771,8 @@ Here we will load the modified version of the cancer data with irrelevant
 predictors, and select `Smoothness`, `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`
 as potential predictors, and the `Class` variable as the label.
 We will also extract the column names for the full set of predictor variables.
+
++++
 
 ```{r 06-fwdsel-seed, echo = FALSE, warning = FALSE, message = FALSE}
 # hidden seed
@@ -1652,6 +1794,8 @@ names <- colnames(cancer_subset |> select(-Class))
 cancer_subset
 ```
 
++++
+
 The key idea of the forward selection code is to use the `paste` function (which concatenates strings
 separated by spaces) to create a model formula for each subset of predictors for which we want to build a model.
 The `collapse` argument tells `paste` what to put between the items in the list;
@@ -1660,10 +1804,14 @@ As an example, let's make a model formula for all the predictors,
 which should output something like
 `Class ~ Smoothness + Concavity + Perimeter + Irrelevant1 + Irrelevant2 + Irrelevant3`:
 
++++
+
 ```{r}
 example_formula <- paste("Class", "~", paste(names, collapse="+"))
 example_formula
 ```
+
++++
 
 Finally, we need to write some code that performs the task of sequentially
 finding the best predictor to add to the model.
@@ -1679,6 +1827,8 @@ For each set of predictors to try, we construct a model formula,
 pass it into a `recipe`, build a `workflow` that tunes
 a $K$-NN classifier using 5-fold cross-validation, 
 and finally records the estimated accuracy.
+
++++
 
 ```{r 06-fwdsel-2-seed, warning = FALSE, echo = FALSE, message = FALSE}
 # hidden seed
@@ -1748,6 +1898,8 @@ for (i in 1:n_total) {
 accuracies
 ```
 
++++
+
 Interesting! The forward selection procedure first added the three meaningful variables `Perimeter`,
 `Concavity`, and `Smoothness`, followed by the irrelevant variables. Figure \@ref(fig:06-fwdsel-3)
 visualizes the accuracy versus the number of predictors in the model. You can see that
@@ -1764,6 +1916,8 @@ predictors from the model! It is always worth remembering, however, that what cr
 is an *estimate* of the true accuracy; you have to use your judgement when looking at this plot to decide
 where the elbow occurs, and whether adding a variable provides a meaningful increase in accuracy.
 
++++
+
 ```{r 06-fwdsel-3, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Estimated accuracy versus the number of predictors for the sequence of models built using forward selection.", fig.pos = "H"}
 
 fwd_sel_accuracies_plot <- accuracies |>
@@ -1774,6 +1928,9 @@ fwd_sel_accuracies_plot <- accuracies |>
 
 fwd_sel_accuracies_plot
 ```
+
++++
+
 
 > **Note:** Since the choice of which variables to include as predictors is
 > part of tuning your classifier, you *cannot use your test data* for this

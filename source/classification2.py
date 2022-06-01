@@ -16,36 +16,6 @@
 # %% [markdown]
 # (classification2)=
 # # Classification II: evaluation & tuning
-#
-# ```{r classification2-setup, echo = FALSE, message = FALSE, warning = FALSE}
-# library(gridExtra)
-# library(cowplot)
-# library(stringr)
-# library(knitr)
-# library(ggplot2)
-#
-# knitr::opts_chunk$set(fig.align = "center")
-#
-# print_tidymodels <- function(tidymodels_object) {
-#   if(!is_latex_output()) {
-#     tidymodels_object
-#   } else {
-#     output <- capture.output(tidymodels_object)
-#     
-#     for (i in seq_along(output)) {
-#       if (nchar(output[i]) <= 80) {
-#         cat(output[i], sep = "\n")
-#       } else {
-#         cat(str_sub(output[i], start = 1, end = 80), sep = "\n")
-#         cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = "\n")
-#       }
-#     }
-#   }
-# }
-#
-# theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
-#
-# ```
 
 # %% tags=["remove-cell"]
 import altair as alt
@@ -69,6 +39,8 @@ alt.data_transformers.disable_max_rows()
 # alt.renderers.enable("mimetype")
 
 from myst_nb import glue
+
+pd.options.display.max_colwidth = 100
 
 # %% [markdown]
 # ## Overview 
@@ -1006,7 +978,7 @@ glue("cv_10_mean", round(100 * cv_10_metrics.loc["mean", "test_score"]))
 #     - Samples configurations at random until certain budget (e.g., time) is exhausted
 
 # %% [markdown]
-# Let us walk through how to use `GridSearchCV` to tune the model. `RandomizedSearchCV` follows a similar workflow, and you will get to practice both of them in the worksheet. 
+# Let us walk through how to use `GridSearchCV` to tune the model. `RandomizedSearchCV` follows a similar workflow, and you will get to practice both of them in the worksheet.
 
 # %% tags=["remove-cell"]
 # In order to improve our classifier, we have one choice of parameter: the number of
@@ -1363,8 +1335,6 @@ glue(
 # 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
 
 # %% [markdown]
-#
-#
 # In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 
 # but there are many other methods we could have used to predict a categorical label. 
 # All algorithms have their strengths and weaknesses, and we summarize these for 
@@ -1397,7 +1367,7 @@ glue(
 # yields better predictions! In fact, sometimes including irrelevant predictors \index{irrelevant predictors} can
 # actually negatively affect classifier performance.
 
-# %% [markdown]
+# %% [markdown] toc-hr-collapsed=true
 # ### The effect of irrelevant predictors
 #
 # Let's take a look at an example where $K$-nearest neighbors performs
@@ -1409,156 +1379,175 @@ glue(
 # of what the value `Class` variable takes. In other words, the irrelevant variables have 
 # no meaningful relationship with the `Class` variable.
 
-# %% [markdown]
-# ```{r 06-irrelevant-gendata, echo = FALSE, warning = FALSE}
-# set.seed(4)
-# cancer_irrelevant <- cancer |> select(Class, Smoothness, Concavity, Perimeter)
-#
-# for (i in 1:500) {
-#     # create column
-#     col = (sample(2, size=nrow(cancer_irrelevant), replace=TRUE)-1)
-#     cancer_irrelevant <- cancer_irrelevant |> 
-# 	add_column( !!paste("Irrelevant", i, sep="") := col)
-# }
-# ```
-#
-# ```{r 06-irrelevant-printdata, warning = FALSE}
-# cancer_irrelevant |> 
-#       select(Class, Smoothness, Concavity, Perimeter, Irrelevant1, Irrelevant2)
-# ```
+# %% tags=["remove-cell"]
+np.random.seed(4)
+cancer_irrelevant = cancer[["Class", "Smoothness", "Concavity", "Perimeter"]]
+d = {
+    f"Irrelevant{i+1}": np.random.choice(
+        [0, 1], size=len(cancer_irrelevant), replace=True
+    )
+    for i in range(40)  ## in R textbook, it was 500
+}
+cancer_irrelevant = pd.concat((cancer_irrelevant, pd.DataFrame(d)), axis=1)
+
+# %%
+cancer_irrelevant[
+    ["Class", "Smoothness", "Concavity", "Perimeter", "Irrelevant1", "Irrelevant2"]
+]
 
 # %% [markdown]
 # Next, we build a sequence of $K$-NN classifiers that include `Smoothness`,
 # `Concavity`, and `Perimeter` as predictor variables, but also increasingly many irrelevant
 # variables. In particular, we create 6 data sets with 0, 5, 10, 15, 20, and 40 irrelevant predictors.
 # Then we build a model, tuned via 5-fold cross-validation, for each data set.
-# Figure \@ref(fig:06-performance-irrelevant-features) shows
+# {numref}`fig:06-performance-irrelevant-features` shows
 # the estimated cross-validation accuracy versus the number of irrelevant predictors.  As
 # we add more irrelevant predictor variables, the estimated accuracy of our
 # classifier decreases. This is because the irrelevant variables add a random
 # amount to the distance between each pair of observations; the more irrelevant
 # variables there are, the more (random) influence they have, and the more they
 # corrupt the set of nearest neighbors that vote on the class of the new
-# observation to predict.  
+# observation to predict.
+
+# %% tags=["remove-cell"]
+# get accuracies after including k irrelevant features
+ks = [0, 5, 10, 15, 20, 40]
+fixedaccs = list()
+accs = list()
+nghbrs = list()
+
+for i in range(len(ks)):
+    cancer_irrelevant_subset = cancer_irrelevant.iloc[:, 0 : (4 + ks[i])]
+    cancer_preprocessor = make_column_transformer(
+        (
+            StandardScaler(),
+            list(cancer_irrelevant_subset.drop(columns=["Class"]).columns),
+        ),
+    )
+    cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+    param_grid = {
+        "kneighborsclassifier__n_neighbors": range(1, 21),
+    }  ## double check
+
+    cancer_tune_grid = GridSearchCV(
+        estimator=cancer_tune_pipe,
+        param_grid=param_grid,
+        cv=5,
+        n_jobs=-1,
+        return_train_score=True,
+    )
+
+    X = cancer_irrelevant_subset.drop(columns=["Class"])
+    y = cancer_irrelevant_subset["Class"]
+
+    cancer_model_grid = cancer_tune_grid.fit(X, y)
+    accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
+    sorted_accuracies = accuracies_grid.sort_values(
+        by="mean_test_score", ascending=False
+    )
+
+    res = sorted_accuracies.iloc[0, :]
+    accs.append(res["mean_test_score"])
+    nghbrs.append(res["param_kneighborsclassifier__n_neighbors"])
+
+    ## Use fixed n_neighbors=3
+    cancer_fixed_pipe = make_pipeline(
+        cancer_preprocessor, KNeighborsClassifier(n_neighbors=3)
+    )
+
+    cv_5 = cross_validate(estimator=cancer_fixed_pipe, X=X, y=y, cv=5)
+    cv_5_metrics = pd.DataFrame(cv_5).aggregate(func=["mean", "std"])
+    fixedaccs.append(cv_5_metrics.loc["mean", "test_score"])
+
+# %% tags=["remove-cell"]
+summary_df = pd.DataFrame(
+    {"ks": ks, "nghbrs": nghbrs, "accs": accs, "fixedaccs": fixedaccs}
+)
+plt_irrelevant_accuracies = (
+    alt.Chart(summary_df)
+    .mark_line() #point=True
+    .encode(
+        x=alt.X("ks", title="Number of Irrelevant Predictors"),
+        y=alt.Y(
+            "accs",
+            title="Model Accuracy Estimate",
+            scale=alt.Scale(domain=(0.80, 0.95)),
+        ),
+    )
+)
+glue("fig:06-performance-irrelevant-features", plt_irrelevant_accuracies)
 
 # %% [markdown]
-# ```{r 06-performance-irrelevant-features, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Effect of inclusion of irrelevant predictors."}
-# # get accuracies after including k irrelevant features
-# ks <- c(0, 5, 10, 15, 20, 40)
-# fixedaccs <- list()
-# accs <- list()
-# nghbrs <- list()
+# :::{glue:figure} fig:06-performance-irrelevant-features
+# :name: fig:06-performance-irrelevant-features
 #
-# for (i in 1:length(ks)) {
-#   knn_spec <- nearest_neighbor(weight_func = "rectangular", 
-#                                neighbors = tune()) |>
-#      set_engine("kknn") |>
-#      set_mode("classification")
-#
-#   cancer_irrelevant_subset <- cancer_irrelevant |> select(1:(3+ks[[i]]))
-#
-#   cancer_vfold <- vfold_cv(cancer_irrelevant_subset, v = 5, strata = Class)
-#
-#   cancer_recipe <- recipe(Class ~ ., data = cancer_irrelevant_subset) |>
-#       step_scale(all_predictors()) |>
-#       step_center(all_predictors())
-#   
-#   res <- workflow() |>
-#     add_recipe(cancer_recipe) |>
-#     add_model(knn_spec) |>
-#     tune_grid(resamples = cancer_vfold, grid = 20) |>
-#     collect_metrics() |>
-#     filter(.metric == "accuracy") |>
-#     arrange(desc(mean)) |>
-#     head(1)
-#   accs[[i]] <- res$mean
-#   nghbrs[[i]] <- res$neighbors
-#
-#   knn_spec_fixed <- nearest_neighbor(weight_func = "rectangular", 
-#                                      neighbors = 3) |>
-#      set_engine("kknn") |>
-#      set_mode("classification")
-#
-#   res <- workflow() |>
-#     add_recipe(cancer_recipe) |>
-#     add_model(knn_spec_fixed) |>
-#     tune_grid(resamples = cancer_vfold, grid = 1) |>
-#     collect_metrics() |>
-#     filter(.metric == "accuracy") |>
-#     arrange(desc(mean)) |>
-#     head(1)
-#   fixedaccs[[i]] <- res$mean
-# }
-# accs <- accs |> unlist()
-# nghbrs <- nghbrs |> unlist()
-# fixedaccs <- fixedaccs |> unlist()
-#
-# ## get accuracy if we always just guess the most frequent label
-# #base_acc <- cancer_irrelevant |>
-# #                group_by(Class) |>
-# #                summarize(n = n()) |>
-# #                mutate(frac = n/sum(n)) |>
-# #                summarize(mx = max(frac)) |>
-# #                select(mx)
-# #base_acc <- base_acc$mx |> unlist()
-#
-# # plot
-# res <- tibble(ks = ks, accs = accs, fixedaccs = fixedaccs, nghbrs = nghbrs)
-# #res <- res |> mutate(base_acc = base_acc)
-# #plt_irrelevant_accuracies <- res |>
-# #  ggplot() +
-# #  geom_line(mapping = aes(x=ks, y=accs, linetype="Tuned KNN")) +
-# #  geom_hline(data=res, mapping=aes(yintercept=base_acc, linetype="Always Predict Benign")) +
-# #  labs(x = "Number of Irrelevant Predictors", y = "Model Accuracy Estimate") + 
-# #  scale_linetype_manual(name="Method", values = c("dashed", "solid"))
-#
-# plt_irrelevant_accuracies <- ggplot(res) +
-#               geom_line(mapping = aes(x=ks, y=accs)) +
-#               labs(x = "Number of Irrelevant Predictors", 
-#                    y = "Model Accuracy Estimate") + 
-#   theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
-#
-# plt_irrelevant_accuracies
-# ```
+# Effect of inclusion of irrelevant predictors.
+# :::
+
+# %% tags=["remove-cell"]
+glue("cancer_propn_1", round(cancer_proportions.loc["Benign", "percent"]))
 
 # %% [markdown]
-#
 # Although the accuracy decreases as expected, one surprising thing about 
-# Figure \@ref(fig:06-performance-irrelevant-features) is that it shows that the method
-# still outperforms the baseline majority classifier (with about `r round(cancer_propn_1[1,1], 0)`% accuracy) 
+# {numref}`fig:06-performance-irrelevant-features` is that it shows that the method
+# still outperforms the baseline majority classifier (with about {glue:}`cancer_propn_1`% accuracy) 
 # even with 40 irrelevant variables.
-# How could that be? Figure \@ref(fig:06-neighbors-irrelevant-features) provides the answer:
+# How could that be? {numref}`fig:06-neighbors-irrelevant-features` provides the answer:
 # the tuning procedure for the $K$-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
 # by increasing the number of neighbors. Of course, because of all the extra noise in the data from the irrelevant
-# variables, the number of neighbors does not increase smoothly; but the general trend is increasing.
-# Figure \@ref(fig:06-fixed-irrelevant-features) corroborates
+# variables, the number of neighbors does not increase smoothly; but the general trend is increasing. {numref}`fig:06-fixed-irrelevant-features` corroborates
 # this evidence; if we fix the number of neighbors to $K=3$, the accuracy falls off more quickly.
 
+# %% tags=["remove-cell"]
+plt_irrelevant_nghbrs = (
+    alt.Chart(summary_df)
+    .mark_line()  # point=True
+    .encode(
+        x=alt.X("ks", title="Number of Irrelevant Predictors"),
+        y=alt.Y(
+            "nghbrs",
+            title="Number of neighbors",
+            # scale=alt.Scale(domain=(0.80, 0.95)),
+        ),
+    )
+)
+glue("fig:06-neighbors-irrelevant-features", plt_irrelevant_nghbrs)
+
 # %% [markdown]
+# :::{glue:figure} fig:06-neighbors-irrelevant-features
+# :name: fig:06-neighbors-irrelevant-features
 #
-# ```{r 06-neighbors-irrelevant-features, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Tuned number of neighbors for varying number of irrelevant predictors."}
-# plt_irrelevant_nghbrs <- ggplot(res) +
-#               geom_line(mapping = aes(x=ks, y=nghbrs)) +
-#               labs(x = "Number of Irrelevant Predictors", 
-#                    y = "Number of neighbors") + 
-#   theme(text = element_text(size = 18), axis.title=element_text(size=18)) 
+# Tuned number of neighbors for varying number of irrelevant predictors.
+# :::
+
+# %% tags=["remove-cell"]
+melted_summary_df = summary_df.melt(
+            id_vars=["ks", "nghbrs"], var_name="Type", value_name="Accuracy"
+        )
+melted_summary_df['Type'] = melted_summary_df['Type'].apply(lambda x: 'Tuned K' if x=='accs' else 'K = 3')
+
+plt_irrelevant_nghbrs_fixed = (
+    alt.Chart(
+        melted_summary_df
+    )
+    .mark_line()  # point=True
+    .encode(
+        x=alt.X("ks", title="Number of Irrelevant Predictors"),
+        y=alt.Y(
+            "Accuracy",
+            scale=alt.Scale(domain=(0.75, 0.95)),
+        ),
+        color=alt.Color("Type"),
+    )
+)
+glue("fig:06-fixed-irrelevant-features", plt_irrelevant_nghbrs_fixed)
+
+# %% [markdown]
+# :::{glue:figure} fig:06-fixed-irrelevant-features
+# :name: fig:06-fixed-irrelevant-features
 #
-# plt_irrelevant_nghbrs
-# ```
-#
-# ```{r 06-fixed-irrelevant-features, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "75%", fig.cap = "Accuracy versus number of irrelevant predictors for tuned and untuned number of neighbors."}
-# res_tmp <- res %>% pivot_longer(cols=c("accs", "fixedaccs"), 
-#                                 names_to="Type", 
-#                                 values_to="accuracy")
-#
-# plt_irrelevant_nghbrs <- ggplot(res_tmp) +
-#               geom_line(mapping = aes(x=ks, y=accuracy, color=Type)) +
-#               labs(x = "Number of Irrelevant Predictors", y = "Accuracy") + 
-#               scale_color_discrete(labels= c("Tuned K", "K = 3")) + 
-#   theme(text = element_text(size = 17), axis.title=element_text(size=17)) 
-#
-# plt_irrelevant_nghbrs
-# ```
+# Accuracy versus number of irrelevant predictors for tuned and untuned number of neighbors.
+# :::
 
 # %% [markdown]
 # ### Finding a good subset of predictors
@@ -1583,7 +1572,7 @@ glue(
 # The first idea you might think of for a systematic way to select predictors
 # is to try all possible subsets of predictors and then pick the set that results in the "best" classifier.
 # This procedure is indeed a well-known variable selection method referred to 
-# as *best subset selection* [@bealesubset; @hockingsubset]. \index{variable selection!best subset}\index{predictor selection|see{variable selection}}
+# as *best subset selection* {cite:p}`bealesubset,hockingsubset`. \index{variable selection!best subset}\index{predictor selection|see{variable selection}}
 # In particular, you
 #
 # 1. create a separate model for every possible subset of predictors,
@@ -1605,7 +1594,7 @@ glue(
 # expensive to use in practice.
 #
 # Another idea is to iteratively build up a model by adding one predictor variable 
-# at a time. This method&mdash;known as *forward selection* [@forwardefroymson; @forwarddraper]&mdash;is also widely \index{variable selection!forward}
+# at a time. This method&mdash;known as *forward selection* {cite:p}`forwardefroymson,forwarddraper`&mdash;is also widely \index{variable selection!forward}
 # applicable and fairly straightforward. It involves the following steps:
 #
 # 1. Start with a model having no predictors.
@@ -1634,12 +1623,22 @@ glue(
 # > when you have a large amount of data and a relatively small total number of 
 # > predictors. More advanced methods do not suffer from this
 # > problem as much; see the additional resources at the end of this chapter for
-# > where to learn more about advanced predictor selection methods. 
+# > where to learn more about advanced predictor selection methods.
 
 # %% [markdown]
-# ### Forward selection in R
+# ### Forward selection in Python
 #  
-# We now turn to implementing forward selection in R.
+# We now turn to implementing forward selection in Python.
+# The function `SequentialFeatureSelector` in the `scikit-learn` can automate this for us, however, for
+# the learning purpose, we want to show how each predictor is selected over iterations, 
+# so we will have to code it ourselves. First we will extract the "total" set of predictors that we are willing to work with. 
+# Here we will load the modified version of the cancer data with irrelevant 
+# predictors, and select `Smoothness`, `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`
+# as potential predictors, and the `Class` variable as the label.
+# We will also extract the column names for the full set of predictor variables.
+
+# %% tags=["remove-cell"]
+# We now turn to implementing forward selection in Python.
 # Unfortunately there is no built-in way to do this using the `tidymodels` framework,
 # so we will have to code it ourselves. First we will use the `select` function
 # to extract the "total" set of predictors that we are willing to work with. 
@@ -1648,28 +1647,54 @@ glue(
 # as potential predictors, and the `Class` variable as the label.
 # We will also extract the column names for the full set of predictor variables.
 
-# %% [markdown]
-# ```{r 06-fwdsel-seed, echo = FALSE, warning = FALSE, message = FALSE}
-# # hidden seed
-# set.seed(1)
-# ```
-#
-# ```{r 06-fwdsel, warning = FALSE}
-# cancer_subset <- cancer_irrelevant |> 
-#   select(Class, 
-#          Smoothness, 
-#          Concavity, 
-#          Perimeter, 
-#          Irrelevant1, 
-#          Irrelevant2, 
-#          Irrelevant3)
-#
-# names <- colnames(cancer_subset |> select(-Class))
-#
-# cancer_subset
-# ```
+# %%
+cancer_subset = cancer_irrelevant[
+    [
+        "Class",
+        "Smoothness",
+        "Concavity",
+        "Perimeter",
+        "Irrelevant1",
+        "Irrelevant2",
+        "Irrelevant3",
+    ]
+]
+
+names = list(cancer_subset.drop(
+    columns=["Class"]
+).columns.values)
+
+cancer_subset
+
+# %% tags=["remove-cell"]
+# # Using scikit-learn SequentialFeatureSelector
+# from sklearn.feature_selection import SequentialFeatureSelector
+# from sklearn.linear_model import Ridge
+# cancer_preprocessor = make_column_transformer(
+#     (
+#         StandardScaler(),
+#         list(cancer_subset.drop(columns=["Class"]).columns),
+#     ),
+# )
+# cancer_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+
+# cancer_pipe_forward = make_pipeline(
+#     cancer_preprocessor,
+#     SequentialFeatureSelector(KNeighborsClassifier(), direction="forward", n_features_to_select='auto'),
+#     KNeighborsClassifier(),
+# )
+
+# X = cancer_subset.drop(columns=["Class"])
+# y = cancer_subset["Class"]
+
+# cancer_pipe_forward.fit(X, y)
+
+# cancer_pipe_forward.named_steps['sequentialfeatureselector'].n_features_to_select_
 
 # %% [markdown]
+# The key idea of the forward selection code is to properly extract each subset of predictors for which we want to build a model, pass them to the preprocessor and fit the pipeline with them.
+
+# %% tags=["remove-cell"]
 # The key idea of the forward selection code is to use the `paste` function (which concatenates strings
 # separated by spaces) to create a model formula for each subset of predictors for which we want to build a model.
 # The `collapse` argument tells `paste` what to put between the items in the list;
@@ -1679,12 +1704,22 @@ glue(
 # `Class ~ Smoothness + Concavity + Perimeter + Irrelevant1 + Irrelevant2 + Irrelevant3`:
 
 # %% [markdown]
-# ```{r}
-# example_formula <- paste("Class", "~", paste(names, collapse="+"))
-# example_formula
-# ```
+# Finally, we need to write some code that performs the task of sequentially
+# finding the best predictor to add to the model.
+# If you recall the end of the wrangling chapter, we mentioned
+# that sometimes one needs more flexible forms of iteration than what 
+# we have used earlier, and in these cases one typically resorts to
+# a *for loop*; see [the chapter on iteration](https://r4ds.had.co.nz/iteration.html) in *R for Data Science* {cite:p}`wickham2016r`.
+# Here we will use two for loops:
+# one over increasing predictor set sizes 
+# (where you see `for i in range(1, n_total + 1):` below),
+# and another to check which predictor to add in each round (where you see `for j in range(len(names))` below).
+# For each set of predictors to try, we extract the subset of predictors,
+# pass it into a preprocessor, build a `Pipeline` that tunes
+# a $K$-NN classifier using 10-fold cross-validation, 
+# and finally records the estimated accuracy.
 
-# %% [markdown]
+# %% tags=["remove-cell"]
 # Finally, we need to write some code that performs the task of sequentially
 # finding the best predictor to add to the model.
 # If you recall the end of the wrangling chapter, we mentioned
@@ -1700,106 +1735,105 @@ glue(
 # a $K$-NN classifier using 5-fold cross-validation, 
 # and finally records the estimated accuracy.
 
-# %% [markdown]
-# ```{r 06-fwdsel-2-seed, warning = FALSE, echo = FALSE, message = FALSE}
-# # hidden seed
-# set.seed(1)
-# ```
-#
-# ```{r 06-fwdsel-2, warning = FALSE}
-# # create an empty tibble to store the results
-# accuracies <- tibble(size = integer(), 
-#                      model_string = character(), 
-#                      accuracy = numeric())
-#
-# # create a model specification
-# knn_spec <- nearest_neighbor(weight_func = "rectangular", 
-#                              neighbors = tune()) |>
-#      set_engine("kknn") |>
-#      set_mode("classification")
-#
-# # create a 5-fold cross-validation object
-# cancer_vfold <- vfold_cv(cancer_subset, v = 5, strata = Class)
-#
-# # store the total number of predictors
-# n_total <- length(names)
-#
-# # stores selected predictors
-# selected <- c()
-#
-# # for every size from 1 to the total number of predictors
-# for (i in 1:n_total) {
-#     # for every predictor still not added yet
-#     accs <- list()
-#     models <- list()
-#     for (j in 1:length(names)) {
-#         # create a model string for this combination of predictors
-#         preds_new <- c(selected, names[[j]])
-#         model_string <- paste("Class", "~", paste(preds_new, collapse="+"))
-#
-#         # create a recipe from the model string
-#         cancer_recipe <- recipe(as.formula(model_string), 
-#                                 data = cancer_subset) |>
-#                           step_scale(all_predictors()) |>
-#                           step_center(all_predictors())
-#
-#         # tune the KNN classifier with these predictors, 
-#         # and collect the accuracy for the best K
-#         acc <- workflow() |>
-#           add_recipe(cancer_recipe) |>
-#           add_model(knn_spec) |>
-#           tune_grid(resamples = cancer_vfold, grid = 10) |>
-#           collect_metrics() |>
-#           filter(.metric == "accuracy") |>
-#           summarize(mx = max(mean))
-#         acc <- acc$mx |> unlist()
-#
-#         # add this result to the dataframe
-#         accs[[j]] <- acc
-#         models[[j]] <- model_string
-#     }
-#     jstar <- which.max(unlist(accs))
-#     accuracies <- accuracies |> 
-#       add_row(size = i, 
-#               model_string = models[[jstar]], 
-#               accuracy = accs[[jstar]])
-#     selected <- c(selected, names[[jstar]])
-#     names <- names[-jstar]
-# }
-# accuracies
-# ```
+# %%
+accuracy_dict = {"size": [], "selected_predictors": [], "accuracy": []}
+
+# store the total number of predictors
+n_total = len(names)
+
+selected = []
+
+# for every possible number of predictors
+for i in range(1, n_total + 1):
+    accs = []
+    models = []
+    for j in range(len(names)):
+        # create the preprocessor and pipeline with specified set of predictors
+        cancer_preprocessor = make_column_transformer(
+            (StandardScaler(), selected + [names[j]]),
+        )
+        cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+        # tune the KNN classifier with these predictors,
+        # and collect the accuracy for the best K
+        param_grid = {
+            "kneighborsclassifier__n_neighbors": range(1, 61, 5),
+        }  ## double check
+
+        cancer_tune_grid = GridSearchCV(
+            estimator=cancer_tune_pipe,
+            param_grid=param_grid,
+            cv=10,  ## double check
+            n_jobs=-1,
+            # return_train_score=True,
+        )
+
+        X = cancer_subset[selected + [names[j]]]
+        y = cancer_subset["Class"]
+
+        cancer_model_grid = cancer_tune_grid.fit(X, y)
+        accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
+        sorted_accuracies = accuracies_grid.sort_values(
+            by="mean_test_score", ascending=False
+        )
+
+        res = sorted_accuracies.iloc[0, :]
+        accs.append(res["mean_test_score"])
+        models.append(
+            selected + [names[j]]
+        )  # (res["param_kneighborsclassifier__n_neighbors"])
+        
+    best_set = models[accs.index(max(accs))]
+    
+    accuracy_dict["size"].append(i)
+    accuracy_dict["selected_predictors"].append(', '.join(best_set))
+    accuracy_dict["accuracy"].append(max(accs))
+    
+    selected = best_set
+    del names[accs.index(max(accs))]
+
+accuracies = pd.DataFrame(accuracy_dict)
+accuracies
 
 # %% [markdown]
 # Interesting! The forward selection procedure first added the three meaningful variables `Perimeter`,
-# `Concavity`, and `Smoothness`, followed by the irrelevant variables. Figure \@ref(fig:06-fwdsel-3)
+# `Concavity`, and `Smoothness`, followed by the irrelevant variables. {numref}`fig:06-fwdsel-3`
 # visualizes the accuracy versus the number of predictors in the model. You can see that
 # as meaningful predictors are added, the estimated accuracy increases substantially; and as you add irrelevant
 # variables, the accuracy either exhibits small fluctuations or decreases as the model attempts to tune the number
 # of neighbors to account for the extra noise. In order to pick the right model from the sequence, you have 
 # to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting). The 
 # way to find that balance is to look for the *elbow* \index{variable selection!elbow method}
-# in Figure \@ref(fig:06-fwdsel-3), i.e., the place on the plot where the accuracy stops increasing dramatically and
-# levels off or begins to decrease. The elbow in Figure \@ref(fig:06-fwdsel-3) appears to occur at the model with 
+# in {numref}`fig:06-fwdsel-3`, i.e., the place on the plot where the accuracy stops increasing dramatically and
+# levels off or begins to decrease. The elbow in {numref}`fig:06-fwdsel-3` appears to occur at the model with 
 # 3 predictors; after that point the accuracy levels off. So here the right trade-off of accuracy and number of predictors
-# occurs with 3 variables: `Class ~ Perimeter + Concavity + Smoothness`. In other words, we have successfully removed irrelevant
+# occurs with 3 variables: `Perimeter, Concavity, Smoothness`. In other words, we have successfully removed irrelevant
 # predictors from the model! It is always worth remembering, however, that what cross-validation gives you 
 # is an *estimate* of the true accuracy; you have to use your judgement when looking at this plot to decide
 # where the elbow occurs, and whether adding a variable provides a meaningful increase in accuracy.
 
-# %% [markdown]
-# ```{r 06-fwdsel-3, echo = FALSE, warning = FALSE, fig.retina = 2, out.width = "65%", fig.cap = "Estimated accuracy versus the number of predictors for the sequence of models built using forward selection.", fig.pos = "H"}
-#
-# fwd_sel_accuracies_plot <- accuracies |>
-#   ggplot(aes(x = size, y = accuracy)) +
-#   geom_line() +
-#   labs(x = "Number of Predictors", y = "Estimated Accuracy")  +
-#   theme(text = element_text(size = 20), axis.title=element_text(size=20)) 
-#
-# fwd_sel_accuracies_plot
-# ```
+# %% tags=["remove-cell"]
+fwd_sel_accuracies_plot = (
+    alt.Chart(accuracies)
+    .mark_line()  # point=True
+    .encode(
+        x=alt.X("size", title="Number of Predictors"),
+        y=alt.Y(
+            "accuracy",
+            title="Estimated Accuracy",
+            scale=alt.Scale(domain=(0.89, 0.935)),
+        ),
+    )
+)
+glue("fig:06-fwdsel-3", fwd_sel_accuracies_plot)
 
 # %% [markdown]
+# :::{glue:figure} fig:06-fwdsel-3
+# :name: fig:06-fwdsel-3
 #
+# Estimated accuracy versus the number of predictors for the sequence of models built using forward selection.
+# :::
+
+# %% [markdown]
 # > **Note:** Since the choice of which variables to include as predictors is
 # > part of tuning your classifier, you *cannot use your test data* for this
 # > process! 

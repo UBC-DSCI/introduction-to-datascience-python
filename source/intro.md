@@ -1,35 +1,29 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
 
-\mainmatter
+# Python and the Pandas
 
-# R and the Tidyverse hello worldV
-
-```{r intro-setup, include=FALSE}
-library(magick)
-
-# set as default because for some reason it breaks the pdf in this chapter
-knitr::opts_chunk$set(fig.align = "default")
+```{code-cell} ipython3
+from myst_nb import glue
 ```
 
 ## Overview
 
-This chapter provides an introduction to data science and the R programming language.
+This chapter provides an introduction to data science and the Python programming language.
 The goal here is to get your hands dirty right from the start! We will walk through an entire data analysis,
 and along the way introduce different types of data analysis question, some fundamental programming 
-concepts in R, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will
+concepts in Python, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will
 dig into each of these steps in much more detail; but for now, let's jump in to see how much we can do 
 with data science!
 
@@ -38,12 +32,14 @@ with data science!
 By the end of the chapter, readers will be able to do the following:
 
 - Identify the different types of data analysis question and categorize a question into the correct type.
-- Load the `tidyverse` package into R.
+- Load the `pandas` package into Python.
 - Read tabular data with `read_csv`.
-- Use `?` to access help and documentation tools in R.
-- Create new variables and objects in R using the assignment symbol.
-- Create and organize subsets of tabular data using `filter`, `select`, `arrange`, and `slice`.
-- Visualize data with a `ggplot` bar plot.
+- Use `help()` to access help and documentation tools in Python.
+- Create new variables and objects in Python.
+- Do indexing and slicing with .loc[].
+- Select columns of a dataframe using df[] notation.
+- Create a new column using assign.
+- Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set
 
@@ -100,7 +96,7 @@ Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
 descriptive, exploratory, inferential, predictive, causal, and mechanistic,
-all of which are defined in Table \@ref(tab:questions-table).
+all of which are defined in {numref}`questions-table`.
 Carefully formulating a question as early as possible in your analysis&mdash;and 
 correctly identifying which type of question it is&mdash;will guide your overall approach to 
 the analysis as well as the selection of appropriate tools.\index{question!data analysis}
@@ -111,16 +107,37 @@ the analysis as well as the selection of appropriate tools.\index{question!data 
 \index{causal question!definition}
 \index{mechanistic question!definition}
 
-Table: (\#tab:questions-table) Types of data analysis question [@leek2015question; @peng2015art].
 
-|Question type|    Description         |     Example        |
-|-------------|------------------------|--------------------|
-| Descriptive | A question that asks about summarized characteristics of a data set without interpretation (i.e., report a fact). | How many people live in each province and territory in Canada? |
-| Exploratory | A question that asks if there are patterns, trends, or relationships within a single data set. Often used to propose hypotheses for future study. | Does political party voting change with indicators of wealth in a set of data collected on 2,000 people living in Canada? |
-| Predictive | A question that asks about predicting measurements or labels for individuals (people or things). The focus is on what things predict some outcome, but not what causes the outcome. | What political party will someone vote for in the next Canadian election? |
-| Inferential | A question that looks for patterns, trends, or relationships in a single data set **and** also asks for quantification of how applicable these findings are to the wider population. | Does political party voting change with indicators of wealth for all people living in Canada? |
-| Causal | A question that asks about whether changing one factor will lead to a change in another factor, on average, in the wider population. | Does wealth lead to voting for a certain political party in Canadian elections? |
-| Mechanistic | A question that asks about the underlying mechanism of the observed patterns, trends, or relationships (i.e., how does it happen?) | How does wealth lead to voting for a certain political party in Canadian elections? |
+
+
+```{list-table} Types of data analysis question [@leek2015question; @peng2015art].
+:header-rows: 1
+:name: questions-table
+
+* - Question type
+  - Description
+  - Example
+* - Descriptive
+  - A question that asks about summarized characteristics of a data set without interpretation (i.e., report a fact).
+  - How many people live in each province and territory in Canada?
+* - Exploratory
+  - A question that asks if there are patterns, trends, or relationships within a single data set. Often used to propose hypotheses for future study.
+  - Does political party voting change with indicators of wealth in a set of data collected on 2,000 people living in Canada?
+* - Predictive
+  - A question that asks about predicting measurements or labels for individuals (people or things). The focus is on what things predict some outcome, but not what causes the outcome.
+  - What political party will someone vote for in the next Canadian election?
+* - Inferential
+  - A question that looks for patterns, trends, or relationships in a single data set **and** also asks for quantification of how applicable these findings are to the wider population.
+  - Does political party voting change with indicators of wealth for all people living in Canada?
+* - Causal
+  - A question that asks about whether changing one factor will lead to a change in another factor, on average, in the wider population.
+  - Does wealth lead to voting for a certain political party in Canadian elections?
+* - Mechanistic
+  - A question that asks about the underlying mechanism of the observed patterns, trends, or relationships (i.e., how does it happen?)
+  - How does wealth lead to voting for a certain political party in Canadian elections?
+  
+```
+
 
 In this book, you will learn techniques to answer the 
 first four types of question: descriptive, exploratory, predictive, and inferential; 
@@ -180,10 +197,9 @@ find in the wild, however, is *tabular data*\index{tabular data}. Think spreadsh
 rectangular-shaped and spreadsheet-like, as shown in Figure
 \@ref(fig:img-spreadsheet-vs-dataframe). In this book, we will focus primarily on tabular data.
 
-Since we are using R for data analysis in this book, the first step for us is to
-load the data into R. When we load tabular data into
-R, it is represented as a *data frame* object\index{data frame!overview}. Figure
-\@ref(fig:img-spreadsheet-vs-dataframe) shows that an R data frame is very similar
+Since we are using Python for data analysis in this book, the first step for us is to
+load the data into Python. When we load tabular data into
+Python, it is represented as a *data frame* object\index{data frame!overview}. {numref}`img-spreadsheet-vs-dataframe` shows that an Python data frame is very similar
 to a spreadsheet. We refer to the rows as \index{observation} **observations**; these are the things that we
 collect the data on, e.g., voters, cities, etc. We refer to the columns as \index{variable}
 **variables**; these are the characteristics of those observations, e.g., voters' political
@@ -193,7 +209,16 @@ affiliations, cities' populations, etc.
 knitr::include_graphics("img/spreadsheet_vs_dataframe.PNG")
 ```
 
-The first kind of data file that we will learn how to load into R as a data
+
+```{figure} img/spreadsheet_vs_dataframe.PNG
+---
+height: 400px
+name: img-spreadsheet-vs-dataframe
+---
+A spreadsheet versus a data frame in Python
+```
+
+The first kind of data file that we will learn how to load into Python as a data
 frame is the *comma-separated values* format (`.csv` for short)\index{comma-separated values|see{csv}}\index{csv}.  These files
 have names ending in `.csv`, and can be opened and saved using common
 spreadsheet programs like Microsoft Excel and Google Sheets.  For example, the
@@ -215,11 +240,11 @@ Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
-To load this data into R so that we can do things with it (e.g., perform
+To load this data into Python so that we can do things with it (e.g., perform
 analyses or create data visualizations), we will need to use a *function.* \index{function} A
-function is a special word in R that takes instructions (we call these
+function is a special word in Python that takes instructions (we call these
 *arguments*) \index{argument} and does something. The function we will use to load a `.csv` file
-into R is called `read_csv`. \index{read function!read\_csv} In its most basic 
+into Python is called `read_csv`. \index{read function!read\_csv} In its most basic 
 use-case, `read_csv` expects that the data file:
 
 - has column names (or *headers*),
@@ -228,50 +253,38 @@ use-case, `read_csv` expects that the data file:
 
 +++
 
-Below you'll see the code used to load the data into R using the `read_csv`
+Below you'll see the code used to load the data into Python using the `read_csv`
 function. Note that the `read_csv` function is not included in the base
-installation of R, meaning that it is not one of the primary functions ready to
-use when you install R. Therefore, you need to load it from somewhere else
-before you can use it. The place from which we will load it is called an R *package*. 
-An R package \index{package} is a collection of functions that can be used in addition to the
-built-in R package functions once loaded. The `read_csv` function, in
+installation of Python, meaning that it is not one of the primary functions ready to
+use when you install Python. Therefore, you need to load it from somewhere else
+before you can use it. The place from which we will load it is called a Python *package*. 
+A Python package \index{package} is a collection of functions that can be used in addition to the
+built-in Python package functions once loaded. The `read_csv` function, in
 particular, can be made accessible by loading 
-[the `tidyverse` R package](https://tidyverse.tidyverse.org/) [@tidyverse; @wickham2019tidverse]
-using the `library` function. \index{library} The `tidyverse` \index{tidyverse} package contains many
+[the `pandas` Python package](https://pypi.org/project/pandas/) [@tidyverse; @wickham2019tidverse]
+using the `import` command. \index{library} The `pandas` \index{tidyverse} package contains many
 functions that we will use throughout this book to load, clean, wrangle, 
 and visualize data. 
+
++++
 
 ```{r load-tidyverse, message = TRUE, warning = TRUE}
 library(tidyverse)
 ```
 
-> **Note:** You may have noticed that we got some extra
-> output from R saying `Attaching packages` and `Conflicts` below our code
-> line. These are examples of *messages* in R, which give the user more
-> information that might be handy to know. The `Attaching packages` message is
-> natural when loading `tidyverse`, since `tidyverse` actually automatically
-> causes other packages to be imported too, such as `dplyr`.  In the future,
-> when we load `tidyverse` in this book, we will silence these messages to help
-> with the readability of the book.  The `Conflicts` message is also totally normal
-> in this circumstance.  This message tells you if functions from different
-> packages share the same name, which is confusing to R.  For example, in this
-> case, the `dplyr` package and the `stats` package both provide a function
-> called `filter`. The message above (`dplyr::filter() masks stats::filter()`)
-> is R telling you that it is going to default to the `dplyr` package version
-> of this function. So if you use the `filter` function, you will be using the
-> `dplyr` version. In order to use the `stats` version, you need to use its
-> full name `stats::filter`.  Messages are not errors, so generally you don't
-> need to take action when you see a message; but you should always read the message
-> and critically think about what it means and whether you need to do anything
-> about it.
+```{code-cell} ipython3
+import pandas as pd
+```
 
-After loading the `tidyverse` package, we can call the `read_csv` function and
+
+
+After loading the `pandas` package and accessing it using the variable `pd`, we can call the `read_csv` function and
 pass it a single argument: the name of the file, `"can_lang.csv"`. We have to
 put quotes around file names and other letters and words that we use in our
-code to distinguish it from the special words (like functions!) that make up the R programming
+code to distinguish it from the special words (like functions!) that make up the Python programming
 language.  The file's name is the only argument we need to provide because our
 file satisfies everything else that the `read_csv` function expects in the default
-use-case. Figure \@ref(fig:img-read-csv) describes how we use the `read_csv`
+use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into R. 
 
 (ref:img-read-csv) Syntax for the `read_csv` function.
@@ -281,18 +294,24 @@ image_read("img/read_csv_function.jpeg") |>
   image_crop("1625x1900")
 ```
 
-```{r load-can-lang-data, warning = FALSE, message = FALSE}
-read_csv("data/can_lang.csv")
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-read-csv
+---
+Syntax for the read_csv function
 ```
 
-> **Note:** There is another function
-> that also loads csv files named `read.csv`. We will *always* use 
-> `read_csv` in this book, as it is designed to play nicely with all of the 
-> other `tidyverse` functions, which we will use extensively. Be
-> careful not to accidentally use `read.csv`, as it can cause some tricky
-> errors to occur in your code that are hard to track down!
 
-## Naming things in R
++++
+```{code-cell} ipython3
+pd.read_csv("data/can_lang.csv")
+
+```
+
+
+
+## Naming things in Python
 
 When we loaded the 2016 Canadian census language data
 using `read_csv`, we did not give this data frame a name. 
@@ -302,24 +321,29 @@ What would be more useful would be to give a name
 to the data frame that `read_csv` outputs, 
 so that we can refer to it later for analysis and visualization.
 
-The way to assign a name to a value in R is via the *assignment symbol* `<-`. 
+The way to assign a name to a value in Python is via the *assignment symbol* `=`. 
 \index{aaaassignsymb@\texttt{<-}|see{assignment symbol}}\index{assignment symbol}
 On the left side of the assignment symbol you put the name that you want
 to use, and on the right side of the assignment symbol
 you put the value that you want the name to refer to.
-Names can be used to refer to almost anything in R, such as numbers,
+Names can be used to refer to almost anything in Python, such as numbers,
 words (also known as *strings* of characters), and data frames!
 Below, we set `my_number` to `3` (the result of `1+2`)
 and we set `name` to the string `"Alice"`. \index{string}
 
-```{r naming-things}
-my_number <- 1 + 2
-name <- "Alice"
+
+```{code-cell} ipython3
+my_number = 1 + 2
+print(my_number)
+
+name = "Alice"
+print(name)
 ```
+
 Note that when 
-we name something in R using the assignment symbol, `<-`, 
+we name something in Python using the assignment symbol, `=`, 
 we do not need to surround the name we are creating  with quotes. This is 
-because we are formally telling R that this special word denotes
+because we are formally telling Python that this special word denotes
 the value of whatever is on the right-hand side.
 Only characters and words that act as *values* on the right-hand side of the assignment
 symbol&mdash;e.g., the file name `"data/can_lang.csv"` that we specified before, or `"Alice"` above&mdash;need 
@@ -329,27 +353,31 @@ After making the assignment, we can use the special name words we have created i
 place of their values. For example, if we want to do something with the value `3` later on, 
 we can just use `my_number` instead. Let's try adding 2 to `my_number`; you will see that
 R just interprets this as adding 2 and 3:
-```{r naming-things2}
+
+
+```{code-cell} ipython3
 my_number + 2
 ```
 
 Object names \index{object} can consist of letters, numbers, periods `.` and underscores `_`.
-Other symbols won't work since they have their own meanings in R. For example,
-`+` is the addition symbol; if we try to assign a name with
-the `+` symbol, R will complain and we will get an error!
+Other symbols won't work since they have their own meanings in Python. For example,
+`+` is the addition symbol(operator); if we try to assign a name with
+the `+` symbol, Python will complain and we will get an error!
 
-```{r, eval = F}
-na + me <- 1
+
 ```
-```
-Error: unexpected assignment in "na+me <-"
+na+me = 1
 ```
 
-There are certain conventions for naming objects in R. 
+```
+SyntaxError: cannot assign to operator
+```
+
+There are certain conventions for naming objects in Python. 
 When naming \index{object!naming convention} an object we
 suggest using only lowercase letters, numbers and underscores `_` to separate
-the words in a name.  R is case sensitive, which means that `Letter` and
-`letter` would be two different objects in R.  You should also try to give your
+the words in a name.  Python is case sensitive, which means that `Letter` and
+`letter` would be two different objects in Python.  You should also try to give your
 objects meaningful names.  For instance, you *can* name a data frame `x`.
 However, using more meaningful terms, such as `language_data`, will help you
 remember what each name in your code represents.  We recommend following the
@@ -358,8 +386,10 @@ now use the assignment symbol to give the name
 `can_lang` to the 2016 Canadian census language data frame that we get from
 `read_csv`. 
 
-```{r load-data-with-name, message=FALSE}
-can_lang <- read_csv("data/can_lang.csv")
+
+
+```{code-cell} ipython3
+can_lang = pd.read_csv("data/can_lang.csv")
 ```
 
 Wait a minute, nothing happened this time! Where's our data?
@@ -371,33 +401,36 @@ on the screen. You will also see at the top that the number of observations (i.e
 variables (i.e., columns) are printed. Printing the first few rows of a data frame 
 like this is a handy way to get a quick sense for what is contained in a data frame.
 
-```{r print}
+
+
+```{code-cell} ipython3
 can_lang
 ```
 
-## Creating subsets of data frames with `filter` & `select`
+## Creating subsets of data frames with `df[]` & `loc[]`
 
-Now that we've loaded our data into R, we can start wrangling the data to
+Now that we've loaded our data into Python, we can start wrangling the data to
 find the ten Aboriginal languages that were most often reported
 in 2016 as mother tongues in Canada. In particular, we will construct 
 a table with the ten Aboriginal languages that have the largest 
 counts in the `mother_tongue` column. 
-The `filter` and `select` functions from the `tidyverse` package will help us
-here. The `filter` \index{filter} function allows you to obtain a subset of the
-rows with specific values, while the `select` \index{select} function allows you 
-to obtain a subset of the columns. Therefore, we can `filter` the rows to extract the
-Aboriginal languages in the data set, and then use `select` to obtain only the
-columns we want to include in our table.
+The `df[]` and `loc[]` properties of the `pandas` dataframe will help us
+here. The `df[]` \index{filter} property allows you to obtain a subset of the
+rows with specific values, while the `loc[]` \index{select} property allows you 
+to obtain a subset of the columns. Therefore, we can use `df[]` 
+to filter the rows to extract the Aboriginal languages in the data set, and 
+then use `loc[]` property to obtain only the columns we want to include in our table.
 
-### Using `filter` to extract rows
+### Using `df[]` to extract rows
 Looking at the `can_lang` data above, we see the column `category` contains different
 high-level categories of languages, which include "Aboriginal languages",
 "Non-Official & Non-Aboriginal languages" and "Official languages".  To answer
 our question we want to filter our data set so we restrict our attention 
 to only those languages in the "Aboriginal languages" category. 
 
-We can use the `filter` \index{filter} function to obtain the subset of rows with desired
-values from a data frame. Figure \@ref(fig:img-filter) outlines what arguments we need to specify to use `filter`. The first argument to `filter` is the name of the data frame
+We can use the `df[]` \index{filter} property to obtain the subset of rows with desired
+values from a data frame. Figure \@ref(fig:img-filter) outlines what arguments we need to specify to use `df[]`. 
+The first argument to `filter` is the name of the data frame
 object, `can_lang`. The second argument is a *logical statement* \index{logical statement} to use when
 filtering the rows. A logical statement evaluates to either `TRUE` or `FALSE`;
 `filter` keeps only those rows for which the logical statement evaluates to `TRUE`.
@@ -419,6 +452,9 @@ image_read("img/filter_function.jpeg") |>
   image_crop("1625x1900")
 ```
 
+
+
+
 With these arguments, `filter` returns a data frame that has all the columns of
 the input data frame, but only those rows we asked for in our logical filter
 statement. 
@@ -427,14 +463,20 @@ statement.
 aboriginal_lang <- filter(can_lang, category == "Aboriginal languages")
 aboriginal_lang
 ```
+
+```{code-cell} ipython3
+aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
+aboriginal_lang
+```
+
 It's good practice to check the output after using a
-function in R. We can see the original `can_lang` data set contained 214 rows
+function in Python. We can see the original `can_lang` data set contained 214 rows
 with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains languages in
 the "Aboriginal languages" in the `category` column. So it looks like the function 
 gave us the result we wanted!
 
-### Using `select` to extract columns
+### Using `.loc[]` to extract columns
 
 Now let's use `select` \index{select} to extract the `language` and `mother_tongue` columns
 from this data frame. Figure \@ref(fig:img-select) shows us the syntax for the `select` function. To extract these columns, we need to provide the `select`
@@ -462,24 +504,28 @@ selected_lang <- select(aboriginal_lang, language, mother_tongue)
 selected_lang
 ```
 
-### Using `arrange` to order and `slice` to select rows by index number
+```{code-cell} ipython3
+selected_lang = aboriginal_lang.loc[:, ['language', 'mother_tongue']]
+selected_lang
+```
 
-We have used `filter` and `select` to obtain a table with only the Aboriginal
+### Using `sort_values` to order and `iloc[]` to select rows by index number
+
+We have used `df[]` and `loc[]` properties of dataframe to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the **ten** languages that are spoken most often. As a next step, we could
 order the `mother_tongue` column from greatest to least and then extract only
-the top ten rows. This is where the `arrange` and `slice` functions come to the
+the top ten rows. This is where the `sort_values` function and `.iloc[]` property come to the
 rescue! \index{arrange}\index{slice}
 
-The `arrange` function allows us to order the rows of a data frame by the
+The `sort_values` function allows us to order the rows of a data frame by the
 values of a particular column. Figure \@ref(fig:img-arrange) details what arguments we need to specify to
-use the `arrange` function. We need to pass the data frame as the first
-argument to this function, and the variable to order by as the second argument. 
+use the `sort_values` function. We need to pass the column name as a list by which we want to sort the dataframe 
 Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
-language, we will use the `arrange` function to order the rows in our
+language, we will use the `sort_values` function to order the rows in our
 `selected_lang` data frame by the `mother_tongue` column. We want to
 arrange the rows in descending order (from largest to smallest),
-so we pass the column to the `desc` function before using it as an argument. 
+so we specify the argument `ascending` as `False`.
 
 (ref:img-arrange) Syntax for the `arrange` function.
 
@@ -493,11 +539,21 @@ arranged_lang <- arrange(selected_lang, by = desc(mother_tongue))
 arranged_lang
 ```
 
-Next we will use the `slice` function, which selects rows according to their
+```{code-cell} ipython3
+arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
+arranged_lang
+```
+
+Next we will use the `iloc[]` property, which selects rows according to their
 row number. Since we want to choose the most common ten languages, we will indicate we want the
-rows 1 to 10 using the argument `1:10`.
+rows 1 to 10 using the argument `:10`.
 ```{r}
 ten_lang <- slice(arranged_lang, 1:10)
+ten_lang
+```
+
+```{code-cell} ipython3
+ten_lang = arranged_lang.iloc[:10]
 ten_lang
 ```
 
@@ -518,7 +574,7 @@ analysis. In this section we will develop a visualization of the
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in
 Canada, as well as the number of people that speak each of them.
 
-### Using `ggplot` to create a bar plot
+### Using `altair` to create a bar plot
 
 In our data set, we can see that `language` and `mother_tongue` are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
@@ -532,13 +588,13 @@ We will make a bar plot to visualize our data. A bar plot \index{plot|see{visual
 heights of the bars represent certain values, like counts or proportions. We
 will make a bar plot using the `mother_tongue` and `language` columns from our
 `ten_lang` data frame. To create a bar plot of these two variables using the 
-`ggplot` function, we must specify the data frame, which variables
+`altair` package, we must specify the data frame, which variables
 to put on the x and y axes, and what kind of plot to create. The `ggplot`
 function and its common usage is illustrated in Figure \@ref(fig:img-ggplot).
 Figure \@ref(fig:barplot-mother-tongue) shows the resulting bar plot
 generated by following the instructions in Figure \@ref(fig:img-ggplot).
 
-(ref:img-ggplot) Creating a bar plot with the `ggplot` function.
+(ref:img-ggplot) Creating a bar plot with the `altair` package.
 
 ```{r img-ggplot, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-ggplot)", out.width="100%", fig.retina = 2}
 image_read("img/ggplot_function.jpeg") |>
@@ -550,6 +606,35 @@ ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
   geom_bar(stat = "identity")
 ```
 
+```{code-cell} ipython3
+import altair as alt
+
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+mother_tongue_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x='language',
+        y='mother_tongue'
+    ))
+glue('boot_fig', mother_tongue_plot, display=True)
+```
+
+:::{glue:figure} boot_fig
+:figwidth: 300px
+:name: boot_fig
+
+This is a **caption**, with an embedded !
+:::
+
++++
+
+
+
+
 > **Note:** The vast majority of the
 > time, a single expression in R must be contained in a single line of code.
 > However, there *are* a small number of situations in which you can have a
@@ -559,7 +644,7 @@ ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
 > put all of the added layers on one line of code, but splitting them across
 > multiple lines helps a lot with code readability. \index{multi-line expression}
 
-### Formatting ggplot objects
+### Formatting altair objects
 
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
@@ -591,6 +676,20 @@ ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
   geom_bar(stat = "identity") +
   xlab("Language") +
   ylab("Mother Tongue (Number of Canadian Residents)")
+  
+  
+  
+  
+```
+
+```{code-cell} ipython3
+mother_tongue_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('language', title='Language'),
+        y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
+    ))
+mother_tongue_plot
 ```
 
 The result is shown in Figure \@ref(fig:barplot-mother-tongue-labs). 
@@ -605,6 +704,16 @@ ggplot(ten_lang, aes(x = mother_tongue, y = language)) +
   geom_bar(stat = "identity") +
   xlab("Mother Tongue (Number of Canadian Residents)") +
   ylab("Language")
+```
+
+```{code-cell} ipython3
+mother_tongue_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', title='Language')
+    ))
+mother_tongue_plot
 ```
 
 Another big step forward, as shown in Figure \@ref(fig:barplot-mother-tongue-flipped)! There 
@@ -625,6 +734,19 @@ ggplot(ten_lang, aes(x = mother_tongue,
   xlab("Mother Tongue (Number of Canadian Residents)") +
   ylab("Language")
 ```
+
+```{code-cell} ipython3
+mother_tongue_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', title='Language')
+    ))
+mother_tongue_plot
+```
+
+        
+
 
 Figure \@ref(fig:barplot-mother-tongue-reorder) provides a very clear and well-organized
 answer to our original question; we can see what the ten most often reported Aboriginal languages
@@ -681,6 +803,24 @@ ggplot(ten_lang, aes(x = mother_tongue,
   ylab("Language") 
 ```
 
+```{code-cell} ipython3
+# load the data set
+can_lang = pd.read_csv("data/can_lang.csv")
+
+# obtain the 10 most common Aboriginal languages
+aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
+
+arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
+
+ten_lang = arranged_lang[:10]
+
+ten_lang_plot = (alt.Chart(ten_lang)
+                 .mark_bar().encode(
+                  x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
+                  y = alt.Y('language', title="Language")))
+ten_lang_plot
+```
+
 ## Accessing documentation
 
 There are many R functions in the `tidyverse` package (and beyond!), and 
@@ -698,6 +838,10 @@ code:
 
 ```
 ?filter
+```
+
+```{code-cell} ipython3
+help(pd.read_csv)
 ```
 
 Figure \@ref(fig:01-help) shows the documentation that will pop up,

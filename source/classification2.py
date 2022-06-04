@@ -221,7 +221,7 @@ random_numbers
 # as random as it should.
 #
 # Different argument values in `np.random.seed` lead to different patterns of randomness, but as long as 
-# you pick the same argument value your result will be the same. 
+# you pick the same argument value your result will be the same.
 
 # %% tags=["remove-cell"]
 # In other words, even though the sequences of numbers that R is generating *look*
@@ -436,7 +436,7 @@ cancer_preprocessor = make_column_transformer(
 # the number $K$ of neighbors to be 3. To fit the model with only concavity and smoothness as the
 # predictors, we need to explicitly create `X` (predictors) and `y` (target) based on `cancer_train`.
 # As before we need to create a model specification, combine
-# the model specification and recipe into a workflow, and then finally
+# the model specification and preprocessor into a workflow, and then finally
 # use `fit` with `X` and `y` to build the classifier.
 
 # %% tags=["remove-cell"]
@@ -450,7 +450,7 @@ cancer_preprocessor = make_column_transformer(
 
 # %%
 # hidden seed
-np.random.seed(1)
+# np.random.seed(1)
 
 knn_spec = KNeighborsClassifier(n_neighbors=3)  ## weights="uniform"
 
@@ -480,20 +480,32 @@ knn_fit
 # classifier.
 
 # %%
-# np.random.seed(1)
-
 cancer_test_predictions = knn_fit.predict(
     cancer_test.loc[:, ["Smoothness", "Concavity"]]
 )
+
 cancer_test_predictions = pd.concat(
     [
         pd.DataFrame(cancer_test_predictions, columns=["predicted"]),
         cancer_test.reset_index(drop=True),
     ],
     axis=1,
-)  # to add the predictions column to the original test data
+)  # add the predictions column to the original test data
 
 cancer_test_predictions
+
+# %% tags=["remove-cell"]
+## alternative way to add a column
+
+# # add the predictions column to the original test data
+# cancer_test_predictions = cancer_test.reset_index(drop=True).assign(
+#     predicted=cancer_test_predictions
+# )
+
+# # move the `predicted` column to the first column for easy visualization
+# col_order = cancer_test_predictions.columns.tolist()
+# col_order = col_order[-1:] + col_order[:-1]
+# cancer_test_predictions[col_order]
 
 # %% [markdown]
 # ### Compute the accuracy
@@ -554,7 +566,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 confusion_display = ConfusionMatrixDisplay(
     confusion_matrix=confusion, display_labels=knn_fit.classes_
 )
-confusion_display.plot()
+confusion_display.plot();
 
 # %% tags=["remove-cell"]
 glue("confu11", confusion[1, 1])
@@ -685,9 +697,6 @@ cancer_proportions
 # split.
 
 # %%
-# # hidden seed
-# np.random.seed(1)
-
 # create the 25/75 split of the training data into training and validation
 cancer_subtrain, cancer_validation = train_test_split(
     cancer_train, test_size=0.25, random_state=1
@@ -724,9 +733,6 @@ glue(f"acc_seed1", round(100 * acc, 1))
 # %% tags=["remove-cell"]
 accuracies = []
 for i in range(1, 6):
-    # # hidden seed
-    # np.random.seed(i)
-
     # create the 25/75 split of the training data into training and validation
     cancer_subtrain, cancer_validation = train_test_split(
         cancer_train, test_size=0.25, random_state=i
@@ -799,9 +805,9 @@ glue("avg_5_splits", round(100 * sum(accuracies) / len(accuracies)))
 # To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
 # function: `cross_validate`. This function splits our training data into `cv` folds
 # automatically. 
-# According to its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html), the parameter `cv`
+# According to its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html), the parameter `cv`:
 #
-# > For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, `StratifiedKFold` is used.
+# > For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, [`StratifiedKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold) is used.
 #
 # This means `cross_validate` will ensure that the training and validation subsets contain the
 # right proportions of each category of observation.
@@ -1024,7 +1030,6 @@ y_tune = cancer_train["Class"]
 
 cancer_model_grid = cancer_tune_grid.fit(X_tune, y_tune)
 
-# %%
 accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
 
 # %%
@@ -1092,7 +1097,7 @@ glue("fig:06-find-k", accuracy_vs_k)
 # Setting the number of 
 # neighbors to $K =$ {glue:}`best_k_unique`
 # provides the highest accuracy ({glue:}`best_acc`%). But there is no exact or perfect answer here;
-# any selection from $K = 20$ and $60$ would be reasonably justified, as all
+# any selection from $K = 20$ and $55$ would be reasonably justified, as all
 # of these differ in classifier accuracy by a small amount. Remember: the
 # values you see on this plot are *estimates* of the true accuracy of our
 # classifier. Although the 
@@ -1315,7 +1320,7 @@ glue(
 # 5. Call `fit` on the `GridSearchCV` instance created in step 4, passing the training data.
 # 6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 # 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
-# 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` method.
+# 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
 
 # %% tags=["remove-cell"]
 # The overall workflow for performing $K$-nearest neighbors classification using `tidymodels` is as follows:
@@ -1382,7 +1387,7 @@ d = {
     f"Irrelevant{i+1}": np.random.choice(
         [0, 1], size=len(cancer_irrelevant), replace=True
     )
-    for i in range(40)  ## in R textbook, it was 500
+    for i in range(40)  ## in R textbook, it is 500, but the downstream analysis only uses up to 40
 }
 cancer_irrelevant = pd.concat((cancer_irrelevant, pd.DataFrame(d)), axis=1)
 
@@ -1413,7 +1418,7 @@ accs = list()
 nghbrs = list()
 
 for i in range(len(ks)):
-    cancer_irrelevant_subset = cancer_irrelevant.iloc[:, 0 : (4 + ks[i])]
+    cancer_irrelevant_subset = cancer_irrelevant.iloc[:, : (4 + ks[i])]
     cancer_preprocessor = make_column_transformer(
         (
             StandardScaler(),
@@ -1423,8 +1428,19 @@ for i in range(len(ks)):
     cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
     param_grid = {
         "kneighborsclassifier__n_neighbors": range(1, 21),
-    }  ## double check
-
+    }  ## double check: in R textbook, it is tune_grid(..., grid = 20), so I guess it matches RandomizedSearchCV
+       ## instead of GridSeachCV?
+    # param_grid_rand = {
+    #     "kneighborsclassifier__n_neighbors": range(1, 100),
+    # }
+    # cancer_tune_grid = RandomizedSearchCV(
+    #     estimator=cancer_tune_pipe,
+    #     param_distributions=param_grid_rand,
+    #     n_iter=20,
+    #     cv=5,
+    #     n_jobs=-1,
+    #     return_train_score=True,
+    # )
     cancer_tune_grid = GridSearchCV(
         estimator=cancer_tune_pipe,
         param_grid=param_grid,
@@ -1503,7 +1519,6 @@ plt_irrelevant_nghbrs = (
         y=alt.Y(
             "nghbrs",
             title="Number of neighbors",
-            # scale=alt.Scale(domain=(0.80, 0.95)),
         ),
     )
 )
@@ -1625,9 +1640,13 @@ glue("fig:06-fixed-irrelevant-features", plt_irrelevant_nghbrs_fixed)
 # ### Forward selection in Python
 #  
 # We now turn to implementing forward selection in Python.
-# The function `SequentialFeatureSelector` in the `scikit-learn` can automate this for us, however, for
-# the learning purpose, we want to show how each predictor is selected over iterations, 
-# so we will have to code it ourselves. First we will extract the "total" set of predictors that we are willing to work with. 
+# The function [`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 
+# in the `scikit-learn` can automate this for us, and a simple demo is shown below. However, for
+# the learning purpose, we also want to show how each predictor is selected over iterations, 
+# so we will have to code it ourselves. 
+
+# %% [markdown]
+# First we will extract the "total" set of predictors that we are willing to work with. 
 # Here we will load the modified version of the cancer data with irrelevant 
 # predictors, and select `Smoothness`, `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`
 # as potential predictors, and the `Class` variable as the label.
@@ -1662,33 +1681,40 @@ names = list(cancer_subset.drop(
 
 cancer_subset
 
+# %% tags=[]
+# Using scikit-learn SequentialFeatureSelector
+from sklearn.feature_selection import SequentialFeatureSelector
+cancer_preprocessor = make_column_transformer(
+    (
+        StandardScaler(),
+        list(cancer_subset.drop(columns=["Class"]).columns),
+    ),
+)
+
+cancer_pipe_forward = make_pipeline(
+    cancer_preprocessor,
+    SequentialFeatureSelector(KNeighborsClassifier(), direction="forward"),
+    KNeighborsClassifier(),
+)
+
+X = cancer_subset.drop(columns=["Class"])
+y = cancer_subset["Class"]
+
+cancer_pipe_forward.fit(X, y)
+
+cancer_pipe_forward.named_steps['sequentialfeatureselector'].n_features_to_select_
+
 # %% tags=["remove-cell"]
-# # Using scikit-learn SequentialFeatureSelector
-# from sklearn.feature_selection import SequentialFeatureSelector
-# from sklearn.linear_model import Ridge
-# cancer_preprocessor = make_column_transformer(
-#     (
-#         StandardScaler(),
-#         list(cancer_subset.drop(columns=["Class"]).columns),
-#     ),
-# )
-# cancer_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
-
-# cancer_pipe_forward = make_pipeline(
-#     cancer_preprocessor,
-#     SequentialFeatureSelector(KNeighborsClassifier(), direction="forward", n_features_to_select='auto'),
-#     KNeighborsClassifier(),
-# )
-
-# X = cancer_subset.drop(columns=["Class"])
-# y = cancer_subset["Class"]
-
-# cancer_pipe_forward.fit(X, y)
-
-# cancer_pipe_forward.named_steps['sequentialfeatureselector'].n_features_to_select_
+glue(
+    "sequentialfeatureselector_n_features",
+    cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_,
+)
 
 # %% [markdown]
-# The key idea of the forward selection code is to properly extract each subset of predictors for which we want to build a model, pass them to the preprocessor and fit the pipeline with them.
+# This means that {glue:}`sequentialfeatureselector_n_features` features were selected according to the forward selection algorithm.
+
+# %% [markdown]
+# Now, let's code the actual algorithm by ourselves. The key idea of the forward selection code is to properly extract each subset of predictors for which we want to build a model, pass them to the preprocessor and fit the pipeline with them.
 
 # %% tags=["remove-cell"]
 # The key idea of the forward selection code is to use the `paste` function (which concatenates strings
@@ -1776,8 +1802,8 @@ for i in range(1, n_total + 1):
         accs.append(res["mean_test_score"])
         models.append(
             selected + [names[j]]
-        )  # (res["param_kneighborsclassifier__n_neighbors"])
-        
+        )  # (res["param_kneighborsclassifier__n_neighbors"]) ## if want to know the best selection of K
+    # get the best selection of (newly added) feature which maximizes cv accuracy    
     best_set = models[accs.index(max(accs))]
     
     accuracy_dict["size"].append(i)
@@ -1894,6 +1920,9 @@ glue("fig:06-fwdsel-3", fwd_sel_accuracies_plot)
 #   Finally, Chapter 6 covers a number of methods for selecting predictor
 #   variables. Note that while this book is still a very accessible introductory
 #   text, it requires a bit more mathematical background than we require.
+
+# %% [markdown]
+# ## References
 
 # %% [markdown]
 # ```{bibliography}

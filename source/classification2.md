@@ -217,11 +217,10 @@ random, they are totally determined when we set a seed value!
 So what does this mean for data analysis? Well, `np.random.choice` is certainly
 not the only function that uses randomness in R. Many of the functions 
 that we use in `scikit-learn`, `numpy`, and beyond use randomness&mdash;many of them
-without even telling you about it. So at the beginning of every data analysis you
-do, right after loading packages, you should call the `np.random.seed` function and
-pass it an integer that you pick.
+without even telling you about it. 
 Also note that when Python starts up, it creates its own seed to use. So if you do not
-explicitly call the `np.random.seed` function in your code, your results will 
+explicitly call the `np.random.seed` function in your code or specify the `random_state` 
+argument in `scikit-learn` functions (where it is available), your results will 
 likely not be reproducible.
 And finally, be careful to set the seed *only once* at the beginning of a data
 analysis. Each time you set the seed, you are inserting your own human input,
@@ -229,11 +228,8 @@ thereby influencing the analysis. If you use `np.random.choice` many times
 throughout your analysis, the randomness that Python uses will not look 
 as random as it should.
 
-In summary: if you want your analysis to be reproducible, i.e., produce *the same result* each time you
-run it, make sure to use `np.random.seed` exactly once at the beginning of the analysis.
 Different argument values in `np.random.seed` lead to different patterns of randomness, but as long as 
 you pick the same argument value your result will be the same. 
-In the remainder of the textbook, we will set the seed once at the beginning of each chapter.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -281,8 +277,8 @@ or `random_state` argument, as described in Section {ref}`randomseeds`.
 import altair as alt
 import pandas as pd
 
-# # set the seed
-# np.random.seed(4235)
+# set the seed
+np.random.seed(1)
 
 # load data
 cancer = pd.read_csv("data/unscaled_wdbc.csv")
@@ -339,7 +335,7 @@ Second, by specifying the `stratify` parameter to be the target column of the tr
 it **stratifies** the \index{stratification} data by the class label, to ensure that roughly
 the same proportion of each class ends up in both the training and testing sets. For example,
 in our data set, roughly 63% of the
-observations are from the benign class (`B`), and 37% are from the malignant class (`M`),
+observations are from the benign class (`Benign`), and 37% are from the malignant class (`Malignant`),
 so specifying `stratify` as the class column ensures that roughly 63% of the training data are benign, 
 37% of the training data are malignant,
 and the same proportions exist in the testing data.
@@ -1850,7 +1846,7 @@ finding the best predictor to add to the model.
 If you recall the end of the wrangling chapter, we mentioned
 that sometimes one needs more flexible forms of iteration than what 
 we have used earlier, and in these cases one typically resorts to
-a *for loop*; see [the chapter on iteration](https://r4ds.had.co.nz/iteration.html) in *R for Data Science* {cite:p}`wickham2016r`.
+a *for loop*; see [the section on control flow (for loops)](https://wesmckinney.com/book/python-basics.html#control_for) in *Python for Data Analysis* {cite:p}`mckinney2012python`.
 Here we will use two for loops:
 one over increasing predictor set sizes 
 (where you see `for i in range(1, n_total + 1):` below),
@@ -1995,24 +1991,26 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
 
 ## Additional resources
-- The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
+
++++
+
+- The [`scikit-learn` website](https://scikit-learn.org/stable/) is an excellent
   reference for more details on, and advanced usage of, the functions and
-  packages in the past two chapters. Aside from that, it also has a [nice
-  beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
-  of more advanced examples](https://www.tidymodels.org/learn/) that you can use
-  to continue learning beyond the scope of this book. It's worth noting that the
-  `tidymodels` package does a lot more than just classification, and so the
+  packages in the past two chapters. Aside from that, it also offers many 
+  useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) 
+  to get you started. It's worth noting that the `scikit-learn` package 
+  does a lot more than just classification, and so the
   examples on the website similarly go beyond classification as well. In the next
   two chapters, you'll learn about another kind of predictive modeling setting,
   so it might be worth visiting the website only after reading through those
-  chapters.
-- *An Introduction to Statistical Learning* [@james2013introduction] provides 
+  chapters. 
+- *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides 
   a great next stop in the process of
   learning about classification. Chapter 4 discusses additional basic techniques
   for classification that we do not cover, such as logistic regression, linear
@@ -2022,6 +2020,32 @@ and guidance that the worksheets provide will function as intended.
   Finally, Chapter 6 covers a number of methods for selecting predictor
   variables. Note that while this book is still a very accessible introductory
   text, it requires a bit more mathematical background than we require.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
+#   reference for more details on, and advanced usage of, the functions and
+#   packages in the past two chapters. Aside from that, it also has a [nice
+#   beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
+#   of more advanced examples](https://www.tidymodels.org/learn/) that you can use
+#   to continue learning beyond the scope of this book. It's worth noting that the
+#   `tidymodels` package does a lot more than just classification, and so the
+#   examples on the website similarly go beyond classification as well. In the next
+#   two chapters, you'll learn about another kind of predictive modeling setting,
+#   so it might be worth visiting the website only after reading through those
+#   chapters.
+# - *An Introduction to Statistical Learning* [@james2013introduction] provides 
+#   a great next stop in the process of
+#   learning about classification. Chapter 4 discusses additional basic techniques
+#   for classification that we do not cover, such as logistic regression, linear
+#   discriminant analysis, and naive Bayes. Chapter 5 goes into much more detail
+#   about cross-validation. Chapters 8 and 9 cover decision trees and support
+#   vector machines, two very popular but more advanced classification methods.
+#   Finally, Chapter 6 covers a number of methods for selecting predictor
+#   variables. Note that while this book is still a very accessible introductory
+#   text, it requires a bit more mathematical background than we require.
+```
 
 ```{bibliography}
 ```

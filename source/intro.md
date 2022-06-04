@@ -792,6 +792,22 @@ ten_lang_plot = (alt.Chart(ten_lang)
 ten_lang_plot
 ```
 
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue('ten_lang_plot', ten_lang_plot, display=True)
+
+```
+
+
+:::{glue:figure} ten_lang_plot
+:figwidth: 300px
+:name: ten_lang_plot
+
+Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
+:::
+
+
 ## Accessing documentation
 
 There are many Python functions in the `pandas` package (and beyond!), and 

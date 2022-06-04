@@ -96,7 +96,7 @@ Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
 descriptive, exploratory, inferential, predictive, causal, and mechanistic,
-all of which are defined in {numref}`questions-table`.
+all of which are defined in {numref}`questions-table`. [@leek2015question; @peng2015art]
 Carefully formulating a question as early as possible in your analysis&mdash;and 
 correctly identifying which type of question it is&mdash;will guide your overall approach to 
 the analysis as well as the selection of appropriate tools.\index{question!data analysis}
@@ -110,7 +110,7 @@ the analysis as well as the selection of appropriate tools.\index{question!data 
 
 
 
-```{list-table} Types of data analysis question [@leek2015question; @peng2015art].
+```{list-table} Types of data analysis question.
 :header-rows: 1
 :name: questions-table
 
@@ -180,7 +180,7 @@ For example, you might use estimation to answer the following question:
 of the entire Canadian population own Android phones?* 
 Estimation is covered in Chapter \@ref(inference).
 
-Referring to Table \@ref(tab:questions-table), our question about 
+Referring to {numref}`questions-table`, our question about 
 Aboriginal languages is an example of a *descriptive question*: we are
 summarizing the characteristics of a data set without further interpretation.
 And referring to the list above, it looks like we should use visualization
@@ -205,9 +205,6 @@ collect the data on, e.g., voters, cities, etc. We refer to the columns as \inde
 **variables**; these are the characteristics of those observations, e.g., voters' political
 affiliations, cities' populations, etc. 
 
-```{r img-spreadsheet-vs-dataframe, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "A spreadsheet versus a data frame in R.", out.width="100%", fig.retina = 2}
-knitr::include_graphics("img/spreadsheet_vs_dataframe.PNG")
-```
 
 
 ```{figure} img/spreadsheet_vs_dataframe.PNG
@@ -268,9 +265,7 @@ and visualize data.
 
 +++
 
-```{r load-tidyverse, message = TRUE, warning = TRUE}
-library(tidyverse)
-```
+
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -278,21 +273,18 @@ import pandas as pd
 
 
 
-After loading the `pandas` package and accessing it using the variable `pd`, we can call the `read_csv` function and
+After loading the `pandas` package and accessing it using the alias `pd`, we can call the `read_csv` function and
 pass it a single argument: the name of the file, `"can_lang.csv"`. We have to
 put quotes around file names and other letters and words that we use in our
 code to distinguish it from the special words (like functions!) that make up the Python programming
 language.  The file's name is the only argument we need to provide because our
 file satisfies everything else that the `read_csv` function expects in the default
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
-to read data into R. 
+to read data into Python. 
 
 (ref:img-read-csv) Syntax for the `read_csv` function.
 
-``` {r img-read-csv, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-read-csv)", fig.retina = 2, out.width="100%", fig.pos = "H", out.extra=""}
-image_read("img/read_csv_function.jpeg") |>
-  image_crop("1625x1900")
-```
+
 
 ```{figure} img/read_csv_function.jpeg
 ---
@@ -352,7 +344,7 @@ to be surrounded by quotes.
 After making the assignment, we can use the special name words we have created in
 place of their values. For example, if we want to do something with the value `3` later on, 
 we can just use `my_number` instead. Let's try adding 2 to `my_number`; you will see that
-R just interprets this as adding 2 and 3:
+Python just interprets this as adding 2 and 3:
 
 
 ```{code-cell} ipython3
@@ -381,7 +373,7 @@ the words in a name.  Python is case sensitive, which means that `Letter` and
 objects meaningful names.  For instance, you *can* name a data frame `x`.
 However, using more meaningful terms, such as `language_data`, will help you
 remember what each name in your code represents.  We recommend following the
-Tidyverse naming conventions outlined in the *Tidyverse Style Guide* [@tidyversestyleguide].  Let's
+**PEP 8** naming conventions outlined in the *[PEP 8](https://peps.python.org/pep-0008/)* [@tidyversestyleguide].  Let's
 now use the assignment symbol to give the name
 `can_lang` to the 2016 Canadian census language data frame that we get from
 `read_csv`. 
@@ -429,40 +421,30 @@ our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category. 
 
 We can use the `df[]` \index{filter} property to obtain the subset of rows with desired
-values from a data frame. Figure \@ref(fig:img-filter) outlines what arguments we need to specify to use `df[]`. 
-The first argument to `filter` is the name of the data frame
+values from a data frame, where `df[]` is same as the data frame object you are using. 
+In our case it would be `can_lang[]`
+The argument to `can_lang[]` is selection of column name `category` of the data frame
 object, `can_lang`. The second argument is a *logical statement* \index{logical statement} to use when
-filtering the rows. A logical statement evaluates to either `TRUE` or `FALSE`;
-`filter` keeps only those rows for which the logical statement evaluates to `TRUE`.
+filtering the rows with the logical statement evaluating to either `TRUE` or `FALSE`;
+`df[]` keeps only those rows for which the logical statement evaluates to `TRUE`.
 For example, in our analysis, we are interested in keeping only languages in the
 "Aboriginal languages" higher-level category. We can use 
 the *equivalency operator* `==` \index{logical statement!equivalency operator} to compare the values
 of the `category` column with the value `"Aboriginal languages"`; you will learn about
 many other kinds of logical statements in Chapter \@ref(wrangling).  Similar to
 when we loaded the data file and put quotes around the file name, here we need
-to put quotes around `"Aboriginal languages"`. Using quotes tells R that this
-is a string *value* \index{string} and not one of the special words that make up R
+to put quotes around `"Aboriginal languages"`. Using quotes tells Python that this
+is a string *value* \index{string} and not one of the special words that make up Python
 programming language, or one of the names we have given to data frames in the
 code we have already written. 
 
-(ref:img-filter) Syntax for the `filter` function.
-
-```{r img-filter, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-filter)", fig.retina = 2, out.width="100%"}
-image_read("img/filter_function.jpeg") |>
-  image_crop("1625x1900")
-```
 
 
-
-
-With these arguments, `filter` returns a data frame that has all the columns of
+With the logical filter statement inside `df[]`, we get a data frame that has all the columns of
 the input data frame, but only those rows we asked for in our logical filter
 statement. 
 
-```{r}
-aboriginal_lang <- filter(can_lang, category == "Aboriginal languages")
-aboriginal_lang
-```
+
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
@@ -473,36 +455,21 @@ It's good practice to check the output after using a
 function in Python. We can see the original `can_lang` data set contained 214 rows
 with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains languages in
-the "Aboriginal languages" in the `category` column. So it looks like the function 
+the "Aboriginal languages" in the `category` column. So it looks like the `df[]` property
 gave us the result we wanted!
 
 ### Using `.loc[]` to extract columns
 
-Now let's use `select` \index{select} to extract the `language` and `mother_tongue` columns
-from this data frame. Figure \@ref(fig:img-select) shows us the syntax for the `select` function. To extract these columns, we need to provide the `select`
-function with three arguments. The first argument is the name of the data frame
-object, which in this example is `aboriginal_lang`. The second and third
-arguments are the column names that we want to select: `language` and
-`mother_tongue`. After passing these three arguments, the  `select` function
+Now let's use `loc[]` \index{select} to extract the `language` and `mother_tongue` columns
+from this data frame. To extract these columns, we need to provide the `loc[]`
+property with list of rows separated by list of columns i.e `df.loc[[row1, row2, ...], [col1, col2, ...]]`
+As we want to access all the rows of the dataframe, instead of passing the names of all the rows, 
+we can instead just depict them using `:` and then pass a list of columns `language` and `mother_tongue`.
+After passing these as arguments, the  `loc[]` property
 returns two columns (the `language` and `mother_tongue` columns that we asked
-for) as a data frame. This code is also a great example of why being
-able to name things in R is useful: you can see that we are using the
-result of our earlier `filter` step (which we named `aboriginal_lang`) here 
-in the next step of the analysis!
-
-(ref:img-select) Syntax for the `select` function.
-
-``` {r img-select, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-select)", out.width="100%", fig.retina = 2}
-image_read("img/select_function.jpeg") |>
-  image_crop("1625x1900")
-```
+for) as a data frame.
 
 +++
-
-```{r}
-selected_lang <- select(aboriginal_lang, language, mother_tongue)
-selected_lang
-```
 
 ```{code-cell} ipython3
 selected_lang = aboriginal_lang.loc[:, ['language', 'mother_tongue']]
@@ -519,25 +486,13 @@ the top ten rows. This is where the `sort_values` function and `.iloc[]` propert
 rescue! \index{arrange}\index{slice}
 
 The `sort_values` function allows us to order the rows of a data frame by the
-values of a particular column. Figure \@ref(fig:img-arrange) details what arguments we need to specify to
-use the `sort_values` function. We need to pass the column name as a list by which we want to sort the dataframe 
+values of a particular column.  We need to pass the column name as a list by which we want to sort the dataframe 
 Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
 language, we will use the `sort_values` function to order the rows in our
 `selected_lang` data frame by the `mother_tongue` column. We want to
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
-(ref:img-arrange) Syntax for the `arrange` function.
-
-``` {r img-arrange, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-arrange)", out.width="100%", fig.retina = 2}
-image_read("img/arrange_function.jpeg") |>
-  image_crop("1625x1900")
-```
-
-```{r}
-arranged_lang <- arrange(selected_lang, by = desc(mother_tongue))
-arranged_lang
-```
 
 ```{code-cell} ipython3
 arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
@@ -547,10 +502,7 @@ arranged_lang
 Next we will use the `iloc[]` property, which selects rows according to their
 row number. Since we want to choose the most common ten languages, we will indicate we want the
 rows 1 to 10 using the argument `:10`.
-```{r}
-ten_lang <- slice(arranged_lang, 1:10)
-ten_lang
-```
+
 
 ```{code-cell} ipython3
 ten_lang = arranged_lang.iloc[:10]
@@ -580,8 +532,8 @@ In our data set, we can see that `language` and `mother_tongue` are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
 The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
-book: many of the functions from `tidyverse` require tidy data, including the
-`ggplot` \index{ggplot} function that we will use shortly for our visualization. We will
+book: many of the functions from `pandas` require tidy data, including the
+`altair` \index{ggplot} package that we will use shortly for our visualization. We will
 formally introduce tidy data in Chapter \@ref(wrangling).
 
 We will make a bar plot to visualize our data. A bar plot \index{plot|see{visualization}}\index{visualization|see{ggplot}}\index{visualization!bar} is a chart where the
@@ -589,17 +541,11 @@ heights of the bars represent certain values, like counts or proportions. We
 will make a bar plot using the `mother_tongue` and `language` columns from our
 `ten_lang` data frame. To create a bar plot of these two variables using the 
 `altair` package, we must specify the data frame, which variables
-to put on the x and y axes, and what kind of plot to create. The `ggplot`
-function and its common usage is illustrated in Figure \@ref(fig:img-ggplot).
-Figure \@ref(fig:barplot-mother-tongue) shows the resulting bar plot
-generated by following the instructions in Figure \@ref(fig:img-ggplot).
+to put on the x and y axes, and what kind of plot to create. 
+First, we need to import the `altair` package.
 
-(ref:img-ggplot) Creating a bar plot with the `altair` package.
 
-```{r img-ggplot, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-ggplot)", out.width="100%", fig.retina = 2}
-image_read("img/ggplot_function.jpeg") |>
-  image_crop("1625x1900")
-```
+
 
 ```{r barplot-mother-tongue, fig.width=5, fig.height=3, warning=FALSE, fig.cap = "Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. Note that this visualization is not done yet; there are still improvements to be made."}
 ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
@@ -610,24 +556,46 @@ ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
 import altair as alt
 
 ```
++++
+
+The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument `alt.Chart(ten_lang)`.
+With a chart object in hand, we can now specify how we would like the data to be visualized. 
+We first indicate what kind of geometric mark we want to use to represent the data. We can set the mark attribute 
+of the chart object using the `Chart.mark_*` methods.
+Here, as we want to plot the bar chart, so we will use `mark_bar()` method.
+Next, we need to encode the fields of the data frame using 
+the `x`(represents the x-axis position of the points) and 
+`y`(represents the y-axis position of the points) channels. The `encode()`
+method builds a key-value mapping between encoding channels (such as x, y) 
+to fields in the dataset, accessed by field name(column names)
+
++++
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+:tags: []
 
-mother_tongue_plot = (
+ten_lang_plot = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x='language',
         y='mother_tongue'
     ))
+    
+
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
 glue('boot_fig', mother_tongue_plot, display=True)
+
 ```
 
 :::{glue:figure} boot_fig
 :figwidth: 300px
 :name: boot_fig
 
-This is a **caption**, with an embedded !
+Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
 :::
 
 +++
@@ -636,11 +604,11 @@ This is a **caption**, with an embedded !
 
 
 > **Note:** The vast majority of the
-> time, a single expression in R must be contained in a single line of code.
+> time, a single expression in Python must be contained in a single line of code.
 > However, there *are* a small number of situations in which you can have a
-> single R expression span multiple lines. Above is one such case: here, R knows that a line cannot
-> end with a `+` symbol, \index{aaaplussymb@$+$|see{ggplot (add layer)}} and so it keeps reading the next line to figure out
-> what the right-hand side of the `+` symbol should be.  We could, of course,
+> single Python expression span multiple lines. Above is one such case: here, Python knows that a line cannot
+> end with a `.` symbol, \index{aaaplussymb@$+$|see{ggplot (add layer)}} and so it keeps reading the next line to figure out
+> what the right-hand side of the `.` symbol should be.  We could, of course,
 > put all of the added layers on one line of code, but splitting them across
 > multiple lines helps a lot with code readability. \index{multi-line expression}
 
@@ -649,10 +617,10 @@ This is a **caption**, with an embedded !
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
 interpretability of the data visualization that we created. For example, by
-default, R uses the column names as the axis labels. Usually these
+default, Python uses the column names as the axis labels. Usually these
 column names do not have enough information about the variable in the column.
 We really should replace this default with a more informative label. For the
-example above, R uses the column name `mother_tongue` as the label for the
+example above, Python uses the column name `mother_tongue` as the label for the
 y axis, but most people will not know what that is. And even if they did, they
 will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
@@ -769,7 +737,7 @@ modifications. In particular, we have actually skipped the
 in the `ggplot` function, you don't actually need to `select` the columns in advance
 when creating a visualization. We have also provided *comments* next to 
 many of the lines of code below using the
-hash symbol `#`. When R sees a `#` sign, \index{comment} \index{aaacommentsymb@\#|see{comment}} it 
+hash symbol `#`. When Python sees a `#` sign, \index{comment} \index{aaacommentsymb@\#|see{comment}} it 
 will ignore all of the text that
 comes after the symbol on that line. So you can use comments to explain lines 
 of code for others, and perhaps more importantly, your future self!
@@ -823,22 +791,20 @@ ten_lang_plot
 
 ## Accessing documentation
 
-There are many R functions in the `tidyverse` package (and beyond!), and 
+There are many Python functions in the `tidyverse` package (and beyond!), and 
 nobody can be expected to remember what every one of them does
-or all of the arguments we have to give them. Fortunately, R provides 
-the `?` symbol, which 
+or all of the arguments we have to give them. Fortunately, Python provides 
+the `help()` function, which 
 \index{aaaquestionmark@?|see{documentation}}
 \index{help|see{documentation}}
 \index{documentation} provides an easy way to pull up the documentation for 
-most functions quickly. To use the `?` symbol to access documentation, you 
-just put the name of the function you are curious about after the `?` symbol.
-For example, if you had forgotten what the `filter` function
+most functions quickly. To use the `help` function to access documentation, you 
+just put the name of the function you are curious about as an argument inside the `help` function.
+For example, if you had forgotten what the `pd.read_csv` function
 did or exactly what arguments to pass in, you could run the following
 code: 
 
-```
-?filter
-```
+
 
 ```{code-cell} ipython3
 help(pd.read_csv)

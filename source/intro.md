@@ -15,6 +15,7 @@ kernelspec:
 # Python and the Pandas
 
 ```{code-cell} ipython3
+:tags: ["remove-cell"]
 from myst_nb import glue
 ```
 
@@ -674,7 +675,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 The result is shown in Figure \@ref(fig:barplot-mother-tongue-labs). 
 This is already quite an improvement! Let's tackle the next major issue with the visualization
-in Figure \@ref(fig:barplot-mother-tongue-labs): the overlapping x axis labels, which are
+in Figure \@ref(fig:barplot-mother-tongue-labs): the vertical x axis labels, which are
 currently making it difficult to read the different language names.
 One solution is to rotate the plot such that the bars are horizontal rather than vertical.
 To accomplish this, we will swap the x and y coordinate axes:
@@ -717,8 +718,8 @@ the visualization to make it even more well-suited to answering the question
 we asked earlier in this chapter. For example, the visualization could be made more transparent by
 organizing the bars according to the number of Canadian residents reporting
 each language, rather than in alphabetical order. We can reorder the bars using
-the `reorder` \index{reorder} function, which orders a variable (here `language`) based on the
-values of the second variable (`mother_tongue`). 
+the `sort` \index{reorder} argument, which orders a variable (here `language`) based on the
+values of the variable(`mother_tongue`) on the `x-axis`. 
 
 \newpage
 
@@ -731,16 +732,31 @@ ggplot(ten_lang, aes(x = mother_tongue,
 ```
 
 ```{code-cell} ipython3
-mother_tongue_plot = (
+sorted_ten_lang_plot = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', title='Language')
+        y=alt.Y('language', sort='x', title='Language')
     ))
-mother_tongue_plot
+sorted_ten_lang_plot
 ```
 
-        
++++
+
+```{code-cell} ipython3
+:tags: []
+
+glue('sorted_ten_lang_plot', sorted_ten_lang_plot, display=True)
+
+```
+
+
+:::{glue:figure} sorted_ten_lang_plot
+:figwidth: 300px
+:name: sorted_ten_lang_plot
+
+Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.
+:::        
 
 
 Figure \@ref(fig:barplot-mother-tongue-reorder) provides a very clear and well-organized
@@ -760,8 +776,8 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 
 In the block of code below, we put everything from this chapter together, with a few
 modifications. In particular, we have actually skipped the
-`select` step that we did above; since you specify the variable names to plot
-in the `ggplot` function, you don't actually need to `select` the columns in advance
+`loc[]` step that we did above; since you specify the variable names to plot
+in the `altair` function, you don't actually need to select the columns in advance
 when creating a visualization. We have also provided *comments* next to 
 many of the lines of code below using the
 hash symbol `#`. When Python sees a `#` sign, \index{comment} \index{aaacommentsymb@\#|see{comment}} it 
@@ -771,10 +787,10 @@ of code for others, and perhaps more importantly, your future self!
 It's good practice to get in the habit of
 commenting your code to improve its readability.
 
-This exercise demonstrates the power of R. In relatively few lines of code, we
+This exercise demonstrates the power of Python. In relatively few lines of code, we
 performed an entire data science workflow with a highly effective data
-visualization! We asked a question, loaded the data into R, wrangled the data
-(using `filter`, `arrange` and `slice`) and created a data visualization to
+visualization! We asked a question, loaded the data into Python, wrangled the data
+(using `df[]`, `sort_values()` and `iloc[]`) and created a data visualization to
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
@@ -804,11 +820,10 @@ can_lang = pd.read_csv("data/can_lang.csv")
 
 # obtain the 10 most common Aboriginal languages
 aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
-
 arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
-
 ten_lang = arranged_lang[:10]
 
+# create the visualization
 ten_lang_plot = (alt.Chart(ten_lang)
                  .mark_bar().encode(
                   x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
@@ -818,10 +833,10 @@ ten_lang_plot
 
 ## Accessing documentation
 
-There are many Python functions in the `tidyverse` package (and beyond!), and 
+There are many Python functions in the `pandas` package (and beyond!), and 
 nobody can be expected to remember what every one of them does
 or all of the arguments we have to give them. Fortunately, Python provides 
-the `help()` function, which 
+the `help` function and `__doc__` attrribute, which 
 \index{aaaquestionmark@?|see{documentation}}
 \index{help|see{documentation}}
 \index{documentation} provides an easy way to pull up the documentation for 
@@ -834,26 +849,39 @@ code:
 
 
 ```{code-cell} ipython3
+:tags: ["remove-output"]
 help(pd.read_csv)
 ```
+To use the `__doc__` attribute to access documentation, you 
+just put `.__doc__`  after the function you are curious about.
+For example, to access the documentation of `read_csv` you could run the following code:
+ 
+ 
 
-Figure \@ref(fig:01-help) shows the documentation that will pop up,
+```{code-cell} ipython3
+:tags: ["remove-output"]
+print(pd.read_csv._doc__)
+```
+{numref}`help_read_csv` shows the documentation that will pop up,
 including a high-level description of the function, its arguments, 
 a description of each, and more. Note that you may find some of the
 text in the documentation a bit too technical right now 
-(for example, what is `dbplyr`, and what is grouped data?).
 Fear not: as you work through this book, many of these terms will be introduced
 to you, and slowly but surely you will become more adept at understanding and navigating 
-documentation like that shown in Figure \@ref(fig:01-help). But do keep in mind that the documentation
+documentation like that shown in {numref}`help_read_csv`. But do keep in mind that the documentation
 is not written to *teach* you about a function; it is just there as a reference to *remind*
 you about the different arguments and usage of functions that you have already learned about elsewhere.
 
-(ref:01-help) The documentation for the `filter` function, including a high-level description, a list of arguments and their meanings, and more.
+
 
 +++
 
-```{r 01-help, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:01-help)", fig.retina = 2, out.width="80%"}
-knitr::include_graphics("img/help-filter.png")
+```{figure} img/help_read_csv.png
+---
+height: 700px
+name: help_read_csv
+---
+The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.
 ```
 
 ## Exercises

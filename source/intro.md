@@ -39,7 +39,6 @@ By the end of the chapter, readers will be able to do the following:
 - Create new variables and objects in Python.
 - Do indexing and slicing with .loc[].
 - Select columns of a dataframe using df[] notation.
-- Create a new column using assign.
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set
@@ -639,13 +638,6 @@ to format the plot further, and we will explore these in Chapter
 
 (ref:barplot-mother-tongue-labs) Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
 
-```{r barplot-mother-tongue-labs, fig.width=5, fig.height=3.6, warning=FALSE, fig.cap = "(ref:barplot-mother-tongue-labs)", fig.pos = "H", out.extra=""}
-ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
-  geom_bar(stat = "identity") +
-  xlab("Language") +
-  ylab("Mother Tongue (Number of Canadian Residents)")  
-```
-
 ```{code-cell} ipython3
 ten_lang_plot = (
     alt.Chart(ten_lang)
@@ -680,12 +672,6 @@ currently making it difficult to read the different language names.
 One solution is to rotate the plot such that the bars are horizontal rather than vertical.
 To accomplish this, we will swap the x and y coordinate axes:
 
-```{r barplot-mother-tongue-flipped, fig.width=5, fig.height=3, fig.pos = "H", out.extra="", warning=FALSE, fig.cap = "Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further."}
-ggplot(ten_lang, aes(x = mother_tongue, y = language)) +
-  geom_bar(stat = "identity") +
-  xlab("Mother Tongue (Number of Canadian Residents)") +
-  ylab("Language")
-```
 
 ```{code-cell} ipython3
 ten_lang_plot = (
@@ -722,14 +708,6 @@ the `sort` \index{reorder} argument, which orders a variable (here `language`) b
 values of the variable(`mother_tongue`) on the `x-axis`. 
 
 \newpage
-
-```{r barplot-mother-tongue-reorder, fig.width=5, fig.height=3, warning=FALSE, fig.cap = "Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered."}
-ggplot(ten_lang, aes(x = mother_tongue,
-                     y = reorder(language, mother_tongue))) +
-  geom_bar(stat = "identity") +
-  xlab("Mother Tongue (Number of Canadian Residents)") +
-  ylab("Language")
-```
 
 ```{code-cell} ipython3
 sorted_ten_lang_plot = (
@@ -795,24 +773,7 @@ help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
 
-```{r nachos-to-cheesecake, fig.width=5, fig.height=3, warning=FALSE, message=FALSE, fig.cap = "Putting it all together: bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue."}
-library(tidyverse)
 
-# load the data set
-can_lang <- read_csv("data/can_lang.csv")
-
-# obtain the 10 most common Aboriginal languages
-aboriginal_lang <- filter(can_lang, category == "Aboriginal languages")
-arranged_lang <- arrange(aboriginal_lang, by = desc(mother_tongue))
-ten_lang <- slice(arranged_lang, 1:10)
-
-# create the visualization
-ggplot(ten_lang, aes(x = mother_tongue,
-                     y = reorder(language, mother_tongue))) +
-  geom_bar(stat = "identity") +
-  xlab("Mother Tongue (Number of Canadian Residents)") +
-  ylab("Language") 
-```
 
 ```{code-cell} ipython3
 # load the data set
@@ -860,7 +821,7 @@ For example, to access the documentation of `read_csv` you could run the followi
 
 ```{code-cell} ipython3
 :tags: ["remove-output"]
-print(pd.read_csv._doc__)
+print(pd.read_csv.__doc__)
 ```
 {numref}`help_read_csv` shows the documentation that will pop up,
 including a high-level description of the function, its arguments, 

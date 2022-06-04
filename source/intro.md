@@ -587,13 +587,13 @@ ten_lang_plot = (
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('boot_fig', mother_tongue_plot, display=True)
+glue('ten_lang_plot', ten_lang_plot, display=True)
 
 ```
 
 :::{glue:figure} boot_fig
 :figwidth: 300px
-:name: boot_fig
+:name: ten_lang_plot
 
 Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
 :::
@@ -626,15 +626,14 @@ will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
 Canadian Residents)" would be much more informative.
 
-Adding additional layers \index{plot!layers} to our visualizations that we create in `ggplot` is
-one common and easy way to improve and refine our data visualizations. New
-layers are added to `ggplot` objects using the `+` symbol. For example, we can
-use the `xlab` (short for x axis label) and `ylab` (short for y axis label) functions 
-to add layers where we specify meaningful
-and informative labels for the x and y axes. \index{plot!axis labels} Again, since we are specifying
+Adding additional labels \index{plot!layers} to our visualizations that we create in `altair` is
+one common and easy way to improve and refine our data visualizations. We can add titles for the axes 
+in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make 
+the axes titles more informative.
+\index{plot!axis labels} Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
-`xlab` and `ylab`, we surround them with double quotation marks. We can add many more
-layers to format the plot further, and we will explore these in Chapter
+`alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
+to format the plot further, and we will explore these in Chapter
 \@ref(viz).
 
 (ref:barplot-mother-tongue-labs) Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
@@ -643,22 +642,35 @@ layers to format the plot further, and we will explore these in Chapter
 ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
   geom_bar(stat = "identity") +
   xlab("Language") +
-  ylab("Mother Tongue (Number of Canadian Residents)")
-  
-  
-  
-  
+  ylab("Mother Tongue (Number of Canadian Residents)")  
 ```
 
 ```{code-cell} ipython3
-mother_tongue_plot = (
+ten_lang_plot = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('language', title='Language'),
         y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
     ))
-mother_tongue_plot
+ten_lang_plot
 ```
+
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue('ten_lang_plot', ten_lang_plot, display=True)
+
+```
+
+
+:::{glue:figure} boot_fig
+:figwidth: 300px
+:name: ten_lang_plot
+
+Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
+:::
+
 
 The result is shown in Figure \@ref(fig:barplot-mother-tongue-labs). 
 This is already quite an improvement! Let's tackle the next major issue with the visualization
@@ -675,14 +687,29 @@ ggplot(ten_lang, aes(x = mother_tongue, y = language)) +
 ```
 
 ```{code-cell} ipython3
-mother_tongue_plot = (
+ten_lang_plot = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', title='Language')
     ))
-mother_tongue_plot
+ten_lang_plot
 ```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue('ten_lang_plot', ten_lang_plot, display=True)
+
+```
+
+
+:::{glue:figure} boot_fig
+:figwidth: 300px
+:name: ten_lang_plot
+
+Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.
+:::
 
 Another big step forward, as shown in Figure \@ref(fig:barplot-mother-tongue-flipped)! There 
 are no more serious issues with the visualization. Now comes time to refine

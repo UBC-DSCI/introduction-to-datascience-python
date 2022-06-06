@@ -1,13 +1,13 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
-#     cell_metadata_filter: -all
 #     formats: py:percent,md:myst,ipynb
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.13.5
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -15,8 +15,10 @@
 # ---
 
 # %% [markdown]
-# # Regression I: K-nearest neighbors {#regression1}
-#
+# (regression1)=
+# # Regression I: K-nearest neighbors
+
+# %% [markdown]
 # ```{r regression1-setup, echo = FALSE, message = FALSE, warning = FALSE}
 # library(knitr)
 # library(plotly)
@@ -43,7 +45,20 @@
 # }
 # theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
 # ```
-#
+
+# %% tags=["remove-cell"]
+import altair as alt
+import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from myst_nb import glue
+
+# %% [markdown]
 # ## Overview 
 #
 # This chapter continues our foray into answering predictive questions.
@@ -53,10 +68,10 @@
 # variables via classification. However, regression does have many similarities
 # to classification: for example, just as in the case of classification,
 # we will split our data into training, validation, and test sets, we will 
-# use `tidymodels` workflows, we will use a K-nearest neighbors (KNN) 
+# use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN) 
 # approach to make predictions, and we will use cross-validation to choose K.
 # Because of how similar these procedures are, make sure to read Chapters
-# \@ref(classification) and \@ref(classification2) before reading 
+# {ref}`classification` and {ref}`classification2` before reading 
 # this one&mdash;we will move a little bit faster here with the
 # concepts that have already been covered.
 # This chapter will primarily focus on the case where there is a single predictor, 
@@ -65,19 +80,21 @@
 # It is important to note that regression 
 # can also be used to answer inferential and causal questions, 
 # however that is beyond the scope of this book.
-#
+
+# %% [markdown]
 # ## Chapter learning objectives 
 # By the end of the chapter, readers will be able to do the following:
 #
 # * Recognize situations where a simple regression analysis would be appropriate for making predictions.
 # * Explain the K-nearest neighbor (KNN) regression algorithm and describe how it differs from KNN classification.
 # * Interpret the output of a KNN regression.
-# * In a dataset with two or more variables, perform K-nearest neighbor regression in R using a `tidymodels` workflow.
-# * Execute cross-validation in R to choose the number of neighbors.
-# * Evaluate KNN regression prediction accuracy in R using a test data set and the root mean squared prediction error (RMSPE).
+# * In a dataset with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
+# * Execute cross-validation in Python to choose the number of neighbors.
+# * Evaluate KNN regression prediction accuracy in Python using a test data set and the root mean squared prediction error (RMSPE).
 # * In the context of KNN regression, compare and contrast goodness of fit and prediction properties (namely RMSE vs RMSPE).
 # * Describe the advantages and disadvantages of K-nearest neighbors regression.
-#
+
+# %% [markdown]
 # ## The regression problem
 #
 # Regression, like classification, is a predictive \index{predictive question} problem setting where we want
@@ -93,7 +110,7 @@
 # Just like in the \index{classification!comparison to regression} 
 # classification setting, there are many possible methods that we can use 
 # to predict numerical response variables. In this chapter we will
-# focus on the **K-nearest neighbors** algorithm [@knnfix; @knncover], and in the next chapter
+# focus on the **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`, and in the next chapter
 # we will study **linear regression**.
 # In your future studies, you might encounter regression trees, splines,
 # and general local regression methods; see the additional resources
@@ -108,7 +125,6 @@
 # choices of model parameters (e.g., K in a K-nearest neighbors model). The major difference
 # is that we are now predicting numerical variables instead of categorical variables.
 #
-# \newpage
 #
 # > **Note:** You can usually tell whether a\index{categorical variable}\index{numerical variable} variable is numerical or
 # > categorical&mdash;and therefore whether you need to perform regression or
@@ -121,8 +137,9 @@
 # > though: sometimes categorical variables will be encoded as numbers in your
 # > data (e.g., "1" represents "benign", and "0" represents "malignant"). In
 # > these cases you have to ask the question about the *meaning* of the labels
-# > ("benign" and "malignant"), not their values ("1" and "0"). 
-#
+# > ("benign" and "malignant"), not their values ("1" and "0").
+
+# %% [markdown]
 # ## Exploring a data set
 #
 # In this chapter and the next, we will study 
@@ -138,18 +155,15 @@
 # We begin the analysis by loading and examining the data, and setting the seed value.
 #
 # \index{seed!set.seed}
-#
-# ```{r 07-load, message = FALSE}
-# library(tidyverse)
-# library(tidymodels)
-# library(gridExtra)
-#
-# set.seed(5)
-#
-# sacramento <- read_csv("data/sacramento.csv")
-# sacramento
-# ```
-#
+
+# %%
+import pandas as pd
+import altair as alt
+
+sacramento = pd.read_csv("data/sacramento.csv")
+sacramento
+
+# %% [markdown]
 # The scientific question guides our initial exploration: the columns in the
 # data that we are interested in are `sqft` (house size, in livable square feet)
 # and `price` (house sale price, in US dollars (USD)).  The first step is to visualize
@@ -159,25 +173,36 @@
 # \index{ggplot!geom\_point}
 # \index{visualization!scatter}
 #
-# > **Note:** Given that the y-axis unit is dollars in Figure \@ref(fig:07-edaRegr), 
+# > **Note:** Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`, 
 # > we format the axis labels to put dollar signs in front of the house prices, 
 # > as well as commas to increase the readability of the larger numbers.
-# > We can do this in R by passing the `dollar_format` function 
-# > (from the `scales` package)
-# > to the `labels` argument of the `scale_y_continuous` function.
+# > We can do this in `altair` by passing the `axis=alt.Axis(format='$,.0f')` argument 
+# > to the `y` encoding channel in an `altair` specification.
+
+# %% tags=["remove-output"]
+eda = (
+    alt.Chart(sacramento)
+    .mark_circle(opacity=0.4)
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    )
+)
+
+eda
+
+# %% tags=["remove-cell"]
+glue("fig:07-edaRegr", eda)
+
+# %% [markdown]
+# :::{glue:figure} fig:07-edaRegr
+# :name: fig:07-edaRegr
 #
-# ```{r 07-edaRegr, message = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet)."}
-# eda <- ggplot(sacramento, aes(x = sqft, y = price)) +
-#   geom_point(alpha = 0.4) +
-#   xlab("House size (square feet)") +
-#   ylab("Price (USD)") +
-#   scale_y_continuous(labels = dollar_format()) + 
-#   theme(text = element_text(size = 12))
-#
-# eda
-# ```
-#  
-# The plot is shown in Figure \@ref(fig:07-edaRegr).
+# Scatter plot of price (USD) versus house size (square feet).
+# :::
+
+# %% [markdown]
+# The plot is shown in {numref}`fig:07-edaRegr`.
 # We can see that in Sacramento, CA, as the
 # size of a house increases, so does its sale price. Thus, we can reason that we
 # may be able to use the size of a not-yet-sold house (for which we don't know
@@ -185,105 +210,140 @@
 # that a larger house size *causes* a higher sale price; just that house price
 # tends to increase with house size, and that we may be able to use the latter to 
 # predict the former.
-#
+
+# %% [markdown]
 # ## K-nearest neighbors regression
 #
 # Much like in the case of classification, 
 # we can use a K-nearest neighbors-based \index{K-nearest neighbors!regression} 
 # approach in regression to make predictions. 
-# Let's take a small sample of the data in Figure \@ref(fig:07-edaRegr) 
+# Let's take a small sample of the data in {numref}`fig:07-edaRegr` 
 # and walk through how K-nearest neighbors (KNN) works
 # in a regression context before we dive in to creating our model and assessing
 # how well it predicts house sale price. This subsample is taken to allow us to
 # illustrate the mechanics of KNN regression with a few data points; later in
 # this chapter we will use all the data.
 #
-# To take a small random sample of size 30, we'll use the function
-# `slice_sample`, and input the data frame to sample from and the number of rows
-# to randomly select. \index{slice\_sample}
-#
-# ```{r 07-sacramento-seed, echo = FALSE, message = FALSE, warning = FALSE}
-# # hidden seed
-# set.seed(10)
-# ```
-#
-# ```{r 07-sacramento}
-# small_sacramento <- slice_sample(sacramento, n = 30)
-# ```
-#
+# To take a small random sample of size 30, we'll use the 
+# `sample` method of a `pandas.DataFrame` object, and input the number of rows
+# to randomly select (`n`) and the random seed (`random_state`). \index{slice\_sample}
+
+# %%
+small_sacramento = sacramento.sample(n=30, random_state=10)
+
+# %% [markdown]
 # Next let's say we come across a  2,000 square-foot house in Sacramento we are
 # interested in purchasing, with an advertised list price of \$350,000. Should we
 # offer to pay the asking price for this house, or is it overpriced and we should
 # offer less? Absent any other information, we can get a sense for a good answer
 # to this question by using the data we have to predict the sale price given the
-# sale prices we have already observed. But in Figure \@ref(fig:07-small-eda-regr),
+# sale prices we have already observed. But in {numref}`fig:07-small-eda-regr`,
 # you can see that we have no
 # observations of a house of size *exactly* 2,000 square feet. How can we predict
-# the sale price? 
+# the sale price?
+
+# %% tags=["remove-output"]
+small_plot = (
+    alt.Chart(small_sacramento)
+    .mark_circle()
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    )
+)
+
+# add an overlay to the base plot
+line_df = pd.DataFrame({"x": [2000]})
+rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+
+small_plot + rule
+
+# %% tags=["remove-cell"]
+glue("fig:07-small-eda-regr", (small_plot + rule))
+
+# %% [markdown]
+# :::{glue:figure} fig:07-small-eda-regr
+# :name: fig:07-small-eda-regr
 #
-# ```{r 07-small-eda-regr, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with vertical line indicating 2,000 square feet on x-axis."}
-# small_plot <- ggplot(small_sacramento, aes(x = sqft, y = price)) +
-#   geom_point() +
-#   xlab("House size (square feet)") +
-#   ylab("Price (USD)") +
-#   scale_y_continuous(labels = dollar_format()) +
-#   geom_vline(xintercept = 2000, linetype = "dotted") + 
-#   theme(text = element_text(size = 12))
-#
-# small_plot
-# ```
-#
+# Scatter plot of price (USD) versus house size (square feet) with vertical line indicating 2,000 square feet on x-axis.
+# :::
+
+# %% [markdown]
 # We will employ the same intuition from the classification chapter, and use the
 # neighboring points to the new point of interest to suggest/predict what its
 # sale price might be. 
-# For the example shown in Figure \@ref(fig:07-small-eda-regr), 
+# For the example shown in {numref}`fig:07-small-eda-regr`, 
 # we find and label the 5 nearest neighbors to our observation 
 # of a house that is 2,000 square feet.
 # \index{mutate}\index{slice}\index{arrange}\index{abs}
+
+# %%
+nearest_neighbors = (
+    small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
+    .sort_values("diff")
+    .iloc[:5]
+)
+nearest_neighbors
+
+# %% tags=["remove-cell"]
+nn_plot = small_plot + rule
+
+# plot horizontal lines which is perpendicular to x=2000
+for i in range(5):
+    h_line_df = pd.concat(
+        (
+            pd.DataFrame(nearest_neighbors.iloc[i, [4, 6]]).T,
+            pd.DataFrame({"sqft": [2000], "price": [nearest_neighbors.iloc[i, 6]]}),
+        ),
+        ignore_index=True,
+    )
+    h_line = alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price")
+    nn_plot += h_line
+
+nn_plot
+
+# %% tags=["remove-cell"]
+glue("fig:07-knn5-example", nn_plot)
+
+# %% [markdown]
+# :::{glue:figure} fig:07-knn5-example
+# :name: fig:07-knn5-example
 #
-# ```{r 07-find-k3}
-# nearest_neighbors <- small_sacramento |>
-#   mutate(diff = abs(2000 - sqft)) |>
-#   arrange(diff) |>
-#   slice(1:5) #subset the first 5 rows
-#
-# nearest_neighbors
-# ```
-#
-# ```{r 07-knn3-example, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors."}
-# nearest_neighbors <- mutate(nearest_neighbors, twothou = rep(2000, 5))
-#
-# nn_plot <- small_plot +
-#   geom_segment(
-#     data = nearest_neighbors,
-#     aes(x = twothou, xend = sqft, y = price, yend = price), color = "orange"
-#   )
-#
-# nn_plot
-# ```
-#
-# Figure \@ref(fig:07-knn3-example) illustrates the difference between the house sizes
+# Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors.
+# :::
+
+# %% [markdown]
+# {numref}`fig:07-knn5-example` illustrates the difference between the house sizes
 # of the 5 nearest neighbors (in terms of house size) to our new
 # 2,000 square-foot house of interest. Now that we have obtained these nearest neighbors, 
 # we can use their values to predict the
 # sale price for the new home.  Specifically, we can take the mean (or
 # average) of these 5 values as our predicted value, as illustrated by
-# the red point in Figure \@ref(fig:07-predictedViz-knn).
+# the red point in {numref}`fig:07-predictedViz-knn`.
+
+# %%
+prediction = nearest_neighbors["price"].mean()
+prediction
+
+# %% tags=["remove-cell"]
+nn_plot_pred = nn_plot + alt.Chart(
+    pd.DataFrame({"sqft": [2000], "price": [prediction]})
+).mark_circle(size=40).encode(x="sqft", y="price", color=alt.value("red"))
+
+# %% tags=["remove-cell"]
+glue("knn-5-pred", "{0:,.0f}".format(prediction))
+glue("fig:07-predictedViz-knn", nn_plot_pred)
+
+# %% [markdown]
+# :::{glue:figure} fig:07-predictedViz-knn
+# :name: fig:07-predictedViz-knn
 #
-# ```{r 07-predicted-knn}
-# prediction <- nearest_neighbors |>
-#   summarise(predicted = mean(price))
-#
-# prediction
-# ```
-#
-# ```{r 07-predictedViz-knn, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with predicted price for a 2,000 square-foot house based on 5 nearest neighbors represented as a red dot."}
-# nn_plot +
-#   geom_point(aes(x = 2000, y = prediction[[1]]), color = "red", size = 2.5)
-# ```
-#
-# Our predicted price is \$`r format(round(prediction[[1]]), big.mark=",", nsmall=0, scientific = FALSE)`
-# (shown as a red point in Figure \@ref(fig:07-predictedViz-knn)), which is much less than \$350,000; perhaps we
+# Scatter plot of price (USD) versus house size (square feet) with predicted price for a 2,000 square-foot house based on 5 nearest neighbors represented as a red dot.
+# :::
+
+# %% [markdown]
+# Our predicted price is \${glue:}`knn-5-pred`
+# (shown as a red point in {numref}`fig:07-predictedViz-knn`), which is much less than \$350,000; perhaps we
 # might want to offer less than the list price at which the house is advertised.
 # But this is only the very beginning of the story. We still have all the same
 # unanswered questions here with KNN regression that we had with KNN
@@ -298,7 +358,8 @@
 # This stems from the use of nearest neighbors to predict values.
 # The algorithm really has very few assumptions 
 # about what the data must look like for it to work.
-#
+
+# %% [markdown]
 # ## Training, evaluating, and tuning the model
 #
 # As usual, 
@@ -896,3 +957,10 @@
 # make sure to follow the instructions for computer setup
 # found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
+
+# %% [markdown]
+# ## References
+
+# %% [markdown]
+# ```{bibliography}
+# ```

@@ -591,7 +591,7 @@ glue('ten_lang_plot', ten_lang_plot, display=True)
 
 ```
 
-:::{glue:figure} boot_fig
+:::{glue:figure} ten_lang_plot
 :figwidth: 300px
 :name: ten_lang_plot
 
@@ -657,7 +657,7 @@ glue('ten_lang_plot', ten_lang_plot, display=True)
 ```
 
 
-:::{glue:figure} boot_fig
+:::{glue:figure} ten_lang_plot
 :figwidth: 300px
 :name: ten_lang_plot
 
@@ -680,7 +680,7 @@ ten_lang_plot = (
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', title='Language')
     ))
-ten_lang_plot
+
 ```
 
 ```{code-cell} ipython3
@@ -691,7 +691,7 @@ glue('ten_lang_plot', ten_lang_plot, display=True)
 ```
 
 
-:::{glue:figure} boot_fig
+:::{glue:figure} ten_lang_plot
 :figwidth: 300px
 :name: ten_lang_plot
 
@@ -716,7 +716,7 @@ sorted_ten_lang_plot = (
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', sort='x', title='Language')
     ))
-sorted_ten_lang_plot
+
 ```
 
 +++
@@ -789,7 +789,7 @@ ten_lang_plot = (alt.Chart(ten_lang)
                  .mark_bar().encode(
                   x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
                   y = alt.Y('language', title="Language")))
-ten_lang_plot
+
 ```
 
 ```{code-cell} ipython3

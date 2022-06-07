@@ -153,7 +153,7 @@ Tools for summarization are covered in detail in Chapters \@ref(reading)
 and \@ref(wrangling), but appear regularly throughout the text.
 2. **Visualization:** \index{visualization!overview} plotting data graphically. 
 Visualization is typically used to answer descriptive and exploratory questions,
-but plays a critical supporting role in answering all of the types of question in Table \@ref(tab:questions-table).
+but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?* 
 This is covered in detail in Chapter \@ref(viz), but again appears regularly throughout the book.
@@ -194,8 +194,7 @@ A data set is, at its core essence, a structured collection of numbers and chara
 Aside from that, there are really no strict rules; data sets can come in 
 many different forms! Perhaps the most common form of data set that you will
 find in the wild, however, is *tabular data*\index{tabular data}. Think spreadsheets in Microsoft Excel: tabular data are
-rectangular-shaped and spreadsheet-like, as shown in Figure
-\@ref(fig:img-spreadsheet-vs-dataframe). In this book, we will focus primarily on tabular data.
+rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-dataframe`. In this book, we will focus primarily on tabular data.
 
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
@@ -547,10 +546,7 @@ First, we need to import the `altair` package.
 
 
 
-```{r barplot-mother-tongue, fig.width=5, fig.height=3, warning=FALSE, fig.cap = "Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. Note that this visualization is not done yet; there are still improvements to be made."}
-ggplot(ten_lang, aes(x = language, y = mother_tongue)) +
-  geom_bar(stat = "identity")
-```
+
 
 ```{code-cell} ipython3
 import altair as alt
@@ -574,7 +570,7 @@ to fields in the dataset, accessed by field name(column names)
 ```{code-cell} ipython3
 :tags: []
 
-ten_lang_plot = (
+barplot_mother_tongue = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x='language',
@@ -587,13 +583,13 @@ ten_lang_plot = (
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('ten_lang_plot', ten_lang_plot, display=True)
+glue('barplot-mother-tongue', barplot_mother_tongue, display=True)
 
 ```
 
-:::{glue:figure} boot_fig
-:figwidth: 300px
-:name: ten_lang_plot
+:::{glue:figure} barplot-mother-tongue
+:figwidth: 700px
+:name: barplot-mother-tongue
 
 Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
 :::
@@ -636,69 +632,69 @@ words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 to format the plot further, and we will explore these in Chapter
 \@ref(viz).
 
-(ref:barplot-mother-tongue-labs) Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
+{numref}`barplot-mother-tongue-labs` Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
 
 ```{code-cell} ipython3
-ten_lang_plot = (
+barplot_mother_tongue = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('language', title='Language'),
         y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
     ))
-ten_lang_plot
+
 ```
 
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('ten_lang_plot', ten_lang_plot, display=True)
+glue('barplot-mother-tongue-labs', barplot_mother_tongue, display=True)
 
 ```
 
 
-:::{glue:figure} boot_fig
-:figwidth: 300px
-:name: ten_lang_plot
+:::{glue:figure} barplot-mother-tongue-labs
+:figwidth: 700px
+:name: barplot-mother-tongue-labs
 
-Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
+Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
 :::
 
 
-The result is shown in Figure \@ref(fig:barplot-mother-tongue-labs). 
+The result is shown in {numref}`barplot-mother-tongue-labs`. 
 This is already quite an improvement! Let's tackle the next major issue with the visualization
-in Figure \@ref(fig:barplot-mother-tongue-labs): the vertical x axis labels, which are
+in {numref}`barplot-mother-tongue-labs`: the vertical x axis labels, which are
 currently making it difficult to read the different language names.
 One solution is to rotate the plot such that the bars are horizontal rather than vertical.
 To accomplish this, we will swap the x and y coordinate axes:
 
 
 ```{code-cell} ipython3
-ten_lang_plot = (
+barplot_mother_tongue_axis = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', title='Language')
     ))
-ten_lang_plot
+
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('ten_lang_plot', ten_lang_plot, display=True)
+glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True)
 
 ```
 
 
-:::{glue:figure} boot_fig
-:figwidth: 300px
-:name: ten_lang_plot
+:::{glue:figure} barplot-mother-tongue-labs-axis
+:figwidth: 700px
+:name: barplot-mother-tongue-labs-axis
 
 Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.
 :::
 
-Another big step forward, as shown in Figure \@ref(fig:barplot-mother-tongue-flipped)! There 
+Another big step forward, as shown in {numref}`barplot-mother-tongue-labs-axis`! There 
 are no more serious issues with the visualization. Now comes time to refine
 the visualization to make it even more well-suited to answering the question
 we asked earlier in this chapter. For example, the visualization could be made more transparent by
@@ -710,34 +706,34 @@ values of the variable(`mother_tongue`) on the `x-axis`.
 \newpage
 
 ```{code-cell} ipython3
-sorted_ten_lang_plot = (
+ordered_barplot_mother_tongue = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', sort='x', title='Language')
     ))
-sorted_ten_lang_plot
+
 ```
 
 +++
 
 ```{code-cell} ipython3
-:tags: []
+:tags: ["remove-cell"]
 
-glue('sorted_ten_lang_plot', sorted_ten_lang_plot, display=True)
+glue('barplot-mother-tongue-reorder', ordered_barplot_mother_tongue, display=True)
 
 ```
 
 
-:::{glue:figure} sorted_ten_lang_plot
-:figwidth: 300px
-:name: sorted_ten_lang_plot
+:::{glue:figure} barplot-mother-tongue-reorder
+:figwidth: 700px
+:name: barplot-mother-tongue-reorder
 
 Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.
 :::        
 
 
-Figure \@ref(fig:barplot-mother-tongue-reorder) provides a very clear and well-organized
+{numref}`barplot-mother-tongue-reorder` provides a very clear and well-organized
 answer to our original question; we can see what the ten most often reported Aboriginal languages
 were, according to the 2016 Canadian census, and how many people speak each of them. For
 instance, we can see that the Aboriginal language most often reported was Cree
@@ -789,20 +785,20 @@ ten_lang_plot = (alt.Chart(ten_lang)
                  .mark_bar().encode(
                   x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
                   y = alt.Y('language', title="Language")))
-ten_lang_plot
+
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('ten_lang_plot', ten_lang_plot, display=True)
+glue('final_plot', ten_lang_plot, display=True)
 
 ```
 
 
-:::{glue:figure} ten_lang_plot
-:figwidth: 300px
-:name: ten_lang_plot
+:::{glue:figure} final_plot
+:figwidth: 700px
+:name: final_plot
 
 Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
 :::

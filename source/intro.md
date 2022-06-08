@@ -37,7 +37,7 @@ By the end of the chapter, readers will be able to do the following:
 - Read tabular data with `read_csv`.
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
-- Do indexing and slicing with .loc[].
+- Do indexing and slicing with `.loc[]` and `.iloc[]` properties.
 - Select columns of a dataframe using df[] notation.
 - Visualize data with an `altair` bar plot.
 
@@ -206,7 +206,7 @@ affiliations, cities' populations, etc.
 
 
 
-```{figure} img/spreadsheet_vs_dataframe.PNG
+```{figure} img/spreadsheet_vs_dataframe.png
 ---
 height: 400px
 name: img-spreadsheet-vs-dataframe
@@ -485,7 +485,8 @@ the top ten rows. This is where the `sort_values` function and `.iloc[]` propert
 rescue! \index{arrange}\index{slice}
 
 The `sort_values` function allows us to order the rows of a data frame by the
-values of a particular column.  We need to pass the column name as a list by which we want to sort the dataframe 
+values of a particular column.  We need to specify the column name
+by which we want to sort the dataframe by passing it to the argument `by`.
 Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
 language, we will use the `sort_values` function to order the rows in our
 `selected_lang` data frame by the `mother_tongue` column. We want to
@@ -494,7 +495,7 @@ so we specify the argument `ascending` as `False`.
 
 
 ```{code-cell} ipython3
-arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
+arranged_lang = selected_lang.sort_values(by='mother_tongue', ascending=False)
 arranged_lang
 ```
 
@@ -632,7 +633,7 @@ words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 to format the plot further, and we will explore these in Chapter
 \@ref(viz).
 
-{numref}`barplot-mother-tongue-labs` Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.
+
 
 ```{code-cell} ipython3
 barplot_mother_tongue = (

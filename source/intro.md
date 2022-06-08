@@ -11,7 +11,6 @@ kernelspec:
   language: python
   name: python3
 ---
-
 # Python and the Pandas
 
 ```{code-cell} ipython3
@@ -21,7 +20,7 @@ from myst_nb import glue
 
 ## Overview
 
-This chapter provides an introduction to data science and the Python programming language.
+his chapter provides an introduction to data science and the Python programming language.
 The goal here is to get your hands dirty right from the start! We will walk through an entire data analysis,
 and along the way introduce different types of data analysis question, some fundamental programming 
 concepts in Python, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will
@@ -206,7 +205,7 @@ affiliations, cities' populations, etc.
 
 
 
-```{figure} img/spreadsheet_vs_dataframe.png
+```{figure} img/spreadsheet_vs_df.png
 ---
 height: 400px
 name: img-spreadsheet-vs-dataframe

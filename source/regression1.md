@@ -56,6 +56,10 @@ from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import StandardScaler
+import plotly.express as px
+import plotly.graph_objs as go
+from plotly.offline import plot
+from IPython.display import HTML
 
 from myst_nb import glue
 ```
@@ -830,6 +834,7 @@ from sklearn.metrics import mean_squared_error
 RMSPE = np.sqrt(
     mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
 )
+
 RMSPE
 ```
 
@@ -1017,7 +1022,7 @@ sacr_spec <- nearest_neighbor(weight_func = "rectangular",
 
 +++
 
-Next, we'll use 5-fold cross-validation to choose the number of neighbors via the minimum RMSPE:
+Next, we'll use 5-fold cross-validation through `GridSearchCV` to choose the number of neighbors via the minimum RMSPE:
 
 ```{code-cell} ipython3
 # create the 5-fold GridSearchCV object
@@ -1038,8 +1043,7 @@ sacr_gridsearch.fit(X, y)
 # retrieve the CV scores
 sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
 # negate mean_test_score (negative RMSPE) to get the actual RMSPE
-sacr_results["RMSPE"] = - sacr_results["mean_test_score"]
-# sacr_results[["param_kneighborsregressor__n_neighbors", "RMSPE", "mean_test_score", "std_test_score"]]
+sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
 sacr_multi = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
@@ -1072,82 +1076,97 @@ and evaluate its performance on test data. We first need to re-train the model o
 training data set with $K =$ {glue:}`sacr_k`, and then use that model to make predictions
 on the test data.
 
-+++
+```{code-cell} ipython3
+# re-make the pipeline
+sacr_pipeline_mult = make_pipeline(sacr_preprocessor, KNeighborsRegressor(n_neighbors=sacr_k))
 
-```{r 07-re-train}
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                              neighbors = sacr_k) |>
-  set_engine("kknn") |>
-  set_mode("regression")
+# fit the pipeline object
+sacr_pipeline_mult.fit(X, y)
 
-knn_mult_fit <- workflow() |>
-  add_recipe(sacr_recipe) |>
-  add_model(sacr_spec) |>
-  fit(data = sacramento_train)
+# predict on test data
+sacr_preds = sacramento_test
+sacr_preds = sacr_preds.assign(predicted=sacr_pipeline_mult.predict(sacramento_test))
 
-knn_mult_preds <- knn_mult_fit |>
-  predict(sacramento_test) |>
-  bind_cols(sacramento_test)
+# calculate RMSPE
+from sklearn.metrics import mean_squared_error
 
-knn_mult_mets <- metrics(knn_mult_preds, truth = price, estimate = .pred) |>
-                     filter(.metric == 'rmse')
-knn_mult_mets
+RMSPE_mult = np.sqrt(
+    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+)
+
+RMSPE_mult
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("RMSPE_mult", int(RMSPE_mult))
+```
 
 This time, when we performed KNN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error 
-of `r format(round(knn_mult_mets |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`.
-Figure \@ref(fig:07-knn-mult-viz) visualizes the model's predictions overlaid on top of the data. This 
+of .
+{numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This 
 time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
 predictors instead of 1.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 07-knn-mult-viz, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "KNN regression model’s predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.", out.width="100%"}
-xvals <- seq(from = min(sacramento_train$sqft), 
-             to = max(sacramento_train$sqft), 
-             length = 50)
-yvals <- seq(from = min(sacramento_train$beds), 
-             to = max(sacramento_train$beds), 
-             length = 50)
+# create a prediction pt grid
+xvals = np.linspace(
+    sacramento_train["sqft"].min(), sacramento_train["sqft"].max(), 50
+)
+yvals = np.linspace(
+    sacramento_train["beds"].min(), sacramento_train["beds"].max(), 50
+)
+xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
+xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
 
-zvals <- knn_mult_fit |>
-  predict(crossing(xvals, yvals) |> 
-            mutate(sqft = xvals, beds = yvals)) |>
-  pull(.pred)
+# add prediction
+knnPredGrid = sacr_pipeline_mult.predict(pcgrid)
 
-zvalsm <- matrix(zvals, nrow = length(xvals))
+fig = px.scatter_3d(
+    sacramento_train,
+    x="sqft",
+    y="beds",
+    z="price",
+    opacity=0.4,
+    labels={"sqft": "Size (sq ft)", "beds": "Bedrooms", "price": "Price (USD)"},
+)
 
-plot_3d <- plot_ly() |>
-  add_markers(
-    data = sacramento_train,
-    x = ~sqft,
-    y = ~beds,
-    z = ~price,
-    marker = list(size = 2, opacity = 0.4, color = "red")
-  ) |>
-  layout(scene = list(
-    xaxis = list(title = "Size (sq ft)"),
-    zaxis = list(title = "Price (USD)"),
-    yaxis = list(title = "Bedrooms")
-  )) |>
-  add_surface(
-    x = ~xvals,
-    y = ~yvals,
-    z = ~zvalsm,
-    colorbar = list(title = "Price (USD)")
-  )
+fig.update_traces(marker={"size": 2, "color": "red"})
 
-if(!is_latex_output()){  
-  plot_3d
-} else {
-  scene = list(camera = list(eye = list(x = -2.1, y = -2.2, z = 0.75)))
-  plot_3d <- plot_3d  |> layout(scene = scene)
-  save_image(plot_3d, "img/plot3d_knn_regression.png", scale = 10)
-  knitr::include_graphics("img/plot3d_knn_regression.png")
-}
+fig.add_trace(
+    go.Surface(
+        x=xvals,
+        y=yvals,
+        z=knnPredGrid.reshape(50, -1),
+        name="Predictions",
+        colorscale="viridis",
+        colorbar={"title": "Price (USD)"}
+    )
+)
+
+fig.update_layout(
+    margin=dict(l=0, r=0, b=0, t=1),
+    template="plotly_white",
+)
+
+plot(fig, filename="img/regression1/fig07-knn-mult-viz.html", auto_open=False)
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+
+display(HTML("img/regression1/fig07-knn-mult-viz.html"))
+```
+
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:07-knn-mult-viz
+:figclass: caption-hack
+
+KNN regression model’s predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.
 ```
 
 +++
@@ -1193,7 +1212,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

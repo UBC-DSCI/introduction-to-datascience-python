@@ -15,35 +15,6 @@ kernelspec:
 (regression1)=
 # Regression I: K-nearest neighbors
 
-+++
-
-```{r regression1-setup, echo = FALSE, message = FALSE, warning = FALSE}
-library(knitr)
-library(plotly)
-library(stringr)
-
-knitr::opts_chunk$set(fig.align = "center")
-reticulate::use_miniconda('r-reticulate')
-
-print_tidymodels <- function(tidymodels_object) {
-  if(!is_latex_output()) {
-    tidymodels_object
-  } else {
-    output <- capture.output(tidymodels_object)
-    
-    for (i in seq_along(output)) {
-      if (nchar(output[i]) <= 80) {
-        cat(output[i], sep = "\n")
-      } else {
-        cat(str_sub(output[i], start = 1, end = 80), sep = "\n")
-        cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = "\n")
-      }
-    }
-  }
-}
-theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
-```
-
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -160,9 +131,25 @@ we want to answer. In this example, our question is again predictive:
 its sale price? A rigorous, quantitative answer to this question might help
 a realtor advise a client as to whether the price of a particular listing 
 is fair, or perhaps how to set the price of a new listing.
-We begin the analysis by loading and examining the data, and setting the seed value.
+We begin the analysis by loading and examining the data.
 
-\index{seed!set.seed}
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# In this chapter and the next, we will study 
+# a data set \index{Sacramento real estate} of 
+# [932 real estate transactions in Sacramento, California](https://support.spatialkey.com/spatialkey-sample-csv-data/) 
+# originally reported in the *Sacramento Bee* newspaper.
+# We first need to formulate a precise question that
+# we want to answer. In this example, our question is again predictive:
+# \index{question!regression} Can we use the size of a house in the Sacramento, CA area to predict
+# its sale price? A rigorous, quantitative answer to this question might help
+# a realtor advise a client as to whether the price of a particular listing 
+# is fair, or perhaps how to set the price of a new listing.
+# We begin the analysis by loading and examining the data, and setting the seed value.
+
+# \index{seed!set.seed}
+```
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -304,6 +291,7 @@ nearest_neighbors = (
     .sort_values("diff")
     .iloc[:5]
 )
+
 nearest_neighbors
 ```
 
@@ -414,14 +402,6 @@ sacramento_train, sacramento_test = train_test_split(
     sacramento, train_size=0.75, random_state=5
 )
 ```
-
-```{r 07-test-train-split}
-sacramento_split <- initial_split(sacramento, prop = 0.75, strata = price)
-sacramento_train <- training(sacramento_split)
-sacramento_test <- testing(sacramento_split)
-```
-
-+++
 
 Next, we'll use cross-validation \index{cross-validation} to choose $K$. In KNN classification, we used
 accuracy to see how well our predictions matched the true labels. We cannot use
@@ -545,6 +525,18 @@ The reason that `scikit-learn` negates the regular RMSPE is that the function al
 the scores, while RMSPE should be minimized. Hence, in order to see the actual RMSPE, we need to negate 
 back the `mean_test_score`.
 
++++
+
+In the output of the `sacr_results`
+results data frame, we see that the `param_kneighborsregressor__n_neighbors` variable contains the values of $K$,
+the `RMSPE` variable contains the value of the RMSPE estimated via cross-validation, 
+which was obtained through negating the `mean_test_score` variable, 
+and the standard error (`std_test_score`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
+is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
+error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
+fall outside this range). You may ignore the other columns in the metrics data frame,
+as they do not provide any additional insight.
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -594,19 +586,17 @@ sacr_gridsearch.fit(X, y)
 # retrieve the CV scores
 sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
 # negate mean_test_score (negative RMSPE) to get the actual RMSPE
-sacr_results["RMSPE"] = - sacr_results["mean_test_score"]
-sacr_results[["param_kneighborsregressor__n_neighbors", "RMSPE", "mean_test_score", "std_test_score"]]
-```
+sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
 
-In the output of the `sacr_results`
-results data frame, we see that the `param_kneighborsregressor__n_neighbors` variable contains the dictionaries of parameters,
-the RMSPE (`RMSPE`) contains the value of the RMSPE estimated via cross-validation, 
-which was obtained through negating the `mean_test_score` variable, 
-and the standard error (`std_test_score`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
-is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
-error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
-fall outside this range). You may ignore the other columns in the metrics data frame,
-as they do not provide any additional insight.
+sacr_results[
+    [
+        "param_kneighborsregressor__n_neighbors",
+        "RMSPE",
+        "mean_test_score",
+        "std_test_score",
+    ]
+]
+```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -625,7 +615,7 @@ as they do not provide any additional insight.
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-output]
+:tags: [remove-cell]
 
 sacr_tunek_plot = alt.Chart(sacr_results).mark_line(point=True).encode(
     x=alt.X("param_kneighborsregressor__n_neighbors", title="Neighbors"),
@@ -655,7 +645,14 @@ We take the *minimum* RMSPE to find the best setting for the number of neighbors
 ```{code-cell} ipython3
 # show only the row of minimum RMSPE
 sacr_min = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
-sacr_min
+sacr_min[
+    [
+        "param_kneighborsregressor__n_neighbors",
+        "RMSPE",
+        "mean_test_score",
+        "std_test_score",
+    ]
+]
 ```
 
 ```{code-cell} ipython3
@@ -795,7 +792,7 @@ using $K =$ {glue:}`kmin` neighbors. Then we will
 use `predict` to make predictions on the test data, and use the `mean_squared_error`
 function to compute the mean squared prediction error (MSPE). Finally take the 
 square root of MSPE to get RMSPE. The reason that we do not use `score` method (as we
-did in Classification chapter) is that the scoring metric `score` uses for KNeighborsRegressor 
+did in Classification chapter) is that the scoring metric `score` uses for `KNeighborsRegressor` 
 is $R^2$ instead of RMSPE.
 
 ```{code-cell} ipython3
@@ -1009,19 +1006,6 @@ X = sacramento_train[["sqft", "beds"]]
 y = sacramento_train[["price"]]
 ```
 
-```{r 07-mult-setup}
-sacr_recipe <- recipe(price ~ sqft + beds, data = sacramento_train) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
-
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                              neighbors = tune()) |>
-  set_engine("kknn") |>
-  set_mode("regression")
-```
-
-+++
-
 Next, we'll use 5-fold cross-validation through `GridSearchCV` to choose the number of neighbors via the minimum RMSPE:
 
 ```{code-cell} ipython3
@@ -1078,7 +1062,9 @@ on the test data.
 
 ```{code-cell} ipython3
 # re-make the pipeline
-sacr_pipeline_mult = make_pipeline(sacr_preprocessor, KNeighborsRegressor(n_neighbors=sacr_k))
+sacr_pipeline_mult = make_pipeline(
+    sacr_preprocessor, KNeighborsRegressor(n_neighbors=sacr_k)
+)
 
 # fit the pipeline object
 sacr_pipeline_mult.fit(X, y)
@@ -1105,7 +1091,7 @@ glue("RMSPE_mult", int(RMSPE_mult))
 
 This time, when we performed KNN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error 
-of .
+of {glue:}`RMSPE_mult`.
 {numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This 
 time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
 predictors instead of 1.
@@ -1124,7 +1110,7 @@ xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
 xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
 
 # add prediction
-knnPredGrid = sacr_pipeline_mult.predict(pcgrid)
+knnPredGrid = sacr_pipeline_mult.predict(xygrid)
 
 fig = px.scatter_3d(
     sacramento_train,

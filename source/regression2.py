@@ -213,33 +213,84 @@ glue("pred_2000", int(prediction))
 # different lines could be drawn through the data points. 
 # Some plausible examples are shown in {numref}`fig:08-several-lines`.
 
+# %% tags=["remove-cell"]
+intercept_l = [-64542.23, -6900, -64542.23]
+slope_l = [190, 175, 160]
+line_color_l = ["green", "purple", "red"]
+
+# set the domains (range of x values) of lines
+min_x = small_sacramento["sqft"].min()
+max_x = small_sacramento["sqft"].max()
+
+several_lines_plot = small_plot.copy()
+
+for i in range(len(slope_l)):
+    several_lines_plot += (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [min_x, max_x],
+                    "y": [
+                        intercept_l[i] + slope_l[i] * min_x,
+                        intercept_l[i] + slope_l[i] * max_x,
+                    ],
+                }
+            )
+        )
+        .mark_line(color=line_color_l[i])
+        .encode(x=alt.X("x"), y=alt.Y("y"))
+    )
+
+several_lines_plot
+
+# %% tags=["remove-cell"]
+glue("fig:08-several-lines", several_lines_plot)
+
 # %% [markdown]
-# ```{r 08-several-lines, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3.5, fig.width = 4.5,  fig.cap = "Scatter plot of sale price versus size with many possible lines that could be drawn through the data points."}
-# small_plot +
-#   geom_abline(intercept = -64542.23, slope = 190, color = "green") +
-#   geom_abline(intercept = -6900, slope = 175, color = "purple") +
-#   geom_abline(intercept = -64542.23, slope = 160, color = "red")
-# ```
+# :::{glue:figure} fig:08-several-lines
+# :name: fig:08-several-lines
+#
+# Scatter plot of sale price versus size with many possible lines that could be drawn through the data points.
+# :::
 
 # %% [markdown]
 # Simple linear regression chooses the straight line of best fit by choosing
 # the line that minimizes the **average squared vertical distance** between itself and
-# each of the observed data points in the training data. Figure \@ref(fig:08-verticalDistToMin) illustrates 
+# each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates 
 # these vertical distances as red lines. Finally, to assess the predictive 
 # accuracy of a simple linear regression model,
 # we use RMSPE&mdash;the same measure of predictive performance we used with KNN regression.
 # \index{RMSPE}
 
+# %% tags=["remove-cell"]
+small_sacramento_pred = small_sacramento
+# get prediction
+small_sacramento_pred = small_sacramento_pred.assign(
+    predicted=lm.predict(small_sacramento[["sqft"]])
+)
+# melt the dataframe to create separate df to create lines
+small_sacramento_pred = small_sacramento_pred[["sqft", "price", "predicted"]].melt(
+    id_vars=["sqft"]
+)
+
+error_plot = small_plot.copy()
+
+for i in range(len(small_sacramento)):
+    sqft_val = small_sacramento.iloc[i]["sqft"]
+    line_df = small_sacramento_pred.query("sqft == @sqft_val")
+    error_plot += alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value")
+
+error_plot
+
+# %% tags=["remove-cell"]
+glue("fig:08-verticalDistToMin", error_plot)
+
 # %% [markdown]
-# ```{r 08-verticalDistToMin,  echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points."}
-# small_sacramento <- small_sacramento |>
-#   mutate(predicted = predict(small_model))
+# :::{glue:figure} fig:08-verticalDistToMin
+# :name: fig:08-verticalDistToMin
 #
-# small_plot +
-#   geom_segment(data = small_sacramento, 
-#                aes(xend = sqft, yend = predicted), 
-#                colour = "red")
-# ```
+# Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
+# :::
 
 # %% [markdown]
 # ## Linear regression in R

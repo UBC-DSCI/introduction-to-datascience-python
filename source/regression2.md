@@ -1,53 +1,45 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
 
-# Regression II: linear regression {#regression2}
+(regression2)=
+# Regression II: linear regression
 
-```{r regression2-setup, echo = FALSE, message = FALSE, warning = FALSE}
-library(knitr)
-library(plotly)
-library(stringr)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-knitr::opts_chunk$set(fig.align = "center")
-reticulate::use_miniconda('r-reticulate')
+import altair as alt
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
+import plotly.express as px
+import plotly.graph_objs as go
+from plotly.offline import plot
+from IPython.display import HTML
 
-print_tidymodels <- function(tidymodels_object) {
-  if(!is_latex_output()) {
-    tidymodels_object
-  } else {
-    output <- capture.output(tidymodels_object)
-    
-    for (i in seq_along(output)) {
-      if (nchar(output[i]) <= 80) {
-        cat(output[i], sep = "\n")
-      } else {
-        cat(str_sub(output[i], start = 1, end = 80), sep = "\n")
-        cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = "\n")
-      }
-    }
-  }
-}
-
-theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
+from myst_nb import glue
 ```
 
 ## Overview 
 Up to this point, we have solved all of our predictive problems&mdash;both classification
 and regression&mdash;using K-nearest neighbors (KNN)-based approaches. In the context of regression, 
 there is another commonly used method known as *linear regression*. This chapter provides an introduction
-to the basic concept of linear regression, shows how to use `tidymodels` to perform linear regression in R,
+to the basic concept of linear regression, shows how to use `scikit-learn` to perform linear regression in Python,
 and characterizes its strengths and weaknesses compared to KNN regression. The focus is, as usual,
 on the case where there is a single predictor and single response variable of interest; but the chapter
 concludes with an example using *multivariable linear regression* when there is more than one
@@ -56,10 +48,12 @@ predictor.
 ## Chapter learning objectives 
 By the end of the chapter, readers will be able to do the following:
 
-* Use R and `tidymodels` to fit a linear regression model on training data.
+* Use Python and `scikit-learn` to fit a linear regression model on training data.
 * Evaluate the linear regression model on test data.
 * Compare and contrast predictions obtained from K-nearest neighbor regression to those obtained using linear regression from the same data set.
-* In R, overlay predictions from linear regression on a scatter plot of data using `geom_smooth`.
+* In `altair`, overlay predictions from linear regression on a scatter plot of data using `transform_regression`.
+
++++
 
 ## Simple linear regression
 
@@ -81,6 +75,8 @@ over their values for a prediction, in simple linear regression, we create a
 straight line of best fit through the training data and then
 "look up" the prediction using the line.
 
++++
+
 > **Note:** Although we did not cover it in earlier chapters, there 
 > is another popular method for classification called *logistic
 > regression* (it is used for classification even though the name, somewhat confusingly,
@@ -92,7 +88,9 @@ straight line of best fit through the training data and then
 > logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
 > classification chapters to learn more about logistic regression. \index{regression!logistic}
 
-Let's return to the Sacramento housing data \index{Sacramento real estate} from Chapter \@ref(regression1) to learn
++++
+
+Let's return to the Sacramento housing data \index{Sacramento real estate} from Chapter {ref}`regression1` to learn
 how to apply linear regression and compare it to KNN regression. For now, we
 will consider 
 a smaller version of the housing data to help make our visualizations clear.
@@ -103,30 +101,47 @@ in purchasing with an advertised list price of
 To answer this question using simple linear regression, we use the data we have
 to draw the straight line of best fit through our existing data points.
 The small subset of data as well as the line of best fit are shown
-in Figure \@ref(fig:08-lin-reg1).
+in {numref}`fig:08-lin-reg1`.
 
-```{r 08-lin-reg1, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.pos = "H", out.extra="", fig.cap = "Scatter plot of sale price versus size with line of best fit for subset of the Sacramento housing data."}
-library(tidyverse)
-library(tidymodels)
-library(scales)
-library(gridExtra)
-library(caret)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-set.seed(2)
+sacramento = pd.read_csv("data/sacramento.csv")
 
-sacramento <- read_csv("data/sacramento.csv")
+small_sacramento = sacramento.sample(n=30, random_state=2)
 
-small_sacramento <- sample_n(sacramento, size = 30)
+small_plot = (
+    alt.Chart(small_sacramento)
+    .mark_circle(color="black")
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y(
+            "price",
+            title="Price (USD)",
+            axis=alt.Axis(format="$,.0f"),
+            scale=alt.Scale(zero=False),
+        ),
+    )
+)
 
-small_plot <- ggplot(small_sacramento, aes(x = sqft, y = price)) +
-  geom_point() +
-  xlab("House size (square feet)") +
-  ylab("Price (USD)") +
-  scale_y_continuous(labels = dollar_format()) +
-  geom_smooth(method = "lm", se = FALSE)
+small_plot += small_plot.transform_regression("sqft", "price").mark_line()
 
 small_plot
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:08-lin-reg1", small_plot)
+```
+
+:::{glue:figure} fig:08-lin-reg1
+:name: fig:08-lin-reg1
+
+Scatter plot of sale price versus size with line of best fit for subset of the Sacramento housing data.
+:::
+
++++
 
 The equation for the straight line is: \index{straight line!equation}
 
@@ -147,41 +162,73 @@ Or what about *negative* 2,000 square feet? As it turns out, nothing in the form
 regression will happily make predictions for crazy predictor values if you ask it to. But even though
 you *can* make these wild predictions, you shouldn't. You should only make predictions roughly within
 the range of your original data, and perhaps a bit beyond it only if it makes sense. For example,
-the data in Figure \@ref(fig:08-lin-reg1) only reaches around 800 square feet on the low end, but 
-it would probably be reasonable to use the linear regression model to make a prediction at 600 square feet, say.
+the data in {numref}`fig:08-lin-reg1` only reaches around 600 square feet on the low end, but 
+it would probably be reasonable to use the linear regression model to make a prediction at 500 square feet, say.
 
 Back to the example! Once we have the coefficients $\beta_0$ and $\beta_1$, we can use the equation
 above to evaluate the predicted sale price given the value we have for the
-predictor variable&mdash;here 2,000 square feet. Figure
-\@ref(fig:08-lin-reg2) demonstrates this process.
+predictor variable&mdash;here 2,000 square feet. {numref}`fig:08-lin-reg2` demonstrates this process.
 
-```{r 08-lin-reg2, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of sale price versus size with line of best fit and a red dot at the predicted sale price for a 2,000 square-foot home."}
-small_model <- lm(price ~ sqft, data = small_sacramento)
-prediction <- predict(small_model, data.frame(sqft = 2000))
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-small_plot +
-  geom_vline(xintercept = 2000, linetype = "dotted") +
-  geom_point(aes(x = 2000, 
-                 y = prediction[[1]], 
-                 color = "red", size = 2.5)) +
-  annotate("text", 
-           x = 2350, 
-           y = prediction[[1]]-30000, 
-           label=paste("$", 
-                       format(round(prediction[[1]]),
-                              big.mark=",", 
-                              nsmall=0, 
-                              scientific = FALSE),
-                       sep="")) +
-  theme(legend.position = "none")
+lm = LinearRegression()
+lm.fit(small_sacramento[["sqft"]], small_sacramento[["price"]])
+prediction = float(lm.predict(pd.DataFrame({"sqft": [2000]})))
+
+# the vertical dotted line
+line_df = pd.DataFrame({"x": [2000]})
+rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+
+# the red point
+point_df = pd.DataFrame({"x": [2000], "y": [prediction]})
+point = alt.Chart(point_df).mark_circle(color="red", size=100).encode(x="x", y="y")
+
+# overlay all plots
+small_plot_2000_pred = (
+    small_plot
+    + rule
+    + point
+    # add the text
+    + alt.Chart(
+        pd.DataFrame(
+            {
+                "x": [2350],
+                "y": [prediction - 41000],
+                "prediction": ["$" + "{0:,.0f}".format(prediction)],
+            }
+        )
+    )
+    .mark_text(dy=-5, size=15)
+    .encode(x="x", y="y", text="prediction")
+)
+
+small_plot_2000_pred
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:08-lin-reg2", small_plot_2000_pred)
+glue("pred_2000", int(prediction))
+```
+
+:::{glue:figure} fig:08-lin-reg2
+:name: fig:08-lin-reg2
+
+Scatter plot of sale price versus size with line of best fit and a red dot at the predicted sale price for a 2,000 square-foot home.
+:::
+
++++
 
 By using simple linear regression on this small data set to predict the sale price
 for a 2,000 square-foot house, we get a predicted value of 
-\$`r format(round(prediction[[1]]), big.mark=",", nsmall=0, scientific = FALSE)`. But wait a minute...how
+\${glue:}`pred_2000`. But wait a minute...how
 exactly does simple linear regression choose the line of best fit? Many
 different lines could be drawn through the data points. 
-Some plausible examples are shown in Figure \@ref(fig:08-several-lines).
+Some plausible examples are shown in {numref}`fig:08-several-lines`.
+
++++
 
 ```{r 08-several-lines, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3.5, fig.width = 4.5,  fig.cap = "Scatter plot of sale price versus size with many possible lines that could be drawn through the data points."}
 small_plot +
@@ -190,6 +237,8 @@ small_plot +
   geom_abline(intercept = -64542.23, slope = 160, color = "red")
 ```
 
++++
+
 Simple linear regression chooses the straight line of best fit by choosing
 the line that minimizes the **average squared vertical distance** between itself and
 each of the observed data points in the training data. Figure \@ref(fig:08-verticalDistToMin) illustrates 
@@ -197,6 +246,8 @@ these vertical distances as red lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
 we use RMSPE&mdash;the same measure of predictive performance we used with KNN regression.
 \index{RMSPE}
+
++++
 
 ```{r 08-verticalDistToMin,  echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points."}
 small_sacramento <- small_sacramento |>
@@ -207,6 +258,8 @@ small_plot +
                aes(xend = sqft, yend = predicted), 
                colour = "red")
 ```
+
++++
 
 ## Linear regression in R
 
@@ -224,6 +277,8 @@ As usual, we start by loading packages, setting the seed, loading data, and putt
 can come back to after we choose our final model. Let's take care of that now.
 \index{seed!set.seed}
 
++++
+
 ```{r 08-test-train-split, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(tidymodels)
@@ -237,8 +292,12 @@ sacramento_train <- training(sacramento_split)
 sacramento_test <- testing(sacramento_split)
 ```
 
++++
+
 Now that we have our training data, we will create the model specification
 and recipe, and fit our simple linear regression model:
+
++++
 
 ```{r 08-fitLM, results = 'hide', echo = TRUE}
 lm_spec <- linear_reg() |>
@@ -258,6 +317,8 @@ lm_fit
 ```{r echo = FALSE}
 print_tidymodels(lm_fit)
 ```
+
++++
 
 > **Note:** An additional difference that you will notice here is that we do
 > not standardize \index{standardization} (i.e., scale and center) our
@@ -281,6 +342,8 @@ every extra square foot increases the cost of
 the house by \$`r format(round(pull(tidy(pull_workflow_fit(lm_fit)), estimate)[2]), scientific=FALSE)`. Finally, 
 we predict on the test data set to assess how well our model does:
 
++++
+
 ```{r 08-assessFinal}
 lm_test_results <- lm_fit |>
   predict(sacramento_test) |>
@@ -289,6 +352,8 @@ lm_test_results <- lm_fit |>
 
 lm_test_results
 ```
+
++++
 
 Our final model's test error as assessed by RMSPE \index{RMSPE}
 is `r format(round(lm_test_results |> filter(.metric == 'rmse') |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`. 
@@ -306,6 +371,8 @@ linear regression predicted line of best fit. By default `geom_smooth` adds some
 to the plot that we are not interested in at this point; we provide the argument `se = FALSE` to
 tell `geom_smooth` not to show that information. Figure \@ref(fig:08-lm-predict-all) displays the result.
 
++++
+
 ```{r 08-lm-predict-all, fig.height = 3.5, fig.width = 4.5, warning = FALSE, fig.pos = "H", out.extra="", message = FALSE, fig.cap = "Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data."}
 lm_plot_final <- ggplot(sacramento_train, aes(x = sqft, y = price)) +
   geom_point(alpha = 0.4) +
@@ -318,10 +385,14 @@ lm_plot_final <- ggplot(sacramento_train, aes(x = sqft, y = price)) +
 lm_plot_final
 ```
 
++++
+
 We can extract the coefficients from our model by accessing the
 fit object that is output by the `fit` \index{tidymodels!fit} function; we first have to extract
 it from the workflow using the `pull_workflow_fit` function, and then apply
 the `tidy` function to convert the result into a data frame:
+
++++
 
 ```{r 08-lm-get-coeffs}
 coeffs <- lm_fit |>
@@ -331,6 +402,8 @@ coeffs <- lm_fit |>
 coeffs
 ```
 
++++
+
 ## Comparing simple linear and KNN regression
 
 Now that we have a general understanding of both simple linear and KNN
@@ -339,6 +412,8 @@ predictions made by them. To start, let's look at the visualization of the
 simple linear regression model predictions for the Sacramento real estate data
 (predicting price from house size) and the "best" KNN regression model
 obtained from the same problem, shown in Figure \@ref(fig:08-compareRegression).
+
++++
 
 ```{r 08-compareRegression, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 4.75, fig.width = 10, fig.cap = "Comparison of simple linear regression and KNN regression."}
 set.seed(1234)
@@ -401,6 +476,8 @@ lm_plot_final <- lm_plot_final +
 grid.arrange(lm_plot_final, knn_plot_final, ncol = 2)
 ```
 
++++
+
 What differences do we observe in Figure \@ref(fig:08-compareRegression)? One obvious
 difference is the shape of the blue lines. In simple linear regression we are
 restricted to a straight line, whereas in KNN regression our line is much more
@@ -443,7 +520,9 @@ data were slightly different, the linear model may have actually predicted
 a *negative* price for a small house (if the intercept $\beta_0$ was negative),
 which obviously does not match reality. On the other hand, the trend of increasing
 house size corresponding to increasing house price probably continues for large houses, 
-so the "flat" extrapolation of KNN likely does not match reality. 
+so the "flat" extrapolation of KNN likely does not match reality.
+
++++
 
 ## Multivariable linear regression
 
@@ -467,11 +546,18 @@ continue to use house sale price as our response variable. We will start by
 changing the formula in the recipe to 
 include both the `sqft` and `beds` variables as predictors:
 
++++
+
 ```{r 08-lm-mult-test-train-split}
 mlm_recipe <- recipe(price ~ sqft + beds, data = sacramento_train)
 ```
 
++++
+
 Now we can build our workflow and fit the model:
+
++++
+
 ```{r 08-fitlm, results = 'hide', echo = TRUE}
 mlm_fit <- workflow() |>
   add_recipe(mlm_recipe) |>
@@ -485,7 +571,11 @@ mlm_fit
 print_tidymodels(mlm_fit)
 ```
 
++++
+
 And finally, we make predictions on the test data set to assess the quality of our model:
+
++++
 
 ```{r 08-assessFinal-multi}
 lm_mult_test_results <- mlm_fit |>
@@ -496,10 +586,14 @@ lm_mult_test_results <- mlm_fit |>
 lm_mult_test_results
 ```
 
++++
+
 Our model's test error as assessed by RMSPE
 is `r format(round(lm_mult_test_results |> filter(.metric == 'rmse') |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`.
 In the case of two predictors, we can plot the predictions made by our linear regression creates a *plane* of best fit, as
 shown in Figure \@ref(fig:08-3DlinReg).
+
++++
 
 ```{r 08-3DlinReg, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Linear regression plane of best fit overlaid on top of the data (using price, house size, and number of bedrooms as predictors). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the regression plane looks like for learning purposes.", out.width="100%"}
 xvals <- seq(from = min(sacramento_train$sqft), 
@@ -546,6 +640,8 @@ if(!is_latex_output()){
 }
 ```
 
++++
+
 We see that the predictions from linear regression with two predictors form a
 flat plane. This is the hallmark of linear regression, and differs from the 
 wiggly, flexible surface we get from other methods such as KNN regression. 
@@ -554,6 +650,8 @@ predictor, we can get slopes/intercept from linear regression, and thus describe
 plane mathematically. We can extract those slope values from our model object
 as shown below:
 
++++
+
 ```{r 08-lm-multi-get-coeffs}
 mcoeffs <- mlm_fit |>
              pull_workflow_fit() |>
@@ -561,6 +659,8 @@ mcoeffs <- mlm_fit |>
 
 mcoeffs
 ```
+
++++
 
 And then use those slopes to write a mathematical equation to describe the prediction plane: \index{plane equation}
 
@@ -572,7 +672,9 @@ where:
 - $\beta_2$ is the *slope* for the second predictor (how quickly the price increases as you increase the number of bedrooms)
 
 Finally, we can fill in the values for $\beta_0$, $\beta_1$ and $\beta_2$ from the model output above
-to create the equation of the plane of best fit to the data: 
+to create the equation of the plane of best fit to the data:
+
++++
 
 ```{r 08-lm-multi-get-coeffs-hidden, echo = FALSE}
 icept <- format(round(mcoeffs |> 
@@ -585,6 +687,8 @@ bedsc <- format(round(mcoeffs |>
                         filter(term == "beds") |> 
                         pull(estimate)), scientific = FALSE)
 ```
+
++++
 
 $$\text{house sale price} = `r icept` + `r sqftc`\cdot (\text{house size})  `r bedsc` \cdot (\text{number of bedrooms})$$
 
@@ -602,9 +706,13 @@ decided on a small number (e.g., 2 or 3) of tuned candidate models and
 we want to make a final comparison, we can do so by comparing the prediction
 error of the methods on the test data.
 
++++
+
 ```{r 08-get-RMSPE}
 lm_mult_test_results
 ```
+
++++
 
 We obtain an RMSPE \index{RMSPE} for the multivariable linear regression model 
 of `r format(lm_mult_test_results |> filter(.metric == 'rmse') |> pull(.estimate), big.mark=",", nsmall=0, scientific = FALSE)`. This prediction error
@@ -619,11 +727,15 @@ As mentioned earlier, this is not always the case: sometimes including more
 predictors can negatively impact the prediction performance on unseen 
 test data.
 
++++
+
 ## Multicollinearity and outliers
 
 What can go wrong when performing (possibly multivariable) linear regression? 
 This section will introduce two common issues&mdash;*outliers* and *collinear predictors*&mdash;and 
 illustrate their impact on predictions.
+
++++
 
 ### Outliers
 
@@ -644,6 +756,8 @@ the data point is an *outlier*. In blue we plot the original line of best fit, a
 we plot the new line of best fit including the outlier. You can see how different the red line
 is from the blue line, which is entirely caused by that one extra outlier data point.
 
++++
+
 ```{r 08-lm-outlier, fig.height = 3.5, fig.width = 4.5, message = FALSE, warning = FALSE, echo = FALSE, fig.cap = "Scatter plot of a subset of the data, with outlier highlighted in red."}
 sacramento_train_small <- sacramento_train |> sample_n(100)
 sacramento_outlier <- tibble(sqft = 5000, price = 50000)
@@ -663,6 +777,8 @@ lm_plot_outlier <- ggplot(sacramento_train_small, aes(x = sqft, y = price)) +
 lm_plot_outlier
 ```
 
++++
+
 Fortunately, if you have enough data, the inclusion of one or two
 outliers&mdash;as long as their values are not *too* wild&mdash;will
 typically not have a large effect on the line of best fit. Figure
@@ -672,6 +788,8 @@ Sacramento training data. You can see that with this larger data set, the line
 changes much less when adding the outlier.
 Nevertheless, it is still important when working with linear regression to critically
 think about how much any individual data point is influencing the model.
+
++++
 
 ```{r 08-lm-outlier-2, fig.height = 3.5, fig.width = 4.5, warning = FALSE, message = FALSE, echo = FALSE, fig.cap = "Scatter plot of the full data, with outlier highlighted in red."}
 sacramento_outlier <- tibble(sqft = 5000, price = 50000)
@@ -695,6 +813,8 @@ lm_plot_outlier_large <- ggplot(sacramento_train, aes(x = sqft, y = price)) +
 lm_plot_outlier_large
 ```
 
++++
+
 ### Multicollinearity
 
 The second, and much more subtle, issue can occur when performing multivariable
@@ -706,6 +826,8 @@ the Sacramento housing data where the house was measured twice by two people.
 Since the two people are each slightly inaccurate, the two measurements might
 not agree exactly, but they are very strongly linearly related to each other,
 as shown in Figure \@ref(fig:08-lm-multicol).
+
++++
 
 ```{r 08-lm-multicol, fig.height = 3.5, fig.width = 4.5, warning = FALSE, echo = FALSE, fig.cap = "Scatter plot of house size (in square inches) versus house size (in square feet)."}
 sacramento_train <- sacramento_train |>
@@ -725,6 +847,8 @@ lm_plot_multicol_1 <- ggplot(sacramento_train) +
   ylab("House size (square inches)") 
 lm_plot_multicol_1
 ```
+
++++
 
 ```{r 08-lm-multicol-2, echo = FALSE, warning = FALSE}
 lm_recipe1 <- recipe(price ~ sqft + sqft1, data = sacramento_train)
@@ -793,6 +917,8 @@ sqft33 <- format(round(coeffs |>
 
 ```
 
++++
+
  If we again fit the multivariable linear regression model on this data, then the plane of best fit
 has regression coefficients that are very sensitive to the exact values in the data. For example,
 if we change the data ever so slightly&mdash;e.g., by running cross-validation, which splits
@@ -807,6 +933,8 @@ Best Fit 3: $\text{house sale price} = `r icept3` + `r sqft3`\cdot (\text{house 
  Therefore, when performing multivariable linear regression, it is important to avoid including very
 linearly related predictors. However, techniques for doing so are beyond the scope of this
 book; see the list of additional resources at the end of this chapter to find out where you can learn more.
+
++++
 
 ## Designing new predictors
 
@@ -827,6 +955,8 @@ the assumptions of the regression method you have chosen. For example, a data fr
 with two variables&mdash;`x` and `y`&mdash;with a nonlinear relationship between the two variables
 will not be fully captured by simple linear regression, as shown in Figure \@ref(fig:08-predictor-design).
 
++++
+
 ```{r 08-predictor-design-df, echo = FALSE, message = FALSE, warning = FALSE}
 set.seed(1)
 
@@ -836,9 +966,13 @@ df <- df |>
   mutate(y = x^3 + 0.2 * sample(10000, 100, replace=TRUE)/10000 - 0.1)
 ```
 
++++
+
 ```{r 08-predictor-design-df-2, message = FALSE, warning = FALSE}
 df
 ```
+
++++
 
 ```{r 08-predictor-design, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Example of a data set with a nonlinear relationship between the predictor and the response."}
 curve_plt <- ggplot(df, aes(x = x, y = y)) +
@@ -849,15 +983,21 @@ curve_plt <- ggplot(df, aes(x = x, y = y)) +
 curve_plt
 ```
 
++++
+
 Instead of trying to predict the response `y` using a linear regression on `x`,
 we might have some scientific background about our problem to suggest that `y`
 should be a cubic function of `x`. So before performing regression,
 we might *create a new predictor variable* `z` using the `mutate` function: \index{predictor design}
 
++++
+
 ```{r 08-predictor-design-3, message = FALSE, warning = FALSE}
 df <- df |>
         mutate(z = x^3)
 ```
+
++++
 
 Then we can perform linear regression for `y` using the predictor variable `z`,
 as shown in Figure \@ref(fig:08-predictor-design-2).
@@ -866,6 +1006,8 @@ linear regression model make more accurate predictions.
 Note that none of the `y` response values have changed between Figures \@ref(fig:08-predictor-design)
 and \@ref(fig:08-predictor-design-2); the only change is that the `x` values
 have been replaced by `z` values.
+
++++
 
 ```{r 08-predictor-design-2, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Relationship between the transformed predictor and the response."}
 curve_plt2 <- ggplot(df, aes(x = z, y = y)) +
@@ -876,7 +1018,9 @@ curve_plt2 <- ggplot(df, aes(x = z, y = y)) +
 
 curve_plt2
 ```
- 
+
++++
+
 The process of
 transforming predictors (and potentially combining multiple predictors in the process)
 is known as *feature engineering*. \index{feature engineering|see{predictor design}} In real data analysis
@@ -907,6 +1051,8 @@ understanding whether the predictors *cause* changes in the price.
 These sides of regression are well beyond the scope of this book; but
 the material you have learned here should give you a foundation of knowledge
 that will serve you well when moving to more advanced books on the topic.
+
++++
 
 ## Exercises
 
@@ -949,3 +1095,12 @@ and guidance that the worksheets provide will function as intended.
   computational efficiency of linear regression. In contrast, the KNN methods we
   covered earlier are indeed more flexible but become very slow when given lots
   of data.
+
++++
+
+## References
+
++++
+
+```{bibliography}
+```

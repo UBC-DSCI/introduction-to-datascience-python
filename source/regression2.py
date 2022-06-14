@@ -294,6 +294,13 @@ glue("fig:08-verticalDistToMin", error_plot)
 # :::
 
 # %% [markdown]
+# :::{glue:figure} fig:08-verticalDistToMin
+# :name: fig:08-verticalDistToMin
+#
+# Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
+# :::
+
+# %% [markdown]
 # ## Linear regression in Python
 
 # %% [markdown]

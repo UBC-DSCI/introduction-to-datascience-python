@@ -333,7 +333,7 @@ glue("fig:07-predictedViz-knn", nn_plot_pred)
 # :::
 
 # %% [markdown]
-# Our predicted price is \${glue:}`knn-5-pred`
+# Our predicted price is \${glue:text}`knn-5-pred`
 # (shown as a red point in {numref}`fig:07-predictedViz-knn`), which is much less than \$350,000; perhaps we
 # might want to offer less than the list price at which the house is advertised.
 # But this is only the very beginning of the story. We still have all the same
@@ -350,7 +350,7 @@ glue("fig:07-predictedViz-knn", nn_plot_pred)
 # The algorithm really has very few assumptions 
 # about what the data must look like for it to work.
 
-# %% [markdown]
+# %% [markdown] tags=[]
 # ## Training, evaluating, and tuning the model
 #
 # As usual, 
@@ -363,6 +363,10 @@ glue("fig:07-predictedViz-knn", nn_plot_pred)
 # that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 # \index{training data}
 # \index{test data}
+
+# %% [markdown]
+# > Note that we are not specifying the `stratify` argument here as we did in Chapter {ref}`classification2`,
+# > since `sklearn.model_selection.train_test_split` cannot stratify based on a continuous variable. However, some functions inside other packages are able to do that.
 
 # %%
 sacramento_train, sacramento_test = train_test_split(
@@ -615,7 +619,15 @@ glue("kmin", int(sacr_min['param_kneighborsregressor__n_neighbors']))
 #
 # {numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 # regression model. Each plot shows the predicted values for house sale price from
-# our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`kmin`, 41, 250, and 932 (i.e., the entire dataset).
+# our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`kmin`, 41, 250, and 699 (i.e., the training data).
+# For each model, we predict prices for the range of possible home sizes we
+# observed in the data set (here 500 to 5,000 square feet) and we plot the
+# predicted prices as a blue line.
+
+# %% tags=["remove-cell"]
+# Figure \@ref(fig:07-howK) visualizes the effect of different settings of $K$ on the
+# regression model. Each plot shows the predicted values for house sale price from
+# our KNN regression model for 6 different values for $K$: 1, 3, `r kmin`, 41, 250, and 932 (i.e., the entire dataset).
 # For each model, we predict prices for the range of possible home sizes we
 # observed in the data set (here 500 to 5,000 square feet) and we plot the
 # predicted prices as a blue line.
@@ -627,7 +639,7 @@ gridvals = [
     int(sacr_min["param_kneighborsregressor__n_neighbors"]),
     41,
     250,
-    len(sacramento_train),  ## double check
+    len(sacramento_train),
 ]
 
 plots = list()
@@ -644,7 +656,7 @@ base_plot = (
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
     )
 )
-for i in range(len(gridvals)):  ## double check whether an if-else statement is needed
+for i in range(len(gridvals)):
     # make the pipeline based on n_neighbors
     sacr_pipeline = make_pipeline(
         sacr_preprocessor, KNeighborsRegressor(n_neighbors=gridvals[i])
@@ -692,7 +704,7 @@ glue(
 # in the context of regression. \index{overfitting!regression}
 #
 # What about the plots in {numref}`fig:07-howK` where $K$ is quite large, 
-# say, $K$ = 250 or 932? 
+# say, $K$ = 250 or 699? 
 # In this case the blue line becomes extremely smooth, and actually becomes flat
 # once $K$ is equal to the number of datapoints in the entire data set. 
 # This happens because our predicted values for a given x value (here, home
@@ -717,6 +729,12 @@ glue(
 # in price. All of this is similar to how
 # the choice of $K$ affects K-nearest neighbors classification, as discussed in the previous
 # chapter.
+
+# %% tags=["remove-cell"]
+# Changed from ...
+
+# What about the plots in Figure \@ref(fig:07-howK) where $K$ is quite large, 
+# say, $K$ = 250 or 932? 
 
 # %% [markdown]
 # ## Evaluating on the test set
@@ -768,26 +786,26 @@ RMSPE = np.sqrt(
 RMSPE
 
 # %% tags=["remove-cell"]
-glue("test_RMSPE", int(RMSPE))
-glue("cv_RMSPE", int(sacr_min['RMSPE']))
+glue("test_RMSPE", "{0:,.0f}".format(int(RMSPE)))
+glue("cv_RMSPE", "{0:,.0f}".format(int(sacr_min['RMSPE'])))
 
 # %% [markdown]
 # Our final model's test error as assessed by RMSPE 
-# is \$ {glue:}`test_RMSPE`. 
+# is \$ {glue:text}`test_RMSPE`. 
 # Note that RMSPE is measured in the same units as the response variable.
 # In other words, on new observations, we expect the error in our prediction to be 
-# *roughly* \$ {glue:}`test_RMSPE`. 
+# *roughly* \$ {glue:text}`test_RMSPE`. 
 # From one perspective, this is good news: this is about the same as the cross-validation
 # RMSPE estimate of our tuned model 
-# (which was \$ {glue:}`cv_RMSPE`, 
+# (which was \$ {glue:text}`cv_RMSPE`, 
 # so we can say that the model appears to generalize well
 # to new data that it has never seen before.
 # However, much like in the case of KNN classification, whether this value for RMSPE is *good*&mdash;i.e.,
-# whether an error of around \$ {glue:}`test_RMSPE`
+# whether an error of around \$ {glue:text}`test_RMSPE`
 # is acceptable&mdash;depends entirely on the application. 
 # In this application, this error
 # is not prohibitively large, but it is not negligible either; 
-# \$ {glue:}`test_RMSPE`
+# \$ {glue:text}`test_RMSPE`
 # might represent a substantial fraction of a home buyer's budget, and
 # could make or break whether or not they could afford put an offer on a house. 
 #
@@ -950,7 +968,7 @@ sacr_multi
 
 # %% tags=["remove-cell"]
 glue("sacr_k", sacr_k)
-glue("cv_RMSPE_2pred", int(sacr_multi["RMSPE"]))
+glue("cv_RMSPE_2pred", "{0:,.0f}".format(int(sacr_multi["RMSPE"])))
 
 # %% [markdown]
 # Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:}`sacr_k`.
@@ -961,7 +979,7 @@ glue("cv_RMSPE_2pred", int(sacr_multi["RMSPE"]))
 # Looking back, the estimated cross-validation accuracy for the single-predictor 
 # model was {glue:}`cv_RMSPE`.
 # The estimated cross-validation accuracy for the multivariable model is
-# {glue:}`cv_RMSPE_2pred`.
+# {glue:text}`cv_RMSPE_2pred`.
 # Thus in this case, we did not improve the model 
 # by a large amount by adding this additional predictor.
 #
@@ -993,12 +1011,12 @@ RMSPE_mult = np.sqrt(
 RMSPE_mult
 
 # %% tags=["remove-cell"]
-glue("RMSPE_mult", int(RMSPE_mult))
+glue("RMSPE_mult", "{0:,.0f}".format(RMSPE_mult))
 
 # %% [markdown]
 # This time, when we performed KNN regression on the same data set, but also
 # included number of bedrooms as a predictor, we obtained a RMSPE test error 
-# of {glue:}`RMSPE_mult`.
+# of {glue:text}`RMSPE_mult`.
 # {numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This 
 # time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
 # predictors instead of 1.

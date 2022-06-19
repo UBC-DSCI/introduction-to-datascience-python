@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -293,7 +294,7 @@ glue("fig:08-verticalDistToMin", error_plot)
 # :::
 
 # %% [markdown]
-# ## Linear regression in R
+# ## Linear regression in Python
 
 # %% [markdown]
 # We can perform simple linear regression in Python using `scikit-learn` in a
@@ -396,11 +397,11 @@ RMSPE = np.sqrt(
 RMSPE
 
 # %% tags=["remove-cell"]
-glue("sacr_RMSPE", round(RMSPE))
+glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 
 # %% [markdown]
 # Our final model's test error as assessed by RMSPE \index{RMSPE}
-# is {glue:}`sacr_RMSPE`. 
+# is {glue:text}`sacr_RMSPE`. 
 # Remember that this is in units of the target/response variable, and here that
 # is US Dollars (USD). Does this mean our model is "good" at predicting house
 # sale price based off of the predictor of home size? Again, answering this is
@@ -629,7 +630,29 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 
 # %% [markdown]
 # ## Multivariable linear regression
+
+# %% [markdown]
+# As in KNN classification and KNN regression, we can move beyond the simple
+# case of only one predictor to the case with multiple predictors, 
+# known as *multivariable linear regression*. \index{regression!multivariable linear}\index{regression!multivariable linear equation|see{plane equation}}
+# To do this, we follow a very similar approach to what we did for
+# KNN regression: we just specify the training data by adding more predictors. 
+# But recall that we do not need to use cross-validation to choose any parameters,
+# nor do we need to standardize (i.e., center and scale) the data for linear regression. 
+# Note once again that we have the same concerns regarding multiple predictors
+#  as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
+# better. But because the same predictor selection 
+# algorithm from the classification chapter extends to the setting of linear regression,
+# it will not be covered again in this chapter.
 #
+# We will demonstrate multivariable linear regression using the Sacramento real estate  \index{Sacramento real estate}
+# data with both house size
+# (measured in square feet) as well as number of bedrooms as our predictors, and
+# continue to use house sale price as our response variable. We will start by 
+# specifying the training data to 
+# include both the `sqft` and `beds` variables as predictors:
+
+# %% tags=["remove-cell"]
 # As in KNN classification and KNN regression, we can move beyond the simple
 # case of only one predictor to the case with multiple predictors, 
 # known as *multivariable linear regression*. \index{regression!multivariable linear}\index{regression!multivariable linear equation|see{plane equation}}
@@ -642,7 +665,7 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # better. But because the same predictor selection 
 # algorithm from the classification chapter extends to the setting of linear regression,
 # it will not be covered again in this chapter.
-#
+
 # We will demonstrate multivariable linear regression using the Sacramento real estate  \index{Sacramento real estate}
 # data with both house size
 # (measured in square feet) as well as number of bedrooms as our predictors, and
@@ -650,91 +673,107 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # changing the formula in the recipe to 
 # include both the `sqft` and `beds` variables as predictors:
 
-# %% [markdown]
-# ```{r 08-lm-mult-test-train-split}
-# mlm_recipe <- recipe(price ~ sqft + beds, data = sacramento_train)
-# ```
+# %%
+mlm = LinearRegression()
+X_train = sacramento_train[["sqft", "beds"]]
+y_train = sacramento_train[["price"]]
 
 # %% [markdown]
 # Now we can build our workflow and fit the model:
 
-# %% [markdown]
-# ```{r 08-fitlm, results = 'hide', echo = TRUE}
-# mlm_fit <- workflow() |>
-#   add_recipe(mlm_recipe) |>
-#   add_model(lm_spec) |>
-#   fit(data = sacramento_train)
-#
-# mlm_fit
-# ```
-#
-# ```{r echo = FALSE}
-# print_tidymodels(mlm_fit)
-# ```
+# %%
+mlm.fit(X_train, y_train)
+
+# make a dataframe containing slope and intercept coefficients
+pd.DataFrame(
+    {
+        "slope_sqft": mlm.coef_[0][0],
+        "slope_beds": mlm.coef_[0][1],
+        "intercept": mlm.intercept_,
+    }
+)
 
 # %% [markdown]
 # And finally, we make predictions on the test data set to assess the quality of our model:
 
-# %% [markdown]
-# ```{r 08-assessFinal-multi}
-# lm_mult_test_results <- mlm_fit |>
-#   predict(sacramento_test) |>
-#   bind_cols(sacramento_test) |>
-#   metrics(truth = price, estimate = .pred)
-#
-# lm_mult_test_results
-# ```
+# %%
+X_test = sacramento_test[["sqft", "beds"]]
+y_test = sacramento_test[["price"]]
+
+# predict on test data
+sacr_preds = sacramento_test
+sacr_preds = sacr_preds.assign(predicted=mlm.predict(X_test))
+
+# calculate RMSPE
+from sklearn.metrics import mean_squared_error
+
+lm_mult_test_RMSPE = np.sqrt(
+    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+)
+
+lm_mult_test_RMSPE
+
+# %% tags=["remove-cell"]
+glue("sacr_mult_RMSPE", "{0:,.0f}".format(lm_mult_test_RMSPE))
 
 # %% [markdown]
 # Our model's test error as assessed by RMSPE
-# is `r format(round(lm_mult_test_results |> filter(.metric == 'rmse') |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`.
+# is {glue:text}`sacr_mult_RMSPE`.
 # In the case of two predictors, we can plot the predictions made by our linear regression creates a *plane* of best fit, as
-# shown in Figure \@ref(fig:08-3DlinReg).
+# shown in {numref}`fig:08-3DlinReg`.
+
+# %% tags=["remove-cell"]
+# create a prediction pt grid
+xvals = np.linspace(
+    sacramento_train["sqft"].min(), sacramento_train["sqft"].max(), 50
+)
+yvals = np.linspace(
+    sacramento_train["beds"].min(), sacramento_train["beds"].max(), 50
+)
+xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
+xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
+
+# add prediction
+mlmPredGrid = mlm.predict(xygrid)
+
+fig = px.scatter_3d(
+    sacramento_train,
+    x="sqft",
+    y="beds",
+    z="price",
+    opacity=0.4,
+    labels={"sqft": "Size (sq ft)", "beds": "Bedrooms", "price": "Price (USD)"},
+)
+
+fig.update_traces(marker={"size": 2, "color": "red"})
+
+fig.add_trace(
+    go.Surface(
+        x=xvals,
+        y=yvals,
+        z=mlmPredGrid.reshape(50, -1),
+        name="Predictions",
+        colorscale="viridis",
+        colorbar={"title": "Price (USD)"}
+    )
+)
+
+fig.update_layout(
+    margin=dict(l=0, r=0, b=0, t=1),
+    template="plotly_white",
+)
+
+plot(fig, filename="img/regression2/fig08-3DlinReg.html", auto_open=False)
+
+# %% tags=["remove-input"]
+display(HTML("img/regression2/fig08-3DlinReg.html"))
 
 # %% [markdown]
-# ```{r 08-3DlinReg, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Linear regression plane of best fit overlaid on top of the data (using price, house size, and number of bedrooms as predictors). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the regression plane looks like for learning purposes.", out.width="100%"}
-# xvals <- seq(from = min(sacramento_train$sqft), 
-#              to = max(sacramento_train$sqft), 
-#              length = 50)
-# yvals <- seq(from = min(sacramento_train$beds), 
-#              to = max(sacramento_train$beds), 
-#              length = 50)
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:08-3DlinReg
+# :figclass: caption-hack
 #
-# zvals <- mlm_fit |>
-#   predict(crossing(xvals, yvals) |> 
-#             mutate(sqft = xvals, beds = yvals)) |>
-#   pull(.pred)
-#
-# zvalsm <- matrix(zvals, nrow = length(xvals))
-#
-# plot_3d <- plot_ly() |>
-#   add_markers(
-#     data = sacramento_train,
-#     x = ~sqft,
-#     y = ~beds,
-#     z = ~price,
-#     marker = list(size = 2, opacity = 0.4, color = "red")
-#   ) |>
-#   layout(scene = list(
-#     xaxis = list(title = "Size (sq ft)"),
-#     zaxis = list(title = "Price (USD)"),
-#     yaxis = list(title = "Bedrooms")
-#   )) |>
-#   add_surface(
-#     x = ~xvals,
-#     y = ~yvals,
-#     z = ~zvalsm,
-#     colorbar = list(title = "Price (USD)")
-#   )
-#
-# if(!is_latex_output()){  
-#   plot_3d
-# } else {
-#   scene = list(camera = list(eye = list(x = -2.1, y = -2.2, z = 0.75)))
-#   plot_3d <- plot_3d  |> layout(scene = scene)
-#   save_image(plot_3d, "img/plot3d_linear_regression.png", scale = 10)
-#   knitr::include_graphics("img/plot3d_linear_regression.png")
-# }
+# Linear regression plane of best fit overlaid on top of the data (using price, house size, and number of bedrooms as predictors). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the regression plane looks like for learning purposes.
 # ```
 
 # %% [markdown]
@@ -746,14 +785,11 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # plane mathematically. We can extract those slope values from our model object
 # as shown below:
 
-# %% [markdown]
-# ```{r 08-lm-multi-get-coeffs}
-# mcoeffs <- mlm_fit |>
-#              pull_workflow_fit() |>
-#              tidy()
-#
-# mcoeffs
-# ```
+# %%
+mlm.coef_
+
+# %%
+mlm.intercept_
 
 # %% [markdown]
 # And then use those slopes to write a mathematical equation to describe the prediction plane: \index{plane equation}
@@ -768,21 +804,16 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # Finally, we can fill in the values for $\beta_0$, $\beta_1$ and $\beta_2$ from the model output above
 # to create the equation of the plane of best fit to the data:
 
-# %% [markdown]
-# ```{r 08-lm-multi-get-coeffs-hidden, echo = FALSE}
-# icept <- format(round(mcoeffs |> 
-#                         filter(term == "(Intercept)") |> 
-#                         pull(estimate)), scientific = FALSE)
-# sqftc <- format(round(mcoeffs |> 
-#                         filter(term == "sqft") |> 
-#                         pull(estimate)), scientific = FALSE)
-# bedsc <- format(round(mcoeffs |> 
-#                         filter(term == "beds") |> 
-#                         pull(estimate)), scientific = FALSE)
-# ```
+# %% tags=["remove-cell"]
+icept = "{0:,.0f}".format(mlm.intercept_[0])
+sqftc = "{0:,.0f}".format(mlm.coef_[0][0])
+bedsc = "{0:,.0f}".format(mlm.coef_[0][1])
+glue("icept", icept)
+glue("sqftc", sqftc)
+glue("bedsc", bedsc)
 
 # %% [markdown]
-# $$\text{house sale price} = `r icept` + `r sqftc`\cdot (\text{house size})  `r bedsc` \cdot (\text{number of bedrooms})$$
+# $\text{house sale price} =$ {glue:text}`icept` $+$ {glue:text}`sqftc` $\cdot (\text{house size})$ {glue:text}`bedsc` $\cdot (\text{number of bedrooms})$
 #
 # This model is more interpretable than the multivariable KNN
 # regression model; we can write a mathematical equation that explains how
@@ -798,19 +829,17 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # we want to make a final comparison, we can do so by comparing the prediction
 # error of the methods on the test data.
 
-# %% [markdown]
-# ```{r 08-get-RMSPE}
-# lm_mult_test_results
-# ```
+# %%
+lm_mult_test_RMSPE
 
 # %% [markdown]
 # We obtain an RMSPE \index{RMSPE} for the multivariable linear regression model 
-# of `r format(lm_mult_test_results |> filter(.metric == 'rmse') |> pull(.estimate), big.mark=",", nsmall=0, scientific = FALSE)`. This prediction error
+# of {glue:text}`sacr_mult_RMSPE`. This prediction error
 #  is less than the prediction error for the multivariable KNN regression model,
 # indicating that we should likely choose linear regression for predictions of
 # house sale price on this data set. Revisiting the simple linear regression model
 # with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was 
-# `r format(lm_test_results |> filter(.metric == 'rmse') |> pull(.estimate), big.mark=",", nsmall=0, scientific = FALSE)`, 
+# {glue:text}`sacr_RMSPE`, 
 # which is slightly higher than that of our more complex model. Our model with two predictors
 # provided a slightly better fit on test data than our model with just one. 
 # As mentioned earlier, this is not always the case: sometimes including more
@@ -835,7 +864,7 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # to judge accurately which data are outliers without advanced techniques that are beyond
 # the scope of this book.
 #
-# But to illustrate what can happen when you have outliers, Figure \@ref(fig:08-lm-outlier)
+# But to illustrate what can happen when you have outliers, {numref}`fig:08-lm-outlier`
 # shows a small subset of the Sacramento housing data again, except we have added a *single* data point (highlighted
 # in red). This house is 5,000 square feet in size, and sold for only \$50,000. Unbeknownst to the
 # data analyst, this house was sold by a parent to their child for an absurdly low price. Of course,
@@ -844,59 +873,125 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # we plot the new line of best fit including the outlier. You can see how different the red line
 # is from the blue line, which is entirely caused by that one extra outlier data point.
 
+# %% tags=["remove-cell"]
+sacramento_train_small = sacramento_train.sample(100, random_state=2)
+sacramento_outlier = pd.DataFrame({"sqft": [5000], "price": [50000]})
+sacramento_concat_df = pd.concat((sacramento_train_small, sacramento_outlier))
+
+lm_plot_outlier = (
+    alt.Chart(sacramento_train_small)
+    .mark_circle(color="black", opacity=0.4)
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y(
+            "price",
+            title="Price (USD)",
+            axis=alt.Axis(format="$,.0f"),
+            scale=alt.Scale(zero=False),
+        ),
+    )
+)
+lm_plot_outlier += lm_plot_outlier.transform_regression("sqft", "price").mark_line(
+    color="blue"
+)
+
+outlier_pt = (
+    alt.Chart(sacramento_outlier)
+    .mark_circle(color="red", size=100)
+    .encode(x="sqft", y="price")
+)
+
+outlier_line = (
+    (
+        alt.Chart(sacramento_concat_df)
+        .mark_circle(color="black", opacity=0.4)
+        .encode(
+            x=alt.X(
+                "sqft", title="House size (square feet)", scale=alt.Scale(zero=False)
+            ),
+            y=alt.Y(
+                "price",
+                title="Price (USD)",
+                axis=alt.Axis(format="$,.0f"),
+                scale=alt.Scale(zero=False),
+            ),
+        )
+    )
+    .transform_regression("sqft", "price")
+    .mark_line(color="red")
+)
+
+lm_plot_outlier += outlier_pt + outlier_line
+
+glue("fig:08-lm-outlier", lm_plot_outlier)
+
 # %% [markdown]
-# ```{r 08-lm-outlier, fig.height = 3.5, fig.width = 4.5, message = FALSE, warning = FALSE, echo = FALSE, fig.cap = "Scatter plot of a subset of the data, with outlier highlighted in red."}
-# sacramento_train_small <- sacramento_train |> sample_n(100)
-# sacramento_outlier <- tibble(sqft = 5000, price = 50000)
+# :::{glue:figure} fig:08-lm-outlier
+# :name: fig:08-lm-outlier
 #
-# lm_plot_outlier <- ggplot(sacramento_train_small, aes(x = sqft, y = price)) +
-#   geom_point(alpha = 0.4) +
-#   geom_point(data = sacramento_outlier, 
-#              mapping = aes(x = sqft, y = price), color="red", size = 2.5) +
-#   xlab("House size (square feet)") +
-#   ylab("Price (USD)") +
-#   scale_y_continuous(labels = dollar_format()) +
-#   geom_smooth(method = "lm", se = FALSE) + 
-#   geom_smooth(data = sacramento_train_small |> 
-#                 add_row(sqft = 5000, price = 50000), 
-#               method = "lm", se = FALSE, color = "red")
-#
-# lm_plot_outlier
-# ```
+# Scatter plot of a subset of the data, with outlier highlighted in red.
+# :::
 
 # %% [markdown]
 # Fortunately, if you have enough data, the inclusion of one or two
 # outliers&mdash;as long as their values are not *too* wild&mdash;will
-# typically not have a large effect on the line of best fit. Figure
-# \@ref(fig:08-lm-outlier-2) shows how that same outlier data point from earlier
+# typically not have a large effect on the line of best fit. {numref}`fig:08-lm-outlier-2` shows how that same outlier data point from earlier
 # influences the line of best fit when we are working with the entire original
 # Sacramento training data. You can see that with this larger data set, the line
 # changes much less when adding the outlier.
 # Nevertheless, it is still important when working with linear regression to critically
 # think about how much any individual data point is influencing the model.
 
+# %% tags=["remove-cell"]
+sacramento_concat_df = pd.concat((sacramento_train, sacramento_outlier))
+
+lm_plot_outlier_large = (
+    alt.Chart(sacramento_train)
+    .mark_circle(color="black", opacity=0.4)
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y(
+            "price",
+            title="Price (USD)",
+            axis=alt.Axis(format="$,.0f"),
+            scale=alt.Scale(zero=False),
+        ),
+    )
+)
+lm_plot_outlier_large += lm_plot_outlier_large.transform_regression(
+    "sqft", "price"
+).mark_line(color="blue")
+
+outlier_line = (
+    (
+        alt.Chart(sacramento_concat_df)
+        .mark_circle(color="black", opacity=0.4)
+        .encode(
+            x=alt.X(
+                "sqft", title="House size (square feet)", scale=alt.Scale(zero=False)
+            ),
+            y=alt.Y(
+                "price",
+                title="Price (USD)",
+                axis=alt.Axis(format="$,.0f"),
+                scale=alt.Scale(zero=False),
+            ),
+        )
+    )
+    .transform_regression("sqft", "price")
+    .mark_line(color="red")
+)
+
+lm_plot_outlier_large += outlier_pt + outlier_line
+
+glue("fig:08-lm-outlier-2", lm_plot_outlier_large)
+
 # %% [markdown]
-# ```{r 08-lm-outlier-2, fig.height = 3.5, fig.width = 4.5, warning = FALSE, message = FALSE, echo = FALSE, fig.cap = "Scatter plot of the full data, with outlier highlighted in red."}
-# sacramento_outlier <- tibble(sqft = 5000, price = 50000)
+# :::{glue:figure} fig:08-lm-outlier-2
+# :name: fig:08-lm-outlier-2
 #
-# lm_plot_outlier_large <- ggplot(sacramento_train, aes(x = sqft, y = price)) +
-#   geom_point(alpha = 0.4) +
-#   geom_point(data = sacramento_outlier, 
-#              mapping = aes(x = sqft, y = price), 
-#              color="red", 
-#              size = 2.5) +
-#   xlab("House size (square feet)") +
-#   ylab("Price (USD)") +
-#   scale_y_continuous(labels = dollar_format()) +
-#   geom_smooth(method = "lm", se = FALSE) + 
-#   geom_smooth(data = sacramento_train |> 
-#                 add_row(sqft = 5000, price = 50000), 
-#               method = "lm", 
-#               se = FALSE, 
-#               color = "red")
-#
-# lm_plot_outlier_large
-# ```
+# Scatter plot of the full data, with outlier highlighted in red.
+# :::
 
 # %% [markdown]
 # ### Multicollinearity
@@ -909,95 +1004,90 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # the Sacramento housing data where the house was measured twice by two people.
 # Since the two people are each slightly inaccurate, the two measurements might
 # not agree exactly, but they are very strongly linearly related to each other,
-# as shown in Figure \@ref(fig:08-lm-multicol).
+# as shown in {numref}`fig:08-lm-multicol`.
+
+# %% tags=["remove-cell"]
+np.random.seed(1)
+sacramento_train = sacramento_train.assign(
+    sqft1=sacramento_train["sqft"]
+    + 100
+    * np.random.choice(range(1000000), size=len(sacramento_train), replace=True)
+    / 1000000
+)
+sacramento_train = sacramento_train.assign(
+    sqft2=sacramento_train["sqft"]
+    + 100
+    * np.random.choice(range(1000000), size=len(sacramento_train), replace=True)
+    / 1000000
+)
+sacramento_train = sacramento_train.assign(
+    sqft3=sacramento_train["sqft"]
+    + 100
+    * np.random.choice(range(1000000), size=len(sacramento_train), replace=True)
+    / 1000000
+)
+sacramento_train
+
+lm_plot_multicol_1 = (
+    alt.Chart(sacramento_train)
+    .mark_circle(color="black", opacity=0.4)
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)"),
+        y=alt.Y("sqft1", title="House size (square inches)"),
+    )
+)
+
+glue("fig:08-lm-multicol", lm_plot_multicol_1)
 
 # %% [markdown]
-# ```{r 08-lm-multicol, fig.height = 3.5, fig.width = 4.5, warning = FALSE, echo = FALSE, fig.cap = "Scatter plot of house size (in square inches) versus house size (in square feet)."}
-# sacramento_train <- sacramento_train |>
-#                           mutate(sqft1 = sqft + 100 * sample(1000000,
-#                                                              size=nrow(sacramento_train),
-#                                                              replace=TRUE)/1000000) |>
-#                           mutate(sqft2 = sqft + 100 * sample(1000000, 
-#                                                              size=nrow(sacramento_train),
-#                                                              replace=TRUE)/1000000) |>
-#                           mutate(sqft3 = sqft + 100 * sample(1000000, 
-#                                                              size=nrow(sacramento_train),
-#                                                              replace=TRUE)/1000000) 
+# :::{glue:figure} fig:08-lm-multicol
+# :name: fig:08-lm-multicol
 #
-# lm_plot_multicol_1 <- ggplot(sacramento_train) +
-#   geom_point(aes(x = sqft, y = sqft1), alpha=0.4)+
-#   xlab("House size (square feet)") +
-#   ylab("House size (square inches)") 
-# lm_plot_multicol_1
-# ```
+# Scatter plot of house size (in square inches) versus house size (in square feet).
+# :::
 
-# %% [markdown]
-# ```{r 08-lm-multicol-2, echo = FALSE, warning = FALSE}
-# lm_recipe1 <- recipe(price ~ sqft + sqft1, data = sacramento_train)
-#
-# lm_fit1 <- workflow() |>
-#   add_recipe(lm_recipe1) |>
-#   add_model(lm_spec) |>
-#   fit(data = sacramento_train)
-#
-# coeffs <- tidy(pull_workflow_fit(lm_fit1))
-#
-# icept1 <- format(round(coeffs |> 
-#                          filter(term == "(Intercept)") |>  
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-# sqft1 <- format(round(coeffs |> 
-#                         filter(term == "sqft") |>  
-#                         pull(estimate)), 
-#                 scientific = FALSE)
-# sqft11 <- format(round(coeffs |> 
-#                          filter(term == "sqft1") |>  
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-#
-# lm_recipe2 <- recipe(price ~ sqft + sqft2, data = sacramento_train)
-#
-# lm_fit2 <- workflow() |>
-#   add_recipe(lm_recipe2) |>
-#   add_model(lm_spec) |>
-#   fit(data = sacramento_train)
-#
-# coeffs <- tidy(pull_workflow_fit(lm_fit2))
-# icept2 <- format(round(coeffs |> 
-#                          filter(term == "(Intercept)") |> 
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-# sqft2 <- format(round(coeffs |> 
-#                         filter(term == "sqft") |> 
-#                         pull(estimate)), 
-#                 scientific = FALSE)
-# sqft22 <- format(round(coeffs |> 
-#                          filter(term == "sqft2") |> 
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-#
-# lm_recipe3 <- recipe(price ~ sqft + sqft3, data = sacramento_train)
-#
-# lm_fit3 <- workflow() |>
-#   add_recipe(lm_recipe3) |>
-#   add_model(lm_spec) |>
-#   fit(data = sacramento_train)
-#
-# coeffs <- tidy(pull_workflow_fit(lm_fit3))
-# icept3 <- format(round(coeffs |> 
-#                          filter(term == "(Intercept)") |> 
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-# sqft3 <- format(round(coeffs |> 
-#                         filter(term == "sqft") |> 
-#                         pull(estimate)), 
-#                 scientific = FALSE)
-# sqft33 <- format(round(coeffs |> 
-#                          filter(term == "sqft3") |> 
-#                          pull(estimate)), 
-#                  scientific = FALSE)
-#
-# ```
+# %% tags=["remove-cell"]
+# first LM
+lm_fit1 = LinearRegression()
+X_train = sacramento_train[["sqft", "sqft1"]]
+y_train = sacramento_train[["price"]]
+
+lm_fit1.fit(X_train, y_train)
+
+icept1 = "{0:,.0f}".format(lm_fit1.intercept_[0])
+sqft1 = "{0:,.0f}".format(lm_fit1.coef_[0][0])
+sqft11 = "{0:,.0f}".format(lm_fit1.coef_[0][1])
+glue("icept1", icept1)
+glue("sqft1", sqft1)
+glue("sqft11", sqft11)
+
+# second LM
+lm_fit2 = LinearRegression()
+X_train = sacramento_train[["sqft", "sqft2"]]
+y_train = sacramento_train[["price"]]
+
+lm_fit2.fit(X_train, y_train)
+
+icept2 = "{0:,.0f}".format(lm_fit2.intercept_[0])
+sqft2 = "{0:,.0f}".format(lm_fit2.coef_[0][0])
+sqft22 = "{0:,.0f}".format(lm_fit2.coef_[0][1])
+glue("icept2", icept2)
+glue("sqft2", sqft2)
+glue("sqft22", sqft22)
+
+# third LM
+lm_fit3 = LinearRegression()
+X_train = sacramento_train[["sqft", "sqft3"]]
+y_train = sacramento_train[["price"]]
+
+lm_fit3.fit(X_train, y_train)
+
+icept3 = "{0:,.0f}".format(lm_fit3.intercept_[0])
+sqft3 = "{0:,.0f}".format(lm_fit3.coef_[0][0])
+sqft33 = "{0:,.0f}".format(lm_fit3.coef_[0][1])
+glue("icept3", icept3)
+glue("sqft3", sqft3)
+glue("sqft33", sqft33)
 
 # %% [markdown]
 #  If we again fit the multivariable linear regression model on this data, then the plane of best fit
@@ -1005,11 +1095,11 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # if we change the data ever so slightly&mdash;e.g., by running cross-validation, which splits
 # up the data randomly into different chunks&mdash;the coefficients vary by large amounts:
 #
-# Best Fit 1: $\text{house sale price} = `r icept1` + `r sqft1`\cdot (\text{house size 1 (ft$^2$)}) + `r sqft11` \cdot (\text{house size 2 (ft$^2$)}).$
+# Best Fit 1: $\text{house sale price} =$ {glue:text}`icept1` $+$ {glue:text}`sqft1` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft11` $\cdot (\text{house size 2}$ $({ft}^2)).$
 #
-# Best Fit 2: $\text{house sale price} = `r icept2` + `r sqft2`\cdot (\text{house size 1 (ft$^2$)}) + `r sqft22` \cdot (\text{house size 2 (ft$^2$)}).$
+# Best Fit 2: $\text{house sale price} =$ {glue:text}`icept2` $+$ {glue:text}`sqft2` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft22` $\cdot (\text{house size 2}$ $({ft}^2)).$
 #
-# Best Fit 3: $\text{house sale price} = `r icept3` + `r sqft3`\cdot (\text{house size 1 (ft$^2$)}) + `r sqft33` \cdot (\text{house size 2 (ft$^2$)}).$
+# Best Fit 3: $\text{house sale price} =$ {glue:text}`icept3` $+$ {glue:text}`sqft3` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft33` $\cdot (\text{house size 2}$ $({ft}^2)).$
 #
 #  Therefore, when performing multivariable linear regression, it is important to avoid including very
 # linearly related predictors. However, techniques for doing so are beyond the scope of this
@@ -1033,32 +1123,44 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # meaningful relationship with the response variable, but that relationship does not fit
 # the assumptions of the regression method you have chosen. For example, a data frame `df`
 # with two variables&mdash;`x` and `y`&mdash;with a nonlinear relationship between the two variables
-# will not be fully captured by simple linear regression, as shown in Figure \@ref(fig:08-predictor-design).
+# will not be fully captured by simple linear regression, as shown in {numref}`fig:08-predictor-design`.
+
+# %% tags=["remove-cell"]
+np.random.seed(3)
+df = pd.DataFrame({"x": np.random.choice(range(10000), size=100, replace=True) / 10000})
+df = df.assign(
+    y=df["x"] ** 3
+    + 0.2 * np.random.choice(range(10000), size=100, replace=True) / 10000
+    - 0.1
+)
+
+# %%
+df
+
+# %% tags=["remove-cell"]
+curve_plt = (
+    alt.Chart(df)
+    .mark_circle(color="black")
+    .encode(
+        x=alt.X("x", scale=alt.Scale(zero=False)),
+        y=alt.Y(
+            "y",
+            scale=alt.Scale(zero=False),
+        ),
+    )
+)
+
+
+curve_plt += curve_plt.transform_regression("x", "y").mark_line(color="blue")
+
+glue("fig:08-predictor-design", curve_plt)
 
 # %% [markdown]
-# ```{r 08-predictor-design-df, echo = FALSE, message = FALSE, warning = FALSE}
-# set.seed(1)
+# :::{glue:figure} fig:08-predictor-design
+# :name: fig:08-predictor-design
 #
-# df = tibble(x = sample(10000, 100, replace=TRUE) / 10000)
-#
-# df <- df |> 
-#   mutate(y = x^3 + 0.2 * sample(10000, 100, replace=TRUE)/10000 - 0.1)
-# ```
-
-# %% [markdown]
-# ```{r 08-predictor-design-df-2, message = FALSE, warning = FALSE}
-# df
-# ```
-
-# %% [markdown]
-# ```{r 08-predictor-design, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Example of a data set with a nonlinear relationship between the predictor and the response."}
-# curve_plt <- ggplot(df, aes(x = x, y = y)) +
-#   geom_point() +
-#   xlab("x") +
-#   ylab("y") +
-#   geom_smooth(method = "lm", se = FALSE)
-# curve_plt
-# ```
+# Example of a data set with a nonlinear relationship between the predictor and the response.
+# :::
 
 # %% [markdown]
 # Instead of trying to predict the response `y` using a linear regression on `x`,
@@ -1066,31 +1168,42 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # should be a cubic function of `x`. So before performing regression,
 # we might *create a new predictor variable* `z` using the `mutate` function: \index{predictor design}
 
-# %% [markdown]
-# ```{r 08-predictor-design-3, message = FALSE, warning = FALSE}
-# df <- df |>
-#         mutate(z = x^3)
-# ```
+# %%
+df["z"] = df["x"] ** 3
 
 # %% [markdown]
 # Then we can perform linear regression for `y` using the predictor variable `z`,
-# as shown in Figure \@ref(fig:08-predictor-design-2).
+# as shown in {numref}`fig:08-predictor-design-2`.
 # Here you can see that the transformed predictor `z` helps the 
 # linear regression model make more accurate predictions. 
-# Note that none of the `y` response values have changed between Figures \@ref(fig:08-predictor-design)
-# and \@ref(fig:08-predictor-design-2); the only change is that the `x` values
+# Note that none of the `y` response values have changed between {numref}`fig:08-predictor-design`
+# and {numref}`fig:08-predictor-design-2`; the only change is that the `x` values
 # have been replaced by `z` values.
 
+# %% tags=["remove-cell"]
+curve_plt2 = (
+    alt.Chart(df)
+    .mark_circle(color="black")
+    .encode(
+        x=alt.X("z", title="z = x³" ,scale=alt.Scale(zero=False)),
+        y=alt.Y(
+            "y",
+            scale=alt.Scale(zero=False),
+        ),
+    )
+)
+
+
+curve_plt2 += curve_plt2.transform_regression("z", "y").mark_line(color="blue")
+
+glue("fig:08-predictor-design-2", curve_plt2)
+
 # %% [markdown]
-# ```{r 08-predictor-design-2, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Relationship between the transformed predictor and the response."}
-# curve_plt2 <- ggplot(df, aes(x = z, y = y)) +
-#   geom_point() +
-#   xlab(expression(paste("z = x"^"3"))) +
-#   ylab("y") +
-#   geom_smooth(method = "lm", se = FALSE)
+# :::{glue:figure} fig:08-predictor-design-2
+# :name: fig:08-predictor-design-2
 #
-# curve_plt2
-# ```
+# Relationship between the transformed predictor and the response.
+# :::
 
 # %% [markdown]
 # The process of
@@ -1134,10 +1247,39 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 # You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 # If you instead decide to download the worksheet and run it on your own machine,
 # make sure to follow the instructions for computer setup
-# found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+# found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
 
 # %% [markdown]
+# ## Additional resources
+#
+# - The [`scikit-learn` website](https://scikit-learn.org/stable/) is an excellent
+#   reference for more details on, and advanced usage of, the functions and
+#   packages in the past two chapters. Aside from that, it also offers many 
+#   useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) and [an extensive list
+#   of more advanced examples](https://scikit-learn.org/stable/auto_examples/index.html#general-examples)
+#   that you can use to continue learning beyond the scope of this book.
+# - *Modern Dive* [@moderndive] is another textbook that uses the
+#   `tidyverse` / `tidymodels` framework. Chapter 6 complements the material in
+#   the current chapter well; it covers some slightly more advanced concepts than
+#   we do without getting mathematical. Give this chapter a read before moving on
+#   to the next reference. It is also worth noting that this book takes a more
+#   "explanatory" / "inferential" approach to regression in general (in Chapters 5,
+#   6, and 10), which provides a nice complement to the predictive tack we take in
+#   the present book.
+# - *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides 
+#   a great next stop in the process of
+#   learning about regression. Chapter 3 covers linear regression at a slightly
+#   more mathematical level than we do here, but it is not too large a leap and so
+#   should provide a good stepping stone. Chapter 6 discusses how to pick a subset
+#   of "informative" predictors when you have a data set with many predictors, and
+#   you expect only a few of them to be relevant. Chapter 7 covers regression
+#   models that are more flexible than linear regression models but still enjoy the
+#   computational efficiency of linear regression. In contrast, the KNN methods we
+#   covered earlier are indeed more flexible but become very slow when given lots
+#   of data.
+
+# %% tags=["remove-cell"]
 # ## Additional resources
 # - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
 #   reference for more details on, and advanced usage of, the functions and

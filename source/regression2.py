@@ -197,7 +197,7 @@ small_plot_2000_pred
 
 # %% tags=["remove-cell"]
 glue("fig:08-lin-reg2", small_plot_2000_pred)
-glue("pred_2000", "{0:,.0f}".format(prediction))
+glue("pred_2000", int(prediction))
 
 # %% [markdown]
 # :::{glue:figure} fig:08-lin-reg2
@@ -209,7 +209,7 @@ glue("pred_2000", "{0:,.0f}".format(prediction))
 # %% [markdown]
 # By using simple linear regression on this small data set to predict the sale price
 # for a 2,000 square-foot house, we get a predicted value of 
-# \${glue:text}`pred_2000`. But wait a minute...how
+# \${glue:}`pred_2000`. But wait a minute...how
 # exactly does simple linear regression choose the line of best fit? Many
 # different lines could be drawn through the data points. 
 # Some plausible examples are shown in {numref}`fig:08-several-lines`.
@@ -294,13 +294,6 @@ glue("fig:08-verticalDistToMin", error_plot)
 # :::
 
 # %% [markdown]
-# :::{glue:figure} fig:08-verticalDistToMin
-# :name: fig:08-verticalDistToMin
-#
-# Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
-# :::
-
-# %% [markdown]
 # ## Linear regression in Python
 
 # %% [markdown]
@@ -361,8 +354,6 @@ pd.DataFrame({"slope": lm.coef_[0], "intercept": lm.intercept_})
 # %% tags=["remove-cell"]
 glue("train_lm_slope", round(lm.coef_[0][0]))
 glue("train_lm_intercept", round(lm.intercept_[0]))
-glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0][0]))
-glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_[0]))
 
 # %% [markdown]
 # > **Note:** An additional difference that you will notice here is that we do
@@ -383,9 +374,9 @@ glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_[0]))
 # $\text{house sale price} =$ {glue:}`train_lm_intercept` $+$ {glue:}`train_lm_slope` $\cdot (\text{house size}).$
 #
 # In other words, the model predicts that houses 
-# start at \${glue:text}`train_lm_intercept_f` for 0 square feet, and that
+# start at \${glue:}`train_lm_intercept` for 0 square feet, and that
 # every extra square foot increases the cost of 
-# the house by \${glue:text}`train_lm_slope_f`. Finally, 
+# the house by \${glue:}`train_lm_slope`. Finally, 
 # we predict on the test data set to assess how well our model does:
 
 # %%
@@ -418,7 +409,7 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 #
 # To visualize the simple linear regression model, we can plot the predicted house
 # sale price across all possible house sizes we might encounter superimposed on a scatter
-# plot of the original housing price data. There is a function in 
+# plot of the original housing price data. There is a plotting function in 
 # the `altair`, `transform_regression`, that
 # allows us to add a layer on our plot with the simple
 # linear regression predicted line of best fit. 
@@ -449,9 +440,7 @@ lm_plot_final = (
     )
 )
 
-lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(
-    color="blue"
-)
+lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(color="blue")
 
 lm_plot_final
 
@@ -493,23 +482,23 @@ glue("fig:08-lm-predict-all", lm_plot_final)
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline_knn = make_pipeline(
     sacr_preprocessor, KNeighborsRegressor(n_neighbors=31)
-)  # 31 is the best parameter obtained through cross validation in regression1 chapter
+)  # 31 is the best parameter obtained in CV in regression1 chapter
 
 sacr_pipeline_knn.fit(X_train, y_train)
 
-# knn in-sample predictions (on training split)
+# in-sample predictions (on training split)
 sacr_preds_knn = sacramento_train
 sacr_preds_knn = sacr_preds_knn.assign(
     knn_predicted=sacr_pipeline_knn.predict(sacramento_train)
 )
 
-# sacr_rmse_knn = np.sqrt(
-#     mean_squared_error(
-#         y_true=sacr_preds_knn["price"], y_pred=sacr_preds_knn["knn_predicted"]
-#     )
-# )
+sacr_rmse_knn = np.sqrt(
+    mean_squared_error(
+        y_true=sacr_preds_knn["price"], y_pred=sacr_preds_knn["knn_predicted"]
+    )
+)
 
-# knn out-of-sample predictions (on test split)
+# out-of-sample predictions (on test split)
 sacr_preds_knn_test = sacramento_test
 sacr_preds_knn_test = sacr_preds_knn_test.assign(
     knn_predicted=sacr_pipeline_knn.predict(sacramento_test)
@@ -690,7 +679,7 @@ X_train = sacramento_train[["sqft", "beds"]]
 y_train = sacramento_train[["price"]]
 
 # %% [markdown]
-# Now we can fit the model:
+# Now we can build our workflow and fit the model:
 
 # %%
 mlm.fit(X_train, y_train)
@@ -1043,8 +1032,8 @@ lm_plot_multicol_1 = (
     alt.Chart(sacramento_train)
     .mark_circle(color="black", opacity=0.4)
     .encode(
-        x=alt.X("sqft", title="House size measurement 1 (square feet)"),
-        y=alt.Y("sqft1", title="House size measurement 2 (square feet)"),
+        x=alt.X("sqft", title="House size (square feet)"),
+        y=alt.Y("sqft1", title="House size (square inches)"),
     )
 )
 
@@ -1054,7 +1043,7 @@ glue("fig:08-lm-multicol", lm_plot_multicol_1)
 # :::{glue:figure} fig:08-lm-multicol
 # :name: fig:08-lm-multicol
 #
-# Scatter plot of house size (in square feet) measured by person 1 versus house size (in square feet) measured by person 2.
+# Scatter plot of house size (in square inches) versus house size (in square feet).
 # :::
 
 # %% tags=["remove-cell"]
@@ -1177,7 +1166,7 @@ glue("fig:08-predictor-design", curve_plt)
 # Instead of trying to predict the response `y` using a linear regression on `x`,
 # we might have some scientific background about our problem to suggest that `y`
 # should be a cubic function of `x`. So before performing regression,
-# we might *create a new predictor variable* `z`: \index{predictor design}
+# we might *create a new predictor variable* `z` using the `mutate` function: \index{predictor design}
 
 # %%
 df["z"] = df["x"] ** 3

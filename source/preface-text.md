@@ -1,7 +1,7 @@
 ---
 jupytext:
   cell_metadata_filter: -all
-  formats: py:percent,md:myst,ipynb
+  formats: md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
@@ -13,15 +13,7 @@ kernelspec:
   name: python3
 ---
 
-```{r setup, include=FALSE}
-library(forcats)
-
-# read canlang data from GitHub and place it in the data directory
-can_lang <- readr::read_csv("https://github.com/ttimbers/canlang/raw/master/inst/extdata/can_lang.csv") %>%
-  readr::write_csv("data/can_lang.csv")
-```
-
-# Preface {-}
+# Preface -- TBD
 
 This textbook aims to be an approachable introduction to the world of data science. 
 In this book, we define **data science** \index{data science!definition} as the process of generating

@@ -13,46 +13,7 @@ kernelspec:
   name: python3
 ---
 
-```{raw-cell}
-
----
-title: |
-  ![](img/ds-a-first-intro-graphic.jpg)  
-  Data Science
-subtitle: "A First Introduction"
-author: "Tiffany Timbers, Trevor Campbell, and Melissa Lee <br> Foreword by Roger Peng"
-date: "`r Sys.Date()`"
-site: bookdown::bookdown_site
-documentclass: book
-bibliography: [references.bib]
-biblio-style: apalike
-link-citations: yes
-description: "This is a textbook for teaching a first introduction to data science."
-always_allow_html: true
-cover-image: "img/ds-a-first-intro-graphic.jpg"
-graphics: yes
-url: https://datasciencebook.ca
-output:
-  bookdown::gitbook:
-    css: style.css
-    config:
-      toc:
-        before: |
-          <li><a href="https://datasciencebook.ca">Data Science: A First Introduction</a></li>
-      edit: null
-      download: null
-  bookdown::pdf_book:
-    includes:
-      in_header: preamble.tex
-      after_body: printindex.tex
-    latex_engine: xelatex
-    citation_package: natbib
-    keep_tex: yes
-  bookdown::epub_book: default
----
-```
-
-# Welcome! {-}  --- update
+# Welcome -- TBD
 
 This is the [website](https://datasciencebook.ca/) for *Data Science: A First Introduction*. 
 You can read the web version of the book on this site. Click a section in the table of contents

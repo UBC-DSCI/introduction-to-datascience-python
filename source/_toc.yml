@@ -15,7 +15,7 @@ parts:
     - file: wrangling.md
     - file: viz.md
     - file: classification1.md
-    # - file: classification2
+    - file: classification2.md
     # - file: regression1
     # - file: regression2
     # - file: clustering

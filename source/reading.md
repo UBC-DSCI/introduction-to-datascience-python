@@ -6,7 +6,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -19,13 +19,9 @@ We need to import the `pandas` package in order to read data into Python
 
 ```{code-cell} ipython3
 import pandas as pd 
-
 ```
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
-
 import warnings
 warnings.filterwarnings('ignore')
 ```
@@ -206,7 +202,6 @@ relative path to the file.
 canlang_data = pd.read_csv("data/can_lang.csv")
 ```
 
-
 ```{code-cell} ipython3
 canlang_data
 ```
@@ -299,7 +294,7 @@ Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
 
 To read in this type of data, we can use the `read_csv` with `sep` argument 
 \index{tab-separated values|see{tsv}}\index{tsv}\index{read function!read\_tsv}
-to read in .tsv (**t**ab **s**eparated **v**alues) files. 
+to read in .tsv (**t**ab **s**eparated **v**alues) files.
 
 ```{code-cell} ipython3
 canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t", header=None)
@@ -345,7 +340,7 @@ tab, which we represent by `"\t"`).
 > **Note:** `\t` is an example of an *escaped character*, 
 > which always starts with a backslash (`\`). \index{escape character}
 > Escaped characters are used to represent non-printing characters 
-> (like the tab) or characters with special meanings (such as quotation marks). 
+> (like the tab) or characters with special meanings (such as quotation marks).
 
 ```{code-cell} ipython3
 canlang_data =  pd.read_csv("data/can_lang.tsv", 
@@ -353,8 +348,6 @@ canlang_data =  pd.read_csv("data/can_lang.tsv",
                            header = None)
 canlang_data
 ```
-
-+++
 
 Data frames in Python need to have column names.  Thus if you read in data that
 don't have column names, Python will assign names automatically. In the example
@@ -370,10 +363,9 @@ The argument of the `rename` function is `columns`, which is a dictionary,
 where the keys are the old column names and values are the new column names.
 We rename the old `0, 1, ..., 5`
 columns in the `canlang_data` data frame to more descriptive names below, with the 
-`inplace` argument as `True`, so that the columns are renamed in place. 
+`inplace` argument as `True`, so that the columns are renamed in place.
 
 ```{code-cell} ipython3
-
 canlang_data.rename(columns = {0:'category', 
                                1:'language',
                                2:'mother_tongue',
@@ -389,9 +381,7 @@ The column names can also be assigned to the dataframe while reading it from the
 list of column names to the `names` argument. `read_csv` and `read_table` have a `names` argument, 
 \index{read function!col\_names argument} whose default value is `[]`.
 
-
 ```{code-cell} ipython3
-
 canlang_data =  pd.read_csv("data/can_lang.tsv", 
                            sep = "\t", 
                            header = None, 
@@ -552,7 +542,6 @@ from sqlalchemy import create_engine, select, MetaData, Table
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
 
-
 ```
 
 Often relational databases have many tables; thus, in order to retrieve
@@ -561,12 +550,10 @@ in which the data is stored. You can get the names of
 all the tables in the database using the `table_names` \index{database!tables}
 function:
 
-
 ```{code-cell} ipython3
 tables = db.table_names()
 tables
 ```
-
 
 The `table_names` function returned only one name, which tells us
 that there is only one table in this database. To reference a table in the
@@ -592,9 +579,7 @@ table = Table(
 query = select([table])
 canlang_data_db = conn.execute(query)
 canlang_data_db
-
 ```
-
 
 Although it looks like we just got a data frame from the database, we didn't!
 It's a *reference*; the data is still stored only in the SQLite database. The output 
@@ -610,24 +595,19 @@ tell it to using the `fetchall` \index{database!collect} function. The `fetchall
 result of the query in the form of a list, where each row in the table is an element in the list.
 Let's look at the first 10 rows in the table.
 
-
 ```{code-cell} ipython3
 canlang_data_db = conn.execute(query).fetchall()
 canlang_data_db[:10]
-
 ```
-
 
 We can look at the SQL commands that are sent to the database when we write 
 `conn.execute(query).fetchall()` in Python with the `query.compile` function from the
 `sqlalchemy` package. \index{database!show\_query}
 
 ```{code-cell} ipython3
-
 compiled = query.compile(db, compile_kwargs={"render_postcompile": True})
 
 print(str(compiled) % compiled.params)
-
 ```
 
 The output above shows the SQL code that is sent to the database. When we
@@ -641,9 +621,6 @@ can mostly continue onward as if it were a regular data frame. For example,
 we can use the `select` function along with `where` function
 to obtain only certain rows. Below we filter the data to include only Aboriginal languages using 
 the `where` function of `sqlalchemy`
-
-
-
 
 ```{code-cell} ipython3
 query = select([table]).where(table.columns.category == 'Aboriginal languages')
@@ -664,8 +641,6 @@ rows of the table from the list returned by the query.
 aboriginal_lang_data_db = result_proxy.fetchall()
 aboriginal_lang_data_db[:10]
 ```
-
-
 
 `sqlalchemy` provides many more functions (not just `select`, `where`) 
 that you can use to directly feed the database reference (`aboriginal_lang_data_db`) into 
@@ -709,6 +684,7 @@ to a dataframe after calling `fetchall` function
 aboriginal_lang_data_db = pd.DataFrame(aboriginal_lang_data_db, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
 aboriginal_lang_data_db.shape
 ```
+
 >
 > Additionally, some operations will not work to extract columns or single values
 > from the reference. Thus, once you have finished
@@ -742,9 +718,7 @@ Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
 `password` (`abc123`) below are *not real*; you will not actually 
 be able to connect to a database using this information.
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
 pip install pgdb
 ```
 
@@ -886,7 +860,6 @@ Canadian 2016 Census, and then writing this to a `.csv` file:
 ```{code-cell} ipython3
 no_official_lang_data = canlang_data[canlang_data['category'] != 'Official languages']
 no_official_lang_data.to_csv("data/no_official_languages.csv")
-
 ```
 
 ## Obtaining data from the web 

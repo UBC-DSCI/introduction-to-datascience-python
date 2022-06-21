@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Reading in data locally and from the web {#reading}
+# Reading in data locally and from the web
 
 We need to import the `pandas` package in order to read data into Python
 
@@ -541,7 +541,6 @@ from sqlalchemy import create_engine, select, MetaData, Table
 
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
-
 ```
 
 Often relational databases have many tables; thus, in order to retrieve

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -8,7 +7,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.11.5
+#       jupytext_version: 1.13.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -16,13 +15,12 @@
 # ---
 
 # %% [markdown]
-# # Reading in data locally and from the web {#reading}
+# # Reading in data locally and from the web
 #
 # We need to import the `pandas` package in order to read data into Python
 
 # %%
 import pandas as pd 
-
 
 # %%
 import warnings
@@ -544,7 +542,6 @@ db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
 
 
-
 # %% [markdown]
 # Often relational databases have many tables; thus, in order to retrieve
 # data from a database, you need to know the name of the table 
@@ -581,7 +578,6 @@ query = select([table])
 canlang_data_db = conn.execute(query)
 canlang_data_db
 
-
 # %% [markdown]
 # Although it looks like we just got a data frame from the database, we didn't!
 # It's a *reference*; the data is still stored only in the SQLite database. The output 
@@ -601,7 +597,6 @@ canlang_data_db
 canlang_data_db = conn.execute(query).fetchall()
 canlang_data_db[:10]
 
-
 # %% [markdown]
 # We can look at the SQL commands that are sent to the database when we write 
 # `conn.execute(query).fetchall()` in Python with the `query.compile` function from the
@@ -611,7 +606,6 @@ canlang_data_db[:10]
 compiled = query.compile(db, compile_kwargs={"render_postcompile": True})
 
 print(str(compiled) % compiled.params)
-
 
 # %% [markdown]
 # The output above shows the SQL code that is sent to the database. When we
@@ -689,16 +683,15 @@ aboriginal_lang_data_db = pd.DataFrame(aboriginal_lang_data_db, columns=['catego
 aboriginal_lang_data_db.shape
 
 # %% [markdown]
-# \newpage
-#
-# Additionally, some operations will not work to extract columns or single values
-# from the reference. Thus, once you have finished
-# your data wrangling of the database reference object, it is advisable to
-# bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
-# But be very careful using `fetchall`: databases are often *very* big,
-# and reading an entire table into Python might take a long time to run or even possibly
-# crash your machine. So make sure you use `where` and `select` on the database table
-# to reduce the data to a reasonable size before using `fetchall` to read it into Python!
+# >
+# > Additionally, some operations will not work to extract columns or single values
+# > from the reference. Thus, once you have finished
+# > your data wrangling of the database reference object, it is advisable to
+# > bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
+# > But be very careful using `fetchall`: databases are often *very* big,
+# > and reading an entire table into Python might take a long time to run or even possibly
+# > crash your machine. So make sure you use `where` and `select` on the database table
+# > to reduce the data to a reasonable size before using `fetchall` to read it into Python!
 #  
 # ### Reading data from a PostgreSQL database 
 #
@@ -865,7 +858,6 @@ pip install pgdb
 # %%
 no_official_lang_data = canlang_data[canlang_data['category'] != 'Official languages']
 no_official_lang_data.to_csv("data/no_official_languages.csv")
-
 
 # %% [markdown]
 # ## Obtaining data from the web 

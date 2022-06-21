@@ -6,13 +6,13 @@ parts:
 - caption: First draft
   chapters:
     - file: preface-text.md
-    - file: forward-text.md
+    - file: foreword-text.md
     - file: acknowledgements.md
     - file: authors.md
     - file: setup.md
     - file: intro.md
-    - file: reading
-    - file: wrangling
+    - file: reading.md
+    - file: wrangling.md
     # - file: viz
     # - file: version-control
     # - file: classification1

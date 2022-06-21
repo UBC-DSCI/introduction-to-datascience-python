@@ -20,7 +20,7 @@ from myst_nb import glue
 
 ## Overview
 
-his chapter provides an introduction to data science and the Python programming language.
+This chapter provides an introduction to data science and the Python programming language.
 The goal here is to get your hands dirty right from the start! We will walk through an entire data analysis,
 and along the way introduce different types of data analysis question, some fundamental programming 
 concepts in Python, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will

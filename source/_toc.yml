@@ -16,8 +16,8 @@ parts:
     - file: viz.md
     - file: classification1.md
     - file: classification2.md
-    - file: regression1
-    - file: regression2
+    - file: regression1.md
+    - file: regression2.md
     # - file: clustering
     # - file: inference
     # - file: references

@@ -21,4 +21,4 @@ parts:
     # - file: clustering
     # - file: inference
     # - file: references
-    # - file: appendixA
+    - file: appendixA.md

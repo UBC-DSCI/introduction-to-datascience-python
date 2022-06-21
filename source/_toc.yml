@@ -17,10 +17,8 @@ parts:
     - file: classification1.md
     - file: classification2.md
     - file: regression1
-    # - file: regression2
+    - file: regression2
     # - file: clustering
     # - file: inference
     # - file: references
-    # - file: acknowledgements
-    # - file: authors
     # - file: appendixA

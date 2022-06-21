@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Collaboration with version control {#Getting-started-with-version-control} &#8212; DSCΙ 100</title>
     
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,20 +20,17 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -39,12 +38,13 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -62,7 +62,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -71,9 +85,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
       
@@ -86,14 +101,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="intro.html">
-   R and the Tidyverse hello worldV
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    R and the Tidyverse hello worldV
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   First draft
  </span>
@@ -146,7 +162,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="regression2.html">
-   Regression II: linear regression {#regression2}
+   Regression II: linear regression
   </a>
  </li>
  <li class="toctree-l1">
@@ -182,100 +198,199 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/version-control.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/version-control.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/version-control.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        <a class="jupyterhub-button" href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/version-control.md&branch=e211_live_main"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch JupyterHub" data-toggle="tooltip"
-                data-placement="left"><img class="jupyterhub-button-logo"
-                    src="_static/images/logo_jupyterhub.svg"
-                    alt="Interact on JupyterHub">JupyterHub</button></a>
-        
-        
-        
-    </div>
-</div>
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/version-control.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/version-control.ipynb&branch=e211_live_main"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on JupyterHub"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="headerbtn__text-container">JupyterHub</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/version-control.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="_sources/version-control.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#overview">
    Overview
@@ -411,12 +526,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Collaboration with version control {#Getting-started-with-version-control}</h1>
@@ -568,11 +682,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="collaboration-with-version-control-getting-started-with-version-control">
-<h1>Collaboration with version control {#Getting-started-with-version-control}<a class="headerlink" href="#collaboration-with-version-control-getting-started-with-version-control" title="Permalink to this headline">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="collaboration-with-version-control-getting-started-with-version-control">
+<h1>Collaboration with version control {#Getting-started-with-version-control}<a class="headerlink" href="#collaboration-with-version-control-getting-started-with-version-control" title="Permalink to this headline">#</a></h1>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(magick)
 library(magrittr)
 library(knitr)
@@ -588,8 +703,8 @@ knitr::opts_chunk$set(message = FALSE,
 and me-from-two-months-ago never responds to email.</em></p>
 <p>–Mark T. Holder</p>
 </div></blockquote>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
 <p>This chapter will introduce the concept of using version control systems
 to track changes to a project over its lifespan, to share
 and edit code in a collaborative team,
@@ -601,9 +716,9 @@ We will focus on the most common version control operations
 used day-to-day in a standard data science project.
 There are many user interfaces for Git; in this chapter
 we will cover the Jupyter Git interface.</p>
-</div>
-<div class="section" id="chapter-learning-objectives">
-<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">#</a></h2>
 <p>By the end of the chapter, readers will be able to do the following:</p>
 <ul class="simple">
 <li><p>Describe what version control is and why data analysis projects can benefit from it.</p></li>
@@ -621,9 +736,9 @@ we will cover the Jupyter Git interface.</p>
 <li><p>Communicate with collaborators using GitHub issues.</p></li>
 <li><p>Use best practices when collaborating on a project with others.</p></li>
 </ul>
-</div>
-<div class="section" id="what-is-version-control-and-why-should-i-use-it">
-<h2>What is version control, and why should I use it?<a class="headerlink" href="#what-is-version-control-and-why-should-i-use-it" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="what-is-version-control-and-why-should-i-use-it">
+<h2>What is version control, and why should I use it?<a class="headerlink" href="#what-is-version-control-and-why-should-i-use-it" title="Permalink to this headline">#</a></h2>
 <p>Data analysis projects often require iteration
 and revision to move from an initial idea to a finished product
 ready for the intended audience.
@@ -696,9 +811,9 @@ Since most repository hosting services now offer free accounts,
 there are not many situations in which you wouldn’t
 want to use one for your project.</p>
 </div></blockquote>
-</div>
-<div class="section" id="version-control-repositories">
-<h2>Version control repositories<a class="headerlink" href="#version-control-repositories" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="version-control-repositories">
+<h2>Version control repositories<a class="headerlink" href="#version-control-repositories" title="Permalink to this headline">#</a></h2>
 <p>Typically, when we put a data analysis project under version control,
 we create two copies of the repository \index{repository} (Figure &#64;ref(fig:vc1-no-changes)).
 One copy we use as our primary workspace where we create, edit, and delete files.
@@ -741,9 +856,9 @@ and is used by Git to index project history. Although hashes are quite long—im
 having to type out 40 precise characters to view an old project version!—Git is able
 to work with shorter versions of hashes. In Figure &#64;ref(fig:vc1-no-changes), you can see
 two of these shortened hashes, one for each commit: <code class="docutils literal notranslate"><span class="pre">Daa29d6</span></code> and <code class="docutils literal notranslate"><span class="pre">884c7ce</span></code>.</p>
-</div>
-<div class="section" id="version-control-workflows">
-<h2>Version control workflows<a class="headerlink" href="#version-control-workflows" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="version-control-workflows">
+<h2>Version control workflows<a class="headerlink" href="#version-control-workflows" title="Permalink to this headline">#</a></h2>
 <p>When you work in a local version-controlled repository, there are generally three additional
 steps you must take as part of your regular workflow. In addition to
 just working on files—creating,
@@ -754,8 +869,8 @@ editing, and deleting files as you normally would—you must:</p>
 <li><p>Tell Git when to retrieve any new changes (that others made) from the remote GitHub repository.</p></li>
 </ol>
 <p>In this section we will discuss all three of these steps in detail.</p>
-<div class="section" id="committing-changes-to-a-local-repository-commit-changes">
-<h3>Committing changes to a local repository {#commit-changes}<a class="headerlink" href="#committing-changes-to-a-local-repository-commit-changes" title="Permalink to this headline">¶</a></h3>
+<section id="committing-changes-to-a-local-repository-commit-changes">
+<h3>Committing changes to a local repository {#commit-changes}<a class="headerlink" href="#committing-changes-to-a-local-repository-commit-changes" title="Permalink to this headline">#</a></h3>
 <p>When working on files in your local version control
 repository (e.g., using Jupyter) and saving your work, these changes will only initially exist in the
 working directory of the local repository (Figure &#64;ref(fig:vc2-changes)).</p>
@@ -793,9 +908,9 @@ able to see your new changes.</p>
   image_crop(&quot;3632x1100&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="pushing-changes-to-a-remote-repository">
-<h3>Pushing changes to a remote repository<a class="headerlink" href="#pushing-changes-to-a-remote-repository" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="pushing-changes-to-a-remote-repository">
+<h3>Pushing changes to a remote repository<a class="headerlink" href="#pushing-changes-to-a-remote-repository" title="Permalink to this headline">#</a></h3>
 <p>Once you have made one or more commits that you want to share with your collaborators,
 you need \index{git!push} to <strong>push</strong> (i.e., send) those commits back to GitHub (Figure &#64;ref(fig:vc5-push)). This updates
 the history in the remote repository (i.e., GitHub) to match what you have in your
@@ -819,9 +934,9 @@ image_read("img/vc5-5-nachos-to-cheesecake.png") |>
   image_crop("3632x2000")
 ```
 -->
-</div>
-<div class="section" id="pulling-changes-from-a-remote-repository">
-<h3>Pulling changes from a remote repository<a class="headerlink" href="#pulling-changes-from-a-remote-repository" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="pulling-changes-from-a-remote-repository">
+<h3>Pulling changes from a remote repository<a class="headerlink" href="#pulling-changes-from-a-remote-repository" title="Permalink to this headline">#</a></h3>
 <p>If you are working on a project with collaborators, they will also be making changes to files
 (e.g., to the analysis code in a Jupyter notebook and the project’s README file),
 committing them to their own local repository, and pushing their commits to the remote GitHub repository
@@ -841,10 +956,10 @@ work and make commits in your own local repository).</p>
   image_crop(&quot;3632x2000&quot;)
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="working-with-remote-repositories-using-github">
-<h2>Working with remote repositories using GitHub<a class="headerlink" href="#working-with-remote-repositories-using-github" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="working-with-remote-repositories-using-github">
+<h2>Working with remote repositories using GitHub<a class="headerlink" href="#working-with-remote-repositories-using-github" title="Permalink to this headline">#</a></h2>
 <p>Now that you have been introduced to some of the key general concepts
 and workflows of Git version control, we will walk through the practical steps.
 There are several different ways to start using version control
@@ -856,8 +971,8 @@ repository to create a local repository in which you primarily work.
 You can clone the repository either
 on your own computer or in a workspace on a server (e.g., a JupyterHub server).
 Section &#64;ref(local-repo-jupyter) below will cover this second step in detail.</p>
-<div class="section" id="creating-a-remote-repository-on-github">
-<h3>Creating a remote repository on GitHub<a class="headerlink" href="#creating-a-remote-repository-on-github" title="Permalink to this headline">¶</a></h3>
+<section id="creating-a-remote-repository-on-github">
+<h3>Creating a remote repository on GitHub<a class="headerlink" href="#creating-a-remote-repository-on-github" title="Permalink to this headline">#</a></h3>
 <p>Before you can create remote repositories on GitHub,
 you will need a GitHub account; you can sign up for a free account
 at <a class="reference external" href="https://github.com/">https://github.com/</a>.
@@ -900,9 +1015,9 @@ like what is shown in Figure &#64;ref(fig:new-repository-03).</p>
   image_flop()
 </pre></div>
 </div>
-</div>
-<div class="section" id="editing-files-on-github-with-the-pen-tool">
-<h3>Editing files on GitHub with the pen tool<a class="headerlink" href="#editing-files-on-github-with-the-pen-tool" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="editing-files-on-github-with-the-pen-tool">
+<h3>Editing files on GitHub with the pen tool<a class="headerlink" href="#editing-files-on-github-with-the-pen-tool" title="Permalink to this headline">#</a></h3>
 <p>The pen tool \index{GitHub!pen tool} can be used to edit existing plain text files. When you click on
 the pen tool, the file will be opened in a text box where you can use your
 keyboard to make changes (Figures &#64;ref(fig:pen-tool-01) and &#64;ref(fig:pen-tool-02)).</p>
@@ -939,9 +1054,9 @@ do on GitHub. In general, editing on GitHub is reserved for small edits to plain
   image_crop(&quot;3583x1500+1+500&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="creating-files-on-github-with-the-add-file-menu">
-<h3>Creating files on GitHub with the “Add file” menu<a class="headerlink" href="#creating-files-on-github-with-the-add-file-menu" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="creating-files-on-github-with-the-add-file-menu">
+<h3>Creating files on GitHub with the “Add file” menu<a class="headerlink" href="#creating-files-on-github-with-the-add-file-menu" title="Permalink to this headline">#</a></h3>
 <p>The “Add file” menu \index{GitHub!add file} can be used to create new plain text files and upload files
 from your computer. To create a new plain text file, click the “Add file”
 drop-down menu and select the “Create new file” option
@@ -1000,10 +1115,10 @@ then Git can only keep track of changes to the entire <code class="docutils lite
 be human-readable. Committing one big archive defeats the whole purpose of using
 version control: you won’t be able to see, interpret, or find changes in the history
 of any of the actual content of your project!</p>
-</div>
-</div>
-<div class="section" id="working-with-local-repositories-using-jupyter-local-repo-jupyter">
-<h2>Working with local repositories using Jupyter {#local-repo-jupyter}<a class="headerlink" href="#working-with-local-repositories-using-jupyter-local-repo-jupyter" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="working-with-local-repositories-using-jupyter-local-repo-jupyter">
+<h2>Working with local repositories using Jupyter {#local-repo-jupyter}<a class="headerlink" href="#working-with-local-repositories-using-jupyter-local-repo-jupyter" title="Permalink to this headline">#</a></h2>
 <p>Although there are several ways to create and edit files on GitHub, they are
 not quite powerful enough for efficiently creating and editing complex files,
 or files that need to be executed to assess whether they work (e.g., files
@@ -1016,8 +1131,8 @@ the Jupyter Git extension. The Jupyter Git \index{git!Jupyter extension} extensi
 can be run by Jupyter on your local computer, or on a JupyterHub server.
 <em>Note: we recommend reading Chapter &#64;ref(getting-started-with-jupyter)</em>
 <em>to learn how to use Jupyter before reading this chapter.</em></p>
-<div class="section" id="generating-a-github-personal-access-token">
-<h3>Generating a GitHub personal access token<a class="headerlink" href="#generating-a-github-personal-access-token" title="Permalink to this headline">¶</a></h3>
+<section id="generating-a-github-personal-access-token">
+<h3>Generating a GitHub personal access token<a class="headerlink" href="#generating-a-github-personal-access-token" title="Permalink to this headline">#</a></h3>
 <p>To send and retrieve work between your local repository
 and the remote repository on GitHub,
 you will frequently need to authenticate with GitHub
@@ -1067,9 +1182,9 @@ see the additional resources section at the end of this chapter.</p>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>image_read(&quot;img/generate-pat_03.png&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="cloning-a-repository-using-jupyter">
-<h3>Cloning a repository using Jupyter<a class="headerlink" href="#cloning-a-repository-using-jupyter" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="cloning-a-repository-using-jupyter">
+<h3>Cloning a repository using Jupyter<a class="headerlink" href="#cloning-a-repository-using-jupyter" title="Permalink to this headline">#</a></h3>
 <!--Now that we have everything we need for authentication,
 the next step is -->
 <p><em>Cloning</em> a \index{git!clone} remote repository from GitHub
@@ -1100,9 +1215,9 @@ Inside this folder  will be all the files that existed on GitHub (Figure &#64;re
   image_crop(&quot;2400x1200+1&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="specifying-files-to-commit">
-<h3>Specifying files to commit<a class="headerlink" href="#specifying-files-to-commit" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="specifying-files-to-commit">
+<h3>Specifying files to commit<a class="headerlink" href="#specifying-files-to-commit" title="Permalink to this headline">#</a></h3>
 <p>Now that you have cloned the remote repository from GitHub to create a local repository,
 you can get to work editing, creating, and deleting files.
 For example, suppose you created and saved a new file (named <code class="docutils literal notranslate"><span class="pre">eda.ipynb</span></code>) that you would
@@ -1140,9 +1255,9 @@ so that your collaborators (and future you) know what happened in this commit.</
   image_crop(&quot;3584x1200&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="making-the-commit">
-<h3>Making the commit<a class="headerlink" href="#making-the-commit" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="making-the-commit">
+<h3>Making the commit<a class="headerlink" href="#making-the-commit" title="Permalink to this headline">#</a></h3>
 <p>To snapshot the changes with an associated commit message,
 you must put a message in the text box at the bottom of the Git pane
 and click on the blue “Commit” button (Figure &#64;ref(fig:git-commit-01)). \index{git!commit}
@@ -1164,9 +1279,9 @@ to the remote repository on GitHub (Figure &#64;ref(fig:git-commit-03)).</p>
   image_crop(&quot;3584x1500&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="pushing-the-commits-to-github">
-<h3>Pushing the commits to GitHub<a class="headerlink" href="#pushing-the-commits-to-github" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="pushing-the-commits-to-github">
+<h3>Pushing the commits to GitHub<a class="headerlink" href="#pushing-the-commits-to-github" title="Permalink to this headline">#</a></h3>
 <p>To send the committed changes back to the remote repository on
 GitHub, you need to <em>push</em> them. \index{git!push} To do this,
 click on the cloud icon with the up arrow on the Jupyter Git tab
@@ -1198,12 +1313,12 @@ you will see that the changes now exist there too
   image_crop(&quot;3584x1900&quot;)
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="collaboration">
-<h2>Collaboration<a class="headerlink" href="#collaboration" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="giving-collaborators-access-to-your-project">
-<h3>Giving collaborators access to your project<a class="headerlink" href="#giving-collaborators-access-to-your-project" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="collaboration">
+<h2>Collaboration<a class="headerlink" href="#collaboration" title="Permalink to this headline">#</a></h2>
+<section id="giving-collaborators-access-to-your-project">
+<h3>Giving collaborators access to your project<a class="headerlink" href="#giving-collaborators-access-to-your-project" title="Permalink to this headline">#</a></h3>
 <p>As mentioned earlier, GitHub allows you to control who has access to your
 project. The default of both public and private projects are that only the
 person who created the GitHub \index{GitHub!collaborator access} repository has permissions to create, edit and
@@ -1241,9 +1356,9 @@ and select their name when it appears (Figure &#64;ref(fig:add-collab-04)).</p>
 “Manage access” tab. They should receive an email invitation to join the
 GitHub repository as a collaborator. They need to accept this invitation
 to enable write access.</p>
-</div>
-<div class="section" id="pulling-changes-from-github-using-jupyter">
-<h3>Pulling changes from GitHub using Jupyter<a class="headerlink" href="#pulling-changes-from-github-using-jupyter" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="pulling-changes-from-github-using-jupyter">
+<h3>Pulling changes from GitHub using Jupyter<a class="headerlink" href="#pulling-changes-from-github-using-jupyter" title="Permalink to this headline">#</a></h3>
 <p>We will now walk through how to use the Jupyter Git extension tool to pull changes
 to our <code class="docutils literal notranslate"><span class="pre">eda.ipynb</span></code> analysis file that were made by a collaborator
 (Figure &#64;ref(fig:git-pull-00)).</p>
@@ -1302,9 +1417,9 @@ tell you that you have a merge conflict in certain file(s) (Figure &#64;ref(fig:
   image_crop(&quot;3584x1450&quot;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="handling-merge-conflicts">
-<h3>Handling merge conflicts<a class="headerlink" href="#handling-merge-conflicts" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="handling-merge-conflicts">
+<h3>Handling merge conflicts<a class="headerlink" href="#handling-merge-conflicts" title="Permalink to this headline">#</a></h3>
 <p>To fix the merge conflict, \index{git!merge conflict} you need to open the offending file
 in a plain text editor and look for special marks that Git puts in the file to
 tell you where the merge conflict occurred (Figure &#64;ref(fig:merge-conflict-04)).</p>
@@ -1333,9 +1448,9 @@ Git added (Figure &#64;ref(fig:merge-conflict-06)).</p>
 </div>
 <p>The file must be saved, added to the staging area, and then committed before you will be able to
 push your changes to GitHub.</p>
-</div>
-<div class="section" id="communicating-using-github-issues">
-<h3>Communicating using GitHub issues<a class="headerlink" href="#communicating-using-github-issues" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="communicating-using-github-issues">
+<h3>Communicating using GitHub issues<a class="headerlink" href="#communicating-using-github-issues" title="Permalink to this headline">#</a></h3>
 <p>When working on a project in a team, you don’t just want a historical record of who changed
 what file and when in the project—you also want a record of decisions that were made,
 ideas that were floated, problems that were identified and addressed, and all other
@@ -1388,10 +1503,10 @@ in the “Issue” tab (Figure &#64;ref(fig:issue-06)).</p>
   image_crop(&quot;3584x1900&quot;)
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">#</a></h2>
 <p>Practice exercises for the material covered in this chapter
 can be found in the accompanying
 <a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
@@ -1402,9 +1517,9 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.</p>
-</div>
-<div class="section" id="additional-resources-vc-add-res">
-<h2>Additional resources {#vc-add-res}<a class="headerlink" href="#additional-resources-vc-add-res" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="additional-resources-vc-add-res">
+<h2>Additional resources {#vc-add-res}<a class="headerlink" href="#additional-resources-vc-add-res" title="Permalink to this headline">#</a></h2>
 <p>Now that you’ve picked up the basics of version control with Git and GitHub,
 you can expand your knowledge through the resources listed below:</p>
 <ul class="simple">
@@ -1428,8 +1543,8 @@ and the <em>Happy Git and GitHub for the useR</em>
 excellent additional resources to consult if you need additional help
 generating and using personal access tokens.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1453,9 +1568,11 @@ generating and using personal access tokens.</p></li>
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="viz.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1471,24 +1588,28 @@ generating and using personal access tokens.</p></li>
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By UBC<br/>
+  
+      &copy; Copyright 2021.<br/>
+</p>
+        </footer>
+    </div>
     
-      By UBC<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

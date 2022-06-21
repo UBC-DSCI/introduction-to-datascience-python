@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Effective data visualization {#viz} &#8212; DSCΙ 100</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Effective data visualization – TBD &#8212; DSCΙ 100</title>
     
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,20 +20,17 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -39,12 +38,13 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -55,8 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Collaboration with version control {#Getting-started-with-version-control}" href="version-control.html" />
-    <link rel="prev" title="Cleaning and wrangling data {#wrangling}" href="wrangling.html" />
+    <link rel="next" title="Classification I: training &amp; predicting" href="classification1.html" />
+    <link rel="prev" title="Cleaning and wrangling data – TBD" href="wrangling.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -64,7 +64,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -73,9 +87,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
       
@@ -88,14 +103,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="intro.html">
-   R and the Tidyverse hello worldV
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Welcome – TBD
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   First draft
  </span>
@@ -103,77 +119,67 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="preface-text.html">
-   Preface {-}
+   Preface – TBD
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="setup.html">
-   Setting up your computer {#move-to-your-own-machine}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="reading.html">
-   Reading in data locally and from the web {#reading}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="wrangling.html">
-   Cleaning and wrangling data {#wrangling}
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Effective data visualization {#viz}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="version-control.html">
-   Collaboration with version control {#Getting-started-with-version-control}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="classification1.html">
-   Classification I: training &amp; predicting {#classification}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="classification2.html">
-   Classification II: evaluation &amp; tuning {#classification2}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="regression1.html">
-   Regression I: K-nearest neighbors {#regression1}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="regression2.html">
-   Regression II: linear regression {#regression2}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="clustering.html">
-   Clustering {#clustering}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="inference.html">
-   Statistical inference {#inference}
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
-   References {-}
+  <a class="reference internal" href="foreword-text.html">
+   Foreword – TBD
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="acknowledgements.html">
-   Acknowledgments {-}
+   Acknowledgments – TBD
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="authors.html">
-   About the authors {-}
+   About the authors – TBD
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="setup.html">
+   Setting up your computer – TBD
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Python and the Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="reading.html">
+   Reading in data locally and from the web
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="wrangling.html">
+   Cleaning and wrangling data – TBD
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Effective data visualization – TBD
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="classification1.html">
+   Classification I: training &amp; predicting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="classification2.html">
+   Classification II: evaluation &amp; tuning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression1.html">
+   Regression I: K-nearest neighbors
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regression2.html">
+   Regression II: linear regression
   </a>
  </li>
  <li class="toctree-l1">
@@ -184,100 +190,163 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/viz.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/viz.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/viz.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        <a class="jupyterhub-button" href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/viz.md&branch=e211_live_main"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch JupyterHub" data-toggle="tooltip"
-                data-placement="left"><img class="jupyterhub-button-logo"
-                    src="_static/images/logo_jupyterhub.svg"
-                    alt="Interact on JupyterHub">JupyterHub</button></a>
-        
-        
-        
-    </div>
-</div>
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/viz.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="_sources/viz.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#overview">
    Overview
@@ -427,15 +496,14 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Effective data visualization {#viz}</h1>
+                <h1>Effective data visualization – TBD</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -598,11 +666,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="effective-data-visualization-viz">
-<h1>Effective data visualization {#viz}<a class="headerlink" href="#effective-data-visualization-viz" title="Permalink to this headline">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="effective-data-visualization-tbd">
+<h1>Effective data visualization – TBD<a class="headerlink" href="#effective-data-visualization-tbd" title="Permalink to this headline">#</a></h1>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(tidyverse)
 library(cowplot)
 library(knitr)
@@ -613,17 +682,17 @@ library(magick)
 knitr::opts_chunk$set(fig.align = &quot;center&quot;)
 </pre></div>
 </div>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
 <p>This chapter will introduce concepts and tools relating to data visualization
 beyond what we have seen and practiced so far.  We will focus on guiding
 principles for effective data visualization and explaining visualizations
 independent of any particular tool or programming language.  In the process, we
 will cover some specifics of creating visualizations (scatter plots, bar
 plots, line plots, and histograms) for data using R.</p>
-</div>
-<div class="section" id="chapter-learning-objectives">
-<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">#</a></h2>
 <p>By the end of the chapter, readers will be able to do the following:</p>
 <ul class="simple">
 <li><p>Describe when to use the following kinds of visualizations to answer specific questions using a data set:</p>
@@ -658,11 +727,11 @@ plots, line plots, and histograms) for data using R.</p>
 <li><p>Describe the difference in raster and vector output formats.</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">ggsave</span></code> to save visualizations in <code class="docutils literal notranslate"><span class="pre">.png</span></code> and <code class="docutils literal notranslate"><span class="pre">.svg</span></code> format.</p></li>
 </ul>
-</div>
-<div class="section" id="choosing-the-visualization">
-<h2>Choosing the visualization<a class="headerlink" href="#choosing-the-visualization" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="ask-a-question-and-answer-it">
-<h3><em>Ask a question, and answer it</em> {-}<a class="headerlink" href="#ask-a-question-and-answer-it" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="choosing-the-visualization">
+<h2>Choosing the visualization<a class="headerlink" href="#choosing-the-visualization" title="Permalink to this headline">#</a></h2>
+<section id="ask-a-question-and-answer-it">
+<h3><em>Ask a question, and answer it</em> {-}<a class="headerlink" href="#ask-a-question-and-answer-it" title="Permalink to this headline">#</a></h3>
 <p>The purpose of a visualization is to answer a question
 \index{question!visualization} about a data set of interest. So naturally, the
 first thing to do <strong>before</strong> creating a visualization is to formulate the
@@ -748,12 +817,12 @@ when converted to a static 2-D image format. Finally, do not use tables to make
 numerical comparisons; humans are much better at quickly processing visual
 information than text and math. Bar plots are again typically a better
 alternative.</p>
-</div>
-</div>
-<div class="section" id="refining-the-visualization">
-<h2>Refining the visualization<a class="headerlink" href="#refining-the-visualization" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="convey-the-message-minimize-noise">
-<h3><em>Convey the message, minimize noise</em> {-}<a class="headerlink" href="#convey-the-message-minimize-noise" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="refining-the-visualization">
+<h2>Refining the visualization<a class="headerlink" href="#refining-the-visualization" title="Permalink to this headline">#</a></h2>
+<section id="convey-the-message-minimize-noise">
+<h3><em>Convey the message, minimize noise</em> {-}<a class="headerlink" href="#convey-the-message-minimize-noise" title="Permalink to this headline">#</a></h3>
 <p>Just being able to make a visualization in R with <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> (or any other tool
 for that matter) doesn’t mean that it effectively communicates your message to
 others. Once you have selected a broad type of visualization to use, you will
@@ -791,12 +860,12 @@ something different.</p></li>
 <li><p>Only make the plot area (where the dots, lines, bars are) as big as needed. Simple plots can be made small.</p></li>
 <li><p>Don’t adjust the axes to zoom in on small differences. If the difference is small, show that it’s small!</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="creating-visualizations-with-ggplot2">
-<h2>Creating visualizations with <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code><a class="headerlink" href="#creating-visualizations-with-ggplot2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="build-the-visualization-iteratively">
-<h3><em>Build the visualization iteratively</em> {-}<a class="headerlink" href="#build-the-visualization-iteratively" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="creating-visualizations-with-ggplot2">
+<h2>Creating visualizations with <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code><a class="headerlink" href="#creating-visualizations-with-ggplot2" title="Permalink to this headline">#</a></h2>
+<section id="build-the-visualization-iteratively">
+<h3><em>Build the visualization iteratively</em> {-}<a class="headerlink" href="#build-the-visualization-iteratively" title="Permalink to this headline">#</a></h3>
 <p>This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer,
 and then how to create the visualization in R \index{ggplot} using <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code>.  To use the <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> package, we need to load the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> metapackage.</p>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(tidyverse)
@@ -805,9 +874,9 @@ and then how to create the visualization in R \index{ggplot} using <code class="
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>options(warn = -1)
 </pre></div>
 </div>
-</div>
-<div class="section" id="scatter-plots-and-line-plots-the-mauna-loa-co-text-2-data-set">
-<h3>Scatter plots and line plots: the Mauna Loa CO<span class="math notranslate nohighlight">\(_{\text{2}}\)</span> data set<a class="headerlink" href="#scatter-plots-and-line-plots-the-mauna-loa-co-text-2-data-set" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="scatter-plots-and-line-plots-the-mauna-loa-co-text-2-data-set">
+<h3>Scatter plots and line plots: the Mauna Loa CO<span class="math notranslate nohighlight">\(_{\text{2}}\)</span> data set<a class="headerlink" href="#scatter-plots-and-line-plots-the-mauna-loa-co-text-2-data-set" title="Permalink to this headline">#</a></h3>
 <p>The <a class="reference external" href="https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html">Mauna Loa CO<span class="math notranslate nohighlight">\(_{\text{2}}\)</span> data set</a>,
 curated by Dr. Pieter Tans, NOAA/GML
 and Dr. Ralph Keeling, Scripps Institution of Oceanography,
@@ -1031,9 +1100,9 @@ this would be the geometric objects (e.g., <code class="docutils literal notrans
 And finally, we work on adding details and refinements to the painting.
 In our data visualization this would be when we fine tune axis labels,
 change the font, adjust the point size, and do other related things.</p>
-</div>
-<div class="section" id="scatter-plots-the-old-faithful-eruption-time-data-set">
-<h3>Scatter plots: the Old Faithful eruption time data set<a class="headerlink" href="#scatter-plots-the-old-faithful-eruption-time-data-set" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="scatter-plots-the-old-faithful-eruption-time-data-set">
+<h3>Scatter plots: the Old Faithful eruption time data set<a class="headerlink" href="#scatter-plots-the-old-faithful-eruption-time-data-set" title="Permalink to this headline">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">faithful</span></code> data set \index{Old Faithful} contains measurements
 of the waiting time between eruptions
 and the subsequent eruption duration (in minutes) of the Old Faithful
@@ -1081,9 +1150,9 @@ faithful_scatter
 </pre></div>
 </div>
 <p>\newpage</p>
-</div>
-<div class="section" id="axis-transformation-and-colored-scatter-plots-the-canadian-languages-data-set">
-<h3>Axis transformation and colored scatter plots: the Canadian languages data set<a class="headerlink" href="#axis-transformation-and-colored-scatter-plots-the-canadian-languages-data-set" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="axis-transformation-and-colored-scatter-plots-the-canadian-languages-data-set">
+<h3>Axis transformation and colored scatter plots: the Canadian languages data set<a class="headerlink" href="#axis-transformation-and-colored-scatter-plots-the-canadian-languages-data-set" title="Permalink to this headline">#</a></h3>
 <p>Recall the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data set [&#64;timbers2020canlang] from Chapters &#64;ref(intro), &#64;ref(reading), and &#64;ref(wrangling),
 \index{Canadian languages} which contains counts of languages from the 2016
 Canadian census.</p>
@@ -1412,9 +1481,9 @@ ggplot(can_lang, aes(
   scale_color_brewer(palette = "RdYlBu")
 ```
 -->
-</div>
-<div class="section" id="bar-plots-the-island-landmass-data-set">
-<h3>Bar plots: the island landmass data set<a class="headerlink" href="#bar-plots-the-island-landmass-data-set" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="bar-plots-the-island-landmass-data-set">
+<h3>Bar plots: the island landmass data set<a class="headerlink" href="#bar-plots-the-island-landmass-data-set" title="Permalink to this headline">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">islands.csv</span></code> data set \index{Island landmasses} contains a list of Earth’s landmasses as well as their area (in thousands of square miles) [&#64;islandsdata].</p>
 <p><strong>Question:</strong> \index{question!visualization} Are the continents (North / South America, Africa, Europe, Asia, Australia, Antarctica) Earth’s seven largest landmasses? If so, what are the next few largest landmasses after those?</p>
 <div class="highlight-{r, notranslate"><div class="highlight"><pre><span></span>islands_df &lt;- read_csv(&quot;data/islands.csv&quot;)
@@ -1519,9 +1588,9 @@ islands_bar
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that continents are the largest seven landmasses.</p>
-</div>
-<div class="section" id="histograms-the-michelson-speed-of-light-data-set">
-<h3>Histograms: the Michelson speed of light data set<a class="headerlink" href="#histograms-the-michelson-speed-of-light-data-set" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="histograms-the-michelson-speed-of-light-data-set">
+<h3>Histograms: the Michelson speed of light data set<a class="headerlink" href="#histograms-the-michelson-speed-of-light-data-set" title="Permalink to this headline">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">morley</span></code> data set \index{Michelson speed of light}
 contains measurements of the speed of light
 collected in experiments performed in 1879.
@@ -1718,8 +1787,8 @@ morley_hist
 <p>Wow, impressive! These measurements of the speed of light from 1879 had errors around <em>0.05%</em> of the true speed. Figure &#64;ref(fig:03-data-morley-hist-5) shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an
 admirable job given the technology available at the time.</p>
 <p>\newpage</p>
-<div class="section" id="choosing-a-binwidth-for-histograms">
-<h4>Choosing a binwidth for histograms {-}<a class="headerlink" href="#choosing-a-binwidth-for-histograms" title="Permalink to this headline">¶</a></h4>
+<section id="choosing-a-binwidth-for-histograms">
+<h4>Choosing a binwidth for histograms {-}<a class="headerlink" href="#choosing-a-binwidth-for-histograms" title="Permalink to this headline">#</a></h4>
 <p>When you create a histogram in R, the default number of bins used is 30.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
@@ -1808,9 +1877,9 @@ plot_grid(morley_hist_default,
           ncol = 2)
 </pre></div>
 </div>
-</div>
-<div class="section" id="adding-layers-to-a-ggplot-plot-object">
-<h4>Adding layers to a <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> plot object {-}<a class="headerlink" href="#adding-layers-to-a-ggplot-plot-object" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="adding-layers-to-a-ggplot-plot-object">
+<h4>Adding layers to a <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> plot object {-}<a class="headerlink" href="#adding-layers-to-a-ggplot-plot-object" title="Permalink to this headline">#</a></h4>
 <p>One of the powerful features of <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> is that you
 can continue to iterate on a single plot object, adding and refining
 one layer \index{ggplot!add layer} at a time. If you stored your plot as a named object
@@ -1830,13 +1899,13 @@ morley_hist_title
 the take home message to the audience. Typically,
 that is the answer to the question you posed before making the visualization.</p>
 </div></blockquote>
-</div>
-</div>
-</div>
-<div class="section" id="explaining-the-visualization">
-<h2>Explaining the visualization<a class="headerlink" href="#explaining-the-visualization" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="tell-a-story">
-<h3><em>Tell a story</em> {-}<a class="headerlink" href="#tell-a-story" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+</section>
+<section id="explaining-the-visualization">
+<h2>Explaining the visualization<a class="headerlink" href="#explaining-the-visualization" title="Permalink to this headline">#</a></h2>
+<section id="tell-a-story">
+<h3><em>Tell a story</em> {-}<a class="headerlink" href="#tell-a-story" title="Permalink to this headline">#</a></h3>
 <p>Typically, your visualization will not be shown entirely on its own, but rather
 it will be part of a larger presentation.  Further, visualizations can provide
 supporting information for any aspect of a presentation, from opening to
@@ -1897,12 +1966,12 @@ experiments 1 and 3 had measurements that were the farthest from the true
 value, and experiment 5 tended to provide the most consistently accurate
 result. (4) It would be worth further investigating the differences between
 these experiments to see why they produced different results.</p>
-</div>
-</div>
-<div class="section" id="saving-the-visualization">
-<h2>Saving the visualization<a class="headerlink" href="#saving-the-visualization" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="choose-the-right-output-format-for-your-needs">
-<h3><em>Choose the right output format for your needs</em> {-}<a class="headerlink" href="#choose-the-right-output-format-for-your-needs" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="saving-the-visualization">
+<h2>Saving the visualization<a class="headerlink" href="#saving-the-visualization" title="Permalink to this headline">#</a></h2>
+<section id="choose-the-right-output-format-for-your-needs">
+<h3><em>Choose the right output format for your needs</em> {-}<a class="headerlink" href="#choose-the-right-output-format-for-your-needs" title="Permalink to this headline">#</a></h3>
 <p>Just as there are many ways to store data sets, there are many ways to store
 visualizations and images.  Which one you choose can depend on several factors,
 such as file size/type limitations (e.g., if you are submitting your
@@ -2029,10 +2098,10 @@ to posters to billboards.</p>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>knitr::include_graphics(&quot;img/png-vs-svg.png&quot;)
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">#</a></h2>
 <p>Practice exercises for the material covered in this chapter
 can be found in the accompanying
 <a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
@@ -2043,9 +2112,9 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.</p>
-</div>
-<div class="section" id="additional-resources">
-<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>The <a class="reference external" href="https://ggplot2.tidyverse.org"><code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> R package page</a> [&#64;ggplot] is
 where you should look if you want to learn more about the functions in this
@@ -2071,8 +2140,8 @@ you should look if you want to learn about <code class="docutils literal notrans
 create them, and how to use them to effectively handle durations, periods and
 intervals using the <code class="docutils literal notranslate"><span class="pre">lubridate</span></code> package.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -2096,42 +2165,48 @@ intervals using the <code class="docutils literal notranslate"><span class="pre"
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="wrangling.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Cleaning and wrangling data {#wrangling}</p>
+            <p class="prev-next-title">Cleaning and wrangling data – TBD</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="version-control.html" title="next page">
+    <a class='right-next' id="next-link" href="classification1.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Collaboration with version control {#Getting-started-with-version-control}</p>
+        <p class="prev-next-title">Classification I: training &amp; predicting</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By UBC<br/>
+  
+      &copy; Copyright 2021.<br/>
+</p>
+        </footer>
+    </div>
     
-      By UBC<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

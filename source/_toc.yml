@@ -19,6 +19,6 @@ parts:
     - file: regression1.md
     - file: regression2.md
     - file: clustering.md
-    # - file: inference
-    # - file: references
+    - file: inference.md
+    - file: references.md
     - file: appendixA.md

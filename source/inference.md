@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Statistical inference {#inference}
+# Statistical inference  -- TBD
 
 ```{r inference-setup, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, fig.align = "center")

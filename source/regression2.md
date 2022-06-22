@@ -1119,8 +1119,8 @@ lm_plot_multicol_1 = (
     alt.Chart(sacramento_train)
     .mark_circle(color="black", opacity=0.4)
     .encode(
-        x=alt.X("sqft", title="House size (square feet)"),
-        y=alt.Y("sqft1", title="House size (square inches)"),
+        x=alt.X("sqft", title="House size measurement 1 (square feet)"),
+        y=alt.Y("sqft1", title="House size measurement 2 (square feet)"),
     )
 )
 
@@ -1130,7 +1130,7 @@ glue("fig:08-lm-multicol", lm_plot_multicol_1)
 :::{glue:figure} fig:08-lm-multicol
 :name: fig:08-lm-multicol
 
-Scatter plot of house size (in square inches) versus house size (in square feet).
+Scatter plot of house size (in square feet) measured by person 1 versus house size (in square feet) measured by person 2.
 :::
 
 ```{code-cell} ipython3

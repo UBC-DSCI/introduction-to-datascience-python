@@ -21,6 +21,7 @@
 import altair as alt
 import numpy as np
 import pandas as pd
+from sklearn.utils import resample
 # import sklearn
 # from sklearn.compose import make_column_transformer
 # from sklearn.metrics import confusion_matrix, plot_confusion_matrix
@@ -660,6 +661,7 @@ glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), -1
                 "sample_mean",
                 bin=True,
                 title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
                 scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
             ),
             y=alt.Y("count()", title="Count"),
@@ -791,7 +793,7 @@ def text_y(distribution):
     if sample_n == 20:
         return 2000
     elif sample_n == 50:
-        return 3500
+        return 3000
     elif sample_n == 100:
         return 4500
     else:
@@ -994,66 +996,83 @@ glue("fig:11-example-bootstrapping0", (
 # ```
 
 # %% [markdown]
-# ### Bootstrapping in R 
+# ### Bootstrapping in Python 
 #
 # Let’s continue working with our Airbnb example to illustrate how we might create
 # and use a bootstrap distribution using just a single sample from the population. 
 # Once again, suppose we are
 # interested in estimating the population mean price per night of all Airbnb
 # listings in Vancouver, Canada, using a single sample size of 40.
-# Recall our point estimate was \$`r round(estimates$sample_mean, 2)`. The
-# histogram of prices in the sample is displayed in Figure \@ref(fig:11-bootstrapping1).
+# Recall our point estimate was \${glue:}`estimate_mean`. The
+# histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
+
+# %% tags=["remove-cell"]
+pd.set_option('display.max_rows', 20)
+
+# %%
+one_sample
+
+# %% tags=["remove-input"]
+one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+one_sample_dist
 
 # %% [markdown]
-# ```{r, echo = F, message = F, warning = F}
-# one_sample <- one_sample |> 
-#   ungroup() |> select(-replicate)
-# ```
-
-# %% [markdown]
-# ```{r 11-bootstrapping1, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Histogram of price per night (Canadian dollars) for one sample of size 40.", fig.height = 3.5, fig.width = 4.5}
-# one_sample
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping1
+# :figclass: caption-hack
 #
-# one_sample_dist <- ggplot(one_sample, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# one_sample_dist
+# Histogram of price per night (Canadian dollars) for one sample of size 40.
 # ```
 
 # %% [markdown]
 # The histogram for the sample is skewed, with a few observations out to the right. The
-# mean of the sample is \$`r round(estimates$sample_mean, 2)`.
+# mean of the sample is \${glue:}`estimate_mean`.
 # Remember, in practice, we usually only have this one sample from the population. So
 # this sample and estimate are the only data we can work with.
 #
 # We now perform steps 1&ndash;5 listed above to generate a single bootstrap
-# sample in R and calculate a point estimate from that bootstrap sample. We will 
-# use the `rep_sample_n` function as we did when we were
-# creating our sampling distribution. But critically, note that we now
+# sample in Python and calculate a point estimate from that bootstrap sample. We will 
+# use the `resample` function from the `scikit-learn` package. But critically, note that we now
 # pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
 # And since we need to sample with replacement,
-# we change the argument for `replace` from its default value of `FALSE` to `TRUE`.
+# we keep the argument for `replace` to its default value of `True`.
 # \index{bootstrap!in R}
 # \index{rep\_sample\_n!bootstrap}
 
-# %% [markdown]
-# ```{r 11-bootstrapping3, echo = TRUE, message = FALSE, fig.pos = "H", out.extra="", warning = FALSE, fig.cap = "Bootstrap distribution.", fig.height = 3.5, fig.width = 4.5}
-# boot1 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 1)
-# boot1_dist <- ggplot(boot1, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y =  "Count") + 
-#   theme(text = element_text(size = 12))
-#
-# boot1_dist
-#
-# summarize(boot1, mean = mean(price))
-# ```
+# %%
+boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
+boot1_dist = alt.Chart(boot1).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+boot1_dist
 
 # %% [markdown]
-# Notice in Figure \@ref(fig:11-bootstrapping3) that the histogram of our bootstrap sample
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping3
+# :figclass: caption-hack
+#
+# Bootstrap distribution.
+# ```
+
+# %%
+boot1["price"].mean()
+
+# %% [markdown]
+# Notice in {numref}`fig:11-bootstrapping3` that the histogram of our bootstrap sample
 # has a similar shape to the original sample histogram. Though the shapes of
 # the distributions are similar, they are not identical. You'll also notice that
 # the original sample mean and the bootstrap sample mean differ. How might that
@@ -1064,47 +1083,60 @@ glue("fig:11-example-bootstrapping0", (
 # sample.
 #
 # Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)  
-# using `rep_sample_n`, and calculate the means for
+# using `resample`, and calculate the means for
 # each of those replicates. Recall that this assumes that `one_sample` *looks like*
 # our original population; but since we do not have access to the population itself,
 # this is often the best we can do.
 
-# %% [markdown]
-# ```{r 11-bootstrapping4, echo = TRUE, message = FALSE, warning = FALSE}
-# boot20000 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 20000)
-#
-# boot20000
-#
-# tail(boot20000)
-# ```
+# %%
+np.random.seed(2)
+
+boot20000 = []
+for rep in range(20000):
+    sample = resample(one_sample, replace=True, n_samples=40)
+    sample = sample.assign(replicate=rep)
+    boot20000.append(sample)
+boot20000 = pd.concat([boot20000[i] for i in range(len(boot20000))])
+
+boot20000
 
 # %% [markdown]
 # Let's take a look at histograms of the first six replicates of our bootstrap samples.
 
+# %%
+six_bootstrap_samples = boot20000.query("replicate < 6")
+
+(
+    alt.Chart(six_bootstrap_samples)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "price",
+            bin=alt.Bin(maxbins=20),
+            title="Price per night (Canadian dollars)",
+        ),
+        y=alt.Y("count()", title="Count"),
+    )
+    .facet("replicate", columns=3)
+)
+
 # %% [markdown]
-# ```{r 11-bootstrapping-six-bootstrap-samples, echo = TRUE, fig.pos = "H", out.extra="", message = FALSE, warning = FALSE, fig.cap = "Histograms of first six replicates of bootstrap samples."}
-# six_bootstrap_samples <- boot20000 |>
-#   filter(replicate <= 6)
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping-six-bootstrap-samples
+# :figclass: caption-hack
 #
-# ggplot(six_bootstrap_samples, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   facet_wrap(~replicate) +
-#   theme(text = element_text(size = 12))
+# Histograms of first six replicates of bootstrap samples.
 # ```
 
 # %% [markdown]
-# We see in Figure \@ref(fig:11-bootstrapping-six-bootstrap-samples) how the
+# We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the
 # bootstrap samples differ. We can also calculate the sample mean for each of
 # these six replicates.
 
-# %% [markdown]
-# ```{r 11-bootstrapping-six-bootstrap-samples-means, echo = TRUE, message = FALSE, warning = FALSE}
-# six_bootstrap_samples |>
-#   group_by(replicate) |>
-#   summarize(mean = mean(price))
-# ```
+# %%
+six_bootstrap_samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "mean"}
+)
 
 # %% [markdown]
 # We can see that the bootstrap sample distributions and the sample means are
@@ -1113,7 +1145,8 @@ glue("fig:11-example-bootstrapping0", (
 # generate a bootstrap distribution of our point estimates. The bootstrap
 # distribution (Figure \@ref(fig:11-bootstrapping5)) suggests how we might expect
 # our point estimate to behave if we took another sample.
-#
+
+# %% [markdown]
 # ```{r 11-bootstrapping5, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Distribution of the bootstrap sample means.", fig.height = 3.5, fig.width = 4.5}
 # boot20000_means <- boot20000 |>
 #   group_by(replicate) |>
@@ -1129,10 +1162,12 @@ glue("fig:11-example-bootstrapping0", (
 #
 # boot_est_dist
 # ```
-#
+
+# %% [markdown]
 # Let's compare the bootstrap distribution&mdash;which we construct by taking many samples from our original sample of size 40&mdash;with 
 # the true sampling distribution&mdash;which corresponds to taking many samples from the population.
-#
+
+# %% [markdown]
 # ```{r 11-bootstrapping6, echo = F, message = FALSE, warning = FALSE, fig.cap = "Comparison of the distribution of the bootstrap sample means and sampling distribution.", fig.height = 3.5}
 # samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
 #
@@ -1169,7 +1204,8 @@ glue("fig:11-example-bootstrapping0", (
 #              ncol = 2
 # )
 # ```
-#
+
+# %% [markdown]
 # There are two essential points that we can take away from Figure
 # \index{sampling distribution!compared to bootstrap distribution}
 # \@ref(fig:11-bootstrapping6). First, the shape and spread of the true sampling
@@ -1191,7 +1227,8 @@ glue("fig:11-example-bootstrapping0", (
 # sample. Since the bootstrap distribution pretty well approximates the sampling
 # distribution spread, we can use the bootstrap spread to help us develop a
 # plausible range for our population parameter along with our estimate!
-#
+
+# %% [markdown]
 # ```{r 11-bootstrapping7, echo = F, message = FALSE, warning = FALSE, fig.cap = "Summary of bootstrapping process."}
 # pop_dist <- population_distribution + ggtitle("Population") + xlab("Price") +
 #   theme(
@@ -1327,7 +1364,8 @@ glue("fig:11-example-bootstrapping0", (
 #   y = unit(0.02, "npc"), gp = gpar(fontsize = 10)
 # )
 # ```
-#
+
+# %% [markdown]
 # ### Using the bootstrap to calculate a plausible range  
 #
 # Now that we have constructed our bootstrap distribution, let's use it to create
@@ -1350,7 +1388,8 @@ glue("fig:11-example-bootstrapping0", (
 # confidence level.
 #
 # To calculate a 95\% percentile bootstrap confidence interval, we will do the following:
-#
+
+# %% [markdown]
 # 1. Arrange the observations in the bootstrap distribution in ascending order. 
 # 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 # 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
@@ -1361,7 +1400,8 @@ glue("fig:11-example-bootstrapping0", (
 # \index{quantile}
 # \index{pull}
 # \index{select}
-#
+
+# %% [markdown]
 # ```{r 11-bootstrapping8, echo = T, message = FALSE, warning = FALSE}
 # bounds <- boot20000_means |>
 #   select(mean) |>
@@ -1370,12 +1410,14 @@ glue("fig:11-example-bootstrapping0", (
 #
 # bounds
 # ```
-#
+
+# %% [markdown]
 # Our interval, \$`r round(bounds[1],2) ` to \$`r round(bounds[2],2)`, captures
 # the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 # visualize the interval on our distribution in Figure
 # \@ref(fig:11-bootstrapping9). 
-#
+
+# %% [markdown]
 # ```{r 11-bootstrapping9, echo = F, message = FALSE, warning = FALSE, fig.cap = "Distribution of the bootstrap sample means with percentile lower and upper bounds.", fig.height=4, fig.width = 6.5}
 # boot_est_dist +
 #   geom_vline(xintercept = bounds, col = "#E69F00", size = 2, linetype = 2) +
@@ -1388,7 +1430,8 @@ glue("fig:11-example-bootstrapping0", (
 #     label = paste("97.5th percentile =", round(bounds[2], 2))
 #   )
 # ```
-#
+
+# %% [markdown]
 # To finish our estimation of the population parameter, we would report the point
 # estimate and our confidence interval's lower and upper bounds. Here the sample
 # mean price-per-night of 40 Airbnb listings was 
@@ -1408,7 +1451,8 @@ glue("fig:11-example-bootstrapping0", (
 # more. We have just scratched the surface of statistical inference; however, the
 # material presented here will serve as the foundation for more advanced
 # statistical techniques you may learn about in the future!
-#
+
+# %% [markdown]
 # ## Exercises
 #
 # Practice exercises for the material covered in this chapter 
@@ -1421,7 +1465,8 @@ glue("fig:11-example-bootstrapping0", (
 # make sure to follow the instructions for computer setup
 # found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
-#
+
+# %% [markdown]
 # ## Additional resources
 #
 # - Chapters 7 to 10 of *Modern Dive* [@moderndive] provide a great
@@ -1442,4 +1487,8 @@ glue("fig:11-example-bootstrapping0", (
 #   statistics*; if you have a solid grasp of probability, more advanced statistics
 #   will come naturally to you!
 
-# %%
+# %% [markdown]
+# ## References
+#
+# ```{bibliography}
+# ```

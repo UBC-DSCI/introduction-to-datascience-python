@@ -20,6 +20,7 @@ kernelspec:
 import altair as alt
 import numpy as np
 import pandas as pd
+from sklearn.utils import resample
 # import sklearn
 # from sklearn.compose import make_column_transformer
 # from sklearn.metrics import confusion_matrix, plot_confusion_matrix
@@ -721,6 +722,7 @@ was \$`r round(mean(airbnb$price),2)`.
                 "sample_mean",
                 bin=True,
                 title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
                 scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
             ),
             y=alt.Y("count()", title="Count"),
@@ -870,7 +872,7 @@ def text_y(distribution):
     if sample_n == 20:
         return 2000
     elif sample_n == 50:
-        return 3500
+        return 3000
     elif sample_n == 100:
         return 4500
     else:
@@ -1086,71 +1088,90 @@ Overview of the bootstrap process.
 
 +++
 
-### Bootstrapping in R 
+### Bootstrapping in Python 
 
 Let’s continue working with our Airbnb example to illustrate how we might create
 and use a bootstrap distribution using just a single sample from the population. 
 Once again, suppose we are
 interested in estimating the population mean price per night of all Airbnb
 listings in Vancouver, Canada, using a single sample size of 40.
-Recall our point estimate was \$`r round(estimates$sample_mean, 2)`. The
-histogram of prices in the sample is displayed in Figure \@ref(fig:11-bootstrapping1).
+Recall our point estimate was \${glue:}`estimate_mean`. The
+histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r, echo = F, message = F, warning = F}
-one_sample <- one_sample |> 
-  ungroup() |> select(-replicate)
+pd.set_option('display.max_rows', 20)
 ```
 
-+++
-
-```{r 11-bootstrapping1, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Histogram of price per night (Canadian dollars) for one sample of size 40.", fig.height = 3.5, fig.width = 4.5}
+```{code-cell} ipython3
 one_sample
+```
 
-one_sample_dist <- ggplot(one_sample, aes(price)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  labs(x = "Price per night (Canadian dollars)", y = "Count") +
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+:tags: [remove-input]
+
+one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
 
 one_sample_dist
+```
+
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping1
+:figclass: caption-hack
+
+Histogram of price per night (Canadian dollars) for one sample of size 40.
 ```
 
 +++
 
 The histogram for the sample is skewed, with a few observations out to the right. The
-mean of the sample is \$`r round(estimates$sample_mean, 2)`.
+mean of the sample is \${glue:}`estimate_mean`.
 Remember, in practice, we usually only have this one sample from the population. So
 this sample and estimate are the only data we can work with.
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
-sample in R and calculate a point estimate from that bootstrap sample. We will 
-use the `rep_sample_n` function as we did when we were
-creating our sampling distribution. But critically, note that we now
+sample in Python and calculate a point estimate from that bootstrap sample. We will 
+use the `resample` function from the `scikit-learn` package. But critically, note that we now
 pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
 And since we need to sample with replacement,
-we change the argument for `replace` from its default value of `FALSE` to `TRUE`.
+we keep the argument for `replace` to its default value of `True`.
 \index{bootstrap!in R}
 \index{rep\_sample\_n!bootstrap}
 
-+++
-
-```{r 11-bootstrapping3, echo = TRUE, message = FALSE, fig.pos = "H", out.extra="", warning = FALSE, fig.cap = "Bootstrap distribution.", fig.height = 3.5, fig.width = 4.5}
-boot1 <- one_sample |>
-  rep_sample_n(size = 40, replace = TRUE, reps = 1)
-boot1_dist <- ggplot(boot1, aes(price)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  labs(x = "Price per night (Canadian dollars)", y =  "Count") + 
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
+boot1_dist = alt.Chart(boot1).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
 
 boot1_dist
-
-summarize(boot1, mean = mean(price))
 ```
 
-+++
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping3
+:figclass: caption-hack
 
-Notice in Figure \@ref(fig:11-bootstrapping3) that the histogram of our bootstrap sample
+Bootstrap distribution.
+```
+
+```{code-cell} ipython3
+boot1["price"].mean()
+```
+
+Notice in {numref}`fig:11-bootstrapping3` that the histogram of our bootstrap sample
 has a similar shape to the original sample histogram. Though the shapes of
 the distributions are similar, they are not identical. You'll also notice that
 the original sample mean and the bootstrap sample mean differ. How might that
@@ -1161,54 +1182,62 @@ mimic drawing another sample from the population by drawing one from our origina
 sample.
 
 Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)  
-using `rep_sample_n`, and calculate the means for
+using `resample`, and calculate the means for
 each of those replicates. Recall that this assumes that `one_sample` *looks like*
 our original population; but since we do not have access to the population itself,
 this is often the best we can do.
 
-+++
+```{code-cell} ipython3
+np.random.seed(2)
 
-```{r 11-bootstrapping4, echo = TRUE, message = FALSE, warning = FALSE}
-boot20000 <- one_sample |>
-  rep_sample_n(size = 40, replace = TRUE, reps = 20000)
+boot20000 = []
+for rep in range(20000):
+    sample = resample(one_sample, replace=True, n_samples=40)
+    sample = sample.assign(replicate=rep)
+    boot20000.append(sample)
+boot20000 = pd.concat([boot20000[i] for i in range(len(boot20000))])
 
 boot20000
-
-tail(boot20000)
 ```
-
-+++
 
 Let's take a look at histograms of the first six replicates of our bootstrap samples.
 
-+++
+```{code-cell} ipython3
+six_bootstrap_samples = boot20000.query("replicate < 6")
 
-```{r 11-bootstrapping-six-bootstrap-samples, echo = TRUE, fig.pos = "H", out.extra="", message = FALSE, warning = FALSE, fig.cap = "Histograms of first six replicates of bootstrap samples."}
-six_bootstrap_samples <- boot20000 |>
-  filter(replicate <= 6)
+(
+    alt.Chart(six_bootstrap_samples)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "price",
+            bin=alt.Bin(maxbins=20),
+            title="Price per night (Canadian dollars)",
+        ),
+        y=alt.Y("count()", title="Count"),
+    )
+    .facet("replicate", columns=3)
+)
+```
 
-ggplot(six_bootstrap_samples, aes(price)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  labs(x = "Price per night (Canadian dollars)", y = "Count") +
-  facet_wrap(~replicate) +
-  theme(text = element_text(size = 12))
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping-six-bootstrap-samples
+:figclass: caption-hack
+
+Histograms of first six replicates of bootstrap samples.
 ```
 
 +++
 
-We see in Figure \@ref(fig:11-bootstrapping-six-bootstrap-samples) how the
+We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the
 bootstrap samples differ. We can also calculate the sample mean for each of
 these six replicates.
 
-+++
-
-```{r 11-bootstrapping-six-bootstrap-samples-means, echo = TRUE, message = FALSE, warning = FALSE}
-six_bootstrap_samples |>
-  group_by(replicate) |>
-  summarize(mean = mean(price))
+```{code-cell} ipython3
+six_bootstrap_samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "mean"}
+)
 ```
-
-+++
 
 We can see that the bootstrap sample distributions and the sample means are
 different. They are different because we are sampling *with replacement*. We
@@ -1216,6 +1245,8 @@ will now calculate point estimates for our 20,000 bootstrap samples and
 generate a bootstrap distribution of our point estimates. The bootstrap
 distribution (Figure \@ref(fig:11-bootstrapping5)) suggests how we might expect
 our point estimate to behave if we took another sample.
+
++++
 
 ```{r 11-bootstrapping5, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Distribution of the bootstrap sample means.", fig.height = 3.5, fig.width = 4.5}
 boot20000_means <- boot20000 |>
@@ -1233,8 +1264,12 @@ boot_est_dist <- ggplot(boot20000_means, aes(x = mean)) +
 boot_est_dist
 ```
 
++++
+
 Let's compare the bootstrap distribution&mdash;which we construct by taking many samples from our original sample of size 40&mdash;with 
 the true sampling distribution&mdash;which corresponds to taking many samples from the population.
+
++++
 
 ```{r 11-bootstrapping6, echo = F, message = FALSE, warning = FALSE, fig.cap = "Comparison of the distribution of the bootstrap sample means and sampling distribution.", fig.height = 3.5}
 samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
@@ -1273,6 +1308,8 @@ grid.arrange(annotated_sampling_dist + ggtitle("Sampling distribution"),
 )
 ```
 
++++
+
 There are two essential points that we can take away from Figure
 \index{sampling distribution!compared to bootstrap distribution}
 \@ref(fig:11-bootstrapping6). First, the shape and spread of the true sampling
@@ -1294,6 +1331,8 @@ approximate the sampling distribution of the sample means when we only have one
 sample. Since the bootstrap distribution pretty well approximates the sampling
 distribution spread, we can use the bootstrap spread to help us develop a
 plausible range for our population parameter along with our estimate!
+
++++
 
 ```{r 11-bootstrapping7, echo = F, message = FALSE, warning = FALSE, fig.cap = "Summary of bootstrapping process."}
 pop_dist <- population_distribution + ggtitle("Population") + xlab("Price") +
@@ -1431,6 +1470,8 @@ grid.text("many means...",
 )
 ```
 
++++
+
 ### Using the bootstrap to calculate a plausible range  
 
 Now that we have constructed our bootstrap distribution, let's use it to create
@@ -1454,6 +1495,8 @@ confidence level.
 
 To calculate a 95\% percentile bootstrap confidence interval, we will do the following:
 
++++
+
 1. Arrange the observations in the bootstrap distribution in ascending order. 
 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
@@ -1465,6 +1508,8 @@ To do this in R, we can use the `quantile()` function:
 \index{pull}
 \index{select}
 
++++
+
 ```{r 11-bootstrapping8, echo = T, message = FALSE, warning = FALSE}
 bounds <- boot20000_means |>
   select(mean) |>
@@ -1474,10 +1519,14 @@ bounds <- boot20000_means |>
 bounds
 ```
 
++++
+
 Our interval, \$`r round(bounds[1],2) ` to \$`r round(bounds[2],2)`, captures
 the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in Figure
 \@ref(fig:11-bootstrapping9). 
+
++++
 
 ```{r 11-bootstrapping9, echo = F, message = FALSE, warning = FALSE, fig.cap = "Distribution of the bootstrap sample means with percentile lower and upper bounds.", fig.height=4, fig.width = 6.5}
 boot_est_dist +
@@ -1491,6 +1540,8 @@ boot_est_dist +
     label = paste("97.5th percentile =", round(bounds[2], 2))
   )
 ```
+
++++
 
 To finish our estimation of the population parameter, we would report the point
 estimate and our confidence interval's lower and upper bounds. Here the sample
@@ -1512,6 +1563,8 @@ more. We have just scratched the surface of statistical inference; however, the
 material presented here will serve as the foundation for more advanced
 statistical techniques you may learn about in the future!
 
++++
+
 ## Exercises
 
 Practice exercises for the material covered in this chapter 
@@ -1524,6 +1577,8 @@ If you instead decide to download the worksheets and run them on your own machin
 make sure to follow the instructions for computer setup
 found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
+
++++
 
 ## Additional resources
 
@@ -1545,6 +1600,9 @@ and guidance that the worksheets provide will function as intended.
   statistics*; if you have a solid grasp of probability, more advanced statistics
   will come naturally to you!
 
-```{code-cell} ipython3
++++
 
+## References
+
+```{bibliography}
 ```

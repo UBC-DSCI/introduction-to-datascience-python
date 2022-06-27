@@ -29,11 +29,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.compose import make_column_transformer
 
 import altair as alt
-# Save a vega-lite spec and a PNG blob for each plot in the notebook
-alt.renderers.enable('mimetype')
-
-
-
 
 ```
 
@@ -191,7 +186,7 @@ to see if we can detect subtypes or groups in our data set.
 
 
 ```{code-cell} ipython3
-alt.Chart(penguin_data, title="Scatter plot of standardized bill length versus standardized flipper length.").mark_circle(color='black').encode(
+scatter_plot = alt.Chart(penguin_data, title="Scatter plot of standardized bill length versus standardized flipper length.").mark_circle(color='black').encode(
     x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y = alt.Y("bill_length_standardized", title="Bill Length (standardized)")).configure_axis(
     labelFontSize=12,
@@ -199,6 +194,20 @@ alt.Chart(penguin_data, title="Scatter plot of standardized bill length versus s
 ).configure_title(fontSize=12)
  
 ```
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('scatter_plot', scatter_plot, display=True)
+```
+
+:::{glue:figure} scatter_plot 
+:figwidth: 700px 
+:name: scatter_plot
+
+Scatter plot of standardized bill length versus standardized flipper length.
+:::
+
+
+
 
 Based \index{ggplot}\index{ggplot!geom\_point} on the visualization 
 in Figure \@ref(fig:10-toy-example-plot), 
@@ -232,7 +241,7 @@ denoted by colored scatter points.
 ```{code-cell} ipython3
 colors = ["orange", "blue", "brown"]
 
-alt.Chart(data, title="Scatter plot of standardized bill length versus standardized flipper length with colored groups.").mark_circle().encode(
+colored_scatter_plot = alt.Chart(data, title="Scatter plot of standardized bill length versus standardized flipper length with colored groups.").mark_circle().encode(
     x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
     color = alt.Color('cluster:N', scale=alt.Scale(range=colors))).configure_axis(
@@ -242,6 +251,21 @@ alt.Chart(data, title="Scatter plot of standardized bill length versus standardi
  
  
 ```
+
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('colored_scatter_plot', colored_scatter_plot, display=True)
+```
+
+:::{glue:figure} colored_scatter_plot
+:figwidth: 700px 
+:name: colored_scatter_plot
+
+Scatter plot of standardized bill length versus standardized flipper length with colored groups.
+
+
+:::
 
 
 What are the labels for these groups? Unfortunately, we don't have any. K-means,
@@ -325,9 +349,8 @@ that we learned about in Chapter \@ref(classification).
 In the {glue:}`clus_rows_glue`-observation cluster example above, 
 we would compute the WSSD $S^2$ via
 
-\begin{align*}
-S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \\ \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right).
-\end{align*}
+
+$S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
 
 These distances are denoted by lines in Figure \@ref(fig:10-toy-example-clus1-dists) for the first cluster of the penguin data example. 
 
@@ -633,6 +656,15 @@ cluster_plot
 glue('cluster_plot', cluster_plot, display=True)
 ```
 
+:::{glue:figure} cluster_plot 
+:figwidth: 700px 
+:name: cluster_plot
+
+The data colored by the cluster assignments returned by K-means.
+:::
+
+
+
 As mentioned above, we also need to select K by finding
 where the "elbow" occurs in the plot of total WSSD versus the number of clusters. 
 We can obtain the total WSSD (`tot.withinss`) \index{WSSD!total} from our
@@ -751,7 +783,7 @@ elbow_plot
 ```{code-cell} ipython3
 elbow_plot=(
     alt.Chart(penguin_clust_ks)
-    .mark_line(point=True)
+    .mark_line(point=True, color='black')
     .encode(
         x=alt.X("k", title="K"),
         y=alt.Y("inertia", title="Total within-cluster sum of squares"),
@@ -766,6 +798,16 @@ elbow_plot
 :tags: ["remove-cell"]
 glue('elbow_plot', elbow_plot, display=True)
 ```
+
+:::{glue:figure} elbow_plot 
+:figwidth: 700px 
+:name: elbow_plot
+
+A plot showing the total WSSD versus the number of clusters.
+:::
+
+
+
 
 It looks like 3 clusters is the right choice for this data.
 But why is there a "bump" in the total WSSD plot here? 

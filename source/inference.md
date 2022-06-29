@@ -21,19 +21,6 @@ import altair as alt
 import numpy as np
 import pandas as pd
 from sklearn.utils import resample
-# import sklearn
-# from sklearn.compose import make_column_transformer
-# from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-# from sklearn.metrics.pairwise import euclidean_distances
-# from sklearn.model_selection import (
-#     GridSearchCV,
-#     RandomizedSearchCV,
-#     cross_validate,
-#     train_test_split,
-# )
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.pipeline import Pipeline, make_pipeline
-# from sklearn.preprocessing import OneHotEncoder, StandardScaler
 alt.data_transformers.disable_max_rows()
 
 # alt.data_transformers.enable('data_server')
@@ -41,34 +28,6 @@ alt.data_transformers.disable_max_rows()
 
 from myst_nb import glue
 ```
-
-+++ {"tags": ["remove-cell"]}
-
-```{r inference-setup, include = FALSE}
-knitr::opts_chunk$set(warning = FALSE, fig.align = "center")
-library(gridExtra)
-library(tidyverse)
-library(grid) #  grid.bezier()
-
-options(digits = 3) # set number of digits to display in output to match writing
-
-max_count <- function(dist) {
-  max(ggplot_build(dist)$data[[1]]$count)
-}
-
-max_x <- function(dist) {
-  max(ggplot_build(dist)$data[[1]]$xmax)
-}
-
-min_x <- function(dist) {
-  ggp_data <- ggplot_build(dist)
-  min(ggp_data$data[[1]]$xmin)
-}
-
-theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
-```
-
-+++
 
 ## Overview
 A typical data analysis task in practice is to draw conclusions about some
@@ -125,7 +84,7 @@ estimates the population parameter. For example, suppose we randomly selected
 ten undergraduate students across North America (the sample) and computed the
 proportion of those students who own an iPhone (the sample estimate). In that
 case, we might suspect that proportion is a reasonable estimate of the
-proportion of students who own an iPhone in the entire population.  Figure
+proportion of students who own an iPhone in the entire population. 
 {numref}`fig:11-population-vs-sample` illustrates this process.
 In general, the process of using a sample to make a conclusion about the
 broader population from which it is taken is referred to as **statistical inference**. 
@@ -195,6 +154,7 @@ airbnb <- airbnb |>
 \index{seed!set.seed}
 
 ```{code-cell} ipython3
+import altair as alt
 import pandas as pd
 
 airbnb = pd.read_csv("data/listings.csv")
@@ -466,9 +426,15 @@ We can visualize the population distribution of the price per night with a histo
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-population_distribution = alt.Chart(airbnb).mark_bar().encode(
-    x=alt.X("price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"),
-    y=alt.Y("count()", title="Count"),
+population_distribution = (
+    alt.Chart(airbnb)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"
+        ),
+        y=alt.Y("count()", title="Count"),
+    )
 )
 
 population_distribution
@@ -621,7 +587,7 @@ sampling_distribution_40 = (
         x=alt.X(
             "sample_mean",
             bin=alt.Bin(maxbins=30),
-            title="Price per night (Canadian dollars)",
+            title="Sample mean price per night (Canadian dollars)",
         ),
         y=alt.Y("count()", title="Count"),
     )
@@ -691,6 +657,7 @@ was \$`r round(mean(airbnb$price),2)`.
                 "price",
                 bin=alt.Bin(maxbins=30),
                 title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
                 scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
             ),
             y=alt.Y("count()", title="Count"),
@@ -705,6 +672,7 @@ was \$`r round(mean(airbnb$price),2)`.
                 "price",
                 bin=alt.Bin(maxbins=30),
                 title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
                 scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
             ),
             y=alt.Y("count()", title="Count"),
@@ -721,7 +689,7 @@ was \$`r round(mean(airbnb$price),2)`.
             x=alt.X(
                 "sample_mean",
                 bin=True,
-                title="Price per night (Canadian dollars)",
+                title="Sample mean price per night (Canadian dollars)",
                 axis=alt.Axis(values=list(range(50, 601, 50))),
                 scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
             ),
@@ -914,7 +882,7 @@ for sample_n, df in sample_dict.items():
             .mark_text(dy=-5, size=15)
             .encode(x="x", y="y", text="text")
         )
-    )
+    ).properties(width=350, height=250)
 ```
 
 ```{code-cell} ipython3
@@ -1022,22 +990,28 @@ for sample_n in [10, 20, 50, 100, 200]:
             ),
             y=alt.Y("count()", title="Count"),
         )
-    )
+    ).properties(width=350, height=250)
 # add title and standardize the x axis ticks for population histogram
 population_distribution.title = "Population distribution"
 population_distribution.encoding["x"]["bin"] = alt.Bin(extent=[0, 600], step=20)
 
-glue("fig:11-example-bootstrapping0", (
+glue(
+    "fig:11-example-bootstrapping0",
     (
-        sample_distribution_dict["sample_distribution_10"]
-        | sample_distribution_dict["sample_distribution_20"]
-    )
-    & (
-        sample_distribution_dict["sample_distribution_50"]
-        | sample_distribution_dict["sample_distribution_100"]
-    )
-    & (sample_distribution_dict["sample_distribution_200"] | population_distribution)
-))
+        (
+            sample_distribution_dict["sample_distribution_10"]
+            | sample_distribution_dict["sample_distribution_20"]
+        )
+        & (
+            sample_distribution_dict["sample_distribution_50"]
+            | sample_distribution_dict["sample_distribution_100"]
+        )
+        & (
+            sample_distribution_dict["sample_distribution_200"]
+            | population_distribution.properties(width=350, height=250)
+        )
+    ),
+)
 ```
 
 :::{glue:figure} fig:11-example-bootstrapping0
@@ -1109,7 +1083,7 @@ one_sample
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: []
 
 one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
     x=alt.X(
@@ -1139,7 +1113,7 @@ this sample and estimate are the only data we can work with.
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
 sample in Python and calculate a point estimate from that bootstrap sample. We will 
-use the `resample` function from the `scikit-learn` package. But critically, note that we now
+use the `resample` function from the `scikit-learn` package. Critically, note that we now
 pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
 And since we need to sample with replacement,
 we keep the argument for `replace` to its default value of `True`.
@@ -1147,6 +1121,8 @@ we keep the argument for `replace` to its default value of `True`.
 \index{rep\_sample\_n!bootstrap}
 
 ```{code-cell} ipython3
+:tags: []
+
 boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
     x=alt.X(
@@ -1181,7 +1157,7 @@ that our single sample is close to the population, and we are trying to
 mimic drawing another sample from the population by drawing one from our original
 sample.
 
-Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)  
+Let's now take 20,000 bootstrap samples from the original sample (`one_sample`) 
 using `resample`, and calculate the means for
 each of those replicates. Recall that this assumes that `one_sample` *looks like*
 our original population; but since we do not have access to the population itself,
@@ -1203,6 +1179,8 @@ boot20000
 Let's take a look at histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
+:tags: []
+
 six_bootstrap_samples = boot20000.query("replicate < 6")
 
 (
@@ -1215,7 +1193,7 @@ six_bootstrap_samples = boot20000.query("replicate < 6")
             title="Price per night (Canadian dollars)",
         ),
         y=alt.Y("count()", title="Count"),
-    )
+    ).properties(width=250, height=200)
     .facet("replicate", columns=3)
 )
 ```
@@ -1243,25 +1221,37 @@ We can see that the bootstrap sample distributions and the sample means are
 different. They are different because we are sampling *with replacement*. We
 will now calculate point estimates for our 20,000 bootstrap samples and
 generate a bootstrap distribution of our point estimates. The bootstrap
-distribution (Figure \@ref(fig:11-bootstrapping5)) suggests how we might expect
+distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
 our point estimate to behave if we took another sample.
 
-+++
-
-```{r 11-bootstrapping5, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Distribution of the bootstrap sample means.", fig.height = 3.5, fig.width = 4.5}
-boot20000_means <- boot20000 |>
-  group_by(replicate) |>
-  summarize(mean = mean(price))
+```{code-cell} ipython3
+boot20000_means = boot20000.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "mean"}
+)
 
 boot20000_means
-tail(boot20000_means)
+```
 
-boot_est_dist <- ggplot(boot20000_means, aes(x = mean)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  labs(x = "Sample mean price per night \n (Canadian dollars)", y = "Count") +
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+:tags: []
+
+boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
+    x=alt.X(
+        "mean",
+        bin=alt.Bin(extent=[95, 245], step=5),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
 
 boot_est_dist
+```
+
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping5
+:figclass: caption-hack
+
+Distribution of the bootstrap sample means.
 ```
 
 +++
@@ -1269,205 +1259,122 @@ boot_est_dist
 Let's compare the bootstrap distribution&mdash;which we construct by taking many samples from our original sample of size 40&mdash;with 
 the true sampling distribution&mdash;which corresponds to taking many samples from the population.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-input]
 
-```{r 11-bootstrapping6, echo = F, message = FALSE, warning = FALSE, fig.cap = "Comparison of the distribution of the bootstrap sample means and sampling distribution.", fig.height = 3.5}
-samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(40)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
 
-sample_estimates <- samples |>
-  group_by(replicate) |>
-  summarize(sample_mean = mean(price))
-
-sampling_dist <- ggplot(sample_estimates, aes(x = sample_mean)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  ylab("Count") +
-  xlab("Sample mean price per night \n (Canadian dollars)")  
-
-annotated_sampling_dist <- sampling_dist +  
-  xlim(min_x(sampling_dist), max_x(sampling_dist)) + 
-  geom_vline(xintercept = mean(sample_estimates$sample_mean), col = "red") +
-  annotate("text",
-    x = max_x(sampling_dist), y = max_count(sampling_dist), 
-    hjust = 1, 
-    vjust = 1,
-    label = paste("mean = ", round(mean(sample_estimates$sample_mean), 1)))
-
-boot_est_dist_limits <- boot_est_dist +   
-    xlim(min_x(sampling_dist), max_x(sampling_dist)) 
-
-annotated_boot_est_dist <- boot_est_dist_limits + 
-  geom_vline(xintercept = mean(boot20000_means$mean), col = "red") +
-  annotate("text",
-    x = max_x(sampling_dist), y = max_count(boot_est_dist_limits), 
-    vjust = 1, 
-    hjust = 1, 
-    label = paste("mean = ", round(mean(boot20000_means$mean), 1))) 
-grid.arrange(annotated_sampling_dist + ggtitle("Sampling distribution"),
-             annotated_boot_est_dist +  ggtitle("Bootstrap distribution"),
-             ncol = 2
+sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "sample_mean"}
 )
+
+plot_min_x = sample_estimates["sample_mean"].min()
+plot_max_x = sample_estimates["sample_mean"].max()
+sampling_mean = sample_estimates["sample_mean"].mean()
+boot_sampling_mean = boot20000_means["mean"].mean()
+
+sampling_dist = alt.Chart(sample_estimates).mark_bar().encode(
+    x=alt.X(
+        "sample_mean",
+        bin=alt.Bin(extent=[95, 245], step=5),
+        # scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+annotated_sampling_dist = (
+    sampling_dist
+    + alt.Chart(pd.DataFrame({"x": [sampling_mean]}), title="Sampling distribution")
+    .mark_rule(color="red", size=2)
+    .encode(x="x")
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [plot_max_x - 20],
+                    "y": [2000],
+                    "text": [f"mean = {round(sampling_mean, 1)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=15)
+        .encode(x="x", y="y", text="text")
+    )
+)
+
+annotated_boot_est_dist = boot_est_dist + (
+    alt.Chart(pd.DataFrame({"x": [boot_sampling_mean]}), title="Bootstrap distribution")
+    .mark_rule(color="red", size=2)
+    .encode(x="x")
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [plot_max_x - 20],
+                    "y": [1500],
+                    "text": [f"mean = {round(boot_sampling_mean, 1)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=15)
+        .encode(x="x", y="y", text="text")
+    )
+)
+
+annotated_sampling_dist | annotated_boot_est_dist
 ```
 
-+++
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping6
+:figclass: caption-hack
 
-There are two essential points that we can take away from Figure
+Comparison of the distribution of the bootstrap sample means and sampling distribution.
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("one_sample_mean", round(one_sample["price"].mean(), 2))
+```
+
+There are two essential points that we can take away from 
 \index{sampling distribution!compared to bootstrap distribution}
-\@ref(fig:11-bootstrapping6). First, the shape and spread of the true sampling
+{numref}`fig:11-bootstrapping6`. First, the shape and spread of the true sampling
 distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
 second important point is that the means of these two distributions are
 different. The sampling distribution is centered at 
-\$`r round(mean(airbnb$price),2)`, the population mean value. However, the bootstrap
+\${glue:}`population_mean`, the population mean value. However, the bootstrap
 distribution is centered at the original sample's mean price per night, 
-\$`r round(mean(boot20000_means$mean), 2)`. Because we are resampling from the
+\${glue:}`one_sample_mean`. Because we are resampling from the
 original sample repeatedly, we see that the bootstrap distribution is centered
 at the original sample's mean value (unlike the sampling distribution of the
 sample mean, which is centered at the population parameter value). 
 
-Figure
-\@ref(fig:11-bootstrapping7) summarizes the bootstrapping process.
+{numref}`fig:11-bootstrapping7` summarizes the bootstrapping process.
 The idea here is that we can use this distribution of bootstrap sample means to
 approximate the sampling distribution of the sample means when we only have one
 sample. Since the bootstrap distribution pretty well approximates the sampling
 distribution spread, we can use the bootstrap spread to help us develop a
 plausible range for our population parameter along with our estimate!
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 11-bootstrapping7, echo = F, message = FALSE, warning = FALSE, fig.cap = "Summary of bootstrapping process."}
-pop_dist <- population_distribution + ggtitle("Population") + xlab("Price") +
-  theme(
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
+!wget -O img/inference/11-bootstrapping7-1.png https://datasciencebook.ca/_main_files/figure-html/11-bootstrapping7-1.png
+```
 
-sam_dist <- one_sample_dist + ggtitle("Sample") + xlab("Price") +
-  theme(
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
+```{figure} img/inference/11-bootstrapping7-1.png
+:name: fig:11-bootstrapping7
+:figclass: caption-hack
 
-set.seed(2)
-
-boot2 <- one_sample |>
-  rep_sample_n(size = 40, replace = TRUE, reps = 1)
-
-set.seed(3)
-boot3 <- one_sample |>
-  rep_sample_n(size = 40, replace = TRUE, reps = 1)
-
-boot1_dist <- boot1_dist + ggtitle("Samples with Replacement") +
-  theme(
-    axis.title.x = element_blank(),
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-boot2_dist <- ggplot(boot2, aes(price)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  theme(
-    axis.title.x = element_blank(),
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-boot3_dist <- ggplot(boot3, aes(price)) +
-  geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-  xlab("") +
-  theme(
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-bootstrap_dist <- boot_est_dist + ggtitle("Bootstrap \nDistribution") + xlab("Sample means") +
-  theme(
-    axis.ticks.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-mygb <- function(x, y) {
-  grid.bezier(
-    x = x, y = y, gp = gpar(fill = "black"),
-    arrow = arrow(type = "closed", length = unit(2, "mm"))
-  )
-}
-
-grid.arrange(pop_dist,
-  sam_dist,
-  boot1_dist,
-  boot2_dist,
-  boot3_dist,
-  bootstrap_dist,
-  widths = c(1, 1, 1, 1, 1),
-  layout_matrix = rbind(
-    c(1, NA, 3, NA, 6),
-    c(1, 2, 4, NA, 6),
-    c(NA, NA, 5, NA, NA)
-  )
-)
-
-grid.text(paste("mean =", round(mean(boot1$price)), sep = " "),
-  x = unit(0.7, "npc"),
-  y = unit(.8, "npc"), gp = gpar(fontsize = 12)
-)
-grid.text(paste("mean =", round(mean(boot2$price)), sep = " "),
-  x = unit(0.7, "npc"),
-  y = unit(.5, "npc"), gp = gpar(fontsize = 12)
-)
-grid.text(paste("mean =", round(mean(boot3$price)), sep = " "),
-  x = unit(0.7, "npc"),
-  y = unit(.2, "npc"), gp = gpar(fontsize = 12)
-)
-# arrows: pop to sample
-mygb(x = c(0.15, 0.3, 0.3, 0.3), y = c(0.8, 0.8, 0.65, 0.65))
-
-# arrows: sample to resamples
-mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.55, 0.55, 0.8, 0.8))
-mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.5, 0.5, 0.5, 0.5))
-mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.45, 0.45, 0.2, 0.2))
-mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.4, 0.4, 0.03, 0.03))
-
-# arrows: resamples to statistics
-mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.8, 0.8, 0.8, 0.8))
-mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.5, 0.5, 0.5, 0.5))
-mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.2, 0.2, 0.2, 0.2))
-mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.02, 0.02, 0.02, 0.02))
-
-# arrows: statistics to boot
-mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.8, 0.8, 0.7, 0.7))
-mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.5, 0.5, 0.6, 0.6))
-mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.2, 0.2, 0.4, 0.4))
-mygb(x = c(0.77, 0.77, 0.85, 0.85), y = c(0.02, 0.02, 0.33, 0.33))
-
-# many resamples
-grid.text("many resamples...",
-  x = unit(0.487, "npc"),
-  y = unit(0.02, "npc"), gp = gpar(fontsize = 10)
-)
-
-# arrow to many more means
-grid.text("many means...",
-  x = unit(0.7, "npc"),
-  y = unit(0.02, "npc"), gp = gpar(fontsize = 10)
-)
+Summary of bootstrapping process.
 ```
 
 +++
@@ -1503,42 +1410,78 @@ To calculate a 95\% percentile bootstrap confidence interval, we will do the fol
 
 \newpage
 
-To do this in R, we can use the `quantile()` function:
+To do this in Python, we can use the `percentile()` function from the `numpy` package:
 \index{quantile}
 \index{pull}
 \index{select}
 
-+++
-
-```{r 11-bootstrapping8, echo = T, message = FALSE, warning = FALSE}
-bounds <- boot20000_means |>
-  select(mean) |>
-  pull() |>
-  quantile(c(0.025, 0.975))
+```{code-cell} ipython3
+import numpy as np
+bounds = np.percentile(boot20000_means["mean"], [2.5, 97.5])
 
 bounds
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-Our interval, \$`r round(bounds[1],2) ` to \$`r round(bounds[2],2)`, captures
+glue("ci_lower", round(bounds[0], 2))
+glue("ci_upper", round(bounds[1], 2))
+```
+
+Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
 the middle 95\% of the sample mean prices in the bootstrap distribution. We can
-visualize the interval on our distribution in Figure
-\@ref(fig:11-bootstrapping9). 
+visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
-+++
+```{code-cell} ipython3
+:tags: [remove-input]
 
-```{r 11-bootstrapping9, echo = F, message = FALSE, warning = FALSE, fig.cap = "Distribution of the bootstrap sample means with percentile lower and upper bounds.", fig.height=4, fig.width = 6.5}
-boot_est_dist +
-  geom_vline(xintercept = bounds, col = "#E69F00", size = 2, linetype = 2) +
-  annotate("text",
-    x = bounds[1], max_count(boot_est_dist), hjust = 0.6, vjust = 2,
-    label = paste("2.5th percentile =", round(bounds[1], 2))
-  ) +
-  annotate("text",
-    x = bounds[2], max_count(boot_est_dist), hjust = 0.5, vjust = 2,
-    label = paste("97.5th percentile =", round(bounds[2], 2))
-  )
+boot_est_dist + (
+    (
+        alt.Chart(pd.DataFrame({"x": [bounds[0]]}))
+        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
+        .encode(x="x")
+    )
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [bounds[0] - 10],
+                    "y": [1600],
+                    "text": [f"2.5th percentile = {round(bounds[0], 2)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=12)
+        .encode(x="x", y="y", text="text")
+    )
+) + (
+    (
+        alt.Chart(pd.DataFrame({"x": [bounds[1]]}))
+        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
+        .encode(x="x")
+    )
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [bounds[1]],
+                    "y": [1600],
+                    "text": [f"97.5th percentile = {round(bounds[1], 2)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=12)
+        .encode(x="x", y="y", text="text")
+    )
+)
+```
+
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:11-bootstrapping9
+:figclass: caption-hack
+
+Distribution of the bootstrap sample means with percentile lower and upper bounds.
 ```
 
 +++
@@ -1546,11 +1489,11 @@ boot_est_dist +
 To finish our estimation of the population parameter, we would report the point
 estimate and our confidence interval's lower and upper bounds. Here the sample
 mean price-per-night of 40 Airbnb listings was 
-\$`r round(mean(one_sample$price),2)`, and we are 95\% "confident" that the true
+\${glue:}`one_sample_mean`, and we are 95\% "confident" that the true
 population mean price-per-night for all Airbnb listings in Vancouver is between
-\$(`r round(bounds[1],2)`, `r round(bounds[2],2)`).
+\$({glue:}`ci_lower`, {glue:}`ci_upper`).
 Notice that our interval does indeed contain the true
-population mean value, \$`r round(mean(airbnb$price),2)`\! However, in
+population mean value, \${glue:}`population_mean`\! However, in
 practice, we would not know whether our interval captured the population
 parameter or not because we usually only have a single sample, not the entire
 population. This is the best we can do when we only have one sample!
@@ -1575,14 +1518,14 @@ You can launch an interactive version of each worksheet in your browser by click
 You can also preview a non-interactive version of each worksheet by clicking "view worksheet."
 If you instead decide to download the worksheets and run them on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
 
 ## Additional resources
 
-- Chapters 7 to 10 of *Modern Dive* [@moderndive] provide a great
+- Chapters 7 to 10 of *Modern Dive* {cite:p}`moderndive` provide a great
   next step in learning about inference. In particular, Chapters 7 and 8 cover
   sampling and bootstrapping using `tidyverse` and `infer` in a slightly more
   in-depth manner than the present chapter. Chapters 9 and 10 take the next step
@@ -1591,7 +1534,7 @@ and guidance that the worksheets provide will function as intended.
   concept of inference in testing hypotheses and performing regression. This
   material offers a great starting point for getting more into the technical side
   of statistics.
-- Chapters 4 to 7 of *OpenIntro Statistics* [@openintro]
+- Chapters 4 to 7 of *OpenIntro Statistics* {cite:p}`openintro`
   provide a good next step after *Modern Dive*. Although it is still certainly
   an introductory text, things get a bit more mathematical here. Depending on
   your background, you may actually want to start going through Chapters 1 to 3

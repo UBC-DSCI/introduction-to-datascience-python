@@ -1,19 +1,20 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
 
-# Cleaning and wrangling data -- TBD
+# Cleaning and wrangling data
+
++++ {"tags": ["remove-cell"]}
 
 ``` {r wrangling-setup, include=FALSE}
 library(magick)
@@ -25,6 +26,13 @@ library(cowplot)
 knitr::opts_chunk$set(fig.align = "default")
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+import altair as alt
+import pandas as pd
+```
+
 ## Overview
 
 This chapter is centered around defining tidy data&mdash;a data format that is
@@ -32,51 +40,84 @@ suitable for analysis&mdash;and the tools needed to transform raw data into this
 format. This will be presented in the context of a real-world data science
 application, providing more practice working through a whole case study.
 
++++
+
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
 
   - Define the term "tidy data".
   - Discuss the advantages of storing data in a tidy data format.
-  - Define what vectors, lists, and data frames are in R, and describe how they relate to
+  - Define what lists, series and data frames are in Python, and describe how they relate to
     each other.
-  - Describe the common types of data in R and their uses.
+  - Describe the common types of data in Python and their uses.
   - Recall and use the following functions for their
     intended data wrangling tasks:
-      - `across`
-      - `c`
-      - `filter`
-      - `group_by`
-      - `select`
-      - `map`
-      - `mutate`
-      - `pull`
-      - `pivot_longer`
-      - `pivot_wider`
-      - `rowwise`
-      - `separate`
-      - `summarize`
+      - `.loc[]`
+      - `df[]` notation
+      - `.assign`
+      - `.groupby`
+      - `.mean()`
+      - `.agg()`
+      - `.apply()`
+      - `.melt`
+      - `.pivot`
   - Recall and use the following operators for their
     intended data wrangling tasks:
       - `==` 
-      - `%in%`
-      - `!`
-      - `&` 
-      - `|`
-      - `|>` and `%>%`
+      - `in`
+      - `and`
+      - `or`
 
-## Data frames, vectors, and lists
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-In Chapters \@ref(intro) and \@ref(reading), *data frames* were the focus:
-we learned how to import data into R as a data frame, and perform basic operations on data frames in R.
+# By the end of the chapter, readers will be able to do the following:
+
+#   - Define the term "tidy data".
+#   - Discuss the advantages of storing data in a tidy data format.
+#   - Define what vectors, lists, and data frames are in R, and describe how they relate to
+#     each other.
+#   - Describe the common types of data in R and their uses.
+#   - Recall and use the following functions for their
+#     intended data wrangling tasks:
+#       - `across`
+#       - `c`
+#       - `filter`
+#       - `group_by`
+#       - `select`
+#       - `map`
+#       - `mutate`
+#       - `pull`
+#       - `pivot_longer`
+#       - `pivot_wider`
+#       - `rowwise`
+#       - `separate`
+#       - `summarize`
+#   - Recall and use the following operators for their
+#     intended data wrangling tasks:
+#       - `==` 
+#       - `%in%`
+#       - `!`
+#       - `&` 
+#       - `|`
+#       - `|>` and `%>%`
+```
+
+## Data frames, series, and lists
+
+In Chapters {ref}`intro` and {ref}`reading`, *data frames* were the focus:
+we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require 
-that data are represented as a data frame in R. Therefore, in this section,
-we will dig more deeply into what data frames are and how they are represented in R.
+that data are represented as a `pandas` data frame in Python. Therefore, in this section,
+we will dig more deeply into what data frames are and how they are represented in Python.
 This knowledge will be helpful in effectively utilizing these objects in our data analyses.
+
++++
 
 ### What is a data frame?
 
-A data frame \index{data frame!definition} is a table-like structure for storing data in R.  Data frames are
+A data frame \index{data frame!definition} is a table-like structure for storing data in Python.  Data frames are
 important to learn about because most data that you will encounter in practice
 can be naturally stored as a table.  In order to define data frames precisely,
 we need to introduce a few technical terms:
@@ -85,37 +126,77 @@ we need to introduce a few technical terms:
 - **observation:** all \index{observation} of the measurements for a given entity.
 - **value:** a \index{value} single measurement of a single variable for a given entity.
 
-Given these definitions, a **data frame** is a tabular data structure in R
+Given these definitions, a **data frame** is a tabular data structure in Python
 that is designed to store observations, variables, and their values.
 Most commonly, each column in a data frame corresponds to a variable,
-and each row corresponds to an observation. For example, Figure
-\@ref(fig:02-obs) displays a data set of city populations. Here, the variables
+and each row corresponds to an observation. For example,
+{numref}`fig:02-obs` displays a data set of city populations. Here, the variables
 are "region, year, population"; each of these are properties that can be
 collected or measured.  The first observation is "Toronto, 2016, 2235145";
 these are the values that the three variables take for the first entity in the
 data set. There are 13 entities in the data set in total, corresponding to the
-13 rows in Figure \@ref(fig:02-obs).
+13 rows in {numref}`fig:02-obs`.
 
-``` {r 02-obs, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "A data frame storing data regarding the population of various regions in Canada. In this example data frame, the row that corresponds to the observation for the city of Vancouver is colored yellow, and the column that corresponds to the population variable is colored blue.", fig.retina = 2, out.width = "100%"}
-image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.004.jpeg") %>%
-  image_crop("3632x700")
++++
+
+```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.004.jpeg
+:name: fig:02-obs
+:figclass: caption-hack
+
+A data frame storing data regarding the population of various regions in Canada. In this example data frame, the row that corresponds to the observation for the city of Vancouver is colored yellow, and the column that corresponds to the population variable is colored blue.
 ```
 
-R stores the columns of a data frame as either
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# The following cell was removed because there is no "vector" in Python.
+```
+
++++ {"tags": ["remove-cell"]}
+
+Python stores the columns of a data frame as either
 *lists* or *vectors*.  For example, the data frame in Figure
-\@ref(fig:02-vectors) has three vectors whose names are `region`, `year` and
+{numref}`fig:02-vectors` has three vectors whose names are `region`, `year` and
 `population`. The next two sections will explain what lists and vectors are.
 
-``` {r 02-vectors, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "Data frame with three vectors.", fig.retina = 2, out.width = "100%"}
-image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.005.jpeg") %>%
-  image_crop("3632x700")
+```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.005.jpeg
+:name: fig:02-vectors
+:figclass: caption-hack
+
+Data frame with three vectors.
 ```
+
++++
+
+### What is a series?
+
+In Python, `pandas` **series** are arrays with labels. They are strictly 1-dimensional and can contain any data type (integers, strings, floats, objects, etc), including a mix of them;
+Python has several different basic data types, as shown in {numref}`tab:datatype-table`.
+You can create a `pandas` series using the `pd.Series()` function.  For 
+example, to create the vector `region` as shown in
+{numref}`fig:02-series`, you can write:
+
+```{code-cell} ipython3
+region = pd.Series(["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"])
+region
+```
+
++++ {"tags": []}
+
+```{figure} img/wrangling/02-series-1.png
+:name: fig:02-series
+:figclass: caption-hack
+
+Example of a `pandas` series whose type is string.
+```
+
++++ {"tags": ["remove-cell"]}
 
 ### What is a vector?
 
 In R, **vectors** \index{vector}\index{atomic vector|see{vector}} are objects that can contain one or more elements. The vector
 elements are ordered, and they must all be of the same **data type**;
-R has several different basic data types, as shown in Table \@ref(tab:datatype-table).
+R has several different basic data types, as shown in {numref}`tab:datatype-table`.
 Figure \@ref(fig:02-vector) provides an example of a vector where all of the elements are
 of character type.
 You can create vectors in R using the `c` function  \index{c function} (`c` stands for "concatenate").  For 
@@ -143,17 +224,31 @@ image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
   image_crop("3632x590")
 ```
 
++++
+
 \newpage
 
-Table: (#tab:datatype-table) Basic data types in R
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-| Data type  | Abbreviation |   Description           |    Example     |
-| ---------- | ------------ |------------------------ |----------------|
-| character | chr | letters or numbers surrounded by quotes | "1" , "Hello world!" |
-| double | dbl | numbers with decimals values | 1.2333 |
-| integer | int | numbers that do not contain decimals | 1L, 20L (where "L" tells R to store as an integer) |
-| logical | lgl | either true or false | `TRUE`, `FALSE` |
-| factor | fct | used to represent data with a limited number of values (usually categories) | a `color` variable with levels `red`, `green` and `orange` |
+# The following table was taken from DSCI511 Lecture 1, credit to Arman Seyed-Ahmadi, MDS 2021
+```
+
+```{table} Basic data types in Python
+:name: tab:datatype-table
+| English name          | Type name  | Type Category  | Description                                   | Example                                    |
+| :-------------------- | :--------- | :------------- | :-------------------------------------------- | :----------------------------------------- |
+| integer               | `int`      | Numeric Type   | positive/negative whole numbers               | `42`                                       |
+| floating point number | `float`    | Numeric Type   | real number in decimal form                   | `3.14159`                                  |
+| boolean               | `bool`     | Boolean Values | true or false                                 | `True`                                     |
+| string                | `str`      | Sequence Type  | text                                          | `"Can I have a cheezburger?"`              |
+| list                  | `list`     | Sequence Type  | a collection of objects - mutable & ordered   | `['Ali', 'Xinyi', 'Miriam']`               |
+| tuple                 | `tuple`    | Sequence Type  | a collection of objects - immutable & ordered | `('Thursday', 6, 9, 2018)`                 |
+| dictionary            | `dict`     | Mapping Type   | mapping of key-value pairs                    | `{'name':'DSCI', 'code':511, 'credits':2}` |
+| none                  | `NoneType` | Null Object    | represents no value                           | `None`                                     |
+```
+
++++
 
 \index{data types}
 \index{character}\index{chr|see{character}}
@@ -161,112 +256,185 @@ Table: (#tab:datatype-table) Basic data types in R
 \index{double}\index{dbl|see{double}}
 \index{logical}\index{lgl|see{logical}}
 \index{factor}\index{fct|see{factor}}
-It is important in R to make sure you represent your data with the correct type. 
-Many of the `tidyverse` functions we use in this book treat 
-the various data types differently. You should use integers and double types
+It is important in Python to make sure you represent your data with the correct type. 
+Many of the `pandas` functions we use in this book treat 
+the various data types differently. You should use integers and float types
 (which both fall under the "numeric" umbrella type) to represent numbers and perform
-arithmetic. Doubles are more common than integers in R, though; for instance, a double data type is the
-default when you create a vector of numbers using `c()`, and when you read in
-whole numbers via `read_csv`. Characters are used to represent data that should
-be thought of as "text", such as words, names, paths, URLs, and more. Factors help us
+arithmetic. Strings are used to represent data that should
+be thought of as "text", such as words, names, paths, URLs, and more. 
+Factors help us
 encode variables that represent *categories*; a factor variable takes one of a discrete
-set of values known as *levels* (one for each category). The levels can be ordered or unordered.  Even though
-factors can sometimes *look* like characters, they are not used to represent
-text, words, names, and paths in the way that characters are; in fact, R
-internally stores factors using integers! There are other basic data types in R, such as *raw*
+set of values known as *levels* (one for each category). There are other basic data types in Python, such as *set*
 and *complex*, but we do not use these in this textbook.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# It is important in R to make sure you represent your data with the correct type. 
+# Many of the `tidyverse` functions we use in this book treat 
+# the various data types differently. You should use integers and double types
+# (which both fall under the "numeric" umbrella type) to represent numbers and perform
+# arithmetic. Doubles are more common than integers in R, though; for instance, a double data type is the
+# default when you create a vector of numbers using `c()`, and when you read in
+# whole numbers via `read_csv`. Characters are used to represent data that should
+# be thought of as "text", such as words, names, paths, URLs, and more. Factors help us
+# encode variables that represent *categories*; a factor variable takes one of a discrete
+# set of values known as *levels* (one for each category). The levels can be ordered or unordered.  Even though
+# factors can sometimes *look* like characters, they are not used to represent
+# text, words, names, and paths in the way that characters are; in fact, R
+# internally stores factors using integers! There are other basic data types in R, such as *raw*
+# and *complex*, but we do not use these in this textbook.
+```
 
 ### What is a list?
 
-Lists \index{list} are also objects in R that have multiple, ordered elements.
-Vectors and lists differ by the requirement of element type
-consistency. All elements within a single vector must be of the same type (e.g.,
-all elements are characters), whereas elements within a single list can be of
-different types (e.g., characters, integers, logicals, and even other lists). 
+Lists \index{list} are built-in objects in Python that have multiple, ordered elements.
+`pandas` series can be treated as lists with labels (indices).
 
-``` {r 02-vec-vs-list, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "A vector versus a list.", fig.retina = 2, out.width = "100%"}
-image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.008.jpeg") %>%
-  image_crop("3632x590")
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Lists \index{list} are also objects in R that have multiple, ordered elements.
+# Vectors and lists differ by the requirement of element type
+# consistency. All elements within a single vector must be of the same type (e.g.,
+# all elements are characters), whereas elements within a single list can be of
+# different types (e.g., characters, integers, logicals, and even other lists). 
 ```
+
++++ {"tags": ["remove-cell"]}
+
+```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.008.jpeg
+:name: fig:02-vec-vs-list
+:figclass: caption-hack
+
+A vector versus a list.
+```
+
++++
 
 ### What does this have to do with data frames?
 
-A data frame \index{data frame!definition} is really a special kind of list that follows two rules:
++++
 
-1. Each element itself must either be a vector or a list. 
-2. Each element (vector or list) must have the same length.
+A data frame \index{data frame!definition} is really just series stuck together that follows two rules:
+
+1. Each element itself is a series. 
+2. Each element (series) must have the same length.
 
 Not all columns in a data frame need to be of the same type. 
-Figure \@ref(fig:02-dataframe) shows a data frame where
-the columns are vectors of different types.
-But remember: because the columns in this example are *vectors*, 
-the elements must be the same data type *within each column.* 
-On the other hand, if our data frame had *list* columns, there would be no such requirement.
-It is generally much more common to use *vector* columns, though, 
-as the values for a single variable are usually all of the same type.
+{numref}`fig:02-dataframe` shows a data frame where
+the columns are series of different types.
 
-``` {r 02-dataframe, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Data frame and vector types.", fig.retina = 2, out.width = "100%"}
-image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.009.jpeg") %>%
-  image_crop("3632x700")
++++ {"tags": []}
+
+```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.009.jpeg
+:name: fig:02-dataframe
+:figclass: caption-hack
+
+Data frame and vector types.
 ```
 
-The functions from the `tidyverse` package that we use often give us a
-special class of data frame called a *tibble*. Tibbles have some additional \index{tibble}
-features and benefits over the built-in data frame object. These include the
-ability to add useful attributes (such as grouping, which we will discuss later)
-and more predictable type preservation when subsetting. 
-Because a tibble is just a data frame with some added features, 
-we will collectively refer to both built-in R data frames and
-tibbles as data frames in this book.
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# A data frame \index{data frame!definition} is really a special kind of list that follows two rules:
 
->  **Note:** You can use the function `class` \index{class} on a data object to assess whether a data
-> frame is a built-in R data frame or a tibble. If the data object is a data
-> frame, `class` will return `"data.frame"`. If the data object is a
-> tibble it will return `"tbl_df" "tbl" "data.frame"`. You can easily convert
-> built-in R data frames to tibbles using the `tidyverse` `as_tibble` function.
+# 1. Each element itself must either be a vector or a list. 
+# 2. Each element (vector or list) must have the same length.
+
+# Not all columns in a data frame need to be of the same type. 
+# Figure \@ref(fig:02-dataframe) shows a data frame where
+# the columns are vectors of different types.
+# But remember: because the columns in this example are *vectors*, 
+# the elements must be the same data type *within each column.* 
+# On the other hand, if our data frame had *list* columns, there would be no such requirement.
+# It is generally much more common to use *vector* columns, though, 
+# as the values for a single variable are usually all of the same type.
+```
+
+>  **Note:** You can use the function `type` \index{class} on a data object.
 > For example we can check the class of the Canadian languages data set,
-> `can_lang`, we worked with in the previous chapters and we see it is a tibble.
+> `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
 
-``` {r 02-load-can-land, warning=F, message=F}
-class(can_lang)
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# The functions from the `tidyverse` package that we use often give us a
+# special class of data frame called a *tibble*. Tibbles have some additional \index{tibble}
+# features and benefits over the built-in data frame object. These include the
+# ability to add useful attributes (such as grouping, which we will discuss later)
+# and more predictable type preservation when subsetting. 
+# Because a tibble is just a data frame with some added features, 
+# we will collectively refer to both built-in R data frames and
+# tibbles as data frames in this book.
+
+# >  **Note:** You can use the function `class` \index{class} on a data object to assess whether a data
+# > frame is a built-in R data frame or a tibble. If the data object is a data
+# > frame, `class` will return `"data.frame"`. If the data object is a
+# > tibble it will return `"tbl_df" "tbl" "data.frame"`. You can easily convert
+# > built-in R data frames to tibbles using the `tidyverse` `as_tibble` function.
+# > For example we can check the class of the Canadian languages data set,
+# > `can_lang`, we worked with in the previous chapters and we see it is a tibble.
 ```
 
-Vectors, data frames and lists are basic types of *data structure* in R, which
+```{code-cell} ipython3
+can_lang = pd.read_csv("data/can_lang.csv")
+type(can_lang)
+```
+
+Lists, Series and DataFrames are basic types of *data structure* in Python, which
 are core to most data analyses. We summarize them in Table
-\@ref(tab:datastructure-table). There are several other data structures in the R programming 
+{numref}`tab:datastructure-table`. There are several other data structures in the Python programming 
 language (*e.g.,* matrices), but these are beyond the scope of this book.
 
-Table: (#tab:datastructure-table) Basic data structures in R
++++
 
+```{table} Basic data structures in Python
+:name: tab:datastructure-table
 | Data Structure | Description |
 | ---            |------------ |
-| vector | An ordered collection of one, or more, values of the *same data type*. |
-| list | An ordered collection of one, or more, values of *possibly different data types*. |
-| data frame | A list of either vectors or lists of the *same length*, with column names. We typically use a data frame to represent a data set. | 
+| list | An 1D ordered collection of values that can store multiple data types at once. |
+| Series | An 1D ordered collection of values *with labels* that can store multiple data types at once. |
+| DataFrame | A 2D labeled data structure with columns of potentially different types. |
+```
+
++++
 
 ## Tidy data
 
 There are many ways a tabular data set can be organized. This chapter will focus
 on introducing the **tidy data** \index{tidy data!definition} format of organization and how to make your raw
 (and likely messy) data tidy. A tidy data frame satisfies 
-the following three criteria [@wickham2014tidy]:
+the following three criteria {cite:p}`wickham2014tidy`:
 
   - each row is a single observation,
   - each column is a single variable, and
   - each value is a single cell (i.e., its entry in the data
     frame is not shared with another value).
 
-Figure \@ref(fig:02-tidy-image) demonstrates a tidy data set that satisfies these 
+{numref}`fig:02-tidy-image` demonstrates a tidy data set that satisfies these 
 three criteria. 
 
-``` {r 02-tidy-image, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "Tidy data satisfies three criteria.", fig.retina = 2, out.width = "80%"}
-image_read("img/tidy_data/tidy_data.001.jpeg") |>
-  image_crop("3632x1400")
++++ {"tags": []}
+
+```{figure} img/tidy_data/tidy_data.001-cropped.jpeg
+:name: fig:02-tidy-image
+:figclass: caption-hack
+
+Tidy data satisfies three criteria.
 ```
+
++++
 
 There are many good reasons for making sure your data are tidy as a first step in your analysis.
 The most important is that it is a single, consistent format that nearly every function
-in the `tidyverse` recognizes. No matter what the variables and observations 
+in the `pandas` recognizes. No matter what the variables and observations 
 in your data represent, as long as the data frame \index{tidy data!arguments for}
 is tidy, you can manipulate it, plot it, and analyze it using the same tools.
 If your data is *not* tidy, you will have to write special bespoke code
@@ -274,7 +442,7 @@ in your analysis that will not only be error-prone, but hard for others to under
 Beyond making your analysis more accessible to others and less error-prone, tidy data
 is also typically easy for humans to interpret. Given these benefits,
 it is well worth spending the time to get your data into a tidy format
-upfront. Fortunately, there are many well-designed `tidyverse` data
+upfront. Fortunately, there are many well-designed `pandas` data
 cleaning/wrangling tools to help you easily tidy your data. Let's explore them
 below!
 
@@ -285,6 +453,8 @@ below!
 > with the appropriate data analysis tool, it's important to match your
 > statistical question with the appropriate variables and ensure they are
 > represented as individual columns to make the data tidy.
+
++++
 
 ### Tidying up: going from wide to long using `pivot_longer`
 

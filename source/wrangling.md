@@ -177,6 +177,7 @@ example, to create the vector `region` as shown in
 {numref}`fig:02-series`, you can write:
 
 ```{code-cell} ipython3
+import pandas as pd
 region = pd.Series(["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"])
 region
 ```
@@ -456,7 +457,7 @@ below!
 
 +++
 
-### Tidying up: going from wide to long using `pivot_longer`
+### Tidying up: going from wide to long using `melt`
 
 One task that is commonly performed to get data into a tidy format \index{pivot\_longer}
 is to combine values that are stored in separate columns, 
@@ -464,7 +465,7 @@ but are really part of the same variable, into one.
 Data is often stored this way 
 because this format is sometimes more intuitive for human readability 
 and understanding, and humans create data sets.
-In Figure \@ref(fig:02-wide-to-long), 
+In {numref}`fig:02-wide-to-long`, 
 the table on the left is in an untidy, "wide" format because the year values 
 (2006, 2011, 2016) are stored as column names. 
 And as a consequence, 
@@ -473,12 +474,12 @@ over these years are also split across several columns.
 
 For humans, this table is easy to read, which is why you will often find data
 stored in this wide format.  However, this format is difficult to work with
-when performing data visualization or statistical analysis using R.  For
+when performing data visualization or statistical analysis using Python.  For
 example, if we wanted to find the latest year it would be challenging because
 the year values are stored as column names instead of as values in a single
 column.  So before we could apply a function to find the latest year (for
 example, by using `max`), we would have to first extract the column names
-to get them as a vector and then apply a function to extract the latest year.
+to get them as a list and then apply a function to extract the latest year.
 The problem only gets worse if you would like to find the value for the
 population for a given region for the latest year.  Both of these tasks are
 greatly simplified once the data is tidied.
@@ -491,32 +492,38 @@ we can reshape this data set to a tidy data format
 by creating a column called "year" and a column called
 "population." This transformation&mdash;which makes the data
 "longer"&mdash;is shown as the right table in
-Figure \@ref(fig:02-wide-to-long).
+{numref}`fig:02-wide-to-long`.
 
-``` {r 02-wide-to-long, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Pivoting data from a wide to long data format.",  fig.retina = 2, out.width = "100%"}
-knitr::include_graphics("img/pivot_functions/pivot_functions.001.jpeg")
++++ {"tags": []}
+
+```{figure} img/pivot_functions/pivot_functions.001.jpeg
+:name: fig:02-wide-to-long
+:figclass: caption-hack
+
+Melting data from a wide to long data format.
 ```
 
-We can achieve this effect in R using the `pivot_longer` function from the `tidyverse` package.
-The `pivot_longer` function combines columns, 
++++
+
+We can achieve this effect in Python using the `melt` function from the `pandas` package.
+The `melt` function combines columns, 
 and is usually used during tidying data 
 when we need to make the data frame longer and narrower. 
-To learn how to use `pivot_longer`, we will work through an example with the
+To learn how to use `melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five 
 major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
 the 2016 Canadian census.  \index{Canadian languages}
 To get started, 
-we will load the `tidyverse` package and use `read_csv` to load the (untidy) data.
+we will use `pd.read_csv` to load the (untidy) data.
 
-``` {r 02-tidyverse, warning=FALSE, message=FALSE}
-library(tidyverse)
-lang_wide <- read_csv("data/region_lang_top5_cities_wide.csv")
+```{code-cell} ipython3
+lang_wide = pd.read_csv("data/region_lang_top5_cities_wide.csv")
 lang_wide
 ```
 
 What is wrong with the untidy format above? 
-The table on the left in Figure \@ref(fig:img-pivot-longer-with-table) 
+The table on the left in {numref}`fig:img-pivot-longer-with-table` 
 represents the data in the "wide" (messy) format.
 From a data analysis perspective, this format is not ideal because the values of 
 the variable *region* (Toronto, Montréal, Vancouver, Calgary and Edmonton) 
@@ -532,49 +539,57 @@ We *could* find the answer with the data in this format,
 though it would be much easier to answer if we tidy our
 data first. If mother tongue were instead stored as one column, 
 as shown in the tidy data on the right in 
-Figure \@ref(fig:img-pivot-longer-with-table),
-we could simply use one line of code (`max(mother_tongue)`) 
-to get the maximum value. 
+{numref}`fig:img-pivot-longer-with-table`,
+we could simply use one line of code (`df["mother_tongue"].max()`) 
+to get the maximum value.
 
-(ref:img-pivot-longer-with-table) Going from wide to long with the `pivot_longer` function.
++++ {"tags": []}
 
-```{r img-pivot-longer-with-table, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-pivot-longer-with-table)", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/pivot_functions/pivot_functions.003.jpeg")
+```{figure} img/wrangling/pandas_melt_wide-long.png
+:name: fig:img-pivot-longer-with-table
+:figclass: caption-hack
+
+Going from wide to long with the `melt` function.
 ```
 
-Figure \@ref(fig:img-pivot-longer) details the arguments that we need to specify 
-in the `pivot_longer` function to accomplish this data transformation.
++++
 
-(ref:img-pivot-longer) Syntax for the `pivot_longer` function.
+{numref}`fig:img-pivot-longer` details the arguments that we need to specify 
+in the `melt` function to accomplish this data transformation.
 
-``` {r img-pivot-longer, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-pivot-longer)", fig.retina = 2, out.width="100%"}
-image_read("img/pivot_longer.jpeg") |>
-  image_crop("1625x1900")
++++ {"tags": []}
+
+```{figure} img/wrangling/pandas_melt_args_labels.png
+:name: fig:img-pivot-longer
+:figclass: caption-hack
+
+Syntax for the `melt` function.
 ```
 
-We use `pivot_longer` to combine the Toronto, Montréal,
++++
+
+We use `melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
-area. We use a colon `:` between Toronto and Edmonton to tell R to select all
+area. We specify `value_vars` to be all
 the columns between Toronto and Edmonton:  \index{column range}\index{aaacolonsymb@\texttt{:}|see{column range}}
 
-``` {r}
-lang_mother_tidy <- pivot_longer(lang_wide,
-  cols = Toronto:Edmonton,
-  names_to = "region",
-  values_to = "mother_tongue"
+```{code-cell} ipython3
+lang_mother_tidy = lang_wide.melt(
+    id_vars=["category", "language"],
+    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+    var_name="region",
+    value_name="mother_tongue",
 )
 
 lang_mother_tidy
 ```
 
-+++
-
 > **Note**: In the code above, the call to the
-> `pivot_longer` function is split across several lines. This is allowed in
+> `melt` function is split across several lines. This is allowed in
 > certain cases; for example, when calling a function as above, as long as the 
-> line ends with a comma `,` R knows to keep reading on the next line.
+> line ends with a comma `,` Python knows to keep reading on the next line.
 > Splitting long lines like this across multiple lines is encouraged 
 > as it helps significantly with code readability. Generally speaking, you should
 > limit each line of code to about 80 characters.
@@ -588,6 +603,8 @@ been met:
     Canadians where that language is the mother tongue, are in a single row.
 3.  Each value is a single cell, i.e., its row, column position in the data
     frame is not shared with another value.
+
++++
 
 ### Tidying up: going from long to wide using `pivot_wider` {#pivot-wider}
 

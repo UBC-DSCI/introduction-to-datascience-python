@@ -309,7 +309,7 @@ region
 # Data frame and vector types.
 # ```
 
-# %% tags=["remove-cell"] jupyter={"source_hidden": true}
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # A data frame \index{data frame!definition} is really a special kind of list that follows two rules:
 
 # 1. Each element itself must either be a vector or a list. 
@@ -329,7 +329,7 @@ region
 # > For example we can check the class of the Canadian languages data set,
 # > `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
 
-# %% tags=["remove-cell"] jupyter={"source_hidden": true}
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # The functions from the `tidyverse` package that we use often give us a
 # special class of data frame called a *tibble*. Tibbles have some additional \index{tibble}
 # features and benefits over the built-in data frame object. These include the
@@ -381,7 +381,7 @@ type(can_lang)
 #     frame is not shared with another value).
 #
 # {numref}`fig:02-tidy-image` demonstrates a tidy data set that satisfies these 
-# three criteria. 
+# three criteria.
 
 # %% [markdown] tags=[]
 # ```{figure} img/tidy_data/tidy_data.001-cropped.jpeg
@@ -557,10 +557,11 @@ lang_mother_tidy
 #     frame is not shared with another value.
 
 # %% [markdown]
-# ### Tidying up: going from long to wide using `pivot_wider` {#pivot-wider}
+# (pivot-wider)=
+# ### Tidying up: going from long to wide using `pivot`
 #
 # Suppose we have observations spread across multiple rows rather than in a single \index{pivot\_wider}
-# row. For example, in Figure \@ref(fig:long-to-wide), the table on the left is in an
+# row. For example, in {numref}`fig:long-to-wide`, the table on the left is in an
 # untidy, long format because the `count` column contains three variables
 # (population, commuter, and incorporated count) and information about each observation 
 # (here, population, commuter, and incorporated counts for a region) is split across three rows. 
@@ -568,7 +569,7 @@ lang_mother_tidy
 # is that each observation must be in a single row.
 #
 # Using data in this format&mdash;where two or more variables are mixed together
-# in a single column&mdash;makes it harder to apply many usual `tidyverse` functions.
+# in a single column&mdash;makes it harder to apply many usual `pandas` functions.
 # For example, finding the maximum number of commuters 
 # would require an additional step of filtering for the commuter values
 # before the maximum can be computed.
@@ -576,27 +577,32 @@ lang_mother_tidy
 # all we would have to do is compute the maximum value for the commuter column.
 # To reshape this untidy data set to a tidy (and in this case, wider) format,
 # we need to create columns called "population", "commuters", and "incorporated."
-# This is illustrated in the right table of Figure \@ref(fig:long-to-wide).
+# This is illustrated in the right table of {numref}`fig:long-to-wide`.
+
+# %% [markdown] tags=[]
+# ```{figure} img/pivot_functions/pivot_functions.002.jpeg
+# :name: fig:long-to-wide
+# :figclass: caption-hack
 #
-# ``` {r long-to-wide, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Going from long to wide data.", fig.retina = 2, out.width = "100%"}
-# knitr::include_graphics("img/pivot_functions/pivot_functions.002.jpeg")
+# Going from long to wide data.
 # ```
-#
-# To tidy this type of data in R, we can use the `pivot_wider` function.
-# The `pivot_wider` function generally increases the number of columns (widens) 
+
+# %% [markdown]
+# To tidy this type of data in Python, we can use the `pivot` function.
+# The `pivot` function generally increases the number of columns (widens) 
 # and decreases the number of rows in a data set. 
-# To learn how to use `pivot_wider`, 
+# To learn how to use `pivot`, 
 # we will work through an example 
 # with the `region_lang_top5_cities_long.csv` data set. 
 # This data set contains the number of Canadians reporting 
 # the primary language at home and work for five
 # major cities (Toronto, Montréal, Vancouver, Calgary and Edmonton).
-#
-# ``` {r 02-reading-long, warning=FALSE, message=FALSE, R.options = list(width = 90)}
-# lang_long <- read_csv("data/region_lang_top5_cities_long.csv")
-# lang_long
-# ```
-#
+
+# %%
+lang_long = pd.read_csv("data/region_lang_top5_cities_long.csv")
+lang_long
+
+# %% [markdown]
 # What makes the data set shown above untidy? 
 # In this example, each observation is a language in a region. 
 # However, each observation is split across multiple rows: 
@@ -607,35 +613,48 @@ lang_mother_tidy
 # Canadians reporting their primary language at home and work. 
 # Doing that would be difficult with this data in its current form,
 # since these two variables are stored in the same column.
-# Figure \@ref(fig:img-pivot-wider-table) shows how this data
-# will be tidied using the `pivot_wider` function.
+# {numref}`fig:img-pivot-wider-table` shows how this data
+# will be tidied using the `pivot` function.
+
+# %% [markdown] tags=[]
+# ```{figure} img/wrangling/pandas_pivot_long-wide.png
+# :name: fig:img-pivot-wider-table
+# :figclass: caption-hack
 #
-# (ref:img-pivot-wider-table) Going from long to wide with the `pivot_wider` function.
-#
-# ``` {r img-pivot-wider-table, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "(ref:img-pivot-wider-table)", fig.retina = 2, out.width="100%"}
-# knitr::include_graphics("img/pivot_functions/pivot_functions.004.jpeg")
+# Going from long to wide with the `pivot` function.
 # ```
-#
-# Figure \@ref(fig:img-pivot-wider) details the arguments that we need to specify 
-# in the `pivot_wider` function.
 
 # %% [markdown]
-# (ref:img-pivot-wider) Syntax for the `pivot_wider` function.
+# {numref}`fig:img-pivot-wider` details the arguments that we need to specify 
+# in the `pivot` function.
+
+# %% [markdown] tags=[]
+# ```{figure} img/wrangling/pandas_pivot_args_labels.png
+# :name: fig:img-pivot-wider
+# :figclass: caption-hack
 #
-# ``` {r img-pivot-wider, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "(ref:img-pivot-wider)", fig.retina = 2, out.width="100%"}
-# image_read("img/pivot_wider.jpeg") |>
-#   image_crop("1625x850")
+# Syntax for the `pivot` function.
 # ```
-#
-# We will apply the function as detailed in Figure \@ref(fig:img-pivot-wider).
-#
-# ``` {r , warning=FALSE, message=FALSE}
-# lang_home_tidy <- pivot_wider(lang_long,
-#   names_from = type,
-#   values_from = count
-# )
-# lang_home_tidy
-# ```
+
+# %% [markdown]
+# We will apply the function as detailed in {numref}`fig:img-pivot-wider`.
+
+# %%
+lang_home_tidy = lang_long.pivot(
+    index=["region", "category", "language"], columns=["type"], values=["count"]
+).reset_index()
+
+lang_home_tidy.columns = [
+    "region",
+    "category",
+    "language",
+    "most_at_home",
+    "most_at_work",
+]
+lang_home_tidy
+
+# %%
+lang_home_tidy.dtypes
 
 # %% [markdown]
 # The data above is now tidy! We can go through the three criteria again to check
@@ -649,12 +668,14 @@ lang_mother_tidy
 #     frame is not shared with another value).
 #
 # You might notice that we have the same number of columns in the tidy data set as
-# we did in the messy one. Therefore `pivot_wider` didn't really "widen" the data,
-# as the name suggests. This is just because the original `type` column only had
-# two categories in it. If it had more than two, `pivot_wider` would have created
+# we did in the messy one. Therefore `pivot` didn't really "widen" the data.
+# This is just because the original `type` column only had
+# two categories in it. If it had more than two, `pivot` would have created
 # more columns, and we would see the data set "widen."
-#
-# ### Tidying up: using `separate` to deal with multiple delimiters  {#separate}
+
+# %% [markdown]
+# (str-split)=
+# ### Tidying up: using `str.split` to deal with multiple delimiters
 #
 # Data are also not considered tidy when multiple values are stored in the same \index{separate}
 # cell. The data set we show below is even messier than the ones we dealt with
@@ -663,53 +684,60 @@ lang_mother_tidy
 # work in one column separated by the delimiter (`/`). The column names are the \index{delimiter}
 # values of a variable, *and* each value does not have its own cell! To turn this
 # messy data into tidy data, we'll have to fix these issues.
-#
-# ``` {r, warning=FALSE, message=FALSE}
-# lang_messy <- read_csv("data/region_lang_top5_cities_messy.csv")
-# lang_messy
-# ```
-#
-# First we’ll use `pivot_longer` to create two columns, `region` and `value`,
+
+# %%
+lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
+lang_messy
+
+# %% [markdown]
+# First we’ll use `melt` to create two columns, `region` and `value`,
 # similar to what we did previously. 
 # The new `region` columns will contain the region names,
 # and the new column `value` will be a temporary holding place for the 
 # data that we need to further separate, i.e., the 
 # number of Canadians reporting their primary language at home and work.
-#
-# ``` {r}
-# lang_messy_longer <- pivot_longer(lang_messy,
-#   cols = Toronto:Edmonton,
-#   names_to = "region",
-#   values_to = "value"
-# )
-#
-# lang_messy_longer
-# ```
-#
-# Next we'll use `separate` to split the `value` column into two columns. 
+
+# %%
+lang_messy_longer = lang_messy.melt(
+    id_vars=["category", "language"],
+    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+    var_name="region",
+    value_name="value",
+)
+
+lang_messy_longer
+
+# %% [markdown]
+# Next we'll use `str.split` to split the `value` column into two columns. 
 # One column will contain only the counts of Canadians 
 # that speak each language most at home, 
 # and the other will contain the counts of Canadians 
 # that speak each language most at work for each region. 
-# Figure \@ref(fig:img-separate) 
-# outlines what we need to specify to use `separate`.
+# {numref}`fig:img-separate`
+# outlines what we need to specify to use `str.split`.
+
+# %% [markdown] tags=[]
+# ```{figure} img/wrangling/str-split_args_labels.png
+# :name: fig:img-separate
+# :figclass: caption-hack
 #
-# (ref:img-separate) Syntax for the `separate` function.
-#
-# ``` {r img-separate, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "(ref:img-separate)", fig.retina = 2, out.width = "100%"}
-# image_read("img/separate_function.jpeg") |>
-#   image_crop("1625x1900")
+# Syntax for the `str.split` function.
 # ```
-#
-# ``` {r}
-# tidy_lang <- separate(lang_messy_longer,
-#   col = value,
-#   into = c("most_at_home", "most_at_work"),
-#   sep = "/"
-# )
-#
-# tidy_lang
-# ```
+
+# %%
+tidy_lang = (
+    pd.concat(
+        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
+        axis=1,
+    )
+    .rename(columns={0: "most_at_home", 1: "most_at_work"})
+    .drop(columns=["value"])
+)
+
+tidy_lang
+
+# %%
+tidy_lang.dtypes
 
 # %% [markdown]
 # Is this data set now tidy? If we recall the three criteria for tidy data:
@@ -718,6 +746,25 @@ lang_mother_tidy
 #   - each column is a single variable, and
 #   - each value is a single cell.
 #
+# We can see that this data now satisfies all three criteria, making it easier to
+# analyze. But we aren't done yet! Notice in the table, all of the variables are
+# "object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in Section {ref}`pivot-wider`, the
+# `most_at_home` and `most_at_work` variables were `int64` (double)&mdash;you can
+# verify this by calling `df.dtypes`&mdash;which is a type
+# of numeric data. This change is due to the delimiter (`/`) when we read in this
+# messy data set. Python read these columns in as string types, and by default,
+# `str.split` will return columns as object data types.
+#
+# It makes sense for `region`, `category`, and `language` to be stored as a
+# object type. However, suppose we want to apply any functions that treat the
+# `most_at_home` and `most_at_work` columns as a number (e.g., finding rows 
+# above a numeric threshold of a column). 
+# In that case, 
+# it won't be possible to do if the variable is stored as a `object`. 
+# Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
+# like this: it will convert the columns to the best numeric data types.
+
+# %% tags=["remove-cell"] jupyter={"source_hidden": true}
 # We can see that this data now satisfies all three criteria, making it easier to
 # analyze. But we aren't done yet! Notice in the table above that the word
 # `<chr>` appears beneath each of the column names. The word under the column name
@@ -729,7 +776,7 @@ lang_mother_tidy
 # of numeric data. This change is due to the delimiter (`/`) when we read in this
 # messy data set. R read these columns in as character types, and by default,
 # `separate` will return columns as character data types.
-#
+
 # It makes sense for `region`, `category`, and `language` to be stored as a
 # character (or perhaps factor) type. However, suppose we want to apply any functions that treat the
 # `most_at_home` and `most_at_work` columns as a number (e.g., finding rows 
@@ -739,41 +786,44 @@ lang_mother_tidy
 # Fortunately, the `separate` function provides a natural way to fix problems
 # like this: we can set `convert = TRUE` to convert the `most_at_home` 
 # and `most_at_work` columns to the correct data type.
-#
-# ``` {r}
-# tidy_lang <- separate(lang_messy_longer,
-#   col = value,
-#   into = c("most_at_home", "most_at_work"),
-#   sep = "/", 
-#   convert = TRUE
-# )
-#
-# tidy_lang
-# ```
-#
-# Now we see `<int>` appears under the `most_at_home` and `most_at_work` columns,
+
+# %%
+tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])
+tidy_lang["most_at_work"] = pd.to_numeric(tidy_lang["most_at_work"])
+tidy_lang
+
+# %%
+tidy_lang.dtypes
+
+# %% [markdown]
+# Now we see `most_at_home` and `most_at_work` columns are of `int64` data types,
 # indicating they are integer data types (i.e., numbers)!
-#
-# ## Using `select` to extract a range of columns
+
+# %% [markdown]
+# ## Using `.loc[]` to extract a range of columns
 #
 # Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it \index{select!helpers}
-# using the powerful suite of functions from the `tidyverse`. 
-# For the first example, recall the `select` function from Chapter \@ref(intro), 
+# using the powerful suite of functions from the `pandas`. 
+# For the first example, recall `.loc[]` from Chapter {ref}`intro`, 
 # which lets us create a subset of columns from a data frame. 
 # Suppose we wanted to select only the columns `language`, `region`,
 # `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-# learned in Chapter \@ref(intro), we would pass the `tidy_lang` data frame as
-# well as all of these column names into the `select` function:
-#
-# ``` {r}
-# selected_columns <- select(tidy_lang, 
-#                            language, 
-#                            region, 
-#                            most_at_home, 
-#                            most_at_work)
-# selected_columns
-# ```
-#
+# learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets:
+
+# %%
+selected_columns = tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+selected_columns
+
+# %% [markdown]
+# Here we wrote out the names of each of the columns. However, this method is
+# time-consuming, especially if you have a lot of columns! Another approach is to
+# index with integers. `.iloc[]` make it easier for
+# us to select columns. For instance, we can use `.iloc[]` to choose a
+# range of columns rather than typing each column name out. To do this, we use the
+# colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
+# the `tidy_lang` data frame from `language` to `most_at_work`, we pass `:` before the comma indicating we want to retrieve all rows, and `1:` after the comma indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
+
+# %% tags=["remove-cell"] jupyter={"source_hidden": true}
 # Here we wrote out the names of each of the columns. However, this method is
 # time-consuming, especially if you have a lot of columns! Another approach is to
 # use a "select helper". Select helpers are operators that make it easier for
@@ -782,39 +832,46 @@ lang_mother_tidy
 # colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
 # the `tidy_lang` data frame from `language` to `most_at_work` we pass
 # `language:most_at_work` as the second argument to the `select` function.
-#
-# ``` {r}
-# column_range <- select(tidy_lang, language:most_at_work)
-# column_range
-# ```
-#
+
+# %%
+column_range = tidy_lang.iloc[:, 1:]
+column_range
+
+# %% [markdown]
 # Notice that we get the same output as we did above, 
 # but with less (and clearer!) code. This type of operator 
 # is especially handy for large data sets.
 #
 # Suppose instead we wanted to extract columns that followed a particular pattern
 # rather than just selecting a range. For example, let's say we wanted only to select the
-# columns `most_at_home` and `most_at_work`. There are other helpers that allow
-# us to select variables based on their names. In particular, we can use the `select` helper \index{select!starts\_with}
-# `starts_with` to choose only the columns that start with the word "most":
-#
-# ``` {r 02-select-helpers}
-# select(tidy_lang, starts_with("most"))
-# ```
-#
-# We could also have chosen the columns containing an underscore `_` by adding
-# `contains("_")` as the second argument in the `select` function, since we notice
+# columns `most_at_home` and `most_at_work`. There are other functions that allow
+# us to select variables based on their names. In particular, we can use the `str.startswith` method \index{select!starts\_with}
+# to choose only the columns that start with the word "most":
+
+# %%
+tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
+
+# %% [markdown]
+# We could also have chosen the columns containing an underscore `_` by using the 
+# `str.contains("_")` function, since we notice
 # the columns we want contain underscores and the others don't. \index{select!contains}
-#
-# ``` {r 02-select-helper-contains}
-# select(tidy_lang, contains("_"))
-# ```
-#
+
+# %%
+tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
+
+# %% [markdown]
+# There are many different functions that help with selecting
+# variables based on certain criteria. 
+# The additional resources section at the end of this chapter 
+# provides a comprehensive resource on these functions.
+
+# %% tags=["remove-cell"] jupyter={"source_hidden": true}
 # There are many different `select` helpers that select
 # variables based on certain criteria. 
 # The additional resources section at the end of this chapter 
 # provides a comprehensive resource on `select` helpers.
-#
+
+# %% [markdown]
 # ## Using `filter` to extract rows
 #
 # Next, we revisit the `filter` function from Chapter \@ref(intro), 
@@ -826,7 +883,8 @@ lang_mother_tidy
 # This section will highlight more advanced usage of the `filter` function.
 # In particular, this section provides an in-depth treatment of the variety of logical statements
 # one can use in the `filter` function to select subsets of rows.
-#
+
+# %% [markdown]
 # ### Extracting rows that have a certain value with `==`
 # Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
 # official languages of Canada (English and French).
@@ -843,7 +901,8 @@ lang_mother_tidy
 # official_langs <- filter(tidy_lang, category == "Official languages")
 # official_langs
 # ```
-#
+
+# %% [markdown]
 # ### Extracting rows that do not have a certain value with `!=`
 #
 # What if we want all the other language categories in the data set *except* for
@@ -855,7 +914,8 @@ lang_mother_tidy
 # ``` {r}
 # filter(tidy_lang, category != "Official languages")
 # ```
-#
+
+# %% [markdown]
 # ### Extracting rows satisfying multiple conditions using `,` or `&` {#filter-and}
 #
 # Suppose now we want to look at only the rows 
@@ -867,21 +927,24 @@ lang_mother_tidy
 # We write the code as shown below to filter the `official_langs` data frame 
 # to subset the rows where `region == "Montréal"` 
 # *and* the `language == "French"`.
-#
+
+# %% [markdown]
 # ``` {r}
 # filter(official_langs, region == "Montréal", language == "French")
 # ```
-#
+
+# %% [markdown]
 # We can also use the ampersand (`&`) logical operator, which gives 
 # us cases where *both* one condition *and* another condition
 # are satisfied. You can use either comma (`,`) or ampersand (`&`) in the `filter`
 # function interchangeably.
-#
+
+# %% [markdown]
 # ``` {r}
 # filter(official_langs, region == "Montréal" & language == "French")
 # ```
 
-# %% [markdown]
+# %% [markdown] tags=[]
 # ### Extracting rows satisfying at least one condition using `|`
 #
 # Suppose we were interested in only those rows corresponding to cities in Alberta
@@ -893,11 +956,13 @@ lang_mother_tidy
 # another condition *or* both are satisfied. 
 # In the code below, we ask R to return the rows
 # where the `region` columns are equal to "Calgary" *or* "Edmonton".
-#
+
+# %% [markdown]
 # ``` {r}
 # filter(official_langs, region == "Calgary" | region == "Edmonton")
 # ```
-#
+
+# %% [markdown]
 # ### Extracting rows with values in a vector using `%in%`
 #
 # Next, suppose we want to see the populations of our five cities. 
@@ -905,30 +970,35 @@ lang_mother_tidy
 # that comes from the 2016 Canadian census, 
 # as it contains statistics for number of households, land area, population 
 # and number of dwellings for different regions.
-#
+
+# %% [markdown]
 # ```{r, include = FALSE}
 # write_csv(canlang::region_data, "data/region_data.csv")
 # ```
-#
+
+# %% [markdown]
 # ``` {r message = FALSE}
 # region_data <- read_csv("data/region_data.csv")
 # region_data
 # ```
-#
+
+# %% [markdown]
 # To get the population of the five cities 
 # we can filter the data set using the `%in%` operator. 
 # The `%in%` operator is used to see if an element belongs to a vector. 
 # Here we are filtering for rows where the value in the `region` column
 # matches any of the five cities we are intersted in: Toronto, Montréal,
 # Vancouver, Calgary, and Edmonton.
-#
+
+# %% [markdown]
 # ``` {r}
 # city_names <- c("Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton")
 # five_cities <- filter(region_data, 
 #                       region %in% city_names)
 # five_cities
 # ```
-#
+
+# %% [markdown]
 # > **Note:** What's the difference between `==` and `%in%`? Suppose we have two
 # > vectors, `vectorA` and `vectorB`. If you type `vectorA == vectorB` into R it
 # > will compare the vectors element by element. R checks if the first element of
@@ -943,7 +1013,8 @@ lang_mother_tidy
 # >c("Vancouver", "Toronto") == c("Toronto", "Vancouver")
 # >c("Vancouver", "Toronto") %in% c("Toronto", "Vancouver")
 # >```
-#
+
+# %% [markdown]
 # ### Extracting rows above or below a threshold using `>` and `<`
 #
 # ``` {r changing_the_units, include = FALSE}
@@ -969,7 +1040,8 @@ lang_mother_tidy
 # only English in Toronto is reported by more people 
 # as their primary language at home 
 # than French in Montréal according to the 2016 Canadian census.
-#
+
+# %% [markdown]
 # ## Using `mutate` to modify or add columns
 #
 # ### Using `mutate` to modify columns
@@ -986,7 +1058,8 @@ lang_mother_tidy
 # so that we can demonstrate how to use `mutate`
 # to change the column types of a data frame. 
 # `mutate` is a useful function to modify or create new data frame columns.
-#
+
+# %% [markdown]
 # ``` {r warning=FALSE, message=FALSE}
 # lang_messy <- read_csv("data/region_lang_top5_cities_messy.csv")
 # lang_messy_longer <- pivot_longer(lang_messy,
@@ -1000,7 +1073,8 @@ lang_mother_tidy
 #
 # official_langs_chr 
 # ```
-#
+
+# %% [markdown]
 # To use `mutate`, again we first specify the data set in the first argument, 
 # and in the following arguments, 
 # we specify the name of the column we want to modify or create 
@@ -1017,7 +1091,8 @@ lang_mother_tidy
 # If we were to give the columns a new name, 
 # then `mutate` would create new columns with the names we specified.
 # `mutate`'s general syntax is detailed in Figure \@ref(fig:img-mutate).
-#
+
+# %% [markdown]
 # (ref:img-mutate) Syntax for the `mutate` function.
 #
 # ``` {r img-mutate, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "(ref:img-mutate)",  fig.retina = 2, out.width = "100%"}
@@ -1040,9 +1115,11 @@ lang_mother_tidy
 #
 # Now we see `<dbl>` appears under the `most_at_home` and `most_at_work` columns,
 # indicating they are double data types (which is a numeric data type)!
-#
+
+# %% [markdown]
 # ### Using `mutate` to create new columns
-#
+
+# %% [markdown]
 # ``` {r , include = FALSE}
 # census_popn <- 35151728
 # number_most_home <- filter(official_langs, 
@@ -1052,7 +1129,8 @@ lang_mother_tidy
 # toronto_popn <- region_data |> filter(region == "Toronto") |>
 # pull(population)
 # ```
-#
+
+# %% [markdown]
 # We can see in the table that
 # `r format(number_most_home, scientific = FALSE, big.mark = ",")` people reported
 # speaking English in Toronto as their primary language at home, according to
@@ -1086,34 +1164,42 @@ lang_mother_tidy
 # To create a vector containing the population values for the five cities
 # (Toronto, Montréal, Vancouver, Calgary, Edmonton),
 # we will use the `c` function (recall that `c` stands for "concatenate"):
-#
+
+# %% [markdown]
 # ```{r}
 # city_pops <- c(5928040, 4098927, 2463431, 1392609, 1321426)
 # city_pops
 # ```
-#
+
+# %% [markdown]
 # And next, we will filter the `official_langs` data frame 
 # so that we only keep the rows where the language is English.
 # We will name the new data frame we get from this `english_langs`:
+
+# %% [markdown]
 #
 # ```{r}
 # english_langs <- filter(official_langs, language == "English")
 # english_langs
 # ```
+
+# %% [markdown]
 #
 # Finally, we can use `mutate` to create a new column, 
 # named `most_at_home_proportion`, that will have value that corresponds to 
 # the proportion of people reporting English as their primary
 # language at home.
 # We will compute this by dividing the column by our vector of city populations. 
-#
+
+# %% [markdown]
 # ```{r, include = TRUE}
 # english_langs <- mutate(english_langs, 
 #                          most_at_home_proportion = most_at_home / city_pops)
 #
 # english_langs
 # ```
-#
+
+# %% [markdown]
 # In the computation above, we had to ensure that we ordered the `city_pops` vector in the
 # same order as the cities were listed in the `english_langs` data frame.
 # This is because R will perform the division computation we did by dividing 
@@ -1158,7 +1244,8 @@ lang_mother_tidy
 # Vancouver, English was reported as the most common primary language used at
 # home.  However, in Montréal, this does not seem to be the case!
 # -->
-#
+
+# %% [markdown]
 # ## Combining functions using the pipe operator, `|>`
 #
 # In R, we often have to call multiple functions in a sequence to process a data
@@ -1172,13 +1259,15 @@ lang_mother_tidy
 #
 # One way of performing these three steps is to just write 
 # multiple lines of code, storing temporary objects as you go:
-#
+
+# %% [markdown]
 # ``` {r eval = FALSE}
 # output_1 <- mutate(data, new_col = old_col * 2)
 # output_2 <- filter(output_1, other_col > 5)
 # output <- select(output_2, new_col)
 # ```
-#
+
+# %% [markdown]
 # This is difficult to understand for multiple reasons. The reader may be tricked
 # into thinking the named `output_1` and `output_2` objects are important for some
 # reason, while they are just temporary intermediate computations. Further, the
@@ -1186,13 +1275,15 @@ lang_mother_tidy
 # each subsequent line.
 #
 # Another option for doing this would be to *compose* the functions:
-#
+
+# %% [markdown]
 # ``` {r eval = F}
 # output <- select(filter(mutate(data, new_col = old_col * 2), 
 #                         other_col > 5), 
 #                  new_col)
 # ```
-#
+
+# %% [markdown]
 # Code like this can also be difficult to understand. Functions compose (reading
 # from left to right) in the *opposite order* in which they are computed by R
 # (above, `mutate` happens first, then `filter`, then `select`). It is also just a
@@ -1206,14 +1297,16 @@ lang_mother_tidy
 # to the function on the right-hand side of the pipe. 
 # The code below accomplishes the same thing as the previous
 # two code blocks:
-#
+
+# %% [markdown]
 # ``` {r eval = FALSE}
 # output <- data |>
 #   mutate(new_col = old_col * 2) |>
 #   filter(other_col > 5) |>
 #   select(new_col)
 # ```
-#
+
+# %% [markdown]
 # > **Note:** You might also have noticed that we split the function calls across
 # > lines after the pipe, similar to when we did this earlier in the chapter
 # > for long function calls. Again, this is allowed and recommended, especially when
@@ -1237,7 +1330,8 @@ lang_mother_tidy
 # > In most cases these two pipes are interchangeable and either can be used.
 #
 # \index{pipe}\index{aaapipesymbb@\%>\%|see{pipe}}
-#
+
+# %% [markdown]
 # ### Using `|>` to combine `filter` and `select`
 #
 # Let's work with the tidy `tidy_lang` data set from Section \@ref(separate), 
@@ -1293,7 +1387,8 @@ lang_mother_tidy
 # to the first argument of the `select` function.
 # As you can see, both of these approaches&mdash;with and without pipes&mdash;give us the same output, but the second
 # approach is clearer and more readable.
-#
+
+# %% [markdown]
 # ### Using `|>` with more than two functions
 #
 # The pipe operator (|>) can be used with any function in R. 
@@ -1342,9 +1437,11 @@ lang_mother_tidy
 # Additionally, piping many functions can be overwhelming and difficult to debug;
 # you may want to store a temporary object midway through to inspect your result
 # before moving on with further steps.
-#
+
+# %% [markdown]
 # ## Aggregating data with `summarize` and `map`
-#
+
+# %% [markdown]
 # ### Calculating summary statistics on whole columns
 #
 # As a part of many data analyses, we need to calculate a summary value for the
@@ -1397,7 +1494,8 @@ lang_mother_tidy
 # primary language at home is spoken by
 # `r format(lang_summary$max_most_at_home[1], scientific = FALSE, big.mark = ",")`
 # people.
-#
+
+# %% [markdown]
 # ### Calculating summary statistics when there are `NA`s
 #
 # In data frames in R, the value `NA` is often used to denote missing data. 
@@ -1444,7 +1542,8 @@ lang_mother_tidy
 #           min_most_at_home = min(most_at_home, na.rm = TRUE),
 #           max_most_at_home = max(most_at_home, na.rm = TRUE))
 # ```
-#
+
+# %% [markdown]
 # ### Calculating summary statistics for groups of rows
 #
 # A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
@@ -1483,7 +1582,8 @@ lang_mother_tidy
 # ```{r}
 # group_by(region_lang, region)
 # ```
-#
+
+# %% [markdown]
 # ### Calculating summary statistics on many columns
 #
 # Sometimes we need to summarize statistics across many columns.
@@ -1502,7 +1602,8 @@ lang_mother_tidy
 # image_read("img/summarize/summarize.003.jpeg") |> 
 #   image_crop("2000x475+0+300")
 # ```
-#
+
+# %% [markdown]
 # #### `summarize` and `across` for calculating summary statistics on many columns {-}
 #
 # To summarize statistics across many columns, we can use the 
@@ -1538,7 +1639,8 @@ lang_mother_tidy
 # > region_lang_na |>
 # >   summarize(across(mother_tongue:lang_known, max, na.rm = TRUE))
 # > ```
-#
+
+# %% [markdown]
 # #### `map` for calculating summary statistics on many columns {-}
 #
 # An alternative to `summarize` and `across` 
@@ -1625,7 +1727,8 @@ lang_mother_tidy
 # or a list, and even to lists of (nested!) data frames.
 # To learn more about the `map` functions, see the additional resources
 # section at the end of this chapter.
-#
+
+# %% [markdown]
 # ## Apply functions across many columns with `mutate` and `across`
 #
 # Sometimes we need to apply a function to many columns in a data frame. 
@@ -1668,7 +1771,8 @@ lang_mother_tidy
 # with the same number of columns and rows.
 # The only thing that changes is the transformation we applied 
 # to the specified columns (here `mother_tongue` to `lang_known`).
-#
+
+# %% [markdown]
 # ## Apply functions across columns within one row with `rowwise` and `mutate`
 #
 # What if you want to apply a function across columns but within one row? 
@@ -1737,7 +1841,8 @@ lang_mother_tidy
 #                          most_at_home, 
 #                          lang_known)))
 # ```
-#
+
+# %% [markdown]
 # ## Summary
 #
 # Cleaning and wrangling data can be a very time-consuming process. However, 
@@ -1765,7 +1870,8 @@ lang_mother_tidy
 # | `separate` | splits up a character column into multiple columns  | 
 # | `select` | subsets columns of a data frame |
 # | `summarize` | calculates summaries of inputs | 
-#
+
+# %% [markdown]
 # ## Exercises
 #
 # Practice exercises for the material covered in this chapter 

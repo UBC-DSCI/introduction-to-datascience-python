@@ -17,20 +17,12 @@
 # %% [markdown]
 # # Cleaning and wrangling data
 
-# %% [markdown] tags=["remove-cell"]
-# ``` {r wrangling-setup, include=FALSE}
-# library(magick)
-# library(tidyverse)
-# library(canlang)
-# library(cowplot)
-#
-# # set as default because for some reason it breaks the pdf in this chapter
-# knitr::opts_chunk$set(fig.align = "default")
-# ```
-
 # %% tags=["remove-cell"]
 import altair as alt
 import pandas as pd
+pd.set_option('display.max_rows', 20)
+
+from myst_nb import glue
 
 # %% [markdown]
 # ## Overview
@@ -764,7 +756,7 @@ tidy_lang.dtypes
 # Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 # like this: it will convert the columns to the best numeric data types.
 
-# %% tags=["remove-cell"] jupyter={"source_hidden": true}
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # We can see that this data now satisfies all three criteria, making it easier to
 # analyze. But we aren't done yet! Notice in the table above that the word
 # `<chr>` appears beneath each of the column names. The word under the column name
@@ -823,7 +815,7 @@ selected_columns
 # colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
 # the `tidy_lang` data frame from `language` to `most_at_work`, we pass `:` before the comma indicating we want to retrieve all rows, and `1:` after the comma indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
 
-# %% tags=["remove-cell"] jupyter={"source_hidden": true}
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # Here we wrote out the names of each of the columns. However, this method is
 # time-consuming, especially if you have a lot of columns! Another approach is to
 # use a "select helper". Select helpers are operators that make it easier for
@@ -865,42 +857,40 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # The additional resources section at the end of this chapter 
 # provides a comprehensive resource on these functions.
 
-# %% tags=["remove-cell"] jupyter={"source_hidden": true}
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # There are many different `select` helpers that select
 # variables based on certain criteria. 
 # The additional resources section at the end of this chapter 
 # provides a comprehensive resource on `select` helpers.
 
 # %% [markdown]
-# ## Using `filter` to extract rows
+# ## Using `df[]` to extract rows
 #
-# Next, we revisit the `filter` function from Chapter \@ref(intro), 
+# Next, we revisit the `df[]` from Chapter {ref}`intro`, 
 # which lets us create a subset of rows from a data frame. 
-# Recall the two main arguments to the `filter` function:
-# the first is the name of the data frame object, and \index{filter!logical statements}
-# the second is a *logical statement* to use when filtering the rows.
-# `filter` works by returning the rows  where the logical statement evaluates to `TRUE`.
-# This section will highlight more advanced usage of the `filter` function.
+# Recall the argument to the `df[]`:
+# column names or a logical statement evaluated to either `True` or `False`;
+# `df[]` works by returning the rows  where the logical statement evaluates to `True`.
+# This section will highlight more advanced usage of the `df[]` function.
 # In particular, this section provides an in-depth treatment of the variety of logical statements
-# one can use in the `filter` function to select subsets of rows.
+# one can use in the `df[]` to select subsets of rows.
 
 # %% [markdown]
 # ### Extracting rows that have a certain value with `==`
 # Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
 # official languages of Canada (English and French).
-# We can `filter` for these rows by using the *equivalency operator* (`==`) 
+# We can extract these rows by using the *equivalency operator* (`==`) 
 # to compare the values of the `category` column 
 # with the value `"Official languages"`. 
-# With these arguments, `filter` returns a data frame with all the columns 
+# With these arguments, `df[]` returns a data frame with all the columns 
 # of the input data frame 
 # but only the rows we asked for in the logical statement, i.e., 
 # those where the `category` column holds the value `"Official languages"`.
 # We name this data frame `official_langs`.
-#
-# ``` {r}
-# official_langs <- filter(tidy_lang, category == "Official languages")
-# official_langs
-# ```
+
+# %%
+official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
+official_langs
 
 # %% [markdown]
 # ### Extracting rows that do not have a certain value with `!=`
@@ -910,60 +900,47 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # operator, which means "not equal to". So if we want to find all the rows
 # where the `category` does *not* equal `"Official languages"` we write the code
 # below.
-#
-# ``` {r}
-# filter(tidy_lang, category != "Official languages")
-# ```
+
+# %%
+tidy_lang[tidy_lang["category"] != "Official languages"]
 
 # %% [markdown]
-# ### Extracting rows satisfying multiple conditions using `,` or `&` {#filter-and}
+# (filter-and)=
+# ### Extracting rows satisfying multiple conditions using `&`
 #
 # Suppose now we want to look at only the rows 
 # for the French language in Montréal. 
 # To do this, we need to filter the data set 
 # to find rows that satisfy multiple conditions simultaneously. 
-# We can do this with the comma symbol (`,`), which in the case of `filter` 
-# is interpreted by R as "and". 
+# We can do this with the ampersand symbol (`&`), which
+# is interpreted by Python as "and". 
 # We write the code as shown below to filter the `official_langs` data frame 
 # to subset the rows where `region == "Montréal"` 
 # *and* the `language == "French"`.
 
-# %% [markdown]
-# ``` {r}
-# filter(official_langs, region == "Montréal", language == "French")
-# ```
-
-# %% [markdown]
-# We can also use the ampersand (`&`) logical operator, which gives 
-# us cases where *both* one condition *and* another condition
-# are satisfied. You can use either comma (`,`) or ampersand (`&`) in the `filter`
-# function interchangeably.
-
-# %% [markdown]
-# ``` {r}
-# filter(official_langs, region == "Montréal" & language == "French")
-# ```
+# %%
+tidy_lang[(tidy_lang["region"] == "Montréal") & (tidy_lang["language"] == "French")]
 
 # %% [markdown] tags=[]
 # ### Extracting rows satisfying at least one condition using `|`
 #
 # Suppose we were interested in only those rows corresponding to cities in Alberta
 # in the `official_langs` data set (Edmonton and Calgary). 
-# We can't use `,` as we did above because `region`
+# We can't use `&` as we did above because `region`
 # cannot be both Edmonton *and* Calgary simultaneously. 
 # Instead, we can use the vertical pipe (`|`) logical operator, 
 # which gives us the cases where one condition *or* 
 # another condition *or* both are satisfied. 
-# In the code below, we ask R to return the rows
+# In the code below, we ask Python to return the rows
 # where the `region` columns are equal to "Calgary" *or* "Edmonton".
 
-# %% [markdown]
-# ``` {r}
-# filter(official_langs, region == "Calgary" | region == "Edmonton")
-# ```
+# %%
+official_langs[
+    (official_langs["region"] == "Calgary") | (official_langs["region"] == "Edmonton")
+]
 
 # %% [markdown]
-# ### Extracting rows with values in a vector using `%in%`
+# ### Extracting rows with values in a list using `.isin()`
 #
 # Next, suppose we want to see the populations of our five cities. 
 # Let's read in the `region_data.csv` file 
@@ -971,34 +948,41 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # as it contains statistics for number of households, land area, population 
 # and number of dwellings for different regions.
 
-# %% [markdown]
-# ```{r, include = FALSE}
-# write_csv(canlang::region_data, "data/region_data.csv")
-# ```
-
-# %% [markdown]
-# ``` {r message = FALSE}
-# region_data <- read_csv("data/region_data.csv")
-# region_data
-# ```
+# %%
+region_data = pd.read_csv("data/region_data.csv")
+region_data
 
 # %% [markdown]
 # To get the population of the five cities 
-# we can filter the data set using the `%in%` operator. 
-# The `%in%` operator is used to see if an element belongs to a vector. 
+# we can filter the data set using the `isin` method. 
+# The `%in%` operator is used to see if an element belongs to a list. 
 # Here we are filtering for rows where the value in the `region` column
 # matches any of the five cities we are intersted in: Toronto, Montréal,
 # Vancouver, Calgary, and Edmonton.
 
-# %% [markdown]
-# ``` {r}
-# city_names <- c("Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton")
-# five_cities <- filter(region_data, 
-#                       region %in% city_names)
-# five_cities
-# ```
+# %%
+city_names = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
+five_cities = region_data[region_data["region"].isin(city_names)]
+five_cities
 
 # %% [markdown]
+# > **Note:** What's the difference between `==` and `.isin`? Suppose we have two
+# > Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
+# > will compare the series element by element. Python checks if the first element of
+# > `seriesA` equals the first element of `seriesB`, the second element of
+# > `seriesA` equals the second element of `seriesB`, and so on. On the other hand,
+# > `seriesA %in% seriesB` compares the first element of `seriesA` to all the
+# > elements in `seriesB`. Then the second element of `seriesA` is compared
+# > to all the elements in `seriesB`, and so on. Notice the difference between `==` and
+# > `.isin` in the example below.
+
+# %%
+pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
+
+# %%
+pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
+
+# %% jupyter={"source_hidden": true} tags=["remove-cell"]
 # > **Note:** What's the difference between `==` and `%in%`? Suppose we have two
 # > vectors, `vectorA` and `vectorB`. If you type `vectorA == vectorB` into R it
 # > will compare the vectors element by element. R checks if the first element of
@@ -1016,108 +1000,123 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 
 # %% [markdown]
 # ### Extracting rows above or below a threshold using `>` and `<`
-#
-# ``` {r changing_the_units, include = FALSE}
-# census_popn <- 35151728
-# most_french <- 2669195
-# ```
-#
-# We saw in Section \@ref(filter-and) that 
-# `r format(most_french, scientific = FALSE, big.mark = ",")` people reported 
+
+# %% tags=["remove-cell"]
+glue("census_popn", "{0:,.0f}".format(35151728))
+glue("most_french", "{0:,.0f}".format(2669195))
+
+# %% [markdown]
+# We saw in Section {ref}`filter-and` that 
+# {glue:text}`most_french` people reported 
 # speaking French in Montréal as their primary language at home. 
 # If we are interested in finding the official languages in regions 
 # with higher numbers of people who speak it as their primary language at home 
-# compared to French in Montréal, then we can use `filter` to obtain rows 
+# compared to French in Montréal, then we can use `df[]` to obtain rows 
 # where the value of `most_at_home` is greater than 
-# `r format(most_french, scientific = FALSE, big.mark = ",")`.
-#
-# ``` {r}
-# filter(official_langs, most_at_home > 2669195)
-# ```
-#
-# `filter` returns a data frame with only one row, indicating that when 
+# {glue:text}`most_french`.
+
+# %%
+official_langs[official_langs["most_at_home"] > 2669195]
+
+# %% [markdown]
+# This operation returns a data frame with only one row, indicating that when 
 # considering the official languages, 
 # only English in Toronto is reported by more people 
 # as their primary language at home 
 # than French in Montréal according to the 2016 Canadian census.
 
 # %% [markdown]
-# ## Using `mutate` to modify or add columns
-#
-# ### Using `mutate` to modify columns
-# In Section \@ref(separate), 
+# ## Using `assign` to modify or add columns
+
+# %% [markdown]
+# ### Using `assign` to modify columns
+# In Section {ref}`str-split`, 
 # when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-# all of the variables were "character" data types. \index{mutate}
+# all of the variables were "object" data types. \index{mutate}
 # During the tidying process, 
-# we used the `convert` argument from the `separate` function 
+# we used the `pandas.to_numeric` function 
 # to convert the `most_at_home` and `most_at_work` columns 
-# to the desired integer (i.e., numeric class) data types. 
-# But suppose we didn't use the `convert` argument,
-# and needed to modify the column type some other way.
+# to the desired integer (i.e., numeric class) data types and then used `df[]` to overwrite columns. 
+# But suppose we didn't use the `df[]`,
+# and needed to modify the columns some other way.
 # Below we create such a situation 
-# so that we can demonstrate how to use `mutate`
+# so that we can demonstrate how to use `assign`
 # to change the column types of a data frame. 
-# `mutate` is a useful function to modify or create new data frame columns.
+# `assign` is a useful function to modify or create new data frame columns.
+
+# %%
+lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
+lang_messy_longer = lang_messy.melt(
+    id_vars=["category", "language"],
+    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+    var_name="region",
+    value_name="value",
+)
+tidy_lang_obj = (
+    pd.concat(
+        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
+        axis=1,
+    )
+    .rename(columns={0: "most_at_home", 1: "most_at_work"})
+    .drop(columns=["value"])
+)
+official_langs_obj = tidy_lang_obj[tidy_lang_obj["category"] == "Official languages"]
+
+official_langs_obj
+
+# %%
+official_langs_obj.dtypes
 
 # %% [markdown]
-# ``` {r warning=FALSE, message=FALSE}
-# lang_messy <- read_csv("data/region_lang_top5_cities_messy.csv")
-# lang_messy_longer <- pivot_longer(lang_messy,
-#                cols = Toronto:Edmonton,
-#                names_to = "region",
-#                values_to = "value")
-# tidy_lang_chr <- separate(lang_messy_longer, col = value,
-#            into = c("most_at_home", "most_at_work"),
-#            sep = "/") 
-# official_langs_chr <- filter(tidy_lang_chr, category == "Official languages")
-#
-# official_langs_chr 
-# ```
-
-# %% [markdown]
-# To use `mutate`, again we first specify the data set in the first argument, 
+# To use the `assign` method, again we first specify the object to be the data set, 
 # and in the following arguments, 
 # we specify the name of the column we want to modify or create 
 # (here `most_at_home` and `most_at_work`), an `=` sign,
-# and then the function we want to apply (here `as.numeric`).
+# and then the function we want to apply (here `pandas.to_numeric`).
 # In the function we want to apply, 
-# we refer directly to the column name upon which we want it to act 
+# we refer to the column upon which we want it to act 
 # (here `most_at_home` and `most_at_work`).
 # In our example, we are naming the columns the same
 # names as columns that already exist in the data frame 
 # ("most\_at\_home", "most\_at\_work") 
-# and this will cause `mutate` to *overwrite* those columns 
+# and this will cause `.assign` to *overwrite* those columns 
 # (also referred to as modifying those columns *in-place*).
 # If we were to give the columns a new name, 
-# then `mutate` would create new columns with the names we specified.
-# `mutate`'s general syntax is detailed in Figure \@ref(fig:img-mutate).
+# then `assign` would create new columns with the names we specified.
+# `assign`'s general syntax is detailed in {numref}`fig:img-assign`.
+
+# %% [markdown] tags=[]
+# ```{figure} img/wrangling/pandas_assign_args_labels.png
+# :name: fig:img-assign
+# :figclass: caption-hack
+#
+# Syntax for the `assign` function.
+# ```
 
 # %% [markdown]
-# (ref:img-mutate) Syntax for the `mutate` function.
-#
-# ``` {r img-mutate, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "(ref:img-mutate)",  fig.retina = 2, out.width = "100%"}
-# image_read("img/mutate_function.jpeg") |>
-#   image_crop("1625x1900")
-# ```
-#
 # Below we use `mutate` to convert the columns `most_at_home` and `most_at_work`
-# to numeric data types in the `official_langs` data set as described in Figure
-# \@ref(fig:img-mutate):
-#
-# ``` {r}
-# official_langs_numeric <- mutate(official_langs_chr,
-#   most_at_home = as.numeric(most_at_home),
-#   most_at_work = as.numeric(most_at_work)
-# )
-#
-# official_langs_numeric
-# ```
-#
-# Now we see `<dbl>` appears under the `most_at_home` and `most_at_work` columns,
-# indicating they are double data types (which is a numeric data type)!
+# to numeric data types in the `official_langs` data set as described in 
+# {numref}`fig:img-assign`:
+
+# %%
+official_langs_numeric = official_langs_obj.assign(
+    most_at_home=pd.to_numeric(official_langs_obj["most_at_home"]),
+    most_at_work=pd.to_numeric(official_langs_obj["most_at_work"]),
+)
+
+official_langs_numeric
+
+# %%
+official_langs_numeric.dtypes
 
 # %% [markdown]
-# ### Using `mutate` to create new columns
+# Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
+
+# %% [markdown]
+# ### Using `assign` to create new columns
+
+# %%
+glue("")
 
 # %% [markdown]
 # ``` {r , include = FALSE}
@@ -1177,19 +1176,17 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # We will name the new data frame we get from this `english_langs`:
 
 # %% [markdown]
-#
 # ```{r}
 # english_langs <- filter(official_langs, language == "English")
 # english_langs
 # ```
 
 # %% [markdown]
-#
 # Finally, we can use `mutate` to create a new column, 
 # named `most_at_home_proportion`, that will have value that corresponds to 
 # the proportion of people reporting English as their primary
 # language at home.
-# We will compute this by dividing the column by our vector of city populations. 
+# We will compute this by dividing the column by our vector of city populations.
 
 # %% [markdown]
 # ```{r, include = TRUE}
@@ -1869,7 +1866,7 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # | `rowwise` | applies functions across columns within one row | 
 # | `separate` | splits up a character column into multiple columns  | 
 # | `select` | subsets columns of a data frame |
-# | `summarize` | calculates summaries of inputs | 
+# | `summarize` | calculates summaries of inputs |
 
 # %% [markdown]
 # ## Exercises

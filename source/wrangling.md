@@ -18,6 +18,7 @@ kernelspec:
 :tags: [remove-cell]
 
 import altair as alt
+import numpy as np
 import pandas as pd
 pd.set_option('display.max_rows', 20)
 
@@ -869,7 +870,7 @@ Suppose we wanted to select only the columns `language`, `region`,
 learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets:
 
 ```{code-cell} ipython3
-selected_columns = tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
 selected_columns
 ```
 
@@ -1114,8 +1115,9 @@ only English in Toronto is reported by more people
 as their primary language at home 
 than French in Montréal according to the 2016 Canadian census.
 
-+++
++++ {"tags": []}
 
+(pandas-assign)=
 ## Using `assign` to modify or add columns
 
 +++
@@ -1212,29 +1214,30 @@ Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (
 ### Using `assign` to create new columns
 
 ```{code-cell} ipython3
-glue("")
+:tags: [remove-cell]
+
+number_most_home = int(
+    official_langs[
+        (official_langs["language"] == "English")
+        & (official_langs["region"] == "Toronto")
+    ]["most_at_home"]
+)
+
+toronto_popn = int(region_data[region_data["region"] == "Toronto"]["population"])
+
+glue("number_most_home", "{0:,.0f}".format(number_most_home))
+glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
+glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
 ```
-
-``` {r , include = FALSE}
-census_popn <- 35151728
-number_most_home <- filter(official_langs, 
-                           language == "English" & region == "Toronto") |>
-pull(most_at_home)
-
-toronto_popn <- region_data |> filter(region == "Toronto") |>
-pull(population)
-```
-
-+++
 
 We can see in the table that
-`r format(number_most_home, scientific = FALSE, big.mark = ",")` people reported
+{glue:text}`number_most_home` people reported
 speaking English in Toronto as their primary language at home, according to
 the 2016 Canadian census. What does this number mean to us? To understand this
 number, we need context. In particular, how many people were in Toronto when
 this data was collected? From the 2016 Canadian census profile, the population
 of Toronto was reported to be
-`r format(toronto_popn, scientific = FALSE, big.mark = ",")` people. 
+{glue:text}`toronto_popn` people. 
 The number of people who report that English is their primary language at home 
 is much more meaningful when we report it in this context. 
 We can even go a step further and transform this count to a relative frequency 
@@ -1243,73 +1246,61 @@ We can do this by dividing the number of people reporting a given language
 as their primary language at home by the number of people who live in Toronto. 
 For example, 
 the proportion of people who reported that their primary language at home 
-was English in the 2016 Canadian census was
-`r format(round(number_most_home/toronto_popn, 2), scientific = FALSE, big.mark = ",")`
+was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
 in Toronto.
 
-Let's use `mutate` to create a new column in our data frame 
+Let's use `.assign` to create a new column in our data frame 
 that holds the proportion of people who speak English 
 for our five cities of focus in this chapter. 
 To accomplish this, we will need to do two tasks 
 beforehand:
 
-1. Create a vector containing the population values for the cities.
+1. Create a list containing the population values for the cities.
 2. Filter the `official_langs` data frame 
 so that we only keep the rows where the language is English.
 
-To create a vector containing the population values for the five cities
+To create a list containing the population values for the five cities
 (Toronto, Montréal, Vancouver, Calgary, Edmonton),
-we will use the `c` function (recall that `c` stands for "concatenate"):
+we will use the `[]` (recall that we can also use `list()` to create a list):
 
-+++
-
-```{r}
-city_pops <- c(5928040, 4098927, 2463431, 1392609, 1321426)
+```{code-cell} ipython3
+city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
 city_pops
 ```
-
-+++
 
 And next, we will filter the `official_langs` data frame 
 so that we only keep the rows where the language is English.
 We will name the new data frame we get from this `english_langs`:
 
-+++
-
-```{r}
-english_langs <- filter(official_langs, language == "English")
+```{code-cell} ipython3
+english_langs = official_langs[official_langs["language"] == "English"]
 english_langs
 ```
 
-+++
-
-Finally, we can use `mutate` to create a new column, 
+Finally, we can use `.assign` to create a new column, 
 named `most_at_home_proportion`, that will have value that corresponds to 
 the proportion of people reporting English as their primary
 language at home.
 We will compute this by dividing the column by our vector of city populations.
 
-+++
-
-```{r, include = TRUE}
-english_langs <- mutate(english_langs, 
-                         most_at_home_proportion = most_at_home / city_pops)
+```{code-cell} ipython3
+english_langs = english_langs.assign(
+    most_at_home_proportion=english_langs["most_at_home"] / city_pops
+)
 
 english_langs
 ```
 
-+++
-
 In the computation above, we had to ensure that we ordered the `city_pops` vector in the
 same order as the cities were listed in the `english_langs` data frame.
-This is because R will perform the division computation we did by dividing 
+This is because Python will perform the division computation we did by dividing 
 each element of the `most_at_home` column by each element of the 
-`city_pops` vector, matching them up by position.
+`city_pops` list, matching them up by position.
 Failing to do this would have resulted in the incorrect math being performed.
 
 > **Note:** In more advanced data wrangling, 
 > one might solve this problem in a less error-prone way though using 
-> a technique called "joins." 
+> a technique called "joins". 
 > We link to resources that discuss this in the additional
 > resources at the end of this chapter.
 
@@ -1348,12 +1339,12 @@ home.  However, in Montréal, this does not seem to be the case!
 
 +++
 
-## Combining functions using the pipe operator, `|>`
+## Combining functions by chaining the methods
 
-In R, we often have to call multiple functions in a sequence to process a data
+In Python, we often have to call multiple methods in a sequence to process a data
 frame. The basic ways of doing this can become quickly unreadable if there are
 many steps. For example, suppose we need to perform three operations on a data
-frame called `data`:  \index{pipe}\index{aaapipesymb@\vert{}>|see{pipe}}
+frame called `data`:
 
 1)  add a new column `new_col` that is double another `old_col`,
 2)  filter for rows where another column, `other_col`, is more than 5, and
@@ -1362,15 +1353,33 @@ frame called `data`:  \index{pipe}\index{aaapipesymb@\vert{}>|see{pipe}}
 One way of performing these three steps is to just write 
 multiple lines of code, storing temporary objects as you go:
 
-+++
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# ## Combining functions using the pipe operator, `|>`
 
-``` {r eval = FALSE}
-output_1 <- mutate(data, new_col = old_col * 2)
-output_2 <- filter(output_1, other_col > 5)
-output <- select(output_2, new_col)
+# In R, we often have to call multiple functions in a sequence to process a data
+# frame. The basic ways of doing this can become quickly unreadable if there are
+# many steps. For example, suppose we need to perform three operations on a data
+# frame called `data`:  \index{pipe}\index{aaapipesymb@\vert{}>|see{pipe}}
 ```
 
-+++
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+data = pd.DataFrame({"old_col": [1, 2, 5, 0], "other_col": [1, 10, 3, 6]})
+```
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+output_1 = data.assign(new_col=data["old_col"] * 2)
+output_2 = output_1[output_1["other_col"] > 5]
+output = output_2.loc[:, "new_col"]
+```
 
 This is difficult to understand for multiple reasons. The reader may be tricked
 into thinking the named `output_1` and `output_2` objects are important for some
@@ -1378,173 +1387,211 @@ reason, while they are just temporary intermediate computations. Further, the
 reader has to look through and find where `output_1` and `output_2` are used in
 each subsequent line.
 
-Another option for doing this would be to *compose* the functions:
-
 +++
 
-``` {r eval = F}
-output <- select(filter(mutate(data, new_col = old_col * 2), 
-                        other_col > 5), 
-                 new_col)
-```
-
-+++
-
-Code like this can also be difficult to understand. Functions compose (reading
-from left to right) in the *opposite order* in which they are computed by R
-(above, `mutate` happens first, then `filter`, then `select`). It is also just a
-really long line of code to read in one go.
-
-The *pipe operator* (`|>`) solves this problem, resulting in cleaner and
-easier-to-follow code. `|>` is built into R so you don't need to load any
-packages to use it. 
-You can think of the pipe as a physical pipe. It takes the output from the
-function on the left-hand side of the pipe, and passes it as the first argument
-to the function on the right-hand side of the pipe. 
+Chaining the sequential functions solves this problem, resulting in cleaner and
+easier-to-follow code. 
 The code below accomplishes the same thing as the previous
 two code blocks:
 
-+++
+```{code-cell} ipython3
+:tags: [remove-output]
 
-``` {r eval = FALSE}
-output <- data |>
-  mutate(new_col = old_col * 2) |>
-  filter(other_col > 5) |>
-  select(new_col)
+output = (
+    data.assign(new_col=data["old_col"] * 2)
+    .query("other_col > 5")
+    .loc[:, "new_col"]
+)
 ```
 
-+++
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# ``` {r eval = F}
+# output <- select(filter(mutate(data, new_col = old_col * 2), 
+#                         other_col > 5), 
+#                  new_col)
+# ```
+# Code like this can also be difficult to understand. Functions compose (reading
+# from left to right) in the *opposite order* in which they are computed by R
+# (above, `mutate` happens first, then `filter`, then `select`). It is also just a
+# really long line of code to read in one go.
+
+# The *pipe operator* (`|>`) solves this problem, resulting in cleaner and
+# easier-to-follow code. `|>` is built into R so you don't need to load any
+# packages to use it. 
+# You can think of the pipe as a physical pipe. It takes the output from the
+# function on the left-hand side of the pipe, and passes it as the first argument
+# to the function on the right-hand side of the pipe. 
+# The code below accomplishes the same thing as the previous
+# two code blocks:
+```
 
 > **Note:** You might also have noticed that we split the function calls across
-> lines after the pipe, similar to when we did this earlier in the chapter
+> lines, similar to when we did this earlier in the chapter
 > for long function calls. Again, this is allowed and recommended, especially when
-> the piped function calls create a long line of code. Doing this makes
-> your code more readable. When you do this, it is important to end each line
-> with the pipe operator `|>` to tell R that your code is continuing onto the
-> next line.
+> the chained function calls create a long line of code. Doing this makes
+> your code more readable. When you do this, it is important to use parentheses 
+> to tell Python that your code is continuing onto the next line.
 
-> **Note:** In this textbook, we will be using the base R pipe operator syntax, `|>`.
-> This base R `|>` pipe operator was inspired by a previous version of the pipe
-> operator, `%>%`. The `%>%` pipe operator is not built into R 
-> and is from the `magrittr` R package. 
-> The `tidyverse` metapackage imports the `%>%` pipe operator via `dplyr` 
-> (which in turn imports the `magrittr` R package).
-> There are some other differences between `%>%` and `|>` related to 
-> more advanced R uses, such as sharing and distributing code as R packages, 
-> however, these are beyond the scope of this textbook. 
-> We have this note in the book to make the reader aware that `%>%` exists
-> as it is still commonly used in data analysis code and in many data science 
-> books and other resources.
-> In most cases these two pipes are interchangeable and either can be used.
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# > **Note:** You might also have noticed that we split the function calls across
+# > lines after the pipe, similar to when we did this earlier in the chapter
+# > for long function calls. Again, this is allowed and recommended, especially when
+# > the piped function calls create a long line of code. Doing this makes
+# > your code more readable. When you do this, it is important to end each line
+# > with the pipe operator `|>` to tell R that your code is continuing onto the
+# > next line.
 
-\index{pipe}\index{aaapipesymbb@\%>\%|see{pipe}}
+# > **Note:** In this textbook, we will be using the base R pipe operator syntax, `|>`.
+# > This base R `|>` pipe operator was inspired by a previous version of the pipe
+# > operator, `%>%`. The `%>%` pipe operator is not built into R 
+# > and is from the `magrittr` R package. 
+# > The `tidyverse` metapackage imports the `%>%` pipe operator via `dplyr` 
+# > (which in turn imports the `magrittr` R package).
+# > There are some other differences between `%>%` and `|>` related to 
+# > more advanced R uses, such as sharing and distributing code as R packages, 
+# > however, these are beyond the scope of this textbook. 
+# > We have this note in the book to make the reader aware that `%>%` exists
+# > as it is still commonly used in data analysis code and in many data science 
+# > books and other resources.
+# > In most cases these two pipes are interchangeable and either can be used.
+
+# \index{pipe}\index{aaapipesymbb@\%>\%|see{pipe}}
+```
+
+### Chaining `df[]` and `.loc`
 
 +++
 
-### Using `|>` to combine `filter` and `select`
-
-Let's work with the tidy `tidy_lang` data set from Section \@ref(separate), 
+Let's work with the tidy `tidy_lang` data set from Section {ref}`str-split`, 
 which contains the number of Canadians reporting their primary language at home 
 and work for five major cities 
 (Toronto, Montréal, Vancouver, Calgary, and Edmonton):
 
-``` {r, warning=FALSE, message=FALSE}
+```{code-cell} ipython3
 tidy_lang
 ```
 
 Suppose we want to create a subset of the data with only the languages and
 counts of each language spoken most at home for the city of Vancouver. To do
-this, we can use the functions `filter` and `select`. First, we use `filter` to
+this, we can use the `df[]` and `.loc`. First, we use `df[]` to
 create a data frame called `van_data` that contains only values for Vancouver.
 
-``` {r}
-van_data <- filter(tidy_lang, region == "Vancouver")
+```{code-cell} ipython3
+van_data = tidy_lang[tidy_lang["region"] == "Vancouver"]
 van_data
 ```
 
-We then use `select` on this data frame to keep only the variables we want:
+We then use `.loc` on this data frame to keep only the variables we want:
 
-``` {r}
-van_data_selected <- select(van_data, language, most_at_home)
+```{code-cell} ipython3
+van_data_selected = van_data.loc[:, ["language", "most_at_home"]]
 van_data_selected
 ```
 
 Although this is valid code, there is a more readable approach we could take by
-using the pipe, `|>`. With the pipe, we do not need to create an intermediate
-object to store the output from `filter`. Instead, we can directly send the
-output of `filter` to the input of `select`:
+chaining the operations. With chaining, we do not need to create an intermediate
+object to store the output from `df[]`. Instead, we can directly call `.loc` upon the
+output of `df[]`:
 
-``` {r}
-van_data_selected <- tidy_lang |>
-        filter(region == "Vancouver") |> 
-        select(language, most_at_home)
+```{code-cell} ipython3
+van_data_selected = tidy_lang[tidy_lang["region"] == "Vancouver"].loc[
+    :, ["language", "most_at_home"]
+]
 
 van_data_selected
 ```
 
-But wait...Why do the `select` and `filter` function calls 
-look different in these two examples? 
-Remember: when you use the pipe, 
-the output of the first function is automatically provided 
-as the first argument for the function that comes after it. 
-Therefore you do not specify the first argument in that function call. 
-In the code above,
-the first line is just the `tidy_lang` data frame with a pipe.
-The pipe passes the left-hand side (`tidy_lang`) to the first argument of the function on the right (`filter`),
-so in the `filter` function you only see the second argument (and beyond).
-Then again after `filter` there is a pipe, which passes the result of the `filter` step
-to the first argument of the `select` function.
-As you can see, both of these approaches&mdash;with and without pipes&mdash;give us the same output, but the second
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# But wait...Why do the `select` and `filter` function calls 
+# look different in these two examples? 
+# Remember: when you use the pipe, 
+# the output of the first function is automatically provided 
+# as the first argument for the function that comes after it. 
+# Therefore you do not specify the first argument in that function call. 
+# In the code above,
+# the first line is just the `tidy_lang` data frame with a pipe.
+# The pipe passes the left-hand side (`tidy_lang`) to the first argument of the function on the right (`filter`),
+# so in the `filter` function you only see the second argument (and beyond).
+# Then again after `filter` there is a pipe, which passes the result of the `filter` step
+# to the first argument of the `select` function.
+```
+
+As you can see, both of these approaches&mdash;with and without chaining&mdash;give us the same output, but the second
 approach is clearer and more readable.
 
 +++
 
-### Using `|>` with more than two functions
+### Chaining more than two functions
 
-The pipe operator (|>) can be used with any function in R. 
-Additionally, we can pipe together more than two functions. 
-For example, we can pipe together three functions to: 
++++
 
-- `filter` rows to include only those where the counts of the language most spoken at home are greater than 10,000, 
-- `select` only the columns corresponding to `region`, `language` and `most_at_home`, and
-- `arrange` the data frame rows in order by counts of the language most spoken at home 
+Chaining can be used with any method in Python. 
+Additionally, we can chain together more than two functions. 
+For example, we can chain together three functions to: 
+
+- extract rows (`df[]`) to include only those where the counts of the language most spoken at home are greater than 10,000, 
+- extract only the columns (`.loc`) corresponding to `region`, `language` and `most_at_home`, and
+- sort the data frame rows in order (`.sort_values`) by counts of the language most spoken at home 
 from smallest to largest.
 
-As we saw in Chapter \@ref(intro), 
-we can use the `tidyverse` `arrange` function \index{arrange}
+As we saw in Chapter {ref}`intro`, 
+we can use the `.sort_values` function \index{arrange}
 to order the rows in the data frame by the values of one or more columns. 
-Here we pass the column name `most_at_home` to arrange the data frame rows by the values in that column, in ascending order.
+Here we pass the column name `most_at_home` to sort the data frame rows by the values in that column, in ascending order.
 
-``` {r}
-large_region_lang <- filter(tidy_lang, most_at_home > 10000) |>
-  select(region, language, most_at_home) |>
-  arrange(most_at_home)
-
-large_region_lang
-```
-
-You will notice above that we passed `tidy_lang` as the first argument of the `filter` function.
-We can also pipe the data frame into the same sequence of functions rather than
-using it as the first argument of the first function. These two choices are equivalent,
-and we get the same result.
-
-``` {r}
-large_region_lang <- tidy_lang |> 
-  filter(most_at_home > 10000) |>
-  select(region, language, most_at_home) |>
-  arrange(most_at_home)
+```{code-cell} ipython3
+large_region_lang = (
+    tidy_lang[tidy_lang["most_at_home"] > 10000]
+    .loc[:, ["region", "language", "most_at_home"]]
+    .sort_values(by="most_at_home")
+)
 
 large_region_lang
 ```
 
-Now that we've shown you the pipe operator as an alternative to storing
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# You will notice above that we passed `tidy_lang` as the first argument of the `filter` function.
+# We can also pipe the data frame into the same sequence of functions rather than
+# using it as the first argument of the first function. These two choices are equivalent,
+# and we get the same result.
+# ``` {r}
+# large_region_lang <- tidy_lang |> 
+#   filter(most_at_home > 10000) |>
+#   select(region, language, most_at_home) |>
+#   arrange(most_at_home)
+
+# large_region_lang
+# ```
+```
+
+Now that we've shown you chaining as an alternative to storing
 temporary objects and composing code, does this mean you should *never* store 
 temporary objects or compose code? Not necessarily! 
 There are times when you will still want to do these things. 
 For example, you might store a temporary object before feeding it into a plot function 
 so you can iteratively change the plot without having to
 redo all of your data transformations. 
-Additionally, piping many functions can be overwhelming and difficult to debug;
+Additionally, chaining many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.
 
@@ -1563,100 +1610,161 @@ are the number of observations, the average/mean value for a column,
 the minimum value, etc. 
 Oftentimes, 
 this summary statistic is calculated from the values in a data frame column, 
-or columns, as shown in Figure \@ref(fig:summarize).
+or columns, as shown in {numref}`fig:summarize`.
 
-(ref:summarize) `summarize` is useful for calculating summary statistics on one or more column(s). In its simplest use case, it creates a new data frame with a single row containing the summary statistic(s) for each column being summarized. The darker, top row of each table represents the column headers.
++++ {"tags": []}
 
-```{r summarize, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "(ref:summarize)", fig.retina = 2, out.width = "85%"}
-image_read("img/summarize/summarize.001.jpeg") |> 
-  image_crop("2000x475+0+300")
+```{figure} img/summarize/summarize.001.jpeg
+:name: fig:summarize
+:figclass: caption-hack
+
+Calculating summary statistics on one or more column(s). In its simplest use case, it creates a new data frame with a single row containing the summary statistic(s) for each column being summarized. The darker, top row of each table represents the column headers.
 ```
 
-A useful `dplyr` function for calculating summary statistics is `summarize`, 
-where the first argument is the data frame and subsequent arguments
-are the summaries we want to perform. 
-Here we show how to use the `summarize` function to calculate the minimum 
-and maximum number of Canadians 
-reporting a particular language as their primary language at home.
++++
+
+We can use `.assign` as mentioned in Section {ref}`pandas-assign` along with proper summary functions to create a aggregated column.
+
 First a reminder of what `region_lang` looks like:
 
-``` {r}
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# A useful `dplyr` function for calculating summary statistics is `summarize`, 
+# where the first argument is the data frame and subsequent arguments
+# are the summaries we want to perform. 
+# Here we show how to use the `summarize` function to calculate the minimum 
+# and maximum number of Canadians 
+# reporting a particular language as their primary language at home.
+# First a reminder of what `region_lang` looks like:
+```
+
+```{code-cell} ipython3
+region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
 ```
 
-We apply `summarize` to calculate the minimum 
-and maximum number of Canadians 
+We apply `min` to calculate the minimum 
+and `max` to calculate maximum number of Canadians 
 reporting a particular language as their primary language at home, 
-for any region:
+for any region, and `assign` a column name to each:
 
-``` {r}
-summarize(region_lang,
-          min_most_at_home = min(most_at_home),
-          max_most_at_home = max(most_at_home))
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+pd.DataFrame(region_lang["most_at_home"].agg(["min", "max"])).T
+
+# pd.DataFrame(region_lang["most_at_home"].agg(["min", "max"])).T.rename(
+#     columns={"min": "min_most_at_home", "max": "max_most_at_home"}
+# )
 ```
 
-```{r, include = FALSE}
-lang_summary <- summarize(region_lang,
-          min_most_at_home = min(most_at_home),
-          max_most_at_home = max(most_at_home))
+```{code-cell} ipython3
+:tags: []
+
+lang_summary = pd.DataFrame()
+lang_summary = lang_summary.assign(min_most_at_home=[min(region_lang["most_at_home"])])
+lang_summary = lang_summary.assign(max_most_at_home=[max(region_lang["most_at_home"])])
+lang_summary
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("lang_most_people", "{0:,.0f}".format(int(lang_summary["max_most_at_home"])))
 ```
 
 From this we see that there are some languages in the data set that no one speaks
 as their primary language at home. We also see that the most commonly spoken
 primary language at home is spoken by
-`r format(lang_summary$max_most_at_home[1], scientific = FALSE, big.mark = ",")`
+{glue:text}`lang_most_people`
 people.
 
 +++
 
-### Calculating summary statistics when there are `NA`s
+### Calculating summary statistics when there are `NaN`s
 
-In data frames in R, the value `NA` is often used to denote missing data. 
-Many of the base R statistical summary functions 
-(e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA` 
-when applied to columns containing `NA` values. \index{missing data}\index{NA|see{missing data}}
+In `pandas` DataFrame, the value `NaN` is often used to denote missing data. 
+Many of the base python statistical summary functions 
+(e.g., `max`, `min`, `sum`, etc) will return `NaN` 
+when applied to columns containing `NaN` values. \index{missing data}\index{NA|see{missing data}}
 Usually that is not what we want to happen; 
-instead, we would usually like R to ignore the missing entries
-and calculate the summary statistic using all of the other non-`NA` values
+instead, we would usually like Python to ignore the missing entries
+and calculate the summary statistic using all of the other non-`NaN` values
 in the column.
-Fortunately many of these functions provide an argument `na.rm` that lets
-us tell the function what to do when it encounters `NA` values.
-In particular, if we specify `na.rm = TRUE`, the function will ignore
+Fortunately `pandas` provides many equivalent methods (e.g., `.max`, `.min`, `.sum`, etc) to 
+these summary functions while providing an extra argument `skipna` that lets
+us tell the function what to do when it encounters `NaN` values.
+In particular, if we specify `skipna=True` (default), the function will ignore
 missing values and return a summary of all the non-missing entries.
-We show an example of this combined with `summarize` below.
+We show an example of this below.
 
 First we create a new version of the `region_lang` data frame,
-named `region_lang_na`, that has a seemingly innocuous `NA` 
-in the first row of the `most_at_home column`:
+named `region_lang_na`, that has a seemingly innocuous `NaN` 
+in the first row of the `most_at_home` column:
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-region_lang_na <- region_lang
-region_lang_na[["most_at_home"]][1] <- NA
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# In data frames in R, the value `NA` is often used to denote missing data. 
+# Many of the base R statistical summary functions 
+# (e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA` 
+# when applied to columns containing `NA` values. \index{missing data}\index{NA|see{missing data}}
+# Usually that is not what we want to happen; 
+# instead, we would usually like R to ignore the missing entries
+# and calculate the summary statistic using all of the other non-`NA` values
+# in the column.
+# Fortunately many of these functions provide an argument `na.rm` that lets
+# us tell the function what to do when it encounters `NA` values.
+# In particular, if we specify `na.rm = TRUE`, the function will ignore
+# missing values and return a summary of all the non-missing entries.
+# We show an example of this combined with `summarize` below.
 ```
 
-```{r}
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+region_lang_na = region_lang
+region_lang_na.loc[0, "most_at_home"] = np.nan
+```
+
+```{code-cell} ipython3
 region_lang_na
 ```
 
-Now if we apply the `summarize` function as above, 
+Now if we apply the Python built-in summary function as above, 
 we see that we no longer get the minimum and maximum returned, 
-but just an `NA` instead!
+but just an `NaN` instead!
 
-```{r}
-summarize(region_lang_na,
-          min_most_at_home = min(most_at_home),
-          max_most_at_home = max(most_at_home))
+```{code-cell} ipython3
+lang_summary_na = pd.DataFrame()
+lang_summary_na = lang_summary_na.assign(
+    min_most_at_home=[min(region_lang_na["most_at_home"])]
+)
+lang_summary_na = lang_summary_na.assign(
+    max_most_at_home=[max(region_lang_na["most_at_home"])]
+)
+lang_summary_na
 ```
 
-We can fix this by adding the `na.rm = TRUE` as explained above:
+We can fix this by using the `pandas` Series methods (*i.e.* `.min` and `.max`) with `skipna=True` as explained above:
 
-```{r}
-summarize(region_lang_na,
-          min_most_at_home = min(most_at_home, na.rm = TRUE),
-          max_most_at_home = max(most_at_home, na.rm = TRUE))
+```{code-cell} ipython3
+lang_summary_na = pd.DataFrame()
+lang_summary_na = lang_summary_na.assign(
+    min_most_at_home=[region_lang_na["most_at_home"].min(skipna=True)]
+)
+lang_summary_na = lang_summary_na.assign(
+    max_most_at_home=[region_lang_na["most_at_home"].max(skipna=True)]
+)
+lang_summary_na
 ```
-
-+++
 
 ### Calculating summary statistics for groups of rows
 

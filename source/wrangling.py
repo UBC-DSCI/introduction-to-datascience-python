@@ -302,7 +302,7 @@ region
 # Data frame and vector types.
 # ```
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # A data frame \index{data frame!definition} is really a special kind of list that follows two rules:
 
 # 1. Each element itself must either be a vector or a list. 
@@ -322,7 +322,7 @@ region
 # > For example we can check the class of the Canadian languages data set,
 # > `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # The functions from the `tidyverse` package that we use often give us a
 # special class of data frame called a *tibble*. Tibbles have some additional \index{tibble}
 # features and benefits over the built-in data frame object. These include the
@@ -757,7 +757,7 @@ tidy_lang.dtypes
 # Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 # like this: it will convert the columns to the best numeric data types.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # We can see that this data now satisfies all three criteria, making it easier to
 # analyze. But we aren't done yet! Notice in the table above that the word
 # `<chr>` appears beneath each of the column names. The word under the column name
@@ -817,7 +817,7 @@ selected_columns
 # colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
 # the `tidy_lang` data frame from `language` to `most_at_work`, we pass `:` before the comma indicating we want to retrieve all rows, and `1:` after the comma indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # Here we wrote out the names of each of the columns. However, this method is
 # time-consuming, especially if you have a lot of columns! Another approach is to
 # use a "select helper". Select helpers are operators that make it easier for
@@ -859,7 +859,7 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 # The additional resources section at the end of this chapter 
 # provides a comprehensive resource on these functions.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # There are many different `select` helpers that select
 # variables based on certain criteria. 
 # The additional resources section at the end of this chapter 
@@ -984,7 +984,7 @@ pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
 # %%
 pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # > **Note:** What's the difference between `==` and `%in%`? Suppose we have two
 # > vectors, `vectorA` and `vectorB`. If you type `vectorA == vectorB` into R it
 # > will compare the vectors element by element. R checks if the first element of
@@ -1254,7 +1254,7 @@ english_langs
 # One way of performing these three steps is to just write 
 # multiple lines of code, storing temporary objects as you go:
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # ## Combining functions using the pipe operator, `|>`
 
 # In R, we often have to call multiple functions in a sequence to process a data
@@ -1290,7 +1290,7 @@ output = (
     .loc[:, "new_col"]
 )
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # ``` {r eval = F}
 # output <- select(filter(mutate(data, new_col = old_col * 2), 
 #                         other_col > 5), 
@@ -1318,7 +1318,7 @@ output = (
 # > your code more readable. When you do this, it is important to use parentheses 
 # > to tell Python that your code is continuing onto the next line.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # > **Note:** You might also have noticed that we split the function calls across
 # > lines after the pipe, similar to when we did this earlier in the chapter
 # > for long function calls. Again, this is allowed and recommended, especially when
@@ -1385,7 +1385,7 @@ van_data_selected = tidy_lang[tidy_lang["region"] == "Vancouver"].loc[
 
 van_data_selected
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # But wait...Why do the `select` and `filter` function calls 
 # look different in these two examples? 
 # Remember: when you use the pipe, 
@@ -1430,7 +1430,7 @@ large_region_lang = (
 
 large_region_lang
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # You will notice above that we passed `tidy_lang` as the first argument of the `filter` function.
 # We can also pipe the data frame into the same sequence of functions rather than
 # using it as the first argument of the first function. These two choices are equivalent,
@@ -1484,7 +1484,7 @@ large_region_lang
 #
 # First a reminder of what `region_lang` looks like:
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # A useful `dplyr` function for calculating summary statistics is `summarize`, 
 # where the first argument is the data frame and subsequent arguments
 # are the summaries we want to perform. 
@@ -1548,7 +1548,7 @@ glue("lang_most_people", "{0:,.0f}".format(int(lang_summary["max_most_at_home"])
 # named `region_lang_na`, that has a seemingly innocuous `NaN` 
 # in the first row of the `most_at_home` column:
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # In data frames in R, the value `NA` is often used to denote missing data. 
 # Many of the base R statistical summary functions 
 # (e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA` 
@@ -1609,7 +1609,7 @@ lang_summary_na
 # reporting the language as the primary language at home 
 # for each of the regions in the data set.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
 # together can let you summarize values for subgroups within a data set,
 # as illustrated in Figure \@ref(fig:summarize-groupby). 
@@ -1658,7 +1658,7 @@ region_summary
 # %% [markdown]
 # Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # Notice that `group_by` on its own doesn't change the way the data looks. 
 # In the output below, the grouped data set looks the same, 
 # and it doesn't *appear* to be grouped by `region`. 
@@ -1681,7 +1681,7 @@ region_lang.groupby("region")
 # Then we will also explore how we can use a more general iteration function, 
 # `.apply`, to also accomplish this.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # Sometimes we need to summarize statistics across many columns.
 # An example of this is illustrated in Figure \@ref(fig:summarize-across).
 # In such a case, using `summarize` alone means that we have to 
@@ -1711,7 +1711,7 @@ region_lang.groupby("region")
 # %%
 pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # To summarize statistics across many columns, we can use the 
 # `summarize` function we have just recently learned about.
 # However, in such a case, using `summarize` alone means that we have to 
@@ -1761,7 +1761,7 @@ pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
 # Therefore, we will use the `.iloc[]` before calling `.apply`
 # to choose the columns for which we want the maximum.
 
-# %% jupyter={"source_hidden": true} tags=["remove-cell"]
+# %% tags=["remove-cell"]
 # An alternative to `summarize` and `across` 
 # for applying a function to many columns is the `map` family of functions. \index{map}
 # Let's again find the maximum value of each column of the
@@ -1870,19 +1870,22 @@ pd.DataFrame(
 # To learn more about the `map` functions, see the additional resources
 # section at the end of this chapter. -->
 
-# %% [markdown]
+# %% [markdown] tags=[]
 # ## Apply functions across many columns with `mutate` and `across`
 #
 # Sometimes we need to apply a function to many columns in a data frame. 
 # For example, we would need to do this when converting units of measurements across many columns. 
-# We illustrate such a data transformation in Figure \@ref(fig:mutate-across).
+# We illustrate such a data transformation in {numref}`fig:mutate-across`.
+
+# %% [markdown] tags=[]
+# ```{figure} img/summarize/summarize.005.jpeg
+# :name: fig:mutate-across
+# :figclass: caption-hack
 #
-# (ref:mutate-across) `mutate` and `across` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
-#
-# ```{r mutate-across, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "(ref:mutate-across)",  fig.retina = 2, out.width = "85%"}
-# image_read("img/summarize/summarize.005.jpeg") |> 
-#   image_crop("2000x475+0+300")
+# `mutate` and `across` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
 # ```
+
+# %% [markdown]
 #
 # For example, 
 # imagine that we wanted to convert all the numeric columns 
@@ -1890,11 +1893,11 @@ pd.DataFrame(
 # using the `as.integer` function.
 # When we revisit the `region_lang` data frame, 
 # we can see that this would be the columns from `mother_tongue` to `lang_known`.
-#
-# ```{r}
-# region_lang
-# ```
-#
+
+# %%
+region_lang
+
+# %% [markdown]
 # To accomplish such a task, we can use `mutate` paired with `across`. \index{across}
 # This works in a similar way for column selection, 
 # as we saw when we used `summarize` + `across` earlier.
@@ -1903,12 +1906,25 @@ pd.DataFrame(
 # as well as the function we want to apply on the specified columns.
 # However, a key difference here is that we are using `mutate`, 
 # which means that we get back a data frame with the same number of rows.
-#
+
+# %%
+region_lang.dtypes
+
+# %%
+region_lang_int32 = region_lang.iloc[:, 3:].apply(lambda col: col.astype('int32'), axis=0)
+region_lang_int32 = pd.concat((region_lang.iloc[:, :3], region_lang_int32), axis=1)
+region_lang_int32
+
+# %%
+region_lang_int32.dtypes
+
+# %% [markdown]
 # ```{r}
 # region_lang |> 
 #   mutate(across(mother_tongue:lang_known, as.integer))
 # ```
-#
+
+# %% [markdown]
 # We see that we get back a data frame
 # with the same number of columns and rows.
 # The only thing that changes is the transformation we applied 
@@ -1918,15 +1934,17 @@ pd.DataFrame(
 # ## Apply functions across columns within one row with `rowwise` and `mutate`
 #
 # What if you want to apply a function across columns but within one row? 
-# We illustrate such a data transformation in Figure \@ref(fig:rowwise).
+# We illustrate such a data transformation in {numref}`fig:rowwise`.
+
+# %% [markdown] tags=[]
+# ```{figure} img/summarize/summarize.004.jpeg
+# :name: fig:rowwise
+# :figclass: caption-hack
 #
-# (ref:rowwise) `rowwise` and `mutate` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
-#
-# ```{r rowwise, echo = FALSE, message = FALSE, warning = FALSE, fig.align = "center", fig.cap = "(ref:rowwise)",  fig.retina = 2, out.width = "85%"}
-# image_read("img/summarize/summarize.004.jpeg") |> 
-#   image_crop("2000x475+0+300")
+# `rowwise` and `mutate` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
 # ```
-#
+
+# %% [markdown]
 # For instance, suppose we want to know the maximum value between `mother_tongue`,
 # `most_at_home`, `most_at_work` 
 # and `lang_known` for each language and region
@@ -1938,32 +1956,30 @@ pd.DataFrame(
 # Before we apply `rowwise`, we will `select` only the count columns \index{rowwise}
 # so we can see all the columns in the data frame's output easily in the book. 
 # So for this demonstration, the data set we are operating on looks like this:
-#
-# ```{r}
-# region_lang |> 
-#   select(mother_tongue:lang_known)
-# ```
-#
+
+# %%
+region_lang.iloc[:, 3:]
+
+# %% [markdown]
 # Now we apply `rowwise` before `mutate`, to tell R that we would like
 # the mutate function to be applied across, and within, a row,
 # as opposed to being applied on a column 
 # (which is the default behavior of `mutate`):
-#
-# ```{r}
-# region_lang |> 
-#   select(mother_tongue:lang_known) |>
-#   rowwise() |> 
-#   mutate(maximum = max(c(mother_tongue, 
-#                          most_at_home, 
-#                          most_at_work, 
-#                          lang_known)))
-# ```
-#
+
+# %%
+region_lang_rowwise = region_lang.assign(
+    maximum=region_lang.iloc[:, 3:].apply(max, axis=1)
+)
+
+region_lang_rowwise
+
+# %% [markdown]
 # We see that we get an additional column added to the data frame, 
 # named `maximum`, which is the maximum value between `mother_tongue`,
 # `most_at_home`, `most_at_work` and `lang_known` for each language
 # and region. 
-#
+
+# %% tags=["remove-cell"] jupyter={"source_hidden": true}
 # Similar to `group_by`, 
 # `rowwise` doesn't appear to do anything when it is called by itself. 
 # However, we can apply `rowwise` in combination 
@@ -1974,7 +1990,7 @@ pd.DataFrame(
 # Below we show what would have happened had we not used
 # `rowwise`. In particular, the same maximum value is reported 
 # in every single row; this code does not provide the desired result.
-#
+
 # ```{r}
 # region_lang |> 
 #   select(mother_tongue:lang_known) |>

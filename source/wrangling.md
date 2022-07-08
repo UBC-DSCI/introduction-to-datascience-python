@@ -45,25 +45,29 @@ By the end of the chapter, readers will be able to do the following:
   - Describe the common types of data in Python and their uses.
   - Recall and use the following functions for their
     intended data wrangling tasks:
-      - `.loc[]`
-      - `df[]` notation
+      - `.agg`
+      - `.apply`
       - `.assign`
       - `.groupby`
-      - `.mean()`
-      - `.agg()`
-      - `.apply()`
       - `.melt`
       - `.pivot`
+      - `.str.split`
   - Recall and use the following operators for their
     intended data wrangling tasks:
       - `==` 
       - `in`
       - `and`
       - `or`
+      - `df[]`
+      - `.iloc[]`
+      - `.loc[]`
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
 # By the end of the chapter, readers will be able to do the following:
 
 #   - Define the term "tidy data".
@@ -101,7 +105,7 @@ By the end of the chapter, readers will be able to do the following:
 In Chapters {ref}`intro` and {ref}`reading`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require 
-that data are represented as a `pandas` data frame in Python. Therefore, in this section,
+that data are represented as a `pandas` **data frame** in Python. Therefore, in this section,
 we will dig more deeply into what data frames are and how they are represented in Python.
 This knowledge will be helpful in effectively utilizing these objects in our data analyses.
 
@@ -162,7 +166,7 @@ Data frame with three vectors.
 
 ### What is a series?
 
-In Python, `pandas` **series** are arrays with labels. They are strictly 1-dimensional and can contain any data type (integers, strings, floats, objects, etc), including a mix of them;
+In Python, `pandas` **series** are arrays with labels. They are strictly 1-dimensional and can contain any data type (integers, strings, floats, etc), including a mix of them (objects);
 Python has several different basic data types, as shown in {numref}`tab:datatype-table`.
 You can create a `pandas` series using the `pd.Series()` function.  For 
 example, to create the vector `region` as shown in
@@ -176,7 +180,7 @@ region
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/02-series-1.png
+```{figure} img/wrangling/pandas_dataframe_series.png
 :name: fig:02-series
 :figclass: caption-hack
 
@@ -237,7 +241,7 @@ image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
 | string                | `str`      | Sequence Type  | text                                          | `"Can I have a cheezburger?"`              |
 | list                  | `list`     | Sequence Type  | a collection of objects - mutable & ordered   | `['Ali', 'Xinyi', 'Miriam']`               |
 | tuple                 | `tuple`    | Sequence Type  | a collection of objects - immutable & ordered | `('Thursday', 6, 9, 2018)`                 |
-| dictionary            | `dict`     | Mapping Type   | mapping of key-value pairs                    | `{'name':'DSCI', 'code':511, 'credits':2}` |
+| dictionary            | `dict`     | Mapping Type   | mapping of key-value pairs                    | `{'name':'DSCI', 'code':100, 'credits':2}` |
 | none                  | `NoneType` | Null Object    | represents no value                           | `None`                                     |
 ```
 
@@ -255,9 +259,7 @@ the various data types differently. You should use integers and float types
 (which both fall under the "numeric" umbrella type) to represent numbers and perform
 arithmetic. Strings are used to represent data that should
 be thought of as "text", such as words, names, paths, URLs, and more. 
-Factors help us
-encode variables that represent *categories*; a factor variable takes one of a discrete
-set of values known as *levels* (one for each category). There are other basic data types in Python, such as *set*
+There are other basic data types in Python, such as *set*
 and *complex*, but we do not use these in this textbook.
 
 ```{code-cell} ipython3
@@ -320,7 +322,7 @@ the columns are series of different types.
 
 +++ {"tags": []}
 
-```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.009.jpeg
+```{figure} img/wrangling/pandas_dataframe_series-3.png
 :name: fig:02-dataframe
 :figclass: caption-hack
 
@@ -1895,6 +1897,7 @@ pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
 # > ```
 ```
 
+(apply-summary)=
 #### `.apply` for calculating summary statistics on many columns
 
 +++
@@ -2025,7 +2028,7 @@ section at the end of this chapter. -->
 
 +++ {"tags": []}
 
-## Apply functions across many columns with `mutate` and `across`
+## Apply functions across many columns with `.apply`
 
 Sometimes we need to apply a function to many columns in a data frame. 
 For example, we would need to do this when converting units of measurements across many columns. 
@@ -2042,26 +2045,55 @@ We illustrate such a data transformation in {numref}`fig:mutate-across`.
 
 +++
 
-
 For example, 
 imagine that we wanted to convert all the numeric columns 
-in the `region_lang` data frame from double type to integer type 
-using the `as.integer` function.
+in the `region_lang` data frame from `int64` type to `int32` type 
+using the `.as_type` function.
 When we revisit the `region_lang` data frame, 
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
+
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# For example, 
+# imagine that we wanted to convert all the numeric columns 
+# in the `region_lang` data frame from double type to integer type 
+# using the `as.integer` function.
+# When we revisit the `region_lang` data frame, 
+# we can see that this would be the columns from `mother_tongue` to `lang_known`.
+```
 
 ```{code-cell} ipython3
 region_lang
 ```
 
-To accomplish such a task, we can use `mutate` paired with `across`. \index{across}
+To accomplish such a task, we can use `.apply`.
 This works in a similar way for column selection, 
-as we saw when we used `summarize` + `across` earlier.
+as we saw when we used in Section {ref}`apply-summary` earlier.
 As we did above, 
-we again use `across` to specify the columns using `select` syntax
-as well as the function we want to apply on the specified columns.
-However, a key difference here is that we are using `mutate`, 
+we again use `.iloc` to specify the columns
+as well as the `.apply` to specify the function we want to apply on these columns.
+However, a key difference here is that we are not using aggregating function here, 
 which means that we get back a data frame with the same number of rows.
+
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# To accomplish such a task, we can use `mutate` paired with `across`. \index{across}
+# This works in a similar way for column selection, 
+# as we saw when we used `summarize` + `across` earlier.
+# As we did above, 
+# we again use `across` to specify the columns using `select` syntax
+# as well as the function we want to apply on the specified columns.
+# However, a key difference here is that we are using `mutate`, 
+# which means that we get back a data frame with the same number of rows.
+```
 
 ```{code-cell} ipython3
 region_lang.dtypes
@@ -2077,13 +2109,6 @@ region_lang_int32
 region_lang_int32.dtypes
 ```
 
-```{r}
-region_lang |> 
-  mutate(across(mother_tongue:lang_known, as.integer))
-```
-
-+++
-
 We see that we get back a data frame
 with the same number of columns and rows.
 The only thing that changes is the transformation we applied 
@@ -2091,7 +2116,7 @@ to the specified columns (here `mother_tongue` to `lang_known`).
 
 +++
 
-## Apply functions across columns within one row with `rowwise` and `mutate`
+## Apply functions across columns within one row with `.apply`
 
 What if you want to apply a function across columns but within one row? 
 We illustrate such a data transformation in {numref}`fig:rowwise`.
@@ -2112,21 +2137,49 @@ For instance, suppose we want to know the maximum value between `mother_tongue`,
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
-We will use the (aptly named) `rowwise` function in combination with `mutate` 
-to accomplish this task. 
-
-Before we apply `rowwise`, we will `select` only the count columns \index{rowwise}
+Before we use `.apply`, we will again use `.iloc` to select only the count columns
 so we can see all the columns in the data frame's output easily in the book. 
 So for this demonstration, the data set we are operating on looks like this:
+
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# For instance, suppose we want to know the maximum value between `mother_tongue`,
+# `most_at_home`, `most_at_work` 
+# and `lang_known` for each language and region
+# in the `region_lang` data set.
+# In other words, we want to apply the `max` function *row-wise.*
+# We will use the (aptly named) `rowwise` function in combination with `mutate` 
+# to accomplish this task. 
+
+# Before we apply `rowwise`, we will `select` only the count columns \index{rowwise}
+# so we can see all the columns in the data frame's output easily in the book. 
+# So for this demonstration, the data set we are operating on looks like this:
+```
 
 ```{code-cell} ipython3
 region_lang.iloc[:, 3:]
 ```
 
-Now we apply `rowwise` before `mutate`, to tell R that we would like
-the mutate function to be applied across, and within, a row,
+Now we use `.apply` with argument `axis=1`, to tell Python that we would like
+the `max` function to be applied across, and within, a row,
 as opposed to being applied on a column 
-(which is the default behavior of `mutate`):
+(which is the default behavior of `.apply`):
+
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# Now we apply `rowwise` before `mutate`, to tell R that we would like
+# the mutate function to be applied across, and within, a row,
+# as opposed to being applied on a column 
+# (which is the default behavior of `mutate`):
+```
 
 ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
@@ -2173,30 +2226,63 @@ tags: [remove-cell]
 Cleaning and wrangling data can be a very time-consuming process. However, 
 it is a critical step in any data analysis. We have explored many different
 functions for cleaning and wrangling data into a tidy format. 
-Table \@ref(tab:summary-functions-table) summarizes some of the key wrangling 
+{numref}`tab:summary-functions-table` summarizes some of the key wrangling 
 functions we learned in this chapter. In the following chapters, you will 
 learn how you can take this tidy data and do so much more with it to answer your 
 burning data science questions!
 
-\newpage
++++
 
-Table: (#tab:summary-functions-table) Summary of wrangling functions 
+```{table} Summary of wrangling functions 
+:name: tab:summary-functions-table
 
 | Function | Description |
 | ---      | ----------- | 
-| `across` | allows you to apply function(s) to multiple columns  | 
-| `filter` | subsets rows of a data frame | 
-| `group_by` |  allows you to apply function(s) to groups of rows |
-| `mutate` | adds or modifies columns in a data frame |
-| `map` | general iteration function |
-| `pivot_longer` | generally makes the data frame longer and narrower |
-| `pivot_wider` | generally makes a data frame wider and decreases the number of rows | 
-| `rowwise` | applies functions across columns within one row | 
-| `separate` | splits up a character column into multiple columns  | 
-| `select` | subsets columns of a data frame |
-| `summarize` | calculates summaries of inputs |
+| `.agg` | calculates aggregated summaries of inputs |
+| `.apply` | allows you to apply function(s) to multiple columns/rows  | 
+| `.assign` | adds or modifies columns in a data frame  | 
+| `.groupby` |  allows you to apply function(s) to groups of rows |
+| `.iloc` | subsets columns/rows of a data frame using integer indices |
+| `.loc` | subsets columns/rows of a data frame using labels | 
+| `.melt` | generally makes the data frame longer and narrower |
+| `.pivot` | generally makes a data frame wider and decreases the number of rows | 
+| `.str.split` | splits up a string column into multiple columns  |
+```
 
-+++
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# ## Summary
+
+# Cleaning and wrangling data can be a very time-consuming process. However, 
+# it is a critical step in any data analysis. We have explored many different
+# functions for cleaning and wrangling data into a tidy format. 
+# Table \@ref(tab:summary-functions-table) summarizes some of the key wrangling 
+# functions we learned in this chapter. In the following chapters, you will 
+# learn how you can take this tidy data and do so much more with it to answer your 
+# burning data science questions!
+
+# \newpage
+
+# Table: (#tab:summary-functions-table) Summary of wrangling functions 
+
+# | Function | Description |
+# | ---      | ----------- | 
+# | `across` | allows you to apply function(s) to multiple columns  | 
+# | `filter` | subsets rows of a data frame | 
+# | `group_by` |  allows you to apply function(s) to groups of rows |
+# | `mutate` | adds or modifies columns in a data frame |
+# | `map` | general iteration function |
+# | `pivot_longer` | generally makes the data frame longer and narrower |
+# | `pivot_wider` | generally makes a data frame wider and decreases the number of rows | 
+# | `rowwise` | applies functions across columns within one row | 
+# | `separate` | splits up a character column into multiple columns  | 
+# | `select` | subsets columns of a data frame |
+# | `summarize` | calculates summaries of inputs |
+```
 
 ## Exercises
 
@@ -2208,43 +2294,70 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-+++
++++ {"tags": []}
 
 ## Additional resources 
 
-- As we mentioned earlier, `tidyverse` is actually an *R
-  meta package*: it installs and loads a collection of R packages that all
-  follow the tidy data philosophy we discussed above. One of the `tidyverse`
-  packages is `dplyr`&mdash;a data wrangling workhorse. You have already met many
-  of `dplyr`'s functions 
-  (`select`, `filter`, `mutate`, `arrange`, `summarize`, and `group_by`). 
-  To learn more about these functions and meet a few more useful
-  functions, we recommend you check out Chapters 5-9 of the [STAT545 online notes](https://stat545.com/).
-  of the data wrangling, exploration, and analysis with R book.
-- The [`dplyr` R package documentation](https://dplyr.tidyverse.org/) [@dplyr] is
+- The [`pandas` package documentation](https://pandas.pydata.org/docs/reference/index.html) is
   another resource to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
   The site also provides a very nice cheat sheet that summarizes many of the
   data wrangling functions from this chapter.
-- Check out the [`tidyselect` R package page](https://tidyselect.r-lib.org/index.html)
-  [@tidyselect] for a comprehensive list of `select` helpers. 
-  These helpers can be used to choose columns in a data frame when paired with  the `select` function 
-  (and other functions that use the `tidyselect` syntax, such as `pivot_longer`).
-  The [documentation for `select` helpers](https://tidyselect.r-lib.org/reference/select_helpers.html) 
-  is a useful reference to find the helper you need for your particular problem.
-- *R for Data Science* [@wickham2016r] has a few chapters related to
+- *Python for Data Analysis* {cite:p}`mckinney2012python` has a few chapters related to
   data wrangling that go into more depth than this book. For example, the
-  [tidy data chapter](https://r4ds.had.co.nz/tidy-data.html) covers tidy data,
-  `pivot_longer`/`pivot_wider` and `separate`, but also covers missing values
-  and additional wrangling functions (like `unite`). The [data
-  transformation chapter](https://r4ds.had.co.nz/transform.html) covers
-  `select`, `filter`, `arrange`, `mutate`, and `summarize`. And the [`map`
-  functions chapter](https://r4ds.had.co.nz/iteration.html#the-map-functions)
-  provides more about the `map` functions.
+  [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
+  `.melt` and `.pivot`, but also covers missing values
+  and additional wrangling functions (like `stack`). The [data
+  aggregation chapter](https://wesmckinney.com/book/data-aggregation.html) covers
+  `.groupby`, aggregating functions, `.apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items
   in a data frame, but none of the above functions are flexible enough to do
   what you want. In that case, you may consider using [a for
-  loop](https://r4ds.had.co.nz/iteration.html#iteration).
+  loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
+
+```{code-cell} ipython3
+---
+jp-MarkdownHeadingCollapsed: true
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# ## Additional resources 
+
+# - As we mentioned earlier, `tidyverse` is actually an *R
+#   meta package*: it installs and loads a collection of R packages that all
+#   follow the tidy data philosophy we discussed above. One of the `tidyverse`
+#   packages is `dplyr`&mdash;a data wrangling workhorse. You have already met many
+#   of `dplyr`'s functions 
+#   (`select`, `filter`, `mutate`, `arrange`, `summarize`, and `group_by`). 
+#   To learn more about these functions and meet a few more useful
+#   functions, we recommend you check out Chapters 5-9 of the [STAT545 online notes](https://stat545.com/).
+#   of the data wrangling, exploration, and analysis with R book.
+# - The [`dplyr` R package documentation](https://dplyr.tidyverse.org/) [@dplyr] is
+#   another resource to learn more about the functions in this
+#   chapter, the full set of arguments you can use, and other related functions.
+#   The site also provides a very nice cheat sheet that summarizes many of the
+#   data wrangling functions from this chapter.
+# - Check out the [`tidyselect` R package page](https://tidyselect.r-lib.org/index.html)
+#   [@tidyselect] for a comprehensive list of `select` helpers. 
+#   These helpers can be used to choose columns in a data frame when paired with  the `select` function 
+#   (and other functions that use the `tidyselect` syntax, such as `pivot_longer`).
+#   The [documentation for `select` helpers](https://tidyselect.r-lib.org/reference/select_helpers.html) 
+#   is a useful reference to find the helper you need for your particular problem.
+# - *R for Data Science* [@wickham2016r] has a few chapters related to
+#   data wrangling that go into more depth than this book. For example, the
+#   [tidy data chapter](https://r4ds.had.co.nz/tidy-data.html) covers tidy data,
+#   `pivot_longer`/`pivot_wider` and `separate`, but also covers missing values
+#   and additional wrangling functions (like `unite`). The [data
+#   transformation chapter](https://r4ds.had.co.nz/transform.html) covers
+#   `select`, `filter`, `arrange`, `mutate`, and `summarize`. And the [`map`
+#   functions chapter](https://r4ds.had.co.nz/iteration.html#the-map-functions)
+#   provides more about the `map` functions.
+# - You will occasionally encounter a case where you need to iterate over items
+#   in a data frame, but none of the above functions are flexible enough to do
+#   what you want. In that case, you may consider using [a for
+#   loop](https://r4ds.had.co.nz/iteration.html#iteration).
+```

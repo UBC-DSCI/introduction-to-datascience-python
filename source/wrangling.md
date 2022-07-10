@@ -445,7 +445,7 @@ below!
 
 +++
 
-### Tidying up: going from wide to long using `melt`
+### Tidying up: going from wide to long using `.melt`
 
 One task that is commonly performed to get data into a tidy format \index{pivot\_longer}
 is to combine values that are stored in separate columns, 
@@ -493,11 +493,11 @@ Melting data from a wide to long data format.
 
 +++
 
-We can achieve this effect in Python using the `melt` function from the `pandas` package.
-The `melt` function combines columns, 
+We can achieve this effect in Python using the `.melt` function from the `pandas` package.
+The `.melt` function combines columns, 
 and is usually used during tidying data 
 when we need to make the data frame longer and narrower. 
-To learn how to use `melt`, we will work through an example with the
+To learn how to use `.melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five 
 major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
@@ -537,13 +537,13 @@ to get the maximum value.
 :name: fig:img-pivot-longer-with-table
 :figclass: caption-hack
 
-Going from wide to long with the `melt` function.
+Going from wide to long with the `.melt` function.
 ```
 
 +++
 
 {numref}`fig:img-pivot-longer` details the arguments that we need to specify 
-in the `melt` function to accomplish this data transformation.
+in the `.melt` function to accomplish this data transformation.
 
 +++ {"tags": []}
 
@@ -556,7 +556,7 @@ Syntax for the `melt` function.
 
 +++
 
-We use `melt` to combine the Toronto, Montréal,
+We use `.melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
@@ -575,7 +575,7 @@ lang_mother_tidy
 ```
 
 > **Note**: In the code above, the call to the
-> `melt` function is split across several lines. This is allowed in
+> `.melt` function is split across several lines. This is allowed in
 > certain cases; for example, when calling a function as above, as long as the 
 > line ends with a comma `,` Python knows to keep reading on the next line.
 > Splitting long lines like this across multiple lines is encouraged 
@@ -595,7 +595,7 @@ been met:
 +++
 
 (pivot-wider)=
-### Tidying up: going from long to wide using `pivot`
+### Tidying up: going from long to wide using `.pivot`
 
 Suppose we have observations spread across multiple rows rather than in a single \index{pivot\_wider}
 row. For example, in {numref}`fig:long-to-wide`, the table on the left is in an
@@ -627,10 +627,10 @@ Going from long to wide data.
 
 +++
 
-To tidy this type of data in Python, we can use the `pivot` function.
-The `pivot` function generally increases the number of columns (widens) 
+To tidy this type of data in Python, we can use the `.pivot` function.
+The `.pivot` function generally increases the number of columns (widens) 
 and decreases the number of rows in a data set. 
-To learn how to use `pivot`, 
+To learn how to use `.pivot`, 
 we will work through an example 
 with the `region_lang_top5_cities_long.csv` data set. 
 This data set contains the number of Canadians reporting 
@@ -653,7 +653,7 @@ Canadians reporting their primary language at home and work.
 Doing that would be difficult with this data in its current form,
 since these two variables are stored in the same column.
 {numref}`fig:img-pivot-wider-table` shows how this data
-will be tidied using the `pivot` function.
+will be tidied using the `.pivot` function.
 
 +++ {"tags": []}
 
@@ -661,13 +661,13 @@ will be tidied using the `pivot` function.
 :name: fig:img-pivot-wider-table
 :figclass: caption-hack
 
-Going from long to wide with the `pivot` function.
+Going from long to wide with the `.pivot` function.
 ```
 
 +++
 
 {numref}`fig:img-pivot-wider` details the arguments that we need to specify 
-in the `pivot` function.
+in the `.pivot` function.
 
 +++ {"tags": []}
 
@@ -675,7 +675,7 @@ in the `pivot` function.
 :name: fig:img-pivot-wider
 :figclass: caption-hack
 
-Syntax for the `pivot` function.
+Syntax for the `.pivot` function.
 ```
 
 +++
@@ -712,15 +712,15 @@ that this data is a tidy data set.
     frame is not shared with another value).
 
 You might notice that we have the same number of columns in the tidy data set as
-we did in the messy one. Therefore `pivot` didn't really "widen" the data.
+we did in the messy one. Therefore `.pivot` didn't really "widen" the data.
 This is just because the original `type` column only had
-two categories in it. If it had more than two, `pivot` would have created
+two categories in it. If it had more than two, `.pivot` would have created
 more columns, and we would see the data set "widen."
 
 +++
 
 (str-split)=
-### Tidying up: using `str.split` to deal with multiple delimiters
+### Tidying up: using `.str.split` to deal with multiple delimiters
 
 Data are also not considered tidy when multiple values are stored in the same \index{separate}
 cell. The data set we show below is even messier than the ones we dealt with
@@ -735,7 +735,7 @@ lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
 lang_messy
 ```
 
-First we’ll use `melt` to create two columns, `region` and `value`,
+First we’ll use `.melt` to create two columns, `region` and `value`,
 similar to what we did previously. 
 The new `region` columns will contain the region names,
 and the new column `value` will be a temporary holding place for the 
@@ -753,13 +753,13 @@ lang_messy_longer = lang_messy.melt(
 lang_messy_longer
 ```
 
-Next we'll use `str.split` to split the `value` column into two columns. 
+Next we'll use `.str.split` to split the `value` column into two columns. 
 One column will contain only the counts of Canadians 
 that speak each language most at home, 
 and the other will contain the counts of Canadians 
 that speak each language most at work for each region. 
 {numref}`fig:img-separate`
-outlines what we need to specify to use `str.split`.
+outlines what we need to specify to use `.str.split`.
 
 +++ {"tags": []}
 
@@ -767,7 +767,7 @@ outlines what we need to specify to use `str.split`.
 :name: fig:img-separate
 :figclass: caption-hack
 
-Syntax for the `str.split` function.
+Syntax for the `.str.split` function.
 ```
 
 ```{code-cell} ipython3
@@ -796,11 +796,11 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Notice in the table, all of the variables are
 "object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in Section {ref}`pivot-wider`, the
-`most_at_home` and `most_at_work` variables were `int64` (double)&mdash;you can
+`most_at_home` and `most_at_work` variables were `int64` (integer)&mdash;you can
 verify this by calling `df.dtypes`&mdash;which is a type
 of numeric data. This change is due to the delimiter (`/`) when we read in this
 messy data set. Python read these columns in as string types, and by default,
-`str.split` will return columns as object data types.
+`.str.split` will return columns as object data types.
 
 It makes sense for `region`, `category`, and `language` to be stored as a
 object type. However, suppose we want to apply any functions that treat the
@@ -901,7 +901,7 @@ is especially handy for large data sets.
 Suppose instead we wanted to extract columns that followed a particular pattern
 rather than just selecting a range. For example, let's say we wanted only to select the
 columns `most_at_home` and `most_at_work`. There are other functions that allow
-us to select variables based on their names. In particular, we can use the `str.startswith` method \index{select!starts\_with}
+us to select variables based on their names. In particular, we can use the `.str.startswith` method \index{select!starts\_with}
 to choose only the columns that start with the word "most":
 
 ```{code-cell} ipython3
@@ -909,7 +909,7 @@ tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
 ```
 
 We could also have chosen the columns containing an underscore `_` by using the 
-`str.contains("_")` function, since we notice
+`.str.contains("_")`, since we notice
 the columns we want contain underscores and the others don't. \index{select!contains}
 
 ```{code-cell} ipython3
@@ -1023,8 +1023,8 @@ region_data
 ```
 
 To get the population of the five cities 
-we can filter the data set using the `isin` method. 
-The `%in%` operator is used to see if an element belongs to a list. 
+we can filter the data set using the `.isin` method. 
+The `.isin` method is used to see if an element belongs to a list. 
 Here we are filtering for rows where the value in the `region` column
 matches any of the five cities we are intersted in: Toronto, Montréal,
 Vancouver, Calgary, and Edmonton.
@@ -1040,7 +1040,7 @@ five_cities
 > will compare the series element by element. Python checks if the first element of
 > `seriesA` equals the first element of `seriesB`, the second element of
 > `seriesA` equals the second element of `seriesB`, and so on. On the other hand,
-> `seriesA %in% seriesB` compares the first element of `seriesA` to all the
+> `seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
 > elements in `seriesB`. Then the second element of `seriesA` is compared
 > to all the elements in `seriesB`, and so on. Notice the difference between `==` and
 > `.isin` in the example below.
@@ -1103,11 +1103,11 @@ than French in Montréal according to the 2016 Canadian census.
 +++ {"tags": []}
 
 (pandas-assign)=
-## Using `assign` to modify or add columns
+## Using `.assign` to modify or add columns
 
 +++
 
-### Using `assign` to modify columns
+### Using `.assign` to modify columns
 In Section {ref}`str-split`, 
 when we first read in the `"region_lang_top5_cities_messy.csv"` data,
 all of the variables were "object" data types. \index{mutate}
@@ -1118,9 +1118,9 @@ to the desired integer (i.e., numeric class) data types and then used `df[]` to 
 But suppose we didn't use the `df[]`,
 and needed to modify the columns some other way.
 Below we create such a situation 
-so that we can demonstrate how to use `assign`
+so that we can demonstrate how to use `.assign`
 to change the column types of a data frame. 
-`assign` is a useful function to modify or create new data frame columns.
+`.assign` is a useful function to modify or create new data frame columns.
 
 ```{code-cell} ipython3
 lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
@@ -1147,7 +1147,7 @@ official_langs_obj
 official_langs_obj.dtypes
 ```
 
-To use the `assign` method, again we first specify the object to be the data set, 
+To use the `.assign` method, again we first specify the object to be the data set, 
 and in the following arguments, 
 we specify the name of the column we want to modify or create 
 (here `most_at_home` and `most_at_work`), an `=` sign,
@@ -1161,8 +1161,8 @@ names as columns that already exist in the data frame
 and this will cause `.assign` to *overwrite* those columns 
 (also referred to as modifying those columns *in-place*).
 If we were to give the columns a new name, 
-then `assign` would create new columns with the names we specified.
-`assign`'s general syntax is detailed in {numref}`fig:img-assign`.
+then `.assign` would create new columns with the names we specified.
+`.assign`'s general syntax is detailed in {numref}`fig:img-assign`.
 
 +++ {"tags": []}
 
@@ -1170,12 +1170,12 @@ then `assign` would create new columns with the names we specified.
 :name: fig:img-assign
 :figclass: caption-hack
 
-Syntax for the `assign` function.
+Syntax for the `.assign` function.
 ```
 
 +++
 
-Below we use `mutate` to convert the columns `most_at_home` and `most_at_work`
+Below we use `.assign` to convert the columns `most_at_home` and `most_at_work`
 to numeric data types in the `official_langs` data set as described in 
 {numref}`fig:img-assign`:
 
@@ -1196,7 +1196,7 @@ Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (
 
 +++
 
-### Using `assign` to create new columns
+### Using `.assign` to create new columns
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1567,7 +1567,7 @@ before moving on with further steps.
 
 +++
 
-## Aggregating data with `summarize` and `map`
+## Aggregating data with `.assign`, `.agg` and `.apply`
 
 +++
 
@@ -1617,7 +1617,7 @@ region_lang
 We apply `min` to calculate the minimum 
 and `max` to calculate maximum number of Canadians 
 reporting a particular language as their primary language at home, 
-for any region, and `assign` a column name to each:
+for any region, and `.assign` a column name to each:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1734,10 +1734,10 @@ lang_summary_na
 
 +++
 
-A common pairing with summary functions is `groupby`. Pairing these functions \index{group\_by}
+A common pairing with summary functions is `.groupby`. Pairing these functions \index{group\_by}
 together can let you summarize values for subgroups within a data set,
 as illustrated in {numref}`fig:summarize-groupby`. 
-For example, we can use `groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians 
+For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians 
 reporting the language as the primary language at home 
 for each of the regions in the data set.
 
@@ -1765,25 +1765,22 @@ Calculating summary statistics on one or more column(s) for each group. It creat
 
 +++
 
-The `groupby` function takes at least one argument&mdash;the columns to use in the
+The `.groupby` function takes at least one argument&mdash;the columns to use in the
 grouping. Here we use only one column for grouping (`region`), but more than one
 can also be used. To do this, pass a list of column names to the `by` argument.
 
 ```{code-cell} ipython3
 region_summary = pd.DataFrame()
 region_summary = region_summary.assign(
-    min_most_at_home=region_lang.groupby(by="region")["most_at_home"].min()
-)
-region_summary = region_summary.assign(
+    min_most_at_home=region_lang.groupby(by="region")["most_at_home"].min(),
     max_most_at_home=region_lang.groupby(by="region")["most_at_home"].max()
-)
+).reset_index()
 
-region_summary = region_summary.reset_index()
 region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
 region_summary
 ```
 
-`pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregating methods in one line of code. We just need to pass in a list of method names to `.agg` as shown below.
+`pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregate functions in one line of code. We just need to pass in a list of function names to `.agg` as shown below.
 
 ```{code-cell} ipython3
 region_summary = (
@@ -1793,7 +1790,7 @@ region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
 region_summary
 ```
 
-Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
+Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1860,8 +1857,11 @@ pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
 # To summarize statistics across many columns, we can use the 
 # `summarize` function we have just recently learned about.
 # However, in such a case, using `summarize` alone means that we have to 
@@ -1914,8 +1914,11 @@ Therefore, we will use the `.iloc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
 # An alternative to `summarize` and `across` 
 # for applying a function to many columns is the `map` family of functions. \index{map}
 # Let's again find the maximum value of each column of the
@@ -2040,7 +2043,7 @@ We illustrate such a data transformation in {numref}`fig:mutate-across`.
 :name: fig:mutate-across
 :figclass: caption-hack
 
-`mutate` and `across` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
+`.apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -2127,7 +2130,7 @@ We illustrate such a data transformation in {numref}`fig:rowwise`.
 :name: fig:rowwise
 :figclass: caption-hack
 
-`rowwise` and `mutate` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
+`.apply` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -2192,7 +2195,7 @@ region_lang_rowwise
 We see that we get an additional column added to the data frame, 
 named `maximum`, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
-and region. 
+and region.
 
 ```{code-cell} ipython3
 ---
@@ -2310,7 +2313,7 @@ and guidance that the worksheets provide will function as intended.
   data wrangling that go into more depth than this book. For example, the
   [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
   `.melt` and `.pivot`, but also covers missing values
-  and additional wrangling functions (like `stack`). The [data
+  and additional wrangling functions (like `.stack`). The [data
   aggregation chapter](https://wesmckinney.com/book/data-aggregation.html) covers
   `.groupby`, aggregating functions, `.apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items

@@ -13,18 +13,9 @@ kernelspec:
   name: python3
 ---
 
-# Effective data visualization {#viz}
-
-```{r viz-setup, include = FALSE}
-library(tidyverse)
-library(cowplot)
-library(knitr)
-library(kableExtra)
-library(magick)
+# Effective data visualization
 
 
-knitr::opts_chunk$set(fig.align = "center")
-```
 
 ## Overview 
 This chapter will introduce concepts and tools relating to data visualization
@@ -32,32 +23,24 @@ beyond what we have seen and practiced so far.  We will focus on guiding
 principles for effective data visualization and explaining visualizations
 independent of any particular tool or programming language.  In the process, we
 will cover some specifics of creating visualizations (scatter plots, bar
-plots, line plots, and histograms) for data using R. 
+plots, line plots, and histograms) for data using Python. 
 
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
 
-- Describe when to use the following kinds of visualizations to answer specific questions using a data set:
-    - scatter plots
-    - line plots
-    - bar plots 
-    - histogram plots
-- Given a data set and a question, select from the above plot types and use R to create a visualization that best answers the question.
+
+- Given a data set and a question, select from the above plot types and use Python to create a visualization that best answers the question.
 - Given a visualization and a question, evaluate the effectiveness of the visualization and suggest improvements to better answer the question.
 - Referring to the visualization, communicate the conclusions in non-technical terms.
 - Identify rules of thumb for creating effective visualizations. 
-- Define the three key aspects of ggplot objects:
-    - aesthetic mappings
-    - geometric objects
-    - scales
-- Use the `ggplot2` package in R to create and refine the above visualizations using:
-    - geometric objects: `geom_point`, `geom_line`, `geom_histogram`, `geom_bar`, `geom_vline`, `geom_hline`
-    - scales: `xlim`, `ylim`
-    - aesthetic mappings: `x`, `y`, `fill`, `color`, `shape`
-    - labeling: `xlab`, `ylab`, `labs`
-    - font control and legend positioning: `theme`
-    - subplots: `facet_grid`
+- Define the two key aspects of altair objects:
+    - mark objects
+    - encodings
+- Use the altair library in Python to create and refine the above visualizations using:
+    - mark objects: mark_point, mark_line, mark_bar
+    - encodings : x, y, fill, color, shape
+    - subplots: facet
 - Describe the difference in raster and vector output formats.
 - Use `ggsave` to save visualizations in `.png` and `.svg` format.
 
@@ -159,7 +142,7 @@ alternative.
 ## Refining the visualization
 #### *Convey the message, minimize noise* {-}
 
-Just being able to make a visualization in R with `ggplot2` (or any other tool
+Just being able to make a visualization in Python with `altair` (or any other tool
 for that matter) doesn't mean that it effectively communicates your message to
 others. Once you have selected a broad type of visualization to use, you will
 have to refine it to suit your particular need.  Some rules of thumb for doing
@@ -179,9 +162,8 @@ understand and remember your message quickly.
 - Make sure to use color schemes that are understandable by those with
   colorblindness (a surprisingly large fraction of the overall 
   population&mdash;from about 1% to 10%, depending on sex and ancestry [@deebblind]).
-  For example, [ColorBrewer](https://colorbrewer2.org) 
-  and [the `RColorBrewer` R package](https://cran.r-project.org/web/packages/RColorBrewer/index.html) [@RColorBrewer]  
-  provide the ability to pick such color schemes, and you can check
+  For example, [Color Schemes](https://vega.github.io/vega/docs/schemes/) 
+  provides the ability to pick such color schemes, and you can check
   your visualizations after you have created them by uploading to online tools
   such as a [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/).
 - Redundancy can be helpful; sometimes conveying the same message in multiple ways reinforces it for the audience.
@@ -199,19 +181,18 @@ understand and remember your message quickly.
 
 +++
 
-## Creating visualizations with `ggplot2` 
+## Creating visualizations with `altair` 
 #### *Build the visualization iteratively* {-}
 
 This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer, 
-and then how to create the visualization in R \index{ggplot} using `ggplot2`.  To use the `ggplot2` package, we need to load the `tidyverse` metapackage.
+and then how to create the visualization in Python \index{ggplot} using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` in order to support reading and other data related operations. 
 
-```{r 03-tidyverse, warning=FALSE, message=FALSE}
-library(tidyverse)
+```{code-cell} ipython3
+import pandas as pd
+import altair as alt
 ```
 
-```{r 03-warn-off, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
-options(warn = -1)
-```
+
 
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
 
@@ -229,43 +210,49 @@ For this book, we are going to focus on the last 40 years of the data set,
 Does the concentration of atmospheric CO$_{\text{2}}$ change over time, 
 and are there any interesting patterns to note?
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
-# convert year and month to date column
-# note: eventually move this to the data script
-library(lubridate)
-read_csv("data/mauna_loa.csv") |>
-  unite(col = "date_measured", year:month, remove = TRUE, sep = "-") |>
-  mutate(date_measured = ym(date_measured)) |>
-  select(-date_decimal) |>
-  filter(ppm > 0, date_measured > date("1980/01/01")) |>
-  write_csv("data/mauna_loa_data.csv")
+
+
+```{code-cell} ipython3
+:tags: ["hide-cell"]
+mauna_loa = pd.read_csv("data/mauna_loa.csv")
+mauna_loa['day']=1
+mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
+mauna_loa = mauna_loa[['date_measured', 'ppm']].query('ppm>0 and date_measured>"1980-1-1"')
+mauna_loa.to_csv("data/mauna_loa_data.csv", index=False)
 ```
+
+
 
 To get started, we will read and inspect the data:
 
-```{r 03-data-co2, warning=FALSE, message=FALSE}
+```{code-cell} ipython3
 # mauna loa carbon dioxide data
-co2_df <- read_csv("data/mauna_loa_data.csv")
+co2_df = pd.read_csv("data/mauna_loa_data.csv", parse_dates=['date_measured'])
 co2_df
+```
+
+
+```{code-cell} ipython3
+co2_df.dtypes
 ```
 
 We see that there are two columns in the `co2_df` data frame; `date_measured` and `ppm`. 
 The `date_measured` column holds the date the measurement was taken, 
-and is of type `date`.
+and is of type `datetime64`.
 The `ppm` column holds the value of CO$_{\text{2}}$ in parts per million 
-that was measured on each date, and is type `double`.
+that was measured on each date, and is type `float64`.
 
 > **Note:** `read_csv` was able to parse the `date_measured` column into the
-> `date` vector type because it was entered 
+> `datetime` vector type because it was entered 
 > in the international standard date format, 
-> called ISO 8601, which lists dates as `year-month-day`.
-> `date` vectors are `double` vectors with special properties that allow 
+> called ISO 8601, which lists dates as `year-month-day` and we used `parse_dates=True`
+> `datetime` vectors are `double` vectors with special properties that allow 
 > them to handle dates correctly.
-> For example, `date` type vectors allow functions like `ggplot` 
+> For example, `datetime` type vectors allow functions like `altair` 
 > to treat them as numeric dates and not as character vectors, 
 > even though they contain non-numeric characters 
 > (e.g., in the `date_measured` column in the `co2_df` data frame).
-> This means R will not accidentally plot the dates in the wrong order 
+> This means Python will not accidentally plot the dates in the wrong order 
 > (i.e., not alphanumerically as would happen if it was a character vector). 
 > An in-depth study of dates and times is beyond the scope of the book, 
 > but interested readers 
@@ -279,7 +266,7 @@ Scatter plots show the data as individual points with `x` (horizontal axis)
 and `y` (vertical axis) coordinates.
 Here, we will use the measurement date as the `x` coordinate 
 and the CO$_{\text{2}}$ concentration as the `y` coordinate. 
-When using the `ggplot2` package, 
+When using the `altair` package, 
 we create a plot object with the `ggplot` function. 
 There are a few basic aspects of a plot that we need to specify:
 \index{ggplot!aesthetic mapping}
@@ -321,6 +308,16 @@ co2_scatter <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
 co2_scatter
 ```
 
+
+```{code-cell} ipython3
+co2_scatter = alt.Chart(co2_df).mark_point(size=10, color='black').encode(
+    x = "date_measured", 
+    y = alt.Y("ppm", scale=alt.Scale(zero=False)))
+
+
+co2_scatter
+```
+
 Certainly, the visualization in Figure \@ref(fig:03-data-co2-scatter) 
 shows a clear upward trend 
 in the atmospheric concentration of CO$_{\text{2}}$ over time.
@@ -352,6 +349,16 @@ co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
 co2_line
 ```
 
+```{code-cell} ipython3
+co2_line = alt.Chart(co2_df).mark_line(color='black').encode(
+    x = "date_measured", 
+    y = alt.Y("ppm", scale=alt.Scale(zero=False)))
+
+
+
+co2_line
+```
+
 Aha! Figure \@ref(fig:03-data-co2-line) shows us there *is* another interesting
 phenomenon in the data: in addition to increasing over time, the concentration
 seems to oscillate as well.  Given the visualization as it is now, it is still
@@ -377,6 +384,18 @@ co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
   xlab("Year") +
   ylab("Atmospheric CO2 (ppm)") +
   theme(text = element_text(size = 12))
+
+co2_line
+```
+
+
+```{code-cell} ipython3
+co2_line = alt.Chart(co2_df).mark_line(color='black').encode(
+    x = alt.X("date_measured", title = "Year"),
+    y = alt.Y("ppm", scale=alt.Scale(zero=False), title = "Atmospheric CO2 (ppm)")).configure_axis(
+    titleFontSize=12)
+
+
 
 co2_line
 ```
@@ -419,6 +438,21 @@ co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
   ylab("Atmospheric CO2 (ppm)") +
   xlim(c(date("1990-01-01"), date("1993-12-01"))) +
   theme(text = element_text(size = 12))
+
+co2_line
+```
+
+
+```{code-cell} ipython3
+
+co2_dates = co2_df.loc[(co2_df.date_measured >= '1990-01-01') &  (co2_df.date_measured < '1993-01-01')]
+co2_dates
+co2_line = alt.Chart(co2_dates).mark_line(color='black').encode(
+    x = alt.X("date_measured:T",title = "Year"),
+    y = alt.Y("ppm", scale=alt.Scale(zero=False), title = "Atmospheric CO2 (ppm)")).configure_axis(
+    titleFontSize=12)
+
+
 
 co2_line
 ```
@@ -468,6 +502,13 @@ faithful <- as_tibble(faithful)
 faithful
 ```
 
+
+```{code-cell} ipython3
+faithful = pd.read_csv("data/faithful.csv")
+faithful
+
+```
+
 Here again, we investigate the relationship between two quantitative variables 
 (waiting time and eruption time). 
 But if you look at the output of the data frame, 
@@ -486,6 +527,15 @@ faithful_scatter <- ggplot(faithful, aes(x = waiting, y = eruptions)) +
 faithful_scatter
 ```
 
+
+```{code-cell} ipython3
+faithful_scatter = alt.Chart(faithful).mark_circle(color='black').encode(
+    x = "waiting",
+    y = "eruptions"
+)
+faithful_scatter
+```
+
 We can see in Figure \@ref(fig:03-data-faithful-scatter) that the data tend to fall
 into two groups: one with short waiting and eruption times, and one with long
 waiting and eruption times. Note that in this case, there is no overplotting:
@@ -500,6 +550,16 @@ faithful_scatter <- ggplot(faithful, aes(x = waiting, y = eruptions)) +
   theme(text = element_text(size = 12))
 
 faithful_scatter
+```
+
+```{code-cell} ipython3
+faithful_scatter = alt.Chart(faithful).mark_circle(color='black').encode(
+    x = alt.X("waiting", title = "Waiting Time (mins)"),
+    y = alt.Y("eruptions", title = "Eruption Duration (mins)")
+)
+faithful_scatter
+
+
 ```
 
 +++
@@ -526,6 +586,10 @@ can_lang <- read_csv("data/can_lang.csv")
 can_lang
 ```
 
+```{code-cell} ipython3
+can_lang =  pd.read_csv("data/can_lang.csv")
+```
+
 We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
 The resulting plot is shown in Figure \@ref(fig:03-mother-tongue-vs-most-at-home).
 \index{ggplot!geom\_point}
@@ -534,6 +598,14 @@ The resulting plot is shown in Figure \@ref(fig:03-mother-tongue-vs-most-at-home
 ggplot(can_lang, aes(x = most_at_home, y = mother_tongue)) +
   geom_point()
 ``` 
+
+```{code-cell} ipython3
+
+alt.Chart(can_lang).mark_circle(color='black').encode(
+    x = "most_at_home",
+    y = "mother_tongue")
+
+```
 
 To make an initial improvement in the interpretability 
 of Figure \@ref(fig:03-mother-tongue-vs-most-at-home), we should 
@@ -551,6 +623,8 @@ ggplot(can_lang, aes(x = most_at_home, y = mother_tongue)) +
        y = "Mother tongue \n (number of Canadian residents)") +
   theme(text = element_text(size = 12))
 ```
+
+
 
 ```{r mother-tongue-hidden-summaries, echo = FALSE, warning = FALSE, message = FALSE}
 numlang_speakers <- can_lang |> 

@@ -77,6 +77,12 @@ By the end of the chapter, readers will be able to do the following:
 
 ## The classification problem
 
+```{index} predictive question, classification, class, categorical variable
+```
+
+```{index} seealso: feature ; predictor
+```
+
 In many situations, we want to make `predictions`\\index{predictive question} based on the current situation
 as well as past experiences. For instance, a doctor may want to diagnose a
 patient as either diseased or healthy based on their symptoms and the doctor's
@@ -88,6 +94,9 @@ These tasks are all examples of \index{classification} **classification**, i.e.,
 categorical class (sometimes called a *label*) \index{class}\index{categorical variable} for an observation given its
 other variables (sometimes called *features*). \index{feature|see{predictor}}
 
+```{index} training set
+```
+
 Generally, a classifier assigns an observation without a known class (e.g., a new patient) 
 to a class (e.g., diseased or healthy) on the basis of how similar it is to other observations
 for which we do know the class (e.g., previous patients with known diseases and
@@ -95,6 +104,9 @@ symptoms). These observations with known classes that we use as a basis for
 prediction are called a **training set**; \index{training set} this name comes from the fact that
 we use these data to train, or teach, our classifier. Once taught, we can use
 the classifier to make predictions on new data for which we do not know the class.
+
+```{index} K-nearest neighbors, classification; binary
+```
 
 There are many possible methods that we could use to predict
 a categorical class/label for an observation. In this book, we will
@@ -110,6 +122,9 @@ also run into multiclass classification problems with more than two
 categories (e.g., a diagnosis of healthy, bronchitis, pneumonia, or a common cold).
 
 ## Exploring a data set
+
+```{index} breast cancer, question; classification
+```
 
 In this chapter and the next, we will study a data set of 
 [digitized breast cancer image features](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29),

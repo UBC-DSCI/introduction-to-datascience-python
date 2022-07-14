@@ -13,7 +13,16 @@ kernelspec:
   name: python3
 ---
 
-# Setting up your computer -- TBD
+```{raw-cell}
+
+---
+output:
+  html_document: default
+  word_document: default
+---
+```
+
+# Setting up your computer {#move-to-your-own-machine}
 
 ## Overview
 

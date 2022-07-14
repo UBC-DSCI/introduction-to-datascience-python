@@ -4,13 +4,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Cleaning and wrangling data – TBD &#8212; DSCΙ 100</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cleaning and wrangling data {#wrangling} &#8212; DSCΙ 100</title>
     
-  <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -20,17 +18,21 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
+    
+      
+
+    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -38,13 +40,12 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -53,8 +54,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Effective data visualization – TBD" href="viz.html" />
-    <link rel="prev" title="Reading in data locally and from the web" href="reading.html" />
+    <link rel="next" title="Effective data visualization {#viz}" href="viz.html" />
+    <link rel="prev" title="Reading in data locally and from the web {#reading}" href="reading.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -62,21 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
-
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -85,10 +72,9 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
       
@@ -101,15 +87,14 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="index.html">
-                    Welcome – TBD
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   R and the Tidyverse hello worldV
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   First draft
  </span>
@@ -117,88 +102,93 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="preface-text.html">
-   Preface – TBD
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="foreword-text.html">
-   Foreword – TBD
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="acknowledgements.html">
-   Acknowledgments – TBD
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="authors.html">
-   About the authors – TBD
+   Preface {-}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="setup.html">
-   Setting up your computer – TBD
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="intro.html">
-   Python and the Pandas
+   Setting up your computer {#move-to-your-own-machine}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="reading.html">
-   Reading in data locally and from the web
+   Reading in data locally and from the web {#reading}
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Cleaning and wrangling data – TBD
+   Cleaning and wrangling data {#wrangling}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="viz.html">
-   Effective data visualization – TBD
+   Effective data visualization {#viz}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="version-control.html">
+   Collaboration with version control {#Getting-started-with-version-control}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="classification1.html">
-   Classification I: training &amp; predicting
+   Classification I: training &amp; predicting {#classification}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="classification2.html">
-   Classification II: evaluation &amp; tuning
+   Classification II: evaluation &amp; tuning {#classification2}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="regression1.html">
-   Regression I: K-nearest neighbors
+   Regression I: K-nearest neighbors {#regression1}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="regression2.html">
-   Regression II: linear regression
+   Regression II: linear regression {#regression2}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="clustering.html">
+   Clustering {#clustering}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="inference.html">
+   Statistical inference {#inference}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="acknowledgements.html">
+   Acknowledgments {-}
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="authors.html">
+   About the authors {-}
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="appendixA.html">
-   Appendix
+   (APPENDIX) Appendix {-}
   </a>
  </li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
-    </div>
-    <div id="rtd-footer-container"></div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
 </div>
 
 
@@ -206,145 +196,87 @@ const thebe_selector_output = ".output, .cell_output"
 
 
           
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="header-article row sticky-top noprint">
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
 
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-    </ul>
-  </div>
-</div>
-
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/wrangling.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download notebook file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-code"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="_sources/wrangling.md"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.md</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        <a class="dropdown-buttons"
+            href="_sources/wrangling.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/wrangling.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/phaustin/eosc211_students/e211_live_main?urlpath=tree/wrangling.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        <a class="jupyterhub-button" href="https://eosc211.jupyterhub.eoas.ubc.ca/jupyter/hub/user-redirect/git-pull?repo=https://github.com/phaustin/eosc211_students&urlpath=tree/eosc211_students/wrangling.md&branch=e211_live_main"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch JupyterHub" data-toggle="tooltip"
+                data-placement="left"><img class="jupyterhub-button-logo"
+                    src="_static/images/logo_jupyterhub.svg"
+                    alt="Interact on JupyterHub">JupyterHub</button></a>
+        
+        
+        
     </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#overview">
    Overview
@@ -719,14 +651,15 @@ title="Print to PDF"
  </li>
 </ul>
 
-    </nav>
-</div>
+            </nav>
+        </div>
     </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Cleaning and wrangling data – TBD</h1>
+                <h1>Cleaning and wrangling data {#wrangling}</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -1114,12 +1047,11 @@ title="Print to PDF"
                     </div>
                 </div>
             </div>
-            <main id="main-content" role="main">
-                
+            
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="cleaning-and-wrangling-data-tbd">
-<h1>Cleaning and wrangling data – TBD<a class="headerlink" href="#cleaning-and-wrangling-data-tbd" title="Permalink to this headline">#</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="cleaning-and-wrangling-data-wrangling">
+<h1>Cleaning and wrangling data {#wrangling}<a class="headerlink" href="#cleaning-and-wrangling-data-wrangling" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>library(magick)
 library(tidyverse)
 library(canlang)
@@ -1129,15 +1061,15 @@ library(cowplot)
 knitr::opts_chunk$set(fig.align = &quot;default&quot;)
 </pre></div>
 </div>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This chapter is centered around defining tidy data—a data format that is
 suitable for analysis—and the tools needed to transform raw data into this
 format. This will be presented in the context of a real-world data science
 application, providing more practice working through a whole case study.</p>
-</section>
-<section id="chapter-learning-objectives">
-<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
 <p>By the end of the chapter, readers will be able to do the following:</p>
 <ul class="simple">
 <li><p>Define the term “tidy data”.</p></li>
@@ -1175,17 +1107,17 @@ intended data wrangling tasks:</p>
 </ul>
 </li>
 </ul>
-</section>
-<section id="data-frames-vectors-and-lists">
-<h2>Data frames, vectors, and lists<a class="headerlink" href="#data-frames-vectors-and-lists" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="data-frames-vectors-and-lists">
+<h2>Data frames, vectors, and lists<a class="headerlink" href="#data-frames-vectors-and-lists" title="Permalink to this headline">¶</a></h2>
 <p>In Chapters &#64;ref(intro) and &#64;ref(reading), <em>data frames</em> were the focus:
 we learned how to import data into R as a data frame, and perform basic operations on data frames in R.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require
 that data are represented as a data frame in R. Therefore, in this section,
 we will dig more deeply into what data frames are and how they are represented in R.
 This knowledge will be helpful in effectively utilizing these objects in our data analyses.</p>
-<section id="what-is-a-data-frame">
-<h3>What is a data frame?<a class="headerlink" href="#what-is-a-data-frame" title="Permalink to this headline">#</a></h3>
+<div class="section" id="what-is-a-data-frame">
+<h3>What is a data frame?<a class="headerlink" href="#what-is-a-data-frame" title="Permalink to this headline">¶</a></h3>
 <p>A data frame \index{data frame!definition} is a table-like structure for storing data in R.  Data frames are
 important to learn about because most data that you will encounter in practice
 can be naturally stored as a table.  In order to define data frames precisely,
@@ -1217,9 +1149,9 @@ data set. There are 13 entities in the data set in total, corresponding to the
   image_crop(&quot;3632x700&quot;)
 </pre></div>
 </div>
-</section>
-<section id="what-is-a-vector">
-<h3>What is a vector?<a class="headerlink" href="#what-is-a-vector" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="what-is-a-vector">
+<h3>What is a vector?<a class="headerlink" href="#what-is-a-vector" title="Permalink to this headline">¶</a></h3>
 <p>In R, <strong>vectors</strong> \index{vector}\index{atomic vector|see{vector}} are objects that can contain one or more elements. The vector
 elements are ordered, and they must all be of the same <strong>data type</strong>;
 R has several different basic data types, as shown in Table &#64;ref(tab:datatype-table).
@@ -1302,9 +1234,9 @@ factors can sometimes <em>look</em> like characters, they are not used to repres
 text, words, names, and paths in the way that characters are; in fact, R
 internally stores factors using integers! There are other basic data types in R, such as <em>raw</em>
 and <em>complex</em>, but we do not use these in this textbook.</p>
-</section>
-<section id="what-is-a-list">
-<h3>What is a list?<a class="headerlink" href="#what-is-a-list" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="what-is-a-list">
+<h3>What is a list?<a class="headerlink" href="#what-is-a-list" title="Permalink to this headline">¶</a></h3>
 <p>Lists \index{list} are also objects in R that have multiple, ordered elements.
 Vectors and lists differ by the requirement of element type
 consistency. All elements within a single vector must be of the same type (e.g.,
@@ -1314,9 +1246,9 @@ different types (e.g., characters, integers, logicals, and even other lists).</p
   image_crop(&quot;3632x590&quot;)
 </pre></div>
 </div>
-</section>
-<section id="what-does-this-have-to-do-with-data-frames">
-<h3>What does this have to do with data frames?<a class="headerlink" href="#what-does-this-have-to-do-with-data-frames" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="what-does-this-have-to-do-with-data-frames">
+<h3>What does this have to do with data frames?<a class="headerlink" href="#what-does-this-have-to-do-with-data-frames" title="Permalink to this headline">¶</a></h3>
 <p>A data frame \index{data frame!definition} is really a special kind of list that follows two rules:</p>
 <ol class="simple">
 <li><p>Each element itself must either be a vector or a list.</p></li>
@@ -1377,10 +1309,10 @@ language (<em>e.g.,</em> matrices), but these are beyond the scope of this book.
 </tr>
 </tbody>
 </table>
-</section>
-</section>
-<section id="tidy-data">
-<h2>Tidy data<a class="headerlink" href="#tidy-data" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="tidy-data">
+<h2>Tidy data<a class="headerlink" href="#tidy-data" title="Permalink to this headline">¶</a></h2>
 <p>There are many ways a tabular data set can be organized. This chapter will focus
 on introducing the <strong>tidy data</strong> \index{tidy data!definition} format of organization and how to make your raw
 (and likely messy) data tidy. A tidy data frame satisfies
@@ -1419,8 +1351,8 @@ with the appropriate data analysis tool, it’s important to match your
 statistical question with the appropriate variables and ensure they are
 represented as individual columns to make the data tidy.</p>
 </div></blockquote>
-<section id="tidying-up-going-from-wide-to-long-using-pivot-longer">
-<h3>Tidying up: going from wide to long using <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code><a class="headerlink" href="#tidying-up-going-from-wide-to-long-using-pivot-longer" title="Permalink to this headline">#</a></h3>
+<div class="section" id="tidying-up-going-from-wide-to-long-using-pivot-longer">
+<h3>Tidying up: going from wide to long using <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code><a class="headerlink" href="#tidying-up-going-from-wide-to-long-using-pivot-longer" title="Permalink to this headline">¶</a></h3>
 <p>One task that is commonly performed to get data into a tidy format \index{pivot_longer}
 is to combine values that are stored in separate columns,
 but are really part of the same variable, into one.
@@ -1528,9 +1460,9 @@ Canadians where that language is the mother tongue, are in a single row.</p></li
 <li><p>Each value is a single cell, i.e., its row, column position in the data
 frame is not shared with another value.</p></li>
 </ol>
-</section>
-<section id="tidying-up-going-from-long-to-wide-using-pivot-wider-pivot-wider">
-<h3>Tidying up: going from long to wide using <code class="docutils literal notranslate"><span class="pre">pivot_wider</span></code> {#pivot-wider}<a class="headerlink" href="#tidying-up-going-from-long-to-wide-using-pivot-wider-pivot-wider" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="tidying-up-going-from-long-to-wide-using-pivot-wider-pivot-wider">
+<h3>Tidying up: going from long to wide using <code class="docutils literal notranslate"><span class="pre">pivot_wider</span></code> {#pivot-wider}<a class="headerlink" href="#tidying-up-going-from-long-to-wide-using-pivot-wider-pivot-wider" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we have observations spread across multiple rows rather than in a single \index{pivot_wider}
 row. For example, in Figure &#64;ref(fig:long-to-wide), the table on the left is in an
 untidy, long format because the <code class="docutils literal notranslate"><span class="pre">count</span></code> column contains three variables
@@ -1610,9 +1542,9 @@ we did in the messy one. Therefore <code class="docutils literal notranslate"><s
 as the name suggests. This is just because the original <code class="docutils literal notranslate"><span class="pre">type</span></code> column only had
 two categories in it. If it had more than two, <code class="docutils literal notranslate"><span class="pre">pivot_wider</span></code> would have created
 more columns, and we would see the data set “widen.”</p>
-</section>
-<section id="tidying-up-using-separate-to-deal-with-multiple-delimiters-separate">
-<h3>Tidying up: using <code class="docutils literal notranslate"><span class="pre">separate</span></code> to deal with multiple delimiters  {#separate}<a class="headerlink" href="#tidying-up-using-separate-to-deal-with-multiple-delimiters-separate" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="tidying-up-using-separate-to-deal-with-multiple-delimiters-separate">
+<h3>Tidying up: using <code class="docutils literal notranslate"><span class="pre">separate</span></code> to deal with multiple delimiters  {#separate}<a class="headerlink" href="#tidying-up-using-separate-to-deal-with-multiple-delimiters-separate" title="Permalink to this headline">¶</a></h3>
 <p>Data are also not considered tidy when multiple values are stored in the same \index{separate}
 cell. The data set we show below is even messier than the ones we dealt with
 above: the <code class="docutils literal notranslate"><span class="pre">Toronto</span></code>, <code class="docutils literal notranslate"><span class="pre">Montréal</span></code>, <code class="docutils literal notranslate"><span class="pre">Vancouver</span></code>, <code class="docutils literal notranslate"><span class="pre">Calgary</span></code> and <code class="docutils literal notranslate"><span class="pre">Edmonton</span></code> columns
@@ -1670,10 +1602,10 @@ like this: we can set <code class="docutils literal notranslate"><span class="pr
 and <code class="docutils literal notranslate"><span class="pre">most_at_work</span></code> columns to the correct data type.</p>
 <p>Now we see <code class="docutils literal notranslate"><span class="pre">&lt;int&gt;</span></code> appears under the <code class="docutils literal notranslate"><span class="pre">most_at_home</span></code> and <code class="docutils literal notranslate"><span class="pre">most_at_work</span></code> columns,
 indicating they are integer data types (i.e., numbers)!</p>
-</section>
-</section>
-<section id="using-select-to-extract-a-range-of-columns">
-<h2>Using <code class="docutils literal notranslate"><span class="pre">select</span></code> to extract a range of columns<a class="headerlink" href="#using-select-to-extract-a-range-of-columns" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="using-select-to-extract-a-range-of-columns">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">select</span></code> to extract a range of columns<a class="headerlink" href="#using-select-to-extract-a-range-of-columns" title="Permalink to this headline">¶</a></h2>
 <p>Now that the <code class="docutils literal notranslate"><span class="pre">tidy_lang</span></code> data is indeed <em>tidy</em>, we can start manipulating it \index{select!helpers}
 using the powerful suite of functions from the <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code>.
 For the first example, recall the <code class="docutils literal notranslate"><span class="pre">select</span></code> function from Chapter &#64;ref(intro),
@@ -1711,9 +1643,9 @@ the columns we want contain underscores and the others don’t. \index{select!co
 variables based on certain criteria.
 The additional resources section at the end of this chapter
 provides a comprehensive resource on <code class="docutils literal notranslate"><span class="pre">select</span></code> helpers.</p>
-</section>
-<section id="using-filter-to-extract-rows">
-<h2>Using <code class="docutils literal notranslate"><span class="pre">filter</span></code> to extract rows<a class="headerlink" href="#using-filter-to-extract-rows" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="using-filter-to-extract-rows">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">filter</span></code> to extract rows<a class="headerlink" href="#using-filter-to-extract-rows" title="Permalink to this headline">¶</a></h2>
 <p>Next, we revisit the <code class="docutils literal notranslate"><span class="pre">filter</span></code> function from Chapter &#64;ref(intro),
 which lets us create a subset of rows from a data frame.
 Recall the two main arguments to the <code class="docutils literal notranslate"><span class="pre">filter</span></code> function:
@@ -1723,8 +1655,8 @@ the second is a <em>logical statement</em> to use when filtering the rows.
 This section will highlight more advanced usage of the <code class="docutils literal notranslate"><span class="pre">filter</span></code> function.
 In particular, this section provides an in-depth treatment of the variety of logical statements
 one can use in the <code class="docutils literal notranslate"><span class="pre">filter</span></code> function to select subsets of rows.</p>
-<section id="extracting-rows-that-have-a-certain-value-with">
-<h3>Extracting rows that have a certain value with <code class="docutils literal notranslate"><span class="pre">==</span></code><a class="headerlink" href="#extracting-rows-that-have-a-certain-value-with" title="Permalink to this headline">#</a></h3>
+<div class="section" id="extracting-rows-that-have-a-certain-value-with">
+<h3>Extracting rows that have a certain value with <code class="docutils literal notranslate"><span class="pre">==</span></code><a class="headerlink" href="#extracting-rows-that-have-a-certain-value-with" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we are only interested in the subset of rows in <code class="docutils literal notranslate"><span class="pre">tidy_lang</span></code> corresponding to the
 official languages of Canada (English and French).
 We can <code class="docutils literal notranslate"><span class="pre">filter</span></code> for these rows by using the <em>equivalency operator</em> (<code class="docutils literal notranslate"><span class="pre">==</span></code>)
@@ -1735,17 +1667,17 @@ of the input data frame
 but only the rows we asked for in the logical statement, i.e.,
 those where the <code class="docutils literal notranslate"><span class="pre">category</span></code> column holds the value <code class="docutils literal notranslate"><span class="pre">&quot;Official</span> <span class="pre">languages&quot;</span></code>.
 We name this data frame <code class="docutils literal notranslate"><span class="pre">official_langs</span></code>.</p>
-</section>
-<section id="extracting-rows-that-do-not-have-a-certain-value-with">
-<h3>Extracting rows that do not have a certain value with <code class="docutils literal notranslate"><span class="pre">!=</span></code><a class="headerlink" href="#extracting-rows-that-do-not-have-a-certain-value-with" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="extracting-rows-that-do-not-have-a-certain-value-with">
+<h3>Extracting rows that do not have a certain value with <code class="docutils literal notranslate"><span class="pre">!=</span></code><a class="headerlink" href="#extracting-rows-that-do-not-have-a-certain-value-with" title="Permalink to this headline">¶</a></h3>
 <p>What if we want all the other language categories in the data set <em>except</em> for
 those in the <code class="docutils literal notranslate"><span class="pre">&quot;Official</span> <span class="pre">languages&quot;</span></code> category? We can accomplish this with the <code class="docutils literal notranslate"><span class="pre">!=</span></code>
 operator, which means “not equal to”. So if we want to find all the rows
 where the <code class="docutils literal notranslate"><span class="pre">category</span></code> does <em>not</em> equal <code class="docutils literal notranslate"><span class="pre">&quot;Official</span> <span class="pre">languages&quot;</span></code> we write the code
 below.</p>
-</section>
-<section id="extracting-rows-satisfying-multiple-conditions-using-or-filter-and">
-<h3>Extracting rows satisfying multiple conditions using <code class="docutils literal notranslate"><span class="pre">,</span></code> or <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> {#filter-and}<a class="headerlink" href="#extracting-rows-satisfying-multiple-conditions-using-or-filter-and" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="extracting-rows-satisfying-multiple-conditions-using-or-filter-and">
+<h3>Extracting rows satisfying multiple conditions using <code class="docutils literal notranslate"><span class="pre">,</span></code> or <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> {#filter-and}<a class="headerlink" href="#extracting-rows-satisfying-multiple-conditions-using-or-filter-and" title="Permalink to this headline">¶</a></h3>
 <p>Suppose now we want to look at only the rows
 for the French language in Montréal.
 To do this, we need to filter the data set
@@ -1759,9 +1691,9 @@ to subset the rows where <code class="docutils literal notranslate"><span class=
 us cases where <em>both</em> one condition <em>and</em> another condition
 are satisfied. You can use either comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>) or ampersand (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code>) in the <code class="docutils literal notranslate"><span class="pre">filter</span></code>
 function interchangeably.</p>
-</section>
-<section id="extracting-rows-satisfying-at-least-one-condition-using">
-<h3>Extracting rows satisfying at least one condition using <code class="docutils literal notranslate"><span class="pre">|</span></code><a class="headerlink" href="#extracting-rows-satisfying-at-least-one-condition-using" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="extracting-rows-satisfying-at-least-one-condition-using">
+<h3>Extracting rows satisfying at least one condition using <code class="docutils literal notranslate"><span class="pre">|</span></code><a class="headerlink" href="#extracting-rows-satisfying-at-least-one-condition-using" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we were interested in only those rows corresponding to cities in Alberta
 in the <code class="docutils literal notranslate"><span class="pre">official_langs</span></code> data set (Edmonton and Calgary).
 We can’t use <code class="docutils literal notranslate"><span class="pre">,</span></code> as we did above because <code class="docutils literal notranslate"><span class="pre">region</span></code>
@@ -1771,9 +1703,9 @@ which gives us the cases where one condition <em>or</em>
 another condition <em>or</em> both are satisfied.
 In the code below, we ask R to return the rows
 where the <code class="docutils literal notranslate"><span class="pre">region</span></code> columns are equal to “Calgary” <em>or</em> “Edmonton”.</p>
-</section>
-<section id="extracting-rows-with-values-in-a-vector-using-in">
-<h3>Extracting rows with values in a vector using <code class="docutils literal notranslate"><span class="pre">%in%</span></code><a class="headerlink" href="#extracting-rows-with-values-in-a-vector-using-in" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="extracting-rows-with-values-in-a-vector-using-in">
+<h3>Extracting rows with values in a vector using <code class="docutils literal notranslate"><span class="pre">%in%</span></code><a class="headerlink" href="#extracting-rows-with-values-in-a-vector-using-in" title="Permalink to this headline">¶</a></h3>
 <p>Next, suppose we want to see the populations of our five cities.
 Let’s read in the <code class="docutils literal notranslate"><span class="pre">region_data.csv</span></code> file
 that comes from the 2016 Canadian census,
@@ -1803,9 +1735,9 @@ elements in <code class="docutils literal notranslate"><span class="pre">vectorB
 to all the elements in <code class="docutils literal notranslate"><span class="pre">vectorB</span></code>, and so on. Notice the difference between <code class="docutils literal notranslate"><span class="pre">==</span></code> and
 <code class="docutils literal notranslate"><span class="pre">%in%</span></code> in the example below.</p>
 </div></blockquote>
-</section>
-<section id="extracting-rows-above-or-below-a-threshold-using-and">
-<h3>Extracting rows above or below a threshold using <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;</span></code><a class="headerlink" href="#extracting-rows-above-or-below-a-threshold-using-and" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="extracting-rows-above-or-below-a-threshold-using-and">
+<h3>Extracting rows above or below a threshold using <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;</span></code><a class="headerlink" href="#extracting-rows-above-or-below-a-threshold-using-and" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>census_popn &lt;- 35151728
 most_french &lt;- 2669195
 </pre></div>
@@ -1823,12 +1755,12 @@ considering the official languages,
 only English in Toronto is reported by more people
 as their primary language at home
 than French in Montréal according to the 2016 Canadian census.</p>
-</section>
-</section>
-<section id="using-mutate-to-modify-or-add-columns">
-<h2>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to modify or add columns<a class="headerlink" href="#using-mutate-to-modify-or-add-columns" title="Permalink to this headline">#</a></h2>
-<section id="using-mutate-to-modify-columns">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to modify columns<a class="headerlink" href="#using-mutate-to-modify-columns" title="Permalink to this headline">#</a></h3>
+</div>
+</div>
+<div class="section" id="using-mutate-to-modify-or-add-columns">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to modify or add columns<a class="headerlink" href="#using-mutate-to-modify-or-add-columns" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-mutate-to-modify-columns">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to modify columns<a class="headerlink" href="#using-mutate-to-modify-columns" title="Permalink to this headline">¶</a></h3>
 <p>In Section &#64;ref(separate),
 when we first read in the <code class="docutils literal notranslate"><span class="pre">&quot;region_lang_top5_cities_messy.csv&quot;</span></code> data,
 all of the variables were “character” data types. \index{mutate}
@@ -1881,9 +1813,9 @@ to numeric data types in the <code class="docutils literal notranslate"><span cl
 &#64;ref(fig:img-mutate):</p>
 <p>Now we see <code class="docutils literal notranslate"><span class="pre">&lt;dbl&gt;</span></code> appears under the <code class="docutils literal notranslate"><span class="pre">most_at_home</span></code> and <code class="docutils literal notranslate"><span class="pre">most_at_work</span></code> columns,
 indicating they are double data types (which is a numeric data type)!</p>
-</section>
-<section id="using-mutate-to-create-new-columns">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to create new columns<a class="headerlink" href="#using-mutate-to-create-new-columns" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="using-mutate-to-create-new-columns">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">mutate</span></code> to create new columns<a class="headerlink" href="#using-mutate-to-create-new-columns" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-{r notranslate"><div class="highlight"><pre><span></span>census_popn &lt;- 35151728
 number_most_home &lt;- filter(official_langs, 
                            language == &quot;English&quot; &amp; region == &quot;Toronto&quot;) |&gt;
@@ -1982,10 +1914,10 @@ From this visualization, we can see that in Calgary, Edmonton, Toronto, and
 Vancouver, English was reported as the most common primary language used at
 home.  However, in Montréal, this does not seem to be the case!
 -->
-</section>
-</section>
-<section id="combining-functions-using-the-pipe-operator">
-<h2>Combining functions using the pipe operator, <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code><a class="headerlink" href="#combining-functions-using-the-pipe-operator" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="combining-functions-using-the-pipe-operator">
+<h2>Combining functions using the pipe operator, <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code><a class="headerlink" href="#combining-functions-using-the-pipe-operator" title="Permalink to this headline">¶</a></h2>
 <p>In R, we often have to call multiple functions in a sequence to process a data
 frame. The basic ways of doing this can become quickly unreadable if there are
 many steps. For example, suppose we need to perform three operations on a data
@@ -2056,8 +1988,8 @@ books and other resources.
 In most cases these two pipes are interchangeable and either can be used.</p>
 </div></blockquote>
 <p>\index{pipe}\index{aaapipesymbb&#64;%&gt;%|see{pipe}}</p>
-<section id="using-to-combine-filter-and-select">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> to combine <code class="docutils literal notranslate"><span class="pre">filter</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code><a class="headerlink" href="#using-to-combine-filter-and-select" title="Permalink to this headline">#</a></h3>
+<div class="section" id="using-to-combine-filter-and-select">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> to combine <code class="docutils literal notranslate"><span class="pre">filter</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code><a class="headerlink" href="#using-to-combine-filter-and-select" title="Permalink to this headline">¶</a></h3>
 <p>Let’s work with the tidy <code class="docutils literal notranslate"><span class="pre">tidy_lang</span></code> data set from Section &#64;ref(separate),
 which contains the number of Canadians reporting their primary language at home
 and work for five major cities
@@ -2088,9 +2020,9 @@ Then again after <code class="docutils literal notranslate"><span class="pre">fi
 to the first argument of the <code class="docutils literal notranslate"><span class="pre">select</span></code> function.
 As you can see, both of these approaches—with and without pipes—give us the same output, but the second
 approach is clearer and more readable.</p>
-</section>
-<section id="using-with-more-than-two-functions">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> with more than two functions<a class="headerlink" href="#using-with-more-than-two-functions" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="using-with-more-than-two-functions">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> with more than two functions<a class="headerlink" href="#using-with-more-than-two-functions" title="Permalink to this headline">¶</a></h3>
 <p>The pipe operator (|&gt;) can be used with any function in R.
 Additionally, we can pipe together more than two functions.
 For example, we can pipe together three functions to:</p>
@@ -2118,12 +2050,12 @@ redo all of your data transformations.
 Additionally, piping many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.</p>
-</section>
-</section>
-<section id="aggregating-data-with-summarize-and-map">
-<h2>Aggregating data with <code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code><a class="headerlink" href="#aggregating-data-with-summarize-and-map" title="Permalink to this headline">#</a></h2>
-<section id="calculating-summary-statistics-on-whole-columns">
-<h3>Calculating summary statistics on whole columns<a class="headerlink" href="#calculating-summary-statistics-on-whole-columns" title="Permalink to this headline">#</a></h3>
+</div>
+</div>
+<div class="section" id="aggregating-data-with-summarize-and-map">
+<h2>Aggregating data with <code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code><a class="headerlink" href="#aggregating-data-with-summarize-and-map" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="calculating-summary-statistics-on-whole-columns">
+<h3>Calculating summary statistics on whole columns<a class="headerlink" href="#calculating-summary-statistics-on-whole-columns" title="Permalink to this headline">¶</a></h3>
 <p>As a part of many data analyses, we need to calculate a summary value for the
 data (a <em>summary statistic</em>). \index{summarize}
 Examples of summary statistics we might want to calculate
@@ -2158,9 +2090,9 @@ as their primary language at home. We also see that the most commonly spoken
 primary language at home is spoken by
 <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">format(lang_summary$max_most_at_home[1],</span> <span class="pre">scientific</span> <span class="pre">=</span> <span class="pre">FALSE,</span> <span class="pre">big.mark</span> <span class="pre">=</span> <span class="pre">&quot;,&quot;)</span></code>
 people.</p>
-</section>
-<section id="calculating-summary-statistics-when-there-are-nas">
-<h3>Calculating summary statistics when there are <code class="docutils literal notranslate"><span class="pre">NA</span></code>s<a class="headerlink" href="#calculating-summary-statistics-when-there-are-nas" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="calculating-summary-statistics-when-there-are-nas">
+<h3>Calculating summary statistics when there are <code class="docutils literal notranslate"><span class="pre">NA</span></code>s<a class="headerlink" href="#calculating-summary-statistics-when-there-are-nas" title="Permalink to this headline">¶</a></h3>
 <p>In data frames in R, the value <code class="docutils literal notranslate"><span class="pre">NA</span></code> is often used to denote missing data.
 Many of the base R statistical summary functions
 (e.g., <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">sum</span></code>, etc) will return <code class="docutils literal notranslate"><span class="pre">NA</span></code>
@@ -2185,9 +2117,9 @@ region_lang_na[[&quot;most_at_home&quot;]][1] &lt;- NA
 we see that we no longer get the minimum and maximum returned,
 but just an <code class="docutils literal notranslate"><span class="pre">NA</span></code> instead!</p>
 <p>We can fix this by adding the <code class="docutils literal notranslate"><span class="pre">na.rm</span> <span class="pre">=</span> <span class="pre">TRUE</span></code> as explained above:</p>
-</section>
-<section id="calculating-summary-statistics-for-groups-of-rows">
-<h3>Calculating summary statistics for groups of rows<a class="headerlink" href="#calculating-summary-statistics-for-groups-of-rows" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="calculating-summary-statistics-for-groups-of-rows">
+<h3>Calculating summary statistics for groups of rows<a class="headerlink" href="#calculating-summary-statistics-for-groups-of-rows" title="Permalink to this headline">¶</a></h3>
 <p>A common pairing with <code class="docutils literal notranslate"><span class="pre">summarize</span></code> is <code class="docutils literal notranslate"><span class="pre">group_by</span></code>. Pairing these functions \index{group_by}
 together can let you summarize values for subgroups within a data set,
 as illustrated in Figure &#64;ref(fig:summarize-groupby).
@@ -2208,9 +2140,9 @@ In the output below, the grouped data set looks the same,
 and it doesn’t <em>appear</em> to be grouped by <code class="docutils literal notranslate"><span class="pre">region</span></code>.
 Instead, <code class="docutils literal notranslate"><span class="pre">group_by</span></code> simply changes how other functions work with the data,
 as we saw with <code class="docutils literal notranslate"><span class="pre">summarize</span></code> above.</p>
-</section>
-<section id="calculating-summary-statistics-on-many-columns">
-<h3>Calculating summary statistics on many columns<a class="headerlink" href="#calculating-summary-statistics-on-many-columns" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="calculating-summary-statistics-on-many-columns">
+<h3>Calculating summary statistics on many columns<a class="headerlink" href="#calculating-summary-statistics-on-many-columns" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes we need to summarize statistics across many columns.
 An example of this is illustrated in Figure &#64;ref(fig:summarize-across).
 In such a case, using <code class="docutils literal notranslate"><span class="pre">summarize</span></code> alone means that we have to
@@ -2224,8 +2156,8 @@ Then we will also explore how we can use a more general iteration function,
   image_crop(&quot;2000x475+0+300&quot;)
 </pre></div>
 </div>
-<section id="summarize-and-across-for-calculating-summary-statistics-on-many-columns">
-<h4><code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">across</span></code> for calculating summary statistics on many columns {-}<a class="headerlink" href="#summarize-and-across-for-calculating-summary-statistics-on-many-columns" title="Permalink to this headline">#</a></h4>
+<div class="section" id="summarize-and-across-for-calculating-summary-statistics-on-many-columns">
+<h4><code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">across</span></code> for calculating summary statistics on many columns {-}<a class="headerlink" href="#summarize-and-across-for-calculating-summary-statistics-on-many-columns" title="Permalink to this headline">¶</a></h4>
 <p>To summarize statistics across many columns, we can use the
 <code class="docutils literal notranslate"><span class="pre">summarize</span></code> function we have just recently learned about.
 However, in such a case, using <code class="docutils literal notranslate"><span class="pre">summarize</span></code> alone means that we have to
@@ -2253,9 +2185,9 @@ In this case, we need to add a <code class="docutils literal notranslate"><span 
 after specifying the function we want <code class="docutils literal notranslate"><span class="pre">summarize</span></code> + <code class="docutils literal notranslate"><span class="pre">across</span></code> to apply,
 as illustrated below:</p>
 </div></blockquote>
-</section>
-<section id="map-for-calculating-summary-statistics-on-many-columns">
-<h4><code class="docutils literal notranslate"><span class="pre">map</span></code> for calculating summary statistics on many columns {-}<a class="headerlink" href="#map-for-calculating-summary-statistics-on-many-columns" title="Permalink to this headline">#</a></h4>
+</div>
+<div class="section" id="map-for-calculating-summary-statistics-on-many-columns">
+<h4><code class="docutils literal notranslate"><span class="pre">map</span></code> for calculating summary statistics on many columns {-}<a class="headerlink" href="#map-for-calculating-summary-statistics-on-many-columns" title="Permalink to this headline">¶</a></h4>
 <p>An alternative to <code class="docutils literal notranslate"><span class="pre">summarize</span></code> and <code class="docutils literal notranslate"><span class="pre">across</span></code>
 for applying a function to many columns is the <code class="docutils literal notranslate"><span class="pre">map</span></code> family of functions. \index{map}
 Let’s again find the maximum value of each column of the
@@ -2347,11 +2279,11 @@ Additionally, their use is not limited to columns of a data frame;
 or a list, and even to lists of (nested!) data frames.
 To learn more about the <code class="docutils literal notranslate"><span class="pre">map</span></code> functions, see the additional resources
 section at the end of this chapter.</p>
-</section>
-</section>
-</section>
-<section id="apply-functions-across-many-columns-with-mutate-and-across">
-<h2>Apply functions across many columns with <code class="docutils literal notranslate"><span class="pre">mutate</span></code> and <code class="docutils literal notranslate"><span class="pre">across</span></code><a class="headerlink" href="#apply-functions-across-many-columns-with-mutate-and-across" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+</div>
+<div class="section" id="apply-functions-across-many-columns-with-mutate-and-across">
+<h2>Apply functions across many columns with <code class="docutils literal notranslate"><span class="pre">mutate</span></code> and <code class="docutils literal notranslate"><span class="pre">across</span></code><a class="headerlink" href="#apply-functions-across-many-columns-with-mutate-and-across" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes we need to apply a function to many columns in a data frame.
 For example, we would need to do this when converting units of measurements across many columns.
 We illustrate such a data transformation in Figure &#64;ref(fig:mutate-across).</p>
@@ -2378,9 +2310,9 @@ which means that we get back a data frame with the same number of rows.</p>
 with the same number of columns and rows.
 The only thing that changes is the transformation we applied
 to the specified columns (here <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> to <code class="docutils literal notranslate"><span class="pre">lang_known</span></code>).</p>
-</section>
-<section id="apply-functions-across-columns-within-one-row-with-rowwise-and-mutate">
-<h2>Apply functions across columns within one row with <code class="docutils literal notranslate"><span class="pre">rowwise</span></code> and <code class="docutils literal notranslate"><span class="pre">mutate</span></code><a class="headerlink" href="#apply-functions-across-columns-within-one-row-with-rowwise-and-mutate" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="apply-functions-across-columns-within-one-row-with-rowwise-and-mutate">
+<h2>Apply functions across columns within one row with <code class="docutils literal notranslate"><span class="pre">rowwise</span></code> and <code class="docutils literal notranslate"><span class="pre">mutate</span></code><a class="headerlink" href="#apply-functions-across-columns-within-one-row-with-rowwise-and-mutate" title="Permalink to this headline">¶</a></h2>
 <p>What if you want to apply a function across columns but within one row?
 We illustrate such a data transformation in Figure &#64;ref(fig:rowwise).</p>
 <p>(ref:rowwise) <code class="docutils literal notranslate"><span class="pre">rowwise</span></code> and <code class="docutils literal notranslate"><span class="pre">mutate</span></code> is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.</p>
@@ -2416,9 +2348,9 @@ rather than the maximum value for <em>each</em> row.
 Below we show what would have happened had we not used
 <code class="docutils literal notranslate"><span class="pre">rowwise</span></code>. In particular, the same maximum value is reported
 in every single row; this code does not provide the desired result.</p>
-</section>
-<section id="summary">
-<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p>Cleaning and wrangling data can be a very time-consuming process. However,
 it is a critical step in any data analysis. We have explored many different
 functions for cleaning and wrangling data into a tidy format.
@@ -2470,9 +2402,9 @@ burning data science questions!</p>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <p>Practice exercises for the material covered in this chapter
 can be found in the accompanying
 <a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
@@ -2483,9 +2415,9 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.</p>
-</section>
-<section id="additional-resources">
-<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>As we mentioned earlier, <code class="docutils literal notranslate"><span class="pre">tidyverse</span></code> is actually an <em>R
 meta package</em>: it installs and loads a collection of R packages that all
@@ -2521,8 +2453,8 @@ in a data frame, but none of the above functions are flexible enough to do
 what you want. In that case, you may consider using <a class="reference external" href="https://r4ds.had.co.nz/iteration.html#iteration">a for
 loop</a>.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {
@@ -2546,48 +2478,42 @@ loop</a>.</p></li>
 
               </div>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
     <a class='left-prev' id="prev-link" href="reading.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Reading in data locally and from the web</p>
+            <p class="prev-next-title">Reading in data locally and from the web {#reading}</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="viz.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Effective data visualization – TBD</p>
+        <p class="prev-next-title">Effective data visualization {#viz}</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            </footer>
+            
         </div>
     </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By UBC<br/>
-  
-      &copy; Copyright 2021.<br/>
-</p>
-        </footer>
-    </div>
+    <footer class="footer">
+  <p>
     
-</div>
+      By UBC<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
 
 
       </div>
     </div>
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
-
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
   </body>
 </html>

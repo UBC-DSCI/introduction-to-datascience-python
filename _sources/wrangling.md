@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Cleaning and wrangling data -- TBD
+# Cleaning and wrangling data {#wrangling}
 
 ``` {r wrangling-setup, include=FALSE}
 library(magick)

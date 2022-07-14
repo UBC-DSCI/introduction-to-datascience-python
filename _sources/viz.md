@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Effective data visualization -- TBD
+# Effective data visualization {#viz}
 
 ```{r viz-setup, include = FALSE}
 library(tidyverse)

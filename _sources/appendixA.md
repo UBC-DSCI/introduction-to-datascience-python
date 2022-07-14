@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Appendix
+# (APPENDIX) Appendix {-}
 
 # Downloading files from JupyterHub {#appendixA}
 

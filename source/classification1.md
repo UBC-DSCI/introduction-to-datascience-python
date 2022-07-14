@@ -80,19 +80,19 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} predictive question, classification, class, categorical variable
 ```
 
-```{index} seealso: feature ; predictor
+```{index} see: feature ; predictor
 ```
 
-In many situations, we want to make `predictions`\\index{predictive question} based on the current situation
+In many situations, we want to make `predictions` based on the current situation
 as well as past experiences. For instance, a doctor may want to diagnose a
 patient as either diseased or healthy based on their symptoms and the doctor's
 past experience with patients; an email provider might want to tag a given
 email as "spam" or "not spam" based on the email's text and past email text data; 
 or a credit card company may want to predict whether a purchase is fraudulent based
 on the current purchase item, amount, and location as well as past purchases.
-These tasks are all examples of \index{classification} **classification**, i.e., predicting a
-categorical class (sometimes called a *label*) \index{class}\index{categorical variable} for an observation given its
-other variables (sometimes called *features*). \index{feature|see{predictor}}
+These tasks are all examples of **classification**, i.e., predicting a
+categorical class (sometimes called a *label*) for an observation given its
+other variables (sometimes called *features*).
 
 ```{index} training set
 ```
@@ -101,7 +101,7 @@ Generally, a classifier assigns an observation without a known class (e.g., a ne
 to a class (e.g., diseased or healthy) on the basis of how similar it is to other observations
 for which we do know the class (e.g., previous patients with known diseases and
 symptoms). These observations with known classes that we use as a basis for
-prediction are called a **training set**; \index{training set} this name comes from the fact that
+prediction are called a **training set**; this name comes from the fact that
 we use these data to train, or teach, our classifier. Once taught, we can use
 the classifier to make predictions on new data for which we do not know the class.
 
@@ -110,13 +110,13 @@ the classifier to make predictions on new data for which we do not know the clas
 
 There are many possible methods that we could use to predict
 a categorical class/label for an observation. In this book, we will
-focus on the widely used **$K$-nearest neighbors** \index{K-nearest neighbors} algorithm {cite:p}`knnfix,knncover`.
+focus on the widely used **$K$-nearest neighbors** algorithm {cite:p}`knnfix,knncover`.
 In your future studies, you might encounter decision trees, support vector machines (SVMs),
 logistic regression, neural networks, and more; see the additional resources
 section at the end of the next chapter for where to begin learning more about
 these other methods. It is also worth mentioning that there are many
 variations on the basic classification problem. For example, 
-we focus on the setting of **binary classification** \index{classification!binary} where only two
+we focus on the setting of **binary classification** where only two
 classes are involved (e.g., a diagnosis of either healthy or diseased), but you may 
 also run into multiclass classification problems with more than two
 categories (e.g., a diagnosis of healthy, bronchitis, pneumonia, or a common cold).
@@ -128,14 +128,14 @@ categories (e.g., a diagnosis of healthy, bronchitis, pneumonia, or a common col
 
 In this chapter and the next, we will study a data set of 
 [digitized breast cancer image features](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29),
-created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian {cite:p}`streetbreastcancer`. \index{breast cancer} 
+created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian {cite:p}`streetbreastcancer`.
 Each row in the data set represents an
 image of a tumor sample, including the diagnosis (benign or malignant) and
 several other measurements (nucleus texture, perimeter, area, and more).
 Diagnosis for each image was conducted by physicians. 
 
 As with all data analyses, we first need to formulate a precise question that
-we want to answer. Here, the question is *predictive*: \index{question!classification} can 
+we want to answer. Here, the question is *predictive*: can 
 we use the tumor
 image measurements available to us to predict whether a future tumor image
 (with unknown diagnosis) shows a benign or malignant tumor? Answering this
@@ -165,7 +165,8 @@ In this case, the file containing the breast cancer data set is a `.csv`
 file with headers. We'll use the `read_csv` function with no additional
 arguments, and then inspect its contents:
 
-\index{read function!read\_csv}
+```{index} read function; read\_csv
+```
 
 ```{code-cell} ipython3
 cancer = pd.read_csv("data/wdbc.csv")
@@ -202,7 +203,10 @@ total set of variables per image in this data set is:
 
 +++
 
-Below we use `.info()` \index{glimpse} to preview the data frame. This method can 
+```{index} info
+```
+
+Below we use `.info()` to preview the data frame. This method can 
 make it easier to inspect the data when we have a lot of columns, 
 as it prints the data such that the columns go down 
 the page (instead of across).
@@ -265,9 +269,12 @@ cancer['Class'].unique()
 
 ### Exploring the cancer data
 
+```{index} groupby, count
+```
+
 Before we start doing any modeling, let's explore our data set. Below we use
-the `.groupby()`, `.count()` \index{group\_by}\index{summarize} methods to find the number and percentage 
-of benign and malignant tumor observations in our data set. When paired with `.groupby()`, `.count()` counts the number of observations in each `Class` group. 
+the `.groupby()`, `.count()` methods to find the number and percentage 
+of benign and malignant tumor observations in our data set. When paired with `.groupby()`, `.count()` counts the number of observations in each `Class` group.
 Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
 
 ```{code-cell} ipython3
@@ -278,7 +285,10 @@ explore_cancer['percentage'] = explore_cancer['count'] / num_obs * 100
 explore_cancer
 ```
 
-Next, let's draw a scatter plot \index{visualization!scatter} to visualize the relationship between the
+```{index} visualization; scatter
+```
+
+Next, let's draw a scatter plot to visualize the relationship between the
 perimeter and concavity variables. Rather than use `altair's` default palette,
 we select our own colorblind-friendly colors&mdash;`"#efb13f"` 
 for light orange and `"#86bfef"` for light blue&mdash;and
@@ -352,9 +362,12 @@ glue("1-new_point_0", new_point[0])
 glue("1-new_point_1", new_point[1])
 ```
 
+```{index} K-nearest neighbors; classification
+```
+
 In order to actually make predictions for new observations in practice, we
 will need a classification algorithm. 
-In this book, we will use the $K$-nearest neighbors \index{K-nearest neighbors!classification} classification algorithm.
+In this book, we will use the $K$-nearest neighbors classification algorithm.
 To predict the label of a new observation (here, classify it as either benign
 or malignant), the $K$-nearest neighbors classifier generally finds the $K$
 "nearest" or "most similar" observations in our training set, and then uses
@@ -575,8 +588,11 @@ next chapter.
 
 ### Distance between points
 
+```{index} distance; K-nearest neighbors, straight line; distance
+```
+
 We decide which points are the $K$ "nearest" to our new observation
-using the *straight-line distance* (we will often just refer to this as *distance*). \index{distance!K-nearest neighbors}\index{straight line!distance}
+using the *straight-line distance* (we will often just refer to this as *distance*). 
 Suppose we have two observations $a$ and $b$, each having two predictor variables, $x$ and $y$.
 Denote $a_x$ and $a_y$ to be the values of variables $x$ and $y$ for observation $a$;
 $b_x$ and $b_y$ have similar definitions for observation $b$.
@@ -587,6 +603,9 @@ $$\mathrm{Distance} = \sqrt{(a_x -b_x)^2 + (a_y - b_y)^2}$$
 
 +++
 
+```{index} assign
+```
+
 To find the $K$ nearest neighbors to our new observation, we compute the distance
 from that new observation to each observation in our training data, and select the $K$ observations corresponding to the
 $K$ *smallest* distance values. For example, suppose we want to use $K=5$ neighbors to classify a new 
@@ -594,7 +613,7 @@ observation with perimeter of {glue:}`3-new_point_0` and
 concavity of {glue:}`3-new_point_1`, shown as a red diamond in {numref}`fig:05-multiknn-1`. Let's calculate the distances
 between our new point and each of the observations in the training set to find
 the $K=5$ neighbors that are nearest to our new point. 
-You will see in the code below \index{mutate}, we compute the straight-line
+You will see in the code below, we compute the straight-line
 distance using the formula above: we square the differences between the two observations' perimeter 
 and concavity coordinates, add the squared differences, and then take the square root.
 
@@ -642,10 +661,10 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
 cancer_dist = cancer.loc[:, ["ID", "Perimeter", "Concavity", "Class"]]
-cancer_dist["dist_from_new"] = np.sqrt(
+cancer_dist = cancer_dist.assign(dist_from_new = np.sqrt(
     (cancer_dist["Perimeter"] - new_obs_Perimeter) ** 2
     + (cancer_dist["Concavity"] - new_obs_Concavity) ** 2
-)
+))
 # sort the rows in ascending order and take the first 5 rows
 cancer_dist = cancer_dist.sort_values(by="dist_from_new").head(5)
 cancer_dist
@@ -724,6 +743,9 @@ for the distance between points. Suppose we have $m$ predictor
 variables for two observations $a$ and $b$, i.e., 
 $a = (a_{1}, a_{2}, \dots, a_{m})$ and
 $b = (b_{1}, b_{2}, \dots, b_{m})$.
+
+```{index} distance; more than two variables
+```
 
 The distance formula becomes \index{distance!more than two variables}
 
@@ -928,8 +950,11 @@ cancer_train = cancer.loc[:, ['Class', 'Perimeter', 'Concavity']]
 cancer_train
 ```
 
+```{index} scikit-learn; model instance, scikit-learn; KNeighborsClassifier
+```
+
 Next, we create a *model specification* for $K$-nearest neighbors classification
-by creating a `KNeighborsClassifier` object, specifying that we want to use $K = 5$ neighbors
+by creating a `KNeighborsClassifier` instance, specifying that we want to use $K = 5$ neighbors
 (we will discuss how to choose $K$ in the next chapter) and the straight-line 
 distance (`weights="uniform"`). The `weights` argument controls
 how neighbors vote when classifying a new observation; by setting it to `"uniform"`,
@@ -958,6 +983,9 @@ which weigh each neighbor's vote differently, can be found on
 ```{code-cell} ipython3
 knn_spec = KNeighborsClassifier(n_neighbors=5)
 knn_spec
+```
+
+```{index} scikit-learn; X & y
 ```
 
 In order to fit the model on the breast cancer data, we need to call `fit` on the classifier object and pass the data in the argument. We also need to specify what variables to use as predictors and what variable to use as the target. Below, the `X=cancer_train[["Perimeter", "Concavity"]]` and the `y=cancer_train['Class']` argument specifies 
@@ -1001,7 +1029,10 @@ knn_spec.fit(X=cancer_train[["Perimeter", "Concavity"]], y=cancer_train["Class"]
 # let R find the value of $K$ for us. 
 ```
 
-Finally, we make the prediction on the new observation by calling `predict` \index{tidymodels!predict} on the classifier object,
+```{index} scikit-learn; predict
+```
+
+Finally, we make the prediction on the new observation by calling `predict` on the classifier object,
 passing the new observation itself. As above, 
 when we ran the $K$-nearest neighbors
 classification algorithm manually, the `knn_fit` object classifies the new observation as "Malignant". Note that the `predict` function outputs a `numpy` array with the model's prediction.
@@ -1023,7 +1054,10 @@ learn ways to quantify how accurate we think our predictions are.
 
 ### Centering and scaling
 
-When using $K$-nearest neighbor classification, the *scale* \index{scaling} of each variable
+```{index} scaling
+```
+
+When using $K$-nearest neighbor classification, the *scale* of each variable
 (i.e., its size and range of values) matters. Since the classifier predicts
 classes by identifying observations nearest to it, any variables with 
 a large scale will have a much larger effect than variables with a small
@@ -1038,6 +1072,9 @@ difference of \$1000 in yearly salary!
 
 +++
 
+```{index} centering
+```
+
 In many other predictive models, the *center* of each variable (e.g., its mean)
 matters as well. For example, if we had a data set with a temperature variable
 measured in degrees Kelvin, and the same data set with temperature measured in
@@ -1047,14 +1084,17 @@ hypothetical job classification example, we would likely see that the center of
 the salary variable is in the tens of thousands, while the center of the years
 of education variable is in the single digits. Although this doesn't affect the
 $K$-nearest neighbor classification algorithm, this large shift can change the
-outcome of using many other predictive models.  \index{centering}
+outcome of using many other predictive models.
+
+```{index} standardization; K-nearest neighbors
+```
 
 To scale and center our data, we need to find
 our variables' *mean* (the average, which quantifies the "central" value of a 
 set of numbers) and *standard deviation* (a number quantifying how spread out values are). 
 For each observed value of the variable, we subtract the mean (i.e., center the variable) 
 and divide by the standard deviation (i.e., scale the variable). When we do this, the data 
-is said to be *standardized*, \index{standardization!K-nearest neighbors} and all variables in a data set will have a mean of 0 
+is said to be *standardized*, and all variables in a data set will have a mean of 0 
 and a standard deviation of 1. To illustrate the effect that standardization can have on the $K$-nearest
 neighbor algorithm, we will read in the original, unstandardized Wisconsin breast
 cancer data set; we have been using a standardized version of the data set up
@@ -1074,6 +1114,12 @@ predictions? In order to find out, we will create a scatter plot of these two
 predictors (colored by diagnosis) for both the unstandardized data we just
 loaded, and the standardized version of that same data. But first, we need to
 standardize the `unscaled_cancer` data set with `scikit-learn`.
+
+```{index} pipeline, scikit-learn; make_column_transformer
+```
+
+```{index} double: scikit-learn; pipeline
+```
 
 In the `scikit-learn` framework, all data preprocessing and modeling can be built using a [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), or a more convenient function [`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline) for simple pipeline construction.
 Here we will initialize a preprocessor using `make_column_transformer` for 
@@ -1101,10 +1147,22 @@ preprocessor
 
 So far, we have built a preprocessor so that each of the predictors have a mean of 0 and standard deviation of 1.
 
+```{index} scikit-learn; ColumnTransformer, scikit-learn; StandardScaler, scikit-learn; fit_transform
+```
+
+```{index} ColumnTransformer; StandardScaler
+```
+
+```{index} scikit-learn; fit, scikit-learn; transform
+```
+
 You can now see that the recipe includes a scaling and centering step for all predictor variables.
 Note that when you add a step to a `ColumnTransformer`, you must specify what columns to apply the step to.
 Here we specified that `StandardScaler` should be applied to 
 all predictor variables.
+
+```{index} see: fit, transform, fit_transform; scikit-learn
+```
 
 At this point, the data are not yet scaled and centered. To actually scale and center 
 the data, we need to call `fit` and `transform` on the unscaled data ( can be combined into `fit_transform`).
@@ -1442,7 +1500,10 @@ Close-up of three nearest neighbors for unstandardized data.
 
 ### Balancing
 
-Another potential issue in a data set for a classifier is *class imbalance*, \index{balance}\index{imbalance}
+```{index} balance, imbalance
+```
+
+Another potential issue in a data set for a classifier is *class imbalance*, 
 i.e., when one label is much more common than another. Since classifiers like
 the $K$-nearest neighbor algorithm use the labels of nearby points to predict
 the label of a new point, if there are many more data points with one label
@@ -1656,12 +1717,15 @@ Imbalanced data with background color indicating the decision of the classifier 
 
 +++
 
+```{index} oversampling, scikit-learn; resample
+```
+
 Despite the simplicity of the problem, solving it in a statistically sound manner is actually
 fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
-For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. \index{oversampling}
+For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. 
 In other words, we will replicate rare observations multiple times in our data set to give them more
 voting power in the $K$-nearest neighbor algorithm. In order to do this, we will need an oversampling
-step with the `resample` function from the `sklearn` Python package. \index{recipe!step\_upsample}
+step with the `resample` function from the `sklearn` Python package.
 We show below how to do this, and also
 use the `.groupby()` and `.count()` methods to see that our classes are now balanced:
 
@@ -1762,6 +1826,9 @@ Upsampled data with background color indicating the decision of the classifier.
 (08:puttingittogetherworkflow)=
 ## Putting it together in a `pipeline`
 
+```{index} scikit-learn; pipeline
+```
+
 The `scikit-learn` package collection also provides the `pipeline`, a way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
 To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
 First we will load the data, create a model, and specify a preprocessor for how the data should be preprocessed:
@@ -1793,6 +1860,9 @@ preprocessor = make_column_transformer(
 
 You will also notice that we did not call `.fit()` on the preprocessor; this is unnecessary when it is
 placed in a `Pipeline`.
+
+```{index} scikit-learn; make_pipeline, scikit-learn; fit
+```
 
 We will now place these steps in a `Pipeline` using the `make_pipeline` function, 
 and finally we will call `.fit()` to run the whole `Pipeline` on the `unscaled_cancer` data.

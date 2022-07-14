@@ -639,7 +639,7 @@ cluster_plot = (
     .mark_circle()
     .encode(
          x = alt.X("flipper_length_mm", title="Flipper Length (standardized)"),
-        y = alt.Y("bill_length_mm", title="Bill Length (standardized)"),
+         y = alt.Y("bill_length_mm", title="Bill Length (standardized)"),
     color=alt.Color("clusters:O", title="Cluster", scale=alt.Scale(scheme="dark2")),
     ).properties(width=400, height=400)
     .configure_axis(labelFontSize=20, titleFontSize=20)
@@ -700,17 +700,12 @@ We demonstrate how to do this below:
 
 
 ```{code-cell} ipython3
+np.random.seed(12)
 penguin_clust_ks = penguin_clust_ks.assign(
     penguin_clusts=penguin_clust_ks['k'].apply(
-        lambda x: KMeans(n_clusters=x, n_init=3, random_state=2020).fit(standardized_data)
+        lambda x: KMeans(n_clusters=x, n_init=3, init="random").fit(standardized_data)
     )
 )
-penguin_clust_ks
-```
-```{code-cell} ipython3
-penguin_clust_ks = penguin_clust_ks.assign(
-    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
-).drop(columns=['penguin_clusts'])
 penguin_clust_ks
 
 ```
@@ -768,22 +763,12 @@ clustering_statistics
 Now that we have `tot.withinss` and `k` as columns in a data frame, we can make a line plot 
 (Figure \@ref(fig:10-plot-choose-k)) and search for the "elbow" to find which value of K to use. 
 
-```{r 10-plot-choose-k, fig.height = 3.25, fig.width = 4.25, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "A plot showing the total WSSD versus the number of clusters."}
-elbow_plot <- ggplot(clustering_statistics, aes(x = k, y = tot.withinss)) +
-  geom_point() +
-  geom_line() +
-  xlab("K") +
-  ylab("Total within-cluster sum of squares") +
-  scale_x_continuous(breaks = 1:9) + 
-  theme(text = element_text(size = 12))
 
-elbow_plot
-```
 
 ```{code-cell} ipython3
 elbow_plot=(
     alt.Chart(penguin_clust_ks)
-    .mark_line(point=True, color='black')
+    .mark_line(point=True)
     .encode(
         x=alt.X("k", title="K"),
         y=alt.Y("inertia", title="Total within-cluster sum of squares"),
@@ -791,7 +776,7 @@ elbow_plot=(
     .properties(width=400, height=400)
     .configure_axis(labelFontSize=15, titleFontSize=20)
 )
-### END SOLUTION 
+
 elbow_plot
 ```
 ```{code-cell} ipython3
@@ -851,6 +836,48 @@ elbow_plot <- ggplot(clustering_statistics, aes(x = k, y = tot.withinss)) +
 
 elbow_plot
 ```
+
+```{code-cell} ipython3
+penguin_clust_ks = penguin_clust_ks.assign(
+    penguin_clusts=penguin_clust_ks['k'].apply(
+        lambda x: KMeans(n_clusters=x, n_init=3, init='k-means++').fit(standardized_data)
+    )
+)
+penguin_clust_ks
+```
+```{code-cell} ipython3
+penguin_clust_ks = penguin_clust_ks.assign(
+    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
+).drop(columns=['penguin_clusts'])
+penguin_clust_ks
+
+```
+```{code-cell} ipython3
+elbow_plot=(
+    alt.Chart(penguin_clust_ks)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("k", title="K"),
+        y=alt.Y("inertia", title="Total within-cluster sum of squares"),
+    )
+    .properties(width=400, height=400)
+    .configure_axis(labelFontSize=15, titleFontSize=20)
+)
+
+elbow_plot
+```
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('elbow_plot', elbow_plot, display=True)
+```
+
+:::{glue:figure} elbow_plot 
+:figwidth: 700px 
+:name: elbow_plot
+
+A plot showing the total WSSD versus the number of clusters.
+:::
+
 
 ## Exercises
 

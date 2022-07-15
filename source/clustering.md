@@ -302,7 +302,7 @@ to clusters until it cannot improve any further. But how do we measure
 the "quality" of a clustering, and what does it mean to improve it? 
 In K-means clustering, we measure the quality of a cluster by its
 \index{within-cluster sum-of-squared-distances|see{WSSD}}\index{WSSD}
-*within-cluster sum-of-squared-distances* (WSSD). Computing this involves two steps.
+*within-cluster sum-of-squared-distances* (WSSD), also called *intertia*. Computing this involves two steps.
 First, we find the cluster centers by computing the mean of each variable 
 over data points in the cluster. For example, suppose we have a 
 cluster containing four observations, and we are using two variables, $x$ and $y$, to cluster the data.
@@ -589,8 +589,7 @@ standardized_data
 To perform K-means clustering in Python, we use the `KMeans` function. \index{K-means!kmeans function} It takes at
 least two arguments: the data frame containing the data you wish to cluster,
 and K, the number of clusters (here we choose K = 3). Note that since the K-means
-algorithm uses a random initialization of assignments, but since we set the random seed
-earlier, the clustering will be reproducible.
+algorithm uses a random initialization of assignments, but since we set the random seed, the clustering will be reproducible.
 
 
 
@@ -601,19 +600,25 @@ np.random.seed(1234)
 
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
-penguin_clust = KMeans(n_clusters=3, random_state=1234).fit(standardized_data)
+penguin_clust = KMeans(n_clusters=3).fit(standardized_data)
 penguin_clust
 
 ```
 
-As you can see above, the clustering object returned by `KMeans` has a lot of information
-that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
-To obtain this information in a tidy format, we will call in help 
-from the `broom` package. \index{broom} Let's start by visualizing the clustering
-as a colored scatter plot. To do that,
-we use the `augment` function, \index{K-means!augment} \index{augment} which takes in the model and the original data
-frame, and returns a data frame with the data and the cluster assignments for
-each point:
+
+```{code-cell} ipython3
+
+print(penguin_clust.inertia_)
+print(penguin_clust.cluster_centers_)
+print(penguin_clust.n_iter_)
+print(penguin_clust.labels_)
+print(penguin_clust.n_clusters)
+```
+
+As you can see above, the clustering object is returned by `KMeans` 
+has a lot of information that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
+To obtain the information in the clustering object, we will call the `predict` function. (We can also call the `labels_` attribute) 
+
 
 
 
@@ -623,13 +628,19 @@ predictions
 
 ```
 
+Let's start by visualizing the clustering
+as a colored scatter plot. To do that,
+we will add a new column and store assign the above predictions to that. The final 
+data frame will contain the data and the cluster assignments for
+each point:
+
+
 ```{code-cell} ipython3
-clustered_data = standardized_data
-clustered_data = clustered_data.assign(clusters = predictions)
+clustered_data = standardized_data.assign(clusters = predictions)
 clustered_data
 ```
 
-Now that we have this information in a tidy data frame, we can make a visualization
+Now that we have this information in a data frame, we can make a visualization
 of the cluster assignments for each point, as shown in Figure \@ref(fig:10-plot-clusters-2).
 
 
@@ -646,7 +657,7 @@ cluster_plot = (
 )
 
 
-cluster_plot
+
 
 
 ```
@@ -667,8 +678,8 @@ The data colored by the cluster assignments returned by K-means.
 
 As mentioned above, we also need to select K by finding
 where the "elbow" occurs in the plot of total WSSD versus the number of clusters. 
-We can obtain the total WSSD (`tot.withinss`) \index{WSSD!total} from our
-clustering using `broom`'s `glance` function. For example:
+We can obtain the total WSSD (inertia) from our
+clustering using `.inertia_` function. For example:
 
 
 ```{code-cell} ipython3
@@ -686,17 +697,8 @@ import numpy as np
 penguin_clust_ks = pd.DataFrame({"k": np.array(range(1, 10)).transpose()})
 ```
 
-Then we use `rowwise` \index{rowwise} + `mutate` to apply the `kmeans` function 
+Then we use `assign()` to create a new column and `lambda` operator to apply the `KMeans` function 
 within each row to each K. 
-However, given that the `kmeans` function 
-returns a model object to us (not a vector),
-we will need to store the results as a list column.
-This works because both vectors and lists are legitimate 
-data structures for data frame columns. 
-To make this work, 
-we have to put each model object in a list using the `list` function.
-We demonstrate how to do this below:
-
 
 
 ```{code-cell} ipython3
@@ -706,70 +708,49 @@ penguin_clust_ks = penguin_clust_ks.assign(
         lambda x: KMeans(n_clusters=x, n_init=3, init="random").fit(standardized_data)
     )
 )
-penguin_clust_ks
+
 
 ```
+If we take a look at our data frame `penguin_clust_ks` now, 
+we see that it has two columns: one with the value for K, 
+and the other holding the clustering model objects.
+
+```{code-cell} ipython3
+penguin_clust_ks
+```
+
+If we wanted to get one of the clusterings out of the column in the data frame, we could use a familiar friend: `.iloc` property. And then to extract the `inertia` or any other attribute of the cluster object, we can simply access it using the `.` operator. Below, we will extract the details of the cluster object, where `k=2`
 
 
 ```{code-cell} ipython3
-penguin_clust_ks = penguin_clust_ks.assign(
-    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
-).drop(columns=['penguin_clusts'])
+penguin_clust_ks.iloc[1]['penguin_clusts']
 
-penguin_clust_ks
 ```
 
-If we take a look at our data frame `penguin_clust_ks` now, 
-we see that it has two columns: one with the value for K, 
-and the other holding the clustering model object in a list column.
+```{code-cell} ipython3
+penguin_clust_ks.iloc[1]['penguin_clusts'].inertia_
 
-
-If we wanted to get one of the clusterings out 
-of the list column in the data frame,
-we could use a familiar friend: `pull`.
-`pull` will return to us a data frame column as a simpler data structure,
-here that would be a list.
-And then to extract the first item of the list, 
-we can use the `pluck` function. We pass  
-it the index for the element we would like to extract 
-(here, `1`).
-
-```{r}
-penguin_clust_ks |>
-  pull(penguin_clusts) |>
-  pluck(1)
 ```
-
-Next, we use `mutate` again to apply `glance` \index{glance} 
+Next, we use `assign` again to add 2 new columns `inertia` and `n_iter`  
 to each of the K-means clustering objects to get the clustering statistics 
-(including WSSD). 
-The output of `glance` is a data frame, 
-and so we need to create another list column (using `list`) for this to work. 
-This results in a complex data frame with 3 columns, one for K, one for the 
-K-means clustering objects, and one for the clustering statistics:
 
-```{r 10-choose-k-part3}
-penguin_clust_ks <- tibble(k = 1:9) |>
-  rowwise() |>
-  mutate(penguin_clusts = list(kmeans(standardized_data, k)),
-         glanced = list(glance(penguin_clusts)))
+This results in a data frame with 4 columns, one for K, one for the 
+K-means clustering objects, and 2 for the clustering statistics:
+
+```{code-cell} ipython3
+penguin_clust_ks = penguin_clust_ks.assign(
+    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_),
+    n_iter =penguin_clust_ks["penguin_clusts"].apply(lambda x: x.n_iter_),
+
+)
+    
+)
 
 penguin_clust_ks
 ```
 
-Finally we extract the total WSSD from the column named `glanced`. 
-Given that each item in this list column is a data frame, 
-we will need to use the `unnest` function 
-to unpack the data frames into simpler column data types. 
 
-```{r 10-get-total-within-sumsqs}
-clustering_statistics <- penguin_clust_ks |>
-  unnest(glanced)
-
-clustering_statistics
-```
-
-Now that we have `tot.withinss` and `k` as columns in a data frame, we can make a line plot 
+Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot 
 (Figure \@ref(fig:10-plot-choose-k)) and search for the "elbow" to find which value of K to use. 
 
 
@@ -786,7 +767,7 @@ elbow_plot=(
     .configure_axis(labelFontSize=15, titleFontSize=20)
 )
 
-elbow_plot
+
 ```
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -807,7 +788,7 @@ It looks like 3 clusters is the right choice for this data.
 But why is there a "bump" in the total WSSD plot here? 
 Shouldn't total WSSD always decrease as we add more clusters? 
 Technically yes, but remember:  K-means can get "stuck" in a bad solution. 
-Unfortunately, for K = 8 we had an unlucky initialization
+Unfortunately, for K = 7 we had an unlucky initialization
 and found a bad clustering! \index{K-means!restart, nstart} 
 We can help prevent finding a bad clustering 
 by trying a few different random initializations 
@@ -826,25 +807,6 @@ but there is a trade-off that doing many clusterings
 could take a long time.
 So this is something that needs to be balanced.
 
-```{r 10-choose-k-nstart, fig.height = 3.25, fig.width = 4.25, fig.pos = "H", out.extra="", message= FALSE, warning = FALSE, fig.align = "center", fig.cap = "A plot showing the total WSSD versus the number of clusters when K-means is run with 10 restarts."}
-penguin_clust_ks <- tibble(k = 1:9) |>
-  rowwise() |>
-  mutate(penguin_clusts = list(kmeans(standardized_data, nstart = 10, k)),
-         glanced = list(glance(penguin_clusts)))
-
-clustering_statistics <- penguin_clust_ks |>
-  unnest(glanced)
-
-elbow_plot <- ggplot(clustering_statistics, aes(x = k, y = tot.withinss)) +
-  geom_point() +
-  geom_line() +
-  xlab("K") +
-  ylab("Total within-cluster sum of squares") +
-  scale_x_continuous(breaks = 1:9) + 
-  theme(text = element_text(size = 12))
-
-elbow_plot
-```
 
 ```{code-cell} ipython3
 penguin_clust_ks = penguin_clust_ks.assign(
@@ -852,16 +814,11 @@ penguin_clust_ks = penguin_clust_ks.assign(
         lambda x: KMeans(n_clusters=x, n_init=3, init='k-means++').fit(standardized_data)
     )
 )
-penguin_clust_ks
-```
-```{code-cell} ipython3
+
 penguin_clust_ks = penguin_clust_ks.assign(
     inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
-).drop(columns=['penguin_clusts'])
-penguin_clust_ks
+)
 
-```
-```{code-cell} ipython3
 elbow_plot=(
     alt.Chart(penguin_clust_ks)
     .mark_line(point=True)
@@ -873,7 +830,7 @@ elbow_plot=(
     .configure_axis(labelFontSize=15, titleFontSize=20)
 )
 
-elbow_plot
+
 ```
 ```{code-cell} ipython3
 :tags: ["remove-cell"]

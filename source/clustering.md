@@ -740,11 +740,11 @@ K-means clustering objects, and 2 for the clustering statistics:
 ```{code-cell} ipython3
 penguin_clust_ks = penguin_clust_ks.assign(
     inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_),
-    n_iter =penguin_clust_ks["penguin_clusts"].apply(lambda x: x.n_iter_),
+    n_iter =penguin_clust_ks["penguin_clusts"].apply(lambda x: x.n_iter_)
 
 )
     
-)
+
 
 penguin_clust_ks
 ```

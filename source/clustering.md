@@ -710,6 +710,15 @@ penguin_clust_ks
 
 ```
 
+
+```{code-cell} ipython3
+penguin_clust_ks = penguin_clust_ks.assign(
+    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
+).drop(columns=['penguin_clusts'])
+
+penguin_clust_ks
+```
+
 If we take a look at our data frame `penguin_clust_ks` now, 
 we see that it has two columns: one with the value for K, 
 and the other holding the clustering model object in a list column.

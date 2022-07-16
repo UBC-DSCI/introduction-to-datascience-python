@@ -1,12 +1,11 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -192,7 +191,7 @@ import pandas as pd
 import altair as alt
 ```
 ```{code-cell} ipython3
-:tags: ["hide-cell"]
+:tags: ["remove-cell"]
 from myst_nb import glue
 ```
 
@@ -217,7 +216,7 @@ and are there any interesting patterns to note?
 
 
 ```{code-cell} ipython3
-:tags: ["hide-cell"]
+:tags: ["remove-cell"]
 mauna_loa = pd.read_csv("data/mauna_loa.csv")
 mauna_loa['day']=1
 mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
@@ -269,19 +268,22 @@ a scatter plot is a good place to start.
 Scatter plots show the data as individual points with `x` (horizontal axis) 
 and `y` (vertical axis) coordinates.
 Here, we will use the measurement date as the `x` coordinate 
-and the CO$_{\text{2}}$ concentration as the `y` coordinate. 
-When using the `altair` package, 
-we create a plot object with the `ggplot` function. 
+and the CO$_{\text{2}}$ concentration as the `y` coordinate.  
+while using the `altair` package, We create a plot object with the `alt.chart()` function. 
 There are a few basic aspects of a plot that we need to specify:
 \index{ggplot!aesthetic mapping}
 \index{ggplot!geometric object}
+
+The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument `alt.Chart(co2_df)`
+
+With a chart object in hand, we can now specify how we would like the data to be visualized. We first indicate what kind of geometric `mark` we want to use to represent the data. We can set the `mark` attribute of the chart object using the the `Chart.mark_*` methods.
 
 - The name of the data frame object to visualize.
     - Here, we specify the `co2_df` data frame.
 - The **aesthetic mapping**, which tells \index{aesthetic mapping} `ggplot` how the columns in the data frame map to properties of the visualization.
     - To create an aesthetic mapping, we use the `aes` function.
     - Here, we set the plot `x` axis to the `date_measured` variable, and the plot `y` axis to the `ppm` variable.
-- The `+` operator, which tells `ggplot` that we would like to add another layer to the plot.\index{aaaplussymb@$+$|see{ggplot!add layer}}\index{ggplot!add layer}
+
 - The **geometric object**, which specifies \index{aesthetic mapping} how the mapped data should be displayed.
     - To create a geometric object, we use a `geom_*` function (see the [ggplot reference](https://ggplot2.tidyverse.org/reference/) for a list of geometric objects).
     - Here, we use the `geom_point` function to visualize our data as a scatter plot.
@@ -296,22 +298,27 @@ default settings.
 \index{ggplot!aes}
 \index{ggplot!geom\_point}
  
-(ref:03-ggplot-function-scatter) Creating a scatter plot with the `ggplot` function.
 
-```{r 03-ggplot-function-scatter, echo = FALSE, fig.cap = "(ref:03-ggplot-function-scatter)", message = FALSE, out.width = "100%"}
-image_read("img/ggplot_function_scatter.jpeg") |>
-  image_crop("1625x1900")
+
+
+
+```{figure} img/ggplot_function_scatter.jpeg
+---
+height: 400px
+name: function_scatter
+---
+Creating a scatter plot with the `ggplot` function.
 ```
+
 
 \newpage
 
-```{r 03-data-co2-scatter, warning=FALSE, message=FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center", fig.cap = "Scatter plot of atmospheric concentration of CO$_{2}$ over time."}
-co2_scatter <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-  geom_point()
 
-co2_scatter
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+from myst_nb import glue
 ```
-
 
 ```{code-cell} ipython3
 co2_scatter = alt.Chart(co2_df).mark_point(size=10, color='black').encode(
@@ -351,17 +358,11 @@ In situations like this, we typically use a line plot to visualize
 the data. Line plots connect the sequence of `x` and `y` coordinates
 of the observations with line segments, thereby emphasizing their order.
 
-We can create a line plot in `ggplot` using the `geom_line` function. 
+We can create a line plot in `altair` using the `mark_line` function. 
 Let's now try to visualize the `co2_df` as a line plot 
 with just the default arguments: 
 \index{ggplot!geom\_line}
 
-```{r 03-data-co2-line, warning=FALSE, message=FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center", fig.cap = "Line plot of atmospheric concentration of CO$_{2}$ over time."}
-co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-  geom_line()
-
-co2_line
-```
 
 ```{code-cell} ipython3
 co2_line = alt.Chart(co2_df).mark_line(color='black').encode(
@@ -2099,13 +2100,7 @@ to create a PNG image file, we specify that the file extension is `.png`.
 Below we demonstrate how to save PNG, JPG, BMP, TIFF and SVG file types 
 for the `faithful_plot`:
 
-```{r warning=FALSE, message=FALSE}
-ggsave("img/faithful_plot.png", faithful_plot)
-ggsave("img/faithful_plot.jpg", faithful_plot)
-ggsave("img/faithful_plot.bmp", faithful_plot)
-ggsave("img/faithful_plot.tiff", faithful_plot)
-ggsave("img/faithful_plot.svg", faithful_plot)
-```
+
 ```{code-cell} ipython3
 faithful_plot.save("faithful_plot.png")
 faithful_plot.save("faithful_plot.svg")

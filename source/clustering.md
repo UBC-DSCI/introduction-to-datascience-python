@@ -12,17 +12,13 @@ kernelspec:
   name: python3
 ---
 
-<<<<<<< HEAD
-# Clustering -- TBD
-=======
->>>>>>> c86ccc0 (complete)
 
 
 
 
 
 # Clustering {#clustering}
-hgj
+
 
 
 
@@ -202,8 +198,8 @@ scatter_plot = (
         x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
         y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"))
         .configure_axis(
-        labelFontSize=12,
-        titleFontSize=12
+            labelFontSize=12,
+            titleFontSize=12
     ).configure_title(fontSize=12)
 )
 ```
@@ -848,7 +844,7 @@ glue('elbow_plot', elbow_plot, display=True)
 :figwidth: 700px 
 :name: elbow_plot
 
-A plot showing the total WSSD versus the number of clusters when K-means is run with 10 restarts.
+A plot showing the total WSSD versus the number of clusters when K-means is run without `init`
 :::
 
 ## Exercises

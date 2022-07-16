@@ -12,13 +12,17 @@ kernelspec:
   name: python3
 ---
 
+<<<<<<< HEAD
+# Clustering -- TBD
+=======
+>>>>>>> c86ccc0 (complete)
 
 
 
 
 
 # Clustering {#clustering}
-
+hgj
 
 
 

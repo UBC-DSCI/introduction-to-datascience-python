@@ -1,13 +1,13 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
-#     cell_metadata_filter: -all
 #     formats: py:percent,md:myst,ipynb
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.13.5
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -15,32 +15,21 @@
 # ---
 
 # %% [markdown]
-# # Statistical inference {#inference}
-#
-# ```{r inference-setup, include = FALSE}
-# knitr::opts_chunk$set(warning = FALSE, fig.align = "center")
-# library(gridExtra)
-# library(tidyverse)
-# library(grid) #  grid.bezier()
-#
-# options(digits = 3) # set number of digits to display in output to match writing
-#
-# max_count <- function(dist) {
-#   max(ggplot_build(dist)$data[[1]]$count)
-# }
-#
-# max_x <- function(dist) {
-#   max(ggplot_build(dist)$data[[1]]$xmax)
-# }
-#
-# min_x <- function(dist) {
-#   ggp_data <- ggplot_build(dist)
-#   min(ggp_data$data[[1]]$xmin)
-# }
-#
-# theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
-# ```
-#
+# # Statistical inference
+
+# %% tags=["remove-cell"]
+import altair as alt
+import numpy as np
+import pandas as pd
+from sklearn.utils import resample
+alt.data_transformers.disable_max_rows()
+
+# alt.data_transformers.enable('data_server')
+# alt.renderers.enable('mimetype')
+
+from myst_nb import glue
+
+# %% [markdown]
 # ## Overview
 # A typical data analysis task in practice is to draw conclusions about some
 # unknown aspect of a population of interest based on observed data sampled from
@@ -58,13 +47,14 @@
 # * Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.
 # * Define the following statistical sampling terms (population, sample, population parameter, point estimate, sampling distribution).
 # * Explain the difference between a population parameter and a sample point estimate.
-# * Use R to draw random samples from a finite population.
-# * Use R to create a sampling distribution from a finite population.
+# * Use Python to draw random samples from a finite population.
+# * Use Python to create a sampling distribution from a finite population.
 # * Describe how sample size influences the sampling distribution.
 # * Define bootstrapping.
-# * Use R to create a bootstrap distribution to approximate a sampling distribution.
+# * Use Python to create a bootstrap distribution to approximate a sampling distribution.
 # * Contrast the bootstrap and sampling distributions.
-#
+
+# %% [markdown]
 # ## Why do we need sampling? 
 # We often need to understand how quantities we observe in a subset
 # of data relate to the same quantities in the broader population. For example, suppose a
@@ -94,16 +84,21 @@
 # ten undergraduate students across North America (the sample) and computed the
 # proportion of those students who own an iPhone (the sample estimate). In that
 # case, we might suspect that proportion is a reasonable estimate of the
-# proportion of students who own an iPhone in the entire population.  Figure
-# \@ref(fig:11-population-vs-sample) illustrates this process.
+# proportion of students who own an iPhone in the entire population. 
+# {numref}`fig:11-population-vs-sample` illustrates this process.
 # In general, the process of using a sample to make a conclusion about the
 # broader population from which it is taken is referred to as **statistical inference**. 
 # \index{inference}\index{statistical inference|see{inference}}
+
+# %% [markdown]
+# ```{figure} img/population_vs_sample.png
+# :name: fig:11-population-vs-sample
+# :figclass: caption-hack
 #
-# ```{r 11-population-vs-sample, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Population versus sample.", out.width="100%"}
-# knitr::include_graphics("img/population_vs_sample.png")
+# Population versus sample.
 # ```
-#
+
+# %% [markdown]
 # Note that proportions are not the *only* kind of population parameter we might
 # be interested in. For example, suppose an undergraduate student studying at the University
 # of British Columbia in Canada is looking for an apartment
@@ -132,12 +127,13 @@
 #
 # 1. Using categorical observations to estimate the proportion of a category
 # 2. Using quantitative observations to estimate the average (or mean)
-#
+
+# %% [markdown]
 # ## Sampling distributions
 #
 # ### Sampling distributions for proportions
 # We will look at an example using data from 
-# [Inside Airbnb](http://insideairbnb.com/) [@insideairbnb]. Airbnb \index{Airbnb} is an online
+# [Inside Airbnb](http://insideairbnb.com/) {cite:p}`insideairbnb`. Airbnb \index{Airbnb} is an online
 # marketplace for arranging vacation rentals and places to stay. The data set
 # contains listings for Vancouver, Canada, in September 2020. Our data
 # includes an ID number, neighborhood, type of room, the number of people the
@@ -152,16 +148,16 @@
 # airbnb <- airbnb |>
 #   mutate(id = 1:nrow(airbnb))
 # -->
-#
 # \index{seed!set.seed}
-# ```{r load-airbnb, message = FALSE, warning = FALSE}
-# library(tidyverse)
-#
-# set.seed(123)
-#
-# airbnb <- read_csv("data/listings.csv")
-# airbnb
-# ```
+
+# %%
+import altair as alt
+import pandas as pd
+
+airbnb = pd.read_csv("data/listings.csv")
+airbnb
+
+# %% [markdown]
 # Suppose the city of Vancouver wants information about Airbnb rentals to help
 # plan city bylaws, and they want to know how many Airbnb places are listed as
 # entire homes and apartments (rather than as private or shared rooms). Therefore
@@ -172,57 +168,53 @@
 # listings in Vancouver, Canada. We can find the proportion of listings where
 # `room_type == "Entire home/apt"`.
 # \index{pull}\index{sum}\index{nrow}
-#
-# ```{r 11-example-proportions2, echo = TRUE, message = FALSE, warning = FALSE }
-# airbnb |>
-#   summarize(
-#     n =  sum(room_type == "Entire home/apt"),
-#     proportion = sum(room_type == "Entire home/apt") / nrow(airbnb)
-#   )
-# ```
-#
-# ```{r 11-population-parameter, echo = F}
-# population_proportion <- airbnb |>
-#   summarize(
-#     n =  sum(room_type == "Entire home/apt"),
-#     proportion = sum(room_type == "Entire home/apt") / nrow(airbnb)
-#   ) |> 
-#   pull()
-# ```
-#
+
+# %%
+population_summary = pd.DataFrame()
+population_summary["n"] = [airbnb.query("room_type == 'Entire home/apt'")["id"].count()]
+population_summary["proportion"] = population_summary["n"] / len(airbnb)
+
+population_summary
+
+# %% tags=["remove-cell"]
+glue("population_proportion", round(population_summary["proportion"][0], 3))
+
+# %% [markdown]
 # We can see that the proportion of `Entire home/apt` listings in
-# the data set is `r round(population_proportion,3)`. This 
-# value, `r round(population_proportion,3)`, is the population parameter. Remember, this
+# the data set is {glue:}`population_proportion`. This 
+# value, {glue:}`population_proportion`, is the population parameter. Remember, this
 # parameter value is usually unknown in real data analysis problems, as it is
 # typically not possible to make measurements for an entire population.  
 #
 # Instead, perhaps we can approximate it with a small subset of data!
 # To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
 # size 40 from our population), and computing the proportion for that sample.
+# We will use the `sample` method of the `pandas.DataFrame`
+# object to take the sample. The argument `n` of `sample` is the size of the sample to take.
+
+# %% tags=["remove-cell"]
+# Instead, perhaps we can approximate it with a small subset of data!
+# To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
+# size 40 from our population), and computing the proportion for that sample.
 # We will use the `rep_sample_n` function \index{rep\_sample\_n} from the `infer`
 # package \index{infer} to take the sample. The arguments of `rep_sample_n` are (1) the data frame to
 # sample from, and (2) the size of the sample to take.
-#
-# ```{r 11-example-proportions3-seed, echo = FALSE, message = FALSE, warning = FALSE}
-# # hidden seed
-# set.seed(123)
-# ```
-#
-# ```{r 11-example-proportions3, echo = TRUE, message = FALSE, warning = FALSE}
-# library(infer)
-#
-# sample_1 <- rep_sample_n(tbl = airbnb, size = 40)
-#
-# airbnb_sample_1 <- summarize(sample_1,
-#   n = sum(room_type == "Entire home/apt"),
-#   prop = sum(room_type == "Entire home/apt") / 40
-# )
-#
-# airbnb_sample_1
-# ```
-#
+
+# %%
+sample_1 = airbnb.sample(n=40, random_state=12)
+
+airbnb_sample_1 = pd.DataFrame()
+airbnb_sample_1["n"] = [sample_1.query("room_type == 'Entire home/apt'")["id"].count()]
+airbnb_sample_1["proportion"] = airbnb_sample_1["n"] / len(sample_1)
+
+airbnb_sample_1
+
+# %% tags=["remove-cell"]
+glue("sample_1_proportion", round(airbnb_sample_1["proportion"][0], 2))
+
+# %% [markdown]
 # Here we see that the proportion of entire home/apartment listings in this
-# random sample is `r round(airbnb_sample_1$prop,2)`. Wow&mdash;that's close to our
+# random sample is {glue:}`sample_1_proportion`. Wow&mdash;that's close to our
 # true population value! But remember, we computed the proportion using a random sample of size 40.
 # This has two consequences. First, this value is only an *estimate*, i.e., our best guess 
 # of our population parameter using this sample. 
@@ -230,23 +222,17 @@
 # refer to it as a **point estimate**.  Second, since the sample was random,
 # if we were to take *another* random sample of size 40 and compute the proportion for that sample,
 # we would not get the same answer:
-#
-# ```{r 11-example-proportions4-seed, echo = FALSE, message = FALSE, warning = FALSE}
-# # hidden seed
-# set.seed(1234)
-# ```
-#
-# ```{r 11-example-proportions4, echo = TRUE, message = FALSE, warning = FALSE}
-# sample_2 <- rep_sample_n(airbnb, size = 40)
-#
-# airbnb_sample_2 <- summarize(sample_2,
-#   n = sum(room_type == "Entire home/apt"),
-#   prop = sum(room_type == "Entire home/apt") / 40
-# )
-#
-# airbnb_sample_2
-# ```
-#
+
+# %%
+sample_2 = airbnb.sample(n=40, random_state=1234)
+
+airbnb_sample_2 = pd.DataFrame()
+airbnb_sample_2["n"] = [sample_2.query("room_type == 'Entire home/apt'")["id"].count()]
+airbnb_sample_2["proportion"] = airbnb_sample_2["n"] / len(sample_2)
+
+airbnb_sample_2
+
+# %% [markdown]
 # Confirmed! We get a different value for our estimate this time.
 # That means that our point estimate might be unreliable. Indeed, estimates vary from sample to
 # sample due to **sampling variability**. But just how much 
@@ -262,25 +248,53 @@
 # a **sampling distribution**. \index{sampling distribution} The sampling distribution will help us see how much we would
 # expect our sample proportions from this population to vary for samples of size 40. 
 #
+# We again use the `sample` to take samples of size 40 from our
+# population of Airbnb listings. But this time we use a for loop 
+# to take 20,000 samples of size 40. \index{rep\_sample\_n!reps argument}
+# \index{rep\_sample\_n!size argument}
+
+# %% tags=["remove-cell"]
 # We again use the `rep_sample_n` to take samples of size 40 from our
 # population of Airbnb listings. But this time we set the `reps` argument to 20,000 to specify 
 # that we want to take 20,000 samples of size 40. \index{rep\_sample\_n!reps argument}
 # \index{rep\_sample\_n!size argument}
-# ```{r 11-example-proportions5, echo = TRUE, message = FALSE, warning = FALSE}
-# samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
-# samples
-# ```
-#
+
+# %%
+np.random.seed(1)
+
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(40)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+samples
+
+# %% [markdown]
+# Notice that the column `replicate` indicates the replicate, or sample, to which
+# each listing belongs. Above, `pandas.DataFrame` by default shows the first and last few 
+# rows, so we can verify that 
+# we indeed created 20,000 samples (or replicates).
+
+# %% tags=["remove-cell"]
 # Notice that the column `replicate` indicates the replicate, or sample, to which
 # each listing belongs. Above, since by default R only prints the first few rows,
 # it looks like all of the listings have `replicate` set to 1. But you can 
 # check the last few entries using the `tail()` function to verify that 
 # we indeed created 20,000 samples (or replicates).
-#
-# ```{r 11-example-proportions5b, echo = TRUE, message = FALSE, warning = FALSE}
-# tail(samples)
-# ```
-#
+
+# %% [markdown]
+# Now that we have obtained the samples, we need to compute the 
+# proportion of entire home/apartment listings in each sample.
+# We first `query` the observations with room type of 'Entire home/apt';
+# group the data by the `replicate` variable&mdash;to group the
+# set of listings in each sample together&mdash;and then use `count` 
+# to compute the number of qualified observations in each sample; finally compute the proportion.
+# Both the first and last few entries of the resulting data frame are printed 
+# below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
+
+# %% tags=["remove-cell"]
 # Now that we have obtained the samples, we need to compute the 
 # proportion of entire home/apartment listings in each sample.
 # We first group the data by the `replicate` variable&mdash;to group the
@@ -288,48 +302,74 @@
 # to compute the proportion in each sample.
 # We print both the first and last few entries of the resulting data frame
 # below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
-#
-# ```{r 11-example-proportions6, echo = TRUE, message = FALSE, warning = FALSE}
-# sample_estimates <- samples |>
-#   group_by(replicate) |>
-#   summarize(sample_proportion = sum(room_type == "Entire home/apt") / 40)
-#
-# sample_estimates
-#
-# tail(sample_estimates)
-# ```
-#
+
+# %%
+# calculate the the number of observations in each sample with room_type == 'Entire home/apt'
+sample_estimates = (
+    samples.query("room_type == 'Entire home/apt'")
+    .groupby("replicate")["room_type"]
+    .count()
+    .reset_index()
+    .rename(columns={"room_type": "counts"})
+)
+
+# calculate the proportion
+sample_estimates["sample_proportion"] = sample_estimates["counts"] / 40
+
+# drop the count column
+sample_estimates = sample_estimates.drop(columns=["counts"])
+
+sample_estimates
+
+# %% [markdown]
 # We can now visualize the sampling distribution of sample proportions
-# for samples of size 40 using a histogram in Figure \@ref(fig:11-example-proportions7). Keep in mind: in the real world, 
+# for samples of size 40 using a histogram in {numref}`fig:11-example-proportions7`. Keep in mind: in the real world, 
 # we don't have access to the full population. So we
 # can't take many samples and can't actually construct or visualize the sampling distribution. 
 # We have created this particular example
 # such that we *do* have access to the full population, which lets us visualize the 
 # sampling distribution directly for learning purposes.
+
+# %% tags=["remove-output"]
+sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
+    x=alt.X("sample_proportion", bin=alt.Bin(maxbins=12), title="Sample proportions"),
+    y=alt.Y("count()", title="Count"),
+)
+
+sampling_distribution
+
+# %% tags=["remove-cell"]
+glue("fig:11-example-proportions7", sampling_distribution)
+
+# %% [markdown]
+# :::{glue:figure} fig:11-example-proportions7
+# :name: fig:11-example-proportions7
 #
-# ```{r 11-example-proportions7, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Sampling distribution of the sample proportion for sample size 40.", fig.height = 3.3, fig.width = 4.2}
-# sampling_distribution <- ggplot(sample_estimates, aes(x = sample_proportion)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey", bins = 12) +
-#   labs(x = "Sample proportions", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# sampling_distribution
-# ```
-#
-# The sampling distribution in Figure \@ref(fig:11-example-proportions7) appears
+# Sampling distribution of the sample proportion for sample size 40.
+# :::
+
+# %% tags=["remove-cell"]
+glue("sample_propotion_center", round(sample_estimates["sample_proportion"].mean(), 1))
+glue("sample_propotion_min", round(sample_estimates["sample_proportion"].min(), 1))
+glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 1))
+
+# %% [markdown]
+# The sampling distribution in {numref}`fig:11-example-proportions7` appears
 # to be bell-shaped, is roughly symmetric, and has one peak. It is centered 
-# around `r round(mean(sample_estimates$sample_proportion),1)` and the sample proportions
-# range from about `r round(min(sample_estimates$sample_proportion), 1)` to about
-# `r round(max(sample_estimates$sample_proportion), 1)`. In fact, we can
+# around {glue:}`sample_propotion_center` and the sample proportions
+# range from about {glue:}`sample_propotion_min` to about
+# {glue:}`sample_propotion_max`. In fact, we can
 # calculate the mean of the sample proportions.  \index{sampling distribution!shape}
-#
-# ```{r 11-example-proportions8, echo = TRUE, message = FALSE, warning = FALSE}
-# sample_estimates |>
-#   summarize(mean = mean(sample_proportion))
-# ```
-#
+
+# %%
+sample_estimates["sample_proportion"].mean()
+
+# %% tags=["remove-cell"]
+glue("sample_proportion_mean", round(sample_estimates["sample_proportion"].mean(), 3))
+
+# %% [markdown]
 # We notice that the sample proportions are centered around the population
-# proportion value, `r round(population_proportion,3)`! In general, the mean of
+# proportion value, {glue:}`sample_proportion_mean`! In general, the mean of
 # the sampling distribution should be equal to the population proportion.
 # This is great news because it means that the sample proportion is neither an overestimate nor an
 # underestimate of the population proportion. 
@@ -338,7 +378,8 @@
 # In a real data analysis setting where you just have access to your single
 # sample, this implies that you would suspect that your sample point estimate is
 # roughly equally likely to be above or below the true population proportion.
-#
+
+# %% [markdown]
 # ### Sampling distributions for means 
 #
 # In the previous section, our variable of interest&mdash;`room_type`&mdash;was
@@ -349,37 +390,51 @@
 # visiting Vancouver, Canada may wish to estimate the
 # population *mean* (or average) price per night of Airbnb listings. Knowing
 # the average could help them tell whether a particular listing is overpriced.
-# We can visualize the population distribution of the price per night with a histogram. 
+# We can visualize the population distribution of the price per night with a histogram.
+
+# %% tags=["remove-output"]
+population_distribution = (
+    alt.Chart(airbnb)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"
+        ),
+        y=alt.Y("count()", title="Count"),
+    )
+)
+
+population_distribution
+
+# %% tags=["remove-cell"]
+glue("fig:11-example-means2", population_distribution)
+
+# %% [markdown]
+# :::{glue:figure} fig:11-example-means2
+# :name: fig:11-example-means2
 #
-# ```{r, echo = FALSE}
-# options(pillar.sigfig = 5)
-# ```
-#
-# ```{r 11-example-means2, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Population distribution of price per night (Canadian dollars) for all Airbnb listings in Vancouver, Canada.", fig.height = 3.5, fig.width = 4.5}
-# population_distribution <- ggplot(airbnb, aes(x = price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# population_distribution
-# ```
-#
-# In Figure \@ref(fig:11-example-means2), we see that the population distribution \index{population!distribution}
+# Population distribution of price per night (Canadian dollars) for all Airbnb listings in Vancouver, Canada.
+# :::
+
+# %% [markdown]
+# In {numref}`fig:11-example-means2`, we see that the population distribution \index{population!distribution}
 # has one peak. It is also skewed (i.e., is not symmetric): most of the listings are
 # less than \$250 per night, but a small number of listings cost much more, 
 # creating a long tail on the histogram's right side. 
 # Along with visualizing the population, we can calculate the population mean,
-# the average price per night for all the Airbnb listings. 
-#
-# ```{r 11-example-means-popmean, echo = TRUE, message = FALSE, warning = FALSE}
-# population_parameters <- airbnb |>
-#   summarize(pop_mean = mean(price))
-#
-# population_parameters
-# ```
-#
+# the average price per night for all the Airbnb listings.
+
+# %%
+population_parameters = airbnb["price"].mean()
+
+population_parameters
+
+# %% tags=["remove-cell"]
+glue("population_mean", round(population_parameters, 2))
+
+# %% [markdown]
 # The price per night of all Airbnb rentals in Vancouver, BC 
-# is \$`r round(population_parameters$pop_mean,2)`, on average. This value is our
+# is \${glue:}`population_mean`, on average. This value is our
 # population parameter since we are calculating it using the population data. \index{population!parameter}
 #
 # Now suppose we did not have access to the population data (which is usually the
@@ -388,39 +443,55 @@
 # and resources allow. Let's say we could do this for 40 listings. What would
 # such a sample look like?  Let's take advantage of the fact that we do have
 # access to the population data and simulate taking one random sample of 40
-# listings in R, again using `rep_sample_n`. 
+# listings in Python, again using `sample`. 
 # \index{rep\_sample\_n}
-#
-# ```{r 11-example-means3, echo = TRUE, message = FALSE, warning = FALSE}
-# one_sample <- airbnb |>
-#   rep_sample_n(40)
-# ```
-#
+
+# %%
+one_sample = airbnb.sample(40, random_state=1)
+
+# %% [markdown]
 # We can create a histogram to visualize the distribution of observations in the
-# sample (Figure \@ref(fig:11-example-means-sample-hist)), and calculate the mean
+# sample ({numref}`fig:11-example-means-sample-hist`), and calculate the mean
 # of our sample.
+
+# %% tags=["remove-output"]
+sample_distribution = alt.Chart(one_sample).mark_bar().encode(
+    x=alt.X("price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"),
+    y=alt.Y("count()", title="Count"),
+)
+
+sample_distribution
+
+# %% tags=["remove-cell"]
+glue("fig:11-example-means-sample-hist", sample_distribution)
+
+# %% [markdown]
+# :::{glue:figure} fig:11-example-means-sample-hist
+# :name: fig:11-example-means-sample-hist
 #
-# ```{r 11-example-means-sample-hist, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Distribution of price per night (Canadian dollars) for sample of 40 Airbnb listings.", fig.height = 3.5, fig.width = 4.5}
-# sample_distribution <- ggplot(one_sample, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# sample_distribution
-#
-# estimates <- one_sample |>
-#   summarize(sample_mean = mean(price))
-#
-# estimates
-# ```
-#
+# Distribution of price per night (Canadian dollars) for sample of 40 Airbnb listings.
+# :::
+
+# %%
+estimates = one_sample["price"].mean()
+
+estimates
+
+# %% tags=["remove-cell"]
+glue("estimate_mean", round(estimates, 2))
+glue(
+    "diff_perc",
+    round(100 * abs(estimates - population_parameters) / population_parameters, 1),
+)
+
+# %% [markdown]
 # The average value of the sample of size 40 
-# is \$`r round(estimates$sample_mean, 2)`.  This 
+# is \${glue:}`estimate_mean`.  This 
 # number is a point estimate for the mean of the full population.
 # Recall that the population mean was 
-# \$`r round(population_parameters$pop_mean,2)`. So our estimate was fairly close to
+# \${glue:}`population_mean`. So our estimate was fairly close to
 # the population parameter: the mean was about 
-# `r round(100*abs(estimates$sample_mean - population_parameters$pop_mean)/population_parameters$pop_mean, 1)`% 
+# {glue:}`diff_perc`% 
 # off.  Note that we usually cannot compute the estimate's accuracy in practice
 # since we do not have access to the population parameter; if we did, we wouldn't
 # need to estimate it!
@@ -433,42 +504,72 @@
 # plot the sampling distribution of \index{sampling distribution} sample means for samples of size 40 to
 # get a sense for this variation. In this case, we'll use 20,000 samples of size
 # 40.
-#
-# ```{r}
-# samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
-# samples
-# ```
-#
+
+# %%
+np.random.seed(2)
+
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(40)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+samples
+
+# %% [markdown]
 # Now we can calculate the sample mean for each replicate and plot the sampling
 # distribution of sample means for samples of size 40.
+
+# %%
+sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "sample_mean"}
+)
+
+sample_estimates
+
+# %% tags=["remove-output"]
+sampling_distribution_40 = (
+    alt.Chart(sample_estimates)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "sample_mean",
+            bin=alt.Bin(maxbins=30),
+            title="Sample mean price per night (Canadian dollars)",
+        ),
+        y=alt.Y("count()", title="Count"),
+    )
+)
+
+sampling_distribution_40
+
+# %% tags=["remove-cell"]
+glue("fig:11-example-means4", sampling_distribution_40)
+
+# %% [markdown]
+# :::{glue:figure} fig:11-example-means4
+# :name: fig:11-example-means4
 #
-# ```{r 11-example-means4, echo = TRUE, message = FALSE, fig.pos = "H", out.extra="", warning = FALSE, fig.cap= "Sampling distribution of the sample means for sample size of 40.", fig.height = 3.5, fig.width = 4.5}
-# sample_estimates <- samples |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
-#
-# sample_estimates
-#
-# sampling_distribution_40 <- ggplot(sample_estimates, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Sample mean price per night (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# sampling_distribution_40
-# ```
-#
-# In Figure \@ref(fig:11-example-means4), the sampling distribution of the mean
+# Sampling distribution of the sample means for sample size of 40.
+# :::
+
+# %% tags=["remove-cell"]
+glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), -1))
+glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), -1))
+
+# %% [markdown]
+# In {numref}`fig:11-example-means4`, the sampling distribution of the mean
 # has one peak and is \index{sampling distribution!shape} bell-shaped. Most of the estimates are between 
-# about  \$`r round(quantile(sample_estimates$sample_mean)[2], -1)` and 
-# \$`r round(quantile(sample_estimates$sample_mean)[4], -1)`; but there are
+# about  \${glue:}`quantile_1` and 
+# \${glue:}`quantile_3`; but there are
 # a good fraction of cases outside this range (i.e., where the point estimate was
 # not close to the population parameter). So it does indeed look like we were
 # quite lucky when we estimated the population mean with only 
-# `r round(100*abs(estimates$sample_mean - population_parameters$pop_mean)/population_parameters$pop_mean, 1)`% error.
+# {glue:}`diff_perc`% error.
 #
 # Let's visualize the population distribution, distribution of the sample, and
-# the sampling distribution on one plot to compare them in Figure
-# \@ref(fig:11-example-means5). Comparing these three distributions, the centers
+# the sampling distribution on one plot to compare them in {numref}`fig:11-example-means5`. Comparing these three distributions, the centers
 # of the distributions are all around the same price (around \$150). The original
 # population distribution has a long right tail, and the sample distribution has
 # a similar shape to that of the population distribution. However, the sampling
@@ -487,21 +588,68 @@
 # Notice that the mean of the sample means is \$`r round(mean(sample_estimates$sample_mean),2)`. Recall that the population mean
 # was \$`r round(mean(airbnb$price),2)`. 
 # -->
+
+# %% tags=["remove-input"]
+(
+    (
+        alt.Chart(airbnb, title="Population")
+        .mark_bar(clip=True)
+        .encode(
+            x=alt.X(
+                "price",
+                bin=alt.Bin(maxbins=30),
+                title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
+                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
+            ),
+            y=alt.Y("count()", title="Count"),
+        )
+        .properties(width=400, height=150)
+    )
+    & (
+        alt.Chart(one_sample, title="Sample (n = 40)")
+        .mark_bar(clip=True)
+        .encode(
+            x=alt.X(
+                "price",
+                bin=alt.Bin(maxbins=30),
+                title="Price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
+                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
+            ),
+            y=alt.Y("count()", title="Count"),
+        )
+        .properties(width=400, height=150)
+    )
+    & (
+        alt.Chart(
+            sample_estimates,
+            title="Sampling distribution of the mean for samples of size 40",
+        )
+        .mark_bar(clip=True)
+        .encode(
+            x=alt.X(
+                "sample_mean",
+                bin=True,
+                title="Sample mean price per night (Canadian dollars)",
+                axis=alt.Axis(values=list(range(50, 601, 50))),
+                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
+            ),
+            y=alt.Y("count()", title="Count"),
+        )
+        .properties(width=400, height=150)
+    )
+)
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-example-means5
+# :figclass: caption-hack
 #
-# ```{r 11-example-means5, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 5.5, fig.width = 4, fig.cap = "Comparison of population distribution, sample distribution, and sampling distribution."}
-# grid.arrange(population_distribution +
-#   ggtitle("Population") +
-#   xlim(min(airbnb$price), 600),
-# sample_distribution +
-#   ggtitle("Sample (n = 40)") +
-#   xlim(min(airbnb$price), 600),
-# sampling_distribution_40 +
-#   ggtitle("Sampling distribution of the mean \n for samples of size 40") +
-#   xlim(min(airbnb$price), 600),
-# nrow = 3
-# )
+# Comparison of population distribution, sample distribution, and sampling distribution.
 # ```
-#
+
+# %% [markdown]
 # Given that there is quite a bit of variation in the sampling distribution of
 # the sample mean&mdash;i.e., the point estimate that we obtain is not very
 # reliable&mdash;is there any way to improve the estimate?  One way to improve a
@@ -509,119 +657,172 @@
 # has, we will take many samples of size 20, 50, 100, and 500, and plot the
 # sampling distribution of the sample mean. We indicate the mean of the sampling
 # distribution with a red vertical line.
-#
-# ```{r 11-example-means6, echo = FALSE, message = FALSE, warning = FALSE}
+
+# %% tags=["remove-cell"]
+# Initially thought of using a loop, but Jupyter book failed to build because "cell execution
+# timed out..."
 # ## Sampling n = 20, 50, 100, 500
-# sample_estimates_20 <- rep_sample_n(airbnb, size = 20, reps = 20000) |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
+# np.random.seed(2)
+# sample_dict = {}
+# for sample_n in [20, 50, 100, 500]:
+#     samples = []
+#     for rep in range(20000):
+#         sample = airbnb.sample(sample_n)
+#         sample = sample.assign(replicate=rep)
+#         samples.append(sample)
+#     samples = pd.concat([samples[i] for i in range(len(samples))])
+
+#     sample_dict[f"sample_estimates_{sample_n}"] = (
+#         samples.groupby("replicate")["price"]
+#         .mean()
+#         .reset_index()
+#         .rename(columns={"price": "sample_mean"})
+#     )
+
+# %% tags=["remove-cell"]
+sample_dict = {}
+
+# Sampling n = 20
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(20)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+sample_dict[f"sample_estimates_20"] = (
+    samples.groupby("replicate")["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
+)
+
+# %% tags=["remove-cell"]
+# Sampling n = 50
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(50)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+sample_dict[f"sample_estimates_50"] = (
+    samples.groupby("replicate")["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
+)
+
+# %% tags=["remove-cell"]
+# Sampling n = 100
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(100)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+sample_dict[f"sample_estimates_100"] = (
+    samples.groupby("replicate")["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
+)
+
+# %% tags=["remove-cell"]
+# Sampling n = 500
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(500)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+sample_dict[f"sample_estimates_500"] = (
+    samples.groupby("replicate")["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
+)
+
+# %% tags=["remove-cell"]
+## Plot sampling distribution n = 20, 50, 100, 500
+sample_plot = {}
+plot_min_x = sample_dict["sample_estimates_20"]["sample_mean"].min()
+plot_max_x = sample_dict["sample_estimates_20"]["sample_mean"].max()
+
+
+# def max_bins(distribution):
+#     if int(distribution.split("_")[-1]) >= 100:
+#         return 10
+#     else:
+#         return 30
+
+
+def text_y(distribution):
+    sample_n = int(distribution.split("_")[-1])
+    if sample_n == 20:
+        return 2000
+    elif sample_n == 50:
+        return 3000
+    elif sample_n == 100:
+        return 4500
+    else:
+        return 10000
+
+
+for sample_n, df in sample_dict.items():
+    sample_plot[sample_n] = (
+        alt.Chart(df, title=f"n = {sample_n.split('_')[-1]}")
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "sample_mean",
+                title="Sample mean price per night (Canadian dollars)",
+                bin=alt.Bin(extent=[80, 300], step=50/7), # maxbins=max_bins(sample_n)
+                scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
+                axis=alt.Axis(values=list(range(80, 301, 20)))
+            ),
+            y=alt.Y("count()", title="Count"),
+        )
+    )
+
+    sample_mean = sample_dict[sample_n]["sample_mean"].mean()
+    sample_plot[sample_n] = (
+        sample_plot[sample_n]
+        + alt.Chart(pd.DataFrame({"x": [sample_mean]}))
+        .mark_rule(color="red", size=2)
+        .encode(x="x")
+        + (
+            alt.Chart(
+                pd.DataFrame(
+                    {
+                        "x": [plot_max_x - 20],
+                        "y": [text_y(sample_n)],
+                        "text": [f"mean = {round(sample_mean, 1)}"],
+                    }
+                )
+            )
+            .mark_text(dy=-5, size=15)
+            .encode(x="x", y="y", text="text")
+        )
+    ).properties(width=350, height=250)
+
+# %% tags=["remove-input"]
+(sample_plot["sample_estimates_20"] | sample_plot["sample_estimates_50"]) & (
+    sample_plot["sample_estimates_100"] | sample_plot["sample_estimates_500"]
+)
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-example-means7
+# :figclass: caption-hack
 #
-# sample_estimates_50 <- rep_sample_n(airbnb, size = 50, reps = 20000) |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
-#
-# sample_estimates_100 <- rep_sample_n(airbnb, size = 100, reps = 20000) |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
-#
-# sample_estimates_500 <- rep_sample_n(airbnb, size = 500, reps = 20000) |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
-#
-# ## Sampling distribution n = 20
-# sampling_distribution_20 <- ggplot(sample_estimates_20, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Sample mean price per night\n(Canadian dollars)", y = "Count") +
-#   ggtitle("n = 20") 
-#
-# ## Sampling distribution n = 50
-# sampling_distribution_50 <- ggplot(sample_estimates_50, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   ylab("Count") +
-#   xlab("Sample mean price per night\n(Canadian dollars)") +
-#   ggtitle("n = 50") +
-#   xlim(min_x(sampling_distribution_20), max_x(sampling_distribution_20))
-#
-# ## Sampling distribution n = 100
-# sampling_distribution_100 <- ggplot(sample_estimates_100, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   ylab("Count") +
-#   xlab("Sample mean price per night\n(Canadian dollars)") +
-#   ggtitle("n = 100") +
-#   xlim(min_x(sampling_distribution_20), max_x(sampling_distribution_20))
-#
-# ## Sampling distribution n = 500
-# sampling_distribution_500 <- ggplot(sample_estimates_500, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   ylab("Count") +
-#   xlab("Sample mean price per night\n(Canadian dollars)") +
-#   ggtitle("n = 500") +
-#   xlim(min_x(sampling_distribution_20), max_x(sampling_distribution_20))
+# Comparison of sampling distributions, with mean highlighted as a vertical red line.
 # ```
-#
-# ```{r 11-example-means7,  echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Comparison of sampling distributions, with mean highlighted as a vertical red line."}
-# annotated_sampling_dist_20 <- sampling_distribution_20 +
-#   geom_vline(xintercept = mean(sample_estimates$sample_mean), col = "red") +
-#   xlim(min_x(sampling_distribution_20), max_x(sampling_distribution_20)) +
-#   ggtitle("n = 20") +
-#   annotate("text",
-#     x = max_x(sampling_distribution_20), 
-#     y = max_count(sampling_distribution_20), 
-#     hjust = 1, 
-#     vjust = 1,
-#     label = paste("mean = ", round(mean(sample_estimates$sample_mean), 1))
-#   )+  theme(text = element_text(size = 12), axis.title=element_text(size=12)) 
-# #+
-# #    annotate("text", x =  max_x(sampling_distribution_20), y = max_count(sampling_distribution_20), hjust = 1, vjust = 3,
-# #               label = paste("sd = ", round(sd(sample_estimates$sample_mean), 1)))
-#
-# annotated_sampling_dist_50 <- sampling_distribution_50 +
-#   geom_vline(xintercept = mean(sample_estimates_50$sample_mean), col = "red") +
-#   ## x limits set the same as n = 20 graph, y is this graph
-#   annotate("text",
-#     x = max_x(sampling_distribution_20), 
-#     y = max_count(sampling_distribution_50), 
-#     hjust = 1, 
-#     vjust = 1,
-#     label = paste("mean = ", round(mean(sample_estimates_50$sample_mean), 1))
-#   )+  theme(text = element_text(size = 12), axis.title=element_text(size=12))  #+
-# # annotate("text", x =  max_x(sampling_distribution_20), y = max_count(sampling_distribution_50), hjust = 1, vjust = 3,
-# #                 label = paste("sd = ", round(sd(sample_estimates_50$sample_mean), 1)))
-#
-# annotated_sampling_dist_100 <- sampling_distribution_100 +
-#   geom_vline(xintercept = mean(sample_estimates_100$sample_mean), col = "red") +
-#   annotate("text",
-#     x = max_x(sampling_distribution_20), 
-#     y = max_count(sampling_distribution_100), 
-#     hjust = 1, 
-#     vjust = 1,
-#     label = paste("mean = ", round(mean(sample_estimates_100$sample_mean), 1))
-#   ) +  theme(text = element_text(size = 12), axis.title=element_text(size=12)) #+
-# #    annotate("text", x =  max_x(sampling_distribution_20), y = max_count(sampling_distribution_100), hjust = 1, vjust = 3,
-# #               label = paste("sd = ", round(sd(sample_estimates_100$sample_mean), 1)))
-#
-# annotated_sampling_dist_500 <- sampling_distribution_500 +
-#   geom_vline(xintercept = mean(sample_estimates_500$sample_mean), col = "red") +
-#   annotate("text",
-#     x = max_x(sampling_distribution_20), 
-#     y = max_count(sampling_distribution_500), 
-#     hjust = 1, 
-#     vjust = 1,
-#     label = paste("mean = ", round(mean(sample_estimates_500$sample_mean), 1))
-#   ) +  theme(text = element_text(size = 12), axis.title=element_text(size=12)) 
-# #+
-# #    annotate("text", x =  max_x(sampling_distribution_20), y = max_count(sampling_distribution_500), hjust = 1, vjust = 3,
-# #               label = paste("sd = ", round(sd(sample_estimates_500$sample_mean), 1)))
-#
-# grid.arrange(annotated_sampling_dist_20,
-#   annotated_sampling_dist_50,
-#   annotated_sampling_dist_100,
-#   annotated_sampling_dist_500,
-#   nrow = 2, ncol = 2
-# )
-# ```
-#
-# Based on the visualization in Figure \@ref(fig:11-example-means7), three points
+
+# %% [markdown]
+# Based on the visualization in {numref}`fig:11-example-means7`, three points
 # about the sample mean become clear.  First, the mean of the sample mean (across
 # samples) is equal to the population mean. In other words, the sampling
 # distribution is centered at the population mean.  Second, increasing the size of
@@ -630,7 +831,7 @@
 # estimate of the population parameter. And third, the distribution of the sample
 # mean is roughly bell-shaped. \index{sampling distribution!effect of sample size}
 #
-# > **Note:** You might notice that in the `n = 20` case in Figure \@ref(fig:11-example-means7),
+# > **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
 # > the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
 # > You might also notice that in the `n = 50` case and larger, that skew seems to disappear.
 # > In general, the sampling distribution&mdash;for both means and proportions&mdash;only 
@@ -640,15 +841,19 @@
 #
 # <!--- > **Note:** If random samples of size $n$ are taken from a population, the sample mean $\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation $\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$ is the population mean, $\sigma$ is the population standard deviation, $\bar{x}$ is the sample mean, and $n$ is the sample size. 
 # > If samples are selected from a finite population as we are doing in this chapter, we should apply a finite population correction. We multiply $\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the population size and $n$ is the sample size. If our sample size, $n$, is small relative to the population size, this finite correction factor is less important. 
-# ---> 
-#
+# --->
+
+# %% [markdown]
 # ### Summary
 # 1. A point estimate is a single value computed using a sample from a population (e.g., a mean or proportion).
 # 2. The sampling distribution of an estimate is the distribution of the estimate for all possible samples of a fixed size from the same population.
 # 3. The shape of the sampling distribution is usually bell-shaped with one peak and centered at the population mean or proportion.
-# 4. The spread of the sampling distribution is related to the sample size. As the sample size increases, the spread of the sampling distribution decreases. 
-#
-# ## Bootstrapping 
+# 4. The spread of the sampling distribution is related to the sample size. As the sample size increases, the spread of the sampling distribution decreases.
+
+# %% [markdown]
+# ## Bootstrapping
+
+# %% [markdown]
 # ### Overview 
 #
 # *Why all this emphasis on sampling distributions?*
@@ -679,77 +884,58 @@
 #
 # Here is the key idea. First, if you take a big enough sample, it *looks like*
 # the population. Notice the histograms' shapes for samples of different sizes
-# taken from the population in Figure \@ref(fig:11-example-bootstrapping0). We
+# taken from the population in {numref}`fig:11-example-bootstrapping0`. We
 # see that the sample’s distribution looks like that of the population for a
 # large enough sample.
 
+# %% tags=["remove-cell"]
+# plot sample distributions for n = 10, 20, 50, 100, 200 and population distribution
+sample_distribution_dict = {}
+np.random.seed(12)
+for sample_n in [10, 20, 50, 100, 200]:
+    sample = airbnb.sample(sample_n)
+    sample_distribution_dict[f"sample_distribution_{sample_n}"] = (
+        alt.Chart(sample, title=f"n = {sample_n}")
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "price",
+                bin=alt.Bin(extent=[0, 600], step=20),
+                title="Price per night (Canadian dollars)",
+            ),
+            y=alt.Y("count()", title="Count"),
+        )
+    ).properties(width=350, height=250)
+# add title and standardize the x axis ticks for population histogram
+population_distribution.title = "Population distribution"
+population_distribution.encoding["x"]["bin"] = alt.Bin(extent=[0, 600], step=20)
+
+glue(
+    "fig:11-example-bootstrapping0",
+    (
+        (
+            sample_distribution_dict["sample_distribution_10"]
+            | sample_distribution_dict["sample_distribution_20"]
+        )
+        & (
+            sample_distribution_dict["sample_distribution_50"]
+            | sample_distribution_dict["sample_distribution_100"]
+        )
+        & (
+            sample_distribution_dict["sample_distribution_200"]
+            | population_distribution.properties(width=350, height=250)
+        )
+    ),
+)
+
 # %% [markdown]
-# ```{r 11-example-bootstrapping0, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 6.8, fig.cap = "Comparison of samples of different sizes from the population."}
-# sample_10 <- airbnb |>
-#   rep_sample_n(10)
-# sample_distribution_10 <- ggplot(sample_10, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("Price per night (Canadian dollars)") +
-#   ylab("Count") + 
-#   ggtitle("n = 10")
+# :::{glue:figure} fig:11-example-bootstrapping0
+# :name: fig:11-example-bootstrapping0
 #
-# sample_20 <- airbnb |>
-#   rep_sample_n(20)
-#
-# sample_distribution_20 <- ggplot(sample_20, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("Price per night (Canadian dollars)") +
-#   ylab("Count") + 
-#   ggtitle("n = 20")
-#
-# sample_50 <- airbnb |>
-#   rep_sample_n(50)
-#
-# sample_distribution_50 <- ggplot(sample_50, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("Price per night (Canadian dollars)") +
-#   ylab("Count") + 
-#   ggtitle("n = 50")
-#
-# sample_100 <- airbnb |>
-#   rep_sample_n(100)
-#
-# sample_distribution_100 <- ggplot(sample_100, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("Price per night (Canadian dollars)") +
-#   ylab("Count") + 
-#   ggtitle("n = 100")
-#
-# sample_200 <- airbnb |>
-#   rep_sample_n(200)
-#
-# sample_distribution_200 <- ggplot(sample_200, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("Price per night (Canadian dollars)") +
-#   ylab("Count") + 
-#   ggtitle("n = 200")
-#
-# grid.arrange(sample_distribution_10 + xlim(min(airbnb$price), 600),
-#   sample_distribution_20 + 
-#     xlim(min(airbnb$price), 600),
-#   sample_distribution_50 + 
-#     xlim(min(airbnb$price), 600),
-#   sample_distribution_100 + 
-#     xlim(min(airbnb$price), 600),
-#   sample_distribution_200 + 
-#     xlim(min(airbnb$price), 600),
-#   population_distribution + 
-#     ggtitle("Population distribution") + 
-#     xlim(min(airbnb$price), 600),
-#   ncol = 2
-# )
-# # widths = c(2, 3),
-# # layout_matrix =  rbind(c(1, 2),
-# #   c(1, 3),
-# #  c(1, 4),
-# #  c(1, 5)))
-# ```
-#
+# Comparison of samples of different sizes from the population.
+# :::
+
+# %% [markdown]
 # In the previous section, we took many samples of the same size *from our
 # population* to get a sense of the variability of a sample estimate. But if our
 # sample is big enough that it looks like our population, we can pretend that our
@@ -766,9 +952,10 @@
 # > size $n$ *without* replacement, it would just return our original sample!
 #
 # This section will explore how to create a bootstrap distribution from a single
-# sample using R.  The process is visualized in Figure \@ref(fig:11-intro-bootstrap-image). 
+# sample using Python.  The process is visualized in {numref}`fig:11-intro-bootstrap-image`. 
 # For a sample of size $n$, you would do the following:
-#
+
+# %% [markdown]
 # 1. Randomly select an observation from the original sample, which was drawn from the population.
 # 2. Record the observation's value.
 # 3. Replace that observation.
@@ -776,66 +963,93 @@
 # 5. Calculate the bootstrap point estimate (e.g., mean, median, proportion, slope, etc.) of the $n$ observations in your bootstrap sample.
 # 6. Repeat steps 1&ndash;5 many times to create a distribution of point estimates (the bootstrap distribution).
 # 7. Calculate the plausible range of values around our observed point estimate.
+
+# %% [markdown]
+# ```{figure} img/intro-bootstrap.jpeg
+# :name: fig:11-intro-bootstrap-image
+# :figclass: caption-hack
 #
-# ```{r 11-intro-bootstrap-image, echo = FALSE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Overview of the bootstrap process.", fig.retina = 2, out.width="100%"}
-# knitr::include_graphics("img/intro-bootstrap.jpeg")
+# Overview of the bootstrap process.
 # ```
-#
-# ### Bootstrapping in R 
+
+# %% [markdown]
+# ### Bootstrapping in Python 
 #
 # Let’s continue working with our Airbnb example to illustrate how we might create
 # and use a bootstrap distribution using just a single sample from the population. 
 # Once again, suppose we are
 # interested in estimating the population mean price per night of all Airbnb
 # listings in Vancouver, Canada, using a single sample size of 40.
-# Recall our point estimate was \$`r round(estimates$sample_mean, 2)`. The
-# histogram of prices in the sample is displayed in Figure \@ref(fig:11-bootstrapping1).
+# Recall our point estimate was \${glue:}`estimate_mean`. The
+# histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
+
+# %% tags=["remove-cell"]
+pd.set_option('display.max_rows', 20)
+
+# %%
+one_sample
+
+# %% tags=[]
+one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+one_sample_dist
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping1
+# :figclass: caption-hack
 #
-# ```{r, echo = F, message = F, warning = F}
-# one_sample <- one_sample |> 
-#   ungroup() |> select(-replicate)
+# Histogram of price per night (Canadian dollars) for one sample of size 40.
 # ```
-#
-# ```{r 11-bootstrapping1, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Histogram of price per night (Canadian dollars) for one sample of size 40.", fig.height = 3.5, fig.width = 4.5}
-# one_sample
-#
-# one_sample_dist <- ggplot(one_sample, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# one_sample_dist
-# ```
-#
+
+# %% [markdown]
 # The histogram for the sample is skewed, with a few observations out to the right. The
-# mean of the sample is \$`r round(estimates$sample_mean, 2)`.
+# mean of the sample is \${glue:}`estimate_mean`.
 # Remember, in practice, we usually only have this one sample from the population. So
 # this sample and estimate are the only data we can work with.
 #
 # We now perform steps 1&ndash;5 listed above to generate a single bootstrap
-# sample in R and calculate a point estimate from that bootstrap sample. We will 
-# use the `rep_sample_n` function as we did when we were
-# creating our sampling distribution. But critically, note that we now
+# sample in Python and calculate a point estimate from that bootstrap sample. We will 
+# use the `resample` function from the `scikit-learn` package. Critically, note that we now
 # pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
 # And since we need to sample with replacement,
-# we change the argument for `replace` from its default value of `FALSE` to `TRUE`.
+# we keep the argument for `replace` to its default value of `True`.
 # \index{bootstrap!in R}
 # \index{rep\_sample\_n!bootstrap}
+
+# %% tags=[]
+boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
+boot1_dist = alt.Chart(boot1).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+boot1_dist
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping3
+# :figclass: caption-hack
 #
-# ```{r 11-bootstrapping3, echo = TRUE, message = FALSE, fig.pos = "H", out.extra="", warning = FALSE, fig.cap = "Bootstrap distribution.", fig.height = 3.5, fig.width = 4.5}
-# boot1 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 1)
-# boot1_dist <- ggplot(boot1, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y =  "Count") + 
-#   theme(text = element_text(size = 12))
-#
-# boot1_dist
-#
-# summarize(boot1, mean = mean(price))
+# Bootstrap distribution.
 # ```
-#
-# Notice in Figure \@ref(fig:11-bootstrapping3) that the histogram of our bootstrap sample
+
+# %%
+boot1["price"].mean()
+
+# %% [markdown]
+# Notice in {numref}`fig:11-bootstrapping3` that the histogram of our bootstrap sample
 # has a similar shape to the original sample histogram. Though the shapes of
 # the distributions are similar, they are not identical. You'll also notice that
 # the original sample mean and the bootstrap sample mean differ. How might that
@@ -845,263 +1059,214 @@
 # mimic drawing another sample from the population by drawing one from our original
 # sample.
 #
-# Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)  
-# using `rep_sample_n`, and calculate the means for
+# Let's now take 20,000 bootstrap samples from the original sample (`one_sample`) 
+# using `resample`, and calculate the means for
 # each of those replicates. Recall that this assumes that `one_sample` *looks like*
 # our original population; but since we do not have access to the population itself,
 # this is often the best we can do.
-#
-# ```{r 11-bootstrapping4, echo = TRUE, message = FALSE, warning = FALSE}
-# boot20000 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 20000)
-#
-# boot20000
-#
-# tail(boot20000)
-# ```
-#
+
+# %%
+np.random.seed(2)
+
+boot20000 = []
+for rep in range(20000):
+    sample = resample(one_sample, replace=True, n_samples=40)
+    sample = sample.assign(replicate=rep)
+    boot20000.append(sample)
+boot20000 = pd.concat([boot20000[i] for i in range(len(boot20000))])
+
+boot20000
+
+# %% [markdown]
 # Let's take a look at histograms of the first six replicates of our bootstrap samples.
-# ```{r 11-bootstrapping-six-bootstrap-samples, echo = TRUE, fig.pos = "H", out.extra="", message = FALSE, warning = FALSE, fig.cap = "Histograms of first six replicates of bootstrap samples."}
-# six_bootstrap_samples <- boot20000 |>
-#   filter(replicate <= 6)
+
+# %% tags=[]
+six_bootstrap_samples = boot20000.query("replicate < 6")
+
+(
+    alt.Chart(six_bootstrap_samples)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "price",
+            bin=alt.Bin(maxbins=20),
+            title="Price per night (Canadian dollars)",
+        ),
+        y=alt.Y("count()", title="Count"),
+    ).properties(width=250, height=200)
+    .facet("replicate", columns=3)
+)
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping-six-bootstrap-samples
+# :figclass: caption-hack
 #
-# ggplot(six_bootstrap_samples, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Price per night (Canadian dollars)", y = "Count") +
-#   facet_wrap(~replicate) +
-#   theme(text = element_text(size = 12))
+# Histograms of first six replicates of bootstrap samples.
 # ```
-#
-# We see in Figure \@ref(fig:11-bootstrapping-six-bootstrap-samples) how the
+
+# %% [markdown]
+# We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the
 # bootstrap samples differ. We can also calculate the sample mean for each of
-# these six replicates. 
-# ```{r 11-bootstrapping-six-bootstrap-samples-means, echo = TRUE, message = FALSE, warning = FALSE}
-# six_bootstrap_samples |>
-#   group_by(replicate) |>
-#   summarize(mean = mean(price))
-# ```
-#
+# these six replicates.
+
+# %%
+six_bootstrap_samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "mean"}
+)
+
+# %% [markdown]
 # We can see that the bootstrap sample distributions and the sample means are
 # different. They are different because we are sampling *with replacement*. We
 # will now calculate point estimates for our 20,000 bootstrap samples and
 # generate a bootstrap distribution of our point estimates. The bootstrap
-# distribution (Figure \@ref(fig:11-bootstrapping5)) suggests how we might expect
+# distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
 # our point estimate to behave if we took another sample.
+
+# %%
+boot20000_means = boot20000.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "mean"}
+)
+
+boot20000_means
+
+# %% tags=[]
+boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
+    x=alt.X(
+        "mean",
+        bin=alt.Bin(extent=[95, 245], step=5),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+boot_est_dist
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping5
+# :figclass: caption-hack
 #
-# ```{r 11-bootstrapping5, echo = TRUE, message = FALSE, warning = FALSE, fig.pos = "H", out.extra="", fig.cap = "Distribution of the bootstrap sample means.", fig.height = 3.5, fig.width = 4.5}
-# boot20000_means <- boot20000 |>
-#   group_by(replicate) |>
-#   summarize(mean = mean(price))
-#
-# boot20000_means
-# tail(boot20000_means)
-#
-# boot_est_dist <- ggplot(boot20000_means, aes(x = mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   labs(x = "Sample mean price per night \n (Canadian dollars)", y = "Count") +
-#   theme(text = element_text(size = 12))
-#
-# boot_est_dist
+# Distribution of the bootstrap sample means.
 # ```
-#
+
+# %% [markdown]
 # Let's compare the bootstrap distribution&mdash;which we construct by taking many samples from our original sample of size 40&mdash;with 
 # the true sampling distribution&mdash;which corresponds to taking many samples from the population.
+
+# %% tags=["remove-input"]
+samples = []
+for rep in range(20000):
+    sample = airbnb.sample(40)
+    sample = sample.assign(replicate=rep)
+    samples.append(sample)
+samples = pd.concat([samples[i] for i in range(len(samples))])
+
+sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
+    columns={"price": "sample_mean"}
+)
+
+plot_min_x = sample_estimates["sample_mean"].min()
+plot_max_x = sample_estimates["sample_mean"].max()
+sampling_mean = sample_estimates["sample_mean"].mean()
+boot_sampling_mean = boot20000_means["mean"].mean()
+
+sampling_dist = alt.Chart(sample_estimates).mark_bar().encode(
+    x=alt.X(
+        "sample_mean",
+        bin=alt.Bin(extent=[95, 245], step=5),
+        # scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
+)
+
+annotated_sampling_dist = (
+    sampling_dist
+    + alt.Chart(pd.DataFrame({"x": [sampling_mean]}), title="Sampling distribution")
+    .mark_rule(color="red", size=2)
+    .encode(x="x")
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [plot_max_x - 20],
+                    "y": [2000],
+                    "text": [f"mean = {round(sampling_mean, 1)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=15)
+        .encode(x="x", y="y", text="text")
+    )
+)
+
+annotated_boot_est_dist = boot_est_dist + (
+    alt.Chart(pd.DataFrame({"x": [boot_sampling_mean]}), title="Bootstrap distribution")
+    .mark_rule(color="red", size=2)
+    .encode(x="x")
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [plot_max_x - 20],
+                    "y": [1500],
+                    "text": [f"mean = {round(boot_sampling_mean, 1)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=15)
+        .encode(x="x", y="y", text="text")
+    )
+)
+
+annotated_sampling_dist | annotated_boot_est_dist
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping6
+# :figclass: caption-hack
 #
-# ```{r 11-bootstrapping6, echo = F, message = FALSE, warning = FALSE, fig.cap = "Comparison of the distribution of the bootstrap sample means and sampling distribution.", fig.height = 3.5}
-# samples <- rep_sample_n(airbnb, size = 40, reps = 20000)
-#
-# sample_estimates <- samples |>
-#   group_by(replicate) |>
-#   summarize(sample_mean = mean(price))
-#
-# sampling_dist <- ggplot(sample_estimates, aes(x = sample_mean)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   ylab("Count") +
-#   xlab("Sample mean price per night \n (Canadian dollars)")  
-#
-# annotated_sampling_dist <- sampling_dist +  
-#   xlim(min_x(sampling_dist), max_x(sampling_dist)) + 
-#   geom_vline(xintercept = mean(sample_estimates$sample_mean), col = "red") +
-#   annotate("text",
-#     x = max_x(sampling_dist), y = max_count(sampling_dist), 
-#     hjust = 1, 
-#     vjust = 1,
-#     label = paste("mean = ", round(mean(sample_estimates$sample_mean), 1)))
-#
-# boot_est_dist_limits <- boot_est_dist +   
-#     xlim(min_x(sampling_dist), max_x(sampling_dist)) 
-#
-# annotated_boot_est_dist <- boot_est_dist_limits + 
-#   geom_vline(xintercept = mean(boot20000_means$mean), col = "red") +
-#   annotate("text",
-#     x = max_x(sampling_dist), y = max_count(boot_est_dist_limits), 
-#     vjust = 1, 
-#     hjust = 1, 
-#     label = paste("mean = ", round(mean(boot20000_means$mean), 1))) 
-# grid.arrange(annotated_sampling_dist + ggtitle("Sampling distribution"),
-#              annotated_boot_est_dist +  ggtitle("Bootstrap distribution"),
-#              ncol = 2
-# )
+# Comparison of the distribution of the bootstrap sample means and sampling distribution.
 # ```
-#
-# There are two essential points that we can take away from Figure
+
+# %% tags=["remove-cell"]
+glue("one_sample_mean", round(one_sample["price"].mean(), 2))
+
+# %% [markdown]
+# There are two essential points that we can take away from 
 # \index{sampling distribution!compared to bootstrap distribution}
-# \@ref(fig:11-bootstrapping6). First, the shape and spread of the true sampling
+# {numref}`fig:11-bootstrapping6`. First, the shape and spread of the true sampling
 # distribution and the bootstrap distribution are similar; the bootstrap
 # distribution lets us get a sense of the point estimate's variability. The
 # second important point is that the means of these two distributions are
 # different. The sampling distribution is centered at 
-# \$`r round(mean(airbnb$price),2)`, the population mean value. However, the bootstrap
+# \${glue:}`population_mean`, the population mean value. However, the bootstrap
 # distribution is centered at the original sample's mean price per night, 
-# \$`r round(mean(boot20000_means$mean), 2)`. Because we are resampling from the
+# \${glue:}`one_sample_mean`. Because we are resampling from the
 # original sample repeatedly, we see that the bootstrap distribution is centered
 # at the original sample's mean value (unlike the sampling distribution of the
 # sample mean, which is centered at the population parameter value). 
 #
-# Figure
-# \@ref(fig:11-bootstrapping7) summarizes the bootstrapping process.
+# {numref}`fig:11-bootstrapping7` summarizes the bootstrapping process.
 # The idea here is that we can use this distribution of bootstrap sample means to
 # approximate the sampling distribution of the sample means when we only have one
 # sample. Since the bootstrap distribution pretty well approximates the sampling
 # distribution spread, we can use the bootstrap spread to help us develop a
 # plausible range for our population parameter along with our estimate!
+
+# %% tags=["remove-cell"]
+# !wget -O img/inference/11-bootstrapping7-1.png https://datasciencebook.ca/_main_files/figure-html/11-bootstrapping7-1.png
+
+# %% [markdown]
+# ```{figure} img/inference/11-bootstrapping7-1.png
+# :name: fig:11-bootstrapping7
+# :figclass: caption-hack
 #
-# ```{r 11-bootstrapping7, echo = F, message = FALSE, warning = FALSE, fig.cap = "Summary of bootstrapping process."}
-# pop_dist <- population_distribution + ggtitle("Population") + xlab("Price") +
-#   theme(
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# sam_dist <- one_sample_dist + ggtitle("Sample") + xlab("Price") +
-#   theme(
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# set.seed(2)
-#
-# boot2 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 1)
-#
-# set.seed(3)
-# boot3 <- one_sample |>
-#   rep_sample_n(size = 40, replace = TRUE, reps = 1)
-#
-# boot1_dist <- boot1_dist + ggtitle("Samples with Replacement") +
-#   theme(
-#     axis.title.x = element_blank(),
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# boot2_dist <- ggplot(boot2, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   theme(
-#     axis.title.x = element_blank(),
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# boot3_dist <- ggplot(boot3, aes(price)) +
-#   geom_histogram(fill = "dodgerblue3", color = "lightgrey") +
-#   xlab("") +
-#   theme(
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# bootstrap_dist <- boot_est_dist + ggtitle("Bootstrap \nDistribution") + xlab("Sample means") +
-#   theme(
-#     axis.ticks.x = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.title.y = element_blank(),
-#     axis.ticks.y = element_blank(),
-#     axis.text.y = element_blank()
-#   )
-#
-# mygb <- function(x, y) {
-#   grid.bezier(
-#     x = x, y = y, gp = gpar(fill = "black"),
-#     arrow = arrow(type = "closed", length = unit(2, "mm"))
-#   )
-# }
-#
-# grid.arrange(pop_dist,
-#   sam_dist,
-#   boot1_dist,
-#   boot2_dist,
-#   boot3_dist,
-#   bootstrap_dist,
-#   widths = c(1, 1, 1, 1, 1),
-#   layout_matrix = rbind(
-#     c(1, NA, 3, NA, 6),
-#     c(1, 2, 4, NA, 6),
-#     c(NA, NA, 5, NA, NA)
-#   )
-# )
-#
-# grid.text(paste("mean =", round(mean(boot1$price)), sep = " "),
-#   x = unit(0.7, "npc"),
-#   y = unit(.8, "npc"), gp = gpar(fontsize = 12)
-# )
-# grid.text(paste("mean =", round(mean(boot2$price)), sep = " "),
-#   x = unit(0.7, "npc"),
-#   y = unit(.5, "npc"), gp = gpar(fontsize = 12)
-# )
-# grid.text(paste("mean =", round(mean(boot3$price)), sep = " "),
-#   x = unit(0.7, "npc"),
-#   y = unit(.2, "npc"), gp = gpar(fontsize = 12)
-# )
-# # arrows: pop to sample
-# mygb(x = c(0.15, 0.3, 0.3, 0.3), y = c(0.8, 0.8, 0.65, 0.65))
-#
-# # arrows: sample to resamples
-# mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.55, 0.55, 0.8, 0.8))
-# mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.5, 0.5, 0.5, 0.5))
-# mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.45, 0.45, 0.2, 0.2))
-# mygb(x = c(0.35, 0.35, 0.42, 0.42), y = c(0.4, 0.4, 0.03, 0.03))
-#
-# # arrows: resamples to statistics
-# mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.8, 0.8, 0.8, 0.8))
-# mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.5, 0.5, 0.5, 0.5))
-# mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.2, 0.2, 0.2, 0.2))
-# mygb(x = c(0.57, 0.57, 0.62, 0.62), y = c(0.02, 0.02, 0.02, 0.02))
-#
-# # arrows: statistics to boot
-# mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.8, 0.8, 0.7, 0.7))
-# mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.5, 0.5, 0.6, 0.6))
-# mygb(x = c(0.77, 0.77, 0.83, 0.83), y = c(0.2, 0.2, 0.4, 0.4))
-# mygb(x = c(0.77, 0.77, 0.85, 0.85), y = c(0.02, 0.02, 0.33, 0.33))
-#
-# # many resamples
-# grid.text("many resamples...",
-#   x = unit(0.487, "npc"),
-#   y = unit(0.02, "npc"), gp = gpar(fontsize = 10)
-# )
-#
-# # arrow to many more means
-# grid.text("many means...",
-#   x = unit(0.7, "npc"),
-#   y = unit(0.02, "npc"), gp = gpar(fontsize = 10)
-# )
+# Summary of bootstrapping process.
 # ```
-#
+
+# %% [markdown]
 # ### Using the bootstrap to calculate a plausible range  
 #
 # Now that we have constructed our bootstrap distribution, let's use it to create
@@ -1124,53 +1289,92 @@
 # confidence level.
 #
 # To calculate a 95\% percentile bootstrap confidence interval, we will do the following:
-#
+
+# %% [markdown]
 # 1. Arrange the observations in the bootstrap distribution in ascending order. 
 # 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 # 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
 #
 # \newpage
 #
-# To do this in R, we can use the `quantile()` function:
+# To do this in Python, we can use the `percentile()` function from the `numpy` package:
 # \index{quantile}
 # \index{pull}
 # \index{select}
-#
-# ```{r 11-bootstrapping8, echo = T, message = FALSE, warning = FALSE}
-# bounds <- boot20000_means |>
-#   select(mean) |>
-#   pull() |>
-#   quantile(c(0.025, 0.975))
-#
-# bounds
-# ```
-#
-# Our interval, \$`r round(bounds[1],2) ` to \$`r round(bounds[2],2)`, captures
+
+# %%
+import numpy as np
+bounds = np.percentile(boot20000_means["mean"], [2.5, 97.5])
+
+bounds
+
+# %% tags=["remove-cell"]
+glue("ci_lower", round(bounds[0], 2))
+glue("ci_upper", round(bounds[1], 2))
+
+# %% [markdown]
+# Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
 # the middle 95\% of the sample mean prices in the bootstrap distribution. We can
-# visualize the interval on our distribution in Figure
-# \@ref(fig:11-bootstrapping9). 
+# visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
+
+# %% tags=["remove-input"]
+boot_est_dist + (
+    (
+        alt.Chart(pd.DataFrame({"x": [bounds[0]]}))
+        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
+        .encode(x="x")
+    )
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [bounds[0] - 10],
+                    "y": [1600],
+                    "text": [f"2.5th percentile = {round(bounds[0], 2)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=12)
+        .encode(x="x", y="y", text="text")
+    )
+) + (
+    (
+        alt.Chart(pd.DataFrame({"x": [bounds[1]]}))
+        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
+        .encode(x="x")
+    )
+    + (
+        alt.Chart(
+            pd.DataFrame(
+                {
+                    "x": [bounds[1]],
+                    "y": [1600],
+                    "text": [f"97.5th percentile = {round(bounds[1], 2)}"],
+                }
+            )
+        )
+        .mark_text(dy=-5, size=12)
+        .encode(x="x", y="y", text="text")
+    )
+)
+
+# %% [markdown]
+# ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+# :name: fig:11-bootstrapping9
+# :figclass: caption-hack
 #
-# ```{r 11-bootstrapping9, echo = F, message = FALSE, warning = FALSE, fig.cap = "Distribution of the bootstrap sample means with percentile lower and upper bounds.", fig.height=4, fig.width = 6.5}
-# boot_est_dist +
-#   geom_vline(xintercept = bounds, col = "#E69F00", size = 2, linetype = 2) +
-#   annotate("text",
-#     x = bounds[1], max_count(boot_est_dist), hjust = 0.6, vjust = 2,
-#     label = paste("2.5th percentile =", round(bounds[1], 2))
-#   ) +
-#   annotate("text",
-#     x = bounds[2], max_count(boot_est_dist), hjust = 0.5, vjust = 2,
-#     label = paste("97.5th percentile =", round(bounds[2], 2))
-#   )
+# Distribution of the bootstrap sample means with percentile lower and upper bounds.
 # ```
-#
+
+# %% [markdown]
 # To finish our estimation of the population parameter, we would report the point
 # estimate and our confidence interval's lower and upper bounds. Here the sample
 # mean price-per-night of 40 Airbnb listings was 
-# \$`r round(mean(one_sample$price),2)`, and we are 95\% "confident" that the true
+# \${glue:}`one_sample_mean`, and we are 95\% "confident" that the true
 # population mean price-per-night for all Airbnb listings in Vancouver is between
-# \$(`r round(bounds[1],2)`, `r round(bounds[2],2)`).
+# \$({glue:}`ci_lower`, {glue:}`ci_upper`).
 # Notice that our interval does indeed contain the true
-# population mean value, \$`r round(mean(airbnb$price),2)`\! However, in
+# population mean value, \${glue:}`population_mean`\! However, in
 # practice, we would not know whether our interval captured the population
 # parameter or not because we usually only have a single sample, not the entire
 # population. This is the best we can do when we only have one sample!
@@ -1182,7 +1386,8 @@
 # more. We have just scratched the surface of statistical inference; however, the
 # material presented here will serve as the foundation for more advanced
 # statistical techniques you may learn about in the future!
-#
+
+# %% [markdown]
 # ## Exercises
 #
 # Practice exercises for the material covered in this chapter 
@@ -1193,12 +1398,13 @@
 # You can also preview a non-interactive version of each worksheet by clicking "view worksheet."
 # If you instead decide to download the worksheets and run them on your own machine,
 # make sure to follow the instructions for computer setup
-# found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+# found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
-#
+
+# %% [markdown]
 # ## Additional resources
 #
-# - Chapters 7 to 10 of *Modern Dive* [@moderndive] provide a great
+# - Chapters 7 to 10 of *Modern Dive* {cite:p}`moderndive` provide a great
 #   next step in learning about inference. In particular, Chapters 7 and 8 cover
 #   sampling and bootstrapping using `tidyverse` and `infer` in a slightly more
 #   in-depth manner than the present chapter. Chapters 9 and 10 take the next step
@@ -1207,7 +1413,7 @@
 #   concept of inference in testing hypotheses and performing regression. This
 #   material offers a great starting point for getting more into the technical side
 #   of statistics.
-# - Chapters 4 to 7 of *OpenIntro Statistics* [@openintro]
+# - Chapters 4 to 7 of *OpenIntro Statistics* {cite:p}`openintro`
 #   provide a good next step after *Modern Dive*. Although it is still certainly
 #   an introductory text, things get a bit more mathematical here. Depending on
 #   your background, you may actually want to start going through Chapters 1 to 3
@@ -1215,3 +1421,9 @@
 #   Although it may seem like a diversion, probability theory is *the language of
 #   statistics*; if you have a solid grasp of probability, more advanced statistics
 #   will come naturally to you!
+
+# %% [markdown]
+# ## References
+#
+# ```{bibliography}
+# ```

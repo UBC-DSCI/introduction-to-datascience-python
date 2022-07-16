@@ -1,45 +1,38 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
 
-# Regression I: K-nearest neighbors {#regression1}
+(regression1)=
+# Regression I: K-nearest neighbors
 
-```{r regression1-setup, echo = FALSE, message = FALSE, warning = FALSE}
-library(knitr)
-library(plotly)
-library(stringr)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-knitr::opts_chunk$set(fig.align = "center")
-reticulate::use_miniconda('r-reticulate')
+import altair as alt
+import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
+import plotly.express as px
+import plotly.graph_objs as go
+from plotly.offline import plot
+from IPython.display import HTML
 
-print_tidymodels <- function(tidymodels_object) {
-  if(!is_latex_output()) {
-    tidymodels_object
-  } else {
-    output <- capture.output(tidymodels_object)
-    
-    for (i in seq_along(output)) {
-      if (nchar(output[i]) <= 80) {
-        cat(output[i], sep = "\n")
-      } else {
-        cat(str_sub(output[i], start = 1, end = 80), sep = "\n")
-        cat(str_sub(output[i], start = 81, end = nchar(output[i])), sep = "\n")
-      }
-    }
-  }
-}
-theme_update(axis.title = element_text(size = 12)) # modify axis label size in plots 
+from myst_nb import glue
 ```
 
 ## Overview 
@@ -51,10 +44,10 @@ This is unlike the past two chapters, which focused on predicting categorical
 variables via classification. However, regression does have many similarities
 to classification: for example, just as in the case of classification,
 we will split our data into training, validation, and test sets, we will 
-use `tidymodels` workflows, we will use a K-nearest neighbors (KNN) 
+use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN) 
 approach to make predictions, and we will use cross-validation to choose K.
 Because of how similar these procedures are, make sure to read Chapters
-\@ref(classification) and \@ref(classification2) before reading 
+{ref}`classification` and {ref}`classification2` before reading 
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor, 
@@ -64,17 +57,21 @@ It is important to note that regression
 can also be used to answer inferential and causal questions, 
 however that is beyond the scope of this book.
 
++++
+
 ## Chapter learning objectives 
 By the end of the chapter, readers will be able to do the following:
 
 * Recognize situations where a simple regression analysis would be appropriate for making predictions.
 * Explain the K-nearest neighbor (KNN) regression algorithm and describe how it differs from KNN classification.
 * Interpret the output of a KNN regression.
-* In a dataset with two or more variables, perform K-nearest neighbor regression in R using a `tidymodels` workflow.
-* Execute cross-validation in R to choose the number of neighbors.
-* Evaluate KNN regression prediction accuracy in R using a test data set and the root mean squared prediction error (RMSPE).
+* In a dataset with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
+* Execute cross-validation in Python to choose the number of neighbors.
+* Evaluate KNN regression prediction accuracy in Python using a test data set and the root mean squared prediction error (RMSPE).
 * In the context of KNN regression, compare and contrast goodness of fit and prediction properties (namely RMSE vs RMSPE).
 * Describe the advantages and disadvantages of K-nearest neighbors regression.
+
++++
 
 ## The regression problem
 
@@ -91,7 +88,7 @@ numerical, and so predicting them given past data is considered a regression pro
 Just like in the \index{classification!comparison to regression} 
 classification setting, there are many possible methods that we can use 
 to predict numerical response variables. In this chapter we will
-focus on the **K-nearest neighbors** algorithm [@knnfix; @knncover], and in the next chapter
+focus on the **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`, and in the next chapter
 we will study **linear regression**.
 In your future studies, you might encounter regression trees, splines,
 and general local regression methods; see the additional resources
@@ -106,7 +103,6 @@ of our method on observations not seen during training. And finally, we can use 
 choices of model parameters (e.g., K in a K-nearest neighbors model). The major difference
 is that we are now predicting numerical variables instead of categorical variables.
 
-\newpage
 
 > **Note:** You can usually tell whether a\index{categorical variable}\index{numerical variable} variable is numerical or
 > categorical&mdash;and therefore whether you need to perform regression or
@@ -119,7 +115,9 @@ is that we are now predicting numerical variables instead of categorical variabl
 > though: sometimes categorical variables will be encoded as numbers in your
 > data (e.g., "1" represents "benign", and "0" represents "malignant"). In
 > these cases you have to ask the question about the *meaning* of the labels
-> ("benign" and "malignant"), not their values ("1" and "0"). 
+> ("benign" and "malignant"), not their values ("1" and "0").
+
++++
 
 ## Exploring a data set
 
@@ -133,18 +131,31 @@ we want to answer. In this example, our question is again predictive:
 its sale price? A rigorous, quantitative answer to this question might help
 a realtor advise a client as to whether the price of a particular listing 
 is fair, or perhaps how to set the price of a new listing.
-We begin the analysis by loading and examining the data, and setting the seed value.
+We begin the analysis by loading and examining the data.
 
-\index{seed!set.seed}
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 07-load, message = FALSE}
-library(tidyverse)
-library(tidymodels)
-library(gridExtra)
+# In this chapter and the next, we will study 
+# a data set \index{Sacramento real estate} of 
+# [932 real estate transactions in Sacramento, California](https://support.spatialkey.com/spatialkey-sample-csv-data/) 
+# originally reported in the *Sacramento Bee* newspaper.
+# We first need to formulate a precise question that
+# we want to answer. In this example, our question is again predictive:
+# \index{question!regression} Can we use the size of a house in the Sacramento, CA area to predict
+# its sale price? A rigorous, quantitative answer to this question might help
+# a realtor advise a client as to whether the price of a particular listing 
+# is fair, or perhaps how to set the price of a new listing.
+# We begin the analysis by loading and examining the data, and setting the seed value.
 
-set.seed(5)
+# \index{seed!set.seed}
+```
 
-sacramento <- read_csv("data/sacramento.csv")
+```{code-cell} ipython3
+import pandas as pd
+import altair as alt
+
+sacramento = pd.read_csv("data/sacramento.csv")
 sacramento
 ```
 
@@ -157,25 +168,42 @@ want to predict (sale price) on the y-axis.
 \index{ggplot!geom\_point}
 \index{visualization!scatter}
 
-> **Note:** Given that the y-axis unit is dollars in Figure \@ref(fig:07-edaRegr), 
+> **Note:** Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`, 
 > we format the axis labels to put dollar signs in front of the house prices, 
 > as well as commas to increase the readability of the larger numbers.
-> We can do this in R by passing the `dollar_format` function 
-> (from the `scales` package)
-> to the `labels` argument of the `scale_y_continuous` function.
+> We can do this in `altair` by passing the `axis=alt.Axis(format='$,.0f')` argument 
+> to the `y` encoding channel in an `altair` specification.
 
-```{r 07-edaRegr, message = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet)."}
-eda <- ggplot(sacramento, aes(x = sqft, y = price)) +
-  geom_point(alpha = 0.4) +
-  xlab("House size (square feet)") +
-  ylab("Price (USD)") +
-  scale_y_continuous(labels = dollar_format()) + 
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+:tags: [remove-output]
+
+eda = (
+    alt.Chart(sacramento)
+    .mark_circle(opacity=0.4, color='black')
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    )
+)
 
 eda
 ```
- 
-The plot is shown in Figure \@ref(fig:07-edaRegr).
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-edaRegr", eda)
+```
+
+:::{glue:figure} fig:07-edaRegr
+:name: fig:07-edaRegr
+
+Scatter plot of price (USD) versus house size (square feet).
+:::
+
++++
+
+The plot is shown in {numref}`fig:07-edaRegr`.
 We can see that in Sacramento, CA, as the
 size of a house increases, so does its sale price. Thus, we can reason that we
 may be able to use the size of a not-yet-sold house (for which we don't know
@@ -184,29 +212,26 @@ that a larger house size *causes* a higher sale price; just that house price
 tends to increase with house size, and that we may be able to use the latter to 
 predict the former.
 
++++
+
 ## K-nearest neighbors regression
 
 Much like in the case of classification, 
 we can use a K-nearest neighbors-based \index{K-nearest neighbors!regression} 
 approach in regression to make predictions. 
-Let's take a small sample of the data in Figure \@ref(fig:07-edaRegr) 
+Let's take a small sample of the data in {numref}`fig:07-edaRegr` 
 and walk through how K-nearest neighbors (KNN) works
 in a regression context before we dive in to creating our model and assessing
 how well it predicts house sale price. This subsample is taken to allow us to
 illustrate the mechanics of KNN regression with a few data points; later in
 this chapter we will use all the data.
 
-To take a small random sample of size 30, we'll use the function
-`slice_sample`, and input the data frame to sample from and the number of rows
-to randomly select. \index{slice\_sample}
+To take a small random sample of size 30, we'll use the 
+`sample` method of a `pandas.DataFrame` object, and input the number of rows
+to randomly select (`n`) and the random seed (`random_state`). \index{slice\_sample}
 
-```{r 07-sacramento-seed, echo = FALSE, message = FALSE, warning = FALSE}
-# hidden seed
-set.seed(10)
-```
-
-```{r 07-sacramento}
-small_sacramento <- slice_sample(sacramento, n = 30)
+```{code-cell} ipython3
+small_sacramento = sacramento.sample(n=30, random_state=10)
 ```
 
 Next let's say we come across a  2,000 square-foot house in Sacramento we are
@@ -214,74 +239,134 @@ interested in purchasing, with an advertised list price of \$350,000. Should we
 offer to pay the asking price for this house, or is it overpriced and we should
 offer less? Absent any other information, we can get a sense for a good answer
 to this question by using the data we have to predict the sale price given the
-sale prices we have already observed. But in Figure \@ref(fig:07-small-eda-regr),
+sale prices we have already observed. But in {numref}`fig:07-small-eda-regr`,
 you can see that we have no
 observations of a house of size *exactly* 2,000 square feet. How can we predict
-the sale price? 
+the sale price?
 
-```{r 07-small-eda-regr, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with vertical line indicating 2,000 square feet on x-axis."}
-small_plot <- ggplot(small_sacramento, aes(x = sqft, y = price)) +
-  geom_point() +
-  xlab("House size (square feet)") +
-  ylab("Price (USD)") +
-  scale_y_continuous(labels = dollar_format()) +
-  geom_vline(xintercept = 2000, linetype = "dotted") + 
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+:tags: [remove-output]
 
-small_plot
+small_plot = (
+    alt.Chart(small_sacramento)
+    .mark_circle(color='black')
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    )
+)
+
+# add an overlay to the base plot
+line_df = pd.DataFrame({"x": [2000]})
+rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+
+small_plot + rule
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-small-eda-regr", (small_plot + rule))
+```
+
+:::{glue:figure} fig:07-small-eda-regr
+:name: fig:07-small-eda-regr
+
+Scatter plot of price (USD) versus house size (square feet) with vertical line indicating 2,000 square feet on x-axis.
+:::
+
++++
 
 We will employ the same intuition from the classification chapter, and use the
 neighboring points to the new point of interest to suggest/predict what its
 sale price might be. 
-For the example shown in Figure \@ref(fig:07-small-eda-regr), 
+For the example shown in {numref}`fig:07-small-eda-regr`, 
 we find and label the 5 nearest neighbors to our observation 
 of a house that is 2,000 square feet.
 \index{mutate}\index{slice}\index{arrange}\index{abs}
 
-```{r 07-find-k3}
-nearest_neighbors <- small_sacramento |>
-  mutate(diff = abs(2000 - sqft)) |>
-  arrange(diff) |>
-  slice(1:5) #subset the first 5 rows
+```{code-cell} ipython3
+nearest_neighbors = (
+    small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
+    .sort_values("diff")
+    .iloc[:5]
+)
 
 nearest_neighbors
 ```
 
-```{r 07-knn3-example, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors."}
-nearest_neighbors <- mutate(nearest_neighbors, twothou = rep(2000, 5))
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-nn_plot <- small_plot +
-  geom_segment(
-    data = nearest_neighbors,
-    aes(x = twothou, xend = sqft, y = price, yend = price), color = "orange"
-  )
+nn_plot = small_plot + rule
+
+# plot horizontal lines which is perpendicular to x=2000
+for i in range(5):
+    h_line_df = pd.concat(
+        (
+            pd.DataFrame(nearest_neighbors.iloc[i, [4, 6]]).T,
+            pd.DataFrame({"sqft": [2000], "price": [nearest_neighbors.iloc[i, 6]]}),
+        ),
+        ignore_index=True,
+    )
+    h_line = alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price")
+    nn_plot += h_line
 
 nn_plot
 ```
 
-Figure \@ref(fig:07-knn3-example) illustrates the difference between the house sizes
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-knn5-example", nn_plot)
+```
+
+:::{glue:figure} fig:07-knn5-example
+:name: fig:07-knn5-example
+
+Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors.
+:::
+
++++
+
+{numref}`fig:07-knn5-example` illustrates the difference between the house sizes
 of the 5 nearest neighbors (in terms of house size) to our new
 2,000 square-foot house of interest. Now that we have obtained these nearest neighbors, 
 we can use their values to predict the
 sale price for the new home.  Specifically, we can take the mean (or
 average) of these 5 values as our predicted value, as illustrated by
-the red point in Figure \@ref(fig:07-predictedViz-knn).
+the red point in {numref}`fig:07-predictedViz-knn`.
 
-```{r 07-predicted-knn}
-prediction <- nearest_neighbors |>
-  summarise(predicted = mean(price))
-
+```{code-cell} ipython3
+prediction = nearest_neighbors["price"].mean()
 prediction
 ```
 
-```{r 07-predictedViz-knn, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with predicted price for a 2,000 square-foot house based on 5 nearest neighbors represented as a red dot."}
-nn_plot +
-  geom_point(aes(x = 2000, y = prediction[[1]]), color = "red", size = 2.5)
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+nn_plot_pred = nn_plot + alt.Chart(
+    pd.DataFrame({"sqft": [2000], "price": [prediction]})
+).mark_circle(size=40).encode(x="sqft", y="price", color=alt.value("red"))
 ```
 
-Our predicted price is \$`r format(round(prediction[[1]]), big.mark=",", nsmall=0, scientific = FALSE)`
-(shown as a red point in Figure \@ref(fig:07-predictedViz-knn)), which is much less than \$350,000; perhaps we
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("knn-5-pred", "{0:,.0f}".format(prediction))
+glue("fig:07-predictedViz-knn", nn_plot_pred)
+```
+
+:::{glue:figure} fig:07-predictedViz-knn
+:name: fig:07-predictedViz-knn
+
+Scatter plot of price (USD) versus house size (square feet) with predicted price for a 2,000 square-foot house based on 5 nearest neighbors represented as a red dot.
+:::
+
++++
+
+Our predicted price is \${glue:text}`knn-5-pred`
+(shown as a red point in {numref}`fig:07-predictedViz-knn`), which is much less than \$350,000; perhaps we
 might want to offer less than the list price at which the house is advertised.
 But this is only the very beginning of the story. We still have all the same
 unanswered questions here with KNN regression that we had with KNN
@@ -297,6 +382,8 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions 
 about what the data must look like for it to work.
 
++++ {"tags": []}
+
 ## Training, evaluating, and tuning the model
 
 As usual, 
@@ -306,14 +393,19 @@ Let's take care of that now.
 Note that for the remainder of the chapter 
 we'll be working with the entire Sacramento data set, 
 as opposed to the smaller sample of 30 points 
-that we used earlier in the chapter (Figure \@ref(fig:07-small-eda-regr)).
+that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 \index{training data}
 \index{test data}
 
-```{r 07-test-train-split}
-sacramento_split <- initial_split(sacramento, prop = 0.75, strata = price)
-sacramento_train <- training(sacramento_split)
-sacramento_test <- testing(sacramento_split)
++++
+
+> Note that we are not specifying the `stratify` argument here as we did in Chapter {ref}`classification2`,
+> since `sklearn.model_selection.train_test_split` cannot stratify based on a continuous variable. However, some functions inside other packages are able to do that.
+
+```{code-cell} ipython3
+sacramento_train, sacramento_test = train_test_split(
+    sacramento, train_size=0.75, random_state=5
+)
 ```
 
 Next, we'll use cross-validation \index{cross-validation} to choose $K$. In KNN classification, we used
@@ -335,7 +427,7 @@ In other words, we compute the *squared* difference between the predicted and tr
 value for each observation in our test (or validation) set, compute the average, and then finally
 take the square root. The reason we use the *squared* difference (and not just the difference)
 is that the differences can be positive or negative, i.e., we can overshoot or undershoot the true
-response value. Figure \@ref(fig:07-verticalerrors) illustrates both positive and negative differences
+response value. {numref}`fig:07-verticalerrors` illustrates both positive and negative differences
 between predicted and true response values.
 So if we want to measure error&mdash;a notion of distance between our predicted and true response values&mdash;we 
 want to make sure that we are only adding up positive values, with larger positive values representing larger
@@ -346,61 +438,64 @@ different from the true values, then RMSPE will be quite large. When we
 use cross-validation, we will choose the $K$ that gives
 us the smallest RMSPE.
 
-```{r 07-verticalerrors, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Scatter plot of price (USD) versus house size (square feet) with example predictions (blue line) and the error in those predictions compared with true response values for three selected observations (vertical red lines).", fig.height = 3.5, fig.width = 4.5}
-# save the seed
-seedval <- .Random.seed
+```{code-cell} ipython3
+:tags: [remove-cell]
 
 # (synthetic) new prediction points
-pts <- tibble(sqft = c(1250, 1850, 2250), price = c(250000, 200000, 500000))
-finegrid <- tibble(sqft = seq(from = 900, to = 3900, by = 10))
+pts = pd.DataFrame({"sqft": [1250, 1850, 2250], "price": [250000, 200000, 500000]})
+finegrid = pd.DataFrame({"sqft": np.arange(900, 3901, 10)})
+
+# preprocess the data, make the pipeline
+sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
+sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor(n_neighbors=4))
 
 # fit the model
-sacr_recipe_hid <- recipe(price ~ sqft, data = small_sacramento) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
+X = small_sacramento[["sqft"]]
+y = small_sacramento[["price"]]
+sacr_pipeline.fit(X, y)
 
-sacr_spec_hid <- nearest_neighbor(weight_func = "rectangular", 
-                                  neighbors = 4) |>
-  set_engine("kknn") |>
-  set_mode("regression")
+# predict on the full grid and new data pts
+sacr_full_preds_hid = pd.concat(
+    (finegrid, pd.DataFrame(sacr_pipeline.predict(finegrid), columns=["predicted"])),
+    axis=1,
+)
 
-sacr_fit_hid <- workflow() |>
-  add_recipe(sacr_recipe_hid) |>
-  add_model(sacr_spec_hid) |>
-  fit(data = small_sacramento)
+sacr_new_preds_hid = pd.concat(
+    (pts, pd.DataFrame(sacr_pipeline.predict(pts), columns=["predicted"])),
+    axis=1,
+)
 
-sacr_full_preds_hid <- sacr_fit_hid |> 
-                           predict(finegrid) |>
-                           bind_cols(finegrid)
-
-sacr_new_preds_hid <- sacr_fit_hid |> 
-                           predict(pts) |>
-                           bind_cols(pts)
-
-# plot the vertical prediction errors
-errors_plot <- ggplot(small_sacramento, aes(x = sqft, y = price)) +
-  geom_point() +
-  xlab("House size (square feet)") +
-  ylab("Price (USD)") +
-  scale_y_continuous(labels = dollar_format()) +
-  geom_line(data = sacr_full_preds_hid, 
-            aes(x = sqft, y = .pred), 
-            color = "blue") + 
-  geom_segment(
-    data = sacr_new_preds_hid,
-    aes(x = sqft, xend = sqft, y = price, yend = .pred), 
-    color = "red") + 
-  geom_point(data = sacr_new_preds_hid, 
-             aes(x = sqft, y = price), 
-             color = "black")
-
-# restore the seed
-.Random.seed <- seedval
+# to make altair mark_line works, need to create separate dataframes for each vertical error line
+sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
+errors_plot = (
+    small_plot
+    + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
+    + alt.Chart(sacr_new_preds_hid)
+    .mark_circle(color="black")
+    .encode(x="sqft", y="price")
+)
+for i in pts["sqft"]:
+    line_df = sacr_new_preds_melted_df.query("sqft == @i")
+    errors_plot += alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value")
 
 errors_plot
 ```
 
-> **Note:** When using many code packages (`tidymodels` included), the evaluation output 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-verticalerrors", errors_plot, display=False)
+```
+
+:::{glue:figure} fig:07-verticalerrors
+:name: fig:07-verticalerrors
+
+Scatter plot of price (USD) versus house size (square feet) with example predictions (blue line) and the error in those predictions compared with true response values for three selected observations (vertical red lines).
+:::
+
++++
+
+> **Note:** When using many code packages, the evaluation output 
 > we will get to assess the prediction quality of
 > our KNN regression models is labeled "RMSE", or "root mean squared
 > error". Why is this so, and why not RMSPE? \index{RMSPE!comparison with RMSE}
@@ -415,156 +510,250 @@ errors_plot
 > and rely on context to denote which data the root mean squared error is being calculated on.
 
 Now that we know how we can assess how well our model predicts a numerical
-value, let's use R to perform cross-validation and to choose the optimal $K$.
+value, let's use Python to perform cross-validation and to choose the optimal $K$.
 First, we will create a recipe for preprocessing our data.
 Note that we include standardization
 in our preprocessing to build good habits, but since we only have one 
 predictor, it is technically not necessary; there is no risk of comparing two predictors
 of different scales.
-Next we create a model specification for K-nearest neighbors regression. Note 
-that we use `set_mode("regression")`
+Next we create a model pipeline for K-nearest neighbors regression. Note 
+that we use `KNeighborsRegressor`
 now in the model specification to denote a regression problem, as opposed to the classification
 problems from the previous chapters. 
-The use of `set_mode("regression")` essentially
- tells `tidymodels` that we need to use different metrics (RMSPE, not accuracy)
-for tuning and evaluation.
-Then we create a 5-fold cross-validation object, and put the recipe and model specification together
-in a workflow.
-\index{tidymodels}\index{recipe}\index{workflow}
+The use of `KNeighborsRegressor` essentially
+ tells `scikit-learn` that we need to use different metrics (instead of accuracy)
+for tuning and evaluation. 
+Next we specify a dictionary of parameter grid containing the numbers of neighbors ranging from 1 to 200. 
+Then we create a 5-fold `GridSearchCV` object, and pass in the pipeline and parameter grid. We also
+need to specify that `scoring="neg_root_mean_squared_error"` to get *negative* RMSPE from `scikit-learn`.
+The reason that `scikit-learn` negates the regular RMSPE is that the function always tries to maximize 
+the scores, while RMSPE should be minimized. Hence, in order to see the actual RMSPE, we need to negate 
+back the `mean_test_score`.
 
-```{r 07-choose-k-knn, results = 'hide', echo = TRUE}
-sacr_recipe <- recipe(price ~ sqft, data = sacramento_train) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
++++
 
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                              neighbors = tune()) |>
-  set_engine("kknn") |>
-  set_mode("regression")
-
-sacr_vfold <- vfold_cv(sacramento_train, v = 5, strata = price)
-
-sacr_wkflw <- workflow() |>
-  add_recipe(sacr_recipe) |>
-  add_model(sacr_spec)
-
-sacr_wkflw
-```
-
-```{r echo = FALSE}
-print_tidymodels(sacr_wkflw)
-```
-
-Next we run cross-validation for a grid of numbers of neighbors ranging from 1 to 200. 
-The following code tunes
-the model and returns the RMSPE for each number of neighbors. In the output of the `sacr_results`
-results data frame, we see that the `neighbors` variable contains the value of $K$,
-the mean (`mean`) contains the value of the RMSPE estimated via cross-validation,
-and the standard error (`std_err`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
+In the output of the `sacr_results`
+results data frame, we see that the `param_kneighborsregressor__n_neighbors` variable contains the values of $K$,
+the `RMSPE` variable contains the value of the RMSPE estimated via cross-validation, 
+which was obtained through negating the `mean_test_score` variable, 
+and the standard error (`std_test_score`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
 is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
 error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
 fall outside this range). You may ignore the other columns in the metrics data frame,
 as they do not provide any additional insight.
-\index{cross-validation!collect\_metrics}
 
-```{r 07-choose-k-knn-results}
-gridvals <- tibble(neighbors = seq(from = 1, to = 200, by = 3))
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-sacr_results <- sacr_wkflw |>
-  tune_grid(resamples = sacr_vfold, grid = gridvals) |>
-  collect_metrics() |>
-  filter(.metric == "rmse")
-
-# show the results
-sacr_results
+# Now that we know how we can assess how well our model predicts a numerical
+# value, let's use R to perform cross-validation and to choose the optimal $K$.
+# First, we will create a recipe for preprocessing our data.
+# Note that we include standardization
+# in our preprocessing to build good habits, but since we only have one 
+# predictor, it is technically not necessary; there is no risk of comparing two predictors
+# of different scales.
+# Next we create a model specification for K-nearest neighbors regression. Note 
+# that we use `set_mode("regression")`
+# now in the model specification to denote a regression problem, as opposed to the classification
+# problems from the previous chapters. 
+# The use of `set_mode("regression")` essentially
+#  tells `tidymodels` that we need to use different metrics (RMSPE, not accuracy)
+# for tuning and evaluation.
+# Then we create a 5-fold cross-validation object, and put the recipe and model specification together
+# in a workflow.
+# \index{tidymodels}\index{recipe}\index{workflow}
 ```
 
-```{r 07-choose-k-knn-plot, echo = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Effect of the number of neighbors on the RMSPE."} 
-sacr_tunek_plot <- ggplot(sacr_results, aes(x = neighbors, y = mean)) +
-  geom_point() +
-  geom_line() +
-  labs(x = "Neighbors", y = "RMSPE")
+```{code-cell} ipython3
+# preprocess the data, make the pipeline
+sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
+sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
+
+# create the predictor and target
+X = sacramento_train[["sqft"]]
+y = sacramento_train[["price"]]
+
+# create the 5-fold GridSearchCV object
+param_grid = {
+    "kneighborsregressor__n_neighbors": range(1, 201, 3),
+}
+sacr_gridsearch = GridSearchCV(
+    estimator=sacr_pipeline,
+    param_grid=param_grid,
+    n_jobs=-1,
+    cv=5,
+    scoring="neg_root_mean_squared_error",
+)
+
+# fit the GridSearchCV object
+sacr_gridsearch.fit(X, y)
+
+# retrieve the CV scores
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
+# negate mean_test_score (negative RMSPE) to get the actual RMSPE
+sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
+
+sacr_results[
+    [
+        "param_kneighborsregressor__n_neighbors",
+        "RMSPE",
+        "mean_test_score",
+        "std_test_score",
+    ]
+]
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Next we run cross-validation for a grid of numbers of neighbors ranging from 1 to 200. 
+# The following code tunes
+# the model and returns the RMSPE for each number of neighbors. In the output of the `sacr_results`
+# results data frame, we see that the `neighbors` variable contains the value of $K$,
+# the mean (`mean`) contains the value of the RMSPE estimated via cross-validation,
+# and the standard error (`std_err`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
+# is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
+# error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
+# fall outside this range). You may ignore the other columns in the metrics data frame,
+# as they do not provide any additional insight.
+# \index{cross-validation!collect\_metrics}
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+sacr_tunek_plot = alt.Chart(sacr_results).mark_line(point=True).encode(
+    x=alt.X("param_kneighborsregressor__n_neighbors", title="Neighbors"),
+    y=alt.Y("RMSPE", scale=alt.Scale(zero=False))
+)
 
 sacr_tunek_plot
 ```
 
-Figure \@ref(fig:07-choose-k-knn-plot) visualizes how the RMSPE varies with the number of neighbors $K$.
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
+```
+
+:::{glue:figure} fig:07-choose-k-knn-plot
+:name: fig:07-choose-k-knn-plot
+
+Effect of the number of neighbors on the RMSPE.
+:::
+
++++
+
+{numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
 We take the *minimum* RMSPE to find the best setting for the number of neighbors:
 
-```{r 07-choose-k-knn-results-2}
+```{code-cell} ipython3
 # show only the row of minimum RMSPE
-sacr_min <- sacr_results |>
-  filter(mean == min(mean))
-
-sacr_min
+sacr_min = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
+sacr_min[
+    [
+        "param_kneighborsregressor__n_neighbors",
+        "RMSPE",
+        "mean_test_score",
+        "std_test_score",
+    ]
+]
 ```
 
-The smallest RMSPE occurs when $K =$ `r sacr_min |> pull(neighbors)`.
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```{r 07-get-kmin, echo = FALSE, message = FALSE, warning = FALSE}
-kmin <- sacr_min |> pull(neighbors)
+glue("kmin", int(sacr_min['param_kneighborsregressor__n_neighbors']))
 ```
+
+The smallest RMSPE occurs when $K =$ {glue:}`kmin`.
+
++++
 
 ## Underfitting and overfitting
 Similar to the setting of classification, by setting the number of neighbors
 to be too small or too large, we cause the RMSPE to increase, as shown in
-Figure \@ref(fig:07-choose-k-knn-plot). What is happening here? 
+{numref}`fig:07-choose-k-knn-plot`. What is happening here? 
 
-Figure \@ref(fig:07-howK) visualizes the effect of different settings of $K$ on the
+{numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 regression model. Each plot shows the predicted values for house sale price from
-our KNN regression model for 6 different values for $K$: 1, 3, `r kmin`, 41, 250, and 932 (i.e., the entire dataset).
+our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`kmin`, 41, 250, and 699 (i.e., the training data).
 For each model, we predict prices for the range of possible home sizes we
 observed in the data set (here 500 to 5,000 square feet) and we plot the
 predicted prices as a blue line.
 
-```{r 07-howK, echo = FALSE, warning = FALSE, fig.height = 13, fig.width = 10,fig.cap = "Predicted values for house price (represented as a blue line) from KNN regression models for six different values for $K$."}
-gridvals <- c(1, 3, kmin, 41, 250, 932)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-plots <- list()
-
-for (i in 1:6) {
-  if (i < 6){
-      sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                                    neighbors = gridvals[[i]]) |>
-        set_engine("kknn") |>
-        set_mode("regression")
-
-      sacr_wkflw <- workflow() |>
-        add_recipe(sacr_recipe) |>
-        add_model(sacr_spec)
-
-      sacr_preds <- sacr_wkflw |>
-        fit(data = sacramento_train) |>
-        predict(sacramento_train) |>
-        bind_cols(sacramento_train)
-
-      plots[[i]] <- ggplot(sacr_preds, aes(x = sqft, y = price)) +
-        geom_point(alpha = 0.4) +
-        xlab("House size (square feet)") +
-        ylab("Price (USD)") +
-        scale_y_continuous(labels = dollar_format()) +
-        geom_line(data = sacr_preds, aes(x = sqft, y = .pred), color = "blue") +
-        ggtitle(paste0("K = ", gridvals[[i]])) +
-        theme(text = element_text(size = 20), axis.title=element_text(size=20))
-      } else {
-      plots[[i]] <- ggplot(sacr_preds, aes(x = sqft, y = price)) +
-        geom_point(alpha = 0.4) +
-        xlab("House size (square feet)") +
-        ylab("Price (USD)") +
-        scale_y_continuous(labels = dollar_format()) +
-        geom_hline(data = sacr_preds, 
-                   mapping = aes(x = sqft), 
-                   yintercept = mean(sacr_preds$price), 
-                   color = "blue") +
-        ggtitle(paste0("K = ", gridvals[[i]])) +
-  theme(text = element_text(size = 20), axis.title=element_text(size=20)) 
-  }
-}
-
-grid.arrange(grobs = plots, ncol = 2)
+# Figure \@ref(fig:07-howK) visualizes the effect of different settings of $K$ on the
+# regression model. Each plot shows the predicted values for house sale price from
+# our KNN regression model for 6 different values for $K$: 1, 3, `r kmin`, 41, 250, and 932 (i.e., the entire dataset).
+# For each model, we predict prices for the range of possible home sizes we
+# observed in the data set (here 500 to 5,000 square feet) and we plot the
+# predicted prices as a blue line.
 ```
 
-Figure \@ref(fig:07-howK) shows that when $K$ = 1, the blue line runs perfectly
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+gridvals = [
+    1,
+    3,
+    int(sacr_min["param_kneighborsregressor__n_neighbors"]),
+    41,
+    250,
+    len(sacramento_train),
+]
+
+plots = list()
+
+sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
+X = sacramento_train[["sqft"]]
+y = sacramento_train[["price"]]
+
+base_plot = (
+    alt.Chart(sacramento_train)
+    .mark_circle(opacity=0.4, color="black")
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
+    )
+)
+for i in range(len(gridvals)):
+    # make the pipeline based on n_neighbors
+    sacr_pipeline = make_pipeline(
+        sacr_preprocessor, KNeighborsRegressor(n_neighbors=gridvals[i])
+    )
+    sacr_pipeline.fit(X, y)
+    # predictions
+    sacr_preds = sacramento_train
+    sacr_preds = sacr_preds.assign(predicted=sacr_pipeline.predict(sacramento_train))
+    # overlay the plots
+    plots.append(
+        base_plot
+        + alt.Chart(sacr_preds, title=f"K = {gridvals[i]}")
+        .mark_line(color="blue")
+        .encode(x="sqft", y="predicted")
+    )
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue(
+    "fig:07-howK", (plots[0] | plots[1]) & (plots[2] | plots[3]) & (plots[4] | plots[5])
+)
+```
+
+:::{glue:figure} fig:07-howK
+:name: fig:07-howK
+
+Predicted values for house price (represented as a blue line) from KNN regression models for six different values for $K$.
+:::
+
++++
+
+{numref}`fig:07-howK` shows that when $K$ = 1, the blue line runs perfectly
 through (almost) all of our training observations. 
 This happens because our
 predicted values for a given region (typically) depend on just a single observation. 
@@ -581,8 +770,8 @@ chapters that this behavior&mdash;where the model is influenced too much
 by the noisy data&mdash;is called *overfitting*; we use this same term 
 in the context of regression. \index{overfitting!regression}
 
-What about the plots in Figure \@ref(fig:07-howK) where $K$ is quite large, 
-say, $K$ = 250 or 932? 
+What about the plots in {numref}`fig:07-howK` where $K$ is quite large, 
+say, $K$ = 250 or 699? 
 In this case the blue line becomes extremely smooth, and actually becomes flat
 once $K$ is equal to the number of datapoints in the entire data set. 
 This happens because our predicted values for a given x value (here, home
@@ -601,90 +790,145 @@ we would like a model that (1) follows the overall "trend" in the training data,
 actually uses the training data to learn something useful, and (2) does not follow
 the noisy fluctuations, so that we can be confident that our model will transfer/generalize
 well to other new data. If we explore 
-the other values for $K$, in particular $K$ = `r sacr_min |> pull(neighbors)`
-(as suggested by cross-validation),
+the other values for $K$, in particular $K$ = {glue:}`kmin` (as suggested by cross-validation),
 we can see it achieves this goal: it follows the increasing trend of house price
 versus house size, but is not influenced too much by the idiosyncratic variations
 in price. All of this is similar to how
 the choice of $K$ affects K-nearest neighbors classification, as discussed in the previous
-chapter. 
+chapter.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Changed from ...
+
+# What about the plots in Figure \@ref(fig:07-howK) where $K$ is quite large, 
+# say, $K$ = 250 or 932? 
+```
 
 ## Evaluating on the test set
 
 To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we will first
 re-train our KNN regression model on the entire training data set, 
-using $K =$ `r sacr_min |> pull(neighbors)` neighbors. Then we will
-use `predict` to make predictions on the test data, and use the `metrics`
-function again to compute the summary of regression quality. Because
-we specify that we are performing regression in `set_mode`, the `metrics`
-function knows to output a quality summary related to regression, and not, say, classification.
+using $K =$ {glue:}`kmin` neighbors. Then we will
+use `predict` to make predictions on the test data, and use the `mean_squared_error`
+function to compute the mean squared prediction error (MSPE). Finally take the 
+square root of MSPE to get RMSPE. The reason that we do not use `score` method (as we
+did in Classification chapter) is that the scoring metric `score` uses for `KNeighborsRegressor` 
+is $R^2$ instead of RMSPE.
 
-```{r 07-predict}
-kmin <- sacr_min |> pull(neighbors)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = kmin) |>
-  set_engine("kknn") |>
-  set_mode("regression")
+# To assess how well our model might do at predicting on unseen data, we will
+# assess its RMSPE on the test data. To do this, we will first
+# re-train our KNN regression model on the entire training data set, 
+# using $K =$ `r sacr_min |> pull(neighbors)` neighbors. Then we will
+# use `predict` to make predictions on the test data, and use the `metrics`
+# function again to compute the summary of regression quality. Because
+# we specify that we are performing regression in `set_mode`, the `metrics`
+# function knows to output a quality summary related to regression, and not, say, classification.
+```
 
-sacr_fit <- workflow() |>
-  add_recipe(sacr_recipe) |>
-  add_model(sacr_spec) |>
-  fit(data = sacramento_train)
+```{code-cell} ipython3
+kmin = int(sacr_min["param_kneighborsregressor__n_neighbors"])
 
-sacr_summary <- sacr_fit |>
-  predict(sacramento_test) |>
-  bind_cols(sacramento_test) |>
-  metrics(truth = price, estimate = .pred) |>
-  filter(.metric == 'rmse')
+# re-make the pipeline
+sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor(n_neighbors=kmin))
 
-sacr_summary
+# create the predictor and target
+X = sacramento_train[["sqft"]]
+y = sacramento_train[["price"]]
+
+# fit the pipeline object
+sacr_pipeline.fit(X, y)
+
+# predict on test data
+sacr_preds = sacramento_test
+sacr_preds = sacr_preds.assign(predicted=sacr_pipeline.predict(sacramento_test))
+
+# calculate RMSPE
+from sklearn.metrics import mean_squared_error
+
+RMSPE = np.sqrt(
+    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+)
+
+RMSPE
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("test_RMSPE", "{0:,.0f}".format(int(RMSPE)))
+glue("cv_RMSPE", "{0:,.0f}".format(int(sacr_min['RMSPE'])))
 ```
 
 Our final model's test error as assessed by RMSPE 
-is $`r format(round(sacr_summary |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`. 
+is \$ {glue:text}`test_RMSPE`. 
 Note that RMSPE is measured in the same units as the response variable.
 In other words, on new observations, we expect the error in our prediction to be 
-*roughly* $`r format(round(sacr_summary |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`. 
+*roughly* \$ {glue:text}`test_RMSPE`. 
 From one perspective, this is good news: this is about the same as the cross-validation
 RMSPE estimate of our tuned model 
-(which was $`r format(round(sacr_min |> pull(mean)), big.mark=",", nsmall=0, scientific=FALSE)`), 
+(which was \$ {glue:text}`cv_RMSPE`, 
 so we can say that the model appears to generalize well
 to new data that it has never seen before.
 However, much like in the case of KNN classification, whether this value for RMSPE is *good*&mdash;i.e.,
-whether an error of around $`r format(round(sacr_summary |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`
+whether an error of around \$ {glue:text}`test_RMSPE`
 is acceptable&mdash;depends entirely on the application. 
 In this application, this error
 is not prohibitively large, but it is not negligible either; 
-$`r format(round(sacr_summary |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`
+\$ {glue:text}`test_RMSPE`
 might represent a substantial fraction of a home buyer's budget, and
 could make or break whether or not they could afford put an offer on a house. 
 
-Finally, Figure \@ref(fig:07-predict-all) shows the predictions that our final model makes across
+Finally, {numref}`fig:07-predict-all` shows the predictions that our final model makes across
 the range of house sizes we might encounter in the Sacramento area&mdash;from 500 to 5000 square feet. 
 You have already seen a few plots like this in this chapter, but here we also provide the code that generated it
 as a learning challenge.
 
-```{r 07-predict-all, warning = FALSE, fig.height = 3.5, fig.width = 4.5, fig.cap = "Predicted values of house price (blue line) for the final KNN regression model."}
-sacr_preds <- tibble(sqft = seq(from = 500, to = 5000, by = 10))
+```{code-cell} ipython3
+:tags: [remove-output]
 
-sacr_preds <- sacr_fit |>
-  predict(sacr_preds) |>
-  bind_cols(sacr_preds)
+sacr_preds = pd.DataFrame({"sqft": np.arange(500, 5001, 10)})
+sacr_preds = pd.concat(
+    (sacr_preds, pd.DataFrame(sacr_pipeline.predict(sacr_preds), columns=["predicted"])),
+    axis=1,
+)
 
-plot_final <- ggplot(sacramento_train, aes(x = sqft, y = price)) +
-  geom_point(alpha = 0.4) +
-  geom_line(data = sacr_preds, 
-            mapping = aes(x = sqft, y = .pred), 
-            color = "blue") +
-  xlab("House size (square feet)") +
-  ylab("Price (USD)") +
-  scale_y_continuous(labels = dollar_format()) +
-  ggtitle(paste0("K = ", kmin)) + 
-  theme(text = element_text(size = 12))
+# the base plot: the training data scatter plot
+base_plot = (
+    alt.Chart(sacramento_train)
+    .mark_circle(opacity=0.4, color="black")
+    .encode(
+        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
+    )
+)
+
+# add the prediction layer
+plot_final = base_plot + alt.Chart(sacr_preds, title=f"K = {kmin}").mark_line(
+    color="blue"
+).encode(x="sqft", y="predicted")
 
 plot_final
 ```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-predict-all", plot_final)
+```
+
+:::{glue:figure} fig:07-predict-all
+:name: fig:07-predict-all
+
+Predicted values of house price (blue line) for the final KNN regression model.
+:::
+
++++
 
 ## Multivariable KNN regression
 
@@ -693,8 +937,20 @@ In this setting, we have the same concerns regarding the scale of the predictors
  predictions are made by identifying the $K$
 observations that are nearest to the new point we want to predict; any
 variables that are on a large scale will have a much larger effect than
-variables on a small scale. But since the `recipe` we built above scales and centers
-all predictor variables, this is handled for us.
+variables on a small scale. Hence, we should re-define the preprocessor in the 
+pipeline to incorporate all predictor variables.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# As in KNN classification, we can use multiple predictors in KNN regression.
+# In this setting, we have the same concerns regarding the scale of the predictors. Once again, 
+#  predictions are made by identifying the $K$
+# observations that are nearest to the new point we want to predict; any
+# variables that are on a large scale will have a much larger effect than
+# variables on a small scale. But since the `recipe` we built above scales and centers
+# all predictor variables, this is handled for us.
+```
 
 Note that we also have the same concern regarding the selection of predictors
 in KNN regression as in KNN classification: having more predictors is **not** always
@@ -704,26 +960,45 @@ algorithm from the classification chapter in KNN regression as well.
 As the algorithm is the same, we will not cover it again in this chapter.
 
 We will now demonstrate a multivariable KNN regression \index{K-nearest neighbors!multivariable regression}  analysis of the 
-Sacramento real estate \index{Sacramento real estate} data using `tidymodels`. This time we will use
+Sacramento real estate \index{Sacramento real estate} data using `scikit-learn`. This time we will use
 house size (measured in square feet) as well as number of bedrooms as our
 predictors, and continue to use house sale price as our outcome/target variable
 that we are trying to predict.
 It is always a good practice to do exploratory data analysis, such as
-visualizing the data, before we start modeling the data. Figure \@ref(fig:07-bedscatter)
+visualizing the data, before we start modeling the data. {numref}`fig:07-bedscatter`
 shows that the number of bedrooms might provide useful information
 to help predict the sale price of a house.
 
-```{r 07-bedscatter, fig.height = 3.5, fig.width = 4.5, fig.cap = "Scatter plot of the sale price of houses versus the number of bedrooms."}
-plot_beds <- sacramento |>
-  ggplot(aes(x = beds, y = price)) +
-  geom_point(alpha = 0.4) + 
-  labs(x = 'Number of Bedrooms', y = 'Price (USD)') + 
-  theme(text = element_text(size = 12))
+```{code-cell} ipython3
+:tags: [remove-output]
+
+plot_beds = (
+    alt.Chart(sacramento)
+    .mark_circle(opacity=0.4, color="black")
+    .encode(
+        x=alt.X("beds", title="Number of Bedrooms"),
+        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
+    )
+)
 
 plot_beds
 ```
 
-Figure \@ref(fig:07-bedscatter) shows that as the number of bedrooms increases,
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("fig:07-bedscatter", plot_beds)
+```
+
+:::{glue:figure} fig:07-bedscatter
+:name: fig:07-bedscatter
+
+Scatter plot of the sale price of houses versus the number of bedrooms.
+:::
+
++++
+
+{numref}`fig:07-bedscatter` shows that as the number of bedrooms increases,
 the house sale price tends to increase as well, but that the relationship
 is quite weak. Does adding the number of bedrooms
 to our model improve our ability to predict price? To answer that
@@ -732,128 +1007,178 @@ model using house size and number of bedrooms, and then we can compare it to
 the model we previously came up with that only used house
 size. Let's do that now!
 
-First we'll build a new model specification and recipe for the analysis. Note that
-we use the formula `price ~ sqft + beds` to denote that we have two predictors,
-and set `neighbors = tune()` to tell `tidymodels` to tune the number of neighbors for us.
+First we'll build a new model specification and preprocessor for the analysis. Note that
+we pass in `["sqft", "beds"]` to denote that we have two predictors in `make_column_transformer`.
+Moreover, we do not specify `n_neighbors` in `KNeighborsRegressor` inside the pipeline, and pass this pipeline to the `GridSearchCV` to tell `scikit-learn` to tune the number of neighbors for us.
 
-```{r 07-mult-setup}
-sacr_recipe <- recipe(price ~ sqft + beds, data = sacramento_train) |>
-  step_scale(all_predictors()) |>
-  step_center(all_predictors())
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                              neighbors = tune()) |>
-  set_engine("kknn") |>
-  set_mode("regression")
+# First we'll build a new model specification and recipe for the analysis. Note that
+# we use the formula `price ~ sqft + beds` to denote that we have two predictors,
+# and set `neighbors = tune()` to tell `tidymodels` to tune the number of neighbors for us.
 ```
 
-Next, we'll use 5-fold cross-validation to choose the number of neighbors via the minimum RMSPE:
+```{code-cell} ipython3
+# preprocess the data, make the pipeline
+sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft", "beds"]))
+sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
 
-```{r 07-mult-cv}
-gridvals <- tibble(neighbors = seq(1, 200))
+# create the predictor and target
+X = sacramento_train[["sqft", "beds"]]
+y = sacramento_train[["price"]]
+```
 
-sacr_multi <- workflow() |>
-  add_recipe(sacr_recipe) |>
-  add_model(sacr_spec) |>
-  tune_grid(sacr_vfold, grid = gridvals) |>
-  collect_metrics() |>
-  filter(.metric == "rmse") |>
-  filter(mean == min(mean))
+Next, we'll use 5-fold cross-validation through `GridSearchCV` to choose the number of neighbors via the minimum RMSPE:
 
-sacr_k <- sacr_multi |>
-              pull(neighbors)
+```{code-cell} ipython3
+# create the 5-fold GridSearchCV object
+param_grid = {
+    "kneighborsregressor__n_neighbors": range(1, 201),
+}
+sacr_gridsearch = GridSearchCV(
+    estimator=sacr_pipeline,
+    param_grid=param_grid,
+    n_jobs=-1,
+    cv=5,
+    scoring="neg_root_mean_squared_error",
+)
+
+# fit the GridSearchCV object
+sacr_gridsearch.fit(X, y)
+
+# retrieve the CV scores
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
+# negate mean_test_score (negative RMSPE) to get the actual RMSPE
+sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
+
+# show only the row of minimum RMSPE
+sacr_multi = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
+sacr_k = int(sacr_multi["param_kneighborsregressor__n_neighbors"])
 
 sacr_multi
 ```
 
-Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ `r sacr_k`.
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("sacr_k", sacr_k)
+glue("cv_RMSPE_2pred", "{0:,.0f}".format(int(sacr_multi["RMSPE"])))
+```
+
+Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:}`sacr_k`.
 If we want to compare this multivariable KNN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
 then we must compare the accuracy estimated using only the training data via cross-validation.
 Looking back, the estimated cross-validation accuracy for the single-predictor 
-model was `r format(round(sacr_min$mean), big.mark=",", nsmall=0, scientific = FALSE)`.
+model was {glue:}`cv_RMSPE`.
 The estimated cross-validation accuracy for the multivariable model is
-`r format(round(sacr_multi$mean), big.mark=",", nsmall=0, scientific = FALSE)`.
+{glue:text}`cv_RMSPE_2pred`.
 Thus in this case, we did not improve the model 
 by a large amount by adding this additional predictor.
 
 Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
 and evaluate its performance on test data. We first need to re-train the model on the entire
-training data set with $K =$ `r sacr_k`, and then use that model to make predictions
+training data set with $K =$ {glue:}`sacr_k`, and then use that model to make predictions
 on the test data.
 
-```{r 07-re-train}
-sacr_spec <- nearest_neighbor(weight_func = "rectangular", 
-                              neighbors = sacr_k) |>
-  set_engine("kknn") |>
-  set_mode("regression")
+```{code-cell} ipython3
+# re-make the pipeline
+sacr_pipeline_mult = make_pipeline(
+    sacr_preprocessor, KNeighborsRegressor(n_neighbors=sacr_k)
+)
 
-knn_mult_fit <- workflow() |>
-  add_recipe(sacr_recipe) |>
-  add_model(sacr_spec) |>
-  fit(data = sacramento_train)
+# fit the pipeline object
+sacr_pipeline_mult.fit(X, y)
 
-knn_mult_preds <- knn_mult_fit |>
-  predict(sacramento_test) |>
-  bind_cols(sacramento_test)
+# predict on test data
+sacr_preds = sacramento_test
+sacr_preds = sacr_preds.assign(predicted=sacr_pipeline_mult.predict(sacramento_test))
 
-knn_mult_mets <- metrics(knn_mult_preds, truth = price, estimate = .pred) |>
-                     filter(.metric == 'rmse')
-knn_mult_mets
+# calculate RMSPE
+from sklearn.metrics import mean_squared_error
+
+RMSPE_mult = np.sqrt(
+    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+)
+
+RMSPE_mult
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("RMSPE_mult", "{0:,.0f}".format(RMSPE_mult))
 ```
 
 This time, when we performed KNN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error 
-of `r format(round(knn_mult_mets |> pull(.estimate)), big.mark=",", nsmall=0, scientific=FALSE)`.
-Figure \@ref(fig:07-knn-mult-viz) visualizes the model's predictions overlaid on top of the data. This 
+of {glue:text}`RMSPE_mult`.
+{numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This 
 time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
-predictors instead of 1.  
+predictors instead of 1.
 
-```{r 07-knn-mult-viz, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "KNN regression model’s predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.", out.width="100%"}
-xvals <- seq(from = min(sacramento_train$sqft), 
-             to = max(sacramento_train$sqft), 
-             length = 50)
-yvals <- seq(from = min(sacramento_train$beds), 
-             to = max(sacramento_train$beds), 
-             length = 50)
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-zvals <- knn_mult_fit |>
-  predict(crossing(xvals, yvals) |> 
-            mutate(sqft = xvals, beds = yvals)) |>
-  pull(.pred)
+# create a prediction pt grid
+xvals = np.linspace(
+    sacramento_train["sqft"].min(), sacramento_train["sqft"].max(), 50
+)
+yvals = np.linspace(
+    sacramento_train["beds"].min(), sacramento_train["beds"].max(), 50
+)
+xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
+xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
 
-zvalsm <- matrix(zvals, nrow = length(xvals))
+# add prediction
+knnPredGrid = sacr_pipeline_mult.predict(xygrid)
 
-plot_3d <- plot_ly() |>
-  add_markers(
-    data = sacramento_train,
-    x = ~sqft,
-    y = ~beds,
-    z = ~price,
-    marker = list(size = 2, opacity = 0.4, color = "red")
-  ) |>
-  layout(scene = list(
-    xaxis = list(title = "Size (sq ft)"),
-    zaxis = list(title = "Price (USD)"),
-    yaxis = list(title = "Bedrooms")
-  )) |>
-  add_surface(
-    x = ~xvals,
-    y = ~yvals,
-    z = ~zvalsm,
-    colorbar = list(title = "Price (USD)")
-  )
+fig = px.scatter_3d(
+    sacramento_train,
+    x="sqft",
+    y="beds",
+    z="price",
+    opacity=0.4,
+    labels={"sqft": "Size (sq ft)", "beds": "Bedrooms", "price": "Price (USD)"},
+)
 
-if(!is_latex_output()){  
-  plot_3d
-} else {
-  scene = list(camera = list(eye = list(x = -2.1, y = -2.2, z = 0.75)))
-  plot_3d <- plot_3d  |> layout(scene = scene)
-  save_image(plot_3d, "img/plot3d_knn_regression.png", scale = 10)
-  knitr::include_graphics("img/plot3d_knn_regression.png")
-}
+fig.update_traces(marker={"size": 2, "color": "red"})
+
+fig.add_trace(
+    go.Surface(
+        x=xvals,
+        y=yvals,
+        z=knnPredGrid.reshape(50, -1),
+        name="Predictions",
+        colorscale="viridis",
+        colorbar={"title": "Price (USD)"}
+    )
+)
+
+fig.update_layout(
+    margin=dict(l=0, r=0, b=0, t=1),
+    template="plotly_white",
+)
+
+plot(fig, filename="img/regression1/fig07-knn-mult-viz.html", auto_open=False)
 ```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+
+display(HTML("img/regression1/fig07-knn-mult-viz.html"))
+```
+
+```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:name: fig:07-knn-mult-viz
+:figclass: caption-hack
+
+KNN regression model’s predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.
+```
+
++++
 
 We can see that the predictions in this case, where we have 2 predictors, form
 a surface instead of a line. Because the newly added predictor (number of bedrooms) is 
@@ -864,6 +1189,8 @@ predictions. For example, in this model we would predict that the cost of a
 house with a size of 2,500 square feet generally increases slightly as the number
 of bedrooms increases. Without having the additional predictor of number of
 bedrooms, we would predict the same price for these two houses.
+
++++
 
 ## Strengths and limitations of KNN regression
 
@@ -882,6 +1209,8 @@ regression has both strengths and weaknesses. Some are listed here:
 2. may not perform well with a large number of predictors, and
 3. may not predict well beyond the range of values input in your training data.
 
++++
+
 ## Exercises
 
 Practice exercises for the material covered in this chapter 
@@ -892,5 +1221,14 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
+
++++
+
+## References
+
++++
+
+```{bibliography}
+```

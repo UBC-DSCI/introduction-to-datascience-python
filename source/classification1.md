@@ -905,6 +905,9 @@ In order to classify a new observation using a $K$-nearest neighbor classifier, 
 
 ## $K$-nearest neighbors with `scikit-learn`
 
+```{index} scikit-learn
+```
+
 Coding the $K$-nearest neighbors algorithm in Python ourselves can get complicated,
 especially if we want to handle multiple classes, more than two variables,
 or predict the class for multiple new observations. Thankfully, in Python,

@@ -13,14 +13,7 @@ kernelspec:
 ---
 
 
-
-
-
-
 # Clustering {#clustering}
-
-
-
 
 ```{code-cell} ipython3
 
@@ -111,8 +104,6 @@ principal component analysis, multidimensional scaling, and more;
 see the additional resources section at the end of this chapter 
 for where to begin learning more about these other methods.
 
-\newpage
-
 > **Note:** There are also so-called *semisupervised* tasks, \index{semisupervised} 
 > where only some of the data come with response variable labels/values, 
 > but the vast majority don't. 
@@ -177,6 +168,7 @@ Now we can load and preview the data.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
+from myst_nb import glue
 data = pd.read_csv('data/toy_penguins.csv')
 data
 ```
@@ -195,13 +187,13 @@ to see if we can detect subtypes or groups in our data set.
 scatter_plot = (
     alt.Chart(penguin_data)
         .mark_circle(color='black').encode(
-        x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
-        y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"))
+            x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
+            y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"))
         .configure_axis(
-            labelFontSize=12,
-            titleFontSize=12
-    ).configure_title(fontSize=12)
+        labelFontSize=12,
+        titleFontSize=12)
 )
+
 ```
 
 ```{code-cell} ipython3
@@ -209,7 +201,7 @@ scatter_plot = (
 glue('scatter_plot', scatter_plot, display=True)
 ```
 
-:::{glue:figure} scatter_plot 
+:::{glue:figure} scatter_plot
 :figwidth: 700px 
 :name: scatter_plot
 
@@ -221,7 +213,7 @@ Scatter plot of standardized bill length versus standardized flipper length.
 Based \index{ggplot}\index{ggplot!geom\_point} on the visualization 
 in {numref}`scatter_plot`, 
 we might suspect there are a few subtypes of penguins within our data set.
-We can see roughly 3 groups of observations in {numref}`scatter_plot`,
+We can see roughly 3 groups of observations in {numref}`scatter`,
 including:
 
 1. a small flipper and bill length group,
@@ -252,15 +244,20 @@ denoted by colored scatter points.
 
 colors = ["orange", "blue", "brown"]
 
-colored_scatter_plot = alt.Chart(data, title="Scatter plot of standardized bill length versus standardized flipper length with colored groups.").mark_circle().encode(
-    x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
-    y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
+colored_scatter_plot = (
+    alt.Chart(data)
+    .mark_circle().encode(
+        x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
+        y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
     color = alt.Color('cluster:N', scale=alt.Scale(range=colors))).configure_axis(
     labelFontSize=12,
     titleFontSize=12
-).configure_title(fontSize=12)
- 
+)
+)
+
+
 glue('colored_scatter_plot', colored_scatter_plot, display=True)
+
 ```
 
 :::{glue:figure} colored_scatter_plot
@@ -268,8 +265,6 @@ glue('colored_scatter_plot', colored_scatter_plot, display=True)
 :name: colored_scatter_plot
 
 Scatter plot of standardized bill length versus standardized flipper length with colored groups.
-
-
 :::
 
 
@@ -320,7 +315,7 @@ $\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-from myst_nb import glue
+
 clus_rows = clus.shape[0]
 
 mean_flipper_len_std = round(np.mean(clus['flipper_length_standardized']),2)
@@ -393,7 +388,7 @@ All clusters from the penguin_data data set example. Observations are in orange,
 ```
 
 
-\newpage
+
 
 ### The clustering algorithm
 
@@ -745,14 +740,12 @@ penguin_clust_ks = penguin_clust_ks.assign(
 
 )
     
-
-
 penguin_clust_ks
 ```
 
 
 Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot 
-({numref}`plot`) and search for the "elbow" to find which value of K to use. We will drop the column `penguin_clusts` to make the plotting in altair feasible
+({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use. We will drop the column `penguin_clusts` to make the plotting in altair feasible
 
 ```{code-cell} ipython3
 
@@ -760,7 +753,7 @@ penguin_clust_ks = penguin_clust_ks.drop(columns = 'penguin_clusts')
 ```
 
 ```{code-cell} ipython3
-plot=(
+elbow_plot=(
     alt.Chart(penguin_clust_ks)
     .mark_line(point=True)
     .encode(
@@ -777,12 +770,12 @@ plot=(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('plot', plot, display=True)
+glue('elbow_plot', elbow_plot, display=True)
 ```
 
-:::{glue:figure} plot 
+:::{glue:figure} elbow_plot
 :figwidth: 700px 
-:name: plot
+:name: elbow_plot
 
 A plot showing the total WSSD versus the number of clusters.
 :::
@@ -837,14 +830,14 @@ elbow_plot=(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('elbow_plot', elbow_plot, display=True)
+glue('elbow_plot2', elbow_plot, display=True)
 ```
 
-:::{glue:figure} elbow_plot 
+:::{glue:figure} elbow_plot2 
 :figwidth: 700px 
-:name: elbow_plot
+:name: elbow_plot2
 
-A plot showing the total WSSD versus the number of clusters when K-means is run without `init`
+A plot showing the total WSSD versus the number of clusters when K-means is run without `init` argument
 :::
 
 ## Exercises

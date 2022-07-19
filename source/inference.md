@@ -65,21 +65,30 @@ retailer might formulate the following question:
 
 *What proportion of all undergraduate students in North America own an iPhone?*
 
+```{index} population, population; parameter
+```
+
 In the above question, we are interested in making a conclusion about *all*
-undergraduate students in North America; this is referred to as the **population**. \index{population} In
+undergraduate students in North America; this is referred to as the **population**. In
 general, the population is the complete collection of individuals or cases we
 are interested in studying.  Further, in the above question, we are interested
 in computing a quantity&mdash;the proportion of iPhone owners&mdash;based on
-the entire population. This proportion is referred to as a **population parameter**. \index{population!parameter} In
+the entire population. This proportion is referred to as a **population parameter**. In
 general, a population parameter is a numerical characteristic of the entire
 population. To compute this number in the example above, we would need to ask
 every single undergraduate in North America whether they own an iPhone. In
 practice, directly computing population parameters is often time-consuming and
 costly, and sometimes impossible. 
 
-A more practical approach would be to make measurements for a **sample**, i.e., a \index{sample}
+```{index} sample, sample; estimate, inference
+```
+
+```{index} see: statistical inference; inference
+```
+
+A more practical approach would be to make measurements for a **sample**, i.e., a 
 subset of individuals collected from the population. We can then compute a
-**sample estimate**&mdash;a numerical characteristic of the sample&mdash;that \index{sample!estimate}
+**sample estimate**&mdash;a numerical characteristic of the sample&mdash;that 
 estimates the population parameter. For example, suppose we randomly selected
 ten undergraduate students across North America (the sample) and computed the
 proportion of those students who own an iPhone (the sample estimate). In that
@@ -88,7 +97,6 @@ proportion of students who own an iPhone in the entire population.
 {numref}`fig:11-population-vs-sample` illustrates this process.
 In general, the process of using a sample to make a conclusion about the
 broader population from which it is taken is referred to as **statistical inference**. 
-\index{inference}\index{statistical inference|see{inference}}
 
 +++
 
@@ -135,8 +143,12 @@ focus on two settings:
 ## Sampling distributions
 
 ### Sampling distributions for proportions
+
+```{index} Airbnb
+```
+
 We will look at an example using data from 
-[Inside Airbnb](http://insideairbnb.com/) {cite:p}`insideairbnb`. Airbnb \index{Airbnb} is an online
+[Inside Airbnb](http://insideairbnb.com/) {cite:p}`insideairbnb`. Airbnb is an online
 marketplace for arranging vacation rentals and places to stay. The data set
 contains listings for Vancouver, Canada, in September 2020. Our data
 includes an ID number, neighborhood, type of room, the number of people the
@@ -151,7 +163,6 @@ airbnb <- read_csv("data/listings.csv") |>
 airbnb <- airbnb |>
   mutate(id = 1:nrow(airbnb))
 -->
-\index{seed!set.seed}
 
 ```{code-cell} ipython3
 import altair as alt
@@ -170,7 +181,9 @@ do not have access to the true population, but here let's imagine (for learning
 purposes) that our data set represents the population of all Airbnb rental
 listings in Vancouver, Canada. We can find the proportion of listings where
 `room_type == "Entire home/apt"`.
-\index{pull}\index{sum}\index{nrow}
+
+```{index} pandas.DataFrame; df[], count, len
+```
 
 ```{code-cell} ipython3
 population_summary = pd.DataFrame()
@@ -191,6 +204,9 @@ the data set is {glue:}`population_proportion`. This
 value, {glue:}`population_proportion`, is the population parameter. Remember, this
 parameter value is usually unknown in real data analysis problems, as it is
 typically not possible to make measurements for an entire population.  
+
+```{index} pandas.DataFrame; sample
+```
 
 Instead, perhaps we can approximate it with a small subset of data!
 To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
@@ -251,19 +267,24 @@ sample due to **sampling variability**. But just how much
 should we expect the estimates of our random samples to vary?
 Or in other words, how much can we really trust our point estimate based on a single sample?
 
+```{index} sampling distribution
+```
+
 To understand this, we will simulate many samples (much more than just two)
 of size 40 from our population of listings and calculate the proportion of
 entire home/apartment listings in each sample. This simulation will create
 many sample proportions, which we can visualize using a histogram. The
 distribution of the estimate for all possible samples of a given size (which we
 commonly refer to as $n$) from a population is called 
-a **sampling distribution**. \index{sampling distribution} The sampling distribution will help us see how much we would
+a **sampling distribution**. The sampling distribution will help us see how much we would
 expect our sample proportions from this population to vary for samples of size 40. 
+
+```{index} pandas.DataFrame; sample
+```
 
 We again use the `sample` to take samples of size 40 from our
 population of Airbnb listings. But this time we use a for loop 
-to take 20,000 samples of size 40. \index{rep\_sample\_n!reps argument}
-\index{rep\_sample\_n!size argument}
+to take 20,000 samples of size 40. 
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -381,12 +402,15 @@ glue("sample_propotion_min", round(sample_estimates["sample_proportion"].min(), 
 glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 1))
 ```
 
+```{index} sampling distribution; shape
+```
+
 The sampling distribution in {numref}`fig:11-example-proportions7` appears
 to be bell-shaped, is roughly symmetric, and has one peak. It is centered 
 around {glue:}`sample_propotion_center` and the sample proportions
 range from about {glue:}`sample_propotion_min` to about
 {glue:}`sample_propotion_max`. In fact, we can
-calculate the mean of the sample proportions.  \index{sampling distribution!shape}
+calculate the mean of the sample proportions. 
 
 ```{code-cell} ipython3
 sample_estimates["sample_proportion"].mean()
@@ -454,7 +478,10 @@ Population distribution of price per night (Canadian dollars) for all Airbnb lis
 
 +++
 
-In {numref}`fig:11-example-means2`, we see that the population distribution \index{population!distribution}
+```{index} population; distribution
+```
+
+In {numref}`fig:11-example-means2`, we see that the population distribution
 has one peak. It is also skewed (i.e., is not symmetric): most of the listings are
 less than \$250 per night, but a small number of listings cost much more, 
 creating a long tail on the histogram's right side. 
@@ -473,9 +500,15 @@ population_parameters
 glue("population_mean", round(population_parameters, 2))
 ```
 
+```{index} population; parameter
+```
+
 The price per night of all Airbnb rentals in Vancouver, BC 
 is \${glue:}`population_mean`, on average. This value is our
-population parameter since we are calculating it using the population data. \index{population!parameter}
+population parameter since we are calculating it using the population data. 
+
+```{index} pandas.DataFrame; sample
+```
 
 Now suppose we did not have access to the population data (which is usually the
 case!), yet we wanted to estimate the mean price per night. We could answer
@@ -483,8 +516,7 @@ this question by taking a random sample of as many Airbnb listings as our time
 and resources allow. Let's say we could do this for 40 listings. What would
 such a sample look like?  Let's take advantage of the fact that we do have
 access to the population data and simulate taking one random sample of 40
-listings in Python, again using `sample`. 
-\index{rep\_sample\_n}
+listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
 one_sample = airbnb.sample(40, random_state=1)
@@ -544,12 +576,15 @@ off.  Note that we usually cannot compute the estimate's accuracy in practice
 since we do not have access to the population parameter; if we did, we wouldn't
 need to estimate it!
 
+```{index} sampling distribution
+```
+
 Also, recall from the previous section that the point estimate can vary; if we
 took another random sample from the population, our estimate's value might
 change. So then, did we just get lucky with our point estimate above?  How much
 does our estimate vary across different samples of size 40 in this example?
 Again, since we have access to the population, we can take many samples and
-plot the sampling distribution of \index{sampling distribution} sample means for samples of size 40 to
+plot the sampling distribution of sample means for samples of size 40 to
 get a sense for this variation. In this case, we'll use 20,000 samples of size
 40.
 
@@ -615,14 +650,20 @@ glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), -1
 glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), -1))
 ```
 
+```{index} sampling distribution; shape
+```
+
 In {numref}`fig:11-example-means4`, the sampling distribution of the mean
-has one peak and is \index{sampling distribution!shape} bell-shaped. Most of the estimates are between 
+has one peak and is bell-shaped. Most of the estimates are between 
 about  \${glue:}`quantile_1` and 
 \${glue:}`quantile_3`; but there are
 a good fraction of cases outside this range (i.e., where the point estimate was
 not close to the population parameter). So it does indeed look like we were
 quite lucky when we estimated the population mean with only 
 {glue:}`diff_perc`% error.
+
+```{index} sampling distribution; compared to population distribution
+```
 
 Let's visualize the population distribution, distribution of the sample, and
 the sampling distribution on one plot to compare them in {numref}`fig:11-example-means5`. Comparing these three distributions, the centers
@@ -634,7 +675,6 @@ it has a bell shape, and it has a lower spread than the population or sample
 distributions. The sample means vary less than the individual observations
 because there will be some high values and some small values in any random
 sample, which will keep the average from being too extreme. 
-\index{sampling distribution!compared to population distribution}
 
 <!---
 ```{r 11-example-means4.5}
@@ -902,6 +942,9 @@ Comparison of sampling distributions, with mean highlighted as a vertical red li
 
 +++
 
+```{index} sampling distribution; effect of sample size
+```
+
 Based on the visualization in {numref}`fig:11-example-means7`, three points
 about the sample mean become clear.  First, the mean of the sample mean (across
 samples) is equal to the population mean. In other words, the sampling
@@ -909,7 +952,7 @@ distribution is centered at the population mean.  Second, increasing the size of
 the sample decreases the spread (i.e., the variability) of the sampling
 distribution. Therefore, a larger sample size results in a more reliable point
 estimate of the population parameter. And third, the distribution of the sample
-mean is roughly bell-shaped. \index{sampling distribution!effect of sample size}
+mean is roughly bell-shaped. 
 
 > **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
 > the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
@@ -954,14 +997,20 @@ So reporting the point estimate from a single sample alone may not be enough.
 We also need to report some notion of *uncertainty* in the value of the point
 estimate.
 
+```{index} bootstrap, confidence interval
+```
+
+```{index} see: interval; confidence interval
+```
+
 Unfortunately, we cannot construct the exact sampling distribution without
 full access to the population. However, if we could somehow *approximate* what 
 the sampling distribution would look like for a sample, we could 
 use that approximation to then report how uncertain our sample
 point estimate is (as we did above with the *exact* sampling
 distribution). There are several methods to accomplish this; in this book, we 
-will use the \index{bootstrap} *bootstrap*. We will discuss **interval estimation** and 
-construct \index{confidence interval}\index{interval|see{confidence interval}} 
+will use the *bootstrap*. We will discuss **interval estimation** and 
+construct
 **confidence intervals** using just a single sample from a population. A 
 confidence interval is a range of plausible values for our population parameter. 
 
@@ -1022,6 +1071,9 @@ Comparison of samples of different sizes from the population.
 
 +++
 
+```{index} bootstrap; distribution
+```
+
 In the previous section, we took many samples of the same size *from our
 population* to get a sense of the variability of a sample estimate. But if our
 sample is big enough that it looks like our population, we can pretend that our
@@ -1029,9 +1081,7 @@ sample *is* the population, and take more samples (with replacement) of the
 same size from it instead! This very clever technique is 
 called **the bootstrap**.  Note that by taking many samples from our single, observed
 sample, we do not obtain the true sampling distribution, but rather an
-approximation that we call **the bootstrap distribution**. \index{bootstrap!distribution}
-
-\newpage
+approximation that we call **the bootstrap distribution**. 
 
 > **Note:** We must sample *with* replacement when using the bootstrap.
 > Otherwise, if we had a sample of size $n$, and obtained a sample from it of
@@ -1111,14 +1161,15 @@ mean of the sample is \${glue:}`estimate_mean`.
 Remember, in practice, we usually only have this one sample from the population. So
 this sample and estimate are the only data we can work with.
 
+```{index} bootstrap; in Python, scikit-learn; resample (bootstrap)
+```
+
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
 sample in Python and calculate a point estimate from that bootstrap sample. We will 
 use the `resample` function from the `scikit-learn` package. Critically, note that we now
 pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
 And since we need to sample with replacement,
 we keep the argument for `replace` to its default value of `True`.
-\index{bootstrap!in R}
-\index{rep\_sample\_n!bootstrap}
 
 ```{code-cell} ipython3
 :tags: []
@@ -1343,8 +1394,10 @@ Comparison of the distribution of the bootstrap sample means and sampling distri
 glue("one_sample_mean", round(one_sample["price"].mean(), 2))
 ```
 
+```{index} sampling distribution; compared to bootstrap distribution
+```
+
 There are two essential points that we can take away from 
-\index{sampling distribution!compared to bootstrap distribution}
 {numref}`fig:11-bootstrapping6`. First, the shape and spread of the true sampling
 distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
@@ -1381,9 +1434,12 @@ Summary of bootstrapping process.
 
 ### Using the bootstrap to calculate a plausible range  
 
+```{index} confidence interval
+```
+
 Now that we have constructed our bootstrap distribution, let's use it to create
 an approximate 95\% percentile bootstrap confidence interval. 
-A **confidence interval** \index{confidence interval} is a range of plausible values for the population parameter. We will
+A **confidence interval** is a range of plausible values for the population parameter. We will
 find the range of values covering the middle 95\% of the bootstrap
 distribution, giving us a 95\% confidence interval.  You may be wondering, what
 does "95\% confidence" mean? If we took 100 random samples and calculated 100
@@ -1408,12 +1464,10 @@ To calculate a 95\% percentile bootstrap confidence interval, we will do the fol
 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
 
-\newpage
-
 To do this in Python, we can use the `percentile()` function from the `numpy` package:
-\index{quantile}
-\index{pull}
-\index{select}
+
+```{index} numpy; percentile, pandas.DataFrame; df[]
+```
 
 ```{code-cell} ipython3
 import numpy as np

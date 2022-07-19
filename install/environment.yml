@@ -25,4 +25,5 @@ dependencies:
   - jinja2==3.0.3
   - scikit-learn
   - watchdog
+  - openpyxl
 # conda-lock --kind explicit --file environment.yml -p linux-64

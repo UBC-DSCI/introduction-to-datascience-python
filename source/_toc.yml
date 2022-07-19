@@ -1,22 +1,24 @@
 format: jb-book
-root: intro.md
+root: index.md
+options:
+  numbered: true
 parts:
 - caption: First draft
   chapters:
-    - file: preface-text
-    - file: setup
-    - file: reading
-    - file: wrangling
-    - file: viz
-    - file: version-control
-    - file: classification1
-    - file: classification2
-    - file: regression1
-    - file: regression2
-    - file: clustering
-    - file: inference
-    - file: references
-    - file: acknowledgements
-    - file: authors
-    - file: appendixA
-
+    - file: preface-text.md
+    - file: foreword-text.md
+    - file: acknowledgements.md
+    - file: authors.md
+    - file: setup.md
+    - file: intro.md
+    - file: reading.md
+    - file: wrangling.md
+    - file: viz.md
+    - file: classification1.ipynb
+    - file: classification2.md
+    - file: regression1.md
+    - file: regression2.md
+    - file: clustering.md
+    - file: inference.md
+    - file: references.md
+    - file: appendixA.md

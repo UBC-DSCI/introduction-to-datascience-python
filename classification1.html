@@ -21,7 +21,7 @@
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -38,7 +38,7 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -56,7 +56,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Classification II: evaluation &amp; tuning" href="classification2.html" />
-    <link rel="prev" title="Effective data visualization – TBD" href="viz.html" />
+    <link rel="prev" title="Effective data visualization" href="viz.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -159,7 +159,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="viz.html">
-   Effective data visualization – TBD
+   Effective data visualization
   </a>
  </li>
  <li class="toctree-l1 current active">
@@ -184,7 +184,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="clustering.html">
-   Clustering – TBD
+   Clustering
   </a>
  </li>
  <li class="toctree-l1">
@@ -1103,13 +1103,13 @@ changing them to “Benign” and “Malignant” using <code class="docutils li
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-3fa156af4f55477e9157324c5b556407"></div>
+<div id="altair-viz-8033cdc4a65c46f58de4c789d8454daa"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-3fa156af4f55477e9157324c5b556407") {
-      outputDiv = document.getElementById("altair-viz-3fa156af4f55477e9157324c5b556407");
+    if (outputDiv.id !== "altair-viz-8033cdc4a65c46f58de4c789d8454daa") {
+      outputDiv = document.getElementById("altair-viz-8033cdc4a65c46f58de4c789d8454daa");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -1161,10 +1161,10 @@ changing them to “Benign” and “Malignant” using <code class="docutils li
 <figure class="caption-hack align-default" id="fig-05-scatter">
 <img alt="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
 <figcaption>
-<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Scatter plot of concavity versus perimeter colored by diagnosis label.</span><a class="headerlink" href="#fig-05-scatter" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 57 </span><span class="caption-text">Scatter plot of concavity versus perimeter colored by diagnosis label.</span><a class="headerlink" href="#fig-05-scatter" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>In <a class="reference internal" href="#fig-05-scatter"><span class="std std-numref">Fig. 29</span></a>, we can see that malignant observations typically fall in
+<p>In <a class="reference internal" href="#fig-05-scatter"><span class="std std-numref">Fig. 57</span></a>, we can see that malignant observations typically fall in
 the upper right-hand corner of the plot area. By contrast, benign
 observations typically fall in the lower left-hand corner of the plot. In other words,
 benign observations tend to have lower concavity and perimeter values, and malignant
@@ -1195,42 +1195,42 @@ is a number that we must choose in advance; for now, we will assume that someone
 <p>To illustrate the concept of <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbors classification, we
 will walk through an example.  Suppose we have a
 new observation, with standardized perimeter of  and standardized concavity of , whose
-diagnosis “Class” is unknown. This new observation is depicted by the red, diamond point in <a class="reference internal" href="#fig-05-knn-2"><span class="std std-numref">Fig. 30</span></a>.</p>
+diagnosis “Class” is unknown. This new observation is depicted by the red, diamond point in <a class="reference internal" href="#fig-05-knn-2"><span class="std std-numref">Fig. 58</span></a>.</p>
 <figure class="align-default" id="fig-05-knn-2">
 <figcaption>
-<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Scatter plot of concavity versus perimeter with new observation represented as a red diamond.</span><a class="headerlink" href="#fig-05-knn-2" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 58 </span><span class="caption-text">Scatter plot of concavity versus perimeter with new observation represented as a red diamond.</span><a class="headerlink" href="#fig-05-knn-2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-05-knn-3"><span class="std std-numref">Fig. 31</span></a> shows that the nearest point to this new observation is <strong>malignant</strong> and
+<p><a class="reference internal" href="#fig-05-knn-3"><span class="std std-numref">Fig. 59</span></a> shows that the nearest point to this new observation is <strong>malignant</strong> and
 located at the coordinates (, ). The idea here is that if a point is close to another in the scatter plot,
 then the perimeter and concavity values are similar, and so we may expect that
 they would have the same diagnosis.</p>
 <figure class="align-default" id="fig-05-knn-3">
 <figcaption>
-<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label.</span><a class="headerlink" href="#fig-05-knn-3" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 59 </span><span class="caption-text">Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label.</span><a class="headerlink" href="#fig-05-knn-3" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Suppose we have another new observation with standardized perimeter  and
-concavity of . Looking at the scatter plot in <a class="reference internal" href="#fig-05-knn-4"><span class="std std-numref">Fig. 32</span></a>, how would you
+concavity of . Looking at the scatter plot in <a class="reference internal" href="#fig-05-knn-4"><span class="std std-numref">Fig. 60</span></a>, how would you
 classify this red, diamond observation? The nearest neighbor to this new point is a
 <strong>benign</strong> observation at (, ).
 Does this seem like the right prediction to make for this observation? Probably
 not, if you consider the other nearby points.</p>
 <figure class="align-default" id="fig-05-knn-4">
 <figcaption>
-<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label.</span><a class="headerlink" href="#fig-05-knn-4" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 60 </span><span class="caption-text">Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label.</span><a class="headerlink" href="#fig-05-knn-4" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>To improve the prediction we can consider several
 neighboring points, say <span class="math notranslate nohighlight">\(K = 3\)</span>, that are closest to the new observation
 to predict its diagnosis class. Among those 3 closest points, we use the
-<em>majority class</em> as our prediction for the new observation. As shown in <a class="reference internal" href="#fig-05-knn-5"><span class="std std-numref">Fig. 33</span></a>, we
+<em>majority class</em> as our prediction for the new observation. As shown in <a class="reference internal" href="#fig-05-knn-5"><span class="std std-numref">Fig. 61</span></a>, we
 see that the diagnoses of 2 of the 3 nearest neighbors to our new observation
 are malignant. Therefore we take majority vote and classify our new red, diamond
 observation as malignant.</p>
 <figure class="align-default" id="fig-05-knn-5">
 <figcaption>
-<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Scatter plot of concavity versus perimeter with three nearest neighbors.</span><a class="headerlink" href="#fig-05-knn-5" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 61 </span><span class="caption-text">Scatter plot of concavity versus perimeter with three nearest neighbors.</span><a class="headerlink" href="#fig-05-knn-5" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Here we chose the <span class="math notranslate nohighlight">\(K=3\)</span> nearest observations, but there is nothing special
@@ -1252,7 +1252,7 @@ be computed using the following formula:</p>
 from that new observation to each observation in our training data, and select the <span class="math notranslate nohighlight">\(K\)</span> observations corresponding to the
 <span class="math notranslate nohighlight">\(K\)</span> <em>smallest</em> distance values. For example, suppose we want to use <span class="math notranslate nohighlight">\(K=5\)</span> neighbors to classify a new
 observation with perimeter of  and
-concavity of , shown as a red diamond in <a class="reference internal" href="#fig-05-multiknn-1"><span class="std std-numref">Fig. 34</span></a>. Let’s calculate the distances
+concavity of , shown as a red diamond in <a class="reference internal" href="#fig-05-multiknn-1"><span class="std std-numref">Fig. 62</span></a>. Let’s calculate the distances
 between our new point and each of the observations in the training set to find
 the <span class="math notranslate nohighlight">\(K=5\)</span> neighbors that are nearest to our new point.
 You will see in the code below \index{mutate}, we compute the straight-line
@@ -1260,7 +1260,7 @@ distance using the formula above: we square the differences between the two obse
 and concavity coordinates, add the squared differences, and then take the square root.</p>
 <figure class="align-default" id="fig-05-multiknn-1">
 <figcaption>
-<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Scatter plot of concavity versus perimeter with new observation represented as a red diamond.</span><a class="headerlink" href="#fig-05-multiknn-1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 62 </span><span class="caption-text">Scatter plot of concavity versus perimeter with new observation represented as a red diamond.</span><a class="headerlink" href="#fig-05-multiknn-1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="cell docutils container">
@@ -1296,12 +1296,12 @@ and concavity coordinates, add the squared differences, and then take the square
 </div>
 </div>
 </div>
-<p>In <a class="reference internal" href="#tab-05-multiknn-mathtable"><span class="std std-numref">Table 6</span></a> we show in mathematical detail how
+<p>In <a class="reference internal" href="#tab-05-multiknn-mathtable"><span class="std std-numref">Table 7</span></a> we show in mathematical detail how
 we computed the <code class="docutils literal notranslate"><span class="pre">dist_from_new</span></code> variable (the
 distance to the new observation) for each of the 5 nearest neighbors in the
 training data.</p>
 <table class="colwidths-auto table" id="tab-05-multiknn-mathtable">
-<caption><span class="caption-number">Table 6 </span><span class="caption-text">Evaluating the distances from the new observation to each of its 5 nearest neighbors</span><a class="headerlink" href="#tab-05-multiknn-mathtable" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-number">Table 7 </span><span class="caption-text">Evaluating the distances from the new observation to each of its 5 nearest neighbors</span><a class="headerlink" href="#tab-05-multiknn-mathtable" title="Permalink to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Perimeter</p></th>
 <th class="head"><p>Concavity</p></th>
@@ -1339,10 +1339,10 @@ training data.</p>
 </table>
 <p>The result of this computation shows that 3 of the 5 nearest neighbors to our new observation are
 malignant (<code class="docutils literal notranslate"><span class="pre">M</span></code>); since this is the majority, we classify our new observation as malignant.
-These 5 neighbors are circled in <a class="reference internal" href="#fig-05-multiknn-3"><span class="std std-numref">Fig. 35</span></a>.</p>
+These 5 neighbors are circled in <a class="reference internal" href="#fig-05-multiknn-3"><span class="std std-numref">Fig. 63</span></a>.</p>
 <figure class="align-default" id="fig-05-multiknn-3">
 <figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Scatter plot of concavity versus perimeter with 5 nearest neighbors circled.</span><a class="headerlink" href="#fig-05-multiknn-3" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 63 </span><span class="caption-text">Scatter plot of concavity versus perimeter with 5 nearest neighbors circled.</span><a class="headerlink" href="#fig-05-multiknn-3" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1410,7 +1410,7 @@ three predictors.</p>
 </div>
 </div>
 <p>Based on <span class="math notranslate nohighlight">\(K=5\)</span> nearest neighbors with these three predictors we would classify the new observation as malignant since 4 out of 5 of the nearest neighbors are malignant class.
-<a class="reference internal" href="#fig-05-more"><span class="std std-numref">Fig. 36</span></a> shows what the data look like when we visualize them
+<a class="reference internal" href="#fig-05-more"><span class="std std-numref">Fig. 64</span></a> shows what the data look like when we visualize them
 as a 3-dimensional scatter with lines from the new observation to its five nearest neighbors.</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
@@ -1427,7 +1427,7 @@ as a 3-dimensional scatter with lines from the new observation to its five neare
 <figure class="caption-hack align-default" id="fig-05-more">
 <img alt="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
 <figcaption>
-<p><span class="caption-number">Fig. 36 </span><span class="caption-text">3D scatter plot of the standardized symmetry, concavity, and perimeter variables. Note that in general we recommend against using 3D visualizations; here we show the data in 3D only to illustrate what higher dimensions and nearest neighbors look like, for learning purposes.</span><a class="headerlink" href="#fig-05-more" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 64 </span><span class="caption-text">3D scatter plot of the standardized symmetry, concavity, and perimeter variables. Note that in general we recommend against using 3D visualizations; here we show the data in 3D only to illustrate what higher dimensions and nearest neighbors look like, for learning purposes.</span><a class="headerlink" href="#fig-05-more" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1841,16 +1841,16 @@ yourself. You will see further on in
 Section <a class="reference internal" href="#puttingittogetherworkflow"><span class="std std-ref">Putting it together in a pipeline</span></a> that <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> provides tools to
 automatically streamline the preprocesser and the model so that you can call<code class="docutils literal notranslate"><span class="pre">fit</span></code>
 and <code class="docutils literal notranslate"><span class="pre">transform</span></code> on the <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> as necessary without additional coding effort.</p>
-<p><a class="reference internal" href="#fig-05-scaling-plt"><span class="std std-numref">Fig. 37</span></a> shows the two scatter plots side-by-side—one for <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> and one for
+<p><a class="reference internal" href="#fig-05-scaling-plt"><span class="std std-numref">Fig. 65</span></a> shows the two scatter plots side-by-side—one for <code class="docutils literal notranslate"><span class="pre">unscaled_cancer</span></code> and one for
 <code class="docutils literal notranslate"><span class="pre">scaled_cancer</span></code>. Each has the same new observation annotated with its <span class="math notranslate nohighlight">\(K=3\)</span> nearest neighbors.
 In the original unstandardized data plot, you can see some odd choices
 for the three nearest neighbors. In particular, the “neighbors” are visually
 well within the cloud of benign observations, and the neighbors are all nearly
 vertically aligned with the new observation (which is why it looks like there
-is only one black line on this plot). <a class="reference internal" href="#fig-05-scaling-plt-zoomed"><span class="std std-numref">Fig. 38</span></a>
+is only one black line on this plot). <a class="reference internal" href="#fig-05-scaling-plt-zoomed"><span class="std std-numref">Fig. 66</span></a>
 shows a close-up of that region on the unstandardized plot. Here the computation of nearest
 neighbors is dominated by the much larger-scale area variable. The plot for standardized data
-on the right in <a class="reference internal" href="#fig-05-scaling-plt"><span class="std std-numref">Fig. 37</span></a> shows a much more intuitively reasonable
+on the right in <a class="reference internal" href="#fig-05-scaling-plt"><span class="std std-numref">Fig. 65</span></a> shows a much more intuitively reasonable
 selection of nearest neighbors. Thus, standardizing the data can change things
 in an important way when we are using predictive algorithms.
 Standardizing your data should be a part of the preprocessing you do
@@ -1858,12 +1858,12 @@ before predictive modeling and you should always think carefully about your prob
 whether you need to standardize your data.</p>
 <figure class="align-default" id="fig-05-scaling-plt">
 <figcaption>
-<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Comparison of K = 3 nearest neighbors with standardized and unstandardized data.</span><a class="headerlink" href="#fig-05-scaling-plt" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 65 </span><span class="caption-text">Comparison of K = 3 nearest neighbors with standardized and unstandardized data.</span><a class="headerlink" href="#fig-05-scaling-plt" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="fig-05-scaling-plt-zoomed">
 <figcaption>
-<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Close-up of three nearest neighbors for unstandardized data.</span><a class="headerlink" href="#fig-05-scaling-plt-zoomed" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 66 </span><span class="caption-text">Close-up of three nearest neighbors for unstandardized data.</span><a class="headerlink" href="#fig-05-scaling-plt-zoomed" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1885,7 +1885,7 @@ what the data would look like if the cancer was rare. We will do this by
 picking only 3 observations from the malignant group, and keeping all
 of the benign observations. We choose these 3 observations using the <code class="docutils literal notranslate"><span class="pre">.head()</span></code>
 method, which takes the number of rows to select from the top (<code class="docutils literal notranslate"><span class="pre">n</span></code>).
-The new imbalanced data is shown in <a class="reference internal" href="#fig-05-unbalanced"><span class="std std-numref">Fig. 39</span></a>.</p>
+The new imbalanced data is shown in <a class="reference internal" href="#fig-05-unbalanced"><span class="std std-numref">Fig. 67</span></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cancer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/wdbc.csv&quot;</span><span class="p">)</span>
@@ -1913,13 +1913,13 @@ The new imbalanced data is shown in <a class="reference internal" href="#fig-05-
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-3014953abcb54b56a815c88c2d26f4d1"></div>
+<div id="altair-viz-e4d50fc978ad463ca110aab5e73e2cea"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-3014953abcb54b56a815c88c2d26f4d1") {
-      outputDiv = document.getElementById("altair-viz-3014953abcb54b56a815c88c2d26f4d1");
+    if (outputDiv.id !== "altair-viz-e4d50fc978ad463ca110aab5e73e2cea") {
+      outputDiv = document.getElementById("altair-viz-e4d50fc978ad463ca110aab5e73e2cea");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -1971,7 +1971,7 @@ The new imbalanced data is shown in <a class="reference internal" href="#fig-05-
 <figure class="caption-hack align-default" id="fig-05-unbalanced">
 <img alt="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
 <figcaption>
-<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Imbalanced data.</span><a class="headerlink" href="#fig-05-unbalanced" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 67 </span><span class="caption-text">Imbalanced data.</span><a class="headerlink" href="#fig-05-unbalanced" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Suppose we now decided to use <span class="math notranslate nohighlight">\(K = 7\)</span> in <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classification.
@@ -1979,21 +1979,21 @@ With only 3 observations of malignant tumors, the classifier
 will <em>always predict that the tumor is benign, no matter what its concavity and perimeter
 are!</em> This is because in a majority vote of 7 observations, at most 3 will be
 malignant (we only have 3 total malignant observations), so at least 4 must be
-benign, and the benign vote will always win. For example, <a class="reference internal" href="#fig-05-upsample"><span class="std std-numref">Fig. 40</span></a>
+benign, and the benign vote will always win. For example, <a class="reference internal" href="#fig-05-upsample"><span class="std std-numref">Fig. 68</span></a>
 shows what happens for a new tumor observation that is quite close to three observations
 in the training data that were tagged as malignant.</p>
 <figure class="align-default" id="fig-05-upsample">
 <figcaption>
-<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Imbalanced data with 7 nearest neighbors to a new observation highlighted.</span><a class="headerlink" href="#fig-05-upsample" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 68 </span><span class="caption-text">Imbalanced data with 7 nearest neighbors to a new observation highlighted.</span><a class="headerlink" href="#fig-05-upsample" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-05-upsample-2"><span class="std std-numref">Fig. 41</span></a> shows what happens if we set the background color of
+<p><a class="reference internal" href="#fig-05-upsample-2"><span class="std std-numref">Fig. 69</span></a> shows what happens if we set the background color of
 each area of the plot to the predictions the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor
 classifier would make. We can see that the decision is
 always “benign,” corresponding to the blue color.</p>
 <figure class="align-default" id="fig-05-upsample-2">
 <figcaption>
-<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data.</span><a class="headerlink" href="#fig-05-upsample-2" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 69 </span><span class="caption-text">Imbalanced data with background color indicating the decision of the classifier and the points represent the labeled data.</span><a class="headerlink" href="#fig-05-upsample-2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Despite the simplicity of the problem, solving it in a statistically sound manner is actually
@@ -2042,14 +2042,14 @@ Name: Class, dtype: int64
 </div>
 </div>
 <p>Now suppose we train our <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor classifier with <span class="math notranslate nohighlight">\(K=7\)</span> on this <em>balanced</em> data.
-<a class="reference internal" href="#fig-05-upsample-plot"><span class="std std-numref">Fig. 42</span></a> shows what happens now when we set the background color
+<a class="reference internal" href="#fig-05-upsample-plot"><span class="std std-numref">Fig. 70</span></a> shows what happens now when we set the background color
 of each area of our scatter plot to the decision the <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor
 classifier would make. We can see that the decision is more reasonable; when the points are close
 to those labeled malignant, the classifier predicts a malignant tumor, and vice versa when they are
 closer to the benign tumor observations.</p>
 <figure class="align-default" id="fig-05-upsample-plot">
 <figcaption>
-<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Upsampled data with background color indicating the decision of the classifier.</span><a class="headerlink" href="#fig-05-upsample-plot" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 70 </span><span class="caption-text">Upsampled data with background color indicating the decision of the classifier.</span><a class="headerlink" href="#fig-05-upsample-plot" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -2145,7 +2145,7 @@ one with <code class="docutils literal notranslate"><span class="pre">Area</span
 </div>
 </div>
 <p>The classifier predicts that the first observation is benign (“B”), while the second is
-malignant (“M”). <a class="reference internal" href="#fig-05-workflow-plot-show"><span class="std std-numref">Fig. 43</span></a> visualizes the predictions that this
+malignant (“M”). <a class="reference internal" href="#fig-05-workflow-plot-show"><span class="std std-numref">Fig. 71</span></a> visualizes the predictions that this
 trained <span class="math notranslate nohighlight">\(K\)</span>-nearest neighbor model will make on a large range of new observations.
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
@@ -2242,7 +2242,7 @@ visualizations in their own data analyses.</p>
 <figure class="caption-hack align-default" id="fig-05-workflow-plot-show">
 <img alt="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
 <figcaption>
-<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Scatter plot of smoothness versus area where background color indicates the decision of the classifier.</span><a class="headerlink" href="#fig-05-workflow-plot-show" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 71 </span><span class="caption-text">Scatter plot of smoothness versus area where background color indicates the decision of the classifier.</span><a class="headerlink" href="#fig-05-workflow-plot-show" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -2335,7 +2335,7 @@ and guidance that the worksheets provide will function as intended.</p>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Effective data visualization – TBD</p>
+            <p class="prev-next-title">Effective data visualization</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="classification2.html" title="next page">

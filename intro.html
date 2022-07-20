@@ -21,7 +21,7 @@
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -38,7 +38,7 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -159,7 +159,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="viz.html">
-   Effective data visualization – TBD
+   Effective data visualization
   </a>
  </li>
  <li class="toctree-l1">
@@ -184,7 +184,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="clustering.html">
-   Clustering – TBD
+   Clustering
   </a>
  </li>
  <li class="toctree-l1">
@@ -889,16 +889,6 @@ and visualize data.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">Input In [2],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;pandas&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <p>After loading the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package and accessing it using the alias <code class="docutils literal notranslate"><span class="pre">pd</span></code>, we can call the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function and
 pass it a single argument: the name of the file, <code class="docutils literal notranslate"><span class="pre">&quot;can_lang.csv&quot;</span></code>. We have to
@@ -922,15 +912,136 @@ to read data into Python.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [3],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.csv&quot;</span><span class="p">)</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;pd&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590.0</td>
+      <td>235.0</td>
+      <td>30.0</td>
+      <td>665.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260.0</td>
+      <td>4785.0</td>
+      <td>85.0</td>
+      <td>23415.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150.0</td>
+      <td>445.0</td>
+      <td>10.0</td>
+      <td>2775.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460.0</td>
+      <td>5985.0</td>
+      <td>25.0</td>
+      <td>22150.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895.0</td>
+      <td>13135.0</td>
+      <td>345.0</td>
+      <td>31930.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>214</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080.0</td>
+      <td>2615.0</td>
+      <td>15.0</td>
+      <td>22415.0</td>
+    </tr>
+    <tr>
+      <th>215</th>
+      <td>=======</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>216</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080.0</td>
+      <td>2615.0</td>
+      <td>15.0</td>
+      <td>22415.0</td>
+    </tr>
+    <tr>
+      <th>217</th>
+      <td>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8a5a94630924c4efdafd74865878d7523bd54fdd</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>218 rows × 6 columns</p>
+</div></div></div>
 </div>
 </section>
 <section id="naming-things-in-python">
@@ -1020,16 +1131,6 @@ now use the assignment symbol to give the name
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [6],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">can_lang</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.csv&quot;</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;pd&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <p>Wait a minute, nothing happened this time! Where’s our data?
 Actually, something did happen: the data was loaded in
@@ -1046,15 +1147,136 @@ like this is a handy way to get a quick sense for what is contained in a data fr
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [7],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">can_lang</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;can_lang&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590.0</td>
+      <td>235.0</td>
+      <td>30.0</td>
+      <td>665.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afrikaans</td>
+      <td>10260.0</td>
+      <td>4785.0</td>
+      <td>85.0</td>
+      <td>23415.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Afro-Asiatic languages, n.i.e.</td>
+      <td>1150.0</td>
+      <td>445.0</td>
+      <td>10.0</td>
+      <td>2775.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Akan (Twi)</td>
+      <td>13460.0</td>
+      <td>5985.0</td>
+      <td>25.0</td>
+      <td>22150.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Albanian</td>
+      <td>26895.0</td>
+      <td>13135.0</td>
+      <td>345.0</td>
+      <td>31930.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>214</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080.0</td>
+      <td>2615.0</td>
+      <td>15.0</td>
+      <td>22415.0</td>
+    </tr>
+    <tr>
+      <th>215</th>
+      <td>=======</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>216</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yoruba</td>
+      <td>9080.0</td>
+      <td>2615.0</td>
+      <td>15.0</td>
+      <td>22415.0</td>
+    </tr>
+    <tr>
+      <th>217</th>
+      <td>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8a5a94630924c4efdafd74865878d7523bd54fdd</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>218 rows × 6 columns</p>
+</div></div></div>
 </div>
 </section>
 <section id="creating-subsets-of-data-frames-with-df-loc">
@@ -1105,16 +1327,136 @@ statement.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [8],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">aboriginal_lang</span> <span class="o">=</span> <span class="n">can_lang</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Aboriginal languages&#39;</span><span class="p">]</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">aboriginal_lang</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;can_lang&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>category</th>
+      <th>language</th>
+      <th>mother_tongue</th>
+      <th>most_at_home</th>
+      <th>most_at_work</th>
+      <th>lang_known</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages</td>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590.0</td>
+      <td>235.0</td>
+      <td>30.0</td>
+      <td>665.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Aboriginal languages</td>
+      <td>Algonquian languages, n.i.e.</td>
+      <td>45.0</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Aboriginal languages</td>
+      <td>Algonquin</td>
+      <td>1260.0</td>
+      <td>370.0</td>
+      <td>40.0</td>
+      <td>2480.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Aboriginal languages</td>
+      <td>Athabaskan languages, n.i.e.</td>
+      <td>50.0</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>85.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Aboriginal languages</td>
+      <td>Atikamekw</td>
+      <td>6150.0</td>
+      <td>5465.0</td>
+      <td>1100.0</td>
+      <td>6645.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>Aboriginal languages</td>
+      <td>Thompson (Ntlakapamux)</td>
+      <td>335.0</td>
+      <td>20.0</td>
+      <td>0.0</td>
+      <td>450.0</td>
+    </tr>
+    <tr>
+      <th>195</th>
+      <td>Aboriginal languages</td>
+      <td>Tlingit</td>
+      <td>95.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>260.0</td>
+    </tr>
+    <tr>
+      <th>196</th>
+      <td>Aboriginal languages</td>
+      <td>Tsimshian</td>
+      <td>200.0</td>
+      <td>30.0</td>
+      <td>10.0</td>
+      <td>410.0</td>
+    </tr>
+    <tr>
+      <th>206</th>
+      <td>Aboriginal languages</td>
+      <td>Wakashan languages, n.i.e.</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840.0</td>
+      <td>800.0</td>
+      <td>75.0</td>
+      <td>2665.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>67 rows × 6 columns</p>
+</div></div></div>
 </div>
 <p>It’s good practice to check the output after using a
 function in Python. We can see the original <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data set contained 214 rows
@@ -1141,16 +1483,88 @@ for) as a data frame.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [9],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">selected_lang</span> <span class="o">=</span> <span class="n">aboriginal_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="s1">&#39;mother_tongue&#39;</span><span class="p">]]</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">selected_lang</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;aboriginal_lang&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>language</th>
+      <th>mother_tongue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aboriginal languages, n.o.s.</td>
+      <td>590.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Algonquian languages, n.i.e.</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Algonquin</td>
+      <td>1260.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Athabaskan languages, n.i.e.</td>
+      <td>50.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Atikamekw</td>
+      <td>6150.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>Thompson (Ntlakapamux)</td>
+      <td>335.0</td>
+    </tr>
+    <tr>
+      <th>195</th>
+      <td>Tlingit</td>
+      <td>95.0</td>
+    </tr>
+    <tr>
+      <th>196</th>
+      <td>Tsimshian</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>206</th>
+      <td>Wakashan languages, n.i.e.</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Woods Cree</td>
+      <td>1840.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>67 rows × 2 columns</p>
+</div></div></div>
 </div>
 </section>
 <section id="using-sort-values-to-order-and-iloc-to-select-rows-by-index-number">
@@ -1177,16 +1591,88 @@ so we specify the argument <code class="docutils literal notranslate"><span clas
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [10],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">arranged_lang</span> <span class="o">=</span> <span class="n">selected_lang</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">arranged_lang</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;selected_lang&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>language</th>
+      <th>mother_tongue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40</th>
+      <td>Cree, n.o.s.</td>
+      <td>64050.0</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>Inuktitut</td>
+      <td>35210.0</td>
+    </tr>
+    <tr>
+      <th>138</th>
+      <td>Ojibway</td>
+      <td>17885.0</td>
+    </tr>
+    <tr>
+      <th>137</th>
+      <td>Oji-Cree</td>
+      <td>12855.0</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Dene</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Algonquian languages, n.i.e.</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Cayuga</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>179</th>
+      <td>Squamish</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>90</th>
+      <td>Iroquoian languages, n.i.e.</td>
+      <td>35.0</td>
+    </tr>
+    <tr>
+      <th>206</th>
+      <td>Wakashan languages, n.i.e.</td>
+      <td>10.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>67 rows × 2 columns</p>
+</div></div></div>
 </div>
 <p>Next we will use the <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code> property, which selects rows according to their
 row number. Since we want to choose the most common ten languages, we will indicate we want the
@@ -1199,16 +1685,82 @@ rows 1 to 10 using the argument <code class="docutils literal notranslate"><span
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [11],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ten_lang</span> <span class="o">=</span> <span class="n">arranged_lang</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">ten_lang</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;arranged_lang&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>language</th>
+      <th>mother_tongue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40</th>
+      <td>Cree, n.o.s.</td>
+      <td>64050.0</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>Inuktitut</td>
+      <td>35210.0</td>
+    </tr>
+    <tr>
+      <th>138</th>
+      <td>Ojibway</td>
+      <td>17885.0</td>
+    </tr>
+    <tr>
+      <th>137</th>
+      <td>Oji-Cree</td>
+      <td>12855.0</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Dene</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>Montagnais (Innu)</td>
+      <td>10235.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>Mi'kmaq</td>
+      <td>6690.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Atikamekw</td>
+      <td>6150.0</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>Plains Cree</td>
+      <td>3065.0</td>
+    </tr>
+    <tr>
+      <th>180</th>
+      <td>Stoney</td>
+      <td>3025.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>We have now answered our initial question by generating this table!
 Are we done? Well, not quite; tables are almost never the best way to present
@@ -1250,16 +1802,6 @@ First, we need to import the <code class="docutils literal notranslate"><span cl
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">Input In [12],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;altair&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <p>The fundamental object in Altair is the <code class="docutils literal notranslate"><span class="pre">Chart</span></code>, which takes a data frame as a single argument <code class="docutils literal notranslate"><span class="pre">alt.Chart(ten_lang)</span></code>.
 With a chart object in hand, we can now specify how we would like the data to be visualized.
@@ -1283,23 +1825,64 @@ to fields in the dataset, accessed by field name(column names)</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [13],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">barplot_mother_tongue</span> <span class="o">=</span> <span class="p">(</span>
-<span class="ne">----&gt; </span><span class="mi">2</span>     <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">x</span><span class="o">=</span><span class="s1">&#39;language&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">y</span><span class="o">=</span><span class="s1">&#39;mother_tongue&#39;</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">))</span>
-
-<span class="ne">NameError</span>: name &#39;alt&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <figure class="align-default" id="barplot-mother-tongue" style="width: 700px">
+<div class="cell_output docutils container">
+<div class="output text_html">
+<div id="altair-viz-7226203b02ca42c29b3b5a015606ac8f"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-7226203b02ca42c29b3b5a015606ac8f") {
+      outputDiv = document.getElementById("altair-viz-7226203b02ca42c29b3b5a015606ac8f");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.17.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "4.17.0"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "language", "type": "nominal"}, "y": {"field": "mother_tongue", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+</script></div></div>
 <figcaption>
 <p><span class="caption-number">Fig. 3 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#barplot-mother-tongue" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -1348,23 +1931,64 @@ to format the plot further, and we will explore these in Chapter
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [15],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">barplot_mother_tongue</span> <span class="o">=</span> <span class="p">(</span>
-<span class="ne">----&gt; </span><span class="mi">2</span>     <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Language&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mother Tongue (Number of Canadian Residents)&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">))</span>
-
-<span class="ne">NameError</span>: name &#39;alt&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <figure class="align-default" id="barplot-mother-tongue-labs" style="width: 700px">
+<div class="cell_output docutils container">
+<div class="output text_html">
+<div id="altair-viz-84795253e1544772b849fffae9a2b4cc"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-84795253e1544772b849fffae9a2b4cc") {
+      outputDiv = document.getElementById("altair-viz-84795253e1544772b849fffae9a2b4cc");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.17.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "4.17.0"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "language", "title": "Language", "type": "nominal"}, "y": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+</script></div></div>
 <figcaption>
 <p><span class="caption-number">Fig. 4 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.</span><a class="headerlink" href="#barplot-mother-tongue-labs" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -1386,23 +2010,64 @@ To accomplish this, we will swap the x and y coordinate axes:</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [17],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">barplot_mother_tongue_axis</span> <span class="o">=</span> <span class="p">(</span>
-<span class="ne">----&gt; </span><span class="mi">2</span>     <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mother Tongue (Number of Canadian Residents)&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Language&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">))</span>
-
-<span class="ne">NameError</span>: name &#39;alt&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <figure class="align-default" id="barplot-mother-tongue-labs-axis" style="width: 700px">
+<div class="cell_output docutils container">
+<div class="output text_html">
+<div id="altair-viz-f5f0aadb9d664fd28f06427ee8979116"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-f5f0aadb9d664fd28f06427ee8979116") {
+      outputDiv = document.getElementById("altair-viz-f5f0aadb9d664fd28f06427ee8979116");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.17.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "4.17.0"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+</script></div></div>
 <figcaption>
 <p><span class="caption-number">Fig. 5 </span><span class="caption-text">Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.</span><a class="headerlink" href="#barplot-mother-tongue-labs-axis" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -1427,23 +2092,64 @@ values of the variable(<code class="docutils literal notranslate"><span class="p
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [19],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">ordered_barplot_mother_tongue</span> <span class="o">=</span> <span class="p">(</span>
-<span class="ne">----&gt; </span><span class="mi">2</span>     <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;mother_tongue&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mother Tongue (Number of Canadian Residents)&#39;</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Language&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">))</span>
-
-<span class="ne">NameError</span>: name &#39;alt&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <figure class="align-default" id="barplot-mother-tongue-reorder" style="width: 700px">
+<div class="cell_output docutils container">
+<div class="output text_html">
+<div id="altair-viz-4c36c588dac74bfeb273307b5db2f074"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-4c36c588dac74bfeb273307b5db2f074") {
+      outputDiv = document.getElementById("altair-viz-4c36c588dac74bfeb273307b5db2f074");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.17.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "4.17.0"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "sort": "x", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+</script></div></div>
 <figcaption>
 <p><span class="caption-number">Fig. 6 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.</span><a class="headerlink" href="#barplot-mother-tongue-reorder" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -1501,21 +2207,64 @@ these steps in much more detail!</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Input In [21],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># load the data set</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">can_lang</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.csv&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="c1"># obtain the 10 most common Aboriginal languages</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">aboriginal_lang</span> <span class="o">=</span> <span class="n">can_lang</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Aboriginal languages&#39;</span><span class="p">]</span>
-
-<span class="ne">NameError</span>: name &#39;pd&#39; is not defined
-</pre></div>
-</div>
-</div>
 </div>
 <figure class="align-default" id="final-plot" style="width: 700px">
+<div class="cell_output docutils container">
+<div class="output text_html">
+<div id="altair-viz-4e54c25103504a7ba947dd6fcf5fc357"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-4e54c25103504a7ba947dd6fcf5fc357") {
+      outputDiv = document.getElementById("altair-viz-4e54c25103504a7ba947dd6fcf5fc357");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.17.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "4.17.0"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+</script></div></div>
 <figcaption>
 <p><span class="caption-number">Fig. 7 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#final-plot" title="Permalink to this image">#</a></p>
 </figcaption>

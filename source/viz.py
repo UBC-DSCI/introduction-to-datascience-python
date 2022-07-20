@@ -1,7 +1,6 @@
 # ---
 # jupyter:
 #   jupytext:
-#     cell_metadata_filter: -all
 #     formats: py:percent,md:myst,ipynb
 #     text_representation:
 #       extension: .py
@@ -15,18 +14,9 @@
 # ---
 
 # %% [markdown]
-# # Effective data visualization {#viz}
-#
-# ```{r viz-setup, include = FALSE}
-# library(tidyverse)
-# library(cowplot)
-# library(knitr)
-# library(kableExtra)
-# library(magick)
+# # Effective data visualization
 #
 #
-# knitr::opts_chunk$set(fig.align = "center")
-# ```
 #
 # ## Overview 
 # This chapter will introduce concepts and tools relating to data visualization
@@ -34,34 +24,26 @@
 # principles for effective data visualization and explaining visualizations
 # independent of any particular tool or programming language.  In the process, we
 # will cover some specifics of creating visualizations (scatter plots, bar
-# plots, line plots, and histograms) for data using R. 
+# plots, line plots, and histograms) for data using Python. 
 #
 # ## Chapter learning objectives
 #
 # By the end of the chapter, readers will be able to do the following:
 #
-# - Describe when to use the following kinds of visualizations to answer specific questions using a data set:
-#     - scatter plots
-#     - line plots
-#     - bar plots 
-#     - histogram plots
-# - Given a data set and a question, select from the above plot types and use R to create a visualization that best answers the question.
+#
+# - Given a data set and a question, select from the above plot types and use Python to create a visualization that best answers the question.
 # - Given a visualization and a question, evaluate the effectiveness of the visualization and suggest improvements to better answer the question.
 # - Referring to the visualization, communicate the conclusions in non-technical terms.
 # - Identify rules of thumb for creating effective visualizations. 
-# - Define the three key aspects of ggplot objects:
-#     - aesthetic mappings
-#     - geometric objects
-#     - scales
-# - Use the `ggplot2` package in R to create and refine the above visualizations using:
-#     - geometric objects: `geom_point`, `geom_line`, `geom_histogram`, `geom_bar`, `geom_vline`, `geom_hline`
-#     - scales: `xlim`, `ylim`
-#     - aesthetic mappings: `x`, `y`, `fill`, `color`, `shape`
-#     - labeling: `xlab`, `ylab`, `labs`
-#     - font control and legend positioning: `theme`
-#     - subplots: `facet_grid`
+# - Define the two key aspects of altair objects:
+#     - mark objects
+#     - encodings
+# - Use the altair library in Python to create and refine the above visualizations using:
+#     - mark objects: mark_point, mark_line, mark_bar
+#     - encodings : x, y, fill, color, shape
+#     - subplots: facet
 # - Describe the difference in raster and vector output formats.
-# - Use `ggsave` to save visualizations in `.png` and `.svg` format.
+# - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
 #
 # ## Choosing the visualization
 # #### *Ask a question, and answer it* {-}
@@ -88,7 +70,7 @@
 # mistakes and iterate a few times before you find the right visualization for
 # your data and question. There are many different kinds of plotting
 # graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* [@wilkeviz] for a directory). 
-# The types of plot that we introduce in this book are shown in Figure \@ref(fig:plot-sketches);
+# The types of plot that we introduce in this book are shown in {numref}`plot_sketches`
 # which one you should select depends on your data 
 # and the question you want to answer. 
 # In general, the guiding principles of when to use each type of plot 
@@ -104,47 +86,15 @@
 # - **bar plots** visualize comparisons of amounts
 # - **histograms** visualize the distribution of one quantitative variable (i.e., all its possible values and how often they occur) \index{distribution}
 #
-# ```{r plot-sketches, echo = FALSE, fig.width = 4.5, fig.height = 4.65, fig.align = 'center', fig.cap = "Examples of scatter, line and bar plots, as well as histograms."}
-# set.seed(1)
 #
-# scatter_plot <- tibble(x = seq(0.25, 10, by = 0.5) + rnorm(20, 1, 1.5),
-#                        y = seq(0.25, 10, by = 0.5) + rnorm(20, 1, 0.5)) |>
-#   ggplot(aes(x = x, y = y)) +
-#   geom_point() +
-#   scale_x_continuous(limits = c(0, 12), breaks = seq(0, 12, by = 3)) +
-#   scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, by = 3)) +
-#   ggtitle("Scatter plot") +
-#   theme_classic()
-#
-# line_plot <- tibble(x = seq(0.5, 10, by = 1) + rnorm(10, 1, 0.5),
-#                        y = seq(0.5, 10, by = 1) + rnorm(10, 1, 0.1)) |>
-#   ggplot(aes(x = x, y = y)) +
-#   geom_line() +
-#   scale_x_continuous(limits = c(0, 12), breaks = seq(0, 12, by = 3)) +
-#   scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, by = 3)) +
-#   ggtitle("Line plot") +
-#   theme_classic()
-#
-# bar_plot <- tibble(count = c(35, 27, 21),
-#                    category = as_factor(c("Group 1", "Group 2", "Group 3"))) |>
-#   ggplot(aes(y = count, x = category)) +
-#   geom_bar(stat = "identity") +
-#   ggtitle("Bar plot") +
-#   theme_classic()
-#
-# histogram_plot <- tibble(measurements = rnorm(200, 25, 5)) |>
-#   ggplot(aes(x = measurements)) +
-#   geom_histogram(binwidth = 3) +
-#   ggtitle("Histogram") +
-#   theme_classic()
-#
-# plot_grid(scatter_plot,
-#           line_plot,
-#           bar_plot,
-#           histogram_plot,
-#           ncol = 2, 
-#           greedy = FALSE)
+# ```{figure} img/plot-sketches-1.png
+# ---
+# height: 400px
+# name: plot_sketches
+# ---
+# Examples of scatter, line and bar plots, as well as histograms.
 # ```
+#
 #
 # All types of visualization have their (mis)uses, but three kinds are usually
 # hard to understand or are easily replaced with an oft-better alternative.  In
@@ -160,7 +110,7 @@
 # ## Refining the visualization
 # #### *Convey the message, minimize noise* {-}
 #
-# Just being able to make a visualization in R with `ggplot2` (or any other tool
+# Just being able to make a visualization in Python with `altair` (or any other tool
 # for that matter) doesn't mean that it effectively communicates your message to
 # others. Once you have selected a broad type of visualization to use, you will
 # have to refine it to suit your particular need.  Some rules of thumb for doing
@@ -180,9 +130,8 @@
 # - Make sure to use color schemes that are understandable by those with
 #   colorblindness (a surprisingly large fraction of the overall 
 #   population&mdash;from about 1% to 10%, depending on sex and ancestry [@deebblind]).
-#   For example, [ColorBrewer](https://colorbrewer2.org) 
-#   and [the `RColorBrewer` R package](https://cran.r-project.org/web/packages/RColorBrewer/index.html) [@RColorBrewer]  
-#   provide the ability to pick such color schemes, and you can check
+#   For example, [Color Schemes](https://vega.github.io/vega/docs/schemes/) 
+#   provides the ability to pick such color schemes, and you can check
 #   your visualizations after you have created them by uploading to online tools
 #   such as a [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/).
 # - Redundancy can be helpful; sometimes conveying the same message in multiple ways reinforces it for the audience.
@@ -199,20 +148,20 @@
 # - Don't adjust the axes to zoom in on small differences. If the difference is small, show that it's small!
 
 # %% [markdown]
-# ## Creating visualizations with `ggplot2` 
+# ## Creating visualizations with `altair` 
 # #### *Build the visualization iteratively* {-}
 #
 # This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer, 
-# and then how to create the visualization in R \index{ggplot} using `ggplot2`.  To use the `ggplot2` package, we need to load the `tidyverse` metapackage.
-#
-# ```{r 03-tidyverse, warning=FALSE, message=FALSE}
-# library(tidyverse)
-# ```
-#
-# ```{r 03-warn-off, echo = FALSE, results = 'hide', message = FALSE, warning = FALSE}
-# options(warn = -1)
-# ```
-#
+# and then how to create the visualization in Python \index{ggplot} using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` in order to support reading and other data related operations.
+
+# %%
+import pandas as pd
+import altair as alt
+
+# %% tags=["remove-cell"]
+from myst_nb import glue
+
+# %% [markdown]
 # ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
 #
 # The [Mauna Loa CO$_{\text{2}}$ data set](https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html), 
@@ -228,49 +177,46 @@
 # **Question:** \index{question!visualization} 
 # Does the concentration of atmospheric CO$_{\text{2}}$ change over time, 
 # and are there any interesting patterns to note?
-#
-# ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-# # convert year and month to date column
-# # note: eventually move this to the data script
-# library(lubridate)
-# read_csv("data/mauna_loa.csv") |>
-#   unite(col = "date_measured", year:month, remove = TRUE, sep = "-") |>
-#   mutate(date_measured = ym(date_measured)) |>
-#   select(-date_decimal) |>
-#   filter(ppm > 0, date_measured > date("1980/01/01")) |>
-#   write_csv("data/mauna_loa_data.csv")
-# ```
-#
+
+# %% tags=["remove-cell"]
+mauna_loa = pd.read_csv("data/mauna_loa.csv")
+mauna_loa['day']=1
+mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
+mauna_loa = mauna_loa[['date_measured', 'ppm']].query('ppm>0 and date_measured>"1980-1-1"')
+mauna_loa.to_csv("data/mauna_loa_data.csv", index=False)
+
+# %% [markdown]
 # To get started, we will read and inspect the data:
-#
-# ```{r 03-data-co2, warning=FALSE, message=FALSE}
-# # mauna loa carbon dioxide data
-# co2_df <- read_csv("data/mauna_loa_data.csv")
-# co2_df
-# ```
-#
+
+# %%
+# mauna loa carbon dioxide data
+co2_df = pd.read_csv("data/mauna_loa_data.csv", parse_dates=['date_measured'])
+co2_df
+
+# %%
+co2_df.dtypes
+
+# %% [markdown]
 # We see that there are two columns in the `co2_df` data frame; `date_measured` and `ppm`. 
 # The `date_measured` column holds the date the measurement was taken, 
-# and is of type `date`.
+# and is of type `datetime64`.
 # The `ppm` column holds the value of CO$_{\text{2}}$ in parts per million 
-# that was measured on each date, and is type `double`.
+# that was measured on each date, and is type `float64`.
 #
 # > **Note:** `read_csv` was able to parse the `date_measured` column into the
-# > `date` vector type because it was entered 
+# > `datetime` vector type because it was entered 
 # > in the international standard date format, 
-# > called ISO 8601, which lists dates as `year-month-day`.
-# > `date` vectors are `double` vectors with special properties that allow 
+# > called ISO 8601, which lists dates as `year-month-day` and we used `parse_dates=True`. 
+# > `datetime` vectors are `double` vectors with special properties that allow 
 # > them to handle dates correctly.
-# > For example, `date` type vectors allow functions like `ggplot` 
+# > For example, `datetime` type vectors allow functions like `altair` 
 # > to treat them as numeric dates and not as character vectors, 
 # > even though they contain non-numeric characters 
 # > (e.g., in the `date_measured` column in the `co2_df` data frame).
-# > This means R will not accidentally plot the dates in the wrong order 
+# > This means Python will not accidentally plot the dates in the wrong order 
 # > (i.e., not alphanumerically as would happen if it was a character vector). 
-# > An in-depth study of dates and times is beyond the scope of the book, 
-# > but interested readers 
-# > may consult the Dates and Times chapter of *R for Data Science* [@wickham2016r];
-# > see the additional resources at the end of this chapter.
+# > More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html)
+#
 #
 # Since we are investigating a relationship between two variables 
 # (CO$_{\text{2}}$ concentration and date), 
@@ -278,50 +224,49 @@
 # Scatter plots show the data as individual points with `x` (horizontal axis) 
 # and `y` (vertical axis) coordinates.
 # Here, we will use the measurement date as the `x` coordinate 
-# and the CO$_{\text{2}}$ concentration as the `y` coordinate. 
-# When using the `ggplot2` package, 
-# we create a plot object with the `ggplot` function. 
+# and the CO$_{\text{2}}$ concentration as the `y` coordinate.  
+# while using the `altair` package, We create a plot object with the `alt.Chart()` function. 
 # There are a few basic aspects of a plot that we need to specify:
 # \index{ggplot!aesthetic mapping}
 # \index{ggplot!geometric object}
 #
-# - The name of the data frame object to visualize.
-#     - Here, we specify the `co2_df` data frame.
-# - The **aesthetic mapping**, which tells \index{aesthetic mapping} `ggplot` how the columns in the data frame map to properties of the visualization.
-#     - To create an aesthetic mapping, we use the `aes` function.
-#     - Here, we set the plot `x` axis to the `date_measured` variable, and the plot `y` axis to the `ppm` variable.
-# - The `+` operator, which tells `ggplot` that we would like to add another layer to the plot.\index{aaaplussymb@$+$|see{ggplot!add layer}}\index{ggplot!add layer}
+#
+#
+# - The name of the **data frame** object to visualize.
+#     - Here, we specify the `co2_df` data frame as an argument to the `alt.Chart()` function
 # - The **geometric object**, which specifies \index{aesthetic mapping} how the mapped data should be displayed.
-#     - To create a geometric object, we use a `geom_*` function (see the [ggplot reference](https://ggplot2.tidyverse.org/reference/) for a list of geometric objects).
-#     - Here, we use the `geom_point` function to visualize our data as a scatter plot.
+#     - To create a geometric object, we use `Chart.mark_*` methods (see the [altair reference](https://altair-viz.github.io/user_guide/marks.html) for a list of geometric objects).
+#     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
+# - The **geometric encoding**, which tells \index{aesthetic mapping} `altair` how the columns in the data frame map to properties of the visualization.
+#     - To create an encoding, we use the `encode()` function.
+#     - The `encode()` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name(column names)
+#     - Here, we set the plot `x` axis to the `date_measured` variable, and the plot `y` axis to the `ppm` variable.
+
+# %% tags=["remove-cell"]
+from myst_nb import glue
+
+# %%
+co2_scatter = alt.Chart(co2_df).mark_point().encode(
+    x = "date_measured", 
+    y = alt.Y("ppm", scale=alt.Scale(zero=False)))
+    
+
+
+# %% tags=["remove-cell"]
+glue('co2_scatter', co2_scatter, display=False)
+
+# %% [markdown]
+# :::{glue:figure} co2_scatter 
+# :figwidth: 700px 
+# :name: co2_scatter
 #
-# Figure \@ref(fig:03-ggplot-function-scatter) 
-# shows how each of these aspects map to code
-# for creating a basic scatter plot of the `co2_df` data.
-# Note that we could pass many other possible arguments to the aesthetic mapping
-# and geometric object to change how the plot looks. For the purposes of quickly
-# testing things out to see what they look like, though, we can just start with the
-# default settings.
-# \index{ggplot!aes}
-# \index{ggplot!geom\_point}
-#  
-# (ref:03-ggplot-function-scatter) Creating a scatter plot with the `ggplot` function.
+# Scatter plot of atmospheric concentration of CO$_{2}$ over time.
+# :::
 #
-# ```{r 03-ggplot-function-scatter, echo = FALSE, fig.cap = "(ref:03-ggplot-function-scatter)", message = FALSE, out.width = "100%"}
-# image_read("img/ggplot_function_scatter.jpeg") |>
-#   image_crop("1625x1900")
-# ```
 #
-# \newpage
+# > **Note:** We can change the size of the point and color of the plot by specifying `mark_point(size=10, color='black')`. 
 #
-# ```{r 03-data-co2-scatter, warning=FALSE, message=FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center", fig.cap = "Scatter plot of atmospheric concentration of CO$_{2}$ over time."}
-# co2_scatter <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-#   geom_point()
-#
-# co2_scatter
-# ```
-#
-# Certainly, the visualization in Figure \@ref(fig:03-data-co2-scatter) 
+# Certainly, the visualization in {numref}`co2_scatter` 
 # shows a clear upward trend 
 # in the atmospheric concentration of CO$_{\text{2}}$ over time.
 # This plot answers the first part of our question in the affirmative, 
@@ -340,19 +285,31 @@
 # the data. Line plots connect the sequence of `x` and `y` coordinates
 # of the observations with line segments, thereby emphasizing their order.
 #
-# We can create a line plot in `ggplot` using the `geom_line` function. 
+# We can create a line plot in `altair` using the `mark_line` function. 
 # Let's now try to visualize the `co2_df` as a line plot 
 # with just the default arguments: 
 # \index{ggplot!geom\_line}
+
+# %%
+co2_line = alt.Chart(co2_df).mark_line(color='black').encode(
+    x = "date_measured", 
+    y = alt.Y("ppm", scale=alt.Scale(zero=False)))
+
+
+
+# %% tags=["remove-cell"]
+glue('co2_line', co2_line, display=False)
+
+# %% [markdown]
+# :::{glue:figure} co2_line
+# :figwidth: 700px 
+# :name: co2_line
 #
-# ```{r 03-data-co2-line, warning=FALSE, message=FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center", fig.cap = "Line plot of atmospheric concentration of CO$_{2}$ over time."}
-# co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-#   geom_line()
+# Line plot of atmospheric concentration of CO$_{2}$ over time.
+# :::
 #
-# co2_line
-# ```
 #
-# Aha! Figure \@ref(fig:03-data-co2-line) shows us there *is* another interesting
+# Aha! {numref}`co2_line` shows us there *is* another interesting
 # phenomenon in the data: in addition to increasing over time, the concentration
 # seems to oscillate as well.  Given the visualization as it is now, it is still
 # hard to tell how fast the oscillation is, but nevertheless, the line seems to
@@ -366,84 +323,88 @@
 # to refine things. This plot is fairly straightforward, and there is not much
 # visual noise to remove. But there are a few things we must do to improve
 # clarity, such as adding informative axis labels and making the font a more
-# readable size.  To add axis labels, we use the `xlab` and `ylab` functions. To
-# change the font size, we use the `theme` function with the `text` argument:
+# readable size.  To add axis labels, we use the `title` argument along with `alt.X` and `alt.Y` functions. To
+# change the font size, we use the `configure_axis` function with the `titleFontSize` argument:
 # \index{ggplot!xlab,ylab}
 # \index{ggplot!theme}
+
+# %%
+co2_line_labels = alt.Chart(co2_df).mark_line(color='black').encode(
+    x = alt.X("date_measured", title = "Year"),
+    y = alt.Y("ppm", scale=alt.Scale(zero=False), title = "Atmospheric CO2 (ppm)")).configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('co2_line_labels', co2_line_labels, display=False)
+
+# %% [markdown]
+# :::{glue:figure} co2_line_labels
+# :figwidth: 700px 
+# :name: co2_line_labels
 #
-# ```{r 03-data-co2-line-2, warning=FALSE, message=FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center",  fig.cap = "Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes and labels."}
-# co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-#   geom_line() +
-#   xlab("Year") +
-#   ylab("Atmospheric CO2 (ppm)") +
-#   theme(text = element_text(size = 12))
+# Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes and labels.
+# :::
 #
-# co2_line
-# ```
+# > **Note:** The `configure_` function in `altair` is complex and supports many other functionalities, which can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html)
 #
-# > **Note:** The `theme` function is quite complex and has many arguments 
-# > that can be specified to control many non-data aspects of a visualization.
-# > An in-depth discussion of the `theme` function is beyond the scope of this book.
-# > Interested readers may consult the `theme` function documentation;
-# > see the additional resources section at the end of this chapter.
 #
 # Finally, let's see if we can better understand the oscillation by changing the
 # visualization slightly. Note that it is totally fine to use a small number of
 # visualizations to answer different aspects of the question you are trying to
-# answer. We will accomplish this by using *scales*, \index{ggplot!scales}
-# another important feature of `ggplot2` that easily transforms the different
-# variables and set limits.  We scale the horizontal axis using the `xlim` function,
-# and the vertical axis with the `ylim` function.
-# In particular, here, we will use the `xlim` function to zoom in 
+# answer. We will accomplish this by using *scale*, \index{ggplot!scales}
+# another important feature of `altair` that easily transforms the different
+# variables and set limits.  We scale the horizontal axis using the `alt.Scale(domain=['1990', '1993'])` by restricting the x-axis values between 1990 and 1994,
+# and the vertical axis with the `alt.Scale(zero=False)` function, to not start the y-axis with zero.
+# In particular, here, we will use the `alt.Scale()` function to zoom in 
 # on just five years of data (say, 1990-1994).
-# `xlim` takes a vector of length two 
-# to specify the upper and lower bounds to limit the axis. 
-# We can create that using the `c` function.
-# Note that it is important that the vector given to `xlim` must be of the same
-# type as the data that is mapped to that axis. 
-# Here, we have mapped a date to the x-axis, 
-# and so we need to use the `date` function 
-# (from the `tidyverse` [`lubridate` R package](https://lubridate.tidyverse.org/) [@lubridate; @lubridatepaper]) 
-# to convert the character strings we provide to `c` to `date` vectors.
+# `domain` argument takes a list of length two 
+# to specify the upper and lower bounds to limit the axis.
+
+# %%
+
+co2_line_scale = alt.Chart(co2_df).mark_line(color='black', clip=True).encode(
+    x=alt.X("date_measured", title="Measurement Date", axis=alt.Axis(tickCount=4), scale=alt.Scale(domain=['1990', '1994'])),
+    y=alt.Y("ppm", scale=alt.Scale(zero=False), title="Atmospheric CO2 (ppm)")
+).configure_axis(
+    titleFontSize=12
+)
+
+
+
+
+
+# %% tags=["remove-cell"]
+glue('co2_line_scale', co2_line_scale, display=False)
+
+# %% [markdown]
+# :::{glue:figure} co2_line_scale
+# :figwidth: 700px 
+# :name: co2_line_scale
 #
-# > **Note:** `lubridate` is a package that is installed by the `tidyverse` metapackage,
-# > but is not loaded by it. 
-# > Hence we need to load it separately in the code below.
-#
-# ```{r 03-data-co2-line-3, warning = FALSE, message = FALSE, fig.height = 3.1, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1994."}
-# library(lubridate)
-#
-# co2_line <- ggplot(co2_df, aes(x = date_measured, y = ppm)) +
-#   geom_line() +
-#   xlab("Year") +
-#   ylab("Atmospheric CO2 (ppm)") +
-#   xlim(c(date("1990-01-01"), date("1993-12-01"))) +
-#   theme(text = element_text(size = 12))
-#
-# co2_line
-# ```
+# Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1994.
+# :::
 #
 # Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases until it reaches its peak somewhere around April, decreases until around late September, 
 # and finally increases again until the end of the year. In Hawaii, there are two seasons: summer from May through October, and winter from November through April.
 # Therefore, the oscillating pattern in CO$_{\text{2}}$ matches up fairly closely with the two seasons.
 #
 # As you might have noticed from the code used to create the final visualization
-# of the `co2_df` data frame, 
-# we construct the visualizations in `ggplot` with layers.
-# New layers are added with the `+` operator, 
-# and we can really add as many as we would like!
+# of the `co2_df` data frame, we used `axis=alt.Axis(tickCount=4)` to add the lines in the background to better visualise and map the values on the axis to the plot.
+#
+#
 # A useful analogy to constructing a data visualization is painting a picture.
 # We start with a blank canvas, 
 # and the first thing we do is prepare the surface 
 # for our painting by adding primer. 
-# In our data visualization this is akin to calling `ggplot` 
+# In our data visualization this is akin to calling `alt.Chart` 
 # and specifying the data set we will be using.
 # Next, we sketch out the background of the painting. 
 # In our data visualization, 
-# this would be when we map data to the axes in the `aes` function.
+# this would be when we map data to the axes in the `encode` function.
 # Then we add our key visual subjects to the painting.
 # In our data visualization, 
-# this would be the geometric objects (e.g., `geom_point`, `geom_line`, etc.).
+# this would be the geometric objects (e.g., `mark_point`, `mark_line`, etc.).
 # And finally, we work on adding details and refinements to the painting.
 # In our data visualization this would be when we fine tune axis labels,
 # change the font, adjust the point size, and do other related things.
@@ -453,58 +414,76 @@
 # of the waiting time between eruptions 
 # and the subsequent eruption duration (in minutes) of the Old Faithful
 # geyser in Yellowstone National Park, Wyoming, United States. 
-# The `faithful` data set is available in base R as a data frame,
-# so it does not need to be loaded.
-# We convert it to a tibble to take advantage of the nicer print output 
-# these specialized data frames provide.
+# First, we will read the data and then answer the following question:
 #
 # **Question:** \index{question!visualization} 
 # Is there a relationship between the waiting time before an eruption 
-# and the duration of the eruption? 
-#
-# ```{r 03-data-faithful, warning=FALSE, message=FALSE}
-# # old faithful eruption time / wait time data
-# faithful <- as_tibble(faithful)
-# faithful
-# ```
-#
+# and the duration of the eruption?
+
+# %%
+faithful = pd.read_csv("data/faithful.csv")
+faithful
+
+
+# %% [markdown]
 # Here again, we investigate the relationship between two quantitative variables 
 # (waiting time and eruption time). 
 # But if you look at the output of the data frame, 
 # you'll notice that unlike time in the Mauna Loa CO$_{\text{2}}$ data set,
 # neither of the variables here have a natural order to them.
 # So a scatter plot is likely to be the most appropriate
-# visualization. Let's create a scatter plot using the `ggplot`
-# function with the `waiting` variable on the horizontal axis, the `eruptions` 
-# variable on the vertical axis, and the `geom_point` geometric object.
-# The result is shown in Figure \@ref(fig:03-data-faithful-scatter).
+# visualization. Let's create a scatter plot using the `altair`
+# package with the `waiting` variable on the horizontal axis, the `eruptions` 
+# variable on the vertical axis, and the `mark_point` geometric object.
+# The result is shown in {numref}`faithful_scatter`.
+
+# %%
+faithful_scatter = alt.Chart(faithful).mark_point(color='black', filled=True).encode(
+    x = "waiting",
+    y = "eruptions"
+)
+
+
+# %% tags=["remove-cell"]
+glue('faithful_scatter', faithful_scatter, display=False)
+
+# %% [markdown]
+# :::{glue:figure} faithful_scatter 
+# :figwidth: 700px 
+# :name: faithful_scatter
 #
-# ```{r 03-data-faithful-scatter, warning=FALSE, message=FALSE, fig.height = 3.5, fig.width = 3.75, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Scatter plot of waiting time and eruption time."}
-# faithful_scatter <- ggplot(faithful, aes(x = waiting, y = eruptions)) +
-#   geom_point()
+# Scatter plot of waiting time and eruption time.
+# :::
 #
-# faithful_scatter
-# ```
-#
-# We can see in Figure \@ref(fig:03-data-faithful-scatter) that the data tend to fall
+# We can see in {numref}`faithful_scatter` that the data tend to fall
 # into two groups: one with short waiting and eruption times, and one with long
 # waiting and eruption times. Note that in this case, there is no overplotting:
 # the points are generally nicely visually separated, and the pattern they form
-# is clear.  In order to refine the visualization, we need only to add axis
+# is clear.  Also, note that to make the points solid, we used `filled=True` as argument of the `mark_point` function. In place of `mark_point(filled=True)`, we can also use `mark_circle()`. 
+# In order to refine the visualization, we need only to add axis
 # labels and make the font more readable:
-#
-# ```{r 03-data-faithful-scatter-2, warning=FALSE, message=FALSE, fig.height = 3.5, fig.width = 3.75, fig.align = "center",  fig.pos = "H", out.extra="", fig.cap = "Scatter plot of waiting time and eruption time with clearer axes and labels."}
-# faithful_scatter <- ggplot(faithful, aes(x = waiting, y = eruptions)) +
-#   geom_point() +
-#   labs(x = "Waiting Time (mins)", y = "Eruption Duration (mins)") +
-#   theme(text = element_text(size = 12))
-#
-# faithful_scatter
-# ```
+
+# %%
+faithful_scatter_labels = alt.Chart(faithful).mark_circle(color='black').encode(
+    x = alt.X("waiting", title = "Waiting Time (mins)"),
+    y = alt.Y("eruptions", title = "Eruption Duration (mins)")
+)
+
+
+
+
+# %% tags=["remove-cell"]
+glue('faithful_scatter_labels', faithful_scatter_labels, display=False)
 
 # %% [markdown]
-# \newpage
+# :::{glue:figure} faithful_scatter_labels
+# :figwidth: 700px 
+# :name: faithful_scatter_labels
 #
+# Scatter plot of waiting time and eruption time with clearer axes and labels.
+# :::
+
+# %% [markdown]
 # ### Axis transformation and colored scatter plots: the Canadian languages data set
 #
 # Recall the `can_lang` data set [@timbers2020canlang] from Chapters \@ref(intro), \@ref(reading), and \@ref(wrangling),
@@ -519,71 +498,96 @@
 # non-official and non-Aboriginal languages)?
 #
 # To get started, we will read and inspect the data:
-#
-# ```{r 03-canlang-example, message = F, warning = F}
-# can_lang <- read_csv("data/can_lang.csv")
-# can_lang
-# ```
-#
+
+# %%
+can_lang =  pd.read_csv("data/can_lang.csv")
+
+# %% tags=["remove-cell"]
+can_lang = can_lang[(can_lang['most_at_home']>0) & (can_lang['mother_tongue']>0)]
+
+# %% [markdown]
 # We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
-# The resulting plot is shown in Figure \@ref(fig:03-mother-tongue-vs-most-at-home).
+# The resulting plot is shown in {numref}`can_lang_plot`
 # \index{ggplot!geom\_point}
+
+# %%
+can_lang_plot = alt.Chart(can_lang).mark_circle(color='black').encode(
+    x = "most_at_home",
+    y = "mother_tongue")
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot', can_lang_plot, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot
+# :figwidth: 700px 
+# :name: can_lang_plot
 #
-# ```{r 03-mother-tongue-vs-most-at-home, fig.height=3.5, fig.width=3.75, fig.align = "center", warning=FALSE, fig.pos = "H", out.extra="", fig.cap = "Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home."}
-# ggplot(can_lang, aes(x = most_at_home, y = mother_tongue)) +
-#   geom_point()
-# ``` 
+# Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home
+# :::
+#
 #
 # To make an initial improvement in the interpretability 
-# of Figure \@ref(fig:03-mother-tongue-vs-most-at-home), we should 
+# of {numref}`can_lang_plot`, we should 
 # replace the default axis
-# names with more informative labels. We can use `\n` to create a line break in
-# the axis names so that the words after `\n` are printed on a new line. This will
-# make the axes labels on the plots more readable.
+# names with more informative labels. We can add a line break in
+# the axis names so that some of the words are printed on a new line. This will
+# make the axes labels on the plots more readable. To do this, we pass the title as a list. Each element of the list will be on a new line.
 # \index{escape character} We should also increase the font size to further 
 # improve readability.
+
+# %%
+can_lang_plot_labels = alt.Chart(can_lang).mark_circle(color='black').encode(
+    x = alt.X("most_at_home",title = ["Language spoken most at home", "(number of Canadian residents)"]),
+    y = alt.Y("mother_tongue", scale=alt.Scale(zero=False), title = ["Mother tongue", "(number of Canadian residents)"])).configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_labels', can_lang_plot_labels, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_labels
+# :figwidth: 700px 
+# :name: can_lang_plot_labels
 #
-# ```{r 03-mother-tongue-vs-most-at-home-labs, fig.height=3.5, fig.width=3.75, fig.align = "center", warning=FALSE, fig.pos = "H", out.extra="", fig.cap = "Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with x and y labels."}
-# ggplot(can_lang, aes(x = most_at_home, y = mother_tongue)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (number of Canadian residents)",
-#        y = "Mother tongue \n (number of Canadian residents)") +
-#   theme(text = element_text(size = 12))
-# ```
-#
-# ```{r mother-tongue-hidden-summaries, echo = FALSE, warning = FALSE, message = FALSE}
-# numlang_speakers <- can_lang |> 
-#               select(mother_tongue) |> 
-#               summarize(maxsp = max(mother_tongue), 
-#                         minsp = min(mother_tongue))
-#
-# maxlang_speakers <- numlang_speakers |> 
-#   pull(maxsp)
-#
-# minlang_speakers <- numlang_speakers |> 
-#   pull(minsp)
-# ```
-#
-# Okay! The axes and labels in Figure \@ref(fig:03-mother-tongue-vs-most-at-home-labs) are
+# Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with x and y labels.
+# :::
+
+# %% tags=["remove-cell"]
+import numpy as np
+numlang_speakers_max = max(can_lang['mother_tongue'])
+print(numlang_speakers_max)
+numlang_speakers_min = min(can_lang['mother_tongue'])
+print(numlang_speakers_min)
+log_result = np.floor(np.log(numlang_speakers_max/numlang_speakers_min))
+print(log_result)
+glue("numlang_speakers_max", numlang_speakers_max)
+glue("numlang_speakers_min", numlang_speakers_min)
+glue("log_result", log_result)
+
+# %% [markdown]
+# Okay! The axes and labels in {numref}`can_lang_plot_labels` are
 # much more readable and interpretable now. However, the scatter points themselves could use
 # some work; most of the 214 data points are bunched
 # up in the lower left-hand side of the visualization. The data is clumped because
 # many more people in Canada speak English or French (the two points in
 # the upper right corner) than other languages. 
 # In particular, the most common mother tongue language 
-# has `r  format(maxlang_speakers, scientific = FALSE, big.mark = ",")` speakers,
-# while the least common has only `r  format(minlang_speakers, scientific = FALSE, big.mark = ",")`.
-# That's a `r as.integer(floor(log10(maxlang_speakers/minlang_speakers)))`-decimal-place difference
+# has {glue:}`numlang_speakers_max` speakers,  
+# while the least common has only {glue:}`numlang_speakers_min`.
+# That's a {glue:}`log_result` -decimal-place difference
 # in the magnitude of these two numbers!
 # We can confirm that the two points in the upper right-hand corner correspond
 # to Canada's two official languages by filtering the data:
 # \index{filter}
-#
-# ```{r english-mother-tongue}
-# can_lang |>
-#   filter(language == "English" | language == "French")
-# ```
-#
+
+# %%
+can_lang.loc[(can_lang['language']=='English') | (can_lang['language']=='French')]
+
+
+# %% [markdown]
 # Recall that our question about this data pertains to *all* languages;
 # so to properly answer our question, 
 # we will need to adjust the scale of the axes so that we can clearly
@@ -598,36 +602,39 @@
 # So we see that applying this function is moving big values closer together 
 # and moving small values farther apart.
 # Note that if your data can take the value 0, logarithmic scaling may not 
-# be appropriate (since `log10(0) = -Inf` in R). There are other ways to transform
+# be appropriate (since `log10(0) = -inf` in Python). There are other ways to transform
 # the data in such a case, but these are beyond the scope of the book. 
 #
-# We can accomplish logarithmic scaling in a `ggplot` visualization
-# using the `scale_x_log10` and `scale_y_log10` functions.
-# Given that the x and y axes have large numbers, we should also format the axis labels
-# to put commas in these numbers to increase their readability.
-# We can do this in R by passing the `label_comma` function (from the `scales` package)
-# to the `labels` argument of the `scale_x_log10` and `scale_x_log10` functions.
+# We can accomplish logarithmic scaling in the `altair` visualization
+# using the argument `type="log"` in the scale functions.
+
+# %%
+can_lang_plot_log = alt.Chart(can_lang).mark_circle(color='black').encode(
+    x = alt.X("most_at_home",title = ["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale( type="log"), axis=alt.Axis(tickCount=7)),
+    y = alt.Y("mother_tongue", title = ["Mother tongue", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7))).configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_log', can_lang_plot_log, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_log
+# :figwidth: 700px 
+# :name: can_lang_plot_log
 #
-# ```{r 03-mother-tongue-vs-most-at-home-scale, message = FALSE, warning =  FALSE, fig.height=3.5,  fig.width=3.75, fig.align = "center",  fig.pos = "H", out.extra="", fig.cap = "Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes."}
-# library(scales)
-#
-# ggplot(can_lang, aes(x = most_at_home, y = mother_tongue)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (number of Canadian residents)",
-#        y = "Mother tongue \n (number of Canadian residents)") +
-#   theme(text = element_text(size = 12)) +
-#   scale_x_log10(labels = label_comma()) +
-#   scale_y_log10(labels = label_comma())
-# ```
-#
-# ```{r 03-changing-the-units, include = FALSE}
-# english_mother_tongue <- can_lang |>
-#   filter(language == "English") |>
-#   pull(mother_tongue)
-#
-# census_popn <- 35151728
-# ```
-#
+# Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes.
+# :::
+
+# %% tags=["remove-cell"]
+english_mother_tongue = can_lang.loc[can_lang['language']=='English'].mother_tongue.values[0]
+census_popn = int(35151728)
+result = round((english_mother_tongue/census_popn)*100,2)
+glue("english_mother_tongue", english_mother_tongue)
+glue("census_popn", census_popn)
+glue("result", result)
+
+# %% [markdown]
 # Similar to some of the examples in Chapter \@ref(wrangling), 
 # we can convert the counts to percentages to give them context 
 # and make them easier to understand.
@@ -637,51 +644,54 @@
 # For example, 
 # the percentage of people who reported that their mother tongue was English 
 # in the 2016 Canadian census 
-# was `r  format(english_mother_tongue, scientific = FALSE, big.mark = ",") ` 
-# / `r  format(census_popn, scientific = FALSE, big.mark = ",")` $\times$ 
-# `r 100` \% =
-# `r format(round(english_mother_tongue/census_popn*100, 2), scientific = FALSE, big.mark = ",")`\%.
+# was {glue:}`english_mother_tongue` / {glue:}`census_popn` $\times$ 
+# `100` \% = {glue:}`result`\%
 #
-# Below we use `mutate` to calculate the percentage of people reporting a given
+# Below we use `assign` to calculate the percentage of people reporting a given
 # language as their mother tongue and primary language at home for all the
 # languages in the `can_lang` data set. Since the new columns are appended to the
 # end of the data table, we selected the new columns after the transformation so
 # you can clearly see the mutated output from the table.
 # \index{mutate}\index{select}
-#
-# ```{r}
-# can_lang <- can_lang |>
-#   mutate(
-#     mother_tongue_percent = (mother_tongue / 35151728) * 100,
-#     most_at_home_percent = (most_at_home / 35151728) * 100
-#   )
-#
-# can_lang |> 
-#   select(mother_tongue_percent, most_at_home_percent)
-# ```
-#
+
+# %%
+can_lang = can_lang.assign(mother_tongue_percent = (can_lang['mother_tongue'] / 35151728) * 100,
+                          most_at_home_percent = (can_lang['most_at_home'] / 35151728) * 100)
+can_lang[['mother_tongue_percent', 'most_at_home_percent']]
+
+
+# %% [markdown]
 # Finally, we will edit the visualization to use the percentages we just computed
 # (and change our axis labels to reflect this change in 
-# units). Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props) displays
+# units). {numref}`can_lang_plot_percent` displays
 # the final result.
+
+# %%
+can_lang_plot_percent = alt.Chart(can_lang).mark_circle(color='black').encode(
+    x = alt.X("most_at_home_percent",title = ["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    y = alt.Y("mother_tongue_percent", title = ["Mother tongue", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7))).configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_percent', can_lang_plot_percent, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_percent
+# :figwidth: 700px 
+# :name: can_lang_plot_percent
 #
-# ```{r 03-mother-tongue-vs-most-at-home-scale-props, fig.height=3.5,  fig.width=3.75, fig.align = "center",  warning=FALSE, fig.pos = "H", out.extra="", fig.cap = "Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home."}
-# ggplot(can_lang, aes(x = most_at_home_percent, y = mother_tongue_percent)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (percentage of Canadian residents)",
-#        y = "Mother tongue \n (percentage of Canadian residents)") +
-#   theme(text = element_text(size = 12)) +
-#   scale_x_log10(labels = comma) +
-#   scale_y_log10(labels = comma)
-# ```
+# Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home.
+# :::
 #
-# Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props) is the appropriate
+#
+# {numref}`can_lang_plot_percent` is the appropriate
 # visualization to use to answer the first question in this section, i.e.,
 # whether there is a relationship between the percentage of people who speak 
 # a language as their mother tongue and the percentage for whom that
 # is the primary language spoken at home.
 # To fully answer the question, we need to use
-#  Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props)
+#  {numref}`can_lang_plot_percent`
 # to assess a few key characteristics of the data: 
 #
 # - **Direction:** if the y variable tends to increase when the x variable increases, then y has a **positive** relationship with x. If 
@@ -692,21 +702,21 @@
 #   the relationship is strong when the scatter points are close together and look more like a "line" or "curve" than a "cloud."
 # - **Shape:** if you can draw a straight line roughly through the data points, the relationship is **linear**. Otherwise, it is **nonlinear**. \index{relationship!linear, nonlinear}
 #
-# In Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props), we see that 
+# In {numref}`can_lang_plot_percent`, we see that 
 # as the percentage of people who have a language as their mother tongue increases, 
 # so does the percentage of people who speak that language at home. 
 # Therefore, there is a **positive** relationship between these two variables.
-# Furthermore, because the points in Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props) 
+# Furthermore, because the points in {numref}`can_lang_plot_percent`
 # are fairly close together, and the points look more like a "line" than a "cloud",
 # we can say that this is a **strong** relationship. 
 # And finally, because drawing a straight line through these points in 
-# Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props)
+# {numref}`can_lang_plot_percent`
 # would fit the pattern we observe quite well, we say that the relationship is **linear**.
 #
 # Onto the second part of our exploratory data analysis question!
 # Recall that we are interested in knowing whether the strength 
 # of the relationship we uncovered 
-# in Figure \@ref(fig:03-mother-tongue-vs-most-at-home-scale-props) depends
+# in {numref}`can_lang_plot_percent` depends
 # on the higher-level language category (Official languages, Aboriginal languages,
 # and non-official, non-Aboriginal languages).
 # One common way to explore this
@@ -717,107 +727,120 @@
 # scatter plot to represent each language's higher-level language category.
 #
 # Here we want to distinguish the values according to the `category` group with
-# which they belong.  We can add an argument to the `aes` function, specifying
+# which they belong.  We can add the argument `color` to the `encode` function, specifying
 # that the `category` column should color the points. Adding this argument will
 # color the points according to their group and add a legend at the side of the
-# plot. 
+# plot.
+
+# %%
+can_lang_plot_category = alt.Chart(can_lang).mark_circle().encode(
+    x = alt.X("most_at_home_percent", title = ["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    y = alt.Y("mother_tongue_percent", title = ["Mother tongue", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    color = "category").configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_category', can_lang_plot_category, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_category
+# :figwidth: 700px 
+# :name: can_lang_plot_category
 #
-# ```{r 03-scatter-color-by-category, warning=FALSE, fig.height=3.5, fig.width=5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category."}
-# ggplot(can_lang, aes(x = most_at_home_percent, 
-#                      y = mother_tongue_percent, 
-#                      color = category)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (percentage of Canadian residents)",
-#        y = "Mother tongue \n (percentage of Canadian residents)") +
-#   theme(text = element_text(size = 12)) +
-#   scale_x_log10(labels = comma) +
-#   scale_y_log10(labels = comma)
-# ```
+# Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category.
+# :::
 #
-# The legend in Figure \@ref(fig:03-scatter-color-by-category) 
+#
+# The legend in {numref}`can_lang_plot_category`
 # takes up valuable plot area. 
-# We can improve this by moving the legend title using the `legend.position`
-# and `legend.direction`
+# We can improve this by moving the legend title using the `alt.Legend` function
+# with the arguments `legendX`, `legendY` and `direction`
 # arguments of the `theme` function. 
-# Here we set `legend.position` to `"top"` to put the legend above the plot
-# and `legend.direction` to `"vertical"` so that the legend items remain 
-# vertically stacked on top of each other.
-# When the `legend.position` is set to either `"top"` or `"bottom"` 
-# the default direction is to stack the legend items horizontally.
-# However, that will not work well for this particular visualization 
+# Here we set the `direction` to `"vertical"` so that the legend items remain 
+# vertically stacked on top of each other. The default `direction` is horizontal, which won't work
+# not work well for this particular visualization 
 # because the legend labels are quite long 
 # and would run off the page if displayed this way.
+
+# %%
+can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
+    x = alt.X("most_at_home_percent",title = ["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale(type="log"),axis=alt.Axis(tickCount=7)),
+    y = alt.Y("mother_tongue_percent", title = ["Mother tongue", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    color = alt.Color("category", legend=alt.Legend(
+                            orient='none',
+                            legendX=0, legendY=-90,
+                            direction='vertical'))).configure_axis(
+    titleFontSize=12)
+
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_legend', can_lang_plot_legend, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_legend
+# :figwidth: 700px 
+# :name: can_lang_plot_legend
 #
-# ```{r 03-scatter-color-by-category-legend-edit, warning=FALSE, fig.height=4.75,  fig.width=3.75, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with the legend edited."}
-# ggplot(can_lang, aes(x = most_at_home_percent, 
-#                      y = mother_tongue_percent, 
-#                      color = category)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (percentage of Canadian residents)",
-#        y = "Mother tongue \n (percentage of Canadian residents)") +
-#   theme(text = element_text(size = 12),
-#         legend.position = "top",
-#         legend.direction = "vertical") +
-#   scale_x_log10(labels = comma) +
-#   scale_y_log10(labels = comma)
-# ```
+# Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with the legend edited.
+# :::
 #
-# In Figure \@ref(fig:03-scatter-color-by-category-legend-edit), the points are colored with
-# the default `ggplot2` color palette. But what if you want to use different
-# colors? In R, two packages that provide alternative color 
-# palettes \index{color palette} are `RColorBrewer` [@RColorBrewer]
-# and `ggthemes` [@ggthemes]; in this book we will cover how to use `RColorBrewer`.
-# You can visualize the list of color
-# palettes that `RColorBrewer` has to offer with the `display.brewer.all`
-# function. You can also print a list of color-blind friendly palettes by adding
-# `colorblindFriendly = TRUE` to the function. 
+# In {numref}`can_lang_plot_legend`, the points are colored with
+# the default `altair` color palette. But what if you want to use different
+# colors? In Altair, there are many themes available, which can be viewed [here](https://vega.github.io/vega/docs/schemes/)
 #
-# (ref:rcolorbrewer) Color palettes available from the `RColorBrewer` R package.
 #
-# ```{r rcolorbrewer, fig.height = 7, fig.cap = "(ref:rcolorbrewer)"}
-# library(RColorBrewer)
-# display.brewer.all(colorblindFriendly = TRUE)
-# ```
-#
-# From Figure \@ref(fig:rcolorbrewer), 
-# we can choose the color palette we want to use in our plot. 
-# To change the color palette, 
-# we add the `scale_color_brewer` layer indicating the palette we want to use. 
+# To change the color scheme, 
+# we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use. 
 # You can use 
 # this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check 
 # if your visualizations \index{color palette!color blindness simulator} 
 # are color-blind friendly.
-# Below we pick the `"Set2"` palette, with the result shown
-# in Figure \@ref(fig:scatter-color-by-category-palette).
+#
+# Below we pick the `"dark2"` theme, with the result shown
+# in {numref}`can_lang_plot_theme`
 # We also set the `shape` aesthetic mapping to the `category` variable as well;
 # this makes the scatter point shapes different for each category. This kind of 
 # visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
 # further improve the clarity and accessibility of your visualization.
 #
-# ```{r scatter-color-by-category-palette, fig.height=4.75,  fig.width=3.75, fig.align = "center", warning=FALSE, fig.pos = "H", out.extra="",  fig.cap = "Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors."}
-# ggplot(can_lang, aes(x = most_at_home_percent, 
-#                      y = mother_tongue_percent, 
-#                      color = category, 
-#                      shape = category)) +
-#   geom_point() +
-#   labs(x = "Language spoken most at home \n (percentage of Canadian residents)",
-#        y = "Mother tongue \n (percentage of Canadian residents)") +
-#   theme(text = element_text(size = 12),
-#         legend.position = "top",
-#         legend.direction = "vertical") +
-#   scale_x_log10(labels = comma) +
-#   scale_y_log10(labels = comma) +
-#   scale_color_brewer(palette = "Set2")
-# ```
+# > Note: We cannot use different shapes with `mark_circle`, it can only be used with `mark_point`
+
+# %%
+can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
+    x = alt.X("most_at_home_percent",title = ["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    y = alt.Y("mother_tongue_percent", title = "Mother tongue(percentage of Canadian residents)", scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
+    color = alt.Color("category", legend=alt.Legend(
+                            orient='none',
+                            legendX=0, legendY=-90,
+                            direction='vertical'), 
+                         scale=alt.Scale(scheme='dark2')),
+    shape = "category").configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('can_lang_plot_theme', can_lang_plot_theme, display=False)
+
+# %% [markdown]
+# :::{glue:figure} can_lang_plot_theme
+# :figwidth: 700px 
+# :name: can_lang_plot_theme
 #
-# From the visualization in Figure \@ref(fig:scatter-color-by-category-palette), 
+# Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors.
+# :::
+#
+#
+#
+# From the visualization in {numref}`can_lang_plot_theme`, 
 # we can now clearly see that the vast majority of Canadians reported one of the official languages 
 # as their mother tongue and as the language they speak most often at home. 
 # What do we see when considering the second part of our exploratory question? 
 # Do we see a difference in the relationship
 # between languages spoken as a mother tongue and as a primary language
 # at home across the higher-level language categories? 
-# Based on Figure \@ref(fig:scatter-color-by-category-palette), there does not
+# Based on {numref}`can_lang_plot_theme`, there does not
 # appear to be much of a difference.
 # For each higher-level language category, 
 # there appears to be a strong, positive, and linear relationship between 
@@ -835,75 +858,22 @@
 # even gathering additional data. We will see more of such complex analyses later on in 
 # this book.  
 #
-# <!--
-# Finally, we can go one step further and distinguish English and French languages
-# with different colors in our visualization. To separate these languages, we
-# will filter the rows where the language is either English or French and mutate
-# the `category` column to equal the corresponding language. 
-# \index{filter}\index{mutate}
 #
-# ```{r 03-separate-English-French}
-# english_and_french <- can_lang |>
-#   filter(language == "English" | language == "French") |>
-#   mutate(category = language)
-# english_and_french
-# ```
-#
-# Next we will bind \index{bind\_rows} the mutated data set `english_and_french` that we just created with the remaining rows in the `can_lang` data set:
-# ```{r 03-bind-english-french}
-# can_lang <- bind_rows(
-#   english_and_french,
-#   can_lang |>
-#     filter(language != "English" & language != "French")
-# )
-# ```
-#
-# +++
-#
-# We have added a few more layers to make the data visualization in Figure \@ref(fig:03-nachos-to-cheesecake) even more effective. Specifically, we used have improved the visualizations accessibility by choosing colors that are easier to distinguish, mapped category to shape, and handled the problem of overlapping data points by making them slightly transparent. \index{ggplot!transparency}\index{alpha|see{ggplot}}
-#
-# ```{r 03-nachos-to-cheesecake, fig.width=7.75, fig.height=4, warning=FALSE, message=FALSE, fig.cap = "Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category."}
-# ggplot(can_lang, aes(
-#   x = most_at_home_percent,
-#   y = mother_tongue_percent,
-#   color = category,
-#   shape = category # map categories to different shapes
-# )) + 
-#   geom_point(alpha = 0.6) + # set the transparency of the points
-#   labs(x = "Language spoken most at home \n (percentage of Canadian residents)",
-#        y = "Mother tongue \n (percentage of Canadian residents)") +
-#   theme(text = element_text(size = 12)) +
-#   scale_x_log10(labels = comma) +
-#   scale_y_log10(labels = comma) + 
-#   scale_color_brewer(palette = "RdYlBu")
-# ```
-# -->
 #
 # ### Bar plots: the island landmass data set
 # The `islands.csv` data set \index{Island landmasses} contains a list of Earth's landmasses as well as their area (in thousands of square miles) [@islandsdata]. 
 #
 # **Question:** \index{question!visualization} Are the continents (North / South America, Africa, Europe, Asia, Australia, Antarctica) Earth's seven largest landmasses? If so, what are the next few largest landmasses after those?
 #
-# ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# islands_df <- read_csv("data/islands.csv")
-# continents <- c("Africa", "Antarctica", "Asia", "Australia", 
-#                 "Europe", "North America", "South America")
 #
-# islands_df <- mutate(islands_df, 
-#                      landmass_type = ifelse(landmass %in% continents, 
-#                                             "Continent", "Other"))
-#
-# write_csv(islands_df, "data/islands.csv")
-# ```
 #
 # To get started, we will read and inspect the data:
-#
-# ```{r 03-data-islands, warning=FALSE, message=FALSE}
-# # islands data
-# islands_df <- read_csv("data/islands.csv")
-# islands_df
-# ```
-#
+
+# %%
+islands_df = pd.read_csv("data/islands.csv")
+islands_df
+
+# %% [markdown]
 # Here, we have a data frame of Earth's landmasses, 
 # and are trying to compare their sizes. 
 # The right type of visualization to answer this question is a bar plot. 
@@ -913,41 +883,61 @@
 # groups of a categorical variable.
 #
 # We specify that we would like to use a bar plot
-# via the `geom_bar` function in `ggplot2`. 
-# However, by default, `geom_bar` sets the heights
-# of bars to the number of times a value appears in a data frame (its *count*); here, we want to plot exactly the values in the data frame, i.e.,
-# the landmass sizes. So we have to pass the `stat = "identity"` argument to `geom_bar`. The result is 
-# shown in Figure \@ref(fig:03-data-islands-bar).
+# via the `mark_bar` function in `altair`. 
+# The result is shown in {numref}`islands_bar`
 # \index{ggplot!geom\_bar}
+
+# %%
+islands_bar = alt.Chart(islands_df).mark_bar().encode(
+    x = "landmass", y = "size")
+
+
+# %% tags=["remove-cell"]
+glue('islands_bar', islands_bar, display=False)
+
+# %% [markdown]
+# :::{glue:figure} islands_bar
+# :figwidth: 700px 
+# :name: islands_bar
 #
-# ```{r 03-data-islands-bar, warning=FALSE, message=FALSE,  fig.width=5, fig.height=2.75, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Bar plot of all Earth's landmasses' size with squished labels."}
-# islands_bar <- ggplot(islands_df, aes(x = landmass, y = size)) +
-#   geom_bar(stat = "identity")
+# Bar plot of all Earth's landmasses' size with squished labels.
+# :::
 #
-# islands_bar
-# ```
-#
-# Alright, not bad! The plot in Figure \@ref(fig:03-data-islands-bar) is
+# Alright, not bad! The plot in {numref}`islands_bar` is
 # definitely the right kind of visualization, as we can clearly see and compare
 # sizes of landmasses. The major issues are that the smaller landmasses' sizes
-# are hard to distinguish, and the names of the landmasses are obscuring each
-# other as they have been squished into too little space. But remember that the
+# are hard to distinguish, and the names of the landmasses are tilted by default to fit in the labels. But remember that the
 # question we asked was only about the largest landmasses; let's make the plot a
 # little bit clearer by keeping only the largest 12 landmasses. We do this using
-# the `slice_max` function.  Then to help us make sure the labels have enough
+# the `sort_values` function followed by the `iloc` property.  Then to help us make sure the labels have enough
 # space, we'll use horizontal bars instead of vertical ones. We do this by
 # swapping the `x` and `y` variables:
 # \index{slice\_max}
+
+# %%
+islands_top12 = islands_df.sort_values(by = "size", ascending=False).iloc[:12] 
+
+islands_bar_sorted = alt.Chart(islands_top12).mark_bar().encode(
+    x = "size", y = "landmass")
+
+
+
+
+# %% tags=["remove-cell"]
+glue('islands_bar_sorted', islands_bar_sorted, display=True)
+
+# %% [markdown]
+# :::{glue:figure} islands_bar_sorted
+# :figwidth: 700px 
+# :name: islands_bar_sorted
 #
-# ```{r 03-data-islands-bar-2, warning=FALSE, message=FALSE, fig.width=5, fig.height=2.75, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Bar plot of size for Earth's largest 12 landmasses."}
-# islands_top12 <- slice_max(islands_df, order_by = size, n = 12)
-# islands_bar <- ggplot(islands_top12, aes(x = size, y = landmass)) +
-#   geom_bar(stat = "identity") 
+# Bar plot of size for Earth's largest 12 landmasses.
+# :::
 #
-# islands_bar
-# ```
 #
-# The plot in Figure \@ref(fig:03-data-islands-bar-2) is definitely clearer now, 
+#
+#
+# The plot in {numref}`islands_bar_sorted` is definitely clearer now, 
 # and allows us to answer our question 
 # ("are the top 7 largest landmasses continents?") in the affirmative. 
 # But the question could be made clearer from the plot 
@@ -955,46 +945,49 @@
 # but by size, and to color them based on whether they are a continent. 
 # The data for this is stored in the `landmass_type` column. 
 # To use this to color the bars, 
-# we add the `fill` argument to the aesthetic mapping 
-# and set it to `landmass_type`. 
+# we use the `color` argument to color the bars according to the `landmass_type`
 #
 # To organize the landmasses by their `size` variable, 
-# we will use the `tidyverse` `fct_reorder` function
-# in the aesthetic mapping to organize the landmasses by their `size` variable.
-# The first argument passed to `fct_reorder` is the name of the factor column
-# whose levels we would like to reorder (here, `landmass`). 
-# The second argument is the column name 
-# that holds the values we would like to use to do the ordering (here, `size`).
-# The `fct_reorder` function uses ascending order by default, 
-# but this can be changed to descending order 
-# by setting  `.desc = TRUE`.
+# we will use the `altair` `sort` function
+# in encoding for `y` axis to organize the landmasses by their `size` variable, which is encoded on the x-axis.
+# To sort the landmasses by their size(denoted on `x` axis), we use `sort='x'`. This plots the values on `y` axis
+# in the ascending order of `x` axis values. 
+#
 # We do this here so that the largest bar will be closest to the axis line,
 # which is more visually appealing.
 #
-# To label the x and y axes, we will use the `labs` function
-# instead of the `xlab` and `ylab` functions from earlier in this chapter. 
-# The `labs` function is more general; we are using it in this case because 
-#  we would also like to change the legend label.
-# The default label is the name of the column being mapped to `fill`. Here that
+# > **Note:** If we want to sort the values on `y-axis` in descending order of `x-axis`,
+# > we need to specify `sort='-x'`.
+#
+# To label the x and y axes, we will use the `alt.X` and `alt.Y` function
+# The default label is the name of the column being mapped to `color`. Here that
 # would be `landmass_type`;
 # however `landmass_type` is not proper English (and so is less readable).
-# Thus we use the `fill` argument inside `labs` to change that to "Type."
-# Finally, we again \index{ggplot!reorder} use the `theme` function 
+# Thus we use the `title` argument inside `alt.Color` to change that to "Type"
+# Finally, we again \index{ggplot!reorder} use the `configure_axis` function 
 # to change the font size.
+
+# %%
+islands_plot_sorted = alt.Chart(islands_top12).mark_bar(color='black').encode(
+    x = alt.X("size",title = "Size (1000 square mi)"),
+    y = alt.Y("landmass", title = "Landmass", sort='x'),
+    color = alt.Color("landmass_type", title = "Type")).configure_axis(
+    titleFontSize=12)
+
+
+# %% tags=["remove-cell"]
+glue('islands_plot_sorted', islands_plot_sorted, display=True)
+
+# %% [markdown]
+# :::{glue:figure} islands_plot_sorted
+# :figwidth: 700px 
+# :name: islands_plot_sorted
 #
-# ```{r 03-data-islands-bar-4, warning = FALSE, message = FALSE, fig.width=5, fig.height=2.75, fig.align="center", fig.pos = "H", out.extra="", fig.cap = "Bar plot of size for Earth's largest 12 landmasses colored by whether its a continent with clearer axes and labels."}
-# islands_bar <- ggplot(islands_top12, 
-#                       aes(x = size,
-#                           y = fct_reorder(landmass, size, .desc = TRUE), 
-#                           fill = landmass_type)) +
-#   geom_bar(stat = "identity") +
-#   labs(x = "Size (1000 square mi)", y = "Landmass",  fill = "Type") +
-#   theme(text = element_text(size = 12))
+# Bar plot of size for Earth's largest 12 landmasses colored by whether its a continent with clearer axes and labels.
+# :::
 #
-# islands_bar
-# ```
 #
-# The plot in Figure \@ref(fig:03-data-islands-bar-4) is now a very effective
+# The plot in {numref}`islands_plot_sorted` is now a very effective
 # visualization for answering our original questions. Landmasses are organized by
 # their size, and continents are colored differently than other landmasses,
 # making it quite clear that continents are the largest seven landmasses.
@@ -1007,8 +1000,7 @@
 # and in each experiment, 20 runs were performed&mdash;meaning that 
 # 20 measurements of the speed of light were collected 
 # in each experiment [@lightdata].
-# The `morley` data set is available in base R as a data frame,
-# so it does not need to be loaded.
+#
 # Because the speed of light is a very large number 
 # (the true value is 299,792.458 km/sec), the data is coded
 # to be the measured speed of light minus 299,000.
@@ -1022,12 +1014,12 @@
 # **Question:** \index{question!visualization} Given what we know now about the speed of 
 # light (299,792.458 kilometres per second), how accurate were each of the experiments?
 #
-# ```{r 03-data-morley, warning=FALSE, message=FALSE}
-# # michelson morley experimental data
-# morley <- as_tibble(morley)
-# morley
-# ```
-#
+# First, we read in the data.
+
+# %%
+morley_df = pd.read_csv("data/morley.csv")
+
+# %% [markdown]
 # In this experimental data, 
 # Michelson was trying to measure just a single quantitative number 
 # (the speed of light). 
@@ -1042,49 +1034,75 @@
 # by separating the data into bins, 
 # and then using vertical bars to show how many data points fell in each bin. 
 #
-# To create a histogram in `ggplot2` we will use the `geom_histogram` geometric
-# object, setting the `x` axis to the `Speed` measurement variable. As usual, 
+# To create a histogram in `altair` we will use the `mark_bar` geometric
+# object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `count()`. As usual, 
 # let's use the default arguments just to see how things look.
+
+# %%
+morley_hist = alt.Chart(morley_df).mark_bar().encode(
+    x = alt.X("Speed"),  
+    y='count()')
+
+
+# %% tags=["remove-cell"]
+glue('morley_hist', morley_hist, display=False)
+
+# %% [markdown]
+# :::{glue:figure} morley_hist
+# :figwidth: 700px 
+# :name: morley_hist
 #
-# ```{r 03-data-morley-hist, warning=FALSE, message=FALSE,  fig.height = 2.75, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Histogram of Michelson's speed of light data."}
-# morley_hist <- ggplot(morley, aes(x = Speed)) +
-#   geom_histogram()
+# Histogram of Michelson's speed of light data.
+# :::
 #
-# morley_hist
-# ```
 #
-# Figure \@ref(fig:03-data-morley-hist) is a great start. 
+#
+# {numref}`morley_hist` is a great start. 
 # However, 
 # we cannot tell how accurate the measurements are using this visualization 
 # unless we can see the true value.
 # In order to visualize the true speed of light, 
-# we will add a vertical line with the `geom_vline` function.
-# To draw a vertical line with `geom_vline`,  \index{ggplot!geom\_vline}
+# we will add a vertical line with the `mark_rule` function.
+# To draw a vertical line with `mark_rule`,  \index{ggplot!geom\_vline}
 # we need to specify where on the x-axis the line should be drawn. 
-# We can do this by setting the `xintercept` argument. 
-# Here we set it to 792.458, which is the true value of light speed 
-# minus 299,000; this ensures it is coded the same way as the 
+# We can do this by creating a dataframe with just one column with value `792.458`, which is the true value of light speed 
+# minus 299,000 and encoding it in the `x` axis; this ensures it is coded the same way as the 
 # measurements in the `morley` data frame.
 # We would also like to fine tune this vertical line, 
 # styling it so that it is dashed and 1 point in thickness.
 # A point is a measurement unit commonly used with fonts, 
 # and 1 point is about 0.353 mm. 
-# We do this by setting `linetype = "dashed"` and `size = 1`, respectively. 
-# There is a similar function, `geom_hline`, 
-# that is used for plotting horizontal lines. 
+# We do this by setting `strokeDash=[3,3]` and `size = 1`, respectively. 
+#
+# Similarly, a horizontal line can be plotted using the `y` axis encoding and the dataframe with one value, which would act as the be the y-intercept
+#
 # Note that 
 # *vertical lines* are used to denote quantities on the *horizontal axis*, 
 # while *horizontal lines* are used to denote quantities on the *vertical axis*. 
 #
-# ```{r 03-data-morley-hist-2, warning=FALSE,  fig.height = 2.75, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", message=FALSE,fig.cap = "Histogram of Michelson's speed of light data with vertical line indicating true speed of light."}
-# morley_hist <- ggplot(morley, aes(x = Speed)) +
-#   geom_histogram() +
-#   geom_vline(xintercept = 792.458, linetype = "dashed", size = 1)
+# To add the dashed line on top of the histogram, we will use the `+` operator. This concept is also known as layering in altair.(This is covered in the later sections of the chapter). Here, we add the `mark_rule` chart on the `morley_hist` chart of the form `mark_bar`
+
+# %%
+v_line = alt.Chart(pd.DataFrame({'x': [792.458]})).mark_rule(
+    strokeDash=[3,3], size=1).encode(
+    x='x')
+
+
+final_plot = morley_hist + v_line
+
+
+# %% tags=["remove-cell"]
+glue('final_plot', final_plot, display=False)
+
+# %% [markdown]
+# :::{glue:figure} final_plot
+# :figwidth: 700px 
+# :name: final_plot
 #
-# morley_hist
-# ```
+# Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
+# :::
 #
-# In Figure \@ref(fig:03-data-morley-hist-2), 
+# In {numref}`final_plot`, 
 # we still cannot tell which experiments (denoted in the `Expt` column) 
 # led to which measurements; 
 # perhaps some experiments were more accurate than others. 
@@ -1094,90 +1112,109 @@
 # where counts from different experiments are stacked on top of each other 
 # in different colors. 
 # We can create a histogram colored by the `Expt` variable 
-# by adding it to the `fill` aesthetic mapping. 
+# by adding it to the `color` argument. 
 # We make sure the different colors can be seen 
 # (despite them all sitting on top of each other) 
-# by setting the `alpha` argument in `geom_histogram` to `0.5` 
-# to make the bars slightly translucent. 
-# We also specify `position = "identity"` in `geom_histogram` to ensure 
-# the histograms for each experiment will be overlaid side-by-side, 
-# instead of stacked bars 
-# (which is the default for bar plots or histograms 
-# when they are colored by another categorical variable).
+# by setting the `opacity` argument in `mark_bar` to `0.5` 
+# to make the bars slightly translucent.
+
+# %%
+morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
+    x = alt.X("Speed"), 
+    y=alt.Y('count()'),
+    color = "Expt")
+
+final_plot_colored = morley_hist_colored + v_line
+
+
+# %% tags=["remove-cell"]
+glue('final_plot_colored', final_plot_colored, display=True)
+
+# %% [markdown]
+# :::{glue:figure} final_plot_colored
+# :figwidth: 700px 
+# :name: final_plot_colored
 #
-# ```{r 03-data-morley-hist-3, warning=FALSE, message=FALSE,  fig.height = 2.75, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Histogram of Michelson's speed of light data colored by experiment."}
-# morley_hist <- ggplot(morley, aes(x = Speed, fill = Expt)) +
-#   geom_histogram(alpha = 0.5, position = "identity") +
-#   geom_vline(xintercept = 792.458, linetype = "dashed", size = 1.0)
+# Histogram of Michelson's speed of light data colored by experiment.
+# :::
 #
-# morley_hist
-# ```
-#
-# Alright great, Figure \@ref(fig:03-data-morley-hist-3) looks...wait a second! The
-# histogram is still all the same color! What is going on here? Well, if you 
+# Alright great, {numref}`final_plot_colored` looks...wait a second! We are not able to distinguish 
+# between different Experiments in the histogram! What is going on here? Well, if you 
 # recall from Chapter \@ref(wrangling), the *data type* you use for each variable
-# can influence how R and `tidyverse` treats it. Here, we indeed have an issue
+# can influence how Python and `altair` treats it. Here, we indeed have an issue
 # with the data types in the `morley` data frame. In particular, the `Expt` column
-# is currently an *integer* (you can see the label `<int>` underneath the `Expt` column in \index{integer} the printed
-# data frame at the start of this section). But we want to treat it as a
+# is currently an *integer*. But we want to treat it as a
 # *category*, i.e., there should be one category per type of experiment.  
 #
-# To fix this issue we can convert the `Expt` variable into a *factor* by \index{factor}
-# passing it to `as_factor` in the `fill` aesthetic mapping.
-# Recall that factor is a data type in R that is often used to represent
-# categories. By writing
-# `as_factor(Expt)` we are ensuring that R will treat this variable as a factor,
-# and the color will be mapped discretely.
+# To fix this issue we can convert the `Expt` variable into a `nominal`(categorical) type 
+# variable by adding a suffix `:N`(where `N` stands for nominal type variable) with the `Expt` variable.
+# By doing this, we are ensuring that `altair` will treat this variable as a categorical variable,
+# and the color will be mapped discretely. Here, we also mention `stack=False`, so that the bars are not stacked on top of each other.
 # \index{factor!usage in ggplot}
+
+# %%
+morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
+    x = alt.X("Speed", bin=alt.Bin(maxbins=50)),  
+    y=alt.Y('count()', stack=False),
+    color = "Expt:N")
+
+final_plot_categorical = morley_hist_categorical + v_line
+
+
+# %% tags=["remove-cell"]
+glue('final_plot_categorical', final_plot_categorical, display=True)
+
+# %% [markdown]
+# :::{glue:figure} final_plot_categorical
+# :figwidth: 700px 
+# :name: final_plot_categorical
 #
-# ```{r 03-data-morley-hist-with-factor, warning=FALSE, message=FALSE,  fig.height = 2.75, fig.width = 5, fig.pos = "H", out.extra="", fig.align = "center", fig.cap = "Histogram of Michelson's speed of light data colored by experiment as factor."}
-# morley_hist <- ggplot(morley, aes(x = Speed, fill = as_factor(Expt))) +
-#   geom_histogram(alpha = 0.5, position = "identity") +
-#   geom_vline(xintercept = 792.458, linetype = "dashed", size = 1.0)
+# Histogram of Michelson's speed of light data colored by experiment as a categorical variable.
+# :::
 #
-# morley_hist
-# ```
 #
-# > **Note:** Factors impact plots in two ways:
-# > (1) ensuring a color is mapped as discretely where appropriate (as in this
-# > example) and (2) the ordering of levels in a plot. `ggplot` takes into account
-# > the order of the factor levels as opposed to the order of data in
-# > your data frame. Learning how to reorder your factor levels will help you with
-# > reordering the labels of a factor on a plot.  
 #  
 # Unfortunately, the attempt to separate out the experiment number visually has
-# created a bit of a mess. All of the colors in Figure
-# \@ref(fig:03-data-morley-hist-with-factor) are blending together, and although it is
+# created a bit of a mess. All of the colors in {numref}`final_plot_categorical` are blending together, and although it is
 # possible to derive *some* insight from this (e.g., experiments 1 and 3 had some
 # of the most incorrect measurements), it isn't the clearest way to convey our
 # message and answer the question. Let's try a different strategy of creating
 # grid of separate histogram plots.
 
 # %% [markdown]
-# We use the `facet_grid` function to create a plot 
+# We use the `facet` function to create a plot 
 # that has multiple subplots arranged in a grid.
-# The argument to `facet_grid` specifies the variable(s) used to split the plot 
+# The argument to `facet` specifies the variable(s) used to split the plot 
 # into subplots, and how to split them (i.e., into rows or columns).
 # If the plot is to be split horizontally, into rows, 
 # then the `rows` argument is used.
 # If the plot is to be split vertically, into columns, 
 # then the `columns` argument is used.
 # Both the `rows` and `columns` arguments take the column names on which to split the data when creating the subplots. 
-# Note that the column names must be surrounded by the `vars` function.
-# This function allows the column names to be correctly evaluated 
-# in the context of the data frame.
+#
 # \index{ggplot!facet\_grid}
+
+# %%
+morley_hist = alt.Chart(morley_df).mark_bar(opacity = 0.5).encode(
+    x = alt.X("Speed", bin=alt.Bin(maxbins=50)),  
+    y=alt.Y('count()', stack=False),
+    color = "Expt:N").properties(height=100, width=300)
+
+final_plot_facet = (morley_hist + v_line).facet(row = 'Expt:N', data = morley_df)
+
+
+# %% tags=["remove-cell"]
+glue('final_plot_facet', final_plot_facet, display=True)
+
+# %% [markdown]
+# :::{glue:figure} final_plot_facet
+# :figwidth: 700px 
+# :name: final_plot_facet
 #
-# ```{r 03-data-morley-hist-4, warning=FALSE, message=FALSE, fig.height = 5, fig.width = 4.25, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Histogram of Michelson's speed of light data split vertically by experiment."}
-# morley_hist <- ggplot(morley, aes(x = Speed, fill = as_factor(Expt))) +
-#   geom_histogram() +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 792.458, linetype = "dashed", size = 1.0)
+# Histogram of Michelson's speed of light data split vertically by experiment.
+# :::
 #
-# morley_hist
-# ```
-#
-# The visualization in Figure \@ref(fig:03-data-morley-hist-4) 
+# The visualization in {numref}`final_plot_facet`
 # now makes it quite clear how accurate the different experiments were 
 # with respect to one another. 
 # The most variable measurements came from Experiment 1. 
@@ -1187,30 +1224,41 @@
 # The most different experiments still obtained quite similar results!
 #
 # There are two finishing touches to make this visualization even clearer. First and foremost, we need to add informative axis labels
-# using the `labs` function, and increase the font size to make it readable using the `theme` function. Second, and perhaps more subtly, even though it 
+# using the `alt.X` and `alt.Y` function, and increase the font size to make it readable using the `configure_axis` function. Second, and perhaps more subtly, even though it 
 # is easy to compare the experiments on this plot to one another, it is hard to get a sense 
 # of just how accurate all the experiments were overall. For example, how accurate is the value 800 on the plot, relative to the true speed of light?
-# To answer this question, we'll use the `mutate` function to transform our data into a relative measure of accuracy rather than absolute measurements:
+# To answer this question, we'll use the assign function to transform our data into a relative measure of accuracy rather than absolute measurements:
 # \index{ggplot!labs}\index{ggplot!theme}
+
+# %%
+morley_rel = morley_df
+morley_rel = morley_rel.assign(relative_accuracy = 100 * 
+                       ((299000 + morley_df['Speed']) - 299792.458) / (299792.458) )
+
+morley_rel
+
+# %%
+v_line = alt.Chart(pd.DataFrame({'x': [0]})).mark_rule(
+    strokeDash=[3,3], size=2).encode(
+    x='x')
+morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
+    x = alt.X("relative_accuracy", bin=alt.Bin(maxbins=120), title = "Relative Accuracy (%)"), 
+    y=alt.Y('count()', stack=False, title = "# Measurements"),
+    color = alt.Color("Expt:N",  title = "Experiment ID")).properties(height=100, width= 400)
+
+final_plot_relative = (morley_hist + v_line).facet(row='Expt:N', data=morley_rel)
+
+
+# %% tags=["remove-cell"]
+glue('final_plot_relative', final_plot_relative, display=True)
+
+# %% [markdown]
+# :::{glue:figure} final_plot_relative
+# :figwidth: 700px 
+# :name: final_plot_relative
 #
-# ```{r 03-data-morley-hist-5, warning=FALSE, message=FALSE, fig.height = 5.25, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Histogram of relative accuracy split vertically by experiment with clearer axes and labels."}
-# morley_rel <- mutate(morley, 
-#                      relative_accuracy = 100 * 
-#                        ((299000 + Speed) - 299792.458) / (299792.458))
-#
-# morley_hist <- ggplot(morley_rel, 
-#                       aes(x = relative_accuracy, 
-#                           fill = as_factor(Expt))) +
-#   geom_histogram() +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 0, linetype = "dashed", size = 1.0) +
-#   labs(x = "Relative Accuracy (%)", 
-#        y = "# Measurements", 
-#        fill = "Experiment ID") +
-#   theme(text = element_text(size = 12))
-#
-# morley_hist
-# ```
+# Histogram of relative accuracy split vertically by experiment with clearer axes and labels
+# :::
 #
 # Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. Figure \@ref(fig:03-data-morley-hist-5) shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an 
 # admirable job given the technology available at the time.
@@ -1219,13 +1267,12 @@
 #
 # #### Choosing a binwidth for histograms {-}
 #
-# When you create a histogram in R, the default number of bins used is 30.
+# When you create a histogram in `altair`, the default number of bins used is 30.
 # Naturally, this is not always the right number to use.
 # You can set the number of bins yourself by using
-# the `bins` argument in the `geom_histogram` geometric object.
-# You can also set the *width* of the bins using the
-# `binwidth` argument in the `geom_histogram` geometric object.
-# But what number of bins, or bin width, is the right one to use? 
+# the `maxbins` argument in the `mark_bar` geometric object.
+#
+# But what number of bins is the right one to use? 
 #
 # Unfortunately there is no hard rule for what the right bin number
 # or width is. It depends entirely on your problem; the *right* number of bins 
@@ -1233,101 +1280,115 @@
 # the one that *helps you answer the question* you asked. 
 # Choosing the correct setting for your problem 
 # is something that commonly takes iteration.
-# We recommend setting the *bin width* (not the *number of bins*) because
-# it often more directly corresponds to values in your problem of interest. For example,
-# if you are looking at a histogram of human heights,
-# a bin width of 1 inch would likely be reasonable, while the number of bins to use is 
-# not immediately clear.
-# It's usually a good idea to try out several bin widths to see which one
+#
+# It's usually a good idea to try out several `maxbins` to see which one
 # most clearly captures your data in the context of the question
 # you want to answer.
 #
-# To get a sense for how different bin widths affect visualizations, 
+# To get a sense for how different bin affect visualizations, 
 # let's experiment with the histogram that we have been working on in this section.
-# In Figure \@ref(fig:03-data-morley-hist-binwidth),
+# In {numref}`final_plot_max_bins`,
 # we compare the default setting with three other histograms where we set the 
-# `binwidth` to 0.001, 0.01 and 0.1.
+# `maxbins` to 200, 70 and 5.
 # In this case, we can see that both the default number of bins 
-# and the binwidth of 0.01 are effective for helping answer our question.
-# On the other hand, the bin widths of 0.001 and 0.1 are too small and too big, respectively.
+# and the `maxbins=70` of  are effective for helping answer our question.
+# On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, respectively.
+
+# %% tags=["remove-cell"]
+morley_hist_default = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
+    x = alt.X("relative_accuracy", title = "Relative Accuracy (%)"), 
+    y=alt.Y('count()', stack=False, title = "# Measurements"),
+    color = alt.Color("Expt:N",  title = "Experiment ID")).properties(height=100, width=400)
+
+morley_hist_200 = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
+    x = alt.X("relative_accuracy", bin=alt.Bin(maxbins=200), title = "Relative Accuracy (%)"), 
+    y=alt.Y('count()', stack=False, title = "# Measurements"),
+    color = alt.Color("Expt:N",  title = "Experiment ID")).properties(height=100, width=400)
+morley_hist_70 = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
+    x = alt.X("relative_accuracy", bin=alt.Bin(maxbins=70), title = "Relative Accuracy (%)"), 
+    y=alt.Y('count()', stack=False, title = "# Measurements"),
+    color = alt.Color("Expt:N",  title = "Experiment ID")).properties(height=100, width=400)
+
+morley_hist_5 = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
+    x = alt.X("relative_accuracy", bin=alt.Bin(maxbins=5), title = "Relative Accuracy (%)"), 
+    y=alt.Y('count()', stack=False, title = "# Measurements"),
+    color = alt.Color("Expt:N",  title = "Experiment ID")).properties(height=100, width=300)
+
+
+
+
+
+final_plot_max_bins = ((morley_hist_default + v_line).facet(row='Expt:N', data=morley_rel, title = "default maxbins") | (morley_hist_200 + v_line).facet(row='Expt:N', data=morley_rel, title = "maxBins=200")) & ((morley_hist_70 + v_line).facet(row='Expt:N', data=morley_rel, title = "maxBins=70") | (morley_hist_5 + v_line).facet(row='Expt:N', data=morley_rel, title = "maxBins=5"))
+
+
+
+# %% tags=["remove-cell"]
+glue('final_plot_max_bins', final_plot_max_bins, display=True)
+
+# %% [markdown]
+# :::{glue:figure} final_plot_max_bins
+# :figwidth: 700px 
+# :name: final_plot_max_bins
 #
-# ```{r 03-data-morley-hist-binwidth, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 10, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Effect of varying bin width on histograms."}
-# morley_hist_default <- ggplot(morley_rel, 
-#                               aes(x = relative_accuracy, 
-#                                   fill = as_factor(Expt))) +
-#   geom_histogram() +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 0, linetype = "dashed", size = 1.0) +
-#   labs(x = "Relative Accuracy (%)", 
-#        y = "# Measurements", 
-#        fill = "Experiment ID") +
-#   theme(legend.position = "none") +
-#   ggtitle("Default (bins = 30)")  + 
-#   theme(text = element_text(size = 14), axis.title=element_text(size=14)) 
+# Effect of varying number of max bins on histograms.
+# :::
 #
-# morley_hist_big <- ggplot(morley_rel, 
-#                           aes(x = relative_accuracy, 
-#                               fill = as_factor(Expt))) +
-#   geom_histogram(binwidth = 0.1) +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 0, linetype = "dashed", size = 1.0) +
-#   labs(x = "Relative Accuracy (%)", 
-#        y = "# Measurements", 
-#        fill = "Experiment ID") +
-#   theme(legend.position = "none") +
-#   ggtitle( "binwidth = 0.1")  + 
-#   theme(text = element_text(size = 14), axis.title=element_text(size=14)) 
+# #### Adding layers to a `altair` plot object {-}
 #
-# morley_hist_med <- ggplot(morley_rel, 
-#                           aes(x = relative_accuracy, 
-#                               fill = as_factor(Expt))) +
-#   geom_histogram(binwidth = 0.01) +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 0, linetype = "dashed", size = 1.0) +
-#   labs(x = "Relative Accuracy (%)", 
-#        y = "# Measurements", 
-#        fill = "Experiment ID") +
-#   theme(legend.position = "none") +
-#   ggtitle("binwidth = 0.01")  + 
-#   theme(text = element_text(size = 14), axis.title=element_text(size=14)) 
-#
-# morley_hist_small <- ggplot(morley_rel, 
-#                             aes(x = relative_accuracy, 
-#                                 fill = as_factor(Expt))) +
-#   geom_histogram(binwidth = 0.001) +
-#   facet_grid(rows = vars(Expt)) +
-#   geom_vline(xintercept = 0, linetype = "dashed", size = 1.0) +
-#   labs(x = "Relative Accuracy (%)", 
-#        y = "# Measurements", 
-#        fill = "Experiment ID") +
-#   theme(legend.position = "none") +
-#   ggtitle("binwidth = 0.001")  + 
-#   theme(text = element_text(size = 14), axis.title=element_text(size=14)) 
-#
-# plot_grid(morley_hist_default, 
-#           morley_hist_small, 
-#           morley_hist_med, 
-#           morley_hist_big, 
-#           ncol = 2)
-# ```
-#
-# #### Adding layers to a `ggplot` plot object {-}
-#
-# One of the powerful features of `ggplot` is that you 
+# One of the powerful features of `altair` is that you 
 # can continue to iterate on a single plot object, adding and refining
 # one layer \index{ggplot!add layer} at a time. If you stored your plot as a named object
-# using the assignment symbol (`<-`), you can 
+# using the assignment symbol (`=`), you can 
 # add to it using the `+` operator.
-# For example, if we wanted to add a title to the last plot we created (`morley_hist`), 
-# we can use the `+` operator to add a title layer with the `ggtitle` function.
-# The result is shown in Figure \@ref(fig:03-data-morley-hist-addlayer).
+# For example, if we wanted to add a vertical line to the last plot we created (`morley_hist`), 
+# we can use the `+` operator to add a vertical line chart layer with the `mark_rule` function.
+# The result is shown in {numref}`morley_hist_layer`.
+
+# %%
+morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
+    x = alt.X("Speed"), 
+    y=alt.Y('count()'),
+    color = "Expt:N")
+    
+v_line = alt.Chart(pd.DataFrame({'x': [792.458]})).mark_rule(
+    strokeDash=[3,3], size=1).encode(
+    x='x')
+morley_hist_layer = morley_hist_colored + v_line   
+    
+
+# %% tags=["remove-cell"]
+glue('morley_hist_layer', morley_hist_layer, display=True)
+
+# %% [markdown]
+# :::{glue:figure} morley_hist_layer
+# :figwidth: 700px 
+# :name: morley_hist_layer
 #
-# ```{r 03-data-morley-hist-addlayer, warning = FALSE, message = FALSE, fig.height = 5.25, fig.width = 4.5, fig.align = "center", fig.pos = "H", out.extra="", fig.cap = "Histogram of relative accuracy split vertically by experiment with a descriptive title highlighting the take home message of the visualization."}
-# morley_hist_title <- morley_hist +
-#   ggtitle("Speed of light experiments \n were accurate to about 0.05%")
+# Histogram of Michelson's speed of light data colored by experiment with layered vertical line.
+# :::
 #
-# morley_hist_title
-# ```
+#
+# We can also add a title to the chart by specifying `title` argument in the `alt.Chart` function
+
+# %%
+morley_hist_title = alt.Chart(morley_df, title = "Histogram of Michelson's speed of light data colored by experiment").mark_bar(opacity=0.5).encode(
+    x = alt.X("Speed"), 
+    y=alt.Y('count()'),
+    color = "Expt:N")
+
+
+
+# %% tags=["remove-cell"]
+glue('morley_hist_title', morley_hist_title, display=True)
+
+# %% [markdown]
+# :::{glue:figure} morley_hist_title
+# :figwidth: 700px 
+# :name: morley_hist_title
+#
+# Histogram of Michelson's speed of light data colored with title
+# :::
+#
 #
 # > **Note:** Good visualization titles clearly communicate 
 # > the take home message to the audience. Typically, 
@@ -1418,10 +1479,9 @@
 # \index{raster graphics!file types}
 #
 # - *Common file types:* 
-#     - [JPEG](https://en.wikipedia.org/wiki/JPEG) (`.jpg`, `.jpeg`): lossy, usually used for photographs 
+#    
 #     - [PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics) (`.png`): lossless, usually used for plots / line drawings
-#     - [BMP](https://en.wikipedia.org/wiki/BMP_file_format) (`.bmp`): lossless, raw image data, no compression (rarely used)
-#     - [TIFF](https://en.wikipedia.org/wiki/TIFF) (`.tif`, `.tiff`): typically lossless, no compression, used mostly in graphic arts, publishing
+#    
 # - *Open-source software:* [GIMP](https://www.gimp.org/)
 #
 # **Vector** images are represented as a collection of mathematical 
@@ -1431,7 +1491,7 @@
 #
 # - *Common file types:* 
 #     - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use 
-#     - [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) (`.eps`), general-purpose use (rarely used)
+#     
 # - *Open-source software:* [Inkscape](https://inkscape.org/)
 #
 # Raster and vector images have opposing advantages and disadvantages. A raster
@@ -1454,80 +1514,86 @@
 # Let's learn how to save plot images to these different file formats using a 
 # scatter plot of 
 # the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat) [@faithfuldata],
-# shown in Figure \@ref(fig:03-plot-line).
+# shown in {numref}`faithful_scatter_labels`
 #
-# ```{r 03-plot-line, collapse=TRUE, warning=FALSE, message=FALSE, fig.width = 3.75, fig.height = 3.5, fig.pos = "H", out.extra="", fig.cap = "Scatter plot of waiting time and eruption time."}
-# library(svglite) # we need this to save SVG files
-# faithful_plot <- ggplot(data = faithful, aes(x = waiting, y = eruptions)) +
-#   geom_point() +
-#   labs(x = "Waiting time to next eruption \n (minutes)",
-#        y = "Eruption time \n (minutes)") + 
-#   theme(text = element_text(size = 12))
 #
-# faithful_plot
-# ```
 #
-# Now that we have a named `ggplot` plot object, we can use the `ggsave` function
+# :::{glue:figure} faithful_scatter_labels
+# :figwidth: 700px 
+# :name: faithful_scatter_labels
+#
+# Scatter plot of waiting time and eruption time.
+# :::
+#
+# Now that we have a named `altair` plot object, we can use the `chart.save` function
 # to save a file containing this image. 
-# `ggsave` works by taking a file name to create for the image 
-# as its first argument. 
-# This can include the path to the directory where you would like to save the file 
+# `chart.save` works by taking the path to the directory where you would like to save the file 
 # (e.g., `img/filename.png` to save a file named `filename` to the `img` directory),
-# and the name of the plot object to save as its second argument.
 # The kind of image to save is specified by the file extension.
 # For example, 
 # to create a PNG image file, we specify that the file extension is `.png`.
-# Below we demonstrate how to save PNG, JPG, BMP, TIFF and SVG file types 
-# for the `faithful_plot`:
+# Below we demonstrate how to save PNG and SVG file types 
+# for the `faithful_scater_labels` plot:
+
+# %% tags=["remove-cell"]
+# !pip install altair_saver
+
+# %%
+# #!pip install altair_saver  #uncomment and run in jupyter notebook to install altair_saver, if not already installed
+from altair_saver import save
+
+faithful_scatter_labels.save("faithful_plot.png")
+faithful_scatter_labels.save("faithful_plot.svg")
+
+
+# %% tags=["remove-cell"]
+import os
+png_size = os.path.getsize("data/faithful_plot.png")/1000000
+svg_size = os.path.getsize("data/faithful_plot.svg")/1000000
+
+glue("png_size", png_size)
+glue("svg_size", svg_size)
+
+# %% [markdown]
+# ```{list-table} File sizes of the scatter plot of the Old Faithful data set when saved as different file formats.
+# :header-rows: 1
+# :name: png-vs-svg-table
 #
-# ```{r warning=FALSE, message=FALSE}
-# ggsave("img/faithful_plot.png", faithful_plot)
-# ggsave("img/faithful_plot.jpg", faithful_plot)
-# ggsave("img/faithful_plot.bmp", faithful_plot)
-# ggsave("img/faithful_plot.tiff", faithful_plot)
-# ggsave("img/faithful_plot.svg", faithful_plot)
+# * - Image type
+#   - File type
+#   - Image size
+# * - Raster
+#   - PNG
+#   - {glue:}`png_size`
+# * - Vector
+#   - SVG
+#   - {glue:}`svg_size`
 # ```
 #
-# ```{r, filesizes, echo = FALSE}
-# file_sizes <- tibble(`Image type` = c("Raster", 
-#                         "Raster", 
-#                         "Raster", 
-#                         "Raster",
-#                         "Vector"),
-#        `File type` = c("PNG", "JPG", "BMP", "TIFF", "SVG"),
-#        `Image size` = c(paste(round(file.info("img/faithful_plot.png")["size"] 
-#                                     / 1000000, 2), "MB"),
-#                         paste(round(file.info("img/faithful_plot.jpg")["size"] 
-#                                     / 1000000, 2), "MB"),
-#                         paste(round(file.info("img/faithful_plot.bmp")["size"] 
-#                                     / 1000000, 2), "MB"),
-#                         paste(round(file.info("img/faithful_plot.tiff")["size"] 
-#                                     / 1000000, 2), "MB"),
-#                         paste(round(file.info("img/faithful_plot.svg")["size"] 
-#                                     / 1000000, 2), "MB")))
-# kable(file_sizes,
-#       caption = "File sizes of the scatter plot of the Old Faithful data set when saved as different file formats.") |>
-#   kable_styling(latex_options = "hold_position")
-# ```
 #
-# Take a look at the file sizes in Table \@ref(tab:filesizes).
+#
+# Take a look at the file sizes in {numref}`png-vs-svg-table`
 # Wow, that's quite a difference! Notice that for such a simple plot with few
 # graphical elements (points), the vector graphics format (SVG) is over 100 times
-# smaller than the uncompressed raster images (BMP, TIFF). Also, note that the
-# JPG format is twice as large as the PNG format since the JPG compression
-# algorithm is designed for natural images (not plots). 
+# smaller than the uncompressed raster images. 
 #
-# In Figure \@ref(fig:03-raster-image), we also show what
+# In {numref}`png-vs-svg`, we also show what
 # the images look like when we zoom in to a rectangle with only 3 data points.
 # You can see why vector graphics formats are so useful: because they're just
 # based on mathematical formulas, vector graphics can be scaled up to arbitrary
 # sizes.  This makes them great for presentation media of all sizes, from papers
 # to posters to billboards.
 #
-# (ref:03-raster-image) Zoomed in `faithful`, raster (PNG, left) and vector (SVG, right) formats.
 #
-# ```{r 03-raster-image, echo=FALSE, fig.cap = "(ref:03-raster-image)", fig.show="hold", fig.align= "center", message =F, out.width="100%"}
-# knitr::include_graphics("img/png-vs-svg.png")
+#
+#
+#
+# ```{figure} img/png-vs-svg.png
+# ---
+# height: 400px
+# name: png-vs-svg
+# ---
+# Zoomed in `faithful`, raster (PNG, left) and vector (SVG, right) formats.
 # ```
 #
 # ## Exercises
@@ -1544,7 +1610,7 @@
 # and guidance that the worksheets provide will function as intended.
 #
 # ## Additional resources
-# - The [`ggplot2` R package page](https://ggplot2.tidyverse.org) [@ggplot] is
+# - The [altair documentation](https://altair-viz.github.io/) [@ggplot] is
 #   where you should look if you want to learn more about the functions in this
 #   chapter, the full set of arguments you can use, and other related functions.
 #   The site also provides a very nice cheat sheet that summarizes many of the data
@@ -1559,11 +1625,7 @@
 #   the full set of tools that `ggplot2` provides. This chapter is where you should
 #   look if you want to learn how to make more intricate visualizations in
 #   `ggplot2` than what is included in this chapter.
-# - The [`theme` function documentation](https://ggplot2.tidyverse.org/reference/theme.html)
-#   is an excellent reference to see how you can fine tune the non-data aspects 
-#   of your visualization.
-# - *R for Data Science* [@wickham2016r] has a chapter on [dates and
-#   times](https://r4ds.had.co.nz/dates-and-times.html).  This chapter is where
-#   you should look if you want to learn about `date` vectors, including how to
-#   create them, and how to use them to effectively handle durations, periods and
-#   intervals using the `lubridate` package.
+# - [dates and
+#   times](https://wesmckinney.com/book/time-series.html).  This chapter is where
+#   you should look if you want to learn about `date` and `time`, including how to
+#   create them, and how to use them to effectively handle durations, etc

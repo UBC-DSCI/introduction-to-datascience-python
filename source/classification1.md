@@ -603,9 +603,6 @@ $$\mathrm{Distance} = \sqrt{(a_x -b_x)^2 + (a_y - b_y)^2}$$
 
 +++
 
-```{index} assign
-```
-
 To find the $K$ nearest neighbors to our new observation, we compute the distance
 from that new observation to each observation in our training data, and select the $K$ observations corresponding to the
 $K$ *smallest* distance values. For example, suppose we want to use $K=5$ neighbors to classify a new 
@@ -656,6 +653,9 @@ glue("fig:05-multiknn-1", perim_concav_with_new_point3)
 
 Scatter plot of concavity versus perimeter with new observation represented as a red diamond.
 :::
+
+```{index} pandas.DataFrame; assign
+```
 
 ```{code-cell} ipython3
 new_obs_Perimeter = 0

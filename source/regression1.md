@@ -294,7 +294,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 
 +++
 
-```{index} pandas.DataFrame; assign, head, pandas.DataFrame; sort_values, abs
+```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
 ```
 
 We will employ the same intuition from the classification chapter, and use the

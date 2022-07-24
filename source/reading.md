@@ -1,12 +1,13 @@
 ---
 jupytext:
   cell_metadata_filter: -all
+  encoding: '# -*- coding: utf-8 -*-'
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.7
+    jupytext_version: 1.13.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -810,7 +811,7 @@ pip install pgdb
 ```
 
 ```
-# !pip install pgdb
+!pip install pgdb
 import pgdb
 import sqlalchemy
 from sqlalchemy import create_engine

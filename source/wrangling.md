@@ -2468,3 +2468,11 @@ tags: [remove-cell]
 #   what you want. In that case, you may consider using [a for
 #   loop](https://r4ds.had.co.nz/iteration.html#iteration).
 ```
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

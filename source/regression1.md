@@ -1275,4 +1275,5 @@ and guidance that the worksheets provide will function as intended.
 +++
 
 ```{bibliography}
+:filter: docname in docnames
 ```

@@ -4,13 +4,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python and the Pandas &#8212; DSCΙ 100</title>
     
-  <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -20,17 +18,21 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
+    
+      
+
+    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -38,13 +40,12 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -64,21 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
-
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -87,10 +74,9 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
       
@@ -103,15 +89,14 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="index.html">
-                    Welcome – TBD
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="index.html">
+   Welcome – TBD
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   First draft
  </span>
@@ -184,7 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="clustering.html">
-   Clustering
+   Clustering {#clustering}
   </a>
  </li>
  <li class="toctree-l1">
@@ -205,17 +190,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
-    </div>
-    <div id="rtd-footer-container"></div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
 </div>
 
 
@@ -223,145 +203,64 @@ const thebe_selector_output = ".output, .cell_output"
 
 
           
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="header-article row sticky-top noprint">
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
 
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-    </ul>
-  </div>
-</div>
-
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/intro.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download notebook file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-code"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="_sources/intro.md"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.md</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        <a class="dropdown-buttons"
+            href="_sources/intro.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/intro.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#overview">
    Overview
@@ -489,11 +388,12 @@ title="Print to PDF"
  </li>
 </ul>
 
-    </nav>
-</div>
+            </nav>
+        </div>
     </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Python and the Pandas</h1>
@@ -637,23 +537,22 @@ title="Print to PDF"
                     </div>
                 </div>
             </div>
-            <main id="main-content" role="main">
-                
+            
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="python-and-the-pandas">
-<h1>Python and the Pandas<a class="headerlink" href="#python-and-the-pandas" title="Permalink to this headline">#</a></h1>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
+  <div class="tex2jax_ignore mathjax_ignore section" id="python-and-the-pandas">
+<h1>Python and the Pandas<a class="headerlink" href="#python-and-the-pandas" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This chapter provides an introduction to data science and the Python programming language.
 The goal here is to get your hands dirty right from the start! We will walk through an entire data analysis,
 and along the way introduce different types of data analysis question, some fundamental programming
 concepts in Python, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will
 dig into each of these steps in much more detail; but for now, let’s jump in to see how much we can do
 with data science!</p>
-</section>
-<section id="chapter-learning-objectives">
-<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
 <p>By the end of the chapter, readers will be able to do the following:</p>
 <ul class="simple">
 <li><p>Identify the different types of data analysis question and categorize a question into the correct type.</p></li>
@@ -665,9 +564,9 @@ with data science!</p>
 <li><p>Select columns of a dataframe using df[] notation.</p></li>
 <li><p>Visualize data with an <code class="docutils literal notranslate"><span class="pre">altair</span></code> bar plot.</p></li>
 </ul>
-</section>
-<section id="canadian-languages-data-set">
-<h2>Canadian languages data set<a class="headerlink" href="#canadian-languages-data-set" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="canadian-languages-data-set">
+<h2>Canadian languages data set<a class="headerlink" href="#canadian-languages-data-set" title="Permalink to this headline">¶</a></h2>
 <p>In this chapter, \index{Canadian languages} we will walk through a full analysis of a data set relating to
 languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada
 with their own cultures and languages; these languages are often unique to Canada and not spoken
@@ -713,9 +612,9 @@ expertise! Remember that when you work with data, it is essential to think
 about <em>how</em> the data were collected, which affects the conclusions you can
 draw. If your data are biased, then your results will be biased!</p>
 </div></blockquote>
-</section>
-<section id="asking-a-question">
-<h2>Asking a question<a class="headerlink" href="#asking-a-question" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="asking-a-question">
+<h2>Asking a question<a class="headerlink" href="#asking-a-question" title="Permalink to this headline">¶</a></h2>
 <p>Every good data analysis begins with a <em>question</em>—like the
 above—that you aim to answer using data. As it turns out, there
 are actually a number of different <em>types</em> of question regarding data:
@@ -731,7 +630,7 @@ the analysis as well as the selection of appropriate tools.\index{question!data 
 \index{causal question!definition}
 \index{mechanistic question!definition}</p>
 <table class="table" id="questions-table">
-<caption><span class="caption-number">Table 1 </span><span class="caption-text">Types of data analysis question.</span><a class="headerlink" href="#questions-table" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Types of data analysis question.</span><a class="headerlink" href="#questions-table" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -819,9 +718,9 @@ and perhaps some summarization to answer the question. So in the remainder
 of this chapter, we will work towards making a visualization that shows
 us the ten most common Aboriginal languages in Canada and their associated counts,
 according to the 2016 census.</p>
-</section>
-<section id="loading-a-tabular-data-set">
-<h2>Loading a tabular data set<a class="headerlink" href="#loading-a-tabular-data-set" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="loading-a-tabular-data-set">
+<h2>Loading a tabular data set<a class="headerlink" href="#loading-a-tabular-data-set" title="Permalink to this headline">¶</a></h2>
 <p>A data set is, at its core essence, a structured collection of numbers and characters.
 Aside from that, there are really no strict rules; data sets can come in
 many different forms! Perhaps the most common form of data set that you will
@@ -834,12 +733,10 @@ to a spreadsheet. We refer to the rows as \index{observation} <strong>observatio
 collect the data on, e.g., voters, cities, etc. We refer to the columns as \index{variable}
 <strong>variables</strong>; these are the characteristics of those observations, e.g., voters’ political
 affiliations, cities’ populations, etc.</p>
-<figure class="align-default" id="img-spreadsheet-vs-dataframe">
+<div class="figure align-default" id="img-spreadsheet-vs-dataframe">
 <a class="reference internal image-reference" href="_images/spreadsheet_vs_df.png"><img alt="_images/spreadsheet_vs_df.png" src="_images/spreadsheet_vs_df.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">A spreadsheet versus a data frame in Python</span><a class="headerlink" href="#img-spreadsheet-vs-dataframe" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">A spreadsheet versus a data frame in Python</span><a class="headerlink" href="#img-spreadsheet-vs-dataframe" title="Permalink to this image">¶</a></p>
+</div>
 <p>The first kind of data file that we will learn how to load into Python as a data
 frame is the <em>comma-separated values</em> format (<code class="docutils literal notranslate"><span class="pre">.csv</span></code> for short)\index{comma-separated values|see{csv}}\index{csv}.  These files
 have names ending in <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, and can be opened and saved using common
@@ -899,12 +796,10 @@ file satisfies everything else that the <code class="docutils literal notranslat
 use-case. <a class="reference internal" href="#img-read-csv"><span class="std std-numref">Fig. 2</span></a> describes how we use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>
 to read data into Python.</p>
 <p>(ref:img-read-csv) Syntax for the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function.</p>
-<figure class="align-default" id="img-read-csv">
+<div class="figure align-default" id="img-read-csv">
 <a class="reference internal image-reference" href="_images/read_csv_function.jpeg"><img alt="_images/read_csv_function.jpeg" src="_images/read_csv_function.jpeg" style="height: 200px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Syntax for the read_csv function</span><a class="headerlink" href="#img-read-csv" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">Syntax for the read_csv function</span><a class="headerlink" href="#img-read-csv" title="Permalink to this image">¶</a></p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/can_lang.csv&quot;</span><span class="p">)</span>
@@ -943,46 +838,46 @@ to read data into Python.</p>
       <th>0</th>
       <td>Aboriginal languages</td>
       <td>Aboriginal languages, n.o.s.</td>
-      <td>590.0</td>
-      <td>235.0</td>
-      <td>30.0</td>
-      <td>665.0</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Afrikaans</td>
-      <td>10260.0</td>
-      <td>4785.0</td>
-      <td>85.0</td>
-      <td>23415.0</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Afro-Asiatic languages, n.i.e.</td>
-      <td>1150.0</td>
-      <td>445.0</td>
-      <td>10.0</td>
-      <td>2775.0</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Akan (Twi)</td>
-      <td>13460.0</td>
-      <td>5985.0</td>
-      <td>25.0</td>
-      <td>22150.0</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Albanian</td>
-      <td>26895.0</td>
-      <td>13135.0</td>
-      <td>345.0</td>
-      <td>31930.0</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
     </tr>
     <tr>
       <th>...</th>
@@ -994,58 +889,58 @@ to read data into Python.</p>
       <td>...</td>
     </tr>
     <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
       <th>213</th>
-      <td>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>214</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Yoruba</td>
-      <td>9080.0</td>
-      <td>2615.0</td>
-      <td>15.0</td>
-      <td>22415.0</td>
-    </tr>
-    <tr>
-      <th>215</th>
-      <td>=======</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>216</th>
-      <td>Non-Official &amp; Non-Aboriginal languages</td>
-      <td>Yoruba</td>
-      <td>9080.0</td>
-      <td>2615.0</td>
-      <td>15.0</td>
-      <td>22415.0</td>
-    </tr>
-    <tr>
-      <th>217</th>
-      <td>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8a5a94630924c4efdafd74865878d7523bd54fdd</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
     </tr>
   </tbody>
 </table>
-<p>218 rows × 6 columns</p>
+<p>214 rows × 6 columns</p>
 </div></div></div>
 </div>
-</section>
-<section id="naming-things-in-python">
-<h2>Naming things in Python<a class="headerlink" href="#naming-things-in-python" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="naming-things-in-python">
+<h2>Naming things in Python<a class="headerlink" href="#naming-things-in-python" title="Permalink to this headline">¶</a></h2>
 <p>When we loaded the 2016 Canadian census language data
 using <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, we did not give this data frame a name.
 Therefore the data was just printed on the screen,
@@ -1178,46 +1073,46 @@ like this is a handy way to get a quick sense for what is contained in a data fr
       <th>0</th>
       <td>Aboriginal languages</td>
       <td>Aboriginal languages, n.o.s.</td>
-      <td>590.0</td>
-      <td>235.0</td>
-      <td>30.0</td>
-      <td>665.0</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Afrikaans</td>
-      <td>10260.0</td>
-      <td>4785.0</td>
-      <td>85.0</td>
-      <td>23415.0</td>
+      <td>10260</td>
+      <td>4785</td>
+      <td>85</td>
+      <td>23415</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Afro-Asiatic languages, n.i.e.</td>
-      <td>1150.0</td>
-      <td>445.0</td>
-      <td>10.0</td>
-      <td>2775.0</td>
+      <td>1150</td>
+      <td>445</td>
+      <td>10</td>
+      <td>2775</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Akan (Twi)</td>
-      <td>13460.0</td>
-      <td>5985.0</td>
-      <td>25.0</td>
-      <td>22150.0</td>
+      <td>13460</td>
+      <td>5985</td>
+      <td>25</td>
+      <td>22150</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Albanian</td>
-      <td>26895.0</td>
-      <td>13135.0</td>
-      <td>345.0</td>
-      <td>31930.0</td>
+      <td>26895</td>
+      <td>13135</td>
+      <td>345</td>
+      <td>31930</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1229,58 +1124,58 @@ like this is a handy way to get a quick sense for what is contained in a data fr
       <td>...</td>
     </tr>
     <tr>
+      <th>209</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wolof</td>
+      <td>3990</td>
+      <td>1385</td>
+      <td>10</td>
+      <td>8240</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>Aboriginal languages</td>
+      <td>Woods Cree</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Wu (Shanghainese)</td>
+      <td>12915</td>
+      <td>7650</td>
+      <td>105</td>
+      <td>16530</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>Non-Official &amp; Non-Aboriginal languages</td>
+      <td>Yiddish</td>
+      <td>13555</td>
+      <td>7085</td>
+      <td>895</td>
+      <td>20985</td>
+    </tr>
+    <tr>
       <th>213</th>
-      <td>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>214</th>
       <td>Non-Official &amp; Non-Aboriginal languages</td>
       <td>Yoruba</td>
-      <td>9080.0</td>
-      <td>2615.0</td>
-      <td>15.0</td>
-      <td>22415.0</td>
-    </tr>
-    <tr>
-      <th>215</th>
-      <td>=======</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>216</th>
-      <td>Non-Official &amp; Non-Aboriginal languages</td>
-      <td>Yoruba</td>
-      <td>9080.0</td>
-      <td>2615.0</td>
-      <td>15.0</td>
-      <td>22415.0</td>
-    </tr>
-    <tr>
-      <th>217</th>
-      <td>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8a5a94630924c4efdafd74865878d7523bd54fdd</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>9080</td>
+      <td>2615</td>
+      <td>15</td>
+      <td>22415</td>
     </tr>
   </tbody>
 </table>
-<p>218 rows × 6 columns</p>
+<p>214 rows × 6 columns</p>
 </div></div></div>
 </div>
-</section>
-<section id="creating-subsets-of-data-frames-with-df-loc">
-<h2>Creating subsets of data frames with <code class="docutils literal notranslate"><span class="pre">df[]</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">loc[]</span></code><a class="headerlink" href="#creating-subsets-of-data-frames-with-df-loc" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="creating-subsets-of-data-frames-with-df-loc">
+<h2>Creating subsets of data frames with <code class="docutils literal notranslate"><span class="pre">df[]</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">loc[]</span></code><a class="headerlink" href="#creating-subsets-of-data-frames-with-df-loc" title="Permalink to this headline">¶</a></h2>
 <p>Now that we’ve loaded our data into Python, we can start wrangling the data to
 find the ten Aboriginal languages that were most often reported
 in 2016 as mother tongues in Canada. In particular, we will construct
@@ -1292,8 +1187,8 @@ rows with specific values, while the <code class="docutils literal notranslate">
 to obtain a subset of the columns. Therefore, we can use <code class="docutils literal notranslate"><span class="pre">df[]</span></code>
 to filter the rows to extract the Aboriginal languages in the data set, and
 then use <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> property to obtain only the columns we want to include in our table.</p>
-<section id="using-df-to-extract-rows">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">df[]</span></code> to extract rows<a class="headerlink" href="#using-df-to-extract-rows" title="Permalink to this headline">#</a></h3>
+<div class="section" id="using-df-to-extract-rows">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">df[]</span></code> to extract rows<a class="headerlink" href="#using-df-to-extract-rows" title="Permalink to this headline">¶</a></h3>
 <p>Looking at the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data above, we see the column <code class="docutils literal notranslate"><span class="pre">category</span></code> contains different
 high-level categories of languages, which include “Aboriginal languages”,
 “Non-Official &amp; Non-Aboriginal languages” and “Official languages”.  To answer
@@ -1358,46 +1253,46 @@ statement.</p>
       <th>0</th>
       <td>Aboriginal languages</td>
       <td>Aboriginal languages, n.o.s.</td>
-      <td>590.0</td>
-      <td>235.0</td>
-      <td>30.0</td>
-      <td>665.0</td>
+      <td>590</td>
+      <td>235</td>
+      <td>30</td>
+      <td>665</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Aboriginal languages</td>
       <td>Algonquian languages, n.i.e.</td>
-      <td>45.0</td>
-      <td>10.0</td>
-      <td>0.0</td>
-      <td>120.0</td>
+      <td>45</td>
+      <td>10</td>
+      <td>0</td>
+      <td>120</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Aboriginal languages</td>
       <td>Algonquin</td>
-      <td>1260.0</td>
-      <td>370.0</td>
-      <td>40.0</td>
-      <td>2480.0</td>
+      <td>1260</td>
+      <td>370</td>
+      <td>40</td>
+      <td>2480</td>
     </tr>
     <tr>
       <th>12</th>
       <td>Aboriginal languages</td>
       <td>Athabaskan languages, n.i.e.</td>
-      <td>50.0</td>
-      <td>10.0</td>
-      <td>0.0</td>
-      <td>85.0</td>
+      <td>50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>85</td>
     </tr>
     <tr>
       <th>13</th>
       <td>Aboriginal languages</td>
       <td>Atikamekw</td>
-      <td>6150.0</td>
-      <td>5465.0</td>
-      <td>1100.0</td>
-      <td>6645.0</td>
+      <td>6150</td>
+      <td>5465</td>
+      <td>1100</td>
+      <td>6645</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1412,46 +1307,46 @@ statement.</p>
       <th>191</th>
       <td>Aboriginal languages</td>
       <td>Thompson (Ntlakapamux)</td>
-      <td>335.0</td>
-      <td>20.0</td>
-      <td>0.0</td>
-      <td>450.0</td>
+      <td>335</td>
+      <td>20</td>
+      <td>0</td>
+      <td>450</td>
     </tr>
     <tr>
       <th>195</th>
       <td>Aboriginal languages</td>
       <td>Tlingit</td>
-      <td>95.0</td>
-      <td>0.0</td>
-      <td>10.0</td>
-      <td>260.0</td>
+      <td>95</td>
+      <td>0</td>
+      <td>10</td>
+      <td>260</td>
     </tr>
     <tr>
       <th>196</th>
       <td>Aboriginal languages</td>
       <td>Tsimshian</td>
-      <td>200.0</td>
-      <td>30.0</td>
-      <td>10.0</td>
-      <td>410.0</td>
+      <td>200</td>
+      <td>30</td>
+      <td>10</td>
+      <td>410</td>
     </tr>
     <tr>
       <th>206</th>
       <td>Aboriginal languages</td>
       <td>Wakashan languages, n.i.e.</td>
-      <td>10.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>25.0</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>25</td>
     </tr>
     <tr>
       <th>210</th>
       <td>Aboriginal languages</td>
       <td>Woods Cree</td>
-      <td>1840.0</td>
-      <td>800.0</td>
-      <td>75.0</td>
-      <td>2665.0</td>
+      <td>1840</td>
+      <td>800</td>
+      <td>75</td>
+      <td>2665</td>
     </tr>
   </tbody>
 </table>
@@ -1464,9 +1359,9 @@ with multiple kinds of <code class="docutils literal notranslate"><span class="p
 <code class="docutils literal notranslate"><span class="pre">aboriginal_lang</span></code> contains only 67 rows, and looks like it only contains languages in
 the “Aboriginal languages” in the <code class="docutils literal notranslate"><span class="pre">category</span></code> column. So it looks like the <code class="docutils literal notranslate"><span class="pre">df[]</span></code> property
 gave us the result we wanted!</p>
-</section>
-<section id="using-loc-to-extract-columns">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code> to extract columns<a class="headerlink" href="#using-loc-to-extract-columns" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="using-loc-to-extract-columns">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code> to extract columns<a class="headerlink" href="#using-loc-to-extract-columns" title="Permalink to this headline">¶</a></h3>
 <p>Now let’s use <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> \index{select} to extract the <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns
 from this data frame. To extract these columns, we need to provide the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code>
 property with list of rows separated by list of columns i.e <code class="docutils literal notranslate"><span class="pre">df.loc[[row1,</span> <span class="pre">row2,</span> <span class="pre">...],</span> <span class="pre">[col1,</span> <span class="pre">col2,</span> <span class="pre">...]]</span></code>
@@ -1509,27 +1404,27 @@ for) as a data frame.</p>
     <tr>
       <th>0</th>
       <td>Aboriginal languages, n.o.s.</td>
-      <td>590.0</td>
+      <td>590</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Algonquian languages, n.i.e.</td>
-      <td>45.0</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Algonquin</td>
-      <td>1260.0</td>
+      <td>1260</td>
     </tr>
     <tr>
       <th>12</th>
       <td>Athabaskan languages, n.i.e.</td>
-      <td>50.0</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>13</th>
       <td>Atikamekw</td>
-      <td>6150.0</td>
+      <td>6150</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1539,36 +1434,36 @@ for) as a data frame.</p>
     <tr>
       <th>191</th>
       <td>Thompson (Ntlakapamux)</td>
-      <td>335.0</td>
+      <td>335</td>
     </tr>
     <tr>
       <th>195</th>
       <td>Tlingit</td>
-      <td>95.0</td>
+      <td>95</td>
     </tr>
     <tr>
       <th>196</th>
       <td>Tsimshian</td>
-      <td>200.0</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>206</th>
       <td>Wakashan languages, n.i.e.</td>
-      <td>10.0</td>
+      <td>10</td>
     </tr>
     <tr>
       <th>210</th>
       <td>Woods Cree</td>
-      <td>1840.0</td>
+      <td>1840</td>
     </tr>
   </tbody>
 </table>
 <p>67 rows × 2 columns</p>
 </div></div></div>
 </div>
-</section>
-<section id="using-sort-values-to-order-and-iloc-to-select-rows-by-index-number">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> to order and <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code> to select rows by index number<a class="headerlink" href="#using-sort-values-to-order-and-iloc-to-select-rows-by-index-number" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="using-sort-values-to-order-and-iloc-to-select-rows-by-index-number">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> to order and <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code> to select rows by index number<a class="headerlink" href="#using-sort-values-to-order-and-iloc-to-select-rows-by-index-number" title="Permalink to this headline">¶</a></h3>
 <p>We have used <code class="docutils literal notranslate"><span class="pre">df[]</span></code> and <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> properties of dataframe to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the <strong>ten</strong> languages that are spoken most often. As a next step, we could
@@ -1617,27 +1512,27 @@ so we specify the argument <code class="docutils literal notranslate"><span clas
     <tr>
       <th>40</th>
       <td>Cree, n.o.s.</td>
-      <td>64050.0</td>
+      <td>64050</td>
     </tr>
     <tr>
       <th>89</th>
       <td>Inuktitut</td>
-      <td>35210.0</td>
+      <td>35210</td>
     </tr>
     <tr>
       <th>138</th>
       <td>Ojibway</td>
-      <td>17885.0</td>
+      <td>17885</td>
     </tr>
     <tr>
       <th>137</th>
       <td>Oji-Cree</td>
-      <td>12855.0</td>
+      <td>12855</td>
     </tr>
     <tr>
       <th>48</th>
       <td>Dene</td>
-      <td>10700.0</td>
+      <td>10700</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1647,27 +1542,27 @@ so we specify the argument <code class="docutils literal notranslate"><span clas
     <tr>
       <th>5</th>
       <td>Algonquian languages, n.i.e.</td>
-      <td>45.0</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>32</th>
       <td>Cayuga</td>
-      <td>45.0</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>179</th>
       <td>Squamish</td>
-      <td>40.0</td>
+      <td>40</td>
     </tr>
     <tr>
       <th>90</th>
       <td>Iroquoian languages, n.i.e.</td>
-      <td>35.0</td>
+      <td>35</td>
     </tr>
     <tr>
       <th>206</th>
       <td>Wakashan languages, n.i.e.</td>
-      <td>10.0</td>
+      <td>10</td>
     </tr>
   </tbody>
 </table>
@@ -1711,52 +1606,52 @@ rows 1 to 10 using the argument <code class="docutils literal notranslate"><span
     <tr>
       <th>40</th>
       <td>Cree, n.o.s.</td>
-      <td>64050.0</td>
+      <td>64050</td>
     </tr>
     <tr>
       <th>89</th>
       <td>Inuktitut</td>
-      <td>35210.0</td>
+      <td>35210</td>
     </tr>
     <tr>
       <th>138</th>
       <td>Ojibway</td>
-      <td>17885.0</td>
+      <td>17885</td>
     </tr>
     <tr>
       <th>137</th>
       <td>Oji-Cree</td>
-      <td>12855.0</td>
+      <td>12855</td>
     </tr>
     <tr>
       <th>48</th>
       <td>Dene</td>
-      <td>10700.0</td>
+      <td>10700</td>
     </tr>
     <tr>
       <th>125</th>
       <td>Montagnais (Innu)</td>
-      <td>10235.0</td>
+      <td>10235</td>
     </tr>
     <tr>
       <th>119</th>
       <td>Mi'kmaq</td>
-      <td>6690.0</td>
+      <td>6690</td>
     </tr>
     <tr>
       <th>13</th>
       <td>Atikamekw</td>
-      <td>6150.0</td>
+      <td>6150</td>
     </tr>
     <tr>
       <th>149</th>
       <td>Plains Cree</td>
-      <td>3065.0</td>
+      <td>3065</td>
     </tr>
     <tr>
       <th>180</th>
       <td>Stoney</td>
-      <td>3025.0</td>
+      <td>3025</td>
     </tr>
   </tbody>
 </table>
@@ -1772,16 +1667,16 @@ gets worse. In contrast, a <em>visualization</em> would convey this information 
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
 effectively communicate with your audience.</p>
-</section>
-</section>
-<section id="exploring-data-with-visualizations">
-<h2>Exploring data with visualizations<a class="headerlink" href="#exploring-data-with-visualizations" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="exploring-data-with-visualizations">
+<h2>Exploring data with visualizations<a class="headerlink" href="#exploring-data-with-visualizations" title="Permalink to this headline">¶</a></h2>
 <p>Creating effective data visualizations \index{visualization} is an essential component of any data
 analysis. In this section we will develop a visualization of the
 ten Aboriginal languages that were most often reported in 2016 as mother tongues in
 Canada, as well as the number of people that speak each of them.</p>
-<section id="using-altair-to-create-a-bar-plot">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to create a bar plot<a class="headerlink" href="#using-altair-to-create-a-bar-plot" title="Permalink to this headline">#</a></h3>
+<div class="section" id="using-altair-to-create-a-bar-plot">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to create a bar plot<a class="headerlink" href="#using-altair-to-create-a-bar-plot" title="Permalink to this headline">¶</a></h3>
 <p>In our data set, we can see that <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
 The data are, therefore, in what we call a <em>tidy data</em> format. Tidy data is a
@@ -1826,16 +1721,16 @@ to fields in the dataset, accessed by field name(column names)</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="barplot-mother-tongue" style="width: 700px">
+<div class="figure align-default" id="barplot-mother-tongue" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-7226203b02ca42c29b3b5a015606ac8f"></div>
+<div id="altair-viz-38a479f557c94428a67465f78a19f47e"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-7226203b02ca42c29b3b5a015606ac8f") {
-      outputDiv = document.getElementById("altair-viz-7226203b02ca42c29b3b5a015606ac8f");
+    if (outputDiv.id !== "altair-viz-38a479f557c94428a67465f78a19f47e") {
+      outputDiv = document.getElementById("altair-viz-38a479f557c94428a67465f78a19f47e");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -1881,12 +1776,10 @@ to fields in the dataset, accessed by field name(column names)</p>
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "language", "type": "nominal"}, "y": {"field": "mother_tongue", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-0cdfcf8245507d928490a47b75d8fff0"}, "mark": "bar", "encoding": {"x": {"field": "language", "type": "nominal"}, "y": {"field": "mother_tongue", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0cdfcf8245507d928490a47b75d8fff0": [{"language": "Cree, n.o.s.", "mother_tongue": 64050}, {"language": "Inuktitut", "mother_tongue": 35210}, {"language": "Ojibway", "mother_tongue": 17885}, {"language": "Oji-Cree", "mother_tongue": 12855}, {"language": "Dene", "mother_tongue": 10700}, {"language": "Montagnais (Innu)", "mother_tongue": 10235}, {"language": "Mi'kmaq", "mother_tongue": 6690}, {"language": "Atikamekw", "mother_tongue": 6150}, {"language": "Plains Cree", "mother_tongue": 3065}, {"language": "Stoney", "mother_tongue": 3025}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#barplot-mother-tongue" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#barplot-mother-tongue" title="Permalink to this image">¶</a></p>
+</div>
 <blockquote>
 <div><p><strong>Note:</strong> The vast majority of the
 time, a single expression in Python must be contained in a single line of code.
@@ -1897,9 +1790,9 @@ what the right-hand side of the <code class="docutils literal notranslate"><span
 put all of the added layers on one line of code, but splitting them across
 multiple lines helps a lot with code readability. \index{multi-line expression}</p>
 </div></blockquote>
-</section>
-<section id="formatting-altair-objects">
-<h3>Formatting altair objects<a class="headerlink" href="#formatting-altair-objects" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="formatting-altair-objects">
+<h3>Formatting altair objects<a class="headerlink" href="#formatting-altair-objects" title="Permalink to this headline">¶</a></h3>
 <p>It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
 interpretability of the data visualization that we created. For example, by
@@ -1932,16 +1825,16 @@ to format the plot further, and we will explore these in Chapter
 </div>
 </div>
 </div>
-<figure class="align-default" id="barplot-mother-tongue-labs" style="width: 700px">
+<div class="figure align-default" id="barplot-mother-tongue-labs" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-84795253e1544772b849fffae9a2b4cc"></div>
+<div id="altair-viz-84aed26642154150b8c9afd59e1c19e7"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-84795253e1544772b849fffae9a2b4cc") {
-      outputDiv = document.getElementById("altair-viz-84795253e1544772b849fffae9a2b4cc");
+    if (outputDiv.id !== "altair-viz-84aed26642154150b8c9afd59e1c19e7") {
+      outputDiv = document.getElementById("altair-viz-84aed26642154150b8c9afd59e1c19e7");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -1987,12 +1880,10 @@ to format the plot further, and we will explore these in Chapter
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "language", "title": "Language", "type": "nominal"}, "y": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-0cdfcf8245507d928490a47b75d8fff0"}, "mark": "bar", "encoding": {"x": {"field": "language", "title": "Language", "type": "nominal"}, "y": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0cdfcf8245507d928490a47b75d8fff0": [{"language": "Cree, n.o.s.", "mother_tongue": 64050}, {"language": "Inuktitut", "mother_tongue": 35210}, {"language": "Ojibway", "mother_tongue": 17885}, {"language": "Oji-Cree", "mother_tongue": 12855}, {"language": "Dene", "mother_tongue": 10700}, {"language": "Montagnais (Innu)", "mother_tongue": 10235}, {"language": "Mi'kmaq", "mother_tongue": 6690}, {"language": "Atikamekw", "mother_tongue": 6150}, {"language": "Plains Cree", "mother_tongue": 3065}, {"language": "Stoney", "mother_tongue": 3025}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.</span><a class="headerlink" href="#barplot-mother-tongue-labs" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.</span><a class="headerlink" href="#barplot-mother-tongue-labs" title="Permalink to this image">¶</a></p>
+</div>
 <p>The result is shown in <a class="reference internal" href="#barplot-mother-tongue-labs"><span class="std std-numref">Fig. 4</span></a>.
 This is already quite an improvement! Let’s tackle the next major issue with the visualization
 in <a class="reference internal" href="#barplot-mother-tongue-labs"><span class="std std-numref">Fig. 4</span></a>: the vertical x axis labels, which are
@@ -2011,16 +1902,16 @@ To accomplish this, we will swap the x and y coordinate axes:</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="barplot-mother-tongue-labs-axis" style="width: 700px">
+<div class="figure align-default" id="barplot-mother-tongue-labs-axis" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-f5f0aadb9d664fd28f06427ee8979116"></div>
+<div id="altair-viz-dc788de512cb487cb960f7571e3e38b0"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-f5f0aadb9d664fd28f06427ee8979116") {
-      outputDiv = document.getElementById("altair-viz-f5f0aadb9d664fd28f06427ee8979116");
+    if (outputDiv.id !== "altair-viz-dc788de512cb487cb960f7571e3e38b0") {
+      outputDiv = document.getElementById("altair-viz-dc788de512cb487cb960f7571e3e38b0");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -2066,12 +1957,10 @@ To accomplish this, we will swap the x and y coordinate axes:</p>
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-0cdfcf8245507d928490a47b75d8fff0"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0cdfcf8245507d928490a47b75d8fff0": [{"language": "Cree, n.o.s.", "mother_tongue": 64050}, {"language": "Inuktitut", "mother_tongue": 35210}, {"language": "Ojibway", "mother_tongue": 17885}, {"language": "Oji-Cree", "mother_tongue": 12855}, {"language": "Dene", "mother_tongue": 10700}, {"language": "Montagnais (Innu)", "mother_tongue": 10235}, {"language": "Mi'kmaq", "mother_tongue": 6690}, {"language": "Atikamekw", "mother_tongue": 6150}, {"language": "Plains Cree", "mother_tongue": 3065}, {"language": "Stoney", "mother_tongue": 3025}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.</span><a class="headerlink" href="#barplot-mother-tongue-labs-axis" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.</span><a class="headerlink" href="#barplot-mother-tongue-labs-axis" title="Permalink to this image">¶</a></p>
+</div>
 <p>Another big step forward, as shown in <a class="reference internal" href="#barplot-mother-tongue-labs-axis"><span class="std std-numref">Fig. 5</span></a>! There
 are no more serious issues with the visualization. Now comes time to refine
 the visualization to make it even more well-suited to answering the question
@@ -2093,16 +1982,16 @@ values of the variable(<code class="docutils literal notranslate"><span class="p
 </div>
 </div>
 </div>
-<figure class="align-default" id="barplot-mother-tongue-reorder" style="width: 700px">
+<div class="figure align-default" id="barplot-mother-tongue-reorder" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-4c36c588dac74bfeb273307b5db2f074"></div>
+<div id="altair-viz-740c82c62d7e495aa1054c91ddaab5d0"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-4c36c588dac74bfeb273307b5db2f074") {
-      outputDiv = document.getElementById("altair-viz-4c36c588dac74bfeb273307b5db2f074");
+    if (outputDiv.id !== "altair-viz-740c82c62d7e495aa1054c91ddaab5d0") {
+      outputDiv = document.getElementById("altair-viz-740c82c62d7e495aa1054c91ddaab5d0");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -2148,12 +2037,10 @@ values of the variable(<code class="docutils literal notranslate"><span class="p
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "sort": "x", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-0cdfcf8245507d928490a47b75d8fff0"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "sort": "x", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0cdfcf8245507d928490a47b75d8fff0": [{"language": "Cree, n.o.s.", "mother_tongue": 64050}, {"language": "Inuktitut", "mother_tongue": 35210}, {"language": "Ojibway", "mother_tongue": 17885}, {"language": "Oji-Cree", "mother_tongue": 12855}, {"language": "Dene", "mother_tongue": 10700}, {"language": "Montagnais (Innu)", "mother_tongue": 10235}, {"language": "Mi'kmaq", "mother_tongue": 6690}, {"language": "Atikamekw", "mother_tongue": 6150}, {"language": "Plains Cree", "mother_tongue": 3065}, {"language": "Stoney", "mother_tongue": 3025}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.</span><a class="headerlink" href="#barplot-mother-tongue-reorder" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.</span><a class="headerlink" href="#barplot-mother-tongue-reorder" title="Permalink to this image">¶</a></p>
+</div>
 <p><a class="reference internal" href="#barplot-mother-tongue-reorder"><span class="std std-numref">Fig. 6</span></a> provides a very clear and well-organized
 answer to our original question; we can see what the ten most often reported Aboriginal languages
 were, according to the 2016 Canadian census, and how many people speak each of them. For
@@ -2167,9 +2054,9 @@ Plains Cree, Woods Cree, and a ‘Cree not included elsewhere’ category (which
 includes Moose Cree, Northern East Cree and Southern East Cree)
 [&#64;language2016].</p>
 </div></blockquote>
-</section>
-<section id="putting-it-all-together">
-<h3>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="putting-it-all-together">
+<h3>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this headline">¶</a></h3>
 <p>In the block of code below, we put everything from this chapter together, with a few
 modifications. In particular, we have actually skipped the
 <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> step that we did above; since you specify the variable names to plot
@@ -2208,16 +2095,16 @@ these steps in much more detail!</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="final-plot" style="width: 700px">
+<div class="figure align-default" id="final-plot" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-4e54c25103504a7ba947dd6fcf5fc357"></div>
+<div id="altair-viz-7cbd1ddbc3a14bb0b55e617c19da9a0d"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-4e54c25103504a7ba947dd6fcf5fc357") {
-      outputDiv = document.getElementById("altair-viz-4e54c25103504a7ba947dd6fcf5fc357");
+    if (outputDiv.id !== "altair-viz-7cbd1ddbc3a14bb0b55e617c19da9a0d") {
+      outputDiv = document.getElementById("altair-viz-7cbd1ddbc3a14bb0b55e617c19da9a0d");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -2263,16 +2150,14 @@ these steps in much more detail!</p>
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-1752b79b5e8a3993e9416d3ad1f768dc"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-1752b79b5e8a3993e9416d3ad1f768dc": [{"language": "Cree, n.o.s.", "mother_tongue": 64050.0}, {"language": "Inuktitut", "mother_tongue": 35210.0}, {"language": "Ojibway", "mother_tongue": 17885.0}, {"language": "Oji-Cree", "mother_tongue": 12855.0}, {"language": "Dene", "mother_tongue": 10700.0}, {"language": "Montagnais (Innu)", "mother_tongue": 10235.0}, {"language": "Mi'kmaq", "mother_tongue": 6690.0}, {"language": "Atikamekw", "mother_tongue": 6150.0}, {"language": "Plains Cree", "mother_tongue": 3065.0}, {"language": "Stoney", "mother_tongue": 3025.0}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-0cdfcf8245507d928490a47b75d8fff0"}, "mark": "bar", "encoding": {"x": {"field": "mother_tongue", "title": "Mother Tongue (Number of Canadian Residents)", "type": "quantitative"}, "y": {"field": "language", "title": "Language", "type": "nominal"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0cdfcf8245507d928490a47b75d8fff0": [{"language": "Cree, n.o.s.", "mother_tongue": 64050}, {"language": "Inuktitut", "mother_tongue": 35210}, {"language": "Ojibway", "mother_tongue": 17885}, {"language": "Oji-Cree", "mother_tongue": 12855}, {"language": "Dene", "mother_tongue": 10700}, {"language": "Montagnais (Innu)", "mother_tongue": 10235}, {"language": "Mi'kmaq", "mother_tongue": 6690}, {"language": "Atikamekw", "mother_tongue": 6150}, {"language": "Plains Cree", "mother_tongue": 3065}, {"language": "Stoney", "mother_tongue": 3025}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#final-plot" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="accessing-documentation">
-<h2>Accessing documentation<a class="headerlink" href="#accessing-documentation" title="Permalink to this headline">#</a></h2>
+<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#final-plot" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="accessing-documentation">
+<h2>Accessing documentation<a class="headerlink" href="#accessing-documentation" title="Permalink to this headline">¶</a></h2>
 <p>There are many Python functions in the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package (and beyond!), and
 nobody can be expected to remember what every one of them does
 or all of the arguments we have to give them. Fortunately, Python provides
@@ -2311,15 +2196,13 @@ to you, and slowly but surely you will become more adept at understanding and na
 documentation like that shown in <a class="reference internal" href="#help-read-csv"><span class="std std-numref">Fig. 8</span></a>. But do keep in mind that the documentation
 is not written to <em>teach</em> you about a function; it is just there as a reference to <em>remind</em>
 you about the different arguments and usage of functions that you have already learned about elsewhere.</p>
-<figure class="align-default" id="help-read-csv">
+<div class="figure align-default" id="help-read-csv">
 <a class="reference internal image-reference" href="_images/help_read_csv.png"><img alt="_images/help_read_csv.png" src="_images/help_read_csv.png" style="height: 700px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.</span><a class="headerlink" href="#help-read-csv" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">#</a></h2>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.</span><a class="headerlink" href="#help-read-csv" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <p>Practice exercises for the material covered in this chapter
 can be found in the accompanying
 <a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
@@ -2330,8 +2213,8 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.</p>
-</section>
-</section>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {
@@ -2355,11 +2238,9 @@ and guidance that the worksheets provide will function as intended.</p>
 
               </div>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
     <a class='left-prev' id="prev-link" href="setup.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -2375,28 +2256,24 @@ and guidance that the worksheets provide will function as intended.</p>
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            </footer>
+            
         </div>
     </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By UBC<br/>
-  
-      &copy; Copyright 2021.<br/>
-</p>
-        </footer>
-    </div>
+    <footer class="footer">
+  <p>
     
-</div>
+      By UBC<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
 
 
       </div>
     </div>
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
-
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
   </body>
 </html>

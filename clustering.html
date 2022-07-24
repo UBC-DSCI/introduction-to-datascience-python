@@ -4,13 +4,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Clustering &#8212; DSCΙ 100</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clustering {#clustering} &#8212; DSCΙ 100</title>
     
-  <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -20,17 +18,21 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
+    
+      
+
+    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -38,13 +40,12 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -64,21 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
-
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -87,10 +74,9 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
       
@@ -103,15 +89,14 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="index.html">
-                    Welcome – TBD
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="index.html">
+   Welcome – TBD
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   First draft
  </span>
@@ -184,7 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Clustering
+   Clustering {#clustering}
   </a>
  </li>
  <li class="toctree-l1">
@@ -205,17 +190,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
-    </div>
-    <div id="rtd-footer-container"></div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
 </div>
 
 
@@ -223,145 +203,64 @@ const thebe_selector_output = ".output, .cell_output"
 
 
           
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="header-article row sticky-top noprint">
-        
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
 
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-    </ul>
-  </div>
-</div>
-
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/clustering.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download notebook file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-code"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="_sources/clustering.md"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.md</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        <a class="dropdown-buttons"
+            href="_sources/clustering.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/clustering.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#overview">
    Overview
@@ -373,7 +272,7 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
+  <a class="reference internal nav-link" href="#clustering">
    Clustering
   </a>
  </li>
@@ -426,14 +325,15 @@ title="Print to PDF"
  </li>
 </ul>
 
-    </nav>
-</div>
+            </nav>
+        </div>
     </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Clustering</h1>
+                <h1>Clustering {#clustering}</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -454,7 +354,7 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
+  <a class="reference internal nav-link" href="#clustering">
    Clustering
   </a>
  </li>
@@ -511,12 +411,11 @@ title="Print to PDF"
                     </div>
                 </div>
             </div>
-            <main id="main-content" role="main">
-                
+            
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="clustering">
-<h1>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">#</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="clustering-clustering">
+<h1>Clustering {#clustering}<a class="headerlink" href="#clustering-clustering" title="Permalink to this headline">¶</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -530,8 +429,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>As part of exploratory data analysis, it is often helpful to see if there are
 meaningful subgroups (or <em>clusters</em>) in the data.
 This grouping can be used for many purposes,
@@ -539,9 +438,9 @@ such as generating new questions or improving predictive analyses.
 This chapter provides an introduction to clustering
 using the K-means algorithm,
 including techniques to choose the number of clusters.</p>
-</section>
-<section id="chapter-learning-objectives">
-<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="chapter-learning-objectives">
+<h2>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this headline">¶</a></h2>
 <p>By the end of the chapter, readers will be able to do the following:</p>
 <ul class="simple">
 <li><p>Describe a case where clustering is appropriate,
@@ -555,9 +454,9 @@ and what insight it might extract from the data.</p></li>
 <li><p>Visualize the output of k-means clustering in Python using a coloured scatter plot</p></li>
 <li><p>Describe advantages, limitations and assumptions of the kmeans clustering algorithm.</p></li>
 </ul>
-</section>
-<section id="id1">
-<h2>Clustering<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="clustering">
+<h2>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h2>
 <p>Clustering \index{clustering} is a data analysis task
 involving separating a data set into subgroups of related data.
 For example, we might use clustering to separate a
@@ -621,12 +520,10 @@ variables—penguin bill and flipper length, both in millimeters—to determine 
 there are distinct types of penguins in our data.
 Understanding this might help us with species discovery and classification in a data-driven
 way.</p>
-<figure class="align-default" id="penguins">
+<div class="figure align-default" id="penguins">
 <a class="reference internal image-reference" href="_images/gentoo.jpg"><img alt="_images/gentoo.jpg" src="_images/gentoo.jpg" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 106 </span><span class="caption-text">Gentoo penguin.</span><a class="headerlink" href="#penguins" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 106 </span><span class="caption-text">Gentoo penguin.</span><a class="headerlink" href="#penguins" title="Permalink to this image">¶</a></p>
+</div>
 <p>To learn about K-means clustering
 we will work with <code class="docutils literal notranslate"><span class="pre">penguin_data</span></code> in this chapter.
 <code class="docutils literal notranslate"><span class="pre">penguin_data</span></code> is a subset of 18 observations of the original data,
@@ -791,16 +688,16 @@ to see if we can detect subtypes or groups in our data set.</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="scatter-plot" style="width: 700px">
+<div class="figure align-default" id="scatter-plot" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-6cc9cc8dccb54de39e010bcd77354679"></div>
+<div id="altair-viz-c06acc902cde4897a3e449185679e6d1"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-6cc9cc8dccb54de39e010bcd77354679") {
-      outputDiv = document.getElementById("altair-viz-6cc9cc8dccb54de39e010bcd77354679");
+    if (outputDiv.id !== "altair-viz-c06acc902cde4897a3e449185679e6d1") {
+      outputDiv = document.getElementById("altair-viz-c06acc902cde4897a3e449185679e6d1");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -848,10 +745,8 @@ to see if we can detect subtypes or groups in our data set.</p>
     }
   })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 12}}, "data": {"name": "data-ebb59f3fa086785a5682bd5f8fba47af"}, "mark": {"type": "circle", "color": "black"}, "encoding": {"x": {"field": "flipper_length_standardized", "title": "Flipper Length (standardized)", "type": "quantitative"}, "y": {"field": "bill_length_standardized", "title": "Bill Length (standardized)", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-ebb59f3fa086785a5682bd5f8fba47af": [{"flipper_length_standardized": -0.189773114129794, "bill_length_standardized": -0.641360823466598}, {"flipper_length_standardized": -1.32841179890856, "bill_length_standardized": -1.14491714043714}, {"flipper_length_standardized": -0.921755125773284, "bill_length_standardized": -1.51792181967458}, {"flipper_length_standardized": -0.921755125773284, "bill_length_standardized": -1.1076166725134}, {"flipper_length_standardized": -1.40974313353561, "bill_length_standardized": -0.846513397047191}, {"flipper_length_standardized": -0.677761121892121, "bill_length_standardized": -0.641360823466598}, {"flipper_length_standardized": -0.271104448756849, "bill_length_standardized": -1.2381683102465}, {"flipper_length_standardized": -0.433767118010958, "bill_length_standardized": -0.902464098932808}, {"flipper_length_standardized": 1.19285957453013, "bill_length_standardized": 0.720106255750059}, {"flipper_length_standardized": 1.35552224378424, "bill_length_standardized": 0.645505319902572}, {"flipper_length_standardized": 1.35552224378424, "bill_length_standardized": 0.962559297254395}, {"flipper_length_standardized": 1.76217891691951, "bill_length_standardized": 0.440352746321979}, {"flipper_length_standardized": 1.11152823990308, "bill_length_standardized": 1.20501233875873}, {"flipper_length_standardized": 0.786202901394858, "bill_length_standardized": 0.123298768970154}, {"flipper_length_standardized": -0.271104448756849, "bill_length_standardized": 0.626855085940699}, {"flipper_length_standardized": -0.271104448756849, "bill_length_standardized": 0.757406723673804}, {"flipper_length_standardized": -0.10844177950274, "bill_length_standardized": 1.78316959157677}, {"flipper_length_standardized": -0.759092456519175, "bill_length_standardized": 0.776056957635675}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 107 </span><span class="caption-text">Scatter plot of standardized bill length versus standardized flipper length.</span><a class="headerlink" href="#scatter-plot" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 107 </span><span class="caption-text">Scatter plot of standardized bill length versus standardized flipper length.</span><a class="headerlink" href="#scatter-plot" title="Permalink to this image">¶</a></p>
+</div>
 <p>Based \index{ggplot}\index{ggplot!geom_point} on the visualization
 in <a class="reference internal" href="#scatter-plot"><span class="std std-numref">Fig. 107</span></a>,
 we might suspect there are a few subtypes of penguins within our data set.
@@ -877,16 +772,16 @@ for selecting the number of clusters.
 This procedure will separate the data into groups;
 <a class="reference internal" href="#colored-scatter-plot"><span class="std std-numref">Fig. 108</span></a> shows these groups
 denoted by colored scatter points.</p>
-<figure class="align-default" id="colored-scatter-plot" style="width: 700px">
+<div class="figure align-default" id="colored-scatter-plot" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-7e6b37493ff94a8ebb9871e81fe04145"></div>
+<div id="altair-viz-9ae59b22a343458692ce0e2beab276c3"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-7e6b37493ff94a8ebb9871e81fe04145") {
-      outputDiv = document.getElementById("altair-viz-7e6b37493ff94a8ebb9871e81fe04145");
+    if (outputDiv.id !== "altair-viz-9ae59b22a343458692ce0e2beab276c3") {
+      outputDiv = document.getElementById("altair-viz-9ae59b22a343458692ce0e2beab276c3");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -934,10 +829,8 @@ denoted by colored scatter points.</p>
     }
   })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 12, "titleFontSize": 12}}, "data": {"name": "data-3c9eea8c1410ca5343e5f80a37a0a937"}, "mark": "circle", "encoding": {"color": {"field": "cluster", "scale": {"range": ["orange", "blue", "brown"]}, "type": "nominal"}, "x": {"field": "flipper_length_standardized", "title": "Flipper Length (standardized)", "type": "quantitative"}, "y": {"field": "bill_length_standardized", "title": "Bill Length (standardized)", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-3c9eea8c1410ca5343e5f80a37a0a937": [{"island": "Dream", "bill_length_mm": 39.2, "bill_depth_mm": 21.1, "flipper_length_mm": 196, "body_mass_g": 4150, "sex": "male", "year": 2007, "cluster": 1, "bill_length_standardized": -0.641360823466598, "flipper_length_standardized": -0.189773114129794}, {"island": "Dream", "bill_length_mm": 36.5, "bill_depth_mm": 18.0, "flipper_length_mm": 182, "body_mass_g": 3150, "sex": "female", "year": 2007, "cluster": 1, "bill_length_standardized": -1.14491714043714, "flipper_length_standardized": -1.32841179890856}, {"island": "Biscoe", "bill_length_mm": 34.5, "bill_depth_mm": 18.1, "flipper_length_mm": 187, "body_mass_g": 2900, "sex": "female", "year": 2008, "cluster": 1, "bill_length_standardized": -1.51792181967458, "flipper_length_standardized": -0.921755125773284}, {"island": "Torgersen", "bill_length_mm": 36.7, "bill_depth_mm": 18.8, "flipper_length_mm": 187, "body_mass_g": 3800, "sex": "female", "year": 2008, "cluster": 1, "bill_length_standardized": -1.1076166725134, "flipper_length_standardized": -0.921755125773284}, {"island": "Biscoe", "bill_length_mm": 38.1, "bill_depth_mm": 17.0, "flipper_length_mm": 181, "body_mass_g": 3175, "sex": "female", "year": 2009, "cluster": 1, "bill_length_standardized": -0.846513397047191, "flipper_length_standardized": -1.40974313353561}, {"island": "Dream", "bill_length_mm": 39.2, "bill_depth_mm": 18.6, "flipper_length_mm": 190, "body_mass_g": 4250, "sex": "male", "year": 2009, "cluster": 1, "bill_length_standardized": -0.641360823466598, "flipper_length_standardized": -0.677761121892121}, {"island": "Dream", "bill_length_mm": 36.0, "bill_depth_mm": 17.8, "flipper_length_mm": 195, "body_mass_g": 3450, "sex": "female", "year": 2009, "cluster": 1, "bill_length_standardized": -1.2381683102465, "flipper_length_standardized": -0.271104448756849}, {"island": "Dream", "bill_length_mm": 37.8, "bill_depth_mm": 18.1, "flipper_length_mm": 193, "body_mass_g": 3750, "sex": "male", "year": 2009, "cluster": 1, "bill_length_standardized": -0.902464098932808, "flipper_length_standardized": -0.433767118010958}, {"island": "Biscoe", "bill_length_mm": 46.5, "bill_depth_mm": 14.5, "flipper_length_mm": 213, "body_mass_g": 4400, "sex": "female", "year": 2007, "cluster": 3, "bill_length_standardized": 0.720106255750059, "flipper_length_standardized": 1.19285957453013}, {"island": "Biscoe", "bill_length_mm": 46.1, "bill_depth_mm": 15.1, "flipper_length_mm": 215, "body_mass_g": 5100, "sex": "male", "year": 2007, "cluster": 3, "bill_length_standardized": 0.645505319902572, "flipper_length_standardized": 1.35552224378424}, {"island": "Biscoe", "bill_length_mm": 47.8, "bill_depth_mm": 15.0, "flipper_length_mm": 215, "body_mass_g": 5650, "sex": "male", "year": 2007, "cluster": 3, "bill_length_standardized": 0.962559297254395, "flipper_length_standardized": 1.35552224378424}, {"island": "Biscoe", "bill_length_mm": 45.0, "bill_depth_mm": 15.4, "flipper_length_mm": 220, "body_mass_g": 5050, "sex": "male", "year": 2008, "cluster": 3, "bill_length_standardized": 0.440352746321979, "flipper_length_standardized": 1.76217891691951}, {"island": "Biscoe", "bill_length_mm": 49.1, "bill_depth_mm": 14.5, "flipper_length_mm": 212, "body_mass_g": 4625, "sex": "female", "year": 2009, "cluster": 3, "bill_length_standardized": 1.20501233875873, "flipper_length_standardized": 1.11152823990308}, {"island": "Biscoe", "bill_length_mm": 43.3, "bill_depth_mm": 14.0, "flipper_length_mm": 208, "body_mass_g": 4575, "sex": "female", "year": 2009, "cluster": 3, "bill_length_standardized": 0.123298768970154, "flipper_length_standardized": 0.786202901394858}, {"island": "Dream", "bill_length_mm": 46.0, "bill_depth_mm": 18.9, "flipper_length_mm": 195, "body_mass_g": 4150, "sex": "female", "year": 2007, "cluster": 2, "bill_length_standardized": 0.626855085940699, "flipper_length_standardized": -0.271104448756849}, {"island": "Dream", "bill_length_mm": 46.7, "bill_depth_mm": 17.9, "flipper_length_mm": 195, "body_mass_g": 3300, "sex": "female", "year": 2007, "cluster": 2, "bill_length_standardized": 0.757406723673804, "flipper_length_standardized": -0.271104448756849}, {"island": "Dream", "bill_length_mm": 52.2, "bill_depth_mm": 18.8, "flipper_length_mm": 197, "body_mass_g": 3450, "sex": "male", "year": 2009, "cluster": 2, "bill_length_standardized": 1.78316959157677, "flipper_length_standardized": -0.10844177950274}, {"island": "Dream", "bill_length_mm": 46.8, "bill_depth_mm": 16.5, "flipper_length_mm": 189, "body_mass_g": 3650, "sex": "female", "year": 2009, "cluster": 2, "bill_length_standardized": 0.776056957635675, "flipper_length_standardized": -0.759092456519175}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 108 </span><span class="caption-text">Scatter plot of standardized bill length versus standardized flipper length with colored groups.</span><a class="headerlink" href="#colored-scatter-plot" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 108 </span><span class="caption-text">Scatter plot of standardized bill length versus standardized flipper length with colored groups.</span><a class="headerlink" href="#colored-scatter-plot" title="Permalink to this image">¶</a></p>
+</div>
 <p>What are the labels for these groups? Unfortunately, we don’t have any. K-means,
 like almost all clustering algorithms, just outputs meaningless “cluster labels”
 that are typically whole numbers: 0, 1, 2, 3, etc. But in a simple case like this,
@@ -954,11 +847,11 @@ classifications or ask further questions about our data. For example, we might
 be interested in understanding the relationship between flipper length and bill
 length, and that relationship may differ depending on the type of penguin we
 have.</p>
-</section>
-<section id="k-means">
-<h2>K-means<a class="headerlink" href="#k-means" title="Permalink to this headline">#</a></h2>
-<section id="measuring-cluster-quality">
-<h3>Measuring cluster quality<a class="headerlink" href="#measuring-cluster-quality" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="k-means">
+<h2>K-means<a class="headerlink" href="#k-means" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="measuring-cluster-quality">
+<h3>Measuring cluster quality<a class="headerlink" href="#measuring-cluster-quality" title="Permalink to this headline">¶</a></h3>
 <p>The K-means algorithm is a procedure that groups data into K clusters.
 It starts with an initial clustering of the data, and then iteratively
 improves it by making adjustments to the assignment of data
@@ -975,12 +868,10 @@ Then we would compute the coordinates, <span class="math notranslate nohighlight
 <p>In the first cluster from the example, there are <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">4</span></code></span> data points. These are shown with their cluster center
 (flipper_length_standardized = <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">-0.35</span></code></span> and bill_length_standardized = <span class="pasted-inline"><code class="output text_plain docutils literal notranslate"><span class="pre">0.99</span></code></span>) highlighted
 in <a class="reference internal" href="#toy-example-clus1-center-1"><span class="std std-numref">Fig. 109</span></a></p>
-<figure class="align-default" id="toy-example-clus1-center-1">
+<div class="figure align-default" id="toy-example-clus1-center-1">
 <a class="reference internal image-reference" href="_images/toy-example-clus1-center-1.png"><img alt="_images/toy-example-clus1-center-1.png" src="_images/toy-example-clus1-center-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 109 </span><span class="caption-text">Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.</span><a class="headerlink" href="#toy-example-clus1-center-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 109 </span><span class="caption-text">Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.</span><a class="headerlink" href="#toy-example-clus1-center-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>The second step in computing the WSSD is to add up the squared distance
 \index{distance!K-means} between each point in the cluster
 and the cluster center.
@@ -990,12 +881,10 @@ In the <span class="pasted-inline"><code class="output text_plain docutils liter
 we would compute the WSSD <span class="math notranslate nohighlight">\(S^2\)</span> via</p>
 <p><span class="math notranslate nohighlight">\(S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)\)</span></p>
 <p>These distances are denoted by lines in <a class="reference internal" href="#toy-example-clus1-dists-1"><span class="std std-numref">Fig. 110</span></a> for the first cluster of the penguin data example.</p>
-<figure class="align-default" id="toy-example-clus1-dists-1">
+<div class="figure align-default" id="toy-example-clus1-dists-1">
 <a class="reference internal image-reference" href="_images/toy-example-clus1-dists-1.png"><img alt="_images/toy-example-clus1-dists-1.png" src="_images/toy-example-clus1-dists-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 110 </span><span class="caption-text">Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red. The distances from the observations to the cluster center are represented as black lines.</span><a class="headerlink" href="#toy-example-clus1-dists-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 110 </span><span class="caption-text">Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red. The distances from the observations to the cluster center are represented as black lines.</span><a class="headerlink" href="#toy-example-clus1-dists-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>The larger the value of <span class="math notranslate nohighlight">\(S^2\)</span>, the more spread out the cluster is, since large <span class="math notranslate nohighlight">\(S^2\)</span> means that points are far from the cluster center.
 Note, however, that “large” is relative to <em>both</em> the scale of the variables for clustering <em>and</em> the number of points in the cluster. A cluster where points are very close to the center might still have a large <span class="math notranslate nohighlight">\(S^2\)</span> if there are many data points in the cluster.</p>
 <p>After we have calculated the WSSD for all the clusters,
@@ -1004,25 +893,21 @@ For our example,
 this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
 <a class="reference internal" href="#toy-example-all-clus-dists-1"><span class="std std-numref">Fig. 111</span></a></p>
-<figure class="align-default" id="toy-example-all-clus-dists-1">
+<div class="figure align-default" id="toy-example-all-clus-dists-1">
 <a class="reference internal image-reference" href="_images/toy-example-all-clus-dists-1.png"><img alt="_images/toy-example-all-clus-dists-1.png" src="_images/toy-example-all-clus-dists-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 111 </span><span class="caption-text">All clusters from the penguin_data data set example. Observations are in orange, blue, and yellow with the cluster center highlighted in red. The distances from the observations to each of the respective cluster centers are represented as black lines.</span><a class="headerlink" href="#toy-example-all-clus-dists-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="the-clustering-algorithm">
-<h3>The clustering algorithm<a class="headerlink" href="#the-clustering-algorithm" title="Permalink to this headline">#</a></h3>
+<p class="caption"><span class="caption-number">Fig. 111 </span><span class="caption-text">All clusters from the penguin_data data set example. Observations are in orange, blue, and yellow with the cluster center highlighted in red. The distances from the observations to each of the respective cluster centers are represented as black lines.</span><a class="headerlink" href="#toy-example-all-clus-dists-1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="the-clustering-algorithm">
+<h3>The clustering algorithm<a class="headerlink" href="#the-clustering-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>We begin the K-means \index{K-means!algorithm} algorithm by picking K,
 and randomly assigning a roughly equal number of observations
 to each of the K clusters.
 An example random initialization is shown in <a class="reference internal" href="#toy-kmeans-init-1"><span class="std std-numref">Fig. 112</span></a></p>
-<figure class="align-default" id="toy-kmeans-init-1">
+<div class="figure align-default" id="toy-kmeans-init-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-init-1.png"><img alt="_images/toy-kmeans-init-1.png" src="_images/toy-kmeans-init-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 112 </span><span class="caption-text">Random initialization of labels.</span><a class="headerlink" href="#toy-kmeans-init-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 112 </span><span class="caption-text">Random initialization of labels.</span><a class="headerlink" href="#toy-kmeans-init-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>Then K-means consists of two major steps that attempt to minimize the
 sum of WSSDs over all the clusters, i.e., the \index{WSSD!total} <em>total WSSD</em>:</p>
 <ol class="simple">
@@ -1035,12 +920,10 @@ We show what the first four iterations of K-means would look like in<br />
 There each row corresponds to an iteration,
 where the left column depicts the center update,
 and the right column depicts the reassignment of data to clusters.</p>
-<figure class="align-default" id="toy-kmeans-iter-1">
+<div class="figure align-default" id="toy-kmeans-iter-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-iter-1.png"><img alt="_images/toy-kmeans-iter-1.png" src="_images/toy-kmeans-iter-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 113 </span><span class="caption-text">First four iterations of K-means clustering on the penguin_data example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-iter-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 113 </span><span class="caption-text">First four iterations of K-means clustering on the penguin_data example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-iter-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>Note that at this point, we can terminate the algorithm since none of the assignments changed
 in the fourth iteration; both the centers and labels will remain the same from this point onward.</p>
 <blockquote>
@@ -1061,30 +944,26 @@ as well as other clustering algorithms entirely,
 that use other distance metrics
 to allow for non-quantitative data to be clustered.
 These, however, are beyond the scope of this book.</p>
-</section>
-<section id="random-restarts">
-<h3>Random restarts<a class="headerlink" href="#random-restarts" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="random-restarts">
+<h3>Random restarts<a class="headerlink" href="#random-restarts" title="Permalink to this headline">¶</a></h3>
 <p>Unlike the classification and regression models we studied in previous chapters, K-means \index{K-means!restart, nstart} can get “stuck” in a bad solution.
 For example, <a class="reference internal" href="#toy-kmeans-bad-init-1"><span class="std std-numref">Fig. 114</span></a> illustrates an unlucky random initialization by K-means.</p>
-<figure class="align-default" id="toy-kmeans-bad-init-1">
+<div class="figure align-default" id="toy-kmeans-bad-init-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-bad-init-1.png"><img alt="_images/toy-kmeans-bad-init-1.png" src="_images/toy-kmeans-bad-init-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 114 </span><span class="caption-text">Random initialization of labels.</span><a class="headerlink" href="#toy-kmeans-bad-init-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 114 </span><span class="caption-text">Random initialization of labels.</span><a class="headerlink" href="#toy-kmeans-bad-init-1" title="Permalink to this image">¶</a></p>
+</div>
 <p><a class="reference internal" href="#toy-kmeans-bad-iter-1"><span class="std std-numref">Fig. 115</span></a> shows what the iterations of K-means would look like with the unlucky random initialization shown in <a class="reference internal" href="#toy-kmeans-bad-init-1"><span class="std std-numref">Fig. 114</span></a></p>
-<figure class="align-default" id="toy-kmeans-bad-iter-1">
+<div class="figure align-default" id="toy-kmeans-bad-iter-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-bad-iter-1.png"><img alt="_images/toy-kmeans-bad-iter-1.png" src="_images/toy-kmeans-bad-iter-1.png" style="height: 700px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 115 </span><span class="caption-text">First five iterations of K-means clustering on the penguin_data example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-bad-iter-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 115 </span><span class="caption-text">First five iterations of K-means clustering on the penguin_data example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-bad-iter-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>This looks like a relatively bad clustering of the data, but K-means cannot improve it.
 To solve this problem when clustering data using K-means, we should randomly re-initialize the labels a few times, run K-means for each initialization,
 and pick the clustering that has the lowest final total WSSD.</p>
-</section>
-<section id="choosing-k">
-<h3>Choosing K<a class="headerlink" href="#choosing-k" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="choosing-k">
+<h3>Choosing K<a class="headerlink" href="#choosing-k" title="Permalink to this headline">¶</a></h3>
 <p>In order to cluster data using K-means,
 we also have to pick the number of clusters, K.
 But unlike in classification, we have no response variable
@@ -1095,28 +974,24 @@ In both cases, we will potentially miss interesting structure in the data.
 <a class="reference internal" href="#toy-kmeans-vary-k-1"><span class="std std-numref">Fig. 116</span></a> illustrates the impact of K
 on K-means clustering of our penguin flipper and bill length data
 by showing the different clusterings for K’s ranging from 1 to 9.</p>
-<figure class="align-default" id="toy-kmeans-vary-k-1">
+<div class="figure align-default" id="toy-kmeans-vary-k-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-vary-k-1.png"><img alt="_images/toy-kmeans-vary-k-1.png" src="_images/toy-kmeans-vary-k-1.png" style="height: 700px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 116 </span><span class="caption-text">Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-vary-k-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 116 </span><span class="caption-text">Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.</span><a class="headerlink" href="#toy-kmeans-vary-k-1" title="Permalink to this image">¶</a></p>
+</div>
 <p>If we set K less than 3, then the clustering merges separate groups of data; this causes a large
 total WSSD, since the cluster center (denoted by an “x”) is not close to any of the data in the cluster. On
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a <em>diminishing amount</em>. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an “elbow shape”) \index{elbow method} when we reach roughly
 the right number of clusters (<a class="reference internal" href="#toy-kmeans-elbow-1"><span class="std std-numref">Fig. 117</span></a>)).</p>
-<figure class="align-default" id="toy-kmeans-elbow-1">
+<div class="figure align-default" id="toy-kmeans-elbow-1">
 <a class="reference internal image-reference" href="_images/toy-kmeans-elbow-1.png"><img alt="_images/toy-kmeans-elbow-1.png" src="_images/toy-kmeans-elbow-1.png" style="height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 117 </span><span class="caption-text">Total WSSD for K clusters ranging from 1 to 9.</span><a class="headerlink" href="#toy-kmeans-elbow-1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="data-pre-processing-for-k-means">
-<h2>Data pre-processing for K-means<a class="headerlink" href="#data-pre-processing-for-k-means" title="Permalink to this headline">#</a></h2>
+<p class="caption"><span class="caption-number">Fig. 117 </span><span class="caption-text">Total WSSD for K clusters ranging from 1 to 9.</span><a class="headerlink" href="#toy-kmeans-elbow-1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="data-pre-processing-for-k-means">
+<h2>Data pre-processing for K-means<a class="headerlink" href="#data-pre-processing-for-k-means" title="Permalink to this headline">¶</a></h2>
 <p>Similar to K-nearest neighbors classification and regression, K-means
 clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the <em>scale</em> of each of the variables in the data
@@ -1384,9 +1259,9 @@ using <code class="docutils literal notranslate"><span class="pre">fit_transform
 </table>
 </div></div></div>
 </div>
-</section>
-<section id="k-means-in-python">
-<h2>K-means in Python<a class="headerlink" href="#k-means-in-python" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="k-means-in-python">
+<h2>K-means in Python<a class="headerlink" href="#k-means-in-python" title="Permalink to this headline">¶</a></h2>
 <p>To perform K-means clustering in Python, we use the <code class="docutils literal notranslate"><span class="pre">KMeans</span></code> function. \index{K-means!kmeans function} It takes at
 least one argument: K, the number of clusters (here we choose K = 3). Note that since the K-means
 algorithm uses a random initialization of assignments, but since we set the random seed, the clustering will be reproducible.</p>
@@ -1611,16 +1486,16 @@ of the cluster assignments for each point, as shown in <a class="reference inter
 </div>
 </div>
 </div>
-<figure class="align-default" id="cluster-plot" style="width: 700px">
+<div class="figure align-default" id="cluster-plot" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-cd6ad7a341d5494b946f7c98365b4963"></div>
+<div id="altair-viz-798e3ec3e6f74622b29bd4d64a297fac"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-cd6ad7a341d5494b946f7c98365b4963") {
-      outputDiv = document.getElementById("altair-viz-cd6ad7a341d5494b946f7c98365b4963");
+    if (outputDiv.id !== "altair-viz-798e3ec3e6f74622b29bd4d64a297fac") {
+      outputDiv = document.getElementById("altair-viz-798e3ec3e6f74622b29bd4d64a297fac");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -1668,10 +1543,8 @@ of the cluster assignments for each point, as shown in <a class="reference inter
     }
   })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 20, "titleFontSize": 20}}, "data": {"name": "data-f9ba5372ad17f212b1b1827985326fef"}, "mark": "circle", "encoding": {"color": {"field": "clusters", "scale": {"scheme": "dark2"}, "title": "Cluster", "type": "ordinal"}, "x": {"field": "flipper_length_mm", "title": "Flipper Length (standardized)", "type": "quantitative"}, "y": {"field": "bill_length_mm", "title": "Bill Length (standardized)", "type": "quantitative"}}, "height": 400, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-f9ba5372ad17f212b1b1827985326fef": [{"bill_length_mm": -0.6599548427421356, "flipper_length_mm": -0.19527492342808553, "clusters": 1}, {"bill_length_mm": -1.1781100181422628, "flipper_length_mm": -1.366924463996594, "clusters": 1}, {"bill_length_mm": -1.561928666586801, "flipper_length_mm": -0.948478199507841, "clusters": 1}, {"bill_length_mm": -1.1397281532978085, "flipper_length_mm": -0.948478199507841, "clusters": 1}, {"bill_length_mm": -0.871055099386632, "flipper_length_mm": -1.4506137168943447, "clusters": 1}, {"bill_length_mm": -0.6599548427421356, "flipper_length_mm": -0.6974104408145891, "clusters": 1}, {"bill_length_mm": -1.2740646802533975, "flipper_length_mm": -0.27896417632583614, "clusters": 1}, {"bill_length_mm": -0.9286278966533135, "flipper_length_mm": -0.4463426821213374, "clusters": 1}, {"bill_length_mm": 0.7409832240804287, "flipper_length_mm": 1.2274423758336748, "clusters": 2}, {"bill_length_mm": 0.6642194943915214, "flipper_length_mm": 1.394820881629176, "clusters": 2}, {"bill_length_mm": 0.990465345569378, "flipper_length_mm": 1.394820881629176, "clusters": 2}, {"bill_length_mm": 0.453119237747025, "flipper_length_mm": 1.813267146117929, "clusters": 2}, {"bill_length_mm": 1.2399474670583288, "flipper_length_mm": 1.1437531229359241, "clusters": 2}, {"bill_length_mm": 0.12687338656916688, "flipper_length_mm": 0.8089961113449218, "clusters": 2}, {"bill_length_mm": 0.6450285619692941, "flipper_length_mm": -0.27896417632583614, "clusters": 0}, {"bill_length_mm": 0.7793650889248831, "flipper_length_mm": -0.27896417632583614, "clusters": 0}, {"bill_length_mm": 1.8348663721473635, "flipper_length_mm": -0.11158567053033494, "clusters": 0}, {"bill_length_mm": 0.7985560213471089, "flipper_length_mm": -0.7810996937123398, "clusters": 0}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 118 </span><span class="caption-text">The data colored by the cluster assignments returned by K-means.</span><a class="headerlink" href="#cluster-plot" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 118 </span><span class="caption-text">The data colored by the cluster assignments returned by K-means.</span><a class="headerlink" href="#cluster-plot" title="Permalink to this image">¶</a></p>
+</div>
 <p>As mentioned above, we also need to select K by finding
 where the “elbow” occurs in the plot of total WSSD versus the number of clusters.
 We can obtain the total WSSD (inertia) from our
@@ -1812,7 +1685,7 @@ and the other holding the clustering model objects.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.576264153631982
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.57626415363198
 </pre></div>
 </div>
 </div>
@@ -1951,16 +1824,16 @@ K-means clustering objects, and 2 for the clustering statistics:</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="elbow-plot" style="width: 700px">
+<div class="figure align-default" id="elbow-plot" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-5aec64a0640643e18a18b28ab8825da2"></div>
+<div id="altair-viz-b9744266ed7944c8a0231fd8cff4a380"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-5aec64a0640643e18a18b28ab8825da2") {
-      outputDiv = document.getElementById("altair-viz-5aec64a0640643e18a18b28ab8825da2");
+    if (outputDiv.id !== "altair-viz-b9744266ed7944c8a0231fd8cff4a380") {
+      outputDiv = document.getElementById("altair-viz-b9744266ed7944c8a0231fd8cff4a380");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -2006,12 +1879,10 @@ K-means clustering objects, and 2 for the clustering statistics:</p>
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 15, "titleFontSize": 20}}, "data": {"name": "data-00d5a197f719d07039ad9f4adf4eb9d2"}, "mark": {"type": "line", "point": true}, "encoding": {"x": {"field": "k", "title": "K", "type": "quantitative"}, "y": {"field": "inertia", "title": "Total within-cluster sum of squares", "type": "quantitative"}}, "height": 400, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-00d5a197f719d07039ad9f4adf4eb9d2": [{"k": 1, "inertia": 35.99999999999999, "n_iter": 2}, {"k": 2, "inertia": 11.576264153631982, "n_iter": 3}, {"k": 3, "inertia": 4.730719092276117, "n_iter": 3}, {"k": 4, "inertia": 4.046971636164045, "n_iter": 2}, {"k": 5, "inertia": 2.3621308411553095, "n_iter": 4}, {"k": 6, "inertia": 1.8490674361826995, "n_iter": 4}, {"k": 7, "inertia": 2.4152411605291895, "n_iter": 3}, {"k": 8, "inertia": 1.035973520676672, "n_iter": 4}, {"k": 9, "inertia": 0.971379605893801, "n_iter": 2}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 15, "titleFontSize": 20}}, "data": {"name": "data-0fffda6890f5cdc3048f89ba722d2fe1"}, "mark": {"type": "line", "point": true}, "encoding": {"x": {"field": "k", "title": "K", "type": "quantitative"}, "y": {"field": "inertia", "title": "Total within-cluster sum of squares", "type": "quantitative"}}, "height": 400, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0fffda6890f5cdc3048f89ba722d2fe1": [{"k": 1, "inertia": 36.0, "n_iter": 2}, {"k": 2, "inertia": 11.57626415363198, "n_iter": 3}, {"k": 3, "inertia": 4.730719092276116, "n_iter": 3}, {"k": 4, "inertia": 4.046971636164045, "n_iter": 2}, {"k": 5, "inertia": 2.3621308411553095, "n_iter": 4}, {"k": 6, "inertia": 1.8490674361826995, "n_iter": 4}, {"k": 7, "inertia": 2.415241160529189, "n_iter": 3}, {"k": 8, "inertia": 1.0359735206766723, "n_iter": 4}, {"k": 9, "inertia": 0.9713796058938011, "n_iter": 2}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 119 </span><span class="caption-text">A plot showing the total WSSD versus the number of clusters.</span><a class="headerlink" href="#elbow-plot" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-number">Fig. 119 </span><span class="caption-text">A plot showing the total WSSD versus the number of clusters.</span><a class="headerlink" href="#elbow-plot" title="Permalink to this image">¶</a></p>
+</div>
 <p>It looks like 3 clusters is the right choice for this data.
 But why is there a “bump” in the total WSSD plot here?
 Shouldn’t total WSSD always decrease as we add more clusters?
@@ -2053,16 +1924,16 @@ the more likely we are to find a good clustering (if one exists).</p>
 </div>
 </div>
 </div>
-<figure class="align-default" id="elbow-plot2" style="width: 700px">
+<div class="figure align-default" id="elbow-plot2" style="width: 700px">
 <div class="cell_output docutils container">
 <div class="output text_html">
-<div id="altair-viz-caabd6eeb1634278a45cea55a1cbeba2"></div>
+<div id="altair-viz-44c67c9e3aea47ebaa4256159a6d0111"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-caabd6eeb1634278a45cea55a1cbeba2") {
-      outputDiv = document.getElementById("altair-viz-caabd6eeb1634278a45cea55a1cbeba2");
+    if (outputDiv.id !== "altair-viz-44c67c9e3aea47ebaa4256159a6d0111") {
+      outputDiv = document.getElementById("altair-viz-44c67c9e3aea47ebaa4256159a6d0111");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -2108,15 +1979,13 @@ the more likely we are to find a good clustering (if one exists).</p>
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 15, "titleFontSize": 20}}, "data": {"name": "data-0513f2211983b3a79b360b03465cc3ca"}, "mark": {"type": "line", "point": true}, "encoding": {"x": {"field": "k", "title": "K", "type": "quantitative"}, "y": {"field": "inertia", "title": "Total within-cluster sum of squares", "type": "quantitative"}}, "height": 400, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-0513f2211983b3a79b360b03465cc3ca": [{"k": 1, "inertia": 36.0, "n_iter": 2}, {"k": 2, "inertia": 11.57626415363198, "n_iter": 3}, {"k": 3, "inertia": 4.730719092276116, "n_iter": 3}, {"k": 4, "inertia": 3.3436127899809343, "n_iter": 2}, {"k": 5, "inertia": 2.3621308411553095, "n_iter": 4}, {"k": 6, "inertia": 1.6783833850432377, "n_iter": 4}, {"k": 7, "inertia": 1.3087316666611315, "n_iter": 3}, {"k": 8, "inertia": 1.0659421816324675, "n_iter": 4}, {"k": 9, "inertia": 0.800296987856855, "n_iter": 2}]}}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "axis": {"labelFontSize": 15, "titleFontSize": 20}}, "data": {"name": "data-2586a99315147573f72e73e0fba4ce8f"}, "mark": {"type": "line", "point": true}, "encoding": {"x": {"field": "k", "title": "K", "type": "quantitative"}, "y": {"field": "inertia", "title": "Total within-cluster sum of squares", "type": "quantitative"}}, "height": 400, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v4.17.0.json", "datasets": {"data-2586a99315147573f72e73e0fba4ce8f": [{"k": 1, "inertia": 36.0, "n_iter": 2}, {"k": 2, "inertia": 11.57626415363198, "n_iter": 3}, {"k": 3, "inertia": 4.730719092276116, "n_iter": 3}, {"k": 4, "inertia": 3.3436127899809343, "n_iter": 2}, {"k": 5, "inertia": 2.3621308411553095, "n_iter": 4}, {"k": 6, "inertia": 1.6783833850432375, "n_iter": 4}, {"k": 7, "inertia": 1.3087316666611315, "n_iter": 3}, {"k": 8, "inertia": 1.0659421816324675, "n_iter": 4}, {"k": 9, "inertia": 0.8002969878568549, "n_iter": 2}]}}, {"mode": "vega-lite"});
 </script></div></div>
-<figcaption>
-<p><span class="caption-number">Fig. 120 </span><span class="caption-text">A plot showing the total WSSD versus the number of clusters when K-means is run without <code class="docutils literal notranslate"><span class="pre">init</span></code> argument</span><a class="headerlink" href="#elbow-plot2" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">#</a></h2>
+<p class="caption"><span class="caption-number">Fig. 120 </span><span class="caption-text">A plot showing the total WSSD versus the number of clusters when K-means is run without <code class="docutils literal notranslate"><span class="pre">init</span></code> argument</span><a class="headerlink" href="#elbow-plot2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <p>Practice exercises for the material covered in this chapter
 can be found in the accompanying
 <a class="reference external" href="https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme">worksheets repository</a>
@@ -2127,9 +1996,9 @@ If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
 found in Chapter &#64;ref(move-to-your-own-machine). This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.</p>
-</section>
-<section id="additional-resources">
-<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Chapter 10 of <em>An Introduction to Statistical
 Learning</em> [&#64;james2013introduction] provides a
@@ -2141,8 +2010,8 @@ subgroups, etc., in your data. In the realm of more general unsupervised
 learning, it covers <em>principal components analysis (PCA)</em>, which is a very
 popular technique for reducing the number of predictors in a dataset.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {
@@ -2166,11 +2035,9 @@ popular technique for reducing the number of predictors in a dataset.</p></li>
 
               </div>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
     <a class='left-prev' id="prev-link" href="regression2.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -2186,28 +2053,24 @@ popular technique for reducing the number of predictors in a dataset.</p></li>
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            </footer>
+            
         </div>
     </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By UBC<br/>
-  
-      &copy; Copyright 2021.<br/>
-</p>
-        </footer>
-    </div>
+    <footer class="footer">
+  <p>
     
-</div>
+      By UBC<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
 
 
       </div>
     </div>
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
-
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
   </body>
 </html>

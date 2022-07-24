@@ -220,7 +220,7 @@ glue('scatter_plot', scatter_plot, display=True)
 Scatter plot of standardized bill length versus standardized flipper length.
 :::
 
-```{index} altair; altair, mark_circle
+```{index} altair, altair; mark_circle
 ```
 
 Based on the visualization 

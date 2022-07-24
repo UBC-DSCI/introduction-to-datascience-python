@@ -747,7 +747,7 @@ $b = (b_{1}, b_{2}, \dots, b_{m})$.
 ```{index} distance; more than two variables
 ```
 
-The distance formula becomes \index{distance!more than two variables}
+The distance formula becomes 
 
 $$\mathrm{Distance} = \sqrt{(a_{1} -b_{1})^2 + (a_{2} - b_{2})^2 + \dots + (a_{m} - b_{m})^2}.$$
 

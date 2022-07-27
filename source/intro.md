@@ -11,6 +11,8 @@ kernelspec:
   language: python
   name: python3
 ---
+
+(intro)=
 # Python and the Pandas
 
 ```{code-cell} ipython3

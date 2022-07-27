@@ -69,7 +69,7 @@ as we have not learned the tools necessary to do that properly just yet.
 As with most coding tasks, it is totally fine (and quite common) to make
 mistakes and iterate a few times before you find the right visualization for
 your data and question. There are many different kinds of plotting
-graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* [@wilkeviz] for a directory). 
+graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* {cite:p}`wilkeviz` for a directory). 
 The types of plot that we introduce in this book are shown in {numref}`plot_sketches`
 which one you should select depends on your data 
 and the question you want to answer. 
@@ -127,7 +127,7 @@ understand and remember your message quickly.
 - Ensure the data are clearly visible; don't hide the shape/distribution of the data behind other objects (e.g.,  a bar).
 - Make sure to use color schemes that are understandable by those with
   colorblindness (a surprisingly large fraction of the overall 
-  population&mdash;from about 1% to 10%, depending on sex and ancestry [@deebblind]).
+  population&mdash;from about 1% to 10%, depending on sex and ancestry {cite:p}`deebblind`).
   For example, [Color Schemes](https://vega.github.io/vega/docs/schemes/) 
   provides the ability to pick such color schemes, and you can check
   your visualizations after you have created them by uploading to online tools
@@ -148,7 +148,7 @@ understand and remember your message quickly.
 +++
 
 ## Creating visualizations with `altair` 
-#### *Build the visualization iteratively* {-}
+#### *Build the visualization iteratively*
 
 ```{index} altair
 ```
@@ -178,7 +178,7 @@ and Dr. Ralph Keeling, Scripps Institution of Oceanography,
 records the atmospheric concentration of carbon dioxide 
 (CO$_{\text{2}}$, in parts per million) 
 at the Mauna Loa research station in Hawaii 
-from 1959 onward [@maunadata].
+from 1959 onward {cite:p}`maunadata`.
 For this book, we are going to focus on the last 40 years of the data set,
 1980-2020.
 
@@ -538,7 +538,7 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 ```{index} Canadian languages
 ```
 
-Recall the `can_lang` data set [@timbers2020canlang] from Chapters \@ref(intro), \@ref(reading), and \@ref(wrangling),
+Recall the `can_lang` data set {cite:p}`timbers2020canlang` from Chapters {ref}`intro`, {ref}`reading`, and {ref}`wrangling`,
 which contains counts of languages from the 2016
 Canadian census.
 
@@ -716,7 +716,7 @@ glue("result", result)
 
 ```
 
-Similar to some of the examples in Chapter \@ref(wrangling), 
+Similar to some of the examples in Chapter {ref}`wrangling`, 
 we can convert the counts to percentages to give them context 
 and make them easier to understand.
 We can do this by dividing the number of people reporting a given language 
@@ -974,7 +974,7 @@ this book.
 ```{index} Island landmasses
 ```
 
-The `islands.csv` data set contains a list of Earth's landmasses as well as their area (in thousands of square miles) [@islandsdata]. 
+The `islands.csv` data set contains a list of Earth's landmasses as well as their area (in thousands of square miles) {cite:p}`islandsdata`. 
 
 ```{index} question; visualization
 ```
@@ -1126,7 +1126,7 @@ collected in experiments performed in 1879.
 Five experiments were performed, 
 and in each experiment, 20 runs were performed&mdash;meaning that 
 20 measurements of the speed of light were collected 
-in each experiment [@lightdata].
+in each experiment {cite:p}`lightdata`.
 
 Because the speed of light is a very large number 
 (the true value is 299,792.458 km/sec), the data is coded
@@ -1229,17 +1229,17 @@ final_plot = morley_hist + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot', final_plot, display=False)
+glue('final_plot_viz', final_plot, display=False)
 ```
 
-:::{glue:figure} final_plot
+:::{glue:figure} final_plot_viz
 :figwidth: 700px 
-:name: final_plot
+:name: final_plot_viz
 
 Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
 :::
 
-In {numref}`final_plot`, 
+In {numref}`final_plot_viz`, 
 we still cannot tell which experiments (denoted in the `Expt` column) 
 led to which measurements; 
 perhaps some experiments were more accurate than others. 
@@ -1283,7 +1283,7 @@ Histogram of Michelson's speed of light data colored by experiment.
 
 Alright great, {numref}`final_plot_colored` looks...wait a second! We are not able to distinguish 
 between different Experiments in the histogram! What is going on here? Well, if you 
-recall from Chapter \@ref(wrangling), the *data type* you use for each variable
+recall from Chapter {ref}`wrangling`, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
 is currently an *integer*. But we want to treat it as a
@@ -1418,12 +1418,10 @@ glue('final_plot_relative', final_plot_relative, display=True)
 Histogram of relative accuracy split vertically by experiment with clearer axes and labels
 :::
 
-Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. Figure \@ref(fig:03-data-morley-hist-5) shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an 
+Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. {numref}`final_plot_relative` shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an 
 admirable job given the technology available at the time.
 
-\newpage
-
-#### Choosing a binwidth for histograms {-}
+#### Choosing a binwidth for histograms
 
 When you create a histogram in `altair`, the default number of bins used is 30.
 Naturally, this is not always the right number to use.
@@ -1709,15 +1707,9 @@ bad, while raster images eventually start to look "pixelated."
 
 Let's learn how to save plot images to these different file formats using a 
 scatter plot of 
-the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat) [@faithfuldata],
+the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat) 
+{cite:p}`faithfuldata`,
 shown in {numref}`faithful_scatter_labels`
-
-:::{glue:figure} faithful_scatter_labels
-:figwidth: 700px 
-:name: faithful_scatter_labels
-
-Scatter plot of waiting time and eruption time.
-:::
 
 Now that we have a named `altair` plot object, we can use the `chart.save` function
 to save a file containing this image. 
@@ -1744,15 +1736,14 @@ faithful_scatter_labels.save("faithful_plot.svg")
 
 ```
 
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import os
 png_size = os.path.getsize("data/faithful_plot.png")/1000000
 svg_size = os.path.getsize("data/faithful_plot.svg")/1000000
 
-glue("png_size", png_size)
-glue("svg_size", svg_size)
+# glue("png_size", png_size)
+# glue("svg_size", svg_size)
 ```
 
 
@@ -1813,22 +1804,23 @@ found in Chapter \@ref(move-to-your-own-machine). This will ensure that the auto
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
-- The [altair documentation](https://altair-viz.github.io/) [@ggplot] is
+
+- The [altair documentation](https://altair-viz.github.io/){cite:p}`altair` is
   where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
   The site also provides a very nice cheat sheet that summarizes many of the data
   wrangling functions from this chapter.
-- The *Fundamentals of Data Visualization* [@wilkeviz] has
+- The *Fundamentals of Data Visualization* {cite:p}`wilkeviz` has
   a wealth of information on designing effective visualizations. It is not
   specific to any particular programming language or library. If you want to
   improve your visualization skills, this is the next place to look.
-- *R for Data Science* [@wickham2016r] has a [chapter on creating visualizations using
-  `ggplot2`](https://r4ds.had.co.nz/data-visualisation.html). This reference is
-  specific to R and `ggplot2`, but provides a much more detailed introduction to
-  the full set of tools that `ggplot2` provides. This chapter is where you should
-  look if you want to learn how to make more intricate visualizations in
-  `ggplot2` than what is included in this chapter.
-- [dates and
-  times](https://wesmckinney.com/book/time-series.html).  This chapter is where
-  you should look if you want to learn about `date` and `time`, including how to
-  create them, and how to use them to effectively handle durations, etc
+- The [dates and times](https://wesmckinney.com/book/time-series.html){cite:p}`mckinney2012python` 
+  chapter is where you should look if you want to learn about `date` and `time`, including how to create them, and how to use them to effectively handle durations, etc
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

@@ -108,7 +108,7 @@ courses.
 As in the case of classification, 
 there are many possible methods that we could use to cluster our observations 
 to look for subgroups. 
-In this book, we will focus on the widely used K-means algorithm [@kmeans]. 
+In this book, we will focus on the widely used K-means algorithm {cite:p}`kmeans`. 
 In your future studies, you might encounter hierarchical clustering,
 principal component analysis, multidimensional scaling, and more; 
 see the additional resources section at the end of this chapter 
@@ -133,10 +133,10 @@ for where to begin learning more about these other methods.
 ```
 
 Here we will present an illustrative example using a data set from
-[the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) [@palmerpenguins]. This 
+[the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. This 
 data set was collected by Dr. Kristen Gorman and
 the Palmer Station, Antarctica Long Term Ecological Research Site, and includes
-measurements for adult penguins found near there [@penguinpaper]. We have
+measurements for adult penguins found near there {cite:p}`penguinpaper`. We have
 modified the data set for use in this chapter. Here we will focus on using two
 variables&mdash;penguin bill and flipper length, both in millimeters&mdash;to determine whether 
 there are distinct types of penguins in our data.
@@ -155,7 +155,7 @@ To learn about K-means clustering
 we will work with `penguin_data` in this chapter.
 `penguin_data` is a subset of 18 observations of the original data, 
 which has already been standardized 
-(remember from Chapter \@ref(classification) 
+(remember from Chapter {ref}`classification` 
 that scaling is part of the standardization process). 
 We will discuss scaling for K-means in more detail later in this chapter. 
 
@@ -365,7 +365,7 @@ The second step in computing the WSSD is to add up the squared distance
 between each point in the cluster 
 and the cluster center.
 We use the straight-line / Euclidean distance formula 
-that we learned about in Chapter \@ref(classification).
+that we learned about in Chapter {ref}`classification`.
 In the {glue:}`clus_rows_glue`-observation cluster example above, 
 we would compute the WSSD $S^2$ via
 
@@ -851,12 +851,13 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
+
 - Chapter 10 of *An Introduction to Statistical
-  Learning* [@james2013introduction] provides a
+  Learning* {cite:p}`james2013introduction` provides a
   great next stop in the process of learning about clustering and unsupervised
   learning in general. In the realm of clustering specifically, it provides a
   great companion introduction to K-means, but also covers *hierarchical*
@@ -864,3 +865,11 @@ and guidance that the worksheets provide will function as intended.
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
   popular technique for reducing the number of predictors in a dataset.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

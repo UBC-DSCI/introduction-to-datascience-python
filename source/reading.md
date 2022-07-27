@@ -167,7 +167,8 @@ locally or remotely stored data into Python.
 
 ## Reading tabular data from a plain text file into Python
 
-### `read_csv` to read in comma-separated files {#readcsv}
+(readcsv)=
+### `read_csv` to read in comma-separated files
 
 ```{index} csv, reading; delimiter, read function; read\_csv
 ```
@@ -336,7 +337,7 @@ canlang_data
 ```
 
 Let's compare the data frame here to the resulting data frame in Section
-\@ref(readcsv) after using `read_csv`. Notice anything? They look the same! The
+{ref}`readcsv` after using `read_csv`. Notice anything? They look the same! The
 same number of columns/rows and column names! So we needed to use different
 tools for the job depending on the file format and our resulting table
 (`canlang_data`) in both cases was the same! 
@@ -938,7 +939,7 @@ Databases are beneficial in a large-scale setting:
 - They provide security and data access control.
 - They allow multiple users to access data simultaneously 
   and remotely without conflicts and errors.
-  For example, there are billions of Google searches conducted daily in 2021 [@googlesearches]. 
+  For example, there are billions of Google searches conducted daily in 2021 {cite:p}`googlesearches`. 
   Can you imagine if Google stored all of the data 
   from those searches in a single `.csv` file!? Chaos would ensue! 
 
@@ -1020,13 +1021,13 @@ content and tells the webpage how the HTML elements should
 be presented (e.g., colors, layouts, fonts etc.). 
 
 This subsection will show you the basics of both web scraping
-with the [`rvest` R package](https://rvest.tidyverse.org/) [@rvest]
+with the [`rvest` R package](https://rvest.tidyverse.org/) {cite:p}`rvest`
 and accessing the Twitter API
-using the [`rtweet` R package](https://github.com/ropensci/rtweet) [@rtweet].
+using the [`rtweet` R package](https://github.com/ropensci/rtweet) {cite:p}`rtweet`.
 
 ### Web scraping
 
-#### HTML and CSS selectors {-}
+#### HTML and CSS selectors
 
 ```{index} web scraping, HTML; selector, CSS; selector, Craiglist
 ```
@@ -1041,12 +1042,13 @@ in knowing the average rental price (per square foot) of the most recently
 available one-bedroom apartments in Vancouver 
 on [Craiglist](https://vancouver.craigslist.org). When we visit the Vancouver Craigslist
 website and search for one-bedroom apartments, 
-we should see something similar to Figure \@ref(fig:craigslist-human).
+we should see something similar to {numref}`fig:craigslist-human`.
 
-:::{figure-md} markdown-fig
-<img src="img/craigslist_human.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
+```{figure} img/craigslist_human.png
+:name: fig:craigslist-human
+
 Craigslist webpage of advertisements for one-bedroom apartments.
-:::
+```
 
 
 Based on what our browser shows us, it's pretty easy to find the size and price
@@ -1057,38 +1059,38 @@ display for us. We show a snippet of it below; the
 entire source 
 is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt):
 
-```
-<!--         <span class="result-meta"> -->
-<!--                 <span class="result-price">$800</span> -->
+```html
+        <span class="result-meta">
+                <span class="result-price">$800</span>
 
-<!--                 <span class="housing"> -->
-<!--                     1br - -->
-<!--                 </span> -->
+                <span class="housing">
+                    1br -
+                </span>
 
-<!--                 <span class="result-hood"> (13768 108th Avenue)</span> -->
+                <span class="result-hood"> (13768 108th Avenue)</span>
 
-<!--                 <span class="result-tags"> -->
-<!--                     <span class="maptag" data-pid="6786042973">map</span> -->
-<!--                 </span> -->
+                <span class="result-tags">
+                    <span class="maptag" data-pid="6786042973">map</span>
+                </span>
 
-<!--                 <span class="banish icon icon-trash" role="button"> -->
-<!--                     <span class="screen-reader-text">hide this posting</span> -->
-<!--                 </span> -->
+                <span class="banish icon icon-trash" role="button">
+                    <span class="screen-reader-text">hide this posting</span>
+                </span>
 
-<!--             <span class="unbanish icon icon-trash red" role="button" aria-hidden -->
-<!--             <a href="#" class="restore-link"> -->
-<!--                 <span class="restore-narrow-text">restore</span> -->
-<!--                 <span class="restore-wide-text">restore this posting</span> -->
-<!--             </a> -->
+            <span class="unbanish icon icon-trash red" role="button" aria-hidden
+            <a href="#" class="restore-link">
+                <span class="restore-narrow-text">restore</span>
+                <span class="restore-wide-text">restore this posting</span>
+            </a>
 
-<!--         </span> -->
-<!--     </p> -->
-<!-- </li> -->
-<!--          <li class="result-row" data-pid="6788463837"> -->
+        </span>
+    </p>
+</li>
+         <li class="result-row" data-pid="6788463837">
                   
-<!--         <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu -->
-<!--                 <span class="result-price">$2285</span> -->
-<!--         </a> -->
+        <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu
+                <span class="result-price">$2285</span>
+        </a>
 ```
 
 Oof...you can tell that the source code for a web page is not really designed
@@ -1097,7 +1099,7 @@ will find that the information we're interested in is hidden among the muck.
 For example, near the top of the snippet
 above you can see a line that looks like
 
-```
+```html
 <span class="result-price">$800</span>
 ```
 
@@ -1123,7 +1125,7 @@ apartment prices, maybe we can look for all the tags with the `"result-price"`
 class, and grab the information between the opening and closing tag. Indeed,
 take a look at another line of the source snippet above:
 
-```
+```html
 <span class="result-price">$2285</span>
 ```
 
@@ -1149,42 +1151,33 @@ website element for which you want an appropriate selector. For
 example, if we click the price of an apartment listing, we
 find that SelectorGadget shows us the selector `.result-price`
 in its toolbar, and highlights all the other apartment
-prices that would be obtained using that selector (Figure \@ref(fig:sg1)).
+prices that would be obtained using that selector ({numref}`fig:sg1`).
 
+```{figure} img/sg1.png
+:name: fig:sg1
 
-
-
-
-:::{figure-md} markdown-fig
-<img src="img/sg1.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
-:::
-
-
+```
 
 If we then click the size of an apartment listing, SelectorGadget shows us
 the `span` selector, and highlights many of the lines on the page; this indicates that the
-`span` selector is not specific enough to capture only apartment sizes (Figure \@ref(fig:sg3)). 
+`span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`). 
 
+```{figure} img/sg3.png
+:name: fig:sg3
 
-:::{figure-md} markdown-fig
-<img src="img/sg3.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
-Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
-:::
-
+Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
+```
 
 To narrow the selector, we can click one of the highlighted elements that
 we *do not* want. For example, we can deselect the "pic/map" links, 
-resulting in only the data we want highlighted using the `.housing` selector (Figure \@ref(fig:sg2)).
+resulting in only the data we want highlighted using the `.housing` selector ({numref}`fig:sg2`).
 
+```{figure} img/sg2.png
+:name: fig:sg2
 
-
-
-
-:::{figure-md} markdown-fig
-<img src="img/sg2.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
-:::
+```
 
 So to scrape information about the square footage and rental price
 of apartment listings, we need to use
@@ -1219,14 +1212,13 @@ We have checked the [Terms of Service document](https://foundation.wikimedia.org
 and it does not mention that web scraping is disallowed. 
 We will use the SelectorGadget tool to pick elements that we are interested in
 (city names and population counts) and deselect others to indicate that we are not 
-interested in them (province names), as shown in Figure \@ref(fig:sg4).
+interested in them (province names), as shown in {numref}`fig:sg4`.
 
+```{figure} img/sg4.png
+:name: fig:sg4
 
-
-:::{figure-md} markdown-fig
-<img src="img/sg4.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 Using the SelectorGadget on a Wikipedia webpage.
-:::
+```
 
 We include a link to a short video tutorial on this process at the end of the chapter
 in the additional resources section. SelectorGadget provides in its toolbar
@@ -1324,7 +1316,7 @@ data frame with one character column for city and one numeric column for
 population (like a spreadsheet).
 Additionally, the populations contain commas (not useful for programmatically
 dealing with numbers), and some even contain a line break character at the end
-(`\n`). In Chapter \@ref(wrangling), we will learn more about how to *wrangle* data
+(`\n`). In Chapter {ref}`wrangling`, we will learn more about how to *wrangle* data
 such as this into a more useful format for data analysis using R.
 
 ### Using an API
@@ -1359,17 +1351,14 @@ library(rtweet)
 This package provides an extensive set of functions to search 
 Twitter for tweets, users, their followers, and more. 
 Let's construct a small data set of the last 400 tweets and 
-retweets from the \@tidyverse account. A few of the most recent tweets
-are shown in Figure \@ref(fig:01-tidyverse-twitter).
+retweets from the [@tidyverse](https://twitter.com/tidyverse) account. A few of the most recent tweets
+are shown in {numref}`fig:01-tidyverse-twitter`.
 
-
-:::{figure-md} markdown-fig
-<img src="img/tidyverse_twitter.png" alt="twitter feed" class="bg-primary mb-2" width="600px" height="500px">
+```{figure} img/tidyverse_twitter.png
+:name: fig:01-tidyverse-twitter
 
 The tidyverse account Twitter feed.
-:::
-
-
+```
 
 **Stop! Think about your API usage carefully!**
 
@@ -1389,23 +1378,22 @@ we should abide by when using the API.
 **Using `rtweet`**
 
 After checking the Twitter website, it seems like asking for 400 tweets one time is acceptable.
-So we can use the `get_timelines` function to ask for the last 400 tweets from the \@tidyverse account.
+So we can use the `get_timelines` function to ask for the last 400 tweets from the [@tidyverse](https://twitter.com/tidyverse) account.
 
 ```r
 tidyverse_tweets <- get_timelines('tidyverse', n=400)
 ```
 
 When you call the `get_timelines` for the first time (or any other `rtweet` function that accesses the API), 
-you will see a browser pop-up that looks something like Figure \@ref(fig:01-tidyverse-authorize).
+you will see a browser pop-up that looks something like {numref}`fig:01-tidyverse-authorize`.
 
 (ref:01-tidyverse-authorize) The `rtweet` authorization prompt.
 
+```{figure} img/authorize_question.png
+:name: fig:craigslist-human
 
-:::{figure-md} markdown-fig
-<img src="img/authorize_question.png" alt="authorize" class="bg-primary mb-2" width="600px" height="500px">
-
-(ref:01-tidyverse-authorize)
-:::
+The `rtweet` authorization prompt.
+```
 
 This is the `rtweet` package asking you to provide your own Twitter account's login information.
 When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;
@@ -1451,7 +1439,7 @@ tidyverse_tweets <- select(tidyverse_tweets,
 tidyverse_tweets
 ```
 
-If you look back up at the image of the \@tidyverse Twitter page, you will
+If you look back up at the image of the [@tidyverse](https://twitter.com/tidyverse) Twitter page, you will
 recognize the text of the most recent few tweets in the above data frame.  In
 other words, we have successfully created a small data set using the Twitter
 API&mdash;neat! This data is also quite different from what we obtained from web scraping;
@@ -1478,11 +1466,12 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
-- The [`readr` documentation](https://readr.tidyverse.org/) 
+
+- The [`pandas` documentation](https://pandas.pydata.org/docs/getting_started/index.html) 
   provides the documentation for many of the reading functions we cover in this chapter.
   It is where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
@@ -1490,19 +1479,8 @@ and guidance that the worksheets provide will function as intended.
   wrangling functions from this chapter.
 - Sometimes you might run into data in such poor shape that none of the reading
   functions we cover in this chapter work. In that case, you can consult the
-  [data import chapter](https://r4ds.had.co.nz/data-import.html) from *R for Data
-  Science* [@wickham2016r], which goes into a lot more detail about how R parses
+  [data loading chapter](https://wesmckinney.com/book/accessing-data.html#io_flat_files) from *Python for Data Analysis* {cite:p}`mckinney2012python`, which goes into a lot more detail about how Python parses
   text from files into data frames.
-- The [`here` R package](https://here.r-lib.org/) [@here]
-  provides a way for you to construct or find your files' paths. 
-- The [`readxl` documentation](https://readxl.tidyverse.org/) provides more
-  details on reading data from Excel, such as reading in data with multiple
-  sheets, or specifying the cells to read in. 
-- The [`rio` R package](https://github.com/leeper/rio) [@rio] provides an alternative
-  set of tools for reading and writing data in R. It aims to be a "Swiss army
-  knife" for data reading/writing/converting, and supports a wide variety of data
-  types (including data formats generated by other statistical software like SPSS
-  and SAS).
 - A [video](https://www.youtube.com/embed/ephId3mYu9o) from the Udacity
   course *Linux Command Line Basics* provides a good explanation of absolute versus relative paths.
 - If you read the subsection on obtaining data from the web via scraping and
@@ -1510,5 +1488,13 @@ and guidance that the worksheets provide will function as intended.
   SelectorGadget tool to obtain desired CSS selectors for:
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
     - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
-- The [`polite` R package](https://dmi3kno.github.io/polite/) [@polite] provides
+- The [`polite` R package](https://dmi3kno.github.io/polite/) {cite:p}`polite` provides
   a set of tools for responsibly scraping data from websites.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

@@ -901,8 +901,6 @@ documentation like that shown in {numref}`help_read_csv`. But do keep in mind th
 is not written to *teach* you about a function; it is just there as a reference to *remind*
 you about the different arguments and usage of functions that you have already learned about elsewhere.
 
-
-
 +++
 
 ```{figure} img/help_read_csv.png

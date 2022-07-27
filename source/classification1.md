@@ -145,7 +145,7 @@ the diagnosing physician is. Furthermore, benign tumors are not normally
 dangerous; the cells stay in the same place, and the tumor stops growing before
 it gets very large. By contrast, in malignant tumors, the cells invade the
 surrounding tissue and spread into nearby organs, where they can cause serious
-damage {cite:p}`streetbreastcancer`.
+damage {cite:p}`stanfordhealthcare`.
 Thus, it is important to quickly and accurately diagnose the tumor type to
 guide patient treatment.
 
@@ -912,7 +912,7 @@ Coding the $K$-nearest neighbors algorithm in Python ourselves can get complicat
 especially if we want to handle multiple classes, more than two variables,
 or predict the class for multiple new observations. Thankfully, in Python,
 the $K$-nearest neighbors algorithm is 
-implemented in [the `scikit-learn` package](https://scikit-learn.org/stable/index.html) along with 
+implemented in [the `scikit-learn` Python package](https://scikit-learn.org/stable/index.html) {cite:p}`sklearn_api` along with 
 many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions 
 in the `scikit-learn` package will help keep our code simple, readable and accurate; the 
 less we have to code ourselves, the fewer mistakes we will likely make. We 
@@ -2014,10 +2014,11 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
+## References
 
 ```{bibliography}
 :filter: docname in docnames

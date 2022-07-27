@@ -12,9 +12,8 @@ kernelspec:
   name: python3
 ---
 
+(viz)=
 # Effective data visualization
-
-
 
 ## Overview 
 This chapter will introduce concepts and tools relating to data visualization

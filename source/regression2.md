@@ -1430,7 +1430,7 @@ and guidance that the worksheets provide will function as intended.
   useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) and [an extensive list
   of more advanced examples](https://scikit-learn.org/stable/auto_examples/index.html#general-examples)
   that you can use to continue learning beyond the scope of this book.
-- *Modern Dive* [@moderndive] is another textbook that uses the
+- *Modern Dive* {cite:p}`moderndive` is another textbook that uses the
   `tidyverse` / `tidymodels` framework. Chapter 6 complements the material in
   the current chapter well; it covers some slightly more advanced concepts than
   we do without getting mathematical. Give this chapter a read before moving on

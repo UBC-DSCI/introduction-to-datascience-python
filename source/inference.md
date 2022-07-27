@@ -12,6 +12,7 @@ kernelspec:
   name: python3
 ---
 
+(inference)=
 # Statistical inference
 
 ```{code-cell} ipython3

@@ -48,24 +48,24 @@ By the end of the chapter, readers will be able to do the following:
 In this chapter, we will walk through a full analysis of a data set relating to
 languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada 
 with their own cultures and languages; these languages are often unique to Canada and not spoken
-anywhere else in the world [@statcan2018mothertongue]. Sadly, colonization has
+anywhere else in the world {cite:p}`statcan2018mothertongue`. Sadly, colonization has
 led to the loss of many of these languages. For instance, generations of
 children were not allowed to speak their mother tongue (the first language an
 individual learns in childhood) in Canadian residential schools. Colonizers
-also renamed places they had "discovered" [@wilson2018].  Acts such as these
+also renamed places they had "discovered" {cite:p}`wilson2018`.  Acts such as these
 have significantly harmed the continuity of Indigenous languages in Canada, and
 some languages are considered "endangered" as few people report speaking them. 
 To learn more, please see *Canadian Geographic*'s article, "Mapping Indigenous Languages in 
-Canada" [@walker2017], 
+Canada" {cite:p}`walker2017`, 
 *They Came for the Children: Canada, Aboriginal 
-peoples, and Residential Schools* [@children2012] 
+peoples, and Residential Schools* {cite:p}`children2012` 
 and the *Truth and Reconciliation Commission of Canada's* 
-*Calls to Action* [@calls2015].
+*Calls to Action* {cite:p}`calls2015`.
 
 The data set we will study in this chapter is taken from 
 [the `canlang` R data package](https://ttimbers.github.io/canlang/) 
-[@timbers2020canlang], which has
-population language data collected during the 2016 Canadian census [@cancensus2016]. 
+{cite:p}`timbers2020canlang`, which has
+population language data collected during the 2016 Canadian census {cite:p}`cancensus2016`. 
 In this data, there are 214 languages recorded, each having six different properties:
 
 1. `category`: Higher-level language category, describing whether the language is an Official Canadian language, an Aboriginal (i.e., Indigenous) language, or a Non-Official and Non-Aboriginal language.
@@ -101,7 +101,7 @@ Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
 descriptive, exploratory, inferential, predictive, causal, and mechanistic,
-all of which are defined in {numref}`questions-table`. [@leek2015question; @peng2015art]
+all of which are defined in {numref}`questions-table`. {cite:p}`leek2015question,peng2015art`
 Carefully formulating a question as early as possible in your analysis&mdash;and 
 correctly identifying which type of question it is&mdash;will guide your overall approach to 
 the analysis as well as the selection of appropriate tools.
@@ -157,36 +157,36 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question: 
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in Chapters \@ref(reading)
-and \@ref(wrangling), but appear regularly throughout the text.
-2. **Visualization:** plotting data graphically. 
+Tools for summarization are covered in detail in Chapters {ref}`reading`
+and {ref}`wrangling`, but appear regularly throughout the text.
+1. **Visualization:** plotting data graphically. 
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?* 
-This is covered in detail in Chapter \@ref(viz), but again appears regularly throughout the book.
+This is covered in detail in Chapter {ref}`viz`, but again appears regularly throughout the book.
 3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in Chapters \@ref(classification) and \@ref(classification2).
+Classification is covered in Chapters {ref}`classification` and {ref}`classification2`.
 4. **Regression:** predicting a quantitative value for a new observation. 
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in Chapters \@ref(regression1) and \@ref(regression2).
+Regression is covered in Chapters {ref}`regression1` and {ref}`regression2`.
 5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in Chapter \@ref(clustering).
+Clustering is covered in Chapter {ref}`clustering`.
 6. **Estimation:** taking measurements for a small number of items from a large group 
  and making a good guess for the average or proportion for the large group. Estimation 
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?* 
-Estimation is covered in Chapter \@ref(inference).
+Estimation is covered in Chapter {ref}`inference`.
 
 Referring to {numref}`questions-table`, our question about 
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -283,7 +283,7 @@ before you can use it. The place from which we will load it is called a Python *
 A Python package is a collection of functions that can be used in addition to the
 built-in Python package functions once loaded. The `read_csv` function, in
 particular, can be made accessible by loading 
-[the `pandas` Python package](https://pypi.org/project/pandas/) [@tidyverse; @wickham2019tidverse]
+[the `pandas` Python package](https://pypi.org/project/pandas/) {cite:p}`reback2020pandas,mckinney-proc-scipy-2010`
 using the `import` command. The `pandas` package contains many
 functions that we will use throughout this book to load, clean, wrangle, 
 and visualize data. 
@@ -402,12 +402,10 @@ the words in a name.  Python is case sensitive, which means that `Letter` and
 objects meaningful names.  For instance, you *can* name a data frame `x`.
 However, using more meaningful terms, such as `language_data`, will help you
 remember what each name in your code represents.  We recommend following the
-**PEP 8** naming conventions outlined in the *[PEP 8](https://peps.python.org/pep-0008/)* [@tidyversestyleguide].  Let's
+**PEP 8** naming conventions outlined in the *[PEP 8](https://peps.python.org/pep-0008/)* {cite:p}`pep8-style-guide`.  Let's
 now use the assignment symbol to give the name
 `can_lang` to the 2016 Canadian census language data frame that we get from
 `read_csv`. 
-
-
 
 ```{code-cell} ipython3
 can_lang = pd.read_csv("data/can_lang.csv")
@@ -464,7 +462,7 @@ For example, in our analysis, we are interested in keeping only languages in the
 "Aboriginal languages" higher-level category. We can use 
 the *equivalency operator* `==` to compare the values
 of the `category` column with the value `"Aboriginal languages"`; you will learn about
-many other kinds of logical statements in Chapter \@ref(wrangling).  Similar to
+many other kinds of logical statements in Chapter {ref}`wrangling`.  Similar to
 when we loaded the data file and put quotes around the file name, here we need
 to put quotes around `"Aboriginal languages"`. Using quotes tells Python that this
 is a string *value* and not one of the special words that make up Python
@@ -577,7 +575,7 @@ The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
 book: many of the functions from `pandas` require tidy data, including the
 `altair` package that we will use shortly for our visualization. We will
-formally introduce tidy data in Chapter \@ref(wrangling).
+formally introduce tidy data in Chapter {ref}`wrangling`.
 
 ```{index} see: plot; visualization
 ```
@@ -682,7 +680,7 @@ Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
 to format the plot further, and we will explore these in Chapter
-\@ref(viz).
+{ref}`viz`.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = (
@@ -794,7 +792,7 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 > Cree languages include the following categories: Cree n.o.s., Swampy Cree,
 > Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
 > includes Moose Cree, Northern East Cree and Southern East Cree)
-> [@language2016]. 
+> {cite:p}`language2016`. 
 
 ### Putting it all together
 
@@ -925,5 +923,13 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

@@ -12,9 +12,8 @@ kernelspec:
   name: python3
 ---
 
-
-
-# Clustering {#clustering}
+(clustering)=
+# Clustering
 
 
 ```{code-cell} ipython3

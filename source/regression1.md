@@ -35,26 +35,26 @@ from IPython.display import HTML
 from myst_nb import glue
 ```
 
-## Overview 
+## Overview
 
 This chapter continues our foray into answering predictive questions.
-Here we will focus on predicting *numerical* variables 
+Here we will focus on predicting *numerical* variables
 and will use *regression* to perform this task.
 This is unlike the past two chapters, which focused on predicting categorical
 variables via classification. However, regression does have many similarities
 to classification: for example, just as in the case of classification,
-we will split our data into training, validation, and test sets, we will 
-use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN) 
+we will split our data into training, validation, and test sets, we will
+use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
 Because of how similar these procedures are, make sure to read Chapters
-{ref}`classification` and {ref}`classification2` before reading 
+{ref}`classification` and {ref}`classification2` before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
-This chapter will primarily focus on the case where there is a single predictor, 
+This chapter will primarily focus on the case where there is a single predictor,
 but the end of the chapter shows how to perform
 regression with more than one predictor variable, i.e., *multivariable regression*.
-It is important to note that regression 
-can also be used to answer inferential and causal questions, 
+It is important to note that regression
+can also be used to answer inferential and causal questions,
 however that is beyond the scope of this book.
 
 +++
@@ -75,18 +75,23 @@ By the end of the chapter, readers will be able to do the following:
 
 ## The regression problem
 
-Regression, like classification, is a predictive \index{predictive question} problem setting where we want
+```{index} predictive question, response variable
+```
+
+Regression, like classification, is a predictive problem setting where we want
 to use past information to predict future observations. But in the case of
 regression, the goal is to predict *numerical* values instead of *categorical* values. 
-The variable that you want to predict is often called the *response variable*. \index{response variable}
+The variable that you want to predict is often called the *response variable*. 
 For example, we could try to use the number of hours a person spends on
 exercise each week to predict their race time in the annual Boston marathon. As 
 another example, we could try to use the size of a house to
 predict its sale price. Both of these response variables&mdash;race time and sale price&mdash;are 
 numerical, and so predicting them given past data is considered a regression problem.
 
-Just like in the \index{classification!comparison to regression} 
-classification setting, there are many possible methods that we can use 
+```{index} classification; comparison to regression
+```
+
+Just like in the classification setting, there are many possible methods that we can use 
 to predict numerical response variables. In this chapter we will
 focus on the **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`, and in the next chapter
 we will study **linear regression**.
@@ -103,8 +108,10 @@ of our method on observations not seen during training. And finally, we can use 
 choices of model parameters (e.g., K in a K-nearest neighbors model). The major difference
 is that we are now predicting numerical variables instead of categorical variables.
 
+```{index} categorical variable, numerical variable
+```
 
-> **Note:** You can usually tell whether a\index{categorical variable}\index{numerical variable} variable is numerical or
+> **Note:** You can usually tell whether a variable is numerical or
 > categorical&mdash;and therefore whether you need to perform regression or
 > classification&mdash;by taking two response variables X and Y from your data,
 > and asking the question, "is response variable X *more* than response
@@ -121,13 +128,16 @@ is that we are now predicting numerical variables instead of categorical variabl
 
 ## Exploring a data set
 
+```{index} Sacramento real estate, question; regression
+```
+
 In this chapter and the next, we will study 
-a data set \index{Sacramento real estate} of 
+a data set of 
 [932 real estate transactions in Sacramento, California](https://support.spatialkey.com/spatialkey-sample-csv-data/) 
 originally reported in the *Sacramento Bee* newspaper.
 We first need to formulate a precise question that
 we want to answer. In this example, our question is again predictive:
-\index{question!regression} Can we use the size of a house in the Sacramento, CA area to predict
+Can we use the size of a house in the Sacramento, CA area to predict
 its sale price? A rigorous, quantitative answer to this question might help
 a realtor advise a client as to whether the price of a particular listing 
 is fair, or perhaps how to set the price of a new listing.
@@ -159,14 +169,15 @@ sacramento = pd.read_csv("data/sacramento.csv")
 sacramento
 ```
 
+```{index} altair; mark_circle, visualization; scatter
+```
+
 The scientific question guides our initial exploration: the columns in the
 data that we are interested in are `sqft` (house size, in livable square feet)
 and `price` (house sale price, in US dollars (USD)).  The first step is to visualize
 the data as a scatter plot where we place the predictor variable
 (house size) on the x-axis, and we place the target/response variable that we
 want to predict (sale price) on the y-axis.
-\index{ggplot!geom\_point}
-\index{visualization!scatter}
 
 > **Note:** Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`, 
 > we format the axis labels to put dollar signs in front of the house prices, 
@@ -216,8 +227,11 @@ predict the former.
 
 ## K-nearest neighbors regression
 
+```{index} K-nearest neighbors; regression
+```
+
 Much like in the case of classification, 
-we can use a K-nearest neighbors-based \index{K-nearest neighbors!regression} 
+we can use a K-nearest neighbors-based 
 approach in regression to make predictions. 
 Let's take a small sample of the data in {numref}`fig:07-edaRegr` 
 and walk through how K-nearest neighbors (KNN) works
@@ -226,9 +240,12 @@ how well it predicts house sale price. This subsample is taken to allow us to
 illustrate the mechanics of KNN regression with a few data points; later in
 this chapter we will use all the data.
 
+```{index} pandas.DataFrame; sample
+```
+
 To take a small random sample of size 30, we'll use the 
 `sample` method of a `pandas.DataFrame` object, and input the number of rows
-to randomly select (`n`) and the random seed (`random_state`). \index{slice\_sample}
+to randomly select (`n`) and the random seed (`random_state`). 
 
 ```{code-cell} ipython3
 small_sacramento = sacramento.sample(n=30, random_state=10)
@@ -277,19 +294,21 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 
 +++
 
+```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
+```
+
 We will employ the same intuition from the classification chapter, and use the
 neighboring points to the new point of interest to suggest/predict what its
 sale price might be. 
 For the example shown in {numref}`fig:07-small-eda-regr`, 
 we find and label the 5 nearest neighbors to our observation 
 of a house that is 2,000 square feet.
-\index{mutate}\index{slice}\index{arrange}\index{abs}
 
 ```{code-cell} ipython3
 nearest_neighbors = (
     small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
     .sort_values("diff")
-    .iloc[:5]
+    .head(5)
 )
 
 nearest_neighbors
@@ -386,6 +405,9 @@ about what the data must look like for it to work.
 
 ## Training, evaluating, and tuning the model
 
+```{index} training data, test data
+```
+
 As usual, 
 we must start by putting some test data away in a lock box 
 that we will come back to only after we choose our final model. 
@@ -394,8 +416,6 @@ Note that for the remainder of the chapter
 we'll be working with the entire Sacramento data set, 
 as opposed to the smaller sample of 30 points 
 that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
-\index{training data}
-\index{test data}
 
 +++
 
@@ -408,12 +428,18 @@ sacramento_train, sacramento_test = train_test_split(
 )
 ```
 
-Next, we'll use cross-validation \index{cross-validation} to choose $K$. In KNN classification, we used
+```{index} cross-validation, RMSPE
+```
+
+```{index} see: root mean square prediction error; RMSPE
+```
+
+Next, we'll use cross-validation to choose $K$. In KNN classification, we used
 accuracy to see how well our predictions matched the true labels. We cannot use
 the same metric in the regression setting, since our predictions will almost never
 *exactly* match the true response variable values. Therefore in the
-context of KNN regression we will use root mean square prediction error \index{root mean square prediction error|see{RMSPE}}\index{RMSPE}
-(RMSPE) instead. The mathematical formula for calculating RMSPE is: 
+context of KNN regression we will use root mean square prediction error (RMSPE) instead. 
+The mathematical formula for calculating RMSPE is: 
 
 $$\text{RMSPE} = \sqrt{\frac{1}{n}\sum\limits_{i=1}^{n}(y_i - \hat{y}_i)^2}$$
 
@@ -495,10 +521,13 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 
 +++
 
+```{index} RMSPE; comparison with RMSE
+```
+
 > **Note:** When using many code packages, the evaluation output 
 > we will get to assess the prediction quality of
 > our KNN regression models is labeled "RMSE", or "root mean squared
-> error". Why is this so, and why not RMSPE? \index{RMSPE!comparison with RMSE}
+> error". Why is this so, and why not RMSPE? 
 > In statistics, we try to be very precise with our
 > language to indicate whether we are calculating the prediction error on the
 > training data (*in-sample* prediction) versus on the testing data 
@@ -508,6 +537,9 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 > The equation for calculating RMSE and RMSPE is exactly the same; all that changes is whether the $y$s are
 > training or testing data. But many people just use RMSE for both, 
 > and rely on context to denote which data the root mean squared error is being calculated on.
+
+```{index} scikit-learn, scikit-learn; pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
+```
 
 Now that we know how we can assess how well our model predicts a numerical
 value, let's use Python to perform cross-validation and to choose the optimal $K$.
@@ -562,6 +594,9 @@ as they do not provide any additional insight.
 # Then we create a 5-fold cross-validation object, and put the recipe and model specification together
 # in a workflow.
 # \index{tidymodels}\index{recipe}\index{workflow}
+```
+
+```{index} scikit-learn; GridSearchCV
 ```
 
 ```{code-cell} ipython3
@@ -753,6 +788,9 @@ Predicted values for house price (represented as a blue line) from KNN regressio
 
 +++
 
+```{index} overfitting; regression
+```
+
 {numref}`fig:07-howK` shows that when $K$ = 1, the blue line runs perfectly
 through (almost) all of our training observations. 
 This happens because our
@@ -768,7 +806,10 @@ as the original training data.
 Recall from the classification
 chapters that this behavior&mdash;where the model is influenced too much
 by the noisy data&mdash;is called *overfitting*; we use this same term 
-in the context of regression. \index{overfitting!regression}
+in the context of regression.
+
+```{index} underfitting; regression
+```
 
 What about the plots in {numref}`fig:07-howK` where $K$ is quite large, 
 say, $K$ = 250 or 699? 
@@ -783,7 +824,7 @@ the smooth, inflexible blue line does not follow the training observations very 
 In other words, the model is *not influenced enough* by the training data.
 Recall from the classification
 chapters that this behavior is called *underfitting*; we again use this same
-term in the context of regression.  \index{underfitting!regression}
+term in the context of regression. 
 
 Ideally, what we want is neither of the two situations discussed above. Instead,
 we would like a model that (1) follows the overall "trend" in the training data, so the model
@@ -959,8 +1000,11 @@ on the quality of predictions. Fortunately, we can use the predictor selection
 algorithm from the classification chapter in KNN regression as well.
 As the algorithm is the same, we will not cover it again in this chapter.
 
-We will now demonstrate a multivariable KNN regression \index{K-nearest neighbors!multivariable regression}  analysis of the 
-Sacramento real estate \index{Sacramento real estate} data using `scikit-learn`. This time we will use
+```{index} K-nearest neighbors; multivariable regression, Sacramento real estate
+```
+
+We will now demonstrate a multivariable KNN regression analysis of the 
+Sacramento real estate data using `scikit-learn`. This time we will use
 house size (measured in square feet) as well as number of bedrooms as our
 predictors, and continue to use house sale price as our outcome/target variable
 that we are trying to predict.
@@ -1231,4 +1275,5 @@ and guidance that the worksheets provide will function as intended.
 +++
 
 ```{bibliography}
+:filter: docname in docnames
 ```

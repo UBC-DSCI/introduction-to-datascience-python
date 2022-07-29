@@ -12,6 +12,7 @@ kernelspec:
   name: python3
 ---
 
+(wrangling)=
 # Cleaning and wrangling data
 
 ```{code-cell} ipython3
@@ -113,14 +114,23 @@ This knowledge will be helpful in effectively utilizing these objects in our dat
 
 ### What is a data frame?
 
-A data frame \index{data frame!definition} is a table-like structure for storing data in Python.  Data frames are
+```{index} data frame; definition
+```
+
+```{index} pandas.DataFrame
+```
+
+A data frame is a table-like structure for storing data in Python. Data frames are
 important to learn about because most data that you will encounter in practice
 can be naturally stored as a table.  In order to define data frames precisely,
 we need to introduce a few technical terms:
 
-- **variable:** a \index{variable} characteristic, number, or quantity that can be measured.
-- **observation:** all \index{observation} of the measurements for a given entity.
-- **value:** a \index{value} single measurement of a single variable for a given entity.
+```{index} variable, observation, value
+```
+
+- **variable:** a characteristic, number, or quantity that can be measured.
+- **observation:** all of the measurements for a given entity.
+- **value:** a single measurement of a single variable for a given entity.
 
 Given these definitions, a **data frame** is a tabular data structure in Python
 that is designed to store observations, variables, and their values.
@@ -165,6 +175,9 @@ Data frame with three vectors.
 +++
 
 ### What is a series?
+
+```{index} pandas.Series
+```
 
 In Python, `pandas` **series** are arrays with labels. They are strictly 1-dimensional and can contain any data type (integers, strings, floats, etc), including a mix of them (objects);
 Python has several different basic data types, as shown in {numref}`tab:datatype-table`.
@@ -223,12 +236,31 @@ image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
 
 +++
 
-\newpage
-
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 # The following table was taken from DSCI511 Lecture 1, credit to Arman Seyed-Ahmadi, MDS 2021
+```
+
+```{index} data types, string, integer, floating point number, boolean, list, set, dictionary, tuple, none
+```
+
+```{index} see: str; string
+```
+
+```{index} see: int; integer
+```
+
+```{index} see: float; floating point number
+```
+
+```{index} see: bool; boolean
+```
+
+```{index} see: NoneType; none
+```
+
+```{index} see: dict; dictionary
 ```
 
 ```{table} Basic data types in Python
@@ -247,12 +279,6 @@ image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
 
 +++
 
-\index{data types}
-\index{character}\index{chr|see{character}}
-\index{integer}\index{int|see{integer}}
-\index{double}\index{dbl|see{double}}
-\index{logical}\index{lgl|see{logical}}
-\index{factor}\index{fct|see{factor}}
 It is important in Python to make sure you represent your data with the correct type. 
 Many of the `pandas` functions we use in this book treat 
 the various data types differently. You should use integers and float types
@@ -283,7 +309,10 @@ and *complex*, but we do not use these in this textbook.
 
 ### What is a list?
 
-Lists \index{list} are built-in objects in Python that have multiple, ordered elements.
+```{index} list
+```
+
+Lists are built-in objects in Python that have multiple, ordered elements.
 `pandas` series can be treated as lists with labels (indices).
 
 ```{code-cell} ipython3
@@ -311,7 +340,10 @@ A vector versus a list.
 
 +++
 
-A data frame \index{data frame!definition} is really just series stuck together that follows two rules:
+```{index} data frame; definition
+```
+
+A data frame is really just series stuck together that follows two rules:
 
 1. Each element itself is a series. 
 2. Each element (series) must have the same length.
@@ -347,7 +379,10 @@ Data frame and vector types.
 # as the values for a single variable are usually all of the same type.
 ```
 
->  **Note:** You can use the function `type` \index{class} on a data object.
+```{index} type
+```
+
+>  **Note:** You can use the function `type` on a data object.
 > For example we can check the class of the Canadian languages data set,
 > `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
 
@@ -397,8 +432,11 @@ language (*e.g.,* matrices), but these are beyond the scope of this book.
 
 ## Tidy data
 
+```{index} tidy data; definition
+```
+
 There are many ways a tabular data set can be organized. This chapter will focus
-on introducing the **tidy data** \index{tidy data!definition} format of organization and how to make your raw
+on introducing the **tidy data** format of organization and how to make your raw
 (and likely messy) data tidy. A tidy data frame satisfies 
 the following three criteria {cite:p}`wickham2014tidy`:
 
@@ -421,10 +459,13 @@ Tidy data satisfies three criteria.
 
 +++
 
+```{index} tidy data; arguments for
+```
+
 There are many good reasons for making sure your data are tidy as a first step in your analysis.
 The most important is that it is a single, consistent format that nearly every function
 in the `pandas` recognizes. No matter what the variables and observations 
-in your data represent, as long as the data frame \index{tidy data!arguments for}
+in your data represent, as long as the data frame 
 is tidy, you can manipulate it, plot it, and analyze it using the same tools.
 If your data is *not* tidy, you will have to write special bespoke code
 in your analysis that will not only be error-prone, but hard for others to understand.
@@ -447,7 +488,10 @@ below!
 
 ### Tidying up: going from wide to long using `.melt`
 
-One task that is commonly performed to get data into a tidy format \index{pivot\_longer}
+```{index} pandas.DataFrame; melt
+```
+
+One task that is commonly performed to get data into a tidy format 
 is to combine values that are stored in separate columns, 
 but are really part of the same variable, into one.
 Data is often stored this way 
@@ -493,6 +537,9 @@ Melting data from a wide to long data format.
 
 +++
 
+```{index} Canadian languages
+```
+
 We can achieve this effect in Python using the `.melt` function from the `pandas` package.
 The `.melt` function combines columns, 
 and is usually used during tidying data 
@@ -501,7 +548,7 @@ To learn how to use `.melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five 
 major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
-the 2016 Canadian census.  \index{Canadian languages}
+the 2016 Canadian census. 
 To get started, 
 we will use `pd.read_csv` to load the (untidy) data.
 
@@ -556,12 +603,18 @@ Syntax for the `melt` function.
 
 +++
 
+```{index} column range
+```
+
+```{index} see: :; column range
+```
+
 We use `.melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
 area. We specify `value_vars` to be all
-the columns between Toronto and Edmonton:  \index{column range}\index{aaacolonsymb@\texttt{:}|see{column range}}
+the columns between Toronto and Edmonton:
 
 ```{code-cell} ipython3
 lang_mother_tidy = lang_wide.melt(
@@ -597,7 +650,10 @@ been met:
 (pivot-wider)=
 ### Tidying up: going from long to wide using `.pivot`
 
-Suppose we have observations spread across multiple rows rather than in a single \index{pivot\_wider}
+```{index} pandas.DataFrame; pivot
+```
+
+Suppose we have observations spread across multiple rows rather than in a single
 row. For example, in {numref}`fig:long-to-wide`, the table on the left is in an
 untidy, long format because the `count` column contains three variables
 (population, commuter, and incorporated count) and information about each observation 
@@ -722,11 +778,14 @@ more columns, and we would see the data set "widen."
 (str-split)=
 ### Tidying up: using `.str.split` to deal with multiple delimiters
 
-Data are also not considered tidy when multiple values are stored in the same \index{separate}
+```{index} pandas.Series; str.split, delimiter
+```
+
+Data are also not considered tidy when multiple values are stored in the same 
 cell. The data set we show below is even messier than the ones we dealt with
 above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary` and `Edmonton` columns
 contain the number of Canadians reporting their primary language at home and
-work in one column separated by the delimiter (`/`). The column names are the \index{delimiter}
+work in one column separated by the delimiter (`/`). The column names are the 
 values of a variable, *and* each value does not have its own cell! To turn this
 messy data into tidy data, we'll have to fix these issues.
 
@@ -855,7 +914,10 @@ indicating they are integer data types (i.e., numbers)!
 (loc-iloc)=
 ## Using `.loc[]` and `.iloc[]` to extract a range of columns
 
-Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it \index{select!helpers}
+```{index} pandas.DataFrame; loc[]
+```
+
+Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it 
 using the powerful suite of functions from the `pandas`. 
 For the first example, recall `.loc[]` from Chapter {ref}`intro`, 
 which lets us create a subset of columns from a data frame. 
@@ -868,12 +930,15 @@ selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most
 selected_columns
 ```
 
+```{index} pandas.DataFrame; iloc[], column range
+```
+
 Here we wrote out the names of each of the columns. However, this method is
 time-consuming, especially if you have a lot of columns! Another approach is to
 index with integers. `.iloc[]` make it easier for
 us to select columns. For instance, we can use `.iloc[]` to choose a
 range of columns rather than typing each column name out. To do this, we use the
-colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
+colon (`:`) operator to denote the range. For example, to get all the columns in 
 the `tidy_lang` data frame from `language` to `most_at_work`, we pass `:` before the comma indicating we want to retrieve all rows, and `1:` after the comma indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
 
 ```{code-cell} ipython3
@@ -898,19 +963,25 @@ Notice that we get the same output as we did above,
 but with less (and clearer!) code. This type of operator 
 is especially handy for large data sets.
 
+```{index} pandas.Series; str.startswith
+```
+
 Suppose instead we wanted to extract columns that followed a particular pattern
 rather than just selecting a range. For example, let's say we wanted only to select the
 columns `most_at_home` and `most_at_work`. There are other functions that allow
-us to select variables based on their names. In particular, we can use the `.str.startswith` method \index{select!starts\_with}
+us to select variables based on their names. In particular, we can use the `.str.startswith` method 
 to choose only the columns that start with the word "most":
 
 ```{code-cell} ipython3
 tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
 ```
 
+```{index} pandas.Series; str.contains
+```
+
 We could also have chosen the columns containing an underscore `_` by using the 
 `.str.contains("_")`, since we notice
-the columns we want contain underscores and the others don't. \index{select!contains}
+the columns we want contain underscores and the others don't. 
 
 ```{code-cell} ipython3
 tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
@@ -1108,9 +1179,13 @@ than French in Montréal according to the 2016 Canadian census.
 +++
 
 ### Using `.assign` to modify columns
+
+```{index} pandas.DataFrame; df[]
+```
+
 In Section {ref}`str-split`, 
 when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-all of the variables were "object" data types. \index{mutate}
+all of the variables were "object" data types. 
 During the tidying process, 
 we used the `pandas.to_numeric` function 
 to convert the `most_at_home` and `most_at_work` columns 
@@ -1326,6 +1401,9 @@ home.  However, in Montréal, this does not seem to be the case!
 
 ## Combining functions by chaining the methods
 
+```{index} chaining methods
+```
+
 In Python, we often have to call multiple methods in a sequence to process a data
 frame. The basic ways of doing this can become quickly unreadable if there are
 many steps. For example, suppose we need to perform three operations on a data
@@ -1522,8 +1600,11 @@ For example, we can chain together three functions to:
 - sort the data frame rows in order (`.sort_values`) by counts of the language most spoken at home 
 from smallest to largest.
 
+```{index} pandas.DataFrame; sort_values
+```
+
 As we saw in Chapter {ref}`intro`, 
-we can use the `.sort_values` function \index{arrange}
+we can use the `.sort_values` function 
 to order the rows in the data frame by the values of one or more columns. 
 Here we pass the column name `most_at_home` to sort the data frame rows by the values in that column, in ascending order.
 
@@ -1573,8 +1654,11 @@ before moving on with further steps.
 
 ### Calculating summary statistics on whole columns
 
+```{index} summarize
+```
+
 As a part of many data analyses, we need to calculate a summary value for the
-data (a *summary statistic*). \index{summarize}
+data (a *summary statistic*). 
 Examples of summary statistics we might want to calculate 
 are the number of observations, the average/mean value for a column, 
 the minimum value, etc. 
@@ -1654,10 +1738,16 @@ people.
 
 ### Calculating summary statistics when there are `NaN`s
 
+```{index} missing data
+```
+
+```{index} see: NaN; missing data
+```
+
 In `pandas` DataFrame, the value `NaN` is often used to denote missing data. 
 Many of the base python statistical summary functions 
 (e.g., `max`, `min`, `sum`, etc) will return `NaN` 
-when applied to columns containing `NaN` values. \index{missing data}\index{NA|see{missing data}}
+when applied to columns containing `NaN` values. 
 Usually that is not what we want to happen; 
 instead, we would usually like Python to ignore the missing entries
 and calculate the summary statistic using all of the other non-`NaN` values
@@ -1734,7 +1824,10 @@ lang_summary_na
 
 +++
 
-A common pairing with summary functions is `.groupby`. Pairing these functions \index{group\_by}
+```{index} pandas.DataFrame; groupby
+```
+
+A common pairing with summary functions is `.groupby`. Pairing these functions 
 together can let you summarize values for subgroups within a data set,
 as illustrated in {numref}`fig:summarize-groupby`. 
 For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians 
@@ -1847,6 +1940,9 @@ Then we will also explore how we can use a more general iteration function,
 
 +++
 
+```{index} column range
+```
+
 Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value 
 of each of the numeric
 columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the 
@@ -1902,6 +1998,9 @@ tags: [remove-cell]
 
 +++
 
+```{index} pandas.DataFrame; apply
+```
+
 An alternative to aggregating on a dataframe
 for applying a function to many columns is the `.apply` method.
 Let's again find the maximum value of each column of the
@@ -1936,11 +2035,14 @@ tags: [remove-cell]
 pd.DataFrame(region_lang.iloc[:, 3:].apply(max, axis=0)).T
 ```
 
+```{index} missing data
+```
+
 > **Note:** Similar to when we use base Python statistical summary functions 
 > (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s, 
 > `.apply` functions paired with base Python statistical summary functions
 > also return `NaN` values when we apply them to columns that 
-> contain `NaN` values. \index{missing data}
+> contain `NaN` values. 
 > 
 > To avoid this, again we need to use the `pandas` variants of summary functions (*i.e.*
 > `.max`, `.min`, `.sum`, etc.) with `skipna=True`.
@@ -2071,6 +2173,9 @@ tags: [remove-cell]
 
 ```{code-cell} ipython3
 region_lang
+```
+
+```{index} pandas.DataFrame; apply, pandas.DataFrame; iloc[]
 ```
 
 To accomplish such a task, we can use `.apply`.
@@ -2363,4 +2468,12 @@ tags: [remove-cell]
 #   in a data frame, but none of the above functions are flexible enough to do
 #   what you want. In that case, you may consider using [a for
 #   loop](https://r4ds.had.co.nz/iteration.html#iteration).
+```
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
 ```

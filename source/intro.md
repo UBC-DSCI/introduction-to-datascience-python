@@ -11,6 +11,8 @@ kernelspec:
   language: python
   name: python3
 ---
+
+(intro)=
 # Python and the Pandas
 
 ```{code-cell} ipython3
@@ -42,27 +44,30 @@ By the end of the chapter, readers will be able to do the following:
 
 ## Canadian languages data set
 
-In this chapter, \index{Canadian languages} we will walk through a full analysis of a data set relating to
+```{index} Canadian languages
+```
+
+In this chapter, we will walk through a full analysis of a data set relating to
 languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada 
 with their own cultures and languages; these languages are often unique to Canada and not spoken
-anywhere else in the world [@statcan2018mothertongue]. Sadly, colonization has
+anywhere else in the world {cite:p}`statcan2018mothertongue`. Sadly, colonization has
 led to the loss of many of these languages. For instance, generations of
 children were not allowed to speak their mother tongue (the first language an
 individual learns in childhood) in Canadian residential schools. Colonizers
-also renamed places they had "discovered" [@wilson2018].  Acts such as these
+also renamed places they had "discovered" {cite:p}`wilson2018`.  Acts such as these
 have significantly harmed the continuity of Indigenous languages in Canada, and
 some languages are considered "endangered" as few people report speaking them. 
 To learn more, please see *Canadian Geographic*'s article, "Mapping Indigenous Languages in 
-Canada" [@walker2017], 
+Canada" {cite:p}`walker2017`, 
 *They Came for the Children: Canada, Aboriginal 
-peoples, and Residential Schools* [@children2012] 
+peoples, and Residential Schools* {cite:p}`children2012` 
 and the *Truth and Reconciliation Commission of Canada's* 
-*Calls to Action* [@calls2015].
+*Calls to Action* {cite:p}`calls2015`.
 
 The data set we will study in this chapter is taken from 
 [the `canlang` R data package](https://ttimbers.github.io/canlang/) 
-[@timbers2020canlang], which has
-population language data collected during the 2016 Canadian census [@cancensus2016]. 
+{cite:p}`timbers2020canlang`, which has
+population language data collected during the 2016 Canadian census {cite:p}`cancensus2016`. 
 In this data, there are 214 languages recorded, each having six different properties:
 
 1. `category`: Higher-level language category, describing whether the language is an Official Canadian language, an Aboriginal (i.e., Indigenous) language, or a Non-Official and Non-Aboriginal language.
@@ -79,7 +84,10 @@ then we might ask the following question, which we wish to answer using our data
 *Which ten Aboriginal languages were most often reported in 2016 as mother
 tongues in Canada, and how many people speak each of them?* 
 
-> **Note:** Data science\index{data science!good practices} cannot be done without 
+```{index} data science; good practices
+```
+
+> **Note:** Data science cannot be done without 
 > a deep understanding of the data and
 > problem domain. In this book, we have simplified the data sets used in our
 > examples to concentrate on methods and fundamental concepts. But in real
@@ -95,19 +103,16 @@ Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
 descriptive, exploratory, inferential, predictive, causal, and mechanistic,
-all of which are defined in {numref}`questions-table`. [@leek2015question; @peng2015art]
+all of which are defined in {numref}`questions-table`. {cite:p}`leek2015question,peng2015art`
 Carefully formulating a question as early as possible in your analysis&mdash;and 
 correctly identifying which type of question it is&mdash;will guide your overall approach to 
-the analysis as well as the selection of appropriate tools.\index{question!data analysis}
-\index{descriptive question!definition}
-\index{exploratory question!definition}
-\index{predictive question!definition}
-\index{inferential question!definition}
-\index{causal question!definition}
-\index{mechanistic question!definition}
+the analysis as well as the selection of appropriate tools.
 
+```{index} question; data analysis, descriptive question; definition, exploratory question; definition
+```
 
-
+```{index} predictive question; definition, inferential question; definition, causal question; definition, mechanistic question; definition
+```
 
 ```{list-table} Types of data analysis question.
 :header-rows: 1
@@ -143,41 +148,47 @@ first four types of question: descriptive, exploratory, predictive, and inferent
 causal and mechanistic questions are beyond the scope of this book.
 In particular, you will learn how to apply the following analysis tools:
 
-1. **Summarization:** \index{summarization!overview} computing and reporting aggregated values pertaining to a data set. 
+```{index} summarization; overview, visualization; overview, classification; overview, regression; overview
+```
+
+```{index} clustering; overview, estimation; overview
+```
+
+1. **Summarization:** computing and reporting aggregated values pertaining to a data set. 
 Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question: 
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in Chapters \@ref(reading)
-and \@ref(wrangling), but appear regularly throughout the text.
-2. **Visualization:** \index{visualization!overview} plotting data graphically. 
+Tools for summarization are covered in detail in Chapters {ref}`reading`
+and {ref}`wrangling`, but appear regularly throughout the text.
+1. **Visualization:** plotting data graphically. 
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?* 
-This is covered in detail in Chapter \@ref(viz), but again appears regularly throughout the book.
-3. **Classification:** \index{classification!overview} predicting a class or category for a new observation.
+This is covered in detail in Chapter {ref}`viz`, but again appears regularly throughout the book.
+3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in Chapters \@ref(classification) and \@ref(classification2).
-4. **Regression:**  \index{regression!overview} predicting a quantitative value for a new observation. 
+Classification is covered in Chapters {ref}`classification` and {ref}`classification2`.
+4. **Regression:** predicting a quantitative value for a new observation. 
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in Chapters \@ref(regression1) and \@ref(regression2).
-5. **Clustering:** \index{clustering!overview} finding previously unknown/unlabeled subgroups in a
+Regression is covered in Chapters {ref}`regression1` and {ref}`regression2`.
+5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in Chapter \@ref(clustering).
-6. **Estimation:**  \index{estimation!overview} taking measurements for a small number of items from a large group 
+Clustering is covered in Chapter {ref}`clustering`.
+6. **Estimation:** taking measurements for a small number of items from a large group 
  and making a good guess for the average or proportion for the large group. Estimation 
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?* 
-Estimation is covered in Chapter \@ref(inference).
+Estimation is covered in Chapter {ref}`inference`.
 
 Referring to {numref}`questions-table`, our question about 
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -189,20 +200,26 @@ us the ten most common Aboriginal languages in Canada and their associated count
 according to the 2016 census. 
 
 ## Loading a tabular data set
+
+```{index} tabular data
+```
+
 A data set is, at its core essence, a structured collection of numbers and characters.
 Aside from that, there are really no strict rules; data sets can come in 
 many different forms! Perhaps the most common form of data set that you will
-find in the wild, however, is *tabular data*\index{tabular data}. Think spreadsheets in Microsoft Excel: tabular data are
+find in the wild, however, is *tabular data*. Think spreadsheets in Microsoft Excel: tabular data are
 rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-dataframe`. In this book, we will focus primarily on tabular data.
+
+```{index} data frame; overview, observation, variable
+```
 
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
-Python, it is represented as a *data frame* object\index{data frame!overview}. {numref}`img-spreadsheet-vs-dataframe` shows that an Python data frame is very similar
-to a spreadsheet. We refer to the rows as \index{observation} **observations**; these are the things that we
-collect the data on, e.g., voters, cities, etc. We refer to the columns as \index{variable}
+Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-dataframe` shows that an Python data frame is very similar
+to a spreadsheet. We refer to the rows as **observations**; these are the things that we
+collect the data on, e.g., voters, cities, etc. We refer to the columns as 
 **variables**; these are the characteristics of those observations, e.g., voters' political
 affiliations, cities' populations, etc. 
-
 
 
 ```{figure} img/spreadsheet_vs_df.png
@@ -213,8 +230,14 @@ name: img-spreadsheet-vs-dataframe
 A spreadsheet versus a data frame in Python
 ```
 
+```{index} see: comma-separated values; csv
+```
+
+```{index} csv
+```
+
 The first kind of data file that we will learn how to load into Python as a data
-frame is the *comma-separated values* format (`.csv` for short)\index{comma-separated values|see{csv}}\index{csv}.  These files
+frame is the *comma-separated values* format (`.csv` for short).  These files
 have names ending in `.csv`, and can be opened and saved using common
 spreadsheet programs like Microsoft Excel and Google Sheets.  For example, the
 `.csv` file named `can_lang.csv` 
@@ -235,11 +258,14 @@ Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
+```{index} function, argument, read function; read\_csv
+```
+
 To load this data into Python so that we can do things with it (e.g., perform
-analyses or create data visualizations), we will need to use a *function.* \index{function} A
+analyses or create data visualizations), we will need to use a *function.* A
 function is a special word in Python that takes instructions (we call these
-*arguments*) \index{argument} and does something. The function we will use to load a `.csv` file
-into Python is called `read_csv`. \index{read function!read\_csv} In its most basic 
+*arguments*) and does something. The function we will use to load a `.csv` file
+into Python is called `read_csv`. In its most basic 
 use-case, `read_csv` expects that the data file:
 
 - has column names (or *headers*),
@@ -248,28 +274,27 @@ use-case, `read_csv` expects that the data file:
 
 +++
 
+```{index} package, import, pandas
+```
+
 Below you'll see the code used to load the data into Python using the `read_csv`
 function. Note that the `read_csv` function is not included in the base
 installation of Python, meaning that it is not one of the primary functions ready to
 use when you install Python. Therefore, you need to load it from somewhere else
 before you can use it. The place from which we will load it is called a Python *package*. 
-A Python package \index{package} is a collection of functions that can be used in addition to the
+A Python package is a collection of functions that can be used in addition to the
 built-in Python package functions once loaded. The `read_csv` function, in
 particular, can be made accessible by loading 
-[the `pandas` Python package](https://pypi.org/project/pandas/) [@tidyverse; @wickham2019tidverse]
-using the `import` command. \index{library} The `pandas` \index{tidyverse} package contains many
+[the `pandas` Python package](https://pypi.org/project/pandas/) {cite:p}`reback2020pandas,mckinney-proc-scipy-2010`
+using the `import` command. The `pandas` package contains many
 functions that we will use throughout this book to load, clean, wrangle, 
 and visualize data. 
 
 +++
 
-
-
 ```{code-cell} ipython3
 import pandas as pd
 ```
-
-
 
 After loading the `pandas` package and accessing it using the alias `pd`, we can call the `read_csv` function and
 pass it a single argument: the name of the file, `"can_lang.csv"`. We have to
@@ -311,16 +336,20 @@ What would be more useful would be to give a name
 to the data frame that `read_csv` outputs, 
 so that we can refer to it later for analysis and visualization.
 
+```{index} see: =; assignment symbol
+```
+
+```{index} assignment symbol, string
+```
+
 The way to assign a name to a value in Python is via the *assignment symbol* `=`. 
-\index{aaaassignsymb@\texttt{<-}|see{assignment symbol}}\index{assignment symbol}
 On the left side of the assignment symbol you put the name that you want
 to use, and on the right side of the assignment symbol
 you put the value that you want the name to refer to.
 Names can be used to refer to almost anything in Python, such as numbers,
 words (also known as *strings* of characters), and data frames!
 Below, we set `my_number` to `3` (the result of `1+2`)
-and we set `name` to the string `"Alice"`. \index{string}
-
+and we set `name` to the string `"Alice"`.
 
 ```{code-cell} ipython3
 my_number = 1 + 2
@@ -344,16 +373,17 @@ place of their values. For example, if we want to do something with the value `3
 we can just use `my_number` instead. Let's try adding 2 to `my_number`; you will see that
 Python just interprets this as adding 2 and 3:
 
-
 ```{code-cell} ipython3
 my_number + 2
 ```
 
-Object names \index{object} can consist of letters, numbers, periods `.` and underscores `_`.
+```{index} object
+```
+
+Object names can consist of letters, numbers, periods `.` and underscores `_`.
 Other symbols won't work since they have their own meanings in Python. For example,
 `+` is the addition symbol(operator); if we try to assign a name with
 the `+` symbol, Python will complain and we will get an error!
-
 
 ```
 na+me = 1
@@ -363,20 +393,21 @@ na+me = 1
 SyntaxError: cannot assign to operator
 ```
 
+```{index} object; naming convention
+```
+
 There are certain conventions for naming objects in Python. 
-When naming \index{object!naming convention} an object we
+When naming an object we
 suggest using only lowercase letters, numbers and underscores `_` to separate
 the words in a name.  Python is case sensitive, which means that `Letter` and
 `letter` would be two different objects in Python.  You should also try to give your
 objects meaningful names.  For instance, you *can* name a data frame `x`.
 However, using more meaningful terms, such as `language_data`, will help you
 remember what each name in your code represents.  We recommend following the
-**PEP 8** naming conventions outlined in the *[PEP 8](https://peps.python.org/pep-0008/)* [@tidyversestyleguide].  Let's
+**PEP 8** naming conventions outlined in the *[PEP 8](https://peps.python.org/pep-0008/)* {cite:p}`pep8-style-guide`.  Let's
 now use the assignment symbol to give the name
 `can_lang` to the 2016 Canadian census language data frame that we get from
 `read_csv`. 
-
-
 
 ```{code-cell} ipython3
 can_lang = pd.read_csv("data/can_lang.csv")
@@ -391,13 +422,14 @@ on the screen. You will also see at the top that the number of observations (i.e
 variables (i.e., columns) are printed. Printing the first few rows of a data frame 
 like this is a handy way to get a quick sense for what is contained in a data frame.
 
-
-
 ```{code-cell} ipython3
 can_lang
 ```
 
 ## Creating subsets of data frames with `df[]` & `loc[]`
+
+```{index} pandas.DataFrame; df[], pandas.DataFrame; loc[]
+```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
 find the ten Aboriginal languages that were most often reported
@@ -405,8 +437,8 @@ in 2016 as mother tongues in Canada. In particular, we will construct
 a table with the ten Aboriginal languages that have the largest 
 counts in the `mother_tongue` column. 
 The `df[]` and `loc[]` properties of the `pandas` dataframe will help us
-here. The `df[]` \index{filter} property allows you to obtain a subset of the
-rows with specific values, while the `loc[]` \index{select} property allows you 
+here. The `df[]` property allows you to obtain a subset of the
+rows with specific values, while the `loc[]` property allows you 
 to obtain a subset of the columns. Therefore, we can use `df[]` 
 to filter the rows to extract the Aboriginal languages in the data set, and 
 then use `loc[]` property to obtain only the columns we want to include in our table.
@@ -418,31 +450,30 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention 
 to only those languages in the "Aboriginal languages" category. 
 
-We can use the `df[]` \index{filter} property to obtain the subset of rows with desired
+```{index} pandas.DataFrame; df[], logical statement, logical statement; equivalency operator, string
+```
+
+We can use the `df[]` property to obtain the subset of rows with desired
 values from a data frame, where `df[]` is same as the data frame object you are using. 
 In our case it would be `can_lang[]`
 The argument to `can_lang[]` is selection of column name `category` of the data frame
-object, `can_lang`. The second argument is a *logical statement* \index{logical statement} to use when
+object, `can_lang`. The second argument is a *logical statement* to use when
 filtering the rows with the logical statement evaluating to either `TRUE` or `FALSE`;
 `df[]` keeps only those rows for which the logical statement evaluates to `TRUE`.
 For example, in our analysis, we are interested in keeping only languages in the
 "Aboriginal languages" higher-level category. We can use 
-the *equivalency operator* `==` \index{logical statement!equivalency operator} to compare the values
+the *equivalency operator* `==` to compare the values
 of the `category` column with the value `"Aboriginal languages"`; you will learn about
-many other kinds of logical statements in Chapter \@ref(wrangling).  Similar to
+many other kinds of logical statements in Chapter {ref}`wrangling`.  Similar to
 when we loaded the data file and put quotes around the file name, here we need
 to put quotes around `"Aboriginal languages"`. Using quotes tells Python that this
-is a string *value* \index{string} and not one of the special words that make up Python
+is a string *value* and not one of the special words that make up Python
 programming language, or one of the names we have given to data frames in the
 code we have already written. 
-
-
 
 With the logical filter statement inside `df[]`, we get a data frame that has all the columns of
 the input data frame, but only those rows we asked for in our logical filter
 statement. 
-
-
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
@@ -458,7 +489,10 @@ gave us the result we wanted!
 
 ### Using `.loc[]` to extract columns
 
-Now let's use `loc[]` \index{select} to extract the `language` and `mother_tongue` columns
+```{index} pandas.DataFrame; loc[]
+```
+
+Now let's use `loc[]` to extract the `language` and `mother_tongue` columns
 from this data frame. To extract these columns, we need to provide the `loc[]`
 property with list of rows separated by list of columns i.e `df.loc[[row1, row2, ...], [col1, col2, ...]]`
 As we want to access all the rows of the dataframe, instead of passing the names of all the rows, 
@@ -476,12 +510,15 @@ selected_lang
 
 ### Using `sort_values` to order and `iloc[]` to select rows by index number
 
+```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
+```
+
 We have used `df[]` and `loc[]` properties of dataframe to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the **ten** languages that are spoken most often. As a next step, we could
 order the `mother_tongue` column from greatest to least and then extract only
 the top ten rows. This is where the `sort_values` function and `.iloc[]` property come to the
-rescue! \index{arrange}\index{slice}
+rescue! 
 
 The `sort_values` function allows us to order the rows of a data frame by the
 values of a particular column.  We need to specify the column name
@@ -520,22 +557,35 @@ Visualizations are a great tool for summarizing information to help you
 effectively communicate with your audience. 
 
 ## Exploring data with visualizations
-Creating effective data visualizations \index{visualization} is an essential component of any data
+
+```{index} visualization
+```
+
+Creating effective data visualizations is an essential component of any data
 analysis. In this section we will develop a visualization of the 
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in
 Canada, as well as the number of people that speak each of them.
 
 ### Using `altair` to create a bar plot
 
+```{index} altair, visualization; bar
+```
+
 In our data set, we can see that `language` and `mother_tongue` are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
 The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
 book: many of the functions from `pandas` require tidy data, including the
-`altair` \index{ggplot} package that we will use shortly for our visualization. We will
-formally introduce tidy data in Chapter \@ref(wrangling).
+`altair` package that we will use shortly for our visualization. We will
+formally introduce tidy data in Chapter {ref}`wrangling`.
 
-We will make a bar plot to visualize our data. A bar plot \index{plot|see{visualization}}\index{visualization|see{ggplot}}\index{visualization!bar} is a chart where the
+```{index} see: plot; visualization
+```
+
+```{index} see: visualization; altair
+```
+
+We will make a bar plot to visualize our data. A bar plot is a chart where the
 heights of the bars represent certain values, like counts or proportions. We
 will make a bar plot using the `mother_tongue` and `language` columns from our
 `ten_lang` data frame. To create a bar plot of these two variables using the 
@@ -543,15 +593,11 @@ will make a bar plot using the `mother_tongue` and `language` columns from our
 to put on the x and y axes, and what kind of plot to create. 
 First, we need to import the `altair` package.
 
-
-
-
-
-
 ```{code-cell} ipython3
 import altair as alt
 
 ```
+
 +++
 
 The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument `alt.Chart(ten_lang)`.
@@ -596,17 +642,20 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 +++
 
+```{index} see: .; chaining methods
+```
 
-
+```{index} multi-line expression
+```
 
 > **Note:** The vast majority of the
 > time, a single expression in Python must be contained in a single line of code.
 > However, there *are* a small number of situations in which you can have a
 > single Python expression span multiple lines. Above is one such case: here, Python knows that a line cannot
-> end with a `.` symbol, \index{aaaplussymb@$+$|see{ggplot (add layer)}} and so it keeps reading the next line to figure out
+> end with a `.` symbol, and so it keeps reading the next line to figure out
 > what the right-hand side of the `.` symbol should be.  We could, of course,
 > put all of the added layers on one line of code, but splitting them across
-> multiple lines helps a lot with code readability. \index{multi-line expression}
+> multiple lines helps a lot with code readability.
 
 ### Formatting altair objects
 
@@ -622,17 +671,18 @@ will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
 Canadian Residents)" would be much more informative.
 
-Adding additional labels \index{plot!layers} to our visualizations that we create in `altair` is
+```{index} plot; labels, plot; axis labels
+```
+
+Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes 
 in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make 
 the axes titles more informative.
-\index{plot!axis labels} Again, since we are specifying
+Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
 to format the plot further, and we will explore these in Chapter
-\@ref(viz).
-
-
+{ref}`viz`.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = (
@@ -686,7 +736,6 @@ glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True
 
 ```
 
-
 :::{glue:figure} barplot-mother-tongue-labs-axis
 :figwidth: 700px
 :name: barplot-mother-tongue-labs-axis
@@ -694,16 +743,17 @@ glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True
 Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.
 :::
 
+```{index} altair; sort
+```
+
 Another big step forward, as shown in {numref}`barplot-mother-tongue-labs-axis`! There 
 are no more serious issues with the visualization. Now comes time to refine
 the visualization to make it even more well-suited to answering the question
 we asked earlier in this chapter. For example, the visualization could be made more transparent by
 organizing the bars according to the number of Canadian residents reporting
 each language, rather than in alphabetical order. We can reorder the bars using
-the `sort` \index{reorder} argument, which orders a variable (here `language`) based on the
+the `sort` argument, which orders a variable (here `language`) based on the
 values of the variable(`mother_tongue`) on the `x-axis`. 
-
-\newpage
 
 ```{code-cell} ipython3
 ordered_barplot_mother_tongue = (
@@ -744,9 +794,15 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 > Cree languages include the following categories: Cree n.o.s., Swampy Cree,
 > Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
 > includes Moose Cree, Northern East Cree and Southern East Cree)
-> [@language2016]. 
+> {cite:p}`language2016`. 
 
 ### Putting it all together
+
+```{index} comment
+```
+
+```{index} see: #; comment
+```
 
 In the block of code below, we put everything from this chapter together, with a few
 modifications. In particular, we have actually skipped the
@@ -754,7 +810,7 @@ modifications. In particular, we have actually skipped the
 in the `altair` function, you don't actually need to select the columns in advance
 when creating a visualization. We have also provided *comments* next to 
 many of the lines of code below using the
-hash symbol `#`. When Python sees a `#` sign, \index{comment} \index{aaacommentsymb@\#|see{comment}} it 
+hash symbol `#`. When Python sees a `#` sign, it 
 will ignore all of the text that
 comes after the symbol on that line. So you can use comments to explain lines 
 of code for others, and perhaps more importantly, your future self!
@@ -768,8 +824,6 @@ visualization! We asked a question, loaded the data into Python, wrangled the da
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
-
-
 
 ```{code-cell} ipython3
 # load the data set
@@ -803,38 +857,42 @@ glue('final_plot', ten_lang_plot, display=True)
 Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue
 :::
 
-
 ## Accessing documentation
+
+```{index} documentation
+```
+
+```{index} see: help; documentation
+```
+
+```{index} see: __doc__; documentation
+```
 
 There are many Python functions in the `pandas` package (and beyond!), and 
 nobody can be expected to remember what every one of them does
 or all of the arguments we have to give them. Fortunately, Python provides 
 the `help` function and `__doc__` attrribute, which 
-\index{aaaquestionmark@?|see{documentation}}
-\index{help|see{documentation}}
-\index{documentation} provides an easy way to pull up the documentation for 
+provides an easy way to pull up the documentation for 
 most functions quickly. To use the `help` function to access documentation, you 
 just put the name of the function you are curious about as an argument inside the `help` function.
 For example, if you had forgotten what the `pd.read_csv` function
 did or exactly what arguments to pass in, you could run the following
 code: 
 
-
-
 ```{code-cell} ipython3
 :tags: ["remove-output"]
 help(pd.read_csv)
 ```
+
 To use the `__doc__` attribute to access documentation, you 
 just put `.__doc__`  after the function you are curious about.
 For example, to access the documentation of `read_csv` you could run the following code:
- 
- 
 
 ```{code-cell} ipython3
 :tags: ["remove-output"]
 print(pd.read_csv.__doc__)
 ```
+
 {numref}`help_read_csv` shows the documentation that will pop up,
 including a high-level description of the function, its arguments, 
 a description of each, and more. Note that you may find some of the
@@ -844,8 +902,6 @@ to you, and slowly but surely you will become more adept at understanding and na
 documentation like that shown in {numref}`help_read_csv`. But do keep in mind that the documentation
 is not written to *teach* you about a function; it is just there as a reference to *remind*
 you about the different arguments and usage of functions that you have already learned about elsewhere.
-
-
 
 +++
 
@@ -867,5 +923,13 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

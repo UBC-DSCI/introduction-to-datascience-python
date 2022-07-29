@@ -12,9 +12,8 @@ kernelspec:
   name: python3
 ---
 
+(viz)=
 # Effective data visualization
-
-
 
 ## Overview 
 This chapter will introduce concepts and tools relating to data visualization
@@ -46,8 +45,11 @@ By the end of the chapter, readers will be able to do the following:
 ## Choosing the visualization
 #### *Ask a question, and answer it* {-}
 
+```{index} question; visualization
+```
+
 The purpose of a visualization is to answer a question
-\index{question!visualization} about a data set of interest. So naturally, the
+about a data set of interest. So naturally, the
 first thing to do **before** creating a visualization is to formulate the
 question about the data you are trying to answer.  A good visualization will
 clearly answer your question without distraction; a *great* visualization will
@@ -67,23 +69,20 @@ as we have not learned the tools necessary to do that properly just yet.
 As with most coding tasks, it is totally fine (and quite common) to make
 mistakes and iterate a few times before you find the right visualization for
 your data and question. There are many different kinds of plotting
-graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* [@wilkeviz] for a directory). 
+graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* {cite:p}`wilkeviz` for a directory). 
 The types of plot that we introduce in this book are shown in {numref}`plot_sketches`
 which one you should select depends on your data 
 and the question you want to answer. 
 In general, the guiding principles of when to use each type of plot 
 are as follows:
 
-\index{visualization!line}
-\index{visualization!histogram}
-\index{visualization!scatter}
-\index{visualization!bar}
+```{index} visualization; line, visualization; histogram, visualization; scatter, visualization; bar, distribution
+```
 
 - **scatter plots** visualize the relationship between two quantitative variables
 - **line plots** visualize trends with respect to an independent, ordered quantity (e.g., time)
 - **bar plots** visualize comparisons of amounts
-- **histograms** visualize the distribution of one quantitative variable (i.e., all its possible values and how often they occur) \index{distribution}
-
+- **histograms** visualize the distribution of one quantitative variable (i.e., all its possible values and how often they occur)
 
 ```{figure} img/plot-sketches-1.png
 ---
@@ -128,7 +127,7 @@ understand and remember your message quickly.
 - Ensure the data are clearly visible; don't hide the shape/distribution of the data behind other objects (e.g.,  a bar).
 - Make sure to use color schemes that are understandable by those with
   colorblindness (a surprisingly large fraction of the overall 
-  population&mdash;from about 1% to 10%, depending on sex and ancestry [@deebblind]).
+  population&mdash;from about 1% to 10%, depending on sex and ancestry {cite:p}`deebblind`).
   For example, [Color Schemes](https://vega.github.io/vega/docs/schemes/) 
   provides the ability to pick such color schemes, and you can check
   your visualizations after you have created them by uploading to online tools
@@ -149,10 +148,13 @@ understand and remember your message quickly.
 +++
 
 ## Creating visualizations with `altair` 
-#### *Build the visualization iteratively* {-}
+#### *Build the visualization iteratively*
+
+```{index} altair
+```
 
 This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer, 
-and then how to create the visualization in Python \index{ggplot} using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` in order to support reading and other data related operations. 
+and then how to create the visualization in Python using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` in order to support reading and other data related operations. 
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -167,21 +169,24 @@ from myst_nb import glue
 
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
 
+```{index} Mauna Loa
+```
+
 The [Mauna Loa CO$_{\text{2}}$ data set](https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html), 
 curated by Dr. Pieter Tans, NOAA/GML 
 and Dr. Ralph Keeling, Scripps Institution of Oceanography,
 records the atmospheric concentration of carbon dioxide 
 (CO$_{\text{2}}$, in parts per million) 
-at the Mauna Loa research station in \index{Mauna Loa} Hawaii 
-from 1959 onward [@maunadata].
+at the Mauna Loa research station in Hawaii 
+from 1959 onward {cite:p}`maunadata`.
 For this book, we are going to focus on the last 40 years of the data set,
 1980-2020.
 
-**Question:** \index{question!visualization} 
-Does the concentration of atmospheric CO$_{\text{2}}$ change over time, 
+```{index} question; visualization
+```
+
+**Question:** Does the concentration of atmospheric CO$_{\text{2}}$ change over time, 
 and are there any interesting patterns to note?
-
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -227,7 +232,6 @@ that was measured on each date, and is type `float64`.
 > (i.e., not alphanumerically as would happen if it was a character vector). 
 > More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html)
 
-
 Since we are investigating a relationship between two variables 
 (CO$_{\text{2}}$ concentration and date), 
 a scatter plot is a good place to start. 
@@ -237,24 +241,19 @@ Here, we will use the measurement date as the `x` coordinate
 and the CO$_{\text{2}}$ concentration as the `y` coordinate.  
 while using the `altair` package, We create a plot object with the `alt.Chart()` function. 
 There are a few basic aspects of a plot that we need to specify:
-\index{ggplot!aesthetic mapping}
-\index{ggplot!geometric object}
 
-
+```{index} altair; geometric object, altair; geometric encoding, geometric object, geometric encoding
+```
 
 - The name of the **data frame** object to visualize.
     - Here, we specify the `co2_df` data frame as an argument to the `alt.Chart()` function
-- The **geometric object**, which specifies \index{aesthetic mapping} how the mapped data should be displayed.
+- The **geometric object**, which specifies how the mapped data should be displayed.
     - To create a geometric object, we use `Chart.mark_*` methods (see the [altair reference](https://altair-viz.github.io/user_guide/marks.html) for a list of geometric objects).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
-- The **geometric encoding**, which tells \index{aesthetic mapping} `altair` how the columns in the data frame map to properties of the visualization.
+- The **geometric encoding**, which tells `altair` how the columns in the data frame map to properties of the visualization.
     - To create an encoding, we use the `encode()` function.
     - The `encode()` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name(column names)
     - Here, we set the plot `x` axis to the `date_measured` variable, and the plot `y` axis to the `ppm` variable.
-
-
-
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -303,11 +302,12 @@ In situations like this, we typically use a line plot to visualize
 the data. Line plots connect the sequence of `x` and `y` coordinates
 of the observations with line segments, thereby emphasizing their order.
 
+```{index} altair; mark_line
+```
+
 We can create a line plot in `altair` using the `mark_line` function. 
 Let's now try to visualize the `co2_df` as a line plot 
 with just the default arguments: 
-\index{ggplot!geom\_line}
-
 
 ```{code-cell} ipython3
 co2_line = alt.Chart(co2_df).mark_line(color='black').encode(
@@ -331,6 +331,8 @@ glue('co2_line', co2_line, display=False)
 Line plot of atmospheric concentration of CO$_{2}$ over time.
 :::
 
+```{index} overplotting
+```
 
 Aha! {numref}`co2_line` shows us there *is* another interesting
 phenomenon in the data: in addition to increasing over time, the concentration
@@ -340,7 +342,10 @@ be a better choice for answering the question than the scatter plot was. The
 comparison between these two visualizations also illustrates a common issue with
 scatter plots: often, the points are shown too close together or even on top of
 one another, muddling information that would otherwise be clear
-(*overplotting*). \index{overplotting}
+(*overplotting*). 
+
+```{index} altair; alt.X, altair; alt.Y, altair; configure_axis
+```
 
 Now that we have settled on the rough details of the visualization, it is time
 to refine things. This plot is fairly straightforward, and there is not much
@@ -348,8 +353,6 @@ visual noise to remove. But there are a few things we must do to improve
 clarity, such as adding informative axis labels and making the font a more
 readable size.  To add axis labels, we use the `title` argument along with `alt.X` and `alt.Y` functions. To
 change the font size, we use the `configure_axis` function with the `titleFontSize` argument:
-\index{ggplot!xlab,ylab}
-\index{ggplot!theme}
 
 ```{code-cell} ipython3
 co2_line_labels = alt.Chart(co2_df).mark_line(color='black').encode(
@@ -373,11 +376,13 @@ Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes a
 
 > **Note:** The `configure_` function in `altair` is complex and supports many other functionalities, which can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html)
 
+```{index} altair; alt.Scale
+```
 
 Finally, let's see if we can better understand the oscillation by changing the
 visualization slightly. Note that it is totally fine to use a small number of
 visualizations to answer different aspects of the question you are trying to
-answer. We will accomplish this by using *scale*, \index{ggplot!scales}
+answer. We will accomplish this by using *scale*, 
 another important feature of `altair` that easily transforms the different
 variables and set limits.  We scale the horizontal axis using the `alt.Scale(domain=['1990', '1993'])` by restricting the x-axis values between 1990 and 1994,
 and the vertical axis with the `alt.Scale(zero=False)` function, to not start the y-axis with zero.
@@ -385,9 +390,6 @@ In particular, here, we will use the `alt.Scale()` function to zoom in
 on just five years of data (say, 1990-1994).
 `domain` argument takes a list of length two 
 to specify the upper and lower bounds to limit the axis. 
-
-
-
 
 ```{code-cell} ipython3
 
@@ -441,16 +443,21 @@ In our data visualization this would be when we fine tune axis labels,
 change the font, adjust the point size, and do other related things.
 
 ### Scatter plots: the Old Faithful eruption time data set
-The `faithful` data set \index{Old Faithful} contains measurements 
+
+```{index} Old Faithful
+```
+
+The `faithful` data set contains measurements 
 of the waiting time between eruptions 
 and the subsequent eruption duration (in minutes) of the Old Faithful
 geyser in Yellowstone National Park, Wyoming, United States. 
 First, we will read the data and then answer the following question:
 
-**Question:** \index{question!visualization} 
-Is there a relationship between the waiting time before an eruption 
-and the duration of the eruption? 
+```{index} question; visualization
+```
 
+**Question:** Is there a relationship between the waiting time before an eruption 
+and the duration of the eruption? 
 
 ```{code-cell} ipython3
 faithful = pd.read_csv("data/faithful.csv")
@@ -524,18 +531,21 @@ glue('faithful_scatter_labels', faithful_scatter_labels, display=False)
 Scatter plot of waiting time and eruption time with clearer axes and labels.
 :::
 
-
 +++
-
-
 
 ### Axis transformation and colored scatter plots: the Canadian languages data set
 
-Recall the `can_lang` data set [@timbers2020canlang] from Chapters \@ref(intro), \@ref(reading), and \@ref(wrangling),
-\index{Canadian languages} which contains counts of languages from the 2016
+```{index} Canadian languages
+```
+
+Recall the `can_lang` data set {cite:p}`timbers2020canlang` from Chapters {ref}`intro`, {ref}`reading`, and {ref}`wrangling`,
+which contains counts of languages from the 2016
 Canadian census.
 
-**Question:** \index{question!visualization} Is there a relationship between
+```{index} question; visualization
+```
+
+**Question:** Is there a relationship between
 the percentage of people who speak a language as their mother tongue and 
 the percentage for whom that is the primary language spoken at home?
 And is there a pattern in the strength of this relationship in the
@@ -543,7 +553,6 @@ higher-level language categories (Official languages, Aboriginal languages, or
 non-official and non-Aboriginal languages)?
 
 To get started, we will read and inspect the data:
-
 
 ```{code-cell} ipython3
 can_lang =  pd.read_csv("data/can_lang.csv")
@@ -554,11 +563,11 @@ can_lang =  pd.read_csv("data/can_lang.csv")
 can_lang = can_lang[(can_lang['most_at_home']>0) & (can_lang['mother_tongue']>0)]
 ```
 
+```{index} altair; mark_circle
+```
+
 We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
 The resulting plot is shown in {numref}`can_lang_plot`
-\index{ggplot!geom\_point}
-
-
 
 ```{code-cell} ipython3
 
@@ -581,6 +590,8 @@ glue('can_lang_plot', can_lang_plot, display=False)
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home
 :::
 
+```{index} escape character
+```
 
 To make an initial improvement in the interpretability 
 of {numref}`can_lang_plot`, we should 
@@ -588,9 +599,8 @@ replace the default axis
 names with more informative labels. We can add a line break in
 the axis names so that some of the words are printed on a new line. This will
 make the axes labels on the plots more readable. To do this, we pass the title as a list. Each element of the list will be on a new line.
-\index{escape character} We should also increase the font size to further 
+We should also increase the font size to further 
 improve readability.
-
 
 ```{code-cell} ipython3
 can_lang_plot_labels = alt.Chart(can_lang).mark_circle(color='black').encode(
@@ -642,22 +652,27 @@ That's a {glue:}`log_result` -decimal-place difference
 in the magnitude of these two numbers!
 We can confirm that the two points in the upper right-hand corner correspond
 to Canada's two official languages by filtering the data:
-\index{filter}
+
+```{index} pandas.DataFrame; loc[]
+```
 
 ```{code-cell} ipython3
 can_lang.loc[(can_lang['language']=='English') | (can_lang['language']=='French')]
-
 ```
+
+```{index} logarithmic scale, altair; logarithmic scaling
+```
+
 Recall that our question about this data pertains to *all* languages;
 so to properly answer our question, 
 we will need to adjust the scale of the axes so that we can clearly
 see all of the scatter points.
 In particular, we will improve the plot by adjusting the horizontal
-and vertical axes so that they are on a **logarithmic** (or **log**) scale. \index{logarithmic scale}
+and vertical axes so that they are on a **logarithmic** (or **log**) scale.
 Log scaling is useful when your data take both *very large* and *very small* values,
 because it helps space out small values and squishes larger values together.
 For example, $\log_{10}(1) = 0$, $\log_{10}(10) = 1$, $\log_{10}(100) = 2$, and $\log_{10}(1000) = 3$;
-on the logarithmic scale, \index{ggplot!logarithmic scaling} 
+on the logarithmic scale,  
 the values 1, 10, 100, and 1000 are all the same distance apart!
 So we see that applying this function is moving big values closer together 
 and moving small values farther apart.
@@ -667,8 +682,6 @@ the data in such a case, but these are beyond the scope of the book.
 
 We can accomplish logarithmic scaling in the `altair` visualization
 using the argument `type="log"` in the scale functions.
-
-
 
 ```{code-cell} ipython3
 can_lang_plot_log = alt.Chart(can_lang).mark_circle(color='black').encode(
@@ -703,7 +716,7 @@ glue("result", result)
 
 ```
 
-Similar to some of the examples in Chapter \@ref(wrangling), 
+Similar to some of the examples in Chapter {ref}`wrangling`, 
 we can convert the counts to percentages to give them context 
 and make them easier to understand.
 We can do this by dividing the number of people reporting a given language 
@@ -720,9 +733,9 @@ language as their mother tongue and primary language at home for all the
 languages in the `can_lang` data set. Since the new columns are appended to the
 end of the data table, we selected the new columns after the transformation so
 you can clearly see the mutated output from the table.
-\index{mutate}\index{select}
 
-
+```{index} pandas.DataFrame; assign, pandas.DataFrame; [[]]
+```
 
 ```{code-cell} ipython3
 can_lang = can_lang.assign(mother_tongue_percent = (can_lang['mother_tongue'] / 35151728) * 100,
@@ -759,7 +772,6 @@ glue('can_lang_plot_percent', can_lang_plot_percent, display=False)
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home.
 :::
 
-
 {numref}`can_lang_plot_percent` is the appropriate
 visualization to use to answer the first question in this section, i.e.,
 whether there is a relationship between the percentage of people who speak 
@@ -769,13 +781,24 @@ To fully answer the question, we need to use
  {numref}`can_lang_plot_percent`
 to assess a few key characteristics of the data: 
 
+```{index} relationship; positive negative none
+```
+
 - **Direction:** if the y variable tends to increase when the x variable increases, then y has a **positive** relationship with x. If 
   y tends to decrease when x increases, then y has a **negative** relationship with x. If y does not meaningfully increase or decrease 
-  as x increases, then y has **little or no** relationship with x. \index{relationship!positive, negative, none}
+  as x increases, then y has **little or no** relationship with x. 
+
+```{index} relationship; strong weak
+```
+
 - **Strength:** if the y variable *reliably* increases, decreases, or stays flat as x increases,
-  then the relationship is **strong**. Otherwise, the relationship is **weak**. Intuitively, \index{relationship!strong, weak}
+  then the relationship is **strong**. Otherwise, the relationship is **weak**. Intuitively, 
   the relationship is strong when the scatter points are close together and look more like a "line" or "curve" than a "cloud."
-- **Shape:** if you can draw a straight line roughly through the data points, the relationship is **linear**. Otherwise, it is **nonlinear**. \index{relationship!linear, nonlinear}
+
+```{index} relationship; linear nonlinear
+```
+
+- **Shape:** if you can draw a straight line roughly through the data points, the relationship is **linear**. Otherwise, it is **nonlinear**. 
 
 In {numref}`can_lang_plot_percent`, we see that 
 as the percentage of people who have a language as their mother tongue increases, 
@@ -874,12 +897,15 @@ In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color palette. But what if you want to use different
 colors? In Altair, there are many themes available, which can be viewed [here](https://vega.github.io/vega/docs/schemes/)
 
-
 To change the color scheme, 
-we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use. 
+we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
+
+```{index} color palette; color blindness simulator
+```
+
 You can use 
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check 
-if your visualizations \index{color palette!color blindness simulator} 
+if your visualizations 
 are color-blind friendly.
 
 Below we pick the `"dark2"` theme, with the result shown
@@ -918,8 +944,6 @@ glue('can_lang_plot_theme', can_lang_plot_theme, display=False)
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors.
 :::
 
-
-
 From the visualization in {numref}`can_lang_plot_theme`, 
 we can now clearly see that the vast majority of Canadians reported one of the official languages 
 as their mother tongue and as the language they speak most often at home. 
@@ -945,18 +969,19 @@ Answering those questions often involves doing more complex analyses, and someti
 even gathering additional data. We will see more of such complex analyses later on in 
 this book.  
 
-
-
 ### Bar plots: the island landmass data set
-The `islands.csv` data set \index{Island landmasses} contains a list of Earth's landmasses as well as their area (in thousands of square miles) [@islandsdata]. 
 
-**Question:** \index{question!visualization} Are the continents (North / South America, Africa, Europe, Asia, Australia, Antarctica) Earth's seven largest landmasses? If so, what are the next few largest landmasses after those?
+```{index} Island landmasses
+```
 
+The `islands.csv` data set contains a list of Earth's landmasses as well as their area (in thousands of square miles) {cite:p}`islandsdata`. 
 
+```{index} question; visualization
+```
+
+**Question:** Are the continents (North / South America, Africa, Europe, Asia, Australia, Antarctica) Earth's seven largest landmasses? If so, what are the next few largest landmasses after those?
 
 To get started, we will read and inspect the data:
-
-
 
 ```{code-cell} ipython3
 islands_df = pd.read_csv("data/islands.csv")
@@ -971,12 +996,12 @@ In a bar plot, the height of the bar represents the value of a summary statistic
 They are particularly useful for comparing summary statistics between different
 groups of a categorical variable.
 
+```{index} altair; mark_bar
+```
+
 We specify that we would like to use a bar plot
 via the `mark_bar` function in `altair`. 
 The result is shown in {numref}`islands_bar`
-\index{ggplot!geom\_bar}
-
-
 
 ```{code-cell} ipython3
 islands_bar = alt.Chart(islands_df).mark_bar().encode(
@@ -1005,20 +1030,16 @@ little bit clearer by keeping only the largest 12 landmasses. We do this using
 the `sort_values` function followed by the `iloc` property.  Then to help us make sure the labels have enough
 space, we'll use horizontal bars instead of vertical ones. We do this by
 swapping the `x` and `y` variables:
-\index{slice\_max}
 
-
+```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
+```
 
 ```{code-cell} ipython3
 islands_top12 = islands_df.sort_values(by = "size", ascending=False).iloc[:12] 
 
 islands_bar_sorted = alt.Chart(islands_top12).mark_bar().encode(
     x = "size", y = "landmass")
-
-
-
 ```
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -1057,14 +1078,16 @@ which is more visually appealing.
 > **Note:** If we want to sort the values on `y-axis` in descending order of `x-axis`,
 > we need to specify `sort='-x'`.
 
+```{index} altair; sort
+```
+
 To label the x and y axes, we will use the `alt.X` and `alt.Y` function
 The default label is the name of the column being mapped to `color`. Here that
 would be `landmass_type`;
 however `landmass_type` is not proper English (and so is less readable).
 Thus we use the `title` argument inside `alt.Color` to change that to "Type"
-Finally, we again \index{ggplot!reorder} use the `configure_axis` function 
+Finally, we again use the `configure_axis` function 
 to change the font size.
-
 
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar(color='black').encode(
@@ -1072,8 +1095,8 @@ islands_plot_sorted = alt.Chart(islands_top12).mark_bar(color='black').encode(
     y = alt.Y("landmass", title = "Landmass", sort='x'),
     color = alt.Color("landmass_type", title = "Type")).configure_axis(
     titleFontSize=12)
-
 ```
+
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 glue('islands_plot_sorted', islands_plot_sorted, display=True)
@@ -1093,13 +1116,17 @@ their size, and continents are colored differently than other landmasses,
 making it quite clear that continents are the largest seven landmasses.
 
 ### Histograms: the Michelson speed of light data set
-The `morley` data set \index{Michelson speed of light} 
+
+```{index} Michelson speed of light
+```
+
+The `morley` data set 
 contains measurements of the speed of light 
 collected in experiments performed in 1879.
 Five experiments were performed, 
 and in each experiment, 20 runs were performed&mdash;meaning that 
 20 measurements of the speed of light were collected 
-in each experiment [@lightdata].
+in each experiment {cite:p}`lightdata`.
 
 Because the speed of light is a very large number 
 (the true value is 299,792.458 km/sec), the data is coded
@@ -1111,7 +1138,10 @@ would not be noticeable, making it difficult to study the differences between th
 Note that we convert the `morley` data to a tibble to take advantage of the nicer print output 
 these specialized data frames provide.
 
-**Question:** \index{question!visualization} Given what we know now about the speed of 
+```{index} question; visualization
+```
+
+**Question:** Given what we know now about the speed of 
 light (299,792.458 kilometres per second), how accurate were each of the experiments?
 
 First, we read in the data.
@@ -1120,16 +1150,18 @@ First, we read in the data.
 morley_df = pd.read_csv("data/morley.csv")
 ```
 
+```{index} distribution, altair; histogram
+```
+
 In this experimental data, 
 Michelson was trying to measure just a single quantitative number 
 (the speed of light). 
 The data set contains many measurements of this single quantity. 
-\index{distribution} 
 To tell how accurate the experiments were, 
 we need to visualize the distribution of the measurements 
 (i.e., all their possible values and how often each occurs). 
 We can do this using a *histogram*. 
-A histogram \index{ggplot!histogram} 
+A histogram 
 helps us visualize how a particular variable is distributed in a data set 
 by separating the data into bins, 
 and then using vertical bars to show how many data points fell in each bin. 
@@ -1138,16 +1170,10 @@ To create a histogram in `altair` we will use the `mark_bar` geometric
 object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `count()`. As usual, 
 let's use the default arguments just to see how things look.
 
-
-
-
-
-
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
     x = alt.X("Speed"),  
     y='count()')
-
 ```
 
 ```{code-cell} ipython3
@@ -1162,7 +1188,8 @@ glue('morley_hist', morley_hist, display=False)
 Histogram of Michelson's speed of light data.
 :::
 
-
+```{index} altair; mark_rule
+```
 
 {numref}`morley_hist` is a great start. 
 However, 
@@ -1170,7 +1197,7 @@ we cannot tell how accurate the measurements are using this visualization
 unless we can see the true value.
 In order to visualize the true speed of light, 
 we will add a vertical line with the `mark_rule` function.
-To draw a vertical line with `mark_rule`,  \index{ggplot!geom\_vline}
+To draw a vertical line with `mark_rule`, 
 we need to specify where on the x-axis the line should be drawn. 
 We can do this by creating a dataframe with just one column with value `792.458`, which is the true value of light speed 
 minus 299,000 and encoding it in the `x` axis; this ensures it is coded the same way as the 
@@ -1189,9 +1216,6 @@ while *horizontal lines* are used to denote quantities on the *vertical axis*.
 
 To add the dashed line on top of the histogram, we will use the `+` operator. This concept is also known as layering in altair.(This is covered in the later sections of the chapter). Here, we add the `mark_rule` chart on the `morley_hist` chart of the form `mark_bar`
 
-
-
-
 ```{code-cell} ipython3
 v_line = alt.Chart(pd.DataFrame({'x': [792.458]})).mark_rule(
     strokeDash=[3,3], size=1).encode(
@@ -1205,17 +1229,17 @@ final_plot = morley_hist + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot', final_plot, display=False)
+glue('final_plot_viz', final_plot, display=False)
 ```
 
-:::{glue:figure} final_plot
+:::{glue:figure} final_plot_viz
 :figwidth: 700px 
-:name: final_plot
+:name: final_plot_viz
 
 Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
 :::
 
-In {numref}`final_plot`, 
+In {numref}`final_plot_viz`, 
 we still cannot tell which experiments (denoted in the `Expt` column) 
 led to which measurements; 
 perhaps some experiments were more accurate than others. 
@@ -1230,7 +1254,6 @@ We make sure the different colors can be seen
 (despite them all sitting on top of each other) 
 by setting the `opacity` argument in `mark_bar` to `0.5` 
 to make the bars slightly translucent. 
-
 
 
 ```{code-cell} ipython3
@@ -1255,21 +1278,24 @@ glue('final_plot_colored', final_plot_colored, display=True)
 Histogram of Michelson's speed of light data colored by experiment.
 :::
 
+```{index} integer
+```
+
 Alright great, {numref}`final_plot_colored` looks...wait a second! We are not able to distinguish 
 between different Experiments in the histogram! What is going on here? Well, if you 
-recall from Chapter \@ref(wrangling), the *data type* you use for each variable
+recall from Chapter {ref}`wrangling`, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
 is currently an *integer*. But we want to treat it as a
 *category*, i.e., there should be one category per type of experiment.  
 
+```{index} nominal, altair; :N
+```
+
 To fix this issue we can convert the `Expt` variable into a `nominal`(categorical) type 
 variable by adding a suffix `:N`(where `N` stands for nominal type variable) with the `Expt` variable.
 By doing this, we are ensuring that `altair` will treat this variable as a categorical variable,
 and the color will be mapped discretely. Here, we also mention `stack=False`, so that the bars are not stacked on top of each other.
-\index{factor!usage in ggplot}
-
-
 
 ```{code-cell} ipython3
 morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
@@ -1304,6 +1330,9 @@ grid of separate histogram plots.
 
 +++
 
+```{index} altair; facet
+```
+
 We use the `facet` function to create a plot 
 that has multiple subplots arranged in a grid.
 The argument to `facet` specifies the variable(s) used to split the plot 
@@ -1313,9 +1342,6 @@ then the `rows` argument is used.
 If the plot is to be split vertically, into columns, 
 then the `columns` argument is used.
 Both the `rows` and `columns` arguments take the column names on which to split the data when creating the subplots. 
-
-\index{ggplot!facet\_grid}
-
 
 ```{code-cell} ipython3
 
@@ -1349,14 +1375,14 @@ The least variable measurements came from Experiment 2.
 There, the measurements ranged from about 750&ndash;950 km/sec.
 The most different experiments still obtained quite similar results!
 
+```{index} altair; alt.X, altair; alt.Y, altair; configure_axis
+```
+
 There are two finishing touches to make this visualization even clearer. First and foremost, we need to add informative axis labels
 using the `alt.X` and `alt.Y` function, and increase the font size to make it readable using the `configure_axis` function. Second, and perhaps more subtly, even though it 
 is easy to compare the experiments on this plot to one another, it is hard to get a sense 
 of just how accurate all the experiments were overall. For example, how accurate is the value 800 on the plot, relative to the true speed of light?
 To answer this question, we'll use the assign function to transform our data into a relative measure of accuracy rather than absolute measurements:
-\index{ggplot!labs}\index{ggplot!theme}
-
-
 
 ```{code-cell} ipython3
 
@@ -1392,12 +1418,10 @@ glue('final_plot_relative', final_plot_relative, display=True)
 Histogram of relative accuracy split vertically by experiment with clearer axes and labels
 :::
 
-Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. Figure \@ref(fig:03-data-morley-hist-5) shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an 
+Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. {numref}`final_plot_relative` shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an 
 admirable job given the technology available at the time.
 
-\newpage
-
-#### Choosing a binwidth for histograms {-}
+#### Choosing a binwidth for histograms
 
 When you create a histogram in `altair`, the default number of bins used is 30.
 Naturally, this is not always the right number to use.
@@ -1475,9 +1499,12 @@ Effect of varying number of max bins on histograms.
 
 #### Adding layers to a `altair` plot object {-}
 
+```{index} altair; +
+```
+
 One of the powerful features of `altair` is that you 
 can continue to iterate on a single plot object, adding and refining
-one layer \index{ggplot!add layer} at a time. If you stored your plot as a named object
+one layer at a time. If you stored your plot as a named object
 using the assignment symbol (`=`), you can 
 add to it using the `+` operator.
 For example, if we wanted to add a vertical line to the last plot we created (`morley_hist`), 
@@ -1550,7 +1577,10 @@ analysis / model, a visualization of the results of your analysis to show what
 your analysis has uncovered, or even one at the end of a presentation to help
 suggest directions for future work. 
 
-Regardless of where it appears, a good way to discuss your visualization \index{visualization!explanation} is as
+```{index} visualization; explanation
+```
+
+Regardless of where it appears, a good way to discuss your visualization is as
 a story: 
 
 1) Establish the setting and scope, and describe why you did what you did. 
@@ -1568,7 +1598,10 @@ a story:
 Below are two examples of how one might take these four steps in describing the example visualizations that appeared earlier in this chapter.
 Each of the steps is denoted by its numeral in parentheses, e.g. (3).
 
-**Mauna Loa Atmospheric CO$_{\text{2}}$ Measurements:** (1) \index{Mauna Loa} Many 
+```{index} Mauna Loa
+```
+
+**Mauna Loa Atmospheric CO$_{\text{2}}$ Measurements:** (1) Many 
 current forms of energy generation and conversion&mdash;from automotive
 engines to natural gas power plants&mdash;rely on burning fossil fuels and produce
 greenhouse gases, typically primarily carbon dioxide (CO$_{\text{2}}$), as a
@@ -1585,7 +1618,10 @@ is small relative to the growth in the overall trend. This shows that
 atmospheric CO$_{\text{2}}$ is clearly increasing over time, and (4) it is
 perhaps worth investigating more into the causes.
 
-**Michelson Light Speed Experiments:** (1) \index{Michelson speed of light} Our
+```{index} Michelson speed of light
+```
+
+**Michelson Light Speed Experiments:** (1) Our
 modern understanding of the physics of light has advanced significantly from
 the late 1800s when Michelson and Morley's experiments first demonstrated that
 it had a finite speed. We now know, based on modern experiments, that it moves at
@@ -1605,14 +1641,23 @@ these experiments to see why they produced different results.
 ## Saving the visualization
 #### *Choose the right output format for your needs* {-}
 
+```{index} see: bitmap; raster graphics
+```
+
+```{index} raster graphics, vector graphics
+```
+
 Just as there are many ways to store data sets, there are many ways to store
 visualizations and images.  Which one you choose can depend on several factors,
 such as file size/type limitations (e.g., if you are submitting your
 visualization as part of a conference paper or to a poster printing shop) and
 where it will be displayed (e.g., online, in a paper, on a poster, on a
 billboard, in talk slides).  Generally speaking, images come in two flavors:
-*raster* \index{bitmap|see{raster graphics}}\index{raster graphics} formats 
-and *vector* \index{vector graphics} formats.
+*raster* formats 
+and *vector* formats.
+
+```{index} raster graphics; file types
+```
 
 **Raster** images are represented as a 2-D grid of square pixels, each
 with its own color. Raster images are often *compressed* before storing so they
@@ -1620,7 +1665,6 @@ take up less space. A compressed format is *lossy* if the image cannot be
 perfectly re-created when loading and displaying, with the hope that the change
 is not noticeable. *Lossless* formats, on the other hand, allow a perfect
 display of the original image.
-\index{raster graphics!file types}
 
 - *Common file types:* 
    
@@ -1628,10 +1672,12 @@ display of the original image.
    
 - *Open-source software:* [GIMP](https://www.gimp.org/)
 
+```{index} vector graphics; file types
+```
+
 **Vector** images are represented as a collection of mathematical 
 objects (lines, surfaces, shapes, curves). When the computer displays the image, it 
 redraws all of the elements using their mathematical formulas.
-\index{vector graphics!file types}
 
 - *Common file types:* 
     - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use 
@@ -1649,25 +1695,21 @@ take your computer some time to open the image. On the other hand, you can zoom
 into / scale up vector graphics as much as you like without the image looking
 bad, while raster images eventually start to look "pixelated." 
 
+```{index} PDF
+```
+
+```{index} see: portable document dormat; PDF
+```
+
 > **Note:** The portable document format [PDF](https://en.wikipedia.org/wiki/PDF) (`.pdf`) is commonly used to
 > store *both* raster and vector formats. If you try to open a PDF and it's taking a long time
 > to load, it may be because there is a complicated vector graphics image that your computer is rendering. 
-\index{PDF}
-\index{portable document format|see{PDF}}
 
 Let's learn how to save plot images to these different file formats using a 
 scatter plot of 
-the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat) [@faithfuldata],
+the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat) 
+{cite:p}`faithfuldata`,
 shown in {numref}`faithful_scatter_labels`
-
-
-
-:::{glue:figure} faithful_scatter_labels
-:figwidth: 700px 
-:name: faithful_scatter_labels
-
-Scatter plot of waiting time and eruption time.
-:::
 
 Now that we have a named `altair` plot object, we can use the `chart.save` function
 to save a file containing this image. 
@@ -1694,15 +1736,14 @@ faithful_scatter_labels.save("faithful_plot.svg")
 
 ```
 
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import os
 png_size = os.path.getsize("data/faithful_plot.png")/1000000
 svg_size = os.path.getsize("data/faithful_plot.svg")/1000000
 
-glue("png_size", png_size)
-glue("svg_size", svg_size)
+# glue("png_size", png_size)
+# glue("svg_size", svg_size)
 ```
 
 
@@ -1763,22 +1804,23 @@ found in Chapter \@ref(move-to-your-own-machine). This will ensure that the auto
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
-- The [altair documentation](https://altair-viz.github.io/) [@ggplot] is
+
+- The [altair documentation](https://altair-viz.github.io/){cite:p}`altair` is
   where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
   The site also provides a very nice cheat sheet that summarizes many of the data
   wrangling functions from this chapter.
-- The *Fundamentals of Data Visualization* [@wilkeviz] has
+- The *Fundamentals of Data Visualization* {cite:p}`wilkeviz` has
   a wealth of information on designing effective visualizations. It is not
   specific to any particular programming language or library. If you want to
   improve your visualization skills, this is the next place to look.
-- *R for Data Science* [@wickham2016r] has a [chapter on creating visualizations using
-  `ggplot2`](https://r4ds.had.co.nz/data-visualisation.html). This reference is
-  specific to R and `ggplot2`, but provides a much more detailed introduction to
-  the full set of tools that `ggplot2` provides. This chapter is where you should
-  look if you want to learn how to make more intricate visualizations in
-  `ggplot2` than what is included in this chapter.
-- [dates and
-  times](https://wesmckinney.com/book/time-series.html).  This chapter is where
-  you should look if you want to learn about `date` and `time`, including how to
-  create them, and how to use them to effectively handle durations, etc
+- The [dates and times](https://wesmckinney.com/book/time-series.html){cite:p}`mckinney2012python` 
+  chapter is where you should look if you want to learn about `date` and `time`, including how to create them, and how to use them to effectively handle durations, etc
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

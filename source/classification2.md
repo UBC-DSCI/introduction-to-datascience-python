@@ -65,10 +65,13 @@ By the end of the chapter, readers will be able to do the following:
 
 ## Evaluating accuracy
 
+```{index} breast cancer
+```
+
 Sometimes our classifier might make the wrong prediction. A classifier does not
 need to be right 100\% of the time to be useful, though we don't want the
 classifier to make too many wrong predictions. How do we measure how "good" our
-classifier is? Let's revisit the \index{breast cancer}
+classifier is? Let's revisit the 
 [breast cancer images data](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) {cite:p}`streetbreastcancer`
 and think about how our classifier will be used in practice. A biopsy will be
 performed on a *new* patient's tumor, the resulting image will be analyzed,
@@ -78,7 +81,10 @@ accurate predictions on data *not seen during training*. But then, how can we
 evaluate our classifier without visiting the hospital to collect more
 tumor images? 
 
-The trick is to split the data into a **training set** \index{training set} and **test set** \index{test set} ({numref}`fig:06-training-test`)
+```{index} training set, test set
+```
+
+The trick is to split the data into a **training set** and **test set** ({numref}`fig:06-training-test`)
 and use only the **training set** when building the classifier.
 Then, to evaluate the accuracy of the classifier, we first set aside the true labels from the **test set**,
 and then use the classifier to predict the labels in the **test set**. If our predictions match the true
@@ -86,7 +92,10 @@ labels for the observations in the **test set**, then we have some
 confidence that our classifier might also accurately predict the class
 labels for new observations without known class labels.
 
-> **Note:** If there were a golden rule of machine learning, \index{golden rule of machine learning} it might be this: 
+```{index} golden rule of machine learning
+```
+
+> **Note:** If there were a golden rule of machine learning, it might be this: 
 > *you cannot use the test data to build the model!* If you do, the model gets to
 > "see" the test data in advance, making it look more accurate than it really
 > is. Imagine how bad it would be to overestimate your classifier's accuracy
@@ -103,9 +112,15 @@ Splitting the data into training and testing sets.
 
 +++
 
+```{index} see: prediction accuracy; accuracy
+```
+
+```{index} accuracy
+```
+
 How exactly can we assess how well our predictions match the true labels for
 the observations in the test set? One way we can do this is to calculate the
-**prediction accuracy**. \index{prediction accuracy|see{accuracy}}\index{accuracy} This is the fraction of examples for which the
+**prediction accuracy**. This is the fraction of examples for which the
 classifier made the correct prediction. To calculate this, we divide the number
 of correct predictions by the number of predictions made. 
 
@@ -132,8 +147,12 @@ Process for splitting the data and finding the prediction accuracy.
 
 (randomseeds)=
 ## Randomness and seeds
+
+```{index} random
+```
+
 Beginning in this chapter, our data analyses will often involve the use
-of *randomness*. \index{random} We use randomness any time we need to make a decision in our
+of *randomness*. We use randomness any time we need to make a decision in our
 analysis that needs to be fair, unbiased, and not influenced by human input.
 For example, in this chapter, we need to split
 a data set into a training set and test set to evaluate our classifier. We 
@@ -144,21 +163,33 @@ In future chapters we will use randomness
 in many other ways, e.g., to help us select a small subset of data from a larger data set, 
 to pick groupings of data, and more.
 
+```{index} reproducible, seed
+```
+
+```{index} see: random seed; seed
+```
+
+```{index} seed; numpy.random.seed
+```
+
 However, the use of randomness runs counter to one of the main 
-tenets of good data analysis practice: \index{reproducible} *reproducibility*. Recall that a reproducible
+tenets of good data analysis practice: *reproducibility*. Recall that a reproducible
 analysis produces the same result each time it is run; if we include randomness
 in the analysis, would we not get a different result each time?
 The trick is that in Python&mdash;and other programming languages&mdash;randomness 
 is not actually random! Instead, Python uses a *random number generator* that
 produces a sequence of numbers that
-are completely determined by a \index{seed} \index{random seed|see{seed}}
+are completely determined by a 
  *seed value*. Once you set the seed value 
-using the \index{seed!set.seed} `np.random.seed` function or the `random_state` argument, everything after that point may *look* random,
+using the `np.random.seed` function or the `random_state` argument, everything after that point may *look* random,
 but is actually totally reproducible. As long as you pick the same seed
 value, you get the same result!
 
+```{index} sample; numpy.random.choice
+```
+
 Let's use an example to investigate how seeds work in Python. Say we want 
-to randomly pick 10 numbers from 0 to 9 in Python using the `np.random.choice` \index{sample!function} function,
+to randomly pick 10 numbers from 0 to 9 in Python using the `np.random.choice` function,
 but we want it to be reproducible. Before using the sample function,
 we call `np.random.seed`, and pass it any integer as an argument. 
 Here, we pass in the number `1`.
@@ -260,14 +291,18 @@ you pick the same argument value your result will be the same.
 ```
 
 ## Evaluating accuracy with `scikit-learn`
+
+```{index} scikit-learn, visualization; scatter
+```
+
 Back to evaluating classifiers now!
-In Python, we can use the `scikit-learn` package \index{tidymodels} not only to perform $K$-nearest neighbors
+In Python, we can use the `scikit-learn` package not only to perform $K$-nearest neighbors
 classification, but also to assess how well our classification worked. 
 Let's work through an example of how to use tools from `scikit-learn` to evaluate a classifier
  using the breast cancer data set from the previous chapter.
 We begin the analysis by loading the packages we require,
 reading in the breast cancer data,
-and then making a quick scatter plot visualization \index{visualization!scatter} of
+and then making a quick scatter plot visualization of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
 You will also notice that we set the random seed using either the `np.random.seed` function
 or `random_state` argument, as described in Section {ref}`randomseeds`.
@@ -327,12 +362,15 @@ and 25% for testing.
 
 +++
 
-The `train_test_split` function \index{tidymodels!initial\_split} from `scikit-learn` handles the procedure of splitting
+```{index} scikit-learn; train_test_split, shuffling, stratification
+```
+
+The `train_test_split` function from `scikit-learn` handles the procedure of splitting
 the data for us. We can specify two very important parameters when using `train_test_split` to ensure
-that the accuracy estimates from the test data are reasonable. First, `shuffle=True` (default) \index{shuffling} means the data will be shuffled before splitting, which ensures that any ordering present
+that the accuracy estimates from the test data are reasonable. First, `shuffle=True` (default) means the data will be shuffled before splitting, which ensures that any ordering present
 in the data does not influence the data that ends up in the training and testing sets.
 Second, by specifying the `stratify` parameter to be the target column of the training set,
-it **stratifies** the \index{stratification} data by the class label, to ensure that roughly
+it **stratifies** the data by the class label, to ensure that roughly
 the same proportion of each class ends up in both the training and testing sets. For example,
 in our data set, roughly 63% of the
 observations are from the benign class (`Benign`), and 37% are from the malignant class (`Malignant`),
@@ -393,7 +431,10 @@ glue("cancer_train_nrow", len(cancer_train))
 glue("cancer_test_nrow", len(cancer_test))
 ```
 
-We can see from `.info()` in \index{glimpse} the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
+```{index} info
+```
+
+We can see from `.info()` in the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
 a train / test split of 75% / 25%, as desired. Recall from Chapter {ref}`classification`
 that we use the `.info()` method to view data with a large number of columns,
@@ -409,7 +450,10 @@ as it prints the data such that the columns go down the page (instead of across)
 # as it prints the data such that the columns go down the page (instead of across).
 ```
 
-We can use `.groupby()` and `.count()` to \index{group\_by}\index{summarize} find the percentage of malignant and benign classes 
+```{index} groupby, count
+```
+
+We can use `.groupby()` and `.count()` to find the percentage of malignant and benign classes 
 in `cancer_train` and we see about {glue:}`cancer_train_b_prop`% of the training
 data are benign and {glue:}`cancer_train_m_prop`% 
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
@@ -439,6 +483,9 @@ created the standardization preprocessor, we can then apply it separately to bot
 training and test data sets.
 
 +++
+
+```{index} pipeline, pipeline; make_column_transformer, pipeline; StandardScaler
+```
 
 Fortunately, the `Pipeline` framework (together with column transformer) from `scikit-learn` helps us handle this properly. Below we construct and prepare the preprocessor using `make_column_transformer`. Later after we construct a full `Pipeline`, we will only fit it with the training data.
 
@@ -495,6 +542,9 @@ knn_fit
 
 ### Predict the labels in the test set
 
+```{index} pandas.concat
+```
+
 Now that we have a $K$-nearest neighbors classifier object, we can use it to
 predict the class labels for our test set.  We use the `pandas.concat()` to add the
 column of predictions to the original test data, creating the
@@ -546,6 +596,9 @@ cancer_test_predictions
 ```
 
 ### Compute the accuracy
+
+```{index} scikit-learn; score
+```
 
 Finally, we can assess our classifier's accuracy. To do this we use the `score` method 
 from `scikit-learn` to get the statistics about the quality of our model, specifying
@@ -643,7 +696,10 @@ We now know that the classifier was {glue:}`cancer_acc_1`% accurate
 on the test data set. That sounds pretty good! Wait, *is* it good? 
 Or do we need something higher?
 
-In general, what a *good* value for accuracy \index{accuracy!assessment} is depends on the application.
+```{index} accuracy; assessment
+```
+
+In general, what a *good* value for accuracy is depends on the application.
  For instance, suppose you are predicting whether a tumor is benign or malignant
  for a type of tumor that is benign 99% of the time. It is very easy to obtain 
  a 99% accuracy just by guessing benign for every observation. In this case, 
@@ -657,8 +713,11 @@ less bad for the classifier to guess "malignant" when the true class is
 expert diagnosis. This is why it is important not only to look at accuracy, but
 also the confusion matrix.
 
+```{index} classification; majority
+```
+
 However, there is always an easy baseline that you can compare to for any
-classification problem: the *majority classifier*. The majority classifier \index{classification!majority}
+classification problem: the *majority classifier*. The majority classifier
 *always* guesses the majority class label from the training data, regardless of
 the predictor variables' values.  It helps to give you a sense of
 scale when considering accuracies. If the majority classifier obtains a 90%
@@ -698,8 +757,14 @@ for the application.
 
 ## Tuning the classifier
 
+```{index} parameter
+```
+
+```{index} see: tuning parameter; parameter
+```
+
 The vast majority of predictive models in statistics and machine learning have
-*parameters*. A *parameter* \index{parameter}\index{tuning parameter|see{parameter}}
+*parameters*. A *parameter* 
 is a number you have to pick in advance that determines
 some aspect of how the model behaves. For example, in the $K$-nearest neighbors
 classification algorithm, $K$ is a parameter that we have to pick
@@ -723,12 +788,15 @@ how to use it to help you pick a good parameter value for your classifier.
 
 ### Cross-validation
 
+```{index} validation set
+```
+
 The first step in choosing the parameter $K$ is to be able to evaluate the 
 classifier using only the training data. If this is possible, then we can compare
 the classifier's performance for different values of $K$&mdash;and pick the best&mdash;using 
 only the training data. As suggested at the beginning of this section, we will
 accomplish this by splitting the training data, training on one subset, and evaluating
-on the other. The subset of training data used for evaluation is often called the **validation set**. \index{validation set}
+on the other. The subset of training data used for evaluation is often called the **validation set**. 
 
 There is, however, one key difference from the train/test split
 that we performed earlier. In particular, we were forced to make only a *single split*
@@ -843,10 +911,13 @@ average (here {glue:}`avg_5_splits`%) to try to get a single assessment of our
 classifier's accuracy; this has the effect of reducing the influence of any one
 (un)lucky validation set on the estimate. 
 
+```{index} cross-validation
+```
+
 In practice, we don't use random splits, but rather use a more structured
 splitting procedure so that each observation in the data set is used in a
 validation set only a single time. The name for this strategy is 
-**cross-validation**.  In **cross-validation**, \index{cross-validation} we split our **overall training
+**cross-validation**.  In **cross-validation**, we split our **overall training
 data** into $C$ evenly sized chunks. Then, iteratively use $1$ chunk as the
 **validation set** and combine the remaining $C-1$ chunks 
 as the **training set**. 
@@ -877,6 +948,9 @@ This means `cross_validate` will ensure that the training and validation subsets
 right proportions of each category of observation.
 
 +++
+
+```{index} cross-validation; cross_validate, scikit-learn; cross_validate
+```
 
 When we run the `cross_validate` function, cross-validation is carried out on each
 train/validation split. We can set `return_train_score=True` to obtain the training scores as well as the validation scores. The `cross_validate` function outputs a dictionary, and we use `pd.DataFrame` to convert it to a `pandas` dataframe for better visualization. (Noteworthy, the `test_score` column is actually the validation scores that we are interested in.)
@@ -1087,6 +1161,9 @@ param_grid = {
 cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
 ```
 
+```{index} cross-validation; GridSearchCV, cross-validation; RandomizedSearchCV, scikit-learn; GridSearchCV, scikit-learn; RandomizedSearchCV
+```
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -1278,7 +1355,10 @@ Plot of accuracy estimate versus number of neighbors for many K values.
 
 +++
 
-**Underfitting:** \index{underfitting!classification} What is actually happening to our classifier that causes
+```{index} underfitting; classification
+```
+
+**Underfitting:** What is actually happening to our classifier that causes
 this? As we increase the number of neighbors, more and more of the training
 observations (and those that are farther and farther away from the point) get a
 "say" in what the class of a new observation is. This causes a sort of
@@ -1290,7 +1370,10 @@ regardless of what the new observation looks like. In general, if the model
 *isn't influenced enough* by the training data, it is said to **underfit** the
 data.
 
-**Overfitting:** \index{overfitting!classification} In contrast, when we decrease the number of neighbors, each
+```{index} overfitting; classification
+```
+
+**Overfitting:** In contrast, when we decrease the number of neighbors, each
 individual data point has a stronger and stronger vote regarding nearby points.
 Since the data themselves are noisy, this causes a more "jagged" boundary
 corresponding to a *less simple* model.  If you take this case to the extreme,
@@ -1426,6 +1509,9 @@ Overview of KNN classification.
 
 +++
 
+```{index} scikit-learn, pipeline, cross-validation, K-nearest neighbors; classification, classification
+```
+
 The overall workflow for performing $K$-nearest neighbors classification using `scikit-learn` is as follows:
 
 1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
@@ -1478,12 +1564,15 @@ the $K$-NN here.
 > interested in learning how irrelevant variables can influence the performance of a classifier, and how to
 > pick a subset of useful variables to include as predictors.
 
+```{index} irrelevant predictors
+```
+
 Another potentially important part of tuning your classifier is to choose which
 variables from your data will be treated as predictor variables. Technically, you can choose
 anything from using a single predictor variable to using every variable in your
 data; the $K$-nearest neighbors algorithm accepts any number of
 predictors. However, it is **not** the case that using more predictors always
-yields better predictions! In fact, sometimes including irrelevant predictors \index{irrelevant predictors} can
+yields better predictions! In fact, sometimes including irrelevant predictors can
 actually negatively affect classifier performance.
 
 +++ {"toc-hr-collapsed": true}
@@ -1714,10 +1803,16 @@ in particular cases of interest. Here we will discuss two basic
 selection methods as an introduction to the topic. See the additional resources at the end of
 this chapter to find out where you can learn more about variable selection, including more advanced methods.
 
+```{index} variable selection; best subset
+```
+
+```{index} see: predictor selection; variable selection
+```
+
 The first idea you might think of for a systematic way to select predictors
 is to try all possible subsets of predictors and then pick the set that results in the "best" classifier.
 This procedure is indeed a well-known variable selection method referred to 
-as *best subset selection* {cite:p}`bealesubset,hockingsubset`. \index{variable selection!best subset}\index{predictor selection|see{variable selection}}
+as *best subset selection* {cite:p}`bealesubset,hockingsubset`. 
 In particular, you
 
 1. create a separate model for every possible subset of predictors,
@@ -1738,8 +1833,11 @@ at $20$ predictors we have over *one million* models to train!
 So although it is a simple method, best subset selection is usually too computationally 
 expensive to use in practice.
 
+```{index} variable selection; forward
+```
+
 Another idea is to iteratively build up a model by adding one predictor variable 
-at a time. This method&mdash;known as *forward selection* {cite:p}`forwardefroymson,forwarddraper`&mdash;is also widely \index{variable selection!forward}
+at a time. This method&mdash;known as *forward selection* {cite:p}`forwardefroymson,forwarddraper`&mdash;is also widely 
 applicable and fairly straightforward. It involves the following steps:
 
 1. Start with a model having no predictors.
@@ -1968,14 +2066,17 @@ accuracies = pd.DataFrame(accuracy_dict)
 accuracies
 ```
 
+```{index} variable selection; elbow method
+```
+
 Interesting! The forward selection procedure first added the three meaningful variables `Perimeter`,
 `Concavity`, and `Smoothness`, followed by the irrelevant variables. {numref}`fig:06-fwdsel-3`
 visualizes the accuracy versus the number of predictors in the model. You can see that
 as meaningful predictors are added, the estimated accuracy increases substantially; and as you add irrelevant
 variables, the accuracy either exhibits small fluctuations or decreases as the model attempts to tune the number
 of neighbors to account for the extra noise. In order to pick the right model from the sequence, you have 
-to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting). The 
-way to find that balance is to look for the *elbow* \index{variable selection!elbow method}
+to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting). 
+The way to find that balance is to look for the *elbow* 
 in {numref}`fig:06-fwdsel-3`, i.e., the place on the plot where the accuracy stops increasing dramatically and
 levels off or begins to decrease. The elbow in {numref}`fig:06-fwdsel-3` appears to occur at the model with 
 3 predictors; after that point the accuracy levels off. So here the right trade-off of accuracy and number of predictors
@@ -2085,4 +2186,5 @@ and guidance that the worksheets provide will function as intended.
 +++
 
 ```{bibliography}
+:filter: docname in docnames
 ```

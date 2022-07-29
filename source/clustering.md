@@ -12,9 +12,8 @@ kernelspec:
   name: python3
 ---
 
-
-
-# Clustering {#clustering}
+(clustering)=
+# Clustering
 
 
 ```{code-cell} ipython3
@@ -61,7 +60,11 @@ and what insight it might extract from the data.
 * Describe advantages, limitations and assumptions of the kmeans clustering algorithm.
 
 ## Clustering
-Clustering \index{clustering} is a data analysis task 
+
+```{index} clustering
+```
+
+Clustering is a data analysis task 
 involving separating a data set into subgroups of related data. 
 For example, we might use clustering to separate a
 data set of documents into groups that correspond to topics, a data set of
@@ -72,15 +75,17 @@ use the subgroups to generate new questions about the data and follow up with a
 predictive modeling exercise. In this course, clustering will be used only for
 exploratory analysis, i.e., uncovering patterns in the data.  
 
+```{index} classification, regression, supervised, unsupervised
+```
+
 Note that clustering is a fundamentally different kind of task 
 than classification or regression. 
 In particular, both classification and regression are *supervised tasks* 
-\index{classification}\index{regression}\index{supervised} 
 where there is a *response variable* (a category label or value), 
 and we have examples of past data with labels/values 
 that help us predict those of future data. 
 By contrast, clustering is an *unsupervised task*, 
-\index{unsupervised} as we are trying to understand 
+as we are trying to understand 
 and examine the structure of data without any response variable labels 
 or values to help us. 
 This approach has both advantages and disadvantages. 
@@ -97,16 +102,22 @@ choice for evaluation. In this book, we will use visualization to ascertain the
 quality of a clustering, and leave rigorous evaluation for more advanced
 courses.  
 
+```{index} K-means
+```
+
 As in the case of classification, 
 there are many possible methods that we could use to cluster our observations 
 to look for subgroups. 
-In this book, we will focus on the widely used K-means \index{K-means} algorithm [@kmeans]. 
+In this book, we will focus on the widely used K-means algorithm {cite:p}`kmeans`. 
 In your future studies, you might encounter hierarchical clustering,
 principal component analysis, multidimensional scaling, and more; 
 see the additional resources section at the end of this chapter 
 for where to begin learning more about these other methods.
 
-> **Note:** There are also so-called *semisupervised* tasks, \index{semisupervised} 
+```{index} semisupervised
+```
+
+> **Note:** There are also so-called *semisupervised* tasks, 
 > where only some of the data come with response variable labels/values, 
 > but the vast majority don't. 
 > The goal is to try to uncover underlying structure in the data 
@@ -118,18 +129,19 @@ for where to begin learning more about these other methods.
 
 **An illustrative example** 
 
-Here we will present an illustrative example using a data set \index{Palmer penguins} from
-[the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) [@palmerpenguins]. This 
+```{index} Palmer penguins
+```
+
+Here we will present an illustrative example using a data set from
+[the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. This 
 data set was collected by Dr. Kristen Gorman and
 the Palmer Station, Antarctica Long Term Ecological Research Site, and includes
-measurements for adult penguins found near there [@penguinpaper]. We have
+measurements for adult penguins found near there {cite:p}`penguinpaper`. We have
 modified the data set for use in this chapter. Here we will focus on using two
 variables&mdash;penguin bill and flipper length, both in millimeters&mdash;to determine whether 
 there are distinct types of penguins in our data.
 Understanding this might help us with species discovery and classification in a data-driven
 way.
-
-
 
 ```{figure} img/gentoo.jpg
 ---
@@ -143,10 +155,9 @@ To learn about K-means clustering
 we will work with `penguin_data` in this chapter.
 `penguin_data` is a subset of 18 observations of the original data, 
 which has already been standardized 
-(remember from Chapter \@ref(classification) 
+(remember from Chapter {ref}`classification` 
 that scaling is part of the standardization process). 
 We will discuss scaling for K-means in more detail later in this chapter. 
-\index{mutate}\index{read function!read\_csv} 
 
 Before we get started, we will set a random seed.
 This will ensure that our analysis will be reproducible.
@@ -154,17 +165,16 @@ As we will learn in more detail later in the chapter,
 setting the seed here is important 
 because the K-means clustering algorithm uses random numbers.
 
-
-
-\index{seed!set.seed}
-
-
+```{index} seed; numpy.random.seed
+```
 
 ```{code-cell} ipython3
 
 np.random.seed(1)
 ```
 
+```{index} read function; read_csv
+```
 
 Now we can load and preview the data.
 
@@ -183,7 +193,6 @@ penguin_data
 
 Next, we can create a scatter plot using this data set 
 to see if we can detect subtypes or groups in our data set.
-
 
 ```{code-cell} ipython3
 scatter_plot = (
@@ -210,9 +219,10 @@ glue('scatter_plot', scatter_plot, display=True)
 Scatter plot of standardized bill length versus standardized flipper length.
 :::
 
+```{index} altair, altair; mark_circle
+```
 
-
-Based \index{ggplot}\index{ggplot!geom\_point} on the visualization 
+Based on the visualization 
 in {numref}`scatter_plot`, 
 we might suspect there are a few subtypes of penguins within our data set.
 We can see roughly 3 groups of observations in {numref}`scatter`,
@@ -221,6 +231,9 @@ including:
 1. a small flipper and bill length group,
 2. a small flipper length, but large bill length group, and
 3. a large  flipper and bill length group.
+
+```{index} K-means, elbow method
+```
 
 Data visualization is a great tool to give us a rough sense of such patterns
 when we have a small number of variables. 
@@ -231,8 +244,8 @@ as we increase the number of variables we consider when clustering.
 The way to rigorously separate the data into groups 
 is to use a clustering algorithm.
 In this chapter, we will focus on the *K-means* algorithm, 
-\index{K-means} a widely used and often very effective clustering method, 
-combined with the *elbow method* \index{elbow method} 
+a widely used and often very effective clustering method, 
+combined with the *elbow method* 
 for selecting the number of clusters. 
 This procedure will separate the data into groups;
 {numref}`colored_scatter_plot` shows these groups
@@ -291,11 +304,15 @@ have.
 
 ### Measuring cluster quality
 
-
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 clus = data[data["cluster"] == 2].loc[:,["bill_length_standardized", "flipper_length_standardized"]]
+```
+
+```{index} see: within-cluster sum-of-squared-distances; WSSD
+```
+
+```{index} WSSD
 ```
 
 The K-means algorithm is a procedure that groups data into K clusters.
@@ -304,7 +321,6 @@ improves it by making adjustments to the assignment of data
 to clusters until it cannot improve any further. But how do we measure
 the "quality" of a clustering, and what does it mean to improve it? 
 In K-means clustering, we measure the quality of a cluster by its
-\index{within-cluster sum-of-squared-distances|see{WSSD}}\index{WSSD}
 *within-cluster sum-of-squared-distances* (WSSD), also called *intertia*. Computing this involves two steps.
 First, we find the cluster centers by computing the mean of each variable 
 over data points in the cluster. For example, suppose we have a 
@@ -342,12 +358,14 @@ name: toy-example-clus1-center-1
 Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.
 ```
 
+```{index} distance; K-means
+```
 
 The second step in computing the WSSD is to add up the squared distance 
-\index{distance!K-means} between each point in the cluster 
+between each point in the cluster 
 and the cluster center.
 We use the straight-line / Euclidean distance formula 
-that we learned about in Chapter \@ref(classification).
+that we learned about in Chapter {ref}`classification`.
 In the {glue:}`clus_rows_glue`-observation cluster example above, 
 we would compute the WSSD $S^2$ via
 
@@ -355,8 +373,6 @@ we would compute the WSSD $S^2$ via
 $S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
 
 These distances are denoted by lines in {numref}`toy-example-clus1-dists-1` for the first cluster of the penguin data example. 
-
-
 
 ```{figure} img/toy-example-clus1-dists-1.png
 ---
@@ -376,9 +392,6 @@ this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
 {numref}`toy-example-all-clus-dists-1`
 
-
-
-
 ```{figure} img/toy-example-all-clus-dists-1.png
 ---
 height: 400px
@@ -389,12 +402,12 @@ All clusters from the penguin_data data set example. Observations are in orange,
 
 ```
 
-
-
-
 ### The clustering algorithm
 
-We begin the K-means \index{K-means!algorithm} algorithm by picking K, 
+```{index} K-means; algorithm
+```
+
+We begin the K-means algorithm by picking K, 
 and randomly assigning a roughly equal number of observations 
 to each of the K clusters.
 An example random initialization is shown in {numref}`toy-kmeans-init-1`
@@ -410,9 +423,11 @@ Random initialization of labels.
 
 ```
 
+```{index} WSSD; total
+```
 
 Then K-means consists of two major steps that attempt to minimize the
-sum of WSSDs over all the clusters, i.e., the \index{WSSD!total} *total WSSD*:
+sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 
 1. **Center update:** Compute the center of each cluster.
 2. **Label update:** Reassign each data point to the cluster with the nearest center.
@@ -424,9 +439,6 @@ There each row corresponds to an iteration,
 where the left column depicts the center update, 
 and the right column depicts the reassignment of data to clusters.
 
-
-
-
 ```{figure} img/toy-kmeans-iter-1.png
 ---
 height: 400px
@@ -436,14 +448,14 @@ First four iterations of K-means clustering on the penguin_data example data set
 
 ```
 
-
-
-
 Note that at this point, we can terminate the algorithm since none of the assignments changed
 in the fourth iteration; both the centers and labels will remain the same from this point onward.
 
+```{index} K-means; termination
+```
+
 > **Note:** Is K-means *guaranteed* to stop at some point, or could it iterate forever? As it turns out,
-> thankfully, the answer is that K-means \index{K-means!termination} is guaranteed to stop after *some* number of iterations. For the interested reader, the
+> thankfully, the answer is that K-means is guaranteed to stop after *some* number of iterations. For the interested reader, the
 > logic for this has three steps: (1) both the label update and the center update decrease total WSSD in each iteration,
 > (2) the total WSSD is always greater than or equal to 0, and (3) there are only a finite number of possible
 > ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
@@ -462,10 +474,11 @@ These, however, are beyond the scope of this book.
 
 ### Random restarts
 
-Unlike the classification and regression models we studied in previous chapters, K-means \index{K-means!restart, nstart} can get "stuck" in a bad solution.
+```{index} K-means; init argument
+```
+
+Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
 For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
-
-
 
 ```{figure} img/toy-kmeans-bad-init-1.png
 ---
@@ -474,10 +487,6 @@ name: toy-kmeans-bad-init-1
 ---
 Random initialization of labels.
 ```
-
-
-
-
 
 {numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
 
@@ -518,16 +527,15 @@ name: toy-kmeans-vary-k-1
 Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.
 ```
 
-
-
+```{index} elbow method
+```
 
 If we set K less than 3, then the clustering merges separate groups of data; this causes a large 
 total WSSD, since the cluster center (denoted by an "x") is not close to any of the data in the cluster. On 
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still 
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of 
-clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") \index{elbow method} when we reach roughly 
+clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly 
 the right number of clusters ({numref}`toy-kmeans-elbow-1`)).
-
 
 ```{figure} img/toy-kmeans-elbow-1.png
 ---
@@ -537,9 +545,10 @@ name: toy-kmeans-elbow-1
 Total WSSD for K clusters ranging from 1 to 9.
 ```
 
-
-
 ## Data pre-processing for K-means
+
+```{index} pair: standardization; K-means
+```
 
 Similar to K-nearest neighbors classification and regression, K-means 
 clustering uses straight-line distance to decide which points are similar to 
@@ -547,12 +556,11 @@ each other. Therefore, the *scale* of each of the variables in the data
 will influence which cluster data points end up being assigned.
 Variables with a large scale will have a much larger 
 effect on deciding cluster assignment than variables with a small scale. 
-To address this problem, we typically standardize \index{standardization!K-means}\index{K-means!standardization} our data before clustering,
+To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
 The `StandardScaler()` function in Python can be used to do this. 
 We show an example of how to use this function 
 below using an unscaled and unstandardized version of the data set in this chapter.
-
 
 
 ```{code-cell} ipython3
@@ -584,20 +592,18 @@ standardized_data = pd.DataFrame(
 standardized_data
 ```
 
-
-
 ## K-means in Python
 
-To perform K-means clustering in Python, we use the `KMeans` function. \index{K-means!kmeans function} It takes at
+```{index} K-means; kmeans function, scikit-learn; KMeans
+```
+
+To perform K-means clustering in Python, we use the `KMeans` function. It takes at
 least one argument: K, the number of clusters (here we choose K = 3). Note that since the K-means
 algorithm uses a random initialization of assignments, but since we set the random seed, the clustering will be reproducible.
-
-
 
 ```{code-cell} ipython3
 np.random.seed(1234)
 ```
-
 
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
@@ -606,22 +612,19 @@ penguin_clust
 
 ```
 
-
 ```{code-cell} ipython3
-
 print(f"Inertia/WSSD : {penguin_clust.inertia_}")
 print(f"Cluster centres : {penguin_clust.cluster_centers_}")
 print(f"No. of iterations : {penguin_clust.n_iter_}")
 print(f"Cluster labels : {penguin_clust.labels_}")
+```
 
+```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
 ```
 
 As you can see above, the clustering object is returned by `KMeans` 
 has a lot of information that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
 To obtain the information in the clustering object, we will call the `predict` function. (We can also call the `labels_` attribute) 
-
-
-
 
 ```{code-cell} ipython3
 predictions = penguin_clust.predict(standardized_data)
@@ -634,7 +637,6 @@ as a colored scatter plot. To do that,
 we will add a new column and store assign the above predictions to that. The final 
 data frame will contain the data and the cluster assignments for
 each point:
-
 
 ```{code-cell} ipython3
 clustered_data = standardized_data.assign(clusters = predictions)
@@ -656,8 +658,6 @@ cluster_plot = (
     ).properties(width=400, height=400)
     .configure_axis(labelFontSize=20, titleFontSize=20)
 )
-
-
 ```
 
 ```{code-cell} ipython3
@@ -672,13 +672,16 @@ glue('cluster_plot', cluster_plot, display=True)
 The data colored by the cluster assignments returned by K-means.
 :::
 
+```{index} WSSD; total, K-means; inertia_
+```
 
+```{index} see: WSSD; K-means inertia
+```
 
 As mentioned above, we also need to select K by finding
 where the "elbow" occurs in the plot of total WSSD versus the number of clusters. 
 We can obtain the total WSSD (inertia) from our
 clustering using `.inertia_` function. For example:
-
 
 ```{code-cell} ipython3
 penguin_clust.inertia_
@@ -688,16 +691,16 @@ To calculate the total WSSD for a variety of Ks, we will
 create a data frame with a column named `k` with rows containing
 each value of K we want to run K-means with (here, 1 to 9). 
 
-
-
 ```{code-cell} ipython3
 import numpy as np
 penguin_clust_ks = pd.DataFrame({"k": np.array(range(1, 10)).transpose()})
 ```
 
+```{index} pandas.DataFrame; assign
+```
+
 Then we use `assign()` to create a new column and `lambda` operator to apply the `KMeans` function 
 within each row to each K. 
-
 
 ```{code-cell} ipython3
 np.random.seed(12)
@@ -706,9 +709,8 @@ penguin_clust_ks = penguin_clust_ks.assign(
         lambda x: KMeans(n_clusters=x, n_init=3, init="random").fit(standardized_data)
     )
 )
-
-
 ```
+
 If we take a look at our data frame `penguin_clust_ks` now, 
 we see that it has two columns: one with the value for K, 
 and the other holding the clustering model objects.
@@ -717,8 +719,10 @@ and the other holding the clustering model objects.
 penguin_clust_ks
 ```
 
-If we wanted to get one of the clusterings out of the column in the data frame, we could use a familiar friend: `.iloc` property. And then to extract the `inertia` or any other attribute of the cluster object, we can simply access it using the dot `.` operator. Below, we will extract the details of the cluster object, where `k=2`
+```{index} pandas.DataFrame; iloc[]
+```
 
+If we wanted to get one of the clusterings out of the column in the data frame, we could use a familiar friend: `.iloc` property. And then to extract the `inertia` or any other attribute of the cluster object, we can simply access it using the dot `.` operator. Below, we will extract the details of the cluster object, where `k=2`
 
 ```{code-cell} ipython3
 penguin_clust_ks.iloc[1]['penguin_clusts']
@@ -727,8 +731,8 @@ penguin_clust_ks.iloc[1]['penguin_clusts']
 
 ```{code-cell} ipython3
 penguin_clust_ks.iloc[1]['penguin_clusts'].inertia_
-
 ```
+
 Next, we use `assign` again to add 2 new columns `inertia` and `n_iter`  
 to each of the K-means clustering objects to get the clustering statistics 
 
@@ -744,7 +748,6 @@ penguin_clust_ks = penguin_clust_ks.assign(
     
 penguin_clust_ks
 ```
-
 
 Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot 
 ({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use. We will drop the column `penguin_clusts` to make the plotting in altair feasible
@@ -765,10 +768,7 @@ elbow_plot=(
     .properties(width=400, height=400)
     .configure_axis(labelFontSize=15, titleFontSize=20)
 )
-
-
 ```
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -782,16 +782,15 @@ glue('elbow_plot', elbow_plot, display=True)
 A plot showing the total WSSD versus the number of clusters.
 :::
 
-
-
-
+```{index} K-means; init argument
+```
 
 It looks like 3 clusters is the right choice for this data.
 But why is there a "bump" in the total WSSD plot here? 
 Shouldn't total WSSD always decrease as we add more clusters? 
 Technically yes, but remember:  K-means can get "stuck" in a bad solution. 
 Unfortunately, for K = 7 we had an unlucky initialization
-and found a bad clustering! \index{K-means!restart, nstart} 
+and found a bad clustering! 
 We can help prevent finding a bad clustering 
 by removing the `init='random'` as the argument in `KMeans`.
 The default value for `init` argument is `k-means++`, which selects 
@@ -852,12 +851,13 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
+
 - Chapter 10 of *An Introduction to Statistical
-  Learning* [@james2013introduction] provides a
+  Learning* {cite:p}`james2013introduction` provides a
   great next stop in the process of learning about clustering and unsupervised
   learning in general. In the realm of clustering specifically, it provides a
   great companion introduction to K-means, but also covers *hierarchical*
@@ -865,3 +865,11 @@ and guidance that the worksheets provide will function as intended.
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
   popular technique for reducing the number of predictors in a dataset.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

@@ -13,6 +13,7 @@ kernelspec:
   name: python3
 ---
 
+(move-to-your-own-machine)=
 # Setting up your computer -- TBD
 
 ## Overview

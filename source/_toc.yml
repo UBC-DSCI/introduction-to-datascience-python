@@ -14,7 +14,7 @@ parts:
     - file: reading.md
     - file: wrangling.md
     - file: viz.md
-    - file: classification1.ipynb
+    - file: classification1.md
     - file: classification2.md
     - file: regression1.md
     - file: regression2.md

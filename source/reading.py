@@ -16,6 +16,7 @@
 # ---
 
 # %% [markdown]
+# (reading)=
 # # Reading in data locally and from the web
 #
 # We need to import the `pandas` package in order to read data into Python
@@ -167,7 +168,8 @@ warnings.filterwarnings('ignore')
 #
 # ## Reading tabular data from a plain text file into Python
 #
-# ### `read_csv` to read in comma-separated files {#readcsv}
+# (readcsv)=
+# ### `read_csv` to read in comma-separated files
 #
 # ```{index} csv, reading; delimiter, read function; read\_csv
 # ```
@@ -335,7 +337,7 @@ canlang_data
 
 # %% [markdown]
 # Let's compare the data frame here to the resulting data frame in Section
-# \@ref(readcsv) after using `read_csv`. Notice anything? They look the same! The
+# {ref}`readcsv` after using `read_csv`. Notice anything? They look the same! The
 # same number of columns/rows and column names! So we needed to use different
 # tools for the job depending on the file format and our resulting table
 # (`canlang_data`) in both cases was the same! 
@@ -935,7 +937,7 @@ pip install pgdb
 # - They provide security and data access control.
 # - They allow multiple users to access data simultaneously 
 #   and remotely without conflicts and errors.
-#   For example, there are billions of Google searches conducted daily in 2021 [@googlesearches]. 
+#   For example, there are billions of Google searches conducted daily in 2021 {cite:p}`googlesearches`. 
 #   Can you imagine if Google stored all of the data 
 #   from those searches in a single `.csv` file!? Chaos would ensue! 
 #
@@ -974,7 +976,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # Data doesn't just magically appear on your computer; you need to get it from
 # somewhere. Earlier in the chapter we showed you how to access data stored in a
 # plain text, spreadsheet-like format (e.g., comma- or tab-separated) from a web
-# URL using one of the `read_*` functions from the `tidyverse`. But as time goes
+# URL using one of the `read_*` functions from the `pandas`. But as time goes
 # on, it is increasingly uncommon to find data (especially large amounts of data)
 # in this format available for download from a URL. Instead, websites now often
 # offer something known as an **a**pplication **p**rogramming **i**nterface
@@ -1017,13 +1019,14 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # be presented (e.g., colors, layouts, fonts etc.). 
 #
 # This subsection will show you the basics of both web scraping
-# with the [`rvest` R package](https://rvest.tidyverse.org/) [@rvest]
+# with the [`rvest` R package](https://rvest.tidyverse.org/) {cite:p}`rvest`
 # and accessing the Twitter API
-# using the [`rtweet` R package](https://github.com/ropensci/rtweet) [@rtweet].
-#
+# using the [`rtweet` R package](https://github.com/ropensci/rtweet) {cite:p}`rtweet`.
+
+# %% [markdown]
 # ### Web scraping
 #
-# #### HTML and CSS selectors {-}
+# #### HTML and CSS selectors
 #
 # ```{index} web scraping, HTML; selector, CSS; selector, Craiglist
 # ```
@@ -1038,54 +1041,56 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # available one-bedroom apartments in Vancouver 
 # on [Craiglist](https://vancouver.craigslist.org). When we visit the Vancouver Craigslist
 # website and search for one-bedroom apartments, 
-# we should see something similar to Figure \@ref(fig:craigslist-human).
+# we should see something similar to {numref}`fig:craigslist-human`.
+
+# %% [markdown]
+# ```{figure} img/craigslist_human.png
+# :name: fig:craigslist-human
 #
-# :::{figure-md} markdown-fig
-# <img src="img/craigslist_human.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 # Craigslist webpage of advertisements for one-bedroom apartments.
-# :::
-#
-#
+# ```
+
+# %% [markdown]
 # Based on what our browser shows us, it's pretty easy to find the size and price
 # for each apartment listed. But we would like to be able to obtain that information
-# using R, without any manual human effort or copying and pasting. We do this by
+# using Python, without any manual human effort or copying and pasting. We do this by
 # examining the *source code* that the web server actually sent our browser to
 # display for us. We show a snippet of it below; the 
 # entire source 
-# is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt):
+# is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
 #
-# ```
-# <!--         <span class="result-meta"> -->
-# <!--                 <span class="result-price">$800</span> -->
+# ```html
+#         <span class="result-meta">
+#                 <span class="result-price">$800</span>
 #
-# <!--                 <span class="housing"> -->
-# <!--                     1br - -->
-# <!--                 </span> -->
+#                 <span class="housing">
+#                     1br -
+#                 </span>
 #
-# <!--                 <span class="result-hood"> (13768 108th Avenue)</span> -->
+#                 <span class="result-hood"> (13768 108th Avenue)</span>
 #
-# <!--                 <span class="result-tags"> -->
-# <!--                     <span class="maptag" data-pid="6786042973">map</span> -->
-# <!--                 </span> -->
+#                 <span class="result-tags">
+#                     <span class="maptag" data-pid="6786042973">map</span>
+#                 </span>
 #
-# <!--                 <span class="banish icon icon-trash" role="button"> -->
-# <!--                     <span class="screen-reader-text">hide this posting</span> -->
-# <!--                 </span> -->
+#                 <span class="banish icon icon-trash" role="button">
+#                     <span class="screen-reader-text">hide this posting</span>
+#                 </span>
 #
-# <!--             <span class="unbanish icon icon-trash red" role="button" aria-hidden -->
-# <!--             <a href="#" class="restore-link"> -->
-# <!--                 <span class="restore-narrow-text">restore</span> -->
-# <!--                 <span class="restore-wide-text">restore this posting</span> -->
-# <!--             </a> -->
+#             <span class="unbanish icon icon-trash red" role="button" aria-hidden
+#             <a href="#" class="restore-link">
+#                 <span class="restore-narrow-text">restore</span>
+#                 <span class="restore-wide-text">restore this posting</span>
+#             </a>
 #
-# <!--         </span> -->
-# <!--     </p> -->
-# <!-- </li> -->
-# <!--          <li class="result-row" data-pid="6788463837"> -->
+#         </span>
+#     </p>
+# </li>
+#          <li class="result-row" data-pid="6788463837">
 #                   
-# <!--         <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu -->
-# <!--                 <span class="result-price">$2285</span> -->
-# <!--         </a> -->
+#         <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu
+#                 <span class="result-price">$2285</span>
+#         </a>
 # ```
 #
 # Oof...you can tell that the source code for a web page is not really designed
@@ -1094,7 +1099,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # For example, near the top of the snippet
 # above you can see a line that looks like
 #
-# ```
+# ```html
 # <span class="result-price">$800</span>
 # ```
 #
@@ -1120,7 +1125,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # class, and grab the information between the opening and closing tag. Indeed,
 # take a look at another line of the source snippet above:
 #
-# ```
+# ```html
 # <span class="result-price">$2285</span>
 # ```
 #
@@ -1146,55 +1151,47 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # example, if we click the price of an apartment listing, we
 # find that SelectorGadget shows us the selector `.result-price`
 # in its toolbar, and highlights all the other apartment
-# prices that would be obtained using that selector (Figure \@ref(fig:sg1)).
+# prices that would be obtained using that selector ({numref}`fig:sg1`).
 #
+# ```{figure} img/sg1.png
+# :name: fig:sg1
 #
-#
-#
-#
-# :::{figure-md} markdown-fig
-# <img src="img/sg1.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 # Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
-# :::
-#
-#
+# ```
 #
 # If we then click the size of an apartment listing, SelectorGadget shows us
 # the `span` selector, and highlights many of the lines on the page; this indicates that the
-# `span` selector is not specific enough to capture only apartment sizes (Figure \@ref(fig:sg3)). 
+# `span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`). 
 #
+# ```{figure} img/sg3.png
+# :name: fig:sg3
 #
-# :::{figure-md} markdown-fig
-# <img src="img/sg3.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
-# Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
-# :::
-#
+# Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
+# ```
 #
 # To narrow the selector, we can click one of the highlighted elements that
 # we *do not* want. For example, we can deselect the "pic/map" links, 
-# resulting in only the data we want highlighted using the `.housing` selector (Figure \@ref(fig:sg2)).
+# resulting in only the data we want highlighted using the `.housing` selector ({numref}`fig:sg2`).
 #
+# ```{figure} img/sg2.png
+# :name: fig:sg2
 #
-#
-#
-#
-# :::{figure-md} markdown-fig
-# <img src="img/sg2.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 # Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
-# :::
+# ```
 #
 # So to scrape information about the square footage and rental price
 # of apartment listings, we need to use
 # the two CSS selectors `.housing` and `.result-price`, respectively.
 # The selector gadget returns them to us as a comma-separated list (here
 # `.housing , .result-price`), which is exactly the format we need to provide to
-# R if we are using more than one CSS selector.
+# Python if we are using more than one CSS selector.
 #
 # **Stop! Are you allowed to scrape that website?**
 #
 # ```{index} web scraping; permission
 # ```
-#
+
+# %% [markdown]
 # *Before* scraping data from the web, you should always check whether or not
 # you are *allowed* to scrape it! There are two documents that are important
 # for this: the `robots.txt` file and the Terms of Service
@@ -1216,103 +1213,85 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # and it does not mention that web scraping is disallowed. 
 # We will use the SelectorGadget tool to pick elements that we are interested in
 # (city names and population counts) and deselect others to indicate that we are not 
-# interested in them (province names), as shown in Figure \@ref(fig:sg4).
+# interested in them (province names), as shown in {numref}`fig:sg4`.
 #
+# ```{figure} img/selectorgadget-wiki-updated.png
+# :name: fig:sg4
 #
-#
-# :::{figure-md} markdown-fig
-# <img src="img/sg4.png" alt="reference_data" class="bg-primary mb-2" width="600px" height="500px">
 # Using the SelectorGadget on a Wikipedia webpage.
-# :::
+# ```
 #
 # We include a link to a short video tutorial on this process at the end of the chapter
 # in the additional resources section. SelectorGadget provides in its toolbar
 # the following list of CSS selectors to use:
-#
+
+# %% [markdown]
 # ```
-# td:nth-child(5), 
-# td:nth-child(7), 
-# .infobox:nth-child(122) td:nth-child(1), 
-# .infobox td:nth-child(3)
+# td:nth-child(8) , 
+# td:nth-child(6) , 
+# td:nth-child(4) , 
+# .mw-parser-output div tr+ tr td:nth-child(2)
 # ```
-#
+
+# %% [markdown]
 # Now that we have the CSS selectors that describe the properties of the elements
 # that we want to target (e.g., has a tag name `price`), we can use them to find
 # certain elements in web pages and extract data. 
+
+# %% [markdown]
+# **Using `BeautifulSoup`**
 #
-# **Using `rvest`**
-#
-# ```{index} rvest
+# ```{index} BeautifulSoup, requests
 # ```
 #
-# Now that we have our CSS selectors we can use the `rvest` R package to scrape our
-# desired data from the website. We start by loading the `rvest` package:
-#
-# ```{r 01-load-rvest}
-# library(rvest)
-# ```
-#
-# Next, we tell R what page we want to scrape by providing the webpage's URL in quotations to the function `read_html`:
-#
-# ```{r 01-specify-page}
-# page <- read_html("https://en.wikipedia.org/wiki/Canada")
-# ```
-#
-# ```{index} read function; read_html
-# ```
-#
-# The `read_html` function directly downloads the source code for the page at 
-# the URL you specify, just like your browser would if you navigated to that site. But 
-# instead of  displaying the website to you, the `read_html` function just returns 
-# the HTML source code itself, which we have
-# stored in the `page` variable. Next, we send the page object to the `html_nodes`
-# function, along with the CSS selectors we obtained from
-# the SelectorGadget tool. Make sure to surround the selectors with quotation marks; the function, `html_nodes`, expects that
-# argument is a string. The `html_nodes` function then selects *nodes* from the HTML document that 
-# match the CSS selectors you specified.  A *node* is an HTML tag pair (e.g.,
+# Now that we have our CSS selectors we can use the `requests` and `BeautifulSoup` Python packages to scrape our desired data from the website. We start by loading the packages:
+
+# %%
+import requests
+from bs4 import BeautifulSoup
+
+# %% [markdown]
+# Next, we tell Python what page we want to scrape by providing the webpage's URL in quotations to the function `requests.get` and pass it into the `BeautifulSoup` function for parsing:
+
+# %%
+wiki = requests.get("https://en.wikipedia.org/wiki/Canada")
+page = BeautifulSoup(wiki.content, "html.parser")
+
+# %% [markdown]
+# The `requests.get` function sends a `GET` request to the specified URL and returns the server's response to the HTTP request (*i.e.* a `requests.Response` object). The `BeautifulSoup` function takes the content of the response and returns the HTML source code itself, which we have
+# stored in the `page` variable. Next, we use the `select` method of the page object along with the CSS selectors we obtained from the SelectorGadget tool. Make sure to surround the selectors with quotation marks; `select` expects that
+# argument is a string. It selects *nodes* from the HTML document that 
+# match the CSS selectors you specified. A *node* is an HTML tag pair (e.g.,
 # `<td>` and `</td>` which defines the cell of a table) combined with the content
-# stored between the tags. For our CSS selector `td:nth-child(5)`, an example
+# stored between the tags. For our CSS selector `td:nth-child(6)`, an example
 # node that would be selected would be:
-#
+
+# %% [markdown]
 # ```
 # <td style="text-align:left;background:#f0f0f0;">
 # <a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
 # </td>
 # ```
-#
-# We store the result of the `html_nodes` function in the `population_nodes` variable.
-# Note that below we use the `paste` function with a comma separator (`sep=","`)
-# to build the list of selectors. The `paste` function converts 
-# elements to characters and combines the values into a list. We use this function to 
-# build the list of selectors to maintain code readability; this avoids
-# having one very long line of code with the string
-# `"td:nth-child(5),td:nth-child(7),.infobox:nth-child(122) td:nth-child(1),.infobox td:nth-child(3)"`
-# as the second argument of `html_nodes`:
-#
-# ```{r 01-select-nodes, results = 'hide', echo = TRUE}
-# selectors <- paste("td:nth-child(5)",
-#              "td:nth-child(7)",
-#              ".infobox:nth-child(122) td:nth-child(1)",
-#              ".infobox td:nth-child(3)", sep=",")
-#
-# population_nodes <- html_nodes(page, selectors)
-# head(population_nodes)
-# ```
-#
-# ```{r echo = FALSE}
-# print_html_nodes(head(population_nodes))
-# ```
-#
+
+# %% [markdown]
+# We store the result of the `select` function in the `population_nodes` variable. Note that it returns a list, and we slice the list to only print the first 5 elements.
+
+# %%
+population_nodes = page.select(
+    "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
+)
+population_nodes[:5]
+
+# %% [markdown]
 # Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from 
-# the nodes using the `html_text`
+# the nodes using the `get_text`
 # function. In the case of the example
-# node above, `html_text` function returns `"London"`.
-#
-# ```{r 01-get-text}
-# population_text <- html_text(population_nodes)
-# head(population_text)
-# ```
-#
+# node above, `get_text` function returns `"London"`.
+
+# %%
+[row.get_text() for row in population_nodes][:5]
+
+# %% [markdown]
 # Fantastic! We seem to have extracted the data of interest from the 
 # raw HTML source code. But we are not quite done; the data
 # is not yet in an optimal format for data analysis. Both the city names and
@@ -1321,9 +1300,10 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # population (like a spreadsheet).
 # Additionally, the populations contain commas (not useful for programmatically
 # dealing with numbers), and some even contain a line break character at the end
-# (`\n`). In Chapter \@ref(wrangling), we will learn more about how to *wrangle* data
-# such as this into a more useful format for data analysis using R.
-#
+# (`\n`). In Chapter {ref}`wrangling`, we will learn more about how to *wrangle* data
+# such as this into a more useful format for data analysis using Python.
+
+# %% [markdown]
 # ### Using an API
 #
 # ```{index} API
@@ -1339,7 +1319,8 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 #
 # ```{index} API; rtweet, rtweet, Twitter, API; token
 # ```
-#
+
+# %% [markdown]
 # In particular, in this book we will show you the basics of how to use
 # the `rtweet` package in R to access
 # data from the Twitter API. One nice feature of this particular 
@@ -1348,26 +1329,27 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # your account username and password. If you have a Twitter 
 # account already (or are willing to make one), you can follow
 # along with the examples that we show here. To get started, load the `rtweet` package:
-#
+
+# %% [markdown]
 # ```r
 # library(rtweet)
 # ```
-#
+
+# %% [markdown]
 # This package provides an extensive set of functions to search 
 # Twitter for tweets, users, their followers, and more. 
 # Let's construct a small data set of the last 400 tweets and 
-# retweets from the \@tidyverse account. A few of the most recent tweets
-# are shown in Figure \@ref(fig:01-tidyverse-twitter).
-#
-#
-# :::{figure-md} markdown-fig
-# <img src="img/tidyverse_twitter.png" alt="twitter feed" class="bg-primary mb-2" width="600px" height="500px">
+# retweets from the [@tidyverse](https://twitter.com/tidyverse) account. A few of the most recent tweets
+# are shown in {numref}`fig:01-tidyverse-twitter`.
+
+# %% [markdown]
+# ```{figure} img/tidyverse_twitter.png
+# :name: fig:01-tidyverse-twitter
 #
 # The tidyverse account Twitter feed.
-# :::
-#
-#
-#
+# ```
+
+# %% [markdown]
 # **Stop! Think about your API usage carefully!**
 #
 # When you access an API, you are initiating a transfer of data from a web server
@@ -1382,28 +1364,29 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # Be careful not to overrun your quota! In this example, we should take a look at
 #  [the Twitter website](https://developer.twitter.com/en/docs/twitter-api/rate-limits) to see what limits
 # we should abide by when using the API. 
-#
+
+# %% [markdown]
 # **Using `rtweet`**
 #
 # After checking the Twitter website, it seems like asking for 400 tweets one time is acceptable.
-# So we can use the `get_timelines` function to ask for the last 400 tweets from the \@tidyverse account.
-#
+# So we can use the `get_timelines` function to ask for the last 400 tweets from the [@tidyverse](https://twitter.com/tidyverse) account.
+
+# %% [markdown]
 # ```r
 # tidyverse_tweets <- get_timelines('tidyverse', n=400)
 # ```
-#
+
+# %% [markdown]
 # When you call the `get_timelines` for the first time (or any other `rtweet` function that accesses the API), 
-# you will see a browser pop-up that looks something like Figure \@ref(fig:01-tidyverse-authorize).
+# you will see a browser pop-up that looks something like {numref}`fig:01-tidyverse-authorize`.
 #
-# (ref:01-tidyverse-authorize) The `rtweet` authorization prompt.
+# ```{figure} img/authorize_question.png
+# :name: fig:01-tidyverse-authorize
 #
-#
-# :::{figure-md} markdown-fig
-# <img src="img/authorize_question.png" alt="authorize" class="bg-primary mb-2" width="600px" height="500px">
-#
-# (ref:01-tidyverse-authorize)
-# :::
-#
+# The `rtweet` authorization prompt.
+# ```
+
+# %% [markdown]
 # This is the `rtweet` package asking you to provide your own Twitter account's login information.
 # When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;
 # Twitter then can keep track of how much data you're asking for, and how frequently you're asking.
@@ -1422,7 +1405,8 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 #
 # With the authentication setup out of the way, let's run the `get_timelines` function again to actually access
 # the API and take a look at what was returned:
-#
+
+# %% [markdown]
 # ```r
 # tidyverse_tweets <- get_timelines('tidyverse', n=400)
 # tidyverse_tweets
@@ -1432,12 +1416,14 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # tidyverse_tweets <- read_csv("data/tweets.csv")
 # tidyverse_tweets
 # ```
-#
+
+# %% [markdown]
 # The data has quite a few variables! (Notice that the output above shows that we
 # have a data table with 293 rows and 71 columns). Let's reduce this down to a
 # few variables of interest: `created_at`,  `retweet_screen_name`, `is_retweet`,
 # and `text`.
-#
+
+# %% [markdown]
 # ```{r 01-select-tweets, message = FALSE, warning = FALSE}
 # tidyverse_tweets <- select(tidyverse_tweets, 
 #                            created_at, 
@@ -1447,8 +1433,9 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 #
 # tidyverse_tweets
 # ```
-#
-# If you look back up at the image of the \@tidyverse Twitter page, you will
+
+# %% [markdown]
+# If you look back up at the image of the [@tidyverse](https://twitter.com/tidyverse) Twitter page, you will
 # recognize the text of the most recent few tweets in the above data frame.  In
 # other words, we have successfully created a small data set using the Twitter
 # API&mdash;neat! This data is also quite different from what we obtained from web scraping;
@@ -1464,7 +1451,8 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # (see [the `rtweet` page](https://github.com/ropensci/rtweet)
 # for more examples of what is possible), just be mindful as usual about how much
 # data you are requesting and how frequently you are making requests. 
-#
+
+# %% [markdown]
 # ## Exercises
 #
 # Practice exercises for the material covered in this chapter 
@@ -1475,11 +1463,12 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 # If you instead decide to download the worksheet and run it on your own machine,
 # make sure to follow the instructions for computer setup
-# found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+# found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 # and guidance that the worksheets provide will function as intended.
 #
 # ## Additional resources
-# - The [`readr` documentation](https://readr.tidyverse.org/) 
+#
+# - The [`pandas` documentation](https://pandas.pydata.org/docs/getting_started/index.html) 
 #   provides the documentation for many of the reading functions we cover in this chapter.
 #   It is where you should look if you want to learn more about the functions in this
 #   chapter, the full set of arguments you can use, and other related functions.
@@ -1487,19 +1476,8 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 #   wrangling functions from this chapter.
 # - Sometimes you might run into data in such poor shape that none of the reading
 #   functions we cover in this chapter work. In that case, you can consult the
-#   [data import chapter](https://r4ds.had.co.nz/data-import.html) from *R for Data
-#   Science* [@wickham2016r], which goes into a lot more detail about how R parses
+#   [data loading chapter](https://wesmckinney.com/book/accessing-data.html#io_flat_files) from *Python for Data Analysis* {cite:p}`mckinney2012python`, which goes into a lot more detail about how Python parses
 #   text from files into data frames.
-# - The [`here` R package](https://here.r-lib.org/) [@here]
-#   provides a way for you to construct or find your files' paths. 
-# - The [`readxl` documentation](https://readxl.tidyverse.org/) provides more
-#   details on reading data from Excel, such as reading in data with multiple
-#   sheets, or specifying the cells to read in. 
-# - The [`rio` R package](https://github.com/leeper/rio) [@rio] provides an alternative
-#   set of tools for reading and writing data in R. It aims to be a "Swiss army
-#   knife" for data reading/writing/converting, and supports a wide variety of data
-#   types (including data formats generated by other statistical software like SPSS
-#   and SAS).
 # - A [video](https://www.youtube.com/embed/ephId3mYu9o) from the Udacity
 #   course *Linux Command Line Basics* provides a good explanation of absolute versus relative paths.
 # - If you read the subsection on obtaining data from the web via scraping and
@@ -1507,5 +1485,12 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 #   SelectorGadget tool to obtain desired CSS selectors for:
 #     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
 #     - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
-# - The [`polite` R package](https://dmi3kno.github.io/polite/) [@polite] provides
+# - The [`polite` R package](https://dmi3kno.github.io/polite/) {cite:p}`polite` provides
 #   a set of tools for responsibly scraping data from websites.
+#
+# ## References
+
+# %% [markdown]
+# ```{bibliography}
+# :filter: docname in docnames
+# ```

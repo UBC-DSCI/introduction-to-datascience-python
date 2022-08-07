@@ -1,7 +1,5 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
-  encoding: '# -*- coding: utf-8 -*-'
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
@@ -124,13 +122,13 @@ Example file system
 
 **Reading `happiness_report.csv` using a relative path:**
 
-```{code-cell eval=False} ipython3
+```{code-cell} ipython3
 happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 
 **Reading `happiness_report.csv` using an absolute path:**
 
-```{code-cell eval=False} ipython3
+```{code-cell} ipython3
 happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
 
@@ -201,7 +199,7 @@ sub-folder, named `data`, relative to where we are running our Python code.
 Here is what the file would look like in a plain text editor (a program that removes
 all formatting, like bolding or different fonts):
 
-```code
+```
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -242,7 +240,7 @@ gives the data scientist useful context and information about the data,
 however, it is not well formatted or intended to be read into a data frame cell
 along with the tabular data that follows later in the file.
 
-```code
+```
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -296,7 +294,7 @@ canlang_data
 How did we know to skip two lines? We looked at the data! The first two lines
 of the data had information we didn't need to import: 
 
-```code
+```
 Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an "as is" basis with the permission of Statistics Canada.
 Date collected: 2020/07/09
 ```
@@ -309,7 +307,7 @@ Another common way data is stored is with tabs as the delimiter. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas. 
 
-```code
+```
 category    language    mother_tongue   most_at_home    most_at_work    lang_kno
 Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
@@ -356,7 +354,7 @@ instead of commas.
 
 Here is how the file would look in a plain text editor:
 
-```code
+```
 Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
 Non-Official & Non-Aboriginal languages Afro-Asiatic languages, n.i.e.  1150    
@@ -429,10 +427,19 @@ list of column names to the `names` argument. `read_csv` and `read_table` have a
 whose default value is `[]`.
 
 ```{code-cell} ipython3
-canlang_data =  pd.read_csv("data/can_lang.tsv", 
-                           sep = "\t", 
-                           header = None, 
-                           names = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+canlang_data = pd.read_csv(
+    "data/can_lang.tsv",
+    sep="\t",
+    header=None,
+    names=[
+        "category",
+        "language",
+        "mother_tongue",
+        "most_at_home",
+        "most_at_work",
+        "lang_known",
+    ],
+)
 canlang_data
 ```
 
@@ -609,7 +616,7 @@ communication channel that Python can use to send SQL commands to the database.
 
 ```{code-cell} ipython3
 import sqlalchemy as sal
-from sqlalchemy import create_engine, select, MetaData, Table
+from sqlalchemy import MetaData, Table, create_engine, select
 
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
@@ -1021,9 +1028,9 @@ content and tells the webpage how the HTML elements should
 be presented (e.g., colors, layouts, fonts etc.). 
 
 This subsection will show you the basics of both web scraping
-with the [`rvest` R package](https://rvest.tidyverse.org/) {cite:p}`rvest`
+with the [`BeautifulSoup` Python package](https://beautiful-soup-4.readthedocs.io/en/latest/) {cite:p}`beautifulsoup`
 and accessing the Twitter API
-using the [`rtweet` R package](https://github.com/ropensci/rtweet) {cite:p}`rtweet`.
+using the [`tweepy` Python package](https://github.com/tweepy/tweepy) {cite:p}`tweepy`.
 
 +++
 
@@ -1064,7 +1071,7 @@ display for us. We show a snippet of it below; the
 entire source 
 is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
 
-```html
+```
         <span class="result-meta">
                 <span class="result-price">$800</span>
 

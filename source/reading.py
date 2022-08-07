@@ -429,10 +429,19 @@ canlang_data
 # whose default value is `[]`.
 
 # %%
-canlang_data =  pd.read_csv("data/can_lang.tsv", 
-                           sep = "\t", 
-                           header = None, 
-                           names = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+canlang_data = pd.read_csv(
+    "data/can_lang.tsv",
+    sep="\t",
+    header=None,
+    names=[
+        "category",
+        "language",
+        "mother_tongue",
+        "most_at_home",
+        "most_at_work",
+        "lang_known",
+    ],
+)
 canlang_data
 
 # %% [markdown]
@@ -608,7 +617,7 @@ canlang_data
 
 # %%
 import sqlalchemy as sal
-from sqlalchemy import create_engine, select, MetaData, Table
+from sqlalchemy import MetaData, Table, create_engine, select
 
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
@@ -1019,9 +1028,9 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # be presented (e.g., colors, layouts, fonts etc.). 
 #
 # This subsection will show you the basics of both web scraping
-# with the [`rvest` R package](https://rvest.tidyverse.org/) {cite:p}`rvest`
+# with the [`BeautifulSoup` Python package](https://beautiful-soup-4.readthedocs.io/en/latest/) {cite:p}`beautifulsoup`
 # and accessing the Twitter API
-# using the [`rtweet` R package](https://github.com/ropensci/rtweet) {cite:p}`rtweet`.
+# using the [`tweepy` Python package](https://github.com/tweepy/tweepy) {cite:p}`tweepy`.
 
 # %% [markdown]
 # ### Web scraping

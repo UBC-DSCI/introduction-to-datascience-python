@@ -1322,47 +1322,61 @@ such as this into a more useful format for data analysis using Python.
 ```
 
 Rather than posting a data file at a URL for you to download, many websites these days
-provide an API that must be accessed through a programming language like R. The benefit of this
+provide an API that must be accessed through a programming language like Python. The benefit of this
 is that data owners have much more control over the data they provide to users. However, unlike
 web scraping, there is no consistent way to access an API across websites. Every website typically
 has its own API designed especially for its own use case. Therefore we will just provide one example
 of accessing data through an API in this book, with the hope that it gives you enough of a basic
 idea that you can learn how to use another API if needed.
 
-```{index} API; rtweet, rtweet, Twitter, API; token
+```{index} API; tweepy, tweepy, Twitter, API; token
 ```
 
 +++
 
 In particular, in this book we will show you the basics of how to use
-the `rtweet` package in R to access
-data from the Twitter API. One nice feature of this particular 
-API is that you don't need  a special *token* to access it; you simply need to 
-make an account with them. Your access to the data will then be authenticated and controlled through
-your account username and password. If you have a Twitter 
-account already (or are willing to make one), you can follow
-along with the examples that we show here. To get started, load the `rtweet` package:
+the `tweepy` package in Python to access
+data from the Twitter API. `tweepy` requires the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to get tokens and secrets from that, through which your access to the data will then be authenticated and controlled.
 
-+++
+Once you get the access keys and tokens, you can store it in the `config.ini` file. Then you can follow along with the examples that we show here.
+To get started, load the `tweepy` package and authenticate our access to the Twitter developer portal account.
 
-```r
-library(rtweet)
+```{code-cell} ipython3
+import tweepy
+import configparser
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+api_key = config['twitter']["api_key"]
+api_key_secret = config['twitter']["api_key_secret"]
+access_token = config['twitter']["access_token"]
+access_token_secret = config['twitter']["access_token_secret"]
+ 
+# Authenticate to Twitter
+auth = tweepy.OAuthHandler(api_key, api_key_secret)
+auth.set_access_token(access_token, access_token_secret)
+ 
+api = tweepy.API(auth)
+
+try:
+    api.verify_credentials()
+    print('Successful Authentication')
+except:
+    print('Failed authentication')
 ```
 
-+++
-
-This package provides an extensive set of functions to search 
+`tweepy` provides an extensive set of functions to search 
 Twitter for tweets, users, their followers, and more. 
-Let's construct a small data set of the last 400 tweets and 
-retweets from the [@tidyverse](https://twitter.com/tidyverse) account. A few of the most recent tweets
-are shown in {numref}`fig:01-tidyverse-twitter`.
+Let's construct a small data set of the last 200 tweets and 
+retweets from the [@scikit_learn](https://twitter.com/scikit_learn) account. A few of the most recent tweets
+are shown in {numref}`fig:01-scikit-learn-twitter`.
 
 +++
 
-```{figure} img/tidyverse_twitter.png
-:name: fig:01-tidyverse-twitter
+```{figure} img/scikit-learn-twitter.png
+:name: fig:01-scikit-learn-twitter
 
-The tidyverse account Twitter feed.
+The `scikit-learn` account Twitter feed.
 ```
 
 +++
@@ -1384,96 +1398,63 @@ we should abide by when using the API.
 
 +++
 
-**Using `rtweet`**
+**Using `tweepy`**
 
-After checking the Twitter website, it seems like asking for 400 tweets one time is acceptable.
-So we can use the `get_timelines` function to ask for the last 400 tweets from the [@tidyverse](https://twitter.com/tidyverse) account.
+After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
+So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
 
-+++
+```{code-cell} ipython3
+userID = "scikit_learn"
 
-```r
-tidyverse_tweets <- get_timelines('tidyverse', n=400)
+scikit_learn_tweets = api.user_timeline(
+    screen_name=userID,
+    count=200,
+    include_rts=True,
+    tweet_mode="extended",
+)
 ```
 
-+++
+Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:
 
-When you call the `get_timelines` for the first time (or any other `rtweet` function that accesses the API), 
-you will see a browser pop-up that looks something like {numref}`fig:01-tidyverse-authorize`.
-
-```{figure} img/authorize_question.png
-:name: fig:01-tidyverse-authorize
-
-The `rtweet` authorization prompt.
+```{code-cell} ipython3
+for info in scikit_learn_tweets[:3]:
+    print("ID: {}".format(info.id))
+    print(info.created_at)
+    print(info.full_text)
+    print("\n")
 ```
 
-+++
-
-This is the `rtweet` package asking you to provide your own Twitter account's login information.
-When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;
-Twitter then can keep track of how much data you're asking for, and how frequently you're asking.
-If you want to follow along with this example using your own Twitter account, you should read
-over the list of permissions you are granting `rtweet` *very carefully* and make sure you are comfortable
-with it. Note that `rtweet` can be used to manage most aspects of your account (make posts, follow others, etc.),
-which is why `rtweet` asks for such extensive permissions.
-If you decide to allow `rtweet` to talk to the Twitter API using your account information, then 
-input your username and password and hit "Sign In." Twitter will probably send you an email to say
-that there was an unusual login attempt on your account, and in that case you will have to take
-the one-time code they send you and provide that to the `rtweet` login page too. 
-
-> **Note:** Every API has its own way to authenticate users when they try to access data. Many APIs require you to
-> sign up to receive a *token*, which is a secret password that you input into the R package (like `rtweet`) 
-> that you are using to access the API. 
-
-With the authentication setup out of the way, let's run the `get_timelines` function again to actually access
-the API and take a look at what was returned:
+A full list of available attributes provided by Twitter API can be found [here](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
 
 +++
 
-```r
-tidyverse_tweets <- get_timelines('tidyverse', n=400)
-tidyverse_tweets
+For the demonstration purpose, let's only use a
+few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
+and `full_text`, and construct a `pandas` DataFrame using the extracted information.
+
+```{code-cell} ipython3
+columns = ["time", "user", "is_retweet", "text"]
+data = []
+for tweet in scikit_learn_tweets:
+    data.append([tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text])
+    
+scikit_learn_tweets_df = pd.DataFrame(data, columns=columns)
+scikit_learn_tweets_df
 ```
 
-```{r 01-reading-hidden-load-tweets, echo = FALSE, message = FALSE, warning = FALSE}
-tidyverse_tweets <- read_csv("data/tweets.csv")
-tidyverse_tweets
-```
-
-+++
-
-The data has quite a few variables! (Notice that the output above shows that we
-have a data table with 293 rows and 71 columns). Let's reduce this down to a
-few variables of interest: `created_at`,  `retweet_screen_name`, `is_retweet`,
-and `text`.
-
-+++
-
-```{r 01-select-tweets, message = FALSE, warning = FALSE}
-tidyverse_tweets <- select(tidyverse_tweets, 
-                           created_at, 
-                           retweet_screen_name,
-                           is_retweet, 
-                           text)
-
-tidyverse_tweets
-```
-
-+++
-
-If you look back up at the image of the [@tidyverse](https://twitter.com/tidyverse) Twitter page, you will
+If you look back up at the image of the [@scikit_learn](https://twitter.com/scikit_learn) Twitter page, you will
 recognize the text of the most recent few tweets in the above data frame.  In
 other words, we have successfully created a small data set using the Twitter
 API&mdash;neat! This data is also quite different from what we obtained from web scraping;
-it is already well-organized into a `tidyverse` data frame (although not *every* API
-will provide data in such a nice format).
- From this point onward, the `tidyverse_tweets` data frame is stored on your
+the extracted information can be easily converted into a `pandas` data frame (although not *every* API will provide data in such a nice format).
+From this point onward, the `scikit_learn_tweets_df` data frame is stored on your
 machine, and you can play with it to your heart's content. For example, you can use
-`write_csv` to save it to a file and `read_csv` to read it into R again later; 
+`pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later; 
 and after reading the next few chapters you will have the skills to
 compute the percentage of retweets versus tweets, find the most oft-retweeted
 account, make visualizations of the data, and much more! If you decide that you want 
 to ask the Twitter API for more data 
-(see [the `rtweet` page](https://github.com/ropensci/rtweet)
+(see [the `tweepy` page](https://github.com/tweepy/tweepy)
 for more examples of what is possible), just be mindful as usual about how much
 data you are requesting and how frequently you are making requests. 
 

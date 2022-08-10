@@ -2,7 +2,6 @@
 # ---
 # jupyter:
 #   jupytext:
-#     cell_metadata_filter: -all
 #     formats: py:percent,md:myst,ipynb
 #     text_representation:
 #       extension: .py
@@ -124,17 +123,21 @@ warnings.filterwarnings('ignore')
 #
 #
 # **Reading `happiness_report.csv` using a relative path:**
-#
-# ```{code-cell eval=False} ipython3
+
+# %% [markdown]
+# ```python
 # happy_data = pd.read_csv("data/happiness_report.csv")
 # ```
-#
+
+# %% [markdown]
 # **Reading `happiness_report.csv` using an absolute path:**
-#
-# ```{code-cell eval=False} ipython3
+
+# %% [markdown]
+# ```python
 # happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 # ```
-#
+
+# %% [markdown]
 # So which one should you use? Generally speaking, to ensure your code can be run 
 # on a different computer, you should use relative paths. An added bonus is that 
 # it's also less typing! Generally, you should use relative paths because the file's 
@@ -202,7 +205,7 @@ warnings.filterwarnings('ignore')
 # Here is what the file would look like in a plain text editor (a program that removes
 # all formatting, like bolding or different fonts):
 #
-# ```code
+# ```
 # category,language,mother_tongue,most_at_home,most_at_work,lang_known
 # Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 # Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -242,7 +245,7 @@ canlang_data
 # however, it is not well formatted or intended to be read into a data frame cell
 # along with the tabular data that follows later in the file.
 #
-# ```code
+# ```
 # Data source: https://ttimbers.github.io/canlang/
 # Data originally published in: Statistics Canada Census of Population 2016.
 # Reproduced and distributed on an as-is basis with their permission.
@@ -296,7 +299,7 @@ canlang_data
 # How did we know to skip two lines? We looked at the data! The first two lines
 # of the data had information we didn't need to import: 
 #
-# ```code
+# ```
 # Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an "as is" basis with the permission of Statistics Canada.
 # Date collected: 2020/07/09
 # ```
@@ -309,7 +312,7 @@ canlang_data
 # data file, `can_lang.tsv`, has tabs in between the columns instead of
 # commas. 
 #
-# ```code
+# ```
 # category    language    mother_tongue   most_at_home    most_at_work    lang_kno
 # Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 # Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
@@ -356,7 +359,7 @@ canlang_data
 #
 # Here is how the file would look in a plain text editor:
 #
-# ```code
+# ```
 # Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 # Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
 # Non-Official & Non-Aboriginal languages Afro-Asiatic languages, n.i.e.  1150    
@@ -1068,7 +1071,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # entire source 
 # is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
 #
-# ```html
+# ```
 #         <span class="result-meta">
 #                 <span class="result-price">$800</span>
 #
@@ -1245,7 +1248,19 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 # %% [markdown]
 # Now that we have the CSS selectors that describe the properties of the elements
 # that we want to target (e.g., has a tag name `price`), we can use them to find
-# certain elements in web pages and extract data. 
+# certain elements in web pages and extract data.
+
+# %% [markdown]
+# **Using `pandas.read_html`**
+
+# %%
+test = pd.read_html("https://en.wikipedia.org/wiki/Canada")
+len(test)
+
+# %%
+df = test[1]
+df.columns = df.columns.droplevel()
+df
 
 # %% [markdown]
 # **Using `BeautifulSoup`**
@@ -1285,11 +1300,21 @@ page = BeautifulSoup(wiki.content, "html.parser")
 # %% [markdown]
 # We store the result of the `select` function in the `population_nodes` variable. Note that it returns a list, and we slice the list to only print the first 5 elements.
 
-# %%
+# %% tags=["remove-output"]
 population_nodes = page.select(
     "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
 )
 population_nodes[:5]
+
+# %% [markdown]
+# ```
+# [<td style="text-align:left;"><a href="/wiki/Greater_Toronto_Area" title="Greater Toronto Area">Toronto</a></td>,
+#  <td style="text-align:right;">6,202,225</td>,
+#  <td style="text-align:left;"><a href="/wiki/London,_Ontario" title="London, Ontario">London</a></td>,
+#  <td style="text-align:right;">543,551
+#  </td>,
+#  <td style="text-align:left;"><a href="/wiki/Greater_Montreal" title="Greater Montreal">Montreal</a></td>]
+# ```
 
 # %% [markdown]
 # Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from 
@@ -1297,8 +1322,13 @@ population_nodes[:5]
 # function. In the case of the example
 # node above, `get_text` function returns `"London"`.
 
-# %%
+# %% tags=["remove-output"]
 [row.get_text() for row in population_nodes][:5]
+
+# %% [markdown]
+# ```
+# ['Toronto', '6,202,225', 'London', '543,551\n', 'Montreal']
+# ```
 
 # %% [markdown]
 # Fantastic! We seem to have extracted the data of interest from the 
@@ -1333,32 +1363,48 @@ population_nodes[:5]
 # In particular, in this book we will show you the basics of how to use
 # the `tweepy` package in Python to access
 # data from the Twitter API. `tweepy` requires the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to get tokens and secrets from that, through which your access to the data will then be authenticated and controlled.
+
+# %% [markdown]
+# First, we go to the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an account if you do not have one yet. Note that you will need a valid phone number to associate with your developer account. After filling out the basic information, we will get the *essential access* to the Twitter API. Then we can create an app and hit the "get key" button, and we will get the API key and API key secret of the app (along with the bearer token which will not be used in this demonstration). **We need to store the key and secret at a safe place, and make sure do not show them to anyone else (also do not accidentally push it to the GitHub repository).** If you lose the key, you can always regenerate it. Next, we go to the "Keys and tokens" tab of the app, and generate an access token and an access token secret. **Save the access token and the access token secret at a safe place as well.** Your app will look something like {numref}`fig:twitter-API-keys-tokens`.
+
+# %% [markdown]
+# ```{figure} img/twitter-API-keys-tokens.png
+# :name: fig:twitter-API-keys-tokens
 #
-# Once you get the access keys and tokens, you can store it in the `config.ini` file. Then you can follow along with the examples that we show here.
+# Generating the API key-secret pair and the access token-secret pair in Twitter API. 
+# ```
+
+# %% [markdown]
+# Once you get the access keys and secrets, you can follow along with the examples that we show here.
 # To get started, load the `tweepy` package and authenticate our access to the Twitter developer portal account.
 
-# %%
+# %% tags=["remove-output"]
 import tweepy
-import configparser
-config = configparser.ConfigParser()
-config.read("config.ini")
 
-api_key = config['twitter']["api_key"]
-api_key_secret = config['twitter']["api_key_secret"]
-access_token = config['twitter']["access_token"]
-access_token_secret = config['twitter']["access_token_secret"]
- 
+# replace these with the api key, api key secret, access token and access token secret
+# generated on your own
+api_key = "8OxHWiIWjy8M39LvnC8OfSXrj" 
+api_key_secret = "scqjRqX5stoy4pYB5Zu52tCBKzhGLDh5nRqTEM6CMoLRkRLR8F"
+
+access_token = "1556029189484007425-mYwaDCI1WnCxjuMt0jb2UYD2ns8BYB"
+access_token_secret = "pDG4Ta7giYLY3mablPhd6y9bB5y2Aer1Cn18rihIJFBB7"
+
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(api_key, api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
- 
+
 api = tweepy.API(auth)
 
 try:
     api.verify_credentials()
-    print('Successful Authentication')
+    print("Successful Authentication")
 except:
-    print('Failed authentication')
+    print("Failed authentication")
+
+# %% [markdown]
+# ```
+# Successful Authentication
+# ```
 
 # %% [markdown]
 # `tweepy` provides an extensive set of functions to search 
@@ -1388,7 +1434,7 @@ except:
 # grants you API access, they also usually specify a limit (or *quota*) of how much data you can ask for.
 # Be careful not to overrun your quota! In this example, we should take a look at
 #  [the Twitter website](https://developer.twitter.com/en/docs/twitter-api/rate-limits) to see what limits
-# we should abide by when using the API. 
+# we should abide by when using the API.
 
 # %% [markdown]
 # **Using `tweepy`**
@@ -1396,7 +1442,7 @@ except:
 # After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
 # So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
 
-# %%
+# %% tags=["remove-output"]
 userID = "scikit_learn"
 
 scikit_learn_tweets = api.user_timeline(
@@ -1409,12 +1455,32 @@ scikit_learn_tweets = api.user_timeline(
 # %% [markdown]
 # Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:
 
-# %%
+# %% tags=["remove-output"]
 for info in scikit_learn_tweets[:3]:
     print("ID: {}".format(info.id))
     print(info.created_at)
     print(info.full_text)
     print("\n")
+
+# %% [markdown]
+# ```
+# ID: 1555686128971403265
+# 2022-08-05 22:44:11+00:00
+# scikit-learn 1.1.2 is out on https://t.co/lSpi4eDc2t and conda-forge!
+#
+# This is a small maintenance release that fixes a couple of regressions:
+# https://t.co/Oa84ES0qpG
+#
+#
+# ID: 1549321048943988737
+# 2022-07-19 09:11:37+00:00
+# RT @MarenWestermann: @scikit_learn It is worth highlighting that this scikit-learn sprint is seeing the highest participation of women out…
+#
+#
+# ID: 1548339716465930244
+# 2022-07-16 16:12:09+00:00
+# @StefanieMolin @theBodlina @RichardKlima We continue pulling requests here in Dublin. Putting some Made in Ireland code in the scikit-learn codebase 🇮🇪 . Current stats: 18 PRs opened, 12 merged 🚀 https://t.co/ccWy8vh8YI
+# ```
 
 # %% [markdown]
 # A full list of available attributes provided by Twitter API can be found [here](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
@@ -1424,13 +1490,19 @@ for info in scikit_learn_tweets[:3]:
 # few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
 # and `full_text`, and construct a `pandas` DataFrame using the extracted information.
 
-# %%
+# %% tags=["remove-output"]
 columns = ["time", "user", "is_retweet", "text"]
 data = []
 for tweet in scikit_learn_tweets:
-    data.append([tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text])
-    
+    data.append(
+        [tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text]
+    )
+
 scikit_learn_tweets_df = pd.DataFrame(data, columns=columns)
+scikit_learn_tweets_df
+
+# %% tags=["remove-input"]
+scikit_learn_tweets_df = pd.read_csv("data/reading_api_df.csv", index_col=0)
 scikit_learn_tweets_df
 
 # %% [markdown]
@@ -1448,7 +1520,7 @@ scikit_learn_tweets_df
 # to ask the Twitter API for more data 
 # (see [the `tweepy` page](https://github.com/tweepy/tweepy)
 # for more examples of what is possible), just be mindful as usual about how much
-# data you are requesting and how frequently you are making requests. 
+# data you are requesting and how frequently you are making requests.
 
 # %% [markdown]
 # ## Exercises

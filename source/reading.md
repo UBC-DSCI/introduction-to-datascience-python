@@ -1265,14 +1265,37 @@ certain elements in web pages and extract data.
 
 **Using `pandas.read_html`**
 
++++
+
+The easiest way to read a table from HTML is to use [`pandas.read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html). We can see that the Wikipedia page of "Canada" has 18 tables.
+
 ```{code-cell} ipython3
-test = pd.read_html("https://en.wikipedia.org/wiki/Canada")
-len(test)
+:tags: [remove-output]
+
+canada_wiki = pd.read_html("https://en.wikipedia.org/wiki/Canada")
+len(canada_wiki)
+```
+
+```
+18
+```
+
++++
+
+With some inspection, we find that the table that shows the population of the most populated provinces is of index 1.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+df = canada_wiki[1]
+df.columns = df.columns.droplevel()
+df
 ```
 
 ```{code-cell} ipython3
-df = test[1]
-df.columns = df.columns.droplevel()
+:tags: [remove-input]
+
+df = pd.read_csv("data/canada-wiki-read_html.csv", index_col=0)
 df
 ```
 
@@ -1599,8 +1622,6 @@ and guidance that the worksheets provide will function as intended.
   SelectorGadget tool to obtain desired CSS selectors for:
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
     - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
-- The [`polite` R package](https://dmi3kno.github.io/polite/) {cite:p}`polite` provides
-  a set of tools for responsibly scraping data from websites.
 
 ## References
 

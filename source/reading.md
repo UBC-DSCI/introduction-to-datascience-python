@@ -1,7 +1,5 @@
 ---
 jupytext:
-  cell_metadata_filter: -all
-  encoding: '# -*- coding: utf-8 -*-'
   formats: py:percent,md:myst,ipynb
   text_representation:
     extension: .md
@@ -124,15 +122,23 @@ Example file system
 
 **Reading `happiness_report.csv` using a relative path:**
 
-```{code-cell eval=False} ipython3
++++
+
+```python
 happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 
++++
+
 **Reading `happiness_report.csv` using an absolute path:**
 
-```{code-cell eval=False} ipython3
++++
+
+```python
 happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
+
++++
 
 So which one should you use? Generally speaking, to ensure your code can be run 
 on a different computer, you should use relative paths. An added bonus is that 
@@ -201,7 +207,7 @@ sub-folder, named `data`, relative to where we are running our Python code.
 Here is what the file would look like in a plain text editor (a program that removes
 all formatting, like bolding or different fonts):
 
-```code
+```
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -242,7 +248,7 @@ gives the data scientist useful context and information about the data,
 however, it is not well formatted or intended to be read into a data frame cell
 along with the tabular data that follows later in the file.
 
-```code
+```
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -296,7 +302,7 @@ canlang_data
 How did we know to skip two lines? We looked at the data! The first two lines
 of the data had information we didn't need to import: 
 
-```code
+```
 Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an "as is" basis with the permission of Statistics Canada.
 Date collected: 2020/07/09
 ```
@@ -309,7 +315,7 @@ Another common way data is stored is with tabs as the delimiter. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas. 
 
-```code
+```
 category    language    mother_tongue   most_at_home    most_at_work    lang_kno
 Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
@@ -356,7 +362,7 @@ instead of commas.
 
 Here is how the file would look in a plain text editor:
 
-```code
+```
 Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
 Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
 Non-Official & Non-Aboriginal languages Afro-Asiatic languages, n.i.e.  1150    
@@ -429,10 +435,19 @@ list of column names to the `names` argument. `read_csv` and `read_table` have a
 whose default value is `[]`.
 
 ```{code-cell} ipython3
-canlang_data =  pd.read_csv("data/can_lang.tsv", 
-                           sep = "\t", 
-                           header = None, 
-                           names = ['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
+canlang_data = pd.read_csv(
+    "data/can_lang.tsv",
+    sep="\t",
+    header=None,
+    names=[
+        "category",
+        "language",
+        "mother_tongue",
+        "most_at_home",
+        "most_at_work",
+        "lang_known",
+    ],
+)
 canlang_data
 ```
 
@@ -609,7 +624,7 @@ communication channel that Python can use to send SQL commands to the database.
 
 ```{code-cell} ipython3
 import sqlalchemy as sal
-from sqlalchemy import create_engine, select, MetaData, Table
+from sqlalchemy import MetaData, Table, create_engine, select
 
 db = sal.create_engine("sqlite:///data/can_lang.db")
 conn = db.connect()
@@ -978,7 +993,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv")
 Data doesn't just magically appear on your computer; you need to get it from
 somewhere. Earlier in the chapter we showed you how to access data stored in a
 plain text, spreadsheet-like format (e.g., comma- or tab-separated) from a web
-URL using one of the `read_*` functions from the `tidyverse`. But as time goes
+URL using one of the `read_*` functions from the `pandas`. But as time goes
 on, it is increasingly uncommon to find data (especially large amounts of data)
 in this format available for download from a URL. Instead, websites now often
 offer something known as an **a**pplication **p**rogramming **i**nterface
@@ -1021,9 +1036,11 @@ content and tells the webpage how the HTML elements should
 be presented (e.g., colors, layouts, fonts etc.). 
 
 This subsection will show you the basics of both web scraping
-with the [`rvest` R package](https://rvest.tidyverse.org/) {cite:p}`rvest`
+with the [`BeautifulSoup` Python package](https://beautiful-soup-4.readthedocs.io/en/latest/) {cite:p}`beautifulsoup`
 and accessing the Twitter API
-using the [`rtweet` R package](https://github.com/ropensci/rtweet) {cite:p}`rtweet`.
+using the [`tweepy` Python package](https://github.com/tweepy/tweepy) {cite:p}`tweepy`.
+
++++
 
 ### Web scraping
 
@@ -1044,22 +1061,25 @@ on [Craiglist](https://vancouver.craigslist.org). When we visit the Vancouver Cr
 website and search for one-bedroom apartments, 
 we should see something similar to {numref}`fig:craigslist-human`.
 
++++
+
 ```{figure} img/craigslist_human.png
 :name: fig:craigslist-human
 
 Craigslist webpage of advertisements for one-bedroom apartments.
 ```
 
++++
 
 Based on what our browser shows us, it's pretty easy to find the size and price
 for each apartment listed. But we would like to be able to obtain that information
-using R, without any manual human effort or copying and pasting. We do this by
+using Python, without any manual human effort or copying and pasting. We do this by
 examining the *source code* that the web server actually sent our browser to
 display for us. We show a snippet of it below; the 
 entire source 
-is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/blob/master/img/website_source.txt):
+is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
 
-```html
+```
         <span class="result-meta">
                 <span class="result-price">$800</span>
 
@@ -1184,12 +1204,14 @@ of apartment listings, we need to use
 the two CSS selectors `.housing` and `.result-price`, respectively.
 The selector gadget returns them to us as a comma-separated list (here
 `.housing , .result-price`), which is exactly the format we need to provide to
-R if we are using more than one CSS selector.
+Python if we are using more than one CSS selector.
 
 **Stop! Are you allowed to scrape that website?**
 
 ```{index} web scraping; permission
 ```
+
++++
 
 *Before* scraping data from the web, you should always check whether or not
 you are *allowed* to scrape it! There are two documents that are important
@@ -1214,7 +1236,7 @@ We will use the SelectorGadget tool to pick elements that we are interested in
 (city names and population counts) and deselect others to indicate that we are not 
 interested in them (province names), as shown in {numref}`fig:sg4`.
 
-```{figure} img/sg4.png
+```{figure} img/selectorgadget-wiki-updated.png
 :name: fig:sg4
 
 Using the SelectorGadget on a Wikipedia webpage.
@@ -1224,50 +1246,87 @@ We include a link to a short video tutorial on this process at the end of the ch
 in the additional resources section. SelectorGadget provides in its toolbar
 the following list of CSS selectors to use:
 
++++
+
 ```
-td:nth-child(5), 
-td:nth-child(7), 
-.infobox:nth-child(122) td:nth-child(1), 
-.infobox td:nth-child(3)
+td:nth-child(8) , 
+td:nth-child(6) , 
+td:nth-child(4) , 
+.mw-parser-output div tr+ tr td:nth-child(2)
 ```
+
++++
 
 Now that we have the CSS selectors that describe the properties of the elements
 that we want to target (e.g., has a tag name `price`), we can use them to find
-certain elements in web pages and extract data. 
+certain elements in web pages and extract data.
 
-**Using `rvest`**
++++
 
-```{index} rvest
+**Using `pandas.read_html`**
+
++++
+
+The easiest way to read a table from HTML is to use [`pandas.read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html). We can see that the Wikipedia page of "Canada" has 18 tables.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+canada_wiki = pd.read_html("https://en.wikipedia.org/wiki/Canada")
+len(canada_wiki)
 ```
 
-Now that we have our CSS selectors we can use the `rvest` R package to scrape our
-desired data from the website. We start by loading the `rvest` package:
-
-```{r 01-load-rvest}
-library(rvest)
+```
+18
 ```
 
-Next, we tell R what page we want to scrape by providing the webpage's URL in quotations to the function `read_html`:
++++
 
-```{r 01-specify-page}
-page <- read_html("https://en.wikipedia.org/wiki/Canada")
+With some inspection, we find that the table that shows the population of the most populated provinces is of index 1.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+df = canada_wiki[1]
+df.columns = df.columns.droplevel()
+df
 ```
 
-```{index} read function; read_html
+```{code-cell} ipython3
+:tags: [remove-input]
+
+df = pd.read_csv("data/canada-wiki-read_html.csv", index_col=0)
+df
 ```
 
-The `read_html` function directly downloads the source code for the page at 
-the URL you specify, just like your browser would if you navigated to that site. But 
-instead of  displaying the website to you, the `read_html` function just returns 
-the HTML source code itself, which we have
-stored in the `page` variable. Next, we send the page object to the `html_nodes`
-function, along with the CSS selectors we obtained from
-the SelectorGadget tool. Make sure to surround the selectors with quotation marks; the function, `html_nodes`, expects that
-argument is a string. The `html_nodes` function then selects *nodes* from the HTML document that 
-match the CSS selectors you specified.  A *node* is an HTML tag pair (e.g.,
+**Using `BeautifulSoup`**
+
+```{index} BeautifulSoup, requests
+```
+
+Now that we have our CSS selectors we can use the `requests` and `BeautifulSoup` Python packages to scrape our desired data from the website. We start by loading the packages:
+
+```{code-cell} ipython3
+import requests
+from bs4 import BeautifulSoup
+```
+
+Next, we tell Python what page we want to scrape by providing the webpage's URL in quotations to the function `requests.get` and pass it into the `BeautifulSoup` function for parsing:
+
+```{code-cell} ipython3
+wiki = requests.get("https://en.wikipedia.org/wiki/Canada")
+page = BeautifulSoup(wiki.content, "html.parser")
+```
+
+The `requests.get` function sends a `GET` request to the specified URL and returns the server's response to the HTTP request (*i.e.* a `requests.Response` object). The `BeautifulSoup` function takes the content of the response and returns the HTML source code itself, which we have
+stored in the `page` variable. Next, we use the `select` method of the page object along with the CSS selectors we obtained from the SelectorGadget tool. Make sure to surround the selectors with quotation marks; `select` expects that
+argument is a string. It selects *nodes* from the HTML document that 
+match the CSS selectors you specified. A *node* is an HTML tag pair (e.g.,
 `<td>` and `</td>` which defines the cell of a table) combined with the content
-stored between the tags. For our CSS selector `td:nth-child(5)`, an example
+stored between the tags. For our CSS selector `td:nth-child(6)`, an example
 node that would be selected would be:
+
++++
 
 ```
 <td style="text-align:left;background:#f0f0f0;">
@@ -1275,38 +1334,46 @@ node that would be selected would be:
 </td>
 ```
 
-We store the result of the `html_nodes` function in the `population_nodes` variable.
-Note that below we use the `paste` function with a comma separator (`sep=","`)
-to build the list of selectors. The `paste` function converts 
-elements to characters and combines the values into a list. We use this function to 
-build the list of selectors to maintain code readability; this avoids
-having one very long line of code with the string
-`"td:nth-child(5),td:nth-child(7),.infobox:nth-child(122) td:nth-child(1),.infobox td:nth-child(3)"`
-as the second argument of `html_nodes`:
++++
 
-```{r 01-select-nodes, results = 'hide', echo = TRUE}
-selectors <- paste("td:nth-child(5)",
-             "td:nth-child(7)",
-             ".infobox:nth-child(122) td:nth-child(1)",
-             ".infobox td:nth-child(3)", sep=",")
+We store the result of the `select` function in the `population_nodes` variable. Note that it returns a list, and we slice the list to only print the first 5 elements.
 
-population_nodes <- html_nodes(page, selectors)
-head(population_nodes)
+```{code-cell} ipython3
+:tags: [remove-output]
+
+population_nodes = page.select(
+    "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
+)
+population_nodes[:5]
 ```
 
-```{r echo = FALSE}
-print_html_nodes(head(population_nodes))
 ```
+[<td style="text-align:left;"><a href="/wiki/Greater_Toronto_Area" title="Greater Toronto Area">Toronto</a></td>,
+ <td style="text-align:right;">6,202,225</td>,
+ <td style="text-align:left;"><a href="/wiki/London,_Ontario" title="London, Ontario">London</a></td>,
+ <td style="text-align:right;">543,551
+ </td>,
+ <td style="text-align:left;"><a href="/wiki/Greater_Montreal" title="Greater Montreal">Montreal</a></td>]
+```
+
++++
 
 Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from 
-the nodes using the `html_text`
+the nodes using the `get_text`
 function. In the case of the example
-node above, `html_text` function returns `"London"`.
+node above, `get_text` function returns `"London"`.
 
-```{r 01-get-text}
-population_text <- html_text(population_nodes)
-head(population_text)
+```{code-cell} ipython3
+:tags: [remove-output]
+
+[row.get_text() for row in population_nodes][:5]
 ```
+
+```
+['Toronto', '6,202,225', 'London', '543,551\n', 'Montreal']
+```
+
++++
 
 Fantastic! We seem to have extracted the data of interest from the 
 raw HTML source code. But we are not quite done; the data
@@ -1317,7 +1384,9 @@ population (like a spreadsheet).
 Additionally, the populations contain commas (not useful for programmatically
 dealing with numbers), and some even contain a line break character at the end
 (`\n`). In Chapter {ref}`wrangling`, we will learn more about how to *wrangle* data
-such as this into a more useful format for data analysis using R.
+such as this into a more useful format for data analysis using Python.
+
++++
 
 ### Using an API
 
@@ -1325,40 +1394,86 @@ such as this into a more useful format for data analysis using R.
 ```
 
 Rather than posting a data file at a URL for you to download, many websites these days
-provide an API that must be accessed through a programming language like R. The benefit of this
+provide an API that must be accessed through a programming language like Python. The benefit of this
 is that data owners have much more control over the data they provide to users. However, unlike
 web scraping, there is no consistent way to access an API across websites. Every website typically
 has its own API designed especially for its own use case. Therefore we will just provide one example
 of accessing data through an API in this book, with the hope that it gives you enough of a basic
 idea that you can learn how to use another API if needed.
 
-```{index} API; rtweet, rtweet, Twitter, API; token
+```{index} API; tweepy, tweepy, Twitter, API; token
 ```
+
++++
 
 In particular, in this book we will show you the basics of how to use
-the `rtweet` package in R to access
-data from the Twitter API. One nice feature of this particular 
-API is that you don't need  a special *token* to access it; you simply need to 
-make an account with them. Your access to the data will then be authenticated and controlled through
-your account username and password. If you have a Twitter 
-account already (or are willing to make one), you can follow
-along with the examples that we show here. To get started, load the `rtweet` package:
+the `tweepy` package in Python to access
+data from the Twitter API. `tweepy` requires the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to get tokens and secrets from that, through which your access to the data will then be authenticated and controlled.
 
-```r
-library(rtweet)
++++
+
+First, we go to the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an account if you do not have one yet. Note that you will need a valid phone number to associate with your developer account. After filling out the basic information, we will get the *essential access* to the Twitter API. Then we can create an app and hit the "get key" button, and we will get the API key and API key secret of the app (along with the bearer token which will not be used in this demonstration). **We need to store the key and secret at a safe place, and make sure do not show them to anyone else (also do not accidentally push it to the GitHub repository).** If you lose the key, you can always regenerate it. Next, we go to the "Keys and tokens" tab of the app, and generate an access token and an access token secret. **Save the access token and the access token secret at a safe place as well.** Your app will look something like {numref}`fig:twitter-API-keys-tokens`.
+
++++
+
+```{figure} img/twitter-API-keys-tokens.png
+:name: fig:twitter-API-keys-tokens
+
+Generating the API key-secret pair and the access token-secret pair in Twitter API. 
 ```
 
-This package provides an extensive set of functions to search 
++++
+
+Once you get the access keys and secrets, you can follow along with the examples that we show here.
+To get started, load the `tweepy` package and authenticate our access to the Twitter developer portal account.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+import tweepy
+
+# replace these with the api key, api key secret, access token and access token secret
+# generated on your own
+api_key = "8OxHWiIWjy8M39LvnC8OfSXrj" 
+api_key_secret = "scqjRqX5stoy4pYB5Zu52tCBKzhGLDh5nRqTEM6CMoLRkRLR8F"
+
+access_token = "1556029189484007425-mYwaDCI1WnCxjuMt0jb2UYD2ns8BYB"
+access_token_secret = "pDG4Ta7giYLY3mablPhd6y9bB5y2Aer1Cn18rihIJFBB7"
+
+# Authenticate to Twitter
+auth = tweepy.OAuthHandler(api_key, api_key_secret)
+auth.set_access_token(access_token, access_token_secret)
+
+api = tweepy.API(auth)
+
+try:
+    api.verify_credentials()
+    print("Successful Authentication")
+except:
+    print("Failed authentication")
+```
+
+```
+Successful Authentication
+```
+
++++
+
+`tweepy` provides an extensive set of functions to search 
 Twitter for tweets, users, their followers, and more. 
-Let's construct a small data set of the last 400 tweets and 
-retweets from the [@tidyverse](https://twitter.com/tidyverse) account. A few of the most recent tweets
-are shown in {numref}`fig:01-tidyverse-twitter`.
+Let's construct a small data set of the last 200 tweets and 
+retweets from the [@scikit_learn](https://twitter.com/scikit_learn) account. A few of the most recent tweets
+are shown in {numref}`fig:01-scikit-learn-twitter`.
 
-```{figure} img/tidyverse_twitter.png
-:name: fig:01-tidyverse-twitter
++++
 
-The tidyverse account Twitter feed.
+```{figure} img/scikit-learn-twitter.png
+:name: fig:01-scikit-learn-twitter
+
+The `scikit-learn` account Twitter feed.
 ```
+
++++
 
 **Stop! Think about your API usage carefully!**
 
@@ -1373,88 +1488,107 @@ with how you write and run your code. You should also keep in mind that when a w
 grants you API access, they also usually specify a limit (or *quota*) of how much data you can ask for.
 Be careful not to overrun your quota! In this example, we should take a look at
  [the Twitter website](https://developer.twitter.com/en/docs/twitter-api/rate-limits) to see what limits
-we should abide by when using the API. 
+we should abide by when using the API.
 
-**Using `rtweet`**
++++
 
-After checking the Twitter website, it seems like asking for 400 tweets one time is acceptable.
-So we can use the `get_timelines` function to ask for the last 400 tweets from the [@tidyverse](https://twitter.com/tidyverse) account.
+**Using `tweepy`**
 
-```r
-tidyverse_tweets <- get_timelines('tidyverse', n=400)
+After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
+So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+userID = "scikit_learn"
+
+scikit_learn_tweets = api.user_timeline(
+    screen_name=userID,
+    count=200,
+    include_rts=True,
+    tweet_mode="extended",
+)
 ```
 
-When you call the `get_timelines` for the first time (or any other `rtweet` function that accesses the API), 
-you will see a browser pop-up that looks something like {numref}`fig:01-tidyverse-authorize`.
+Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:
 
-(ref:01-tidyverse-authorize) The `rtweet` authorization prompt.
+```{code-cell} ipython3
+:tags: [remove-output]
 
-```{figure} img/authorize_question.png
-:name: fig:craigslist-human
-
-The `rtweet` authorization prompt.
+for info in scikit_learn_tweets[:3]:
+    print("ID: {}".format(info.id))
+    print(info.created_at)
+    print(info.full_text)
+    print("\n")
 ```
 
-This is the `rtweet` package asking you to provide your own Twitter account's login information.
-When `rtweet` talks to the Twitter API, it uses your account information to authenticate requests;
-Twitter then can keep track of how much data you're asking for, and how frequently you're asking.
-If you want to follow along with this example using your own Twitter account, you should read
-over the list of permissions you are granting `rtweet` *very carefully* and make sure you are comfortable
-with it. Note that `rtweet` can be used to manage most aspects of your account (make posts, follow others, etc.),
-which is why `rtweet` asks for such extensive permissions.
-If you decide to allow `rtweet` to talk to the Twitter API using your account information, then 
-input your username and password and hit "Sign In." Twitter will probably send you an email to say
-that there was an unusual login attempt on your account, and in that case you will have to take
-the one-time code they send you and provide that to the `rtweet` login page too. 
+```
+ID: 1555686128971403265
+2022-08-05 22:44:11+00:00
+scikit-learn 1.1.2 is out on https://t.co/lSpi4eDc2t and conda-forge!
 
-> **Note:** Every API has its own way to authenticate users when they try to access data. Many APIs require you to
-> sign up to receive a *token*, which is a secret password that you input into the R package (like `rtweet`) 
-> that you are using to access the API. 
+This is a small maintenance release that fixes a couple of regressions:
+https://t.co/Oa84ES0qpG
 
-With the authentication setup out of the way, let's run the `get_timelines` function again to actually access
-the API and take a look at what was returned:
 
-```r
-tidyverse_tweets <- get_timelines('tidyverse', n=400)
-tidyverse_tweets
+ID: 1549321048943988737
+2022-07-19 09:11:37+00:00
+RT @MarenWestermann: @scikit_learn It is worth highlighting that this scikit-learn sprint is seeing the highest participation of women out…
+
+
+ID: 1548339716465930244
+2022-07-16 16:12:09+00:00
+@StefanieMolin @theBodlina @RichardKlima We continue pulling requests here in Dublin. Putting some Made in Ireland code in the scikit-learn codebase 🇮🇪 . Current stats: 18 PRs opened, 12 merged 🚀 https://t.co/ccWy8vh8YI
 ```
 
-```{r 01-reading-hidden-load-tweets, echo = FALSE, message = FALSE, warning = FALSE}
-tidyverse_tweets <- read_csv("data/tweets.csv")
-tidyverse_tweets
++++
+
+A full list of available attributes provided by Twitter API can be found [here](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
+
++++
+
+For the demonstration purpose, let's only use a
+few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
+and `full_text`, and construct a `pandas` DataFrame using the extracted information.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+
+columns = ["time", "user", "is_retweet", "text"]
+data = []
+for tweet in scikit_learn_tweets:
+    data.append(
+        [tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text]
+    )
+
+scikit_learn_tweets_df = pd.DataFrame(data, columns=columns)
+scikit_learn_tweets_df
 ```
 
-The data has quite a few variables! (Notice that the output above shows that we
-have a data table with 293 rows and 71 columns). Let's reduce this down to a
-few variables of interest: `created_at`,  `retweet_screen_name`, `is_retweet`,
-and `text`.
+```{code-cell} ipython3
+:tags: [remove-input]
 
-```{r 01-select-tweets, message = FALSE, warning = FALSE}
-tidyverse_tweets <- select(tidyverse_tweets, 
-                           created_at, 
-                           retweet_screen_name,
-                           is_retweet, 
-                           text)
-
-tidyverse_tweets
+scikit_learn_tweets_df = pd.read_csv("data/reading_api_df.csv", index_col=0)
+scikit_learn_tweets_df
 ```
 
-If you look back up at the image of the [@tidyverse](https://twitter.com/tidyverse) Twitter page, you will
+If you look back up at the image of the [@scikit_learn](https://twitter.com/scikit_learn) Twitter page, you will
 recognize the text of the most recent few tweets in the above data frame.  In
 other words, we have successfully created a small data set using the Twitter
 API&mdash;neat! This data is also quite different from what we obtained from web scraping;
-it is already well-organized into a `tidyverse` data frame (although not *every* API
-will provide data in such a nice format).
- From this point onward, the `tidyverse_tweets` data frame is stored on your
+the extracted information can be easily converted into a `pandas` data frame (although not *every* API will provide data in such a nice format).
+From this point onward, the `scikit_learn_tweets_df` data frame is stored on your
 machine, and you can play with it to your heart's content. For example, you can use
-`write_csv` to save it to a file and `read_csv` to read it into R again later; 
+`pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later; 
 and after reading the next few chapters you will have the skills to
 compute the percentage of retweets versus tweets, find the most oft-retweeted
 account, make visualizations of the data, and much more! If you decide that you want 
 to ask the Twitter API for more data 
-(see [the `rtweet` page](https://github.com/ropensci/rtweet)
+(see [the `tweepy` page](https://github.com/tweepy/tweepy)
 for more examples of what is possible), just be mindful as usual about how much
-data you are requesting and how frequently you are making requests. 
+data you are requesting and how frequently you are making requests.
+
++++
 
 ## Exercises
 
@@ -1488,8 +1622,6 @@ and guidance that the worksheets provide will function as intended.
   SelectorGadget tool to obtain desired CSS selectors for:
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
     - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
-- The [`polite` R package](https://dmi3kno.github.io/polite/) {cite:p}`polite` provides
-  a set of tools for responsibly scraping data from websites.
 
 ## References
 

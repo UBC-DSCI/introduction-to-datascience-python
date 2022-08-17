@@ -4,8 +4,7 @@ on:
       - main
     paths:
       - source/**
-  pull_request: null
-
+      
 jobs:
   deploy-book:
     runs-on: ${{ matrix.os }}

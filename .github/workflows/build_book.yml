@@ -1,11 +1,10 @@
 on:
   push:
     branches:
-      - myst
+      - main
     paths:
       - source/**
-  pull_request: null
-
+      
 jobs:
   deploy-book:
     runs-on: ${{ matrix.os }}
@@ -27,7 +26,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          ref: 'myst'
+          ref: 'main'
 
       - name: install from lockfile
         uses: mamba-org/provision-with-micromamba@main

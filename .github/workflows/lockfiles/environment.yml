@@ -9,6 +9,7 @@ dependencies:
   - conda-lock
   - ghp-import
   - git
+  - jupyter-book
   - jupyterlab
   - jupytext
   - jupyter_contrib_nbextensions

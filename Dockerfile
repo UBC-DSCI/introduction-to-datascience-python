@@ -1,3 +1,4 @@
+# Dockerfile for intro to ds python book
 FROM jupyter/scipy-notebook
 
 USER root

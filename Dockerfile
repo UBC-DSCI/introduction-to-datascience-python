@@ -21,7 +21,6 @@ RUN mamba install --quiet --yes \
         'click' \
         'ghp-import' \
         'jupytext' \
-        'jupyter_contrib_nbextensions' \
         'jupyter-book' \
         'nodejs' \
     && mamba clean --all -f -y \

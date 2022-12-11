@@ -25,11 +25,15 @@ jobs:
     - name: Update build_html.sh script
       run: |
         sed --debug 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.digest }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git add build_html.sh
         git commit -m "update build_html.sh script with new docker image"
     - name: Update build_book.yml
       run: |
         sed --debug 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.digest }}/g' .github/workflows/build_book.yml > build_book.tmp && mv build_book.tmp .github/workflows/build_book.yml
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git add .github/workflows/build_book.yml
         git commit -m "update build_book.yml script with new docker image"
     - name: Push changes to build scripts

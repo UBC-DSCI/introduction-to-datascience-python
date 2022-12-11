@@ -34,7 +34,7 @@ in the root directory of this repository. The book can be viewed in your browser
 
 You can update the build environment for the book by making changes to `Dockerfile` in the root of the repository in the `dev` branch.
 If you push any changes to the `Dockerfile` on the `dev` branch, GitHub will trigger a rebuild of the docker image,
-push it to DockerHub, and update the `build_html.sh` script and book deploy GitHub action with the new image digest.
+push it to DockerHub, and update the `build_html.sh` script and book deploy GitHub action with the new image tag.
 
 ### Update public html
 

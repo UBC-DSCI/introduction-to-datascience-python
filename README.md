@@ -14,8 +14,7 @@ See [the license file](LICENSE.md) for more information.
 
 ### Setup
 
-In order to build the book, you need to first install Docker 
-(instructions here: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)).
+Building the book requires Docker (instructions here: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)).
 
 ### Contributing 
 Primary development in this repository happens on the `dev` branch. If you want to contribute to the book,

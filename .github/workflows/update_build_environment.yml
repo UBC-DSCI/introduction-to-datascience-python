@@ -30,7 +30,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git pull origin dev
-        sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.tag }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
+        sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.snapshot-tag }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
         git add build_html.sh
         git commit -m "update build_html.sh script with new docker image"
     - name: Push changes to build scripts

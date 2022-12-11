@@ -27,7 +27,7 @@ jobs:
         snapshot: true
     - name: Update build_html.sh script
       run: |
-        sed --debug 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.digest }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
+        sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.tag }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add build_html.sh

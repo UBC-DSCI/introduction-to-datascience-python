@@ -9,7 +9,6 @@ on:
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
-    container: ubcdsci/py-intro-to-ds:temporary
     permissions:
       contents: write
       packages: write
@@ -22,7 +21,7 @@ jobs:
 
       - name: Build the book
         run: |
-          jupyter-book build source
+          ./build_html.sh
 
        # Push the book's HTML to github-pages
       - name: GitHub Pages action

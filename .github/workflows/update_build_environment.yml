@@ -18,7 +18,7 @@ jobs:
         ref: 'dev'
     - name: Rebuild and publish image
       id: rebuild
-      uses: elgohr/Publish-Docker-Github-Action@v4
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/py-intro-to-ds
         username: ${{ secrets.DOCKER_USERNAME }}

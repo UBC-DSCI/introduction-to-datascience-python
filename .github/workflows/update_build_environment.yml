@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      workflows: write
+      actions: write
     steps:
     - name: Checkout dev
       uses: actions/checkout@v3

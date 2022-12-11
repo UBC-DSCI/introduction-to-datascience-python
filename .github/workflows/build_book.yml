@@ -1,3 +1,4 @@
+name: Rebuild and deploy book to gh-pages branch
 on:
   push:
     branches:
@@ -7,36 +8,20 @@ on:
       
 jobs:
   deploy-book:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            lock-file: conda-linux-64.lock
-        os: [ubuntu-latest]
-    defaults:
-      run:
-        shell: bash -l {0}
     steps:
       - name: checkout
         uses: actions/checkout@v2
         with:
           ref: 'main'
 
-      - name: install from lockfile
-        uses: mamba-org/provision-with-micromamba@main
-        with:
-          environment-name: lock_test
-          environment-file: .github/workflows/lockfiles/${{ matrix.lock-file }}
-
       - name: Build the book
         run: |
-          jupyter-book build source
+          ./build_html.sh
 
        # Push the book's HTML to github-pages
       - name: GitHub Pages action

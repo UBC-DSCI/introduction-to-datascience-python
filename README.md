@@ -14,8 +14,7 @@ See [the license file](LICENSE.md) for more information.
 
 ### Setup
 
-In order to build the book, you need to first install Docker 
-(instructions here: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)).
+Building the book requires Docker (instructions here: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)).
 
 ### Contributing 
 Primary development in this repository happens on the `dev` branch. If you want to contribute to the book,
@@ -35,7 +34,7 @@ in the root directory of this repository. The book can be viewed in your browser
 
 You can update the build environment for the book by making changes to `Dockerfile` in the root of the repository in the `dev` branch.
 If you push any changes to the `Dockerfile` on the `dev` branch, GitHub will trigger a rebuild of the docker image,
-push it to DockerHub, and update the `build_html.sh` script and book deploy GitHub action with the new image digest.
+push it to DockerHub, and update the `build_html.sh` script and book deploy GitHub action with the new image tag.
 
 ### Update public html
 

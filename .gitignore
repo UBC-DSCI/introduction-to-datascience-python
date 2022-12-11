@@ -1,1 +1,6 @@
 _build
+.bash_history
+.cache/
+.ipython/
+.npm/
+source/geckodriver.log

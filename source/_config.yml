@@ -3,9 +3,9 @@
 #######################################################################################
 # Book settings
 
-title: DSCΙ 100
+title: DSCΙ 100 Py
 author: UBC
-copyright: "2021" # Copyright year to be placed in the footer
+copyright: "Since 2022" # Copyright year to be placed in the footer
 logo: "" # A path to the book logo
 # Patterns to skip when building the book. Can be glob-style (e.g. "*skip.ipynb")
 exclude_patterns: [_build, Thumbs.db, .DS_Store, "*.ipynb_checkpoints"]

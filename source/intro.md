@@ -621,7 +621,7 @@ formally introduce tidy data in the {ref}`wrangling` chapter.
 ```
 
 We will make a bar plot to visualize our data. A bar plot is a chart where the
-heights of the bars represent certain values, like counts or proportions. We
+lengths of the bars represent certain values, like counts or proportions. We
 will make a bar plot using the `mother_tongue` and `language` columns from our
 `ten_lang` data frame. To create a bar plot of these two variables using the 
 `altair` package, we must specify the data frame, which variables
@@ -953,8 +953,8 @@ The documentation for the read_csv function including a high-level description, 
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
-in the "R and the tidyverse" row.
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+in the "Python and Pandas" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,

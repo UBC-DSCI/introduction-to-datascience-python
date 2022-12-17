@@ -504,11 +504,12 @@ gave us the result we wanted!
 
 Now let's use `.loc[]` to extract the `language` and `mother_tongue` columns
 from this data frame. To extract these columns, we need to provide the `.loc[]`
-operation with a list of rows separated by list of columns, i.e., `df.loc[[row1, row2, ...], [col1, col2, ...]]`
-As we want to access all the rows of the dataframe, instead of passing the names of all the rows, 
-we can instead just depict them using `:` and then pass a list of columns `language` and `mother_tongue`.
-After passing these as arguments, the  `loc[]` property
-returns two columns (the `language` and `mother_tongue` columns that we asked
+operation with a list of rows and a list of columns, e.g., `df.loc[[row1, row2, ...], [col1, col2, ...]]`
+As we want to access all the rows of the dataframe, instead of passing the names of all the rows individually, 
+we can instead just represent them all with the `:` symbol.
+For the columns, we can just pass a list of column names `"language"` and `"mother_tongue"`.
+After passing these as arguments, the  `.loc[]` operation
+returns two columns (the `"language"` and `"mother_tongue"` columns that we asked
 for) as a data frame. This code is also a great example of why being able to name things in Python is
 useful: you can see that we are using the result of our earlier filter step
 (which we named `aboriginal_lang`) here in the next step of the analysis!
@@ -519,11 +520,29 @@ useful: you can see that we are using the result of our earlier filter step
 +++
 
 ```{code-cell} ipython3
-selected_lang = aboriginal_lang.loc[:, ['language', 'mother_tongue']]
+selected_lang = aboriginal_lang.loc[:, ["language", "mother_tongue"]]
 selected_lang
 ```
 
-### Using `sort_values` to order and `iloc[]` to select rows by index number
+> **Note:** You will notice that we used the dot (`.`) symbol here for `.loc[]`,
+> which seems somewhat similar to when we use the dot in a function name
+> like `pd.read_csv`. In Python, generally the dot (`.`) means that the 
+> *thing* on the right is a "part of," or "owned by," the *thing* on the left.
+> In the case of `pd.read_csv`, the dot means that `read_csv` is a function
+> that is part of the `pd` (i.e., `pandas`) package. In the case of `aboriginal_lang.loc[...]`,
+> the dot means that data frame `aboriginal_lang` provides a function `.loc[]` that can
+> access the data frame itself.
+
+> **Note:** You will also notice that in Python, we use square brackets *both* to access
+> a data frame (as in `.loc[...]`) *and* to denote a list (as in `["language", "mother tongue"]`).
+> You could, for example, give the list its own name before selecting the columns in the data frame.
+```{code-cell} ipython3
+column_names = ["language", "mother_tongue"]
+selected_lang = aboriginal_lang.loc[:, column_names]
+selected_lang
+```
+
+### Using `sort_values` to order and `.iloc[]` to select rows by index number
 
 ```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
 ```

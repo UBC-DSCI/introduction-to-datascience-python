@@ -644,16 +644,15 @@ import altair as alt
 
 +++
 
-The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument `alt.Chart(ten_lang)`.
+The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized. 
-We first indicate what kind of geometric mark we want to use to represent the data. We can set the mark attribute 
-of the chart object using the `Chart.mark_*` methods.
-Here, as we want to plot the bar chart, so we will use `mark_bar()` method.
+We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute 
+of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
 Next, we need to encode the fields of the data frame using 
 the `x`(represents the x-axis position of the points) and 
-`y`(represents the y-axis position of the points) channels. The `encode()`
-method builds a key-value mapping between encoding channels (such as x, y) 
-to fields in the dataset, accessed by field name(column names)
+`y`(represents the y-axis position of the points) *channels*. We use the `encode()`
+function to handle this: we specify that the `language` column should correspond to the x-axis,
+and that the `mother_tongue` column should correspond to the y-axis.
 
 **(FIGURE 1.6 FROM R BOOK IS MISSING)**
 
@@ -665,8 +664,8 @@ to fields in the dataset, accessed by field name(column names)
 barplot_mother_tongue = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
-        x='language',
-        y='mother_tongue'
+        x="language",
+        y="mother_tongue"
     ))
     
 
@@ -697,10 +696,12 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 > **Note:** The vast majority of the
 > time, a single expression in Python must be contained in a single line of code.
 > However, there *are* a small number of situations in which you can have a
-> single Python expression span multiple lines. Above is one such case: here, Python knows that a line cannot
-> end with a `.` symbol, and so it keeps reading the next line to figure out
-> what the right-hand side of the `.` symbol should be.  We could, of course,
-> put all of the added layers on one line of code, but splitting them across
+> single Python expression span multiple lines. Above is one such case: here, Python sees that we put a left
+> parenthesis symbol `(` on the first line right after the assignment symbol `=`, and knows that our
+> expression cannot end until we close it with an appropriate corresponding right parenthesis `)`. 
+> So Python keeps reading the next line to figure out
+> what the rest of the expression is.  We could, of course,
+> put all of the code on one line of code, but splitting it across
 > multiple lines helps a lot with code readability.
 
 ### Formatting altair objects

@@ -6,3 +6,5 @@ _build
 source/geckodriver.log
 source/*.ipynb
 source/*.py
+*.swp
+*.swo

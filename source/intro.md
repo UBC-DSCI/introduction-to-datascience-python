@@ -311,6 +311,8 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python. 
 
+**(FIGURE 1.2 FROM R BOOK IS NOT MISSING, BUT STILL R VERSION. NEEDS PD.READ_CSV)**
+
 ```{figure} img/read_csv_function.jpeg
 ---
 height: 200px

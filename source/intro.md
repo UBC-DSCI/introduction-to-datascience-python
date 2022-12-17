@@ -296,8 +296,14 @@ and visualize data.
 import pandas as pd
 ```
 
-After loading the `pandas` package and accessing it using the alias `pd`, we can call the `read_csv` function and
-pass it a single argument: the name of the file, `"can_lang.csv"`. We have to
+This command has two parts. The first is `import pandas`, which loads the `pandas` package.
+The second is `as pd`, which give the `pandas` package the much shorter *alias* (another name) `pd`. 
+We can now use the `read_csv` function by writing `pd.read_csv`, i.e., the package name, then a dot, then the function name.
+You can see why we gave `pandas` a shorter alias; if we had to type `pandas.` before every function we wanted to use,
+our code would become much longer and harder to read!
+
+Now that the `pandas` package is loaded, we can use the `read_csv` function by passing 
+it a single argument: the name of the file, `"can_lang.csv"`. We have to
 put quotes around file names and other letters and words that we use in our
 code to distinguish it from the special words (like functions!) that make up the Python programming
 language.  The file's name is the only argument we need to provide because our
@@ -305,16 +311,12 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python. 
 
-(ref:img-read-csv) Syntax for the `read_csv` function.
-
-
-
 ```{figure} img/read_csv_function.jpeg
 ---
 height: 200px
 name: img-read-csv
 ---
-Syntax for the read_csv function
+Syntax for the `read_csv` function
 ```
 
 
@@ -353,10 +355,8 @@ and we set `name` to the string `"Alice"`.
 
 ```{code-cell} ipython3
 my_number = 1 + 2
-print(my_number)
 
 name = "Alice"
-print(name)
 ```
 
 Note that when 
@@ -380,9 +380,9 @@ my_number + 2
 ```{index} object
 ```
 
-Object names can consist of letters, numbers, periods `.` and underscores `_`.
+Object names can consist of letters, numbers, and underscores (`_`).
 Other symbols won't work since they have their own meanings in Python. For example,
-`+` is the addition symbol(operator); if we try to assign a name with
+`+` is the addition symbol; if we try to assign a name with
 the `+` symbol, Python will complain and we will get an error!
 
 ```
@@ -417,10 +417,11 @@ Wait a minute, nothing happened this time! Where's our data?
 Actually, something did happen: the data was loaded in 
 and now has the name `can_lang` associated with it. 
 And we can use that name to access the data frame and do things with it. 
-For example, we can type the name of the data frame to print the first few rows 
-on the screen. You will also see at the top that the number of observations (i.e., rows) and 
-variables (i.e., columns) are printed. Printing the first few rows of a data frame 
-like this is a handy way to get a quick sense for what is contained in a data frame.
+For example, we can type the name of the data frame to print both the first few rows 
+and the last few rows, separated by `...`,
+on the screen. You will also see at the bottom that the number of observations (i.e., rows) and 
+variables (i.e., columns) are printed. Printing a summary of a data frame 
+like this is a handy way to get a quick sense for what is contained in it.
 
 ```{code-cell} ipython3
 can_lang

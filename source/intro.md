@@ -572,13 +572,22 @@ arranged_lang
 
 Next we will use the `iloc[]` property, which selects rows according to their
 row number. Since we want to choose the most common ten languages, we will indicate we want the
-rows 1 to 10 using the argument `:10`.
+first ten rows using the argument `:10`.
 
 
 ```{code-cell} ipython3
 ten_lang = arranged_lang.iloc[:10]
 ten_lang
 ```
+
+> **Note:** In Python, we can denote *ranges* of numbers using the colon (`:`)
+> symbol. The syntax `x:y` means "the range of integers from `x` to `y`", and more specifically,
+> means `x, x+1, x+2, ..., y-2, y-1` (note that `y` is not included!).
+> So `arranged_lang.iloc[3:7]` would give us rows 3, 4, 5, and 6.
+> We can leave out the beginning if we want the range to start from the first entry:
+> for example, `arranged_lang.iloc[:3]` gives us the first 3 rows (0, 1, and 2).
+> We can also leave out the end if we want the range to go all the way to the end:
+> for example, `arranged_lang.iloc[64:]` gives us the last three rows 64, 65, and 66.
 
 We have now answered our initial question by generating this table!
 Are we done? Well, not quite; tables are almost never the best way to present

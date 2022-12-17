@@ -698,7 +698,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 > However, there *are* a small number of situations in which you can have a
 > single Python expression span multiple lines. Above is one such case: here, Python sees that we put a left
 > parenthesis symbol `(` on the first line right after the assignment symbol `=`, and knows that our
-> expression cannot end until we close it with an appropriate corresponding right parenthesis `)`. 
+> expression cannot end until we close it with an appropriate corresponding right parenthesis symbol `)`. 
 > So Python keeps reading the next line to figure out
 > what the rest of the expression is.  We could, of course,
 > put all of the code on one line of code, but splitting it across
@@ -852,8 +852,8 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 
 In the block of code below, we put everything from this chapter together, with a few
 modifications. In particular, we have actually skipped the
-`loc[]` step that we did above; since you specify the variable names to plot
-in the `altair` function, you don't actually need to select the columns in advance
+`.loc[]` step that we did above; since you specify the variable names to plot
+in the `altair` chart, you don't actually need to select the columns in advance
 when creating a visualization. We have also provided *comments* next to 
 many of the lines of code below using the
 hash symbol `#`. When Python sees a `#` sign, it 
@@ -866,7 +866,7 @@ commenting your code to improve its readability.
 This exercise demonstrates the power of Python. In relatively few lines of code, we
 performed an entire data science workflow with a highly effective data
 visualization! We asked a question, loaded the data into Python, wrangled the data
-(using `df[]`, `sort_values()` and `iloc[]`) and created a data visualization to
+(using `[]`, `sort_values` and `.iloc[]`) and created a data visualization to
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
@@ -881,10 +881,13 @@ arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
 ten_lang = arranged_lang[:10]
 
 # create the visualization
-ten_lang_plot = (alt.Chart(ten_lang)
-                 .mark_bar().encode(
-                  x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
-                  y = alt.Y('language', title="Language")))
+ten_lang_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', sort='x', title='Language')
+    ))
+
 
 ```
 
@@ -917,9 +920,9 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 There are many Python functions in the `pandas` package (and beyond!), and 
 nobody can be expected to remember what every one of them does
 or all of the arguments we have to give them. Fortunately, Python provides 
-the `help` function and `__doc__` attrribute, which 
+the `help` function, which 
 provides an easy way to pull up the documentation for 
-most functions quickly. To use the `help` function to access documentation, you 
+most functions quickly. To use the `help` function to access the documentation, you 
 just put the name of the function you are curious about as an argument inside the `help` function.
 For example, if you had forgotten what the `pd.read_csv` function
 did or exactly what arguments to pass in, you could run the following
@@ -928,15 +931,6 @@ code:
 ```{code-cell} ipython3
 :tags: ["remove-output"]
 help(pd.read_csv)
-```
-
-To use the `__doc__` attribute to access documentation, you 
-just put `.__doc__`  after the function you are curious about.
-For example, to access the documentation of `read_csv` you could run the following code:
-
-```{code-cell} ipython3
-:tags: ["remove-output"]
-print(pd.read_csv.__doc__)
 ```
 
 {numref}`help_read_csv` shows the documentation that will pop up,

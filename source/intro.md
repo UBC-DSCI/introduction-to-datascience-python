@@ -241,7 +241,7 @@ frame is the *comma-separated values* format (`.csv` for short).  These files
 have names ending in `.csv`, and can be opened and saved using common
 spreadsheet programs like Microsoft Excel and Google Sheets.  For example, the
 `.csv` file named `can_lang.csv` 
-is included with [the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/tree/master/data).
+is included with [the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/tree/main/source/data).
 If we were to open this data in a plain text editor (a program like Notepad that just shows
 text with no formatting), we would see each row on its own line, and each entry in the table separated by a comma:
 

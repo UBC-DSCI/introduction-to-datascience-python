@@ -13,7 +13,7 @@ kernelspec:
 ---
 
 (intro)=
-# Python and the Pandas
+# Python and Pandas
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -39,7 +39,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
 - Do indexing and slicing with `.loc[]` and `.iloc[]` properties.
-- Select columns of a dataframe using df[] notation.
+- Select columns of a dataframe using `df[]` notation.
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set

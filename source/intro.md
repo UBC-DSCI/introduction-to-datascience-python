@@ -39,7 +39,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
 - Do indexing and slicing with `.loc[]` and `.iloc[]` properties.
-- Select columns of a dataframe using `df[]` notation.
+- Select columns of a data frame using `df[]` notation.
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set
@@ -208,14 +208,14 @@ A data set is, at its core essence, a structured collection of numbers and chara
 Aside from that, there are really no strict rules; data sets can come in 
 many different forms! Perhaps the most common form of data set that you will
 find in the wild, however, is *tabular data*. Think spreadsheets in Microsoft Excel: tabular data are
-rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-dataframe`. In this book, we will focus primarily on tabular data.
+rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-data frame`. In this book, we will focus primarily on tabular data.
 
 ```{index} data frame; overview, observation, variable
 ```
 
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
-Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-dataframe` shows that a Python data frame is very similar
+Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-data frame` shows that a Python data frame is very similar
 to a spreadsheet. We refer to the rows as **observations**; these are the things that we
 collect the data on, e.g., voters, cities, etc. We refer to the columns as 
 **variables**; these are the characteristics of those observations, e.g., voters' political
@@ -225,7 +225,7 @@ affiliations, cities' populations, etc.
 ```{figure} img/spreadsheet_vs_df.png
 ---
 height: 400px
-name: img-spreadsheet-vs-dataframe
+name: img-spreadsheet-vs-data frame
 ---
 A spreadsheet versus a data frame in Python
 ```
@@ -439,7 +439,7 @@ find the ten Aboriginal languages that were most often reported
 in 2016 as mother tongues in Canada. In particular, we will construct 
 a table with the ten Aboriginal languages that have the largest 
 counts in the `mother_tongue` column. 
-The `[]` and `.loc[]` operations on the `pandas` dataframe will help us
+The `[]` and `.loc[]` operations on the `pandas` data frame will help us
 here. The `[]` operation allows you to obtain a subset of the
 rows with specific values, while the `.loc[]` operation allows you 
 to obtain a subset of the columns. Therefore, we can use `[]` 
@@ -505,7 +505,7 @@ gave us the result we wanted!
 Now let's use `.loc[]` to extract the `language` and `mother_tongue` columns
 from this data frame. To extract these columns, we need to provide the `.loc[]`
 operation with a list of rows and a list of columns, e.g., `df.loc[[row1, row2, ...], [col1, col2, ...]]`
-As we want to access all the rows of the dataframe, instead of passing the names of all the rows individually, 
+As we want to access all the rows of the data frame, instead of passing the names of all the rows individually, 
 we can instead just represent them all with the `:` symbol.
 For the columns, we can just pass a list of column names `"language"` and `"mother_tongue"`.
 After passing these as arguments, the  `.loc[]` operation
@@ -544,10 +544,10 @@ selected_lang
 
 ### Using `sort_values` to order and `.iloc[]` to select rows by index number
 
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
+```{index} pandas.DataFrame; sort_values, pandas.DataFrame; .iloc[]
 ```
 
-We have used `df[]` and `loc[]` properties of dataframe to obtain a table with only the Aboriginal
+We have used the `[]` and `.loc[]` operations on a data frame to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the **ten** languages that are spoken most often. As a next step, we could
 order the `mother_tongue` column from greatest to least and then extract only
@@ -556,7 +556,7 @@ rescue!
 
 The `sort_values` function allows us to order the rows of a data frame by the
 values of a particular column.  We need to specify the column name
-by which we want to sort the dataframe by passing it to the argument `by`.
+by which we want to sort the data frame by passing it to the argument `by`.
 Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
 language, we will use the `sort_values` function to order the rows in our
 `selected_lang` data frame by the `mother_tongue` column. We want to

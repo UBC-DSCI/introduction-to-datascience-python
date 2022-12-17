@@ -215,7 +215,7 @@ rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs
 
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
-Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-dataframe` shows that an Python data frame is very similar
+Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-dataframe` shows that a Python data frame is very similar
 to a spreadsheet. We refer to the rows as **observations**; these are the things that we
 collect the data on, e.g., voters, cities, etc. We refer to the columns as 
 **variables**; these are the characteristics of those observations, e.g., voters' political

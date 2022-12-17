@@ -159,36 +159,36 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question: 
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in {ref}`reading`
-and {ref}`wrangling`, but appear regularly throughout the text.
+Tools for summarization are covered in detail in the {ref}`reading`
+and {ref}`wrangling` chapters, but appear regularly throughout the text.
 1. **Visualization:** plotting data graphically. 
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?* 
-This is covered in detail in {ref}`viz`, but again appears regularly throughout the book.
+This is covered in detail in the {ref}`viz` chapter, but again appears regularly throughout the book.
 3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in {ref}`classification` and {ref}`classification2`.
+Classification is covered in the {ref}`classification` and {ref}`classification2` chapters.
 4. **Regression:** predicting a quantitative value for a new observation. 
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in {ref}`regression1` and {ref}`regression2`.
+Regression is covered in the {ref}`regression1` and {ref}`regression2` chapters.
 5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in {ref}`clustering`.
+Clustering is covered in the {ref}`clustering` chapter.
 6. **Estimation:** taking measurements for a small number of items from a large group 
  and making a good guess for the average or proportion for the large group. Estimation 
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?* 
-Estimation is covered in {ref}`inference`.
+Estimation is covered in the {ref}`inference` chapter.
 
 Referring to {numref}`questions-table`, our question about 
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -465,7 +465,7 @@ For example, in our analysis, we are interested in keeping only languages in the
 "Aboriginal languages" higher-level category. We can use 
 the *equivalency operator* `==` to compare the values
 of the `category` column with the value `"Aboriginal languages"`; you will learn about
-many other kinds of logical statements in {ref}`wrangling`.  Similar to
+many other kinds of logical statements in the {ref}`wrangling` chapter.  Similar to
 when we loaded the data file and put quotes around the file name, here we need
 to put quotes around `"Aboriginal languages"`. Using quotes tells Python that this
 is a string *value* and not one of the special words that make up Python
@@ -507,7 +507,12 @@ As we want to access all the rows of the dataframe, instead of passing the names
 we can instead just depict them using `:` and then pass a list of columns `language` and `mother_tongue`.
 After passing these as arguments, the  `loc[]` property
 returns two columns (the `language` and `mother_tongue` columns that we asked
-for) as a data frame.
+for) as a data frame. This code is also a great example of why being able to name things in Python is
+useful: you can see that we are using the result of our earlier filter step
+(which we named `aboriginal_lang`) here in the next step of the analysis!
+
+**(FIGURE 1.4 FROM R BOOK MISSING HERE)**
+
 
 +++
 
@@ -585,7 +590,7 @@ The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
 book: many of the functions from `pandas` require tidy data, including the
 `altair` package that we will use shortly for our visualization. We will
-formally introduce tidy data in {ref}`wrangling`.
+formally introduce tidy data in the {ref}`wrangling` chapter.
 
 ```{index} see: plot; visualization
 ```
@@ -689,7 +694,7 @@ the axes titles more informative.
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
-to format the plot further, and we will explore these in {ref}`viz`.
+to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = (
@@ -930,7 +935,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## References

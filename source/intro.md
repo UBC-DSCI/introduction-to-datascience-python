@@ -427,9 +427,9 @@ like this is a handy way to get a quick sense for what is contained in it.
 can_lang
 ```
 
-## Creating subsets of data frames with `df[]` & `loc[]`
+## Creating subsets of data frames with `[]` & `.loc[]`
 
-```{index} pandas.DataFrame; df[], pandas.DataFrame; loc[]
+```{index} pandas.DataFrame; df[], pandas.DataFrame; .loc[]
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
@@ -437,14 +437,14 @@ find the ten Aboriginal languages that were most often reported
 in 2016 as mother tongues in Canada. In particular, we will construct 
 a table with the ten Aboriginal languages that have the largest 
 counts in the `mother_tongue` column. 
-The `df[]` and `loc[]` properties of the `pandas` dataframe will help us
-here. The `df[]` property allows you to obtain a subset of the
-rows with specific values, while the `loc[]` property allows you 
-to obtain a subset of the columns. Therefore, we can use `df[]` 
+The `[]` and `.loc[]` operations on the `pandas` dataframe will help us
+here. The `[]` operation allows you to obtain a subset of the
+rows with specific values, while the `.loc[]` operation allows you 
+to obtain a subset of the columns. Therefore, we can use `[]` 
 to filter the rows to extract the Aboriginal languages in the data set, and 
-then use `loc[]` property to obtain only the columns we want to include in our table.
+then use `.loc[]` to obtain only the columns we want to include in our table.
 
-### Using `df[]` to extract rows
+### Using `[]` to extract rows
 Looking at the `can_lang` data above, we see the column `category` contains different
 high-level categories of languages, which include "Aboriginal languages",
 "Non-Official & Non-Aboriginal languages" and "Official languages".  To answer
@@ -454,13 +454,13 @@ to only those languages in the "Aboriginal languages" category.
 ```{index} pandas.DataFrame; df[], logical statement, logical statement; equivalency operator, string
 ```
 
-We can use the `df[]` property to obtain the subset of rows with desired
-values from a data frame, where `df[]` is same as the data frame object you are using. 
-In our case it would be `can_lang[]`
-The argument to `can_lang[]` is selection of column name `category` of the data frame
-object, `can_lang`. The second argument is a *logical statement* to use when
-filtering the rows with the logical statement evaluating to either `TRUE` or `FALSE`;
-`df[]` keeps only those rows for which the logical statement evaluates to `TRUE`.
+We can use the `[]` operation to obtain a subset of rows with desired
+values from a data frame (in our case, `can_lang`).
+In order to tell `pandas` which rows we want from the `can_lang` data frame,
+we specify a *logical statement* in between the square brackets. A *logical statement* 
+is an expression in python that evaluates to either `True` or `False`;
+so `can_lang[some logical statement goes here]` would keep only those rows for
+which the logical statement evaluates to `True`.
 For example, in our analysis, we are interested in keeping only languages in the
 "Aboriginal languages" higher-level category. We can use 
 the *equivalency operator* `==` to compare the values
@@ -472,30 +472,37 @@ is a string *value* and not one of the special words that make up Python
 programming language, or one of the names we have given to data frames in the
 code we have already written. 
 
-With the logical filter statement inside `df[]`, we get a data frame that has all the columns of
+**(FIGURE 1.3 FROM R BOOK MISSING HERE)**
+
+With the logical filter statement inside `[]`, we get a data frame that has all the columns of
 the input data frame, but only those rows we asked for in our logical filter
 statement. 
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
+aboriginal_lang = can_lang[can_lang["category"] == "Aboriginal languages"]
 aboriginal_lang
 ```
+
+> **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
+> treated the same. So we could have written `'Aboriginal languages'` instead 
+> of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
+> Try both out for yourself!
 
 It's good practice to check the output after using a
 function in Python. We can see the original `can_lang` data set contained 214 rows
 with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains languages in
-the "Aboriginal languages" in the `category` column. So it looks like the `df[]` property
+the "Aboriginal languages" in the `category` column. So it looks like the `[]` operation
 gave us the result we wanted!
 
 ### Using `.loc[]` to extract columns
 
-```{index} pandas.DataFrame; loc[]
+```{index} pandas.DataFrame; .loc[]
 ```
 
-Now let's use `loc[]` to extract the `language` and `mother_tongue` columns
-from this data frame. To extract these columns, we need to provide the `loc[]`
-property with list of rows separated by list of columns i.e `df.loc[[row1, row2, ...], [col1, col2, ...]]`
+Now let's use `.loc[]` to extract the `language` and `mother_tongue` columns
+from this data frame. To extract these columns, we need to provide the `.loc[]`
+operation with a list of rows separated by list of columns, i.e., `df.loc[[row1, row2, ...], [col1, col2, ...]]`
 As we want to access all the rows of the dataframe, instead of passing the names of all the rows, 
 we can instead just depict them using `:` and then pass a list of columns `language` and `mother_tongue`.
 After passing these as arguments, the  `loc[]` property

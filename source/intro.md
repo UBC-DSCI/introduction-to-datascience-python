@@ -550,8 +550,8 @@ selected_lang
 We have used the `[]` and `.loc[]` operations on a data frame to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the **ten** languages that are spoken most often. As a next step, we could
-order the `mother_tongue` column from greatest to least and then extract only
-the top ten rows. This is where the `sort_values` function and `.iloc[]` property come to the
+order the `mother_tongue` column from largest to smallest value and then extract only
+the top ten rows. This is where the `sort_values` function and `.iloc[]` operation come to the
 rescue! 
 
 The `sort_values` function allows us to order the rows of a data frame by the
@@ -563,6 +563,7 @@ language, we will use the `sort_values` function to order the rows in our
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
+**(FIGURE 1.5 FROM R BOOK MISSING HERE)**
 
 ```{code-cell} ipython3
 arranged_lang = selected_lang.sort_values(by='mother_tongue', ascending=False)
@@ -644,6 +645,8 @@ the `x`(represents the x-axis position of the points) and
 `y`(represents the y-axis position of the points) channels. The `encode()`
 method builds a key-value mapping between encoding channels (such as x, y) 
 to fields in the dataset, accessed by field name(column names)
+
+**(FIGURE 1.6 FROM R BOOK IS MISSING)**
 
 +++
 

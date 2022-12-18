@@ -428,31 +428,34 @@ like this is a handy way to get a quick sense for what is contained in it.
 can_lang
 ```
 
-## Creating subsets of data frames with `[]` & `.loc[]`
+## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} pandas.DataFrame; df[], pandas.DataFrame; .loc[]
+```{index} pandas.DataFrame; [], pandas.DataFrame; loc[]
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
 find the ten Aboriginal languages that were most often reported
-in 2016 as mother tongues in Canada. In particular, we will construct 
+in 2016 as mother tongues in Canada. In particular, we want to construct 
 a table with the ten Aboriginal languages that have the largest 
-counts in the `mother_tongue` column. 
-The `[]` and `.loc[]` operations on the `pandas` data frame will help us
+counts in the `mother_tongue` column. The first step is to extract
+from our `can_lang` data only those rows that correspond to Aboriginal languages,
+and only the `language` and `mother_tongue` columns.
+The `[]` and `loc[]` operations on the `pandas` data frame will help us
 here. The `[]` operation allows you to obtain a subset of the
-rows with specific values, while the `.loc[]` operation allows you 
-to obtain a subset of the columns. Therefore, we can use `[]` 
-to filter the rows to extract the Aboriginal languages in the data set, and 
-then use `.loc[]` to obtain only the columns we want to include in our table.
+rows with specific values *or* a subset of columns (but not both at the same time).
+The `loc[]` operation is slightly more flexible, and it allows you 
+to obtain *both* a subset of the rows and columns simultaneously. Therefore, we can use 
+`[]` to filter the rows to extract the Aboriginal languages in the data set, and 
+then use `loc[]` to obtain only the columns we want to include in our table.
 
-### Using `[]` to extract rows
+### Using `[]` to extract rows or columns
 Looking at the `can_lang` data above, we see the column `category` contains different
 high-level categories of languages, which include "Aboriginal languages",
 "Non-Official & Non-Aboriginal languages" and "Official languages".  To answer
 our question we want to filter our data set so we restrict our attention 
 to only those languages in the "Aboriginal languages" category. 
 
-```{index} pandas.DataFrame; df[], logical statement, logical statement; equivalency operator, string
+```{index} pandas.DataFrame; [], logical statement, logical statement; equivalency operator, string
 ```
 
 We can use the `[]` operation to obtain a subset of rows with desired
@@ -496,18 +499,18 @@ with multiple kinds of `category`. The data frame
 the "Aboriginal languages" in the `category` column. So it looks like the `[]` operation
 gave us the result we wanted!
 
-### Using `.loc[]` to extract columns
+### Using `loc[]` to extract rows and/or columns
 
-```{index} pandas.DataFrame; .loc[]
+```{index} pandas.DataFrame; loc[]
 ```
 
-Now let's use `.loc[]` to extract the `language` and `mother_tongue` columns
-from this data frame. To extract these columns, we need to provide the `.loc[]`
+Now let's use `loc[]` to extract the `language` and `mother_tongue` columns
+from this data frame. To extract these columns, we need to provide the `loc[]`
 operation with a list of rows and a list of columns, e.g., `df.loc[[row1, row2, ...], [col1, col2, ...]]`
 As we want to access all the rows of the data frame, instead of passing the names of all the rows individually, 
 we can instead just represent them all with the `:` symbol.
 For the columns, we can just pass a list of column names `"language"` and `"mother_tongue"`.
-After passing these as arguments, the  `.loc[]` operation
+After passing these as arguments, the  `loc[]` operation
 returns two columns (the `"language"` and `"mother_tongue"` columns that we asked
 for) as a data frame. This code is also a great example of why being able to name things in Python is
 useful: you can see that we are using the result of our earlier filter step
@@ -523,17 +526,17 @@ selected_lang = aboriginal_lang.loc[:, ["language", "mother_tongue"]]
 selected_lang
 ```
 
-> **Note:** You will notice that we used the dot (`.`) symbol here for `.loc[]`,
+> **Note:** You will notice that we used the dot (`.`) symbol here for `loc[]`,
 > which seems somewhat similar to when we use the dot in a function name
 > like `pd.read_csv`. In Python, generally the dot (`.`) means that the 
 > *thing* on the right is a "part of," or "owned by," the *thing* on the left.
 > In the case of `pd.read_csv`, the dot means that `read_csv` is a function
 > that is part of the `pd` (i.e., `pandas`) package. In the case of `aboriginal_lang.loc[...]`,
-> the dot means that data frame `aboriginal_lang` provides a function `.loc[]` that can
+> the dot means that data frame `aboriginal_lang` provides a function `loc[]` that can
 > access the data frame itself.
 
 > **Note:** You will also notice that in Python, we use square brackets *both* to access
-> a data frame (as in `.loc[...]`) *and* to denote a list (as in `["language", "mother tongue"]`).
+> a data frame (as in `loc[...]`) *and* to denote a list (as in `["language", "mother tongue"]`).
 > You could, for example, give the list its own name before selecting the columns in the data frame.
 ```{code-cell} ipython3
 column_names = ["language", "mother_tongue"]
@@ -541,16 +544,16 @@ selected_lang = aboriginal_lang.loc[:, column_names]
 selected_lang
 ```
 
-### Using `sort_values` to order and `.iloc[]` to select rows by index number
+### Using `sort_values` to order and `iloc[]` to select rows by index number
 
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; .iloc[]
+```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
 ```
 
-We have used the `[]` and `.loc[]` operations on a data frame to obtain a table with only the Aboriginal
+We have used the `[]` and `loc[]` operations on a data frame to obtain a table with only the Aboriginal
 languages in the data set and their associated counts. However, we want to know
 the **ten** languages that are spoken most often. As a next step, we could
 order the `mother_tongue` column from largest to smallest value and then extract only
-the top ten rows. This is where the `sort_values` function and `.iloc[]` operation come to the
+the top ten rows. This is where the `sort_values` function and `iloc[]` operation come to the
 rescue! 
 
 The `sort_values` function allows us to order the rows of a data frame by the
@@ -851,7 +854,7 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 
 In the block of code below, we put everything from this chapter together, with a few
 modifications. In particular, we have actually skipped the
-`.loc[]` step that we did above; since you specify the variable names to plot
+`loc[]` step that we did above; since you specify the variable names to plot
 in the `altair` chart, you don't actually need to select the columns in advance
 when creating a visualization. We have also provided *comments* next to 
 many of the lines of code below using the
@@ -865,7 +868,7 @@ commenting your code to improve its readability.
 This exercise demonstrates the power of Python. In relatively few lines of code, we
 performed an entire data science workflow with a highly effective data
 visualization! We asked a question, loaded the data into Python, wrangled the data
-(using `[]`, `sort_values` and `.iloc[]`) and created a data visualization to
+(using `[]`, `sort_values` and `iloc[]`) and created a data visualization to
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!

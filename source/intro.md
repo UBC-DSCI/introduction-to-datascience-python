@@ -665,7 +665,7 @@ import altair as alt
 
 +++
 
-The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
+The fundamental object in `altair` is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized. 
 We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute 
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
@@ -728,7 +728,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 > with many arguments; you can split each argument onto its own line (terminated with a comma `,`). The trailing
 > comma tells Python to keep reading on the next line.
 
-### Formatting altair objects
+### Formatting `altair` objects
 
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the

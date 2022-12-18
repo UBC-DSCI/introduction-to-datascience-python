@@ -38,8 +38,7 @@ By the end of the chapter, readers will be able to do the following:
 - Read tabular data with `read_csv`.
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
-- Do indexing and slicing with `.loc[]` and `.iloc[]` properties.
-- Select columns of a data frame using `df[]` notation.
+- Create and organize subsets of tabular data using `[]`, `loc[]`, and `sort_values`
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set

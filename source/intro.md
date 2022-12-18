@@ -875,10 +875,12 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 ```
 
 In the block of code below, we put everything from this chapter together, with a few
-modifications. In particular, we have actually skipped the
-`loc[]` step that we did above; since you specify the variable names to plot
-in the `altair` chart, you don't actually need to select the columns in advance
-when creating a visualization. We have also provided *comments* next to 
+modifications. In particular, we have actually kept all columns in the data frame
+by specifying `:` as the second argument in the `loc[]` operation; since you specify 
+the variable names to plot in the `altair` chart, you don't actually need to select the columns in advance
+when creating a visualization. We have also combined all of our steps into one expression
+split across multiple lines using the left and right parenthesis symbols `(` and `)`. 
+Finally, we have provided *comments* next to 
 many of the lines of code below using the
 hash symbol `#`. When Python sees a `#` sign, it 
 will ignore all of the text that
@@ -890,7 +892,7 @@ commenting your code to improve its readability.
 This exercise demonstrates the power of Python. In relatively few lines of code, we
 performed an entire data science workflow with a highly effective data
 visualization! We asked a question, loaded the data into Python, wrangled the data
-(using `[]`, `sort_values` and `iloc[]`) and created a data visualization to
+(using `[]`, `loc[]`, `sort_values`, and `head`) and created a data visualization to
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
@@ -900,9 +902,11 @@ these steps in much more detail!
 can_lang = pd.read_csv("data/can_lang.csv")
 
 # obtain the 10 most common Aboriginal languages
-aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
-arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
-ten_lang = arranged_lang[:10]
+ten_lang = (
+    can_lang.loc[can_lang["category"] == "Aboriginal languages", :]
+    .sort_values(by="mother_tongue", ascending=False)
+    .head(10)
+    )
 
 # create the visualization
 ten_lang_plot = (

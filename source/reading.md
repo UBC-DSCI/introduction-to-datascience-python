@@ -15,13 +15,9 @@ kernelspec:
 (reading)=
 # Reading in data locally and from the web
 
-We need to import the `pandas` package in order to read data into Python
 
 ```{code-cell} ipython3
-import pandas as pd 
-```
-
-```{code-cell} ipython3
+:tags: ["remove-cell"]
 import warnings
 warnings.filterwarnings('ignore')
 ```
@@ -57,24 +53,22 @@ By the end of the chapter, readers will be able to do the following:
 - Read data into Python using an absolute path, relative path and a URL.
 - Compare and contrast the following functions:
     - `read_csv` 
-    - `read_table`
     - `read_excel`
-- Match the following `pandas` `.read_*` function arguments to their descriptions:
+- Match the following `pandas` `read_csv` function arguments to their descriptions:
     - `filepath_or_buffer` 
     - `sep`
     - `names`
     - `skiprows`
-
-- Choose the appropriate `pandas` `.read_*` function and function arguments to load a given plain text tabular data set into Python.
+- Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Connect to a database using the `SQLAlchemy` library.
-- List the tables in a database using `SQLAlchemy` library's `table_names` function
+- List the tables in a database using the `SQLAlchemy` library's `table_names` function
 - Create a reference to a database table that is queriable using the `SQLAlchemy` library's `select` 
 and `where` functions
-- Use `.to_csv` to save a data frame to a csv file
+- Use `to_csv` to save a data frame to a `.csv` file
 - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
     - Read/scrape data from an internet URL using the `BeautifulSoup` package
-    - Compare downloading tabular data from a plain text file (e.g. *.csv) from the web versus scraping data from a .html file
+    - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
 
 ## Absolute and relative file paths
 
@@ -226,6 +220,10 @@ Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 And here is a review of how we can use `read_csv` to load it into Python. First we 
 load the `pandas` package to gain access to useful
 functions for reading the data. 
+
+```{code-cell} ipython3
+import pandas as pd 
+```
 
 Next we use `read_csv` to load the data into Python, and in that call we specify the
 relative path to the file.

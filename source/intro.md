@@ -441,92 +441,131 @@ counts in the `mother_tongue` column. The first step is to extract
 from our `can_lang` data only those rows that correspond to Aboriginal languages,
 and then the second step is to keep only the `language` and `mother_tongue` columns.
 The `[]` and `loc[]` operations on the `pandas` data frame will help us
-here. The `loc[]` operation allows you to obtain a subset of *both* the rows
-and columns of a data frame at once. In order to tell the `loc[]` operation
-which subset of columns we want to obtain, we can just list their names.
-In order to tell the `loc[]` operation which subset of rows we want to obtain, 
-we can examine the values of a single column of the data frame using the `[]` operation. 
-In our example in particular, we will use 
-`[]` to look at the `category` column in `can_lang` to extract only the 
-Aboriginal languages in the data set.
+here. The `[]` allows you to obtain a subset of (i.e., *filter*) the rows of a data frame,
+or to obtain a subset of (i.e., *select*) the columns of a data frame.
+The `loc[]` operation allows you to both filter rows *and* select columns
+at the same time. We will first investigate filtering rows and selecting
+columns with the `[]` operation,
+and then use `loc[]` to do both in our analysis of the Aboriginal languages data.
 
-> **Note:** The `[]` operation is much more powerful than what we describe in this chapter.
-> You can actually use it to select multiple columns from a data frame, or to obtain a subset of rows.
-> You will learn more about `[]` (and other indexing operations on data frames) later on
+> **Note:** The `[]` and `loc[]` operations, and related operations, in `pandas`
+> are much more powerful than we describe in this chapter.
+> You will learn more sophisticated ways to index data frames later on
 > in the {ref}`wrangling` chapter.
 
-### Using `[]` to examine a single column
+### Using `[]` to filter rows
 Looking at the `can_lang` data above, we see the column `category` contains different
 high-level categories of languages, which include "Aboriginal languages",
 "Non-Official & Non-Aboriginal languages" and "Official languages".  To answer
 our question we want to filter our data set so we restrict our attention 
 to only those languages in the "Aboriginal languages" category. 
 
-```{index} pandas.DataFrame; [], logical statement, logical statement; equivalency operator, string, series
+```{index} pandas.DataFrame; [], filter, logical statement, logical statement; equivalency operator, string
 ```
 
-We can use the `[]` operation to extract the `category` column from the `can_lang` data frame.
-```{code-cell} ipython3
-can_lang["category"]
-```
-Notice how the single column here looks a little different from the data frame we printed out earlier!
-For example, there is no column title listed at the top any more---it has moved to the bottom (where it says `Name: category`).
-In fact, by running the code `can_lang["category"]`, we have pulled a single column out of the data
-frame as a *series* object. You will learn more about series later in the {ref}`wrangling` chapter,
-but for now, you can just think of this as a column that isn't inside a data frame any more.
-
-Using this column (series), we can tell Python which rows we are interested in by constructing
-a *logical statement*. A *logical statement* 
-is an expression in python that evaluates to either `True` or `False` for every item in the series.
-For example, in our analysis, we are interested in keeping only languages in the
-"Aboriginal languages" higher-level category. We can use 
-the *equivalency operator* `==` to compare the values
-of the `category` column with the value `"Aboriginal languages"`.
-
-```{code-cell} ipython3
-can_lang["category"] == "Aboriginal languages"
-```
-You can now see that the result---which is a series itself!---contains only the entries `True` and `False`.
-The `True` entries are the rows of `can_lang["category"]` that are equal to `"Aboriginal languages"`,
-and the rest are `False` entries. We will use these `True` and `False` entries to specify which rows
-we want from the `can_lang` data frame below. For the current data analysis, we just needed the 
-equivalency operator `==`, but you will learn about
-many other kinds of logical statements in the {ref}`wrangling` chapter.  
-
-Note again that similar to when we loaded the data file and put 
-quotes around the file name, in `can_lang["category"] == "Aboriginal languages"`,
-we need to put quotes around both `"category"` and `"Aboriginal languages"`. Using quotes tells Python that these
-are *string values* (e.g., the name of a column, or a word) and not one of the special words that make up Python
-programming language, or one of the names we have given to data frames or other objects in the
-code we have already written.
+We can use the `[]` operation to obtain the subset of rows with desired values
+from a data frame. {numref}`img-filter` shows the syntax we need to use to filter
+rows with the `[]` operation. First, we type the name of the data frame---here, `can_lang`---followed
+by square brackets. Inside the square brackets, we write a *logical statement* to
+use when filtering the rows. A logical statement evaluates to either `True` or `False`
+for each row in the data frame; the `[]` operation keeps only those rows
+for which the logical statement evaluates to `True`. For example, in our analysis,
+we are interested in keeping only languages in the `"Aboriginal languages"` higher-level
+category. We can use the *equivalency operator* `==` to compare the values of the `category`
+column---denoted by `can_lang["category"]`---with the value `"Aboriginal languages"`.
+You will learn about many other kinds of logical
+statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
+around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
+quotes tells Python that this is a *string value* (e.g., a column name, or word data) 
+and not one of the special words that makes up the Python programming language, 
+or one of the names we have given to objects in the code we have already written.
 
 > **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
 > treated the same. So we could have written `'Aboriginal languages'` instead 
 > of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
 > Try both out for yourself!
 
+**(This figure is wrong-- should be for [] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-filter
+---
+Syntax for using the `[]` operation to filter rows.
+```
+
+This operation returns a data frame that has all the columns of the input data frame,
+but only those rows corresponding to Aboriginal languages that we asked for in the logical statement.
+
+```{code-cell} ipython3
+can_lang[can_lang["category"] == "Aboriginal languages"]
+```
+
+### Using `[]` to select columns
 
 
-### Using `loc[]` to extract rows and/or columns
+```{index} pandas.DataFrame; [], select;
+```
+
+We can also use the `[]` operation to select columns from a data frame.
+{numref}`img-select` displays the syntax needed to select columns.
+We again first type the name of the data frame---here, `can_lang`---followed
+by square brackets. Inside the square brackets, we provide a *list* of
+column names. In Python, we denote a *list* using square brackets, where
+each item is separated by a comma (`,`). So if we are interested in 
+selecting only the `language` and `mother_tongue` columns from our original
+`can_lang` data frame, we put the list `["language", "mother_tongue"]`
+containing those two column names inside the square brackets of the `[]` operation.
+
+**(This figure is wrong-- should be for [] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-select
+---
+Syntax for using the `[]` operation to select columns.
+```
+
+This operation returns a data frame that has all the rows of the input data frame,
+but only those columns that we named in the selection list.
+
+```{code-cell} ipython3
+can_lang[["language", "mother_tongue"]]
+```
+
+### Using `loc[]` to filter rows and select columns
 
 ```{index} pandas.DataFrame; loc[]
 ```
 
-Now that we know how to check whether entries in a single column (`category`) are equal to a 
-particular value (`"Aboriginal languages"`), we can use this information to extract 
-the rows corresponding to that value from a data frame.
-For this task, we will use the `loc[]` operation. 
-The `loc[]` operation takes two arguments:
-a specification of which rows to select, and a specification of which columns to select.
-Let's start by just extracting the rows from `can_lang` corresponding to Aboriginal languages.
+The `[]` operation is only used when you want to filter rows *or* select columns;
+it cannot be used to do both operations at the same time. But in order to answer
+our original data analysis question in this chapter, we need to *both* filter the rows
+for Aboriginal languages, *and* select the `language` and `mother_tongue` columns.
+Fortunately, `pandas` provides the `loc[]` operation, which lets us do just that.
+The syntax is very similar to the `[]` operation we have already covered: we will
+essentially combine both our row filtering and column selection steps from before.
+In particular, we first write the name of the data frame---`can_lang` again---then follow
+that with the `.loc[]` method. Inside the square brackets,
+we write our row filtering logical statement, 
+then a comma, then our list of columns to select.
 
-**(FIGURE 1.3 FROM R BOOK MISSING HERE; BUT NOTE THAT THE STRUCTURE HERE HAS CHANGED SINCE [] and LOC[] DO NOT CORRESPOND
-TO FILTER AND SELECT. PLEASE READ THIS CHAPTER CAREFULLY BEFORE MAKING FIGS)**
+**(This figure is wrong-- should be for .loc[] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-loc
+---
+Syntax for using the `loc[]` operation to filter rows and select columns.
+```
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", :]
+aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 ```
-There are a few very important things to notice in this code example. 
+There is one very important thing to notice in this code example. 
 The first is that we used the `loc[]` operation on the `can_lang` data frame by
 writing `can_lang.loc[]`---first the data frame name, then a dot, then `loc[]`.
 There's that dot again! If you recall, earlier in this chapter we used the `read_csv` function from `pandas` (aliased as `pd`),
@@ -536,14 +575,9 @@ thing on the right (the `read_csv` function). In the case of `can_lang.loc[]`, t
 both packages (like `pandas`) *and* objects (like our `can_lang` data frame) can provide functions 
 and other objects that we access using the dot syntax.
 
-The second thing to notice is what is inside the brackets in `loc[]`.
-The first argument---our logical statement from earlier---specifies the rows we want from the data frame.
-The second argument---a single colon symbol (`:`)---is a shorthand notation saying that we want *all the columns*.
-The two arguments are separated by a comma (`,`). Any time you have multiple arguments to pass to a function,
-they will be separated by commas.
-
 At this point, if we have done everything correctly, `aboriginal_lang` should be a data frame
-containing *only* rows where the `category` is `"Aboriginal languages"`. 
+containing *only* rows where the `category` is `"Aboriginal languages"`,
+and containing *only* the `language` and `mother_tongue` columns.
 Any time you take a step in a data analysis, it's good practice to check the output
 by printing the result.
 ```{code-cell} ipython3
@@ -551,37 +585,20 @@ aboriginal_lang
 ```
 We can see the original `can_lang` data set contained 214 rows
 with multiple kinds of `category`. The data frame
-`aboriginal_lang` contains only 67 rows, and looks like it only contains languages in
-the "Aboriginal languages" in the `category` column. So it looks like the `loc[]` operation
-gave us the result we wanted!
-
-We still have a few unnecessary columns in the data frame; we really only need to keep
-the `language` and `mother_tongue` column for the analysis. Instead of passing a colon (`:`) as 
-the second argument in `loc[]`, we can specify a *list* of the column names we want to keep.
-So for the second argument, we will write `["language", "mother_tongue"]`;
-in Python, a *list* is denoted with square brackets, and items are separated by commas.
-Again we print the resulting data frame to double-check that our code performed the action that
-we originally wanted.
-
-**(FIGURE 1.4 FROM R BOOK MISSING HERE; BUT NOTE THAT THE STRUCTURE HERE HAS CHANGED SINCE [] and LOC[] DO NOT CORRESPOND
-TO FILTER AND SELECT. PLEASE READ THIS CHAPTER CAREFULLY BEFORE MAKING FIGS)**
-
-```{code-cell} ipython3
-selected_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
-selected_lang
-```
+`aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages. 
+So it looks like the `loc[]` operation gave us the result we wanted!
 
 ### Using `sort_values` to order and `head` to select rows by value
 
 ```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
 ```
 
-We have used the `[]` and `loc[]` operations on a data frame to obtain a table with only the Aboriginal
-languages in the data set and their associated counts. However, we want to know
-the **ten** languages that are spoken most often. As a next step, we will
-order the `mother_tongue` column from largest to smallest value and then extract only
-the top ten rows. This is where the `sort_values` and `head` functions come to the
-rescue! 
+We have used the `[]` and `loc[]` operations on a data frame to obtain a table
+with only the Aboriginal languages in the data set and their associated counts.
+However, we want to know the **ten** languages that are spoken most often. As a
+next step, we will order the `mother_tongue` column from largest to smallest
+value and then extract only the top ten rows. This is where the `sort_values`
+and `head` functions come to the rescue! 
 
 The `sort_values` function allows us to order the rows of a data frame by the
 values of a particular column.  We need to specify the column name
@@ -595,7 +612,7 @@ so we specify the argument `ascending` as `False`.
 **(FIGURE 1.5 FROM R BOOK MISSING HERE)**
 
 ```{code-cell} ipython3
-arranged_lang = selected_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
 arranged_lang
 ```
 
@@ -872,12 +889,9 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 ```
 
 In the block of code below, we put everything from this chapter together, with a few
-modifications. In particular, we have actually kept all columns in the data frame
-by specifying `:` as the second argument in the `loc[]` operation; since you specify 
-the variable names to plot in the `altair` chart, you don't actually need to select the columns in advance
-when creating a visualization. We have also combined all of our steps into one expression
+modifications. In particular, we have combined all of our steps into one expression
 split across multiple lines using the left and right parenthesis symbols `(` and `)`. 
-Finally, we have provided *comments* next to 
+We have also provided *comments* next to 
 many of the lines of code below using the
 hash symbol `#`. When Python sees a `#` sign, it 
 will ignore all of the text that
@@ -900,7 +914,7 @@ can_lang = pd.read_csv("data/can_lang.csv")
 
 # obtain the 10 most common Aboriginal languages
 ten_lang = (
-    can_lang.loc[can_lang["category"] == "Aboriginal languages", :]
+    can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
     .sort_values(by="mother_tongue", ascending=False)
     .head(10)
     )
@@ -961,7 +975,7 @@ help(pd.read_csv)
 {numref}`help_read_csv` shows the documentation that will pop up,
 including a high-level description of the function, its arguments, 
 a description of each, and more. Note that you may find some of the
-text in the documentation a bit too technical right now 
+text in the documentation a bit too technical right now.
 Fear not: as you work through this book, many of these terms will be introduced
 to you, and slowly but surely you will become more adept at understanding and navigating 
 documentation like that shown in {numref}`help_read_csv`. But do keep in mind that the documentation
@@ -977,6 +991,12 @@ name: help_read_csv
 ---
 The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.
 ```
+
++++
+
+If you are working in a Jupyter Lab environment, there are also two more convenient
+ways to access documentation for functions. **JOEL ADD TEXT AND IMAGES HERE**.
+
 
 ## Exercises
 

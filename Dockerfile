@@ -19,6 +19,7 @@ RUN mamba install --quiet --yes \
         'jinja2' \
         'altair_data_server' \
         'click' \
+        'ibis-framework' \
         'ghp-import' \
         'jupytext' \
         'jupyter-book' \

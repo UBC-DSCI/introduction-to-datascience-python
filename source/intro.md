@@ -724,9 +724,6 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 > what the rest of the expression is.  We could, of course,
 > put all of the code on one line of code, but splitting it across
 > multiple lines helps a lot with code readability.
-> Another case where Python lets you write an expression on multiple lines is when you are using a function
-> with many arguments; you can split each argument onto its own line (terminated with a comma `,`). The trailing
-> comma tells Python to keep reading on the next line.
 
 ### Formatting `altair` objects
 

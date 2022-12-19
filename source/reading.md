@@ -592,195 +592,186 @@ using Python with SQLite and PostgreSQL databases.
 SQLite is probably the simplest relational database system
 that one can use in combination with Python. SQLite databases are self-contained and
 usually stored and accessed locally on one computer. Data is usually stored in
-a file with a `.db` extension. Similar to Excel files, these are not plain text
-files and cannot be read in a plain text editor. 
+a file with a `.db` extension (or sometimes a `.sqlite` extension). 
+Similar to Excel files, these are not plain text files and cannot be read in a plain text editor. 
 
-```{index} database; connect, SQLAlchemy, SQLAlchemy; create_engine, database; SQLAlchemy
+```{index} database; connect, ibis, ibis; ibis
 ```
 
-```{index} see: SQLAlchemy; database
+```{index} see: ibis; database
 ```
 
 The first thing you need to do to read data into Python from a database is to
-connect to the database. We do that using the `create_engine` function from the
-`sal` (SQLAlchemy) package. This does not read
+connect to the database. For an SQLite database, we will do that using 
+the `connect` function from the
+`sqlite` backend in the
+`ibis` package. This command does not read
 in the data, but simply tells Python where the database is and opens up a
 communication channel that Python can use to send SQL commands to the database.
 
-```{code-cell} ipython3
-import sqlalchemy as sal
-from sqlalchemy import MetaData, Table, create_engine, select
+> **Note:** There is another database package in python called `sqlalchemy`. 
+> That package is a bit more mature and popular than `ibis`,
+> so if you want to dig deeper into working with databases in Python, that is a good next 
+> package to learn about. We will work with `ibis` in this book, as it 
+> provides a friendlier syntax that is more like `pandas` for data analysis code. 
 
-db = sal.create_engine("sqlite:///data/can_lang.db")
-conn = db.connect()
+```{code-cell} ipython3
+import ibis
+
+conn = ibis.sqlite.connect("data/can_lang.db")
 ```
 
-```{index} database; tables
+```{index} database; tables; list_tables
 ```
 
 Often relational databases have many tables; thus, in order to retrieve
 data from a database, you need to know the name of the table 
 in which the data is stored. You can get the names of
-all the tables in the database using the `table_names`
+all the tables in the database using the `list_tables`
 function:
 
 ```{code-cell} ipython3
-tables = db.table_names()
+tables = conn.list_tables()
 tables
 ```
 
-```{index} database; select, SQLAlchemy; select
+```{index} database; select, ibis; select
 ```
 
-The `table_names` function returned only one name, which tells us
+The `list_tables` function returned only one name---`"can_lang"`---which tells us
 that there is only one table in this database. To reference a table in the
 database (so that we can perform operations like selecting columns and filtering rows), we 
-use the `select` function from the `sqlalchemy` package. The object returned
-by the `select` function allows us to work with data
-stored in databases as if they were just regular data frames; but secretly, behind
-the scenes, `sqlalchemy` is turning your function calls (e.g., `select`)
-into SQL queries! To access the table in the database, we first declare the `metadata` of the table using
-`sqlalchemy` package and then access the table using `select` function from `sqlalchemy` package.
+use the `table` function from the `conn` object. The object returned
+by the `table` function allows us to work with data
+stored in databases as if they were just regular `pandas` data frames; but secretly, behind
+the scenes, `ibis` will turn your commands into SQL queries! 
 
 ```{code-cell} ipython3
-metadata = MetaData(bind=None)
-table = Table(
-    'can_lang', 
-    metadata, 
-    autoload=True, 
-    autoload_with=db
-)
+canlang_table = conn.table("can_lang")
+canlang_table 
 ```
+
+```{index} database; count, ibis; count
+```
+
+Although it looks like we might have obtained the whole data frame from the database, we didn't!
+It's a *reference*; the data is still stored only in the SQLite database. The `canlang_table` object  
+is an `AlchemyTable` (`ibis` is using `sqlalchemy` under the hood!), which, when printed, tells
+you which columns are available in the table. But unlike a usual `pandas` data frame,
+we do not immediately know how many rows are in the table. In order to find out how many
+rows there are, we have to send an SQL *query* (i.e., command) to the data base.
+In `ibis`, we can do that using the `count` function from the table object.
 
 ```{code-cell} ipython3
-query = select([table])
-canlang_data_db = conn.execute(query)
-canlang_data_db
+canlang_table.count()
 ```
 
-```{index} database; fetchall, SQLAlchemy; fetchall
+```{index} execute, ibis; execute
 ```
 
-Although it looks like we just got a data frame from the database, we didn't!
-It's a *reference*; the data is still stored only in the SQLite database. The output 
-is a `CursorResult`(indicating that Python does not know how many rows 
-there are in total!) object.
-In order to actually retrieve this data in Python,
-we use the `fetchall()` function. The
-`sqlalchemy` package works this way because databases are often more efficient at selecting, filtering
-and joining large data sets than Python. And typically the database will not even
+Wait a second...this isn't the number of rows in the database. In fact, we haven't actually sent our 
+SQL query to the database yet! We need to explicitly tell `ibis` when we want to send the query.
+The reason for this is that databases are often more efficient at working with (i.e., selecting, filtering,
+joining, etc.) large data sets than Python. And typically, the database will not even
 be stored on your computer, but rather a more powerful machine somewhere on the
 web. So Python is lazy and waits to bring this data into memory until you explicitly
-tell it to using the `fetchall` function. The `fetchall` function returns the 
-result of the query in the form of a list, where each row in the table is an element in the list.
-Let's look at the first 10 rows in the table.
+tell it to using the `execute` function. The `execute` function actually sends the SQL query
+to the database, and gives you the result. Let's look at the number of rows in the table by executing
+the `count` command.
 
 ```{code-cell} ipython3
-canlang_data_db = conn.execute(query).fetchall()
-canlang_data_db[:10]
+canlang_table.count().execute()
 ```
+There we go! There are 214 rows in the `can_lang` table. If you are interested in seeing
+the *actual* text of the SQL query that `ibis` sends to the database, you can use the `compile` function
+instead of `execute`. But note that you have to pass the result of `compile` to the `str` function to turn it into
+a human-readable string first.
 
-```{index} database; show query, SQLAlchemy; query.compile
+```{index} compile, ibis; compile
 ```
-
-We can look at the SQL commands that are sent to the database when we write 
-`conn.execute(query).fetchall()` in Python with the `query.compile` function from the
-`sqlalchemy` package.
 
 ```{code-cell} ipython3
-compiled = query.compile(db, compile_kwargs={"render_postcompile": True})
-
-print(str(compiled) % compiled.params)
+str(canlang_table.count().compile())
 ```
 
 The output above shows the SQL code that is sent to the database. When we
-write `conn.execute(query).fetchall()` in Python, in the background, the function is
+write `canlang_table.count().execute()` in Python, in the background, the `execute` function is
 translating the Python code into SQL, sending that SQL to the database, and then translating the
-response for us. So `sqlalchemy` does all the hard work of translating from Python to SQL and back for us; 
+response for us. So `ibis` does all the hard work of translating from Python to SQL and back for us; 
 we can just stick with Python! 
 
-With our `canlang_data_db` table reference for the 2016 Canadian Census data in hand, we 
-can mostly continue onward as if it were a regular data frame. For example, 
-we can use the `select` function along with `where` function
-to obtain only certain rows. Below we filter the data to include only Aboriginal languages using 
-the `where` function of `sqlalchemy`
+The `ibis` package provides lots of `pandas`-like tools for working with database tables.
+For example, we can look at the first few rows of the table by using the `head` function---and 
+we won't forget to `execute` to see the result!
 
-```{index} database; filter data, SQLAlchemy; where
+```{index} database; head, ibis;
 ```
 
 ```{code-cell} ipython3
-query = select([table]).where(table.columns.category == 'Aboriginal languages')
-result_proxy = conn.execute(query)
-result_proxy
+canlang_table.head(10).execute()
 ```
 
-```{index} database; fetchall, SQLAlchemy; fetchall
-```
+You can see that `ibis` actually returned a `pandas` data frame to us after we executed the query,
+which is very convenient for working with the data after getting it from the database.
+So now that we have the `canlang_table` table reference for the 2016 Canadian Census data in hand, we 
+can mostly continue onward as if it were a regular data frame. For example, let's do the same exercise
+from Chapter 1: we will obtain only those rows corresponding to Aboriginal languages, and keep only
+the `language` and `mother_tongue` columns.
+We can use the `[]` operation with a logical statement
+to obtain only certain rows. Below we filter the data to include only Aboriginal languages.
 
-Above you can again see that this data is not actually stored in Python yet:
-the output is a `CursorResult`(indicating that Python does not know how many rows 
-there are in total!) object.
-In order to actually retrieve this data in Python as a data frame,
-we again use the `fetchall()` function. 
-Below you will see that after running `fetchall()`, Python knows that the retrieved
-data has 67 rows, and there is no `CursorResult` object listed any more. We will display only the first 10 
-rows of the table from the list returned by the query.
+```{index} database; filter, ibis;
+```
 
 ```{code-cell} ipython3
-aboriginal_lang_data_db = result_proxy.fetchall()
-aboriginal_lang_data_db[:10]
+canlang_table_filtered = canlang_table[canlang_table["category"] == "Aboriginal languages"]
+canlang_table_filtered
+```
+Above you can see that we have not yet executed this command; `canlang_table_filtered` is just showing 
+the first part of our query (the part that starts with `Selection[r0]` above).
+We didn't call `execute` because we are not ready to bring the data into Python yet.
+We can still use the database to do some work to obtain *only* the small amount of data we want to work with locally
+in Python. Let's add the second part of our SQL query: selecting only the `language` and `mother_tongue` columns.
+
+```{index} database; select, ibis;
 ```
 
-`sqlalchemy` provides many more functions (not just `select`, `where`) 
-that you can use to directly feed the database reference (`aboriginal_lang_data_db`) into 
-downstream analysis functions (e.g., `altair` for data visualization). 
-But `sqlalchemy` does not provide *every* function that we need for analysis;
-we do eventually need to call `fetchall`.
-
-```{index} pandas.DataFrame; shape
+```{code-cell} ipython3
+canlang_table_selected = canlang_table_filtered[["language", "mother_tongue"]]
+canlang_table_selected
+```
+Now you can see that the `ibis` query will have two steps: it will first find rows corresponding to
+Aboriginal languages, then it will extract only the `language` and `mother_tongue` columns that we are interested in.
+Let's actually execute the query now to bring the data into Python as a `pandas` data frame, and print the result.
+```{code-cell} ipython3
+aboriginal_lang_data = canlang_table_selected.execute()
+aboriginal_lang_data
 ```
 
-Does the result returned by `fetchall` function store it as a dataframe? Let's look 
-what happens when we try to use `shape` to count rows in a dataframe
-
-```
-aboriginal_lang_data_db.shape
-```
-
-```
-## AttributeError: 'list' object has no attribute 'shape'
-```
+`ibis` provides many more functions (not just the `[]` operation)
+that you can use to manipulate the data within the database before calling
+`execute` to obtain the data in Python. But `ibis` does not provide *every* function 
+that we need for analysis; we do eventually need to call `execute`.
+For example, `ibis` does not provide the `tail` function to look at the last
+rows in a database, even though `pandas` does.
 
 ```{index} pandas.DataFrame; tail
 ```
 
-or `tail` to preview the last six rows of a data frame:
-
+```{code-cell} ipython3
+canlang_table_selected.tail(6)
 ```
-aboriginal_lang_data_db.tail(6)
-```
-
-```
-## AttributeError: 'list' object has no attribute 'tail'
-```
-
-Oops! We cannot treat the result as a dataframe, hence we need to convert it 
-to a dataframe after calling `fetchall` function
 
 ```{code-cell} ipython3
-aboriginal_lang_data_db = pd.DataFrame(aboriginal_lang_data_db, columns=['category', 'language', 'mother_tongue', 'most_at_home', 'most_at_work', 'lang_known'])
-aboriginal_lang_data_db.shape
+aboriginal_lang_data.tail(6)
 ```
 
->
-> Additionally, some operations will not work to extract columns or single values
-> from the reference. Thus, once you have finished
-> your data wrangling of the database reference object, it is advisable to
-> bring it into Python using `fetchall` and then converting it into the dataframe using `pandas` package.
-> But be very careful using `fetchall`: databases are often *very* big,
-> and reading an entire table into Python might take a long time to run or even possibly
-> crash your machine. So make sure you use `where` and `select` on the database table
-> to reduce the data to a reasonable size before using `fetchall` to read it into Python!
+So once you have finished your data wrangling of the database reference object, it is advisable to
+bring it into Python as a `pandas` data frame using the `execute` function.
+But be very careful using `execute`: databases are often *very* big,
+and reading an entire table into Python might take a long time to run or even possibly
+crash your machine. So make sure you select and filter the database table
+to reduce the data to a reasonable size before using `execute` to read it into Python!
  
 ### Reading data from a PostgreSQL database 
 
@@ -793,126 +784,97 @@ Unlike SQLite,
 PostgreSQL uses a client–server database engine, as it was designed to be used
 and accessed on a network. This means that you have to provide more information
 to Python when connecting to Postgres databases. The additional information that you
-need to include when you call the `create_engine` function is listed below:
+need to include when you call the `connect` function is listed below:
 
-- `dbname`: the name of the database (a single PostgreSQL instance can host more than one database)
-- `host`: the URL pointing to where the database is located
+- `database`: the name of the database (a single PostgreSQL instance can host more than one database)
+- `host`: the URL pointing to where the database is located (`localhost` if it is on your local machine)
 - `port`: the communication endpoint between Python and the PostgreSQL database (usually `5432`)
 - `user`: the username for accessing the database
 - `password`: the password for accessing the database
 
-Additionally, we must use the `pgdb` package instead of `sqlalchemy` in the
-`create_engine` function call.  Below we demonstrate how to connect to a version of
+Below we demonstrate how to connect to a version of
 the `can_mov_db` database, which contains information about Canadian movies.
 Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and 
 `password` (`abc123`) below are *not real*; you will not actually 
 be able to connect to a database using this information.
 
-```{code-cell} ipython3
-pip install pgdb
+```python
+conn = ibis.postgres.connect(database = "can_mov_db", 
+                                 host = "fakeserver.stat.ubc.ca",
+                                 port = 5432,
+                                 user = "user0001",
+                             password = "abc123"
+                            )
 ```
 
-```
-!pip install pgdb
-import pgdb
-import sqlalchemy
-from sqlalchemy import create_engine
+Aside from needing to provide that additional information, `ibis` makes it so
+that connecting to and working with a Postgres database is identical to
+connecting to and working with an SQLite database. For example, we can again use
+`list_tables` to find out what tables are in the `can_mov_db` database:
 
-# connection_str = "postgresql://<USERNAME>:<PASSWORD>@<IP_ADDRESS>:<PORT>/<DATABASE_NAME>"
-connection_str = "postgresql://user0001:abc123@fakeserver.stat.ubc.ca:5432/can_mov_db"
-db = create_engine(connection_str)
-conn_mov_data = db.connect()
-
+```python
+conn.list_tables()
 ```
 
-After opening the connection, everything looks and behaves almost identically
-to when we were using an SQLite database in Python. For example, we can again use
-`table_names` to find out what tables are in the `can_mov_db` database:
-
-```
-tables = conn_mov_data.table_names()
-tables
-```
-
-
-```
+```text
 ['themes', 'medium', 'titles', 'title_aliases', 'forms', 'episodes', 'names', 'names_occupations', 'occupation', 'ratings']
-
 ```
 
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
-database. To access the table's contents we first need to declare the `metadata` of the table 
-and store it in a variable named `ratings`. Then, we can use the `select` function to 
-refer to the data in the table and return the result in python using `fetchall` function, just like 
-we did for the SQLite database.
+database. 
 
-```
-metadata = MetaData(bind=None)
-ratings = Table(
-    'ratings', 
-    metadata, 
-    autoload=True, 
-    autoload_with=db
-)
-
-query = select([ratings])
-ratings_proxy = conn_mov_data.execute(query).fetchall()
-
+```python
+ratings_table = conn.table("ratings")
+ratings_table
 ```
 
-
-```
-[('The Grand Seduction', 6.6, 150),
-('Rhymes for Young Ghouls', 6.3, 1685),
-('Mommy', 7.5, 1060),
-('Incendies', 6.1, 1101),
-('Bon Cop, Bad Cop', 7.0, 894),
-('Goon', 5.5, 1111),
-('Monsieur Lazhar', 5.6,610),
-('What if', 5.3, 1401),
-('The Barbarian Invations', 5.8, 99
-('Away from Her', 6.9, 2311)]
-
+```text
+AlchemyTable: ratings
+  title           string
+  average_rating  float64
+  num_votes       int64
 ```
 
 ```{index} SQLAlchemy; select
 ```
 
 To find the lowest rating that exists in the data base, we first need to
-extract the `average_rating` column using `select`:
+select the `average_rating` column:
 
-```
-avg_rating_db = select([ratings.columns.average_rating])
-avg_rating_db
-```
-
+```python
+avg_rating = ratings_table[["average_rating"]]
+avg_rating
 ```
 
-[(6.6,),
- (6.3,),
- (7.5,),
- (6.1,),
- (7.0,),
- (5.5,),
- (5.6,),
- (5.4,),
- (5.8,),
- (6.9,)]
+```text
+r0 := AlchemyTable: ratings
+  title           string
+  average_rating  float64
+  num_votes       int64
+
+Selection[r0]
+  selections:
+    average_rating: r0.average_rating
 ```
 
-```{index} min
+```{index} database; order_by, ibis; head, ibis; ibis
 ```
 
-Next we use `min` to find the minimum rating in that column:
+Next we use the `order_by` function from `ibis` order the table by `average_rating`,
+and then the `head` function to select the first row (i.e., the lowest score).
 
-```
-min(avg_rating_db)
+```python
+lowest = avg_rating.order_by("average_rating").head(1)
+lowest.execute()
 ```
 
+```{code-cell} ipython3
+:tags: ["remove-input"]
+lowest = pd.DataFrame({"average_rating" : [1.0]})
+lowest
 ```
-(1.0,)
-```
+
 
 We see the lowest rating given to a movie is 1, indicating that it must have
 been a really bad movie...
@@ -922,14 +884,12 @@ been a really bad movie...
 ```{index} database; reasons to use
 ```
 
-Opening a database stored in a `.db` file
-involved a lot more effort than just opening a `.csv`, or any of the
-other plain text or Excel formats. It was a bit of a pain to use a database in
-that setting since we had to use `sqlalchemy` to translate `pandas`-like
-commands (`where`, `select`, etc.) into SQL commands that the database
-understands. Not all `pandas` commands can currently be translated with
-SQLite databases. For example, we can compute a mean with an SQLite database
-but can't easily compute a median. So you might be wondering: why should we use
+Opening a database involved a lot more effort than just opening a `.csv`, or any of the
+other plain text or Excel formats. We had to open a connection to the database,
+then use `ibis` to translate `pandas`-like
+commands (the `[]` operation, `head`, etc.) into SQL queries that the database
+understands, and then finally `execute` them. And not all `pandas` commands can currently be translated
+via `ibis` into database queries. So you might be wondering: why should we use
 databases at all? 
 
 Databases are beneficial in a large-scale setting:
@@ -949,17 +909,17 @@ Databases are beneficial in a large-scale setting:
 ```
 
 At the middle and end of a data analysis, we often want to write a data frame
-that has changed (either through filtering, selecting, mutating or summarizing)
+that has changed (through selecting columns, filtering rows, etc.)
 to a file to share it with others or use it for another step in the analysis.
 The most straightforward way to do this is to use the `to_csv` function
 from the `pandas` package.  The default
-arguments for this file are to use a comma (`,`) as the separator and include
-column names. Below we demonstrate creating a new version of the Canadian
-languages data set without the official languages category according to the
+arguments are to use a comma (`,`) as the separator, and to include column names. 
+Below we demonstrate creating a new version of the Canadian
+languages data set without the "Official languages" category according to the
 Canadian 2016 Census, and then writing this to a `.csv` file:
 
 ```{code-cell} ipython3
-no_official_lang_data = canlang_data[canlang_data['category'] != 'Official languages']
+no_official_lang_data = canlang_data[canlang_data["category"] != "Official languages"]
 no_official_lang_data.to_csv("data/no_official_languages.csv")
 ```
 

@@ -82,8 +82,7 @@ This chapter will discuss the different functions we can use to import data
 into Python, but before we can talk about *how* we read the data into Python with these
 functions, we first need to talk about *where* the data lives. When you load a
 data set into Python, you first need to tell Python where those files live. The file
-could live on your  computer (*local*) 
-or somewhere on the internet (*remote*). 
+could live on your computer (*local*) or somewhere on the internet (*remote*). 
 
 The place where the file lives on your computer is called the "path". You can
 think of the path as directions to the file. There are two kinds of paths:
@@ -104,14 +103,11 @@ below.
 
 ```{figure} img/filesystem.jpeg
 ---
-height: 400px
+height: 500px
 name: Filesystem
 ---
 Example file system
 ```
-
-
-
 
 
 **Reading `happiness_report.csv` using a relative path:**
@@ -142,11 +138,15 @@ folders between the computer's root `/` and the file) isn't usually the same
 across different computers. For example, suppose Fatima and Jayden are working on a 
 project together on the `happiness_report.csv` data. Fatima's file is stored at 
 
-`/home/Fatima/project/data/happiness_report.csv`, 
+```
+/home/Fatima/project/data/happiness_report.csv
+```
 
 while Jayden's is stored at 
 
-`/home/Jayden/project/data/happiness_report.csv`.
+```
+/home/Jayden/project/data/happiness_report.csv
+```
  
 Even though Fatima and Jayden stored their files in the same place on their
 computers (in their home folders), the absolute paths are different due to
@@ -160,17 +160,17 @@ relative paths will work on both!
 ```
 
 Your file could be stored locally, as we discussed, or it could also be
-somewhere on the internet (remotely). A *Uniform Resource Locator (URL)* (web
-address) indicates the location of a resource on the internet and
-helps us retrieve that resource. Next, we will discuss how to get either
-locally or remotely stored data into Python. 
+somewhere on the internet (remotely). For this purpose we use a 
+*Uniform Resource Locator (URL)*, i.e., a web address that looks something
+like https://google.com/. URLs indicate the location of a resource on the internet and
+helps us retrieve that resource. 
 
 ## Reading tabular data from a plain text file into Python
 
 (readcsv)=
-### `read_csv` to read in comma-separated files
+### `read_csv` to read in comma-separated values files
 
-```{index} csv, reading; delimiter, read function; read\_csv
+```{index} csv, reading; separator, read function; read\_csv
 ```
 
 Now that we have learned about *where* data could be, we will learn about *how*
@@ -178,11 +178,11 @@ to import data into Python using various functions. Specifically, we will learn 
 to *read* tabular data from a plain text file (a document containing only text)
 *into* Python and *write* tabular data to a file *out of* Python. The function we use to do this
 depends on the file's format. For example, in the last chapter, we learned about using
-the `pandas` `read_csv` function when reading .csv (**c**omma-**s**eparated **v**alues)
-files. In that case, the separator or *delimiter* that divided our columns was a
+the `read_csv` function from `pandas` when reading `.csv` (**c**omma-**s**eparated **v**alues)
+files. In that case, the *separator* that divided our columns was a
 comma (`,`). We only learned the case where the data matched the expected defaults 
 of the `read_csv` function 
-(column names are present, and commas are used as the delimiter between columns). 
+(column names are present, and commas are used as the separator between columns). 
 In this section, we will learn how to read 
 files that do not satisfy the default expectations of `read_csv`.
 
@@ -197,11 +197,9 @@ language data from the 2016 Canadian census.
 We put `data/` before the file's
 name when we are loading the data set because this data set is located in a
 sub-folder, named `data`, relative to where we are running our Python code.
+Here is what the text in the file `data/can_lang.csv` looks like.
 
-Here is what the file would look like in a plain text editor (a program that removes
-all formatting, like bolding or different fonts):
-
-```
+```code
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -230,9 +228,6 @@ relative path to the file.
 
 ```{code-cell} ipython3
 canlang_data = pd.read_csv("data/can_lang.csv")
-```
-
-```{code-cell} ipython3
 canlang_data
 ```
 
@@ -240,90 +235,87 @@ canlang_data
 
 Oftentimes, information about how data was collected, or other relevant
 information, is included at the top of the data file. This information is
-usually written in sentence and paragraph form, with no delimiter because it is
+usually written in sentence and paragraph form, with no separator because it is
 not organized into columns. An example of this is shown below. This information
 gives the data scientist useful context and information about the data,
 however, it is not well formatted or intended to be read into a data frame cell
 along with the tabular data that follows later in the file.
 
-```
+```code
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
-Non-Official & Non-Aboriginal languages,"Afro-Asiatic languages, n.i.e.",1150,44
+Non-Official & Non-Aboriginal languages,"Afro-Asiatic languages, n.i.e.",1150,445,10,2775
 Non-Official & Non-Aboriginal languages,Akan (Twi),13460,5985,25,22150
 Non-Official & Non-Aboriginal languages,Albanian,26895,13135,345,31930
 Aboriginal languages,"Algonquian languages, n.i.e.",45,10,0,120
 Aboriginal languages,Algonquin,1260,370,40,2480
-Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
+Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21930
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
 With this extra information being present at the top of the file, using
 `read_csv` as we did previously does not allow us to correctly load the data
-into Python. In the case of this file we end up only reading in one column of the
-data set:
+into Python. In the case of this file, Python just prints a `ParserError`
+message, indicating that it wasn't able to read the file.
 
+```python
+canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ```
-
-canlang_data = pd.read_csv("data/can_lang-meta-data.csv")
-```
-
-```
-ParserError: Error tokenizing data. C error: Expected 3 fields in line 3, saw 6
+```code
+ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
 ```
 
 ```{index} Error
 ```
-
-> **Note:** In contrast to the normal and expected messages above, this time Python 
-> printed out a Parsing error for us indicating that there might be a problem with how
-> our data is being read in.
 
 ```{index} read function; skiprows argument
 ```
 
 To successfully read data like this into Python, the `skiprows` 
 argument can be useful to tell Python 
-how many lines to skip before
+how many rows to skip before
 it should start reading in the data. In the example above, we would set this
-value to 2 and pass `header` as None to read and load the data correctly.
+value to 3 to read and load the data correctly.
 
 ```{code-cell} ipython3
-canlang_data = pd.read_csv("data/can_lang-meta-data.csv", skiprows=2, header=None)
+canlang_data = pd.read_csv("data/can_lang_meta-data.csv", skiprows=3, header=None)
 canlang_data
 ```
 
-How did we know to skip two lines? We looked at the data! The first two lines
+How did we know to skip three rows? We looked at the data! The first three rows
 of the data had information we didn't need to import: 
 
+```code
+Data source: https://ttimbers.github.io/canlang/
+Data originally published in: Statistics Canada Census of Population 2016.
+Reproduced and distributed on an as-is basis with their permission.
 ```
-Source: Statistics Canada, Census of Population, 2016. Reproduced and distributed on an "as is" basis with the permission of Statistics Canada.
-Date collected: 2020/07/09
-```
 
-The column names began at line 3, so we skipped the first two lines. 
+The column names began at row 4, so we skipped the first three rows. 
 
-### `read_csv` with `sep` argument to read in tab-separated files
+### Using the `sep` argument for different separators
 
-Another common way data is stored is with tabs as the delimiter. Notice the
+Another common way data is stored is with tabs as the separator. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas. 
 
+```code
+category	language	mother_tongue	most_at_home	most_at_work	lang_known
+Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
+Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
+Non-Official & Non-Aboriginal languages	Afro-Asiatic languages, n.i.e.	1150	445	10	2775
+Non-Official & Non-Aboriginal languages	Akan (Twi)	13460	5985	25	22150
+Non-Official & Non-Aboriginal languages	Albanian	26895	13135	345	31930
+Aboriginal languages	Algonquian languages, n.i.e.	45	10	0	120
+Aboriginal languages	Algonquin	1260	370	40	2480
+Non-Official & Non-Aboriginal languages	American Sign Language	2685	3020	1145	21930
+Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 ```
-category    language    mother_tongue   most_at_home    most_at_work    lang_kno
-Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
-Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
-Non-Official & Non-Aboriginal languages Afro-Asiatic languages, n.i.e.  1150    
-Non-Official & Non-Aboriginal languages Akan (Twi)  13460   5985    25  22150
-Non-Official & Non-Aboriginal languages Albanian    26895   13135   345 31930
-Aboriginal languages    Algonquian languages, n.i.e.    45  10  0   120
-Aboriginal languages    Algonquin   1260    370 40  2480
-Non-Official & Non-Aboriginal languages American Sign Language  2685    3020    
-Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
+```{index} read function; sep argument
 ```
 
 ```{index} see: tab-separated values; tsv
@@ -332,54 +324,8 @@ Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
 ```{index} tsv, read function; read_tsv
 ```
 
-To read in this type of data, we can use the `read_csv` with `sep` argument 
-to read in .tsv (**t**ab **s**eparated **v**alues) files.
-
-```{code-cell} ipython3
-canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t", header=None)
-canlang_data
-```
-
-Let's compare the data frame here to the resulting data frame in Section
-{ref}`readcsv` after using `read_csv`. Notice anything? They look the same! The
-same number of columns/rows and column names! So we needed to use different
-tools for the job depending on the file format and our resulting table
-(`canlang_data`) in both cases was the same! 
-
-### `read_table` as a more flexible method to get tabular data into Python
-
-```{index} read function; read\_delim, reading; delimiter
-```
-
-`read_csv` and `read_csv` with argument `sep` are actually just special cases of the more general
-`read_table` function. We can use
-`read_table` to import both comma and tab-separated files (and more), we just
-have to specify the delimiter. The `can_lang.tsv` is a different version of
-this same data set with no column names and uses tabs as the delimiter
-instead of commas. 
-
-Here is how the file would look in a plain text editor:
-
-```
-Aboriginal languages    Aboriginal languages, n.o.s.    590 235 30  665
-Non-Official & Non-Aboriginal languages Afrikaans   10260   4785    85  23415
-Non-Official & Non-Aboriginal languages Afro-Asiatic languages, n.i.e.  1150    
-Non-Official & Non-Aboriginal languages Akan (Twi)  13460   5985    25  22150
-Non-Official & Non-Aboriginal languages Albanian    26895   13135   345 31930
-Aboriginal languages    Algonquian languages, n.i.e.    45  10  0   120
-Aboriginal languages    Algonquin   1260    370 40  2480
-Non-Official & Non-Aboriginal languages American Sign Language  2685    3020    
-Non-Official & Non-Aboriginal languages Amharic 22465   12785   200 33670
-Non-Official & Non-Aboriginal languages Arabic  419890  223535  5585    629055
-```
-
-```{index} read function; sep argument
-```
-
-To get this into Python using the `read_table` function, we specify the first
-argument as the path to the file (as done with `read_csv`), and then provide
-values to the `sep` argument (here a
-tab, which we represent by `"\t"`). 
+To read in `.tsv` (**t**ab **s**eparated **v**alues) files, we can set the `sep` argument 
+in the `read_csv` function to the *tab character* `\t`.
 
 ```{index} escape character
 ```
@@ -389,52 +335,96 @@ tab, which we represent by `"\t"`).
 > Escaped characters are used to represent non-printing characters 
 > (like the tab) or characters with special meanings (such as quotation marks).
 
+
 ```{code-cell} ipython3
-canlang_data =  pd.read_csv("data/can_lang.tsv", 
+canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
+canlang_data
+```
+
+Let's compare the data frame here to the resulting data frame in Section
+{ref}`readcsv` after using `read_csv`. Notice anything? They look the same; they have
+the same number of columns and rows, and have the same column names! 
+So even though we needed to use different
+arguments depending on the file format, our resulting data frame
+(`canlang_data`) in both cases was the same.
+
+### Using the `header` argument to handle missing column names
+
+```{index} read function; header, reading; separator
+```
+
+The `can_lang_no_cols.tsv` file contains a slightly different version
+of this data set, except with no column names, and tabs for separators.
+Here is how the file looks in a text editor:
+
+```code
+Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
+Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
+Non-Official & Non-Aboriginal languages	Afro-Asiatic languages, n.i.e.	1150	445	10	2775
+Non-Official & Non-Aboriginal languages	Akan (Twi)	13460	5985	25	22150
+Non-Official & Non-Aboriginal languages	Albanian	26895	13135	345	31930
+Aboriginal languages	Algonquian languages, n.i.e.	45	10	0	120
+Aboriginal languages	Algonquin	1260	370	40	2480
+Non-Official & Non-Aboriginal languages	American Sign Language	2685	3020	1145	21930
+Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
+
+```
+
+Data frames in Python need to have column names.  Thus if you read in data that
+don't have column names, Python will assign names automatically. In this example, 
+Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
+To read this data into Python, we specify the first
+argument as the path to the file (as done with `read_csv`), and then provide
+values to the `sep` argument (here a tab, which we represent by `"\t"`),
+and finally set `header = None` to tell `pandas` that the data file does not
+contain its own column names.
+
+```{code-cell} ipython3
+canlang_data =  pd.read_csv("data/can_lang_no_cols.tsv", 
                            sep = "\t", 
                            header = None)
 canlang_data
 ```
 
-Data frames in Python need to have column names.  Thus if you read in data that
-don't have column names, Python will assign names automatically. In the example
-above, Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
-
 ```{index} pandas.DataFrame; rename, pandas
 ```
 
-It is best to rename your columns to help differentiate between them 
-(e.g., `0, 1`, etc., are not very descriptive names and will make it more confusing as
-you code). To rename your columns, you can use the `rename` function
+It is best to rename your columns manually in this scenario. The current column names
+(`0, 1`, etc.) are problematic for two reasons: first, because they not very descriptive names, which will make your analysis
+confusing; and second, because your column names should generally be *strings*, but are currently *integers*. 
+To rename your columns, you can use the `rename` function
 from the [pandas package](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html#). 
-The argument of the `rename` function is `columns`, which is a dictionary, 
-where the keys are the old column names and values are the new column names.
-We rename the old `0, 1, ..., 5`
-columns in the `canlang_data` data frame to more descriptive names below, with the 
-`inplace` argument as `True`, so that the columns are renamed in place.
+The argument of the `rename` function is `columns`, which takes a mapping between the old column names and the new column names. 
+In this case, we want to rename the old columns (`0, 1, ..., 5`) in the `canlang_data` data frame to more descriptive names.
+
+To specify the mapping, we create a *dictionary*: a Python object that represents
+a mapping from *keys* to *values*. We can create a dictionary by using a pair of curly
+braces `{ }`, and inside the braces placing pairs of `key : value` separated by commas.
+Below, we create a dictionary called `col_map` that maps the old column names in `canlang_data` to new column
+names, and then pass it to the `rename` function.
 
 ```{code-cell} ipython3
-canlang_data.rename(columns = {0:'category', 
-                               1:'language',
-                               2:'mother_tongue',
-                               3:'most_at_home',
-                               4:'most_at_work',
-                               5:'lang_known'}, inplace = True)
-                               
-                               
-canlang_data
+col_map = {
+    0 : "category",
+    1 : "language",
+    2 : "mother_tongue",
+    3 : "most_at_home",
+    4 : "most_at_work",
+    5 : "lang_known"
+}
+canlang_data_renamed = canlang_data.rename(columns = col_map)
+canlang_data_renamed
 ```
 
 ```{index} read function; names argument
 ```
 
-The column names can also be assigned to the dataframe while reading it from the file by passing a 
-list of column names to the `names` argument. `read_csv` and `read_table` have a `names` argument, 
-whose default value is `[]`.
+The column names can also be assigned to the data frame immediately upon reading it from the file by passing a 
+list of column names to the `names` argument in `read_csv`. 
 
 ```{code-cell} ipython3
 canlang_data = pd.read_csv(
-    "data/can_lang.tsv",
+    "data/can_lang_no_cols.tsv",
     sep="\t",
     header=None,
     names=[
@@ -454,10 +444,9 @@ canlang_data
 ```{index} URL; reading from
 ```
 
-We can also use `read_csv`, `read_table`(and related functions)
-to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
-contains tabular data. Here, we provide the URL to
-`read_*` as the path to the file instead of a path to a local file on our
+We can also use `read_csv` to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
+contains tabular data. Here, we provide the URL to a remote file
+as the path in `read_csv`, instead of a path to a local file on our
 computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
@@ -472,12 +461,11 @@ canlang_data
 
 ### Previewing a data file before reading it into Python
 
-In all the examples above, we gave you previews of the data file before we read
+In many of the examples above, we gave you previews of the data file before we read
 it into Python. Previewing data is essential to see whether or not there are column
-names, what the delimiters are, and if there are lines you need to skip. You
-should do this yourself when trying to read in data files. You can preview
-files in a plain text editor by right-clicking on the file, selecting "Open
-With," and choosing a plain text editor (e.g., Notepad). 
+names, what the separators are, and if there are rows you need to skip. You
+should do this yourself when trying to read in data files: open the file in whichever
+text editor your prefer to inspect its contents prior to reading it into Python.
 
 ## Reading tabular data from a Microsoft Excel file
 
@@ -503,7 +491,7 @@ files. Take a look at a snippet of what a `.xlsx` file would look like in a text
 
 +++
 
-```
+```code
 ,?'O
     _rels/.rels???J1??>E?{7?
 <?V????w8?'J???'QrJ???Tf?d??d?o?wZ'???@>?4'?|??hlIo??F
@@ -966,7 +954,7 @@ that has changed (either through filtering, selecting, mutating or summarizing)
 to a file to share it with others or use it for another step in the analysis.
 The most straightforward way to do this is to use the `to_csv` function
 from the `pandas` package.  The default
-arguments for this file are to use a comma (`,`) as the delimiter and include
+arguments for this file are to use a comma (`,`) as the separator and include
 column names. Below we demonstrate creating a new version of the Canadian
 languages data set without the official languages category according to the
 Canadian 2016 Census, and then writing this to a `.csv` file:
@@ -1077,7 +1065,7 @@ display for us. We show a snippet of it below; the
 entire source 
 is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
 
-```
+```html
         <span class="result-meta">
                 <span class="result-price">$800</span>
 
@@ -1246,7 +1234,7 @@ the following list of CSS selectors to use:
 
 +++
 
-```
+```code
 td:nth-child(8) , 
 td:nth-child(6) , 
 td:nth-child(4) , 
@@ -1592,7 +1580,7 @@ data you are requesting and how frequently you are making requests.
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Reading in data locally and from the web" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

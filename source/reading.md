@@ -66,9 +66,9 @@ By the end of the chapter, readers will be able to do the following:
 - Create a reference to a database table that is queriable using the `SQLAlchemy` library's `select` 
 and `where` functions
 - Use `to_csv` to save a data frame to a `.csv` file
-- (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
-    - Read/scrape data from an internet URL using the `BeautifulSoup` package
-    - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
+% - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
+%     - Read/scrape data from an internet URL using the `BeautifulSoup` package
+%     - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
 
 ## Absolute and relative file paths
 

@@ -4,3 +4,5 @@ _build
 .ipython/
 .npm/
 source/geckodriver.log
+source/*.ipynb
+source/*.py

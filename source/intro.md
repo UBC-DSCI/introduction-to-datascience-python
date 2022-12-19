@@ -450,7 +450,7 @@ In our example in particular, we will use
 `[]` to look at the `category` column in `can_lang` to extract only the 
 Aboriginal languages in the data set.
 
-> **Note:** The `[]` operation is much more general than what we describe in this chapter.
+> **Note:** The `[]` operation is much more powerful than what we describe in this chapter.
 > You can actually use it to select multiple columns from a data frame, or to obtain a subset of rows.
 > You will learn more about `[]` (and other indexing operations on data frames) later on
 > in the {ref}`wrangling` chapter.

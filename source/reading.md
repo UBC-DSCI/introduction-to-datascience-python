@@ -523,11 +523,10 @@ canlang_data
 ```
 
 If the `.xlsx` file has multiple sheets, you have to use the `sheet_name` argument
-to specify the sheet number or name. You can also specify cell ranges using the
-`usecols` argument(Example:  `usecols="A:D"` for including cells from `A` to `D`). 
-This functionality is useful when a single sheet contains
+to specify the sheet number or name. This functionality is useful when a single sheet contains
 multiple tables (a sad thing that happens to many Excel spreadsheets since this
-makes reading in data more difficult). 
+makes reading in data more difficult). You can also specify cell ranges using the
+`usecols` argument (e.g., `usecols="A:D"` for including columns from `A` to `D`). 
 
 As with plain text files, you should always explore the data file before
 importing it into Python. Exploring the data beforehand helps you decide which
@@ -535,35 +534,35 @@ arguments you need to load the data into Python successfully. If you do not have
 the Excel program on your computer, you can use other programs to preview the
 file. Examples include Google Sheets and Libre Office. 
 
-In {numref}`read_func` we summarize the `read_*` functions we covered
-in this chapter. We also include the `read_csv2` function for data separated by
+In {numref}`read_func` we summarize the `read_csv` and `read_excel` functions we covered
+in this chapter. We also include the arguments for data separated by
 semicolons `;`, which you may run into with data sets where the decimal is
 represented by a comma instead of a period (as with some data sets from
 European countries).
 
 
-```{list-table} Summary of read_* functions
+```{list-table} Summary of read_csv and read_excel
 :header-rows: 1
 :name: read_func
 
 * - Data File Type
   - Python Function
-  - Python Package
+  - Arguments
 * - Comma (`,`) separated files
   - `read_csv`
-  - `pandas`
+  - just the file path
 * - Tab (`\t`) separated files 
-  - `read_csv` with `sep` argument
-  - `pandas`
-* - Semicolon (`;`) separated files
-  - `read_csv` with `sep` argument
-  - `pandas`
-* - Various formats (`.csv`, `.tsv`) 
-  - `read_table`
-  - `pandas`
+  - `read_csv`
+  - `sep="\t"`
+* - Missing header
+  - `read_csv`
+  - `header=None`
+* - European-style numbers, semicolon (`;`) separators
+  - `read_csv` 
+  - `sep=";"`, `thousands="."`, `decimal=","`
 * - Excel files (`.xlsx`)
   - `read_excel`
-  - `pandas`
+  - `sheet_name`, `usecols`
   
   
 ```

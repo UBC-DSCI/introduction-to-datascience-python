@@ -657,7 +657,7 @@ In our data set, we can see that `language` and `mother_tongue` are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
 The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
-book: many of the functions from `pandas` require tidy data, including the
+book: many of the functions from `pandas` require tidy data, as does the
 `altair` package that we will use shortly for our visualization. We will
 formally introduce tidy data in the {ref}`wrangling` chapter.
 

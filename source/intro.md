@@ -686,8 +686,8 @@ The fundamental object in `altair` is the `Chart`, which takes a data frame as a
 With a chart object in hand, we can now specify how we would like the data to be visualized. 
 We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute 
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
-Next, we need to encode the fields of the data frame using 
-the `x`(represents the x-axis position of the points) and 
+Next, we need to encode the variables of the data frame using 
+the `x` (represents the x-axis position of the points) and 
 `y` (represents the y-axis position of the points) *channels*. We use the `encode()`
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.

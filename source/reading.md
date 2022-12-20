@@ -61,10 +61,10 @@ By the end of the chapter, readers will be able to do the following:
     - `skiprows`
 - Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
-- Connect to a database using the `SQLAlchemy` library.
-- List the tables in a database using the `SQLAlchemy` library's `table_names` function
-- Create a reference to a database table that is queriable using the `SQLAlchemy` library's `select` 
-and `where` functions
+- Connect to a database using the `ibis` library's `connect` function.
+- List the tables in a database using the `ibis` library's `list_tables` function
+- Create a reference to a database table using the `ibis` library's `table` function
+- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function
 - Use `to_csv` to save a data frame to a `.csv` file
 % - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
 %     - Read/scrape data from an internet URL using the `BeautifulSoup` package
@@ -635,7 +635,7 @@ tables = conn.list_tables()
 tables
 ```
 
-```{index} database; select, ibis; select
+```{index} database; table, ibis; table
 ```
 
 The `list_tables` function returned only one name---`"can_lang"`---which tells us
@@ -836,7 +836,7 @@ AlchemyTable: ratings
   num_votes       int64
 ```
 
-```{index} SQLAlchemy; select
+```{index} ibis; select
 ```
 
 To find the lowest rating that exists in the data base, we first need to

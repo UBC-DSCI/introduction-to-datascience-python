@@ -419,10 +419,10 @@ Actually, something did happen: the data was loaded in
 and now has the name `can_lang` associated with it. 
 And we can use that name to access the data frame and do things with it. 
 For example, we can type the name of the data frame to print both the first few rows 
-and the last few rows, separated by `...`,
-on the screen. You will also see at the bottom that the number of observations (i.e., rows) and 
-variables (i.e., columns) are printed. Printing a summary of a data frame 
-like this is a handy way to get a quick sense for what is contained in it.
+and the last few rows. The three dots (`...`) indicate that there are additional rows that are not printed.
+You will also see that the number of observations (i.e., rows) and 
+variables (i.e., columns) are printed just underneath the data frame (214 rows and 6 columns in this case). 
+Printing a few rows from data frame like this is a handy way to get a quick sense for what is contained in it.
 
 ```{code-cell} ipython3
 can_lang

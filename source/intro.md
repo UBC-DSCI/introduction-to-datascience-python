@@ -688,7 +688,7 @@ We first indicate what kind of geometric mark we want to use to represent the da
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
 Next, we need to encode the fields of the data frame using 
 the `x`(represents the x-axis position of the points) and 
-`y`(represents the y-axis position of the points) *channels*. We use the `encode()`
+`y` (represents the y-axis position of the points) *channels*. We use the `encode()`
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 

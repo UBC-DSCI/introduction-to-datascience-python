@@ -18,6 +18,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: 'production'
+          
+      - name: Test permissions
+        run: |
+          echo $USER
+          pwd
+          ls -al
 
       - name: Build the book
         run: |

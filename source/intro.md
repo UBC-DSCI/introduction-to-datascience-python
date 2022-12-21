@@ -13,7 +13,7 @@ kernelspec:
 ---
 
 (intro)=
-# Python and the Pandas
+# Python and Pandas
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -38,8 +38,7 @@ By the end of the chapter, readers will be able to do the following:
 - Read tabular data with `read_csv`.
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
-- Do indexing and slicing with `.loc[]` and `.iloc[]` properties.
-- Select columns of a dataframe using df[] notation.
+- Create and organize subsets of tabular data using `[]`, `loc[]`, and `sort_values`
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set
@@ -159,36 +158,36 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question: 
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in Chapters {ref}`reading`
-and {ref}`wrangling`, but appear regularly throughout the text.
+Tools for summarization are covered in detail in the {ref}`reading`
+and {ref}`wrangling` chapters, but appear regularly throughout the text.
 1. **Visualization:** plotting data graphically. 
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?* 
-This is covered in detail in Chapter {ref}`viz`, but again appears regularly throughout the book.
+This is covered in detail in the {ref}`viz` chapter, but again appears regularly throughout the book.
 3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in Chapters {ref}`classification` and {ref}`classification2`.
+Classification is covered in the {ref}`classification` and {ref}`classification2` chapters.
 4. **Regression:** predicting a quantitative value for a new observation. 
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in Chapters {ref}`regression1` and {ref}`regression2`.
+Regression is covered in the {ref}`regression1` and {ref}`regression2` chapters.
 5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in Chapter {ref}`clustering`.
+Clustering is covered in the {ref}`clustering` chapter.
 6. **Estimation:** taking measurements for a small number of items from a large group 
  and making a good guess for the average or proportion for the large group. Estimation 
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?* 
-Estimation is covered in Chapter {ref}`inference`.
+Estimation is covered in the {ref}`inference` chapter.
 
 Referring to {numref}`questions-table`, our question about 
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -208,14 +207,14 @@ A data set is, at its core essence, a structured collection of numbers and chara
 Aside from that, there are really no strict rules; data sets can come in 
 many different forms! Perhaps the most common form of data set that you will
 find in the wild, however, is *tabular data*. Think spreadsheets in Microsoft Excel: tabular data are
-rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-dataframe`. In this book, we will focus primarily on tabular data.
+rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs-data frame`. In this book, we will focus primarily on tabular data.
 
 ```{index} data frame; overview, observation, variable
 ```
 
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
-Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-dataframe` shows that an Python data frame is very similar
+Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-data frame` shows that a Python data frame is very similar
 to a spreadsheet. We refer to the rows as **observations**; these are the things that we
 collect the data on, e.g., voters, cities, etc. We refer to the columns as 
 **variables**; these are the characteristics of those observations, e.g., voters' political
@@ -225,7 +224,7 @@ affiliations, cities' populations, etc.
 ```{figure} img/spreadsheet_vs_df.png
 ---
 height: 400px
-name: img-spreadsheet-vs-dataframe
+name: img-spreadsheet-vs-data frame
 ---
 A spreadsheet versus a data frame in Python
 ```
@@ -241,7 +240,7 @@ frame is the *comma-separated values* format (`.csv` for short).  These files
 have names ending in `.csv`, and can be opened and saved using common
 spreadsheet programs like Microsoft Excel and Google Sheets.  For example, the
 `.csv` file named `can_lang.csv` 
-is included with [the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience/tree/master/data).
+is included with [the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/tree/main/source/data).
 If we were to open this data in a plain text editor (a program like Notepad that just shows
 text with no formatting), we would see each row on its own line, and each entry in the table separated by a comma:
 
@@ -296,8 +295,14 @@ and visualize data.
 import pandas as pd
 ```
 
-After loading the `pandas` package and accessing it using the alias `pd`, we can call the `read_csv` function and
-pass it a single argument: the name of the file, `"can_lang.csv"`. We have to
+This command has two parts. The first is `import pandas`, which loads the `pandas` package.
+The second is `as pd`, which give the `pandas` package the much shorter *alias* (another name) `pd`. 
+We can now use the `read_csv` function by writing `pd.read_csv`, i.e., the package name, then a dot, then the function name.
+You can see why we gave `pandas` a shorter alias; if we had to type `pandas.` before every function we wanted to use,
+our code would become much longer and harder to read!
+
+Now that the `pandas` package is loaded, we can use the `read_csv` function by passing 
+it a single argument: the name of the file, `"can_lang.csv"`. We have to
 put quotes around file names and other letters and words that we use in our
 code to distinguish it from the special words (like functions!) that make up the Python programming
 language.  The file's name is the only argument we need to provide because our
@@ -305,16 +310,14 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python. 
 
-(ref:img-read-csv) Syntax for the `read_csv` function.
-
-
+**(FIGURE 1.2 FROM R BOOK IS NOT MISSING, BUT STILL R VERSION. NEEDS PD.READ_CSV)**
 
 ```{figure} img/read_csv_function.jpeg
 ---
 height: 200px
 name: img-read-csv
 ---
-Syntax for the read_csv function
+Syntax for the `read_csv` function
 ```
 
 
@@ -353,10 +356,8 @@ and we set `name` to the string `"Alice"`.
 
 ```{code-cell} ipython3
 my_number = 1 + 2
-print(my_number)
 
 name = "Alice"
-print(name)
 ```
 
 Note that when 
@@ -380,9 +381,9 @@ my_number + 2
 ```{index} object
 ```
 
-Object names can consist of letters, numbers, periods `.` and underscores `_`.
+Object names can consist of letters, numbers, and underscores (`_`).
 Other symbols won't work since they have their own meanings in Python. For example,
-`+` is the addition symbol(operator); if we try to assign a name with
+`+` is the addition symbol; if we try to assign a name with
 the `+` symbol, Python will complain and we will get an error!
 
 ```
@@ -417,131 +418,212 @@ Wait a minute, nothing happened this time! Where's our data?
 Actually, something did happen: the data was loaded in 
 and now has the name `can_lang` associated with it. 
 And we can use that name to access the data frame and do things with it. 
-For example, we can type the name of the data frame to print the first few rows 
-on the screen. You will also see at the top that the number of observations (i.e., rows) and 
-variables (i.e., columns) are printed. Printing the first few rows of a data frame 
-like this is a handy way to get a quick sense for what is contained in a data frame.
+For example, we can type the name of the data frame to print both the first few rows 
+and the last few rows. The three dots (`...`) indicate that there are additional rows that are not printed.
+You will also see that the number of observations (i.e., rows) and 
+variables (i.e., columns) are printed just underneath the data frame (214 rows and 6 columns in this case). 
+Printing a few rows from data frame like this is a handy way to get a quick sense for what is contained in it.
 
 ```{code-cell} ipython3
 can_lang
 ```
 
-## Creating subsets of data frames with `df[]` & `loc[]`
+## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} pandas.DataFrame; df[], pandas.DataFrame; loc[]
+```{index} pandas.DataFrame; [], pandas.DataFrame; loc[]
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
 find the ten Aboriginal languages that were most often reported
-in 2016 as mother tongues in Canada. In particular, we will construct 
+in 2016 as mother tongues in Canada. In particular, we want to construct 
 a table with the ten Aboriginal languages that have the largest 
-counts in the `mother_tongue` column. 
-The `df[]` and `loc[]` properties of the `pandas` dataframe will help us
-here. The `df[]` property allows you to obtain a subset of the
-rows with specific values, while the `loc[]` property allows you 
-to obtain a subset of the columns. Therefore, we can use `df[]` 
-to filter the rows to extract the Aboriginal languages in the data set, and 
-then use `loc[]` property to obtain only the columns we want to include in our table.
+counts in the `mother_tongue` column. The first step is to extract
+from our `can_lang` data only those rows that correspond to Aboriginal languages,
+and then the second step is to keep only the `language` and `mother_tongue` columns.
+The `[]` and `loc[]` operations on the `pandas` data frame will help us
+here. The `[]` allows you to obtain a subset of (i.e., *filter*) the rows of a data frame,
+or to obtain a subset of (i.e., *select*) the columns of a data frame.
+The `loc[]` operation allows you to both filter rows *and* select columns
+at the same time. We will first investigate filtering rows and selecting
+columns with the `[]` operation,
+and then use `loc[]` to do both in our analysis of the Aboriginal languages data.
 
-### Using `df[]` to extract rows
+> **Note:** The `[]` and `loc[]` operations, and related operations, in `pandas`
+> are much more powerful than we describe in this chapter.
+> You will learn more sophisticated ways to index data frames later on
+> in the {ref}`wrangling` chapter.
+
+### Using `[]` to filter rows
 Looking at the `can_lang` data above, we see the column `category` contains different
 high-level categories of languages, which include "Aboriginal languages",
 "Non-Official & Non-Aboriginal languages" and "Official languages".  To answer
 our question we want to filter our data set so we restrict our attention 
 to only those languages in the "Aboriginal languages" category. 
 
-```{index} pandas.DataFrame; df[], logical statement, logical statement; equivalency operator, string
+```{index} pandas.DataFrame; [], filter, logical statement, logical statement; equivalency operator, string
 ```
 
-We can use the `df[]` property to obtain the subset of rows with desired
-values from a data frame, where `df[]` is same as the data frame object you are using. 
-In our case it would be `can_lang[]`
-The argument to `can_lang[]` is selection of column name `category` of the data frame
-object, `can_lang`. The second argument is a *logical statement* to use when
-filtering the rows with the logical statement evaluating to either `TRUE` or `FALSE`;
-`df[]` keeps only those rows for which the logical statement evaluates to `TRUE`.
-For example, in our analysis, we are interested in keeping only languages in the
-"Aboriginal languages" higher-level category. We can use 
-the *equivalency operator* `==` to compare the values
-of the `category` column with the value `"Aboriginal languages"`; you will learn about
-many other kinds of logical statements in Chapter {ref}`wrangling`.  Similar to
-when we loaded the data file and put quotes around the file name, here we need
-to put quotes around `"Aboriginal languages"`. Using quotes tells Python that this
-is a string *value* and not one of the special words that make up Python
-programming language, or one of the names we have given to data frames in the
-code we have already written. 
+We can use the `[]` operation to obtain the subset of rows with desired values
+from a data frame. {numref}`img-filter` shows the syntax we need to use to filter
+rows with the `[]` operation. First, we type the name of the data frame---here, `can_lang`---followed
+by square brackets. Inside the square brackets, we write a *logical statement* to
+use when filtering the rows. A logical statement evaluates to either `True` or `False`
+for each row in the data frame; the `[]` operation keeps only those rows
+for which the logical statement evaluates to `True`. For example, in our analysis,
+we are interested in keeping only languages in the `"Aboriginal languages"` higher-level
+category. We can use the *equivalency operator* `==` to compare the values of the `category`
+column---denoted by `can_lang["category"]`---with the value `"Aboriginal languages"`.
+You will learn about many other kinds of logical
+statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
+around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
+quotes tells Python that this is a *string value* (e.g., a column name, or word data) 
+and not one of the special words that makes up the Python programming language, 
+or one of the names we have given to objects in the code we have already written.
 
-With the logical filter statement inside `df[]`, we get a data frame that has all the columns of
-the input data frame, but only those rows we asked for in our logical filter
-statement. 
+> **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
+> treated the same. So we could have written `'Aboriginal languages'` instead 
+> of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
+> Try both out for yourself!
+
+**(This figure is wrong-- should be for [] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-filter
+---
+Syntax for using the `[]` operation to filter rows.
+```
+
+This operation returns a data frame that has all the columns of the input data frame,
+but only those rows corresponding to Aboriginal languages that we asked for in the logical statement.
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
-aboriginal_lang
+can_lang[can_lang["category"] == "Aboriginal languages"]
 ```
 
-It's good practice to check the output after using a
-function in Python. We can see the original `can_lang` data set contained 214 rows
-with multiple kinds of `category`. The data frame
-`aboriginal_lang` contains only 67 rows, and looks like it only contains languages in
-the "Aboriginal languages" in the `category` column. So it looks like the `df[]` property
-gave us the result we wanted!
+### Using `[]` to select columns
 
-### Using `.loc[]` to extract columns
+
+```{index} pandas.DataFrame; [], select;
+```
+
+We can also use the `[]` operation to select columns from a data frame.
+{numref}`img-select` displays the syntax needed to select columns.
+We again first type the name of the data frame---here, `can_lang`---followed
+by square brackets. Inside the square brackets, we provide a *list* of
+column names. In Python, we denote a *list* using square brackets, where
+each item is separated by a comma (`,`). So if we are interested in 
+selecting only the `language` and `mother_tongue` columns from our original
+`can_lang` data frame, we put the list `["language", "mother_tongue"]`
+containing those two column names inside the square brackets of the `[]` operation.
+
+**(This figure is wrong-- should be for [] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-select
+---
+Syntax for using the `[]` operation to select columns.
+```
+
+This operation returns a data frame that has all the rows of the input data frame,
+but only those columns that we named in the selection list.
+
+```{code-cell} ipython3
+can_lang[["language", "mother_tongue"]]
+```
+
+### Using `loc[]` to filter rows and select columns
 
 ```{index} pandas.DataFrame; loc[]
 ```
 
-Now let's use `loc[]` to extract the `language` and `mother_tongue` columns
-from this data frame. To extract these columns, we need to provide the `loc[]`
-property with list of rows separated by list of columns i.e `df.loc[[row1, row2, ...], [col1, col2, ...]]`
-As we want to access all the rows of the dataframe, instead of passing the names of all the rows, 
-we can instead just depict them using `:` and then pass a list of columns `language` and `mother_tongue`.
-After passing these as arguments, the  `loc[]` property
-returns two columns (the `language` and `mother_tongue` columns that we asked
-for) as a data frame.
+The `[]` operation is only used when you want to filter rows *or* select columns;
+it cannot be used to do both operations at the same time. But in order to answer
+our original data analysis question in this chapter, we need to *both* filter the rows
+for Aboriginal languages, *and* select the `language` and `mother_tongue` columns.
+Fortunately, `pandas` provides the `loc[]` operation, which lets us do just that.
+The syntax is very similar to the `[]` operation we have already covered: we will
+essentially combine both our row filtering and column selection steps from before.
+In particular, we first write the name of the data frame---`can_lang` again---then follow
+that with the `.loc[]` method. Inside the square brackets,
+we write our row filtering logical statement, 
+then a comma, then our list of columns to select.
 
-+++
+**(This figure is wrong-- should be for .loc[] operation below)**
+
+```{figure} img/read_csv_function.jpeg
+---
+height: 200px
+name: img-loc
+---
+Syntax for using the `loc[]` operation to filter rows and select columns.
+```
 
 ```{code-cell} ipython3
-selected_lang = aboriginal_lang.loc[:, ['language', 'mother_tongue']]
-selected_lang
+aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+```
+There is one very important thing to notice in this code example. 
+The first is that we used the `loc[]` operation on the `can_lang` data frame by
+writing `can_lang.loc[]`---first the data frame name, then a dot, then `loc[]`.
+There's that dot again! If you recall, earlier in this chapter we used the `read_csv` function from `pandas` (aliased as `pd`),
+and wrote `pd.read_csv`. The dot means that the thing on the left (`pd`, i.e., the `pandas` package) *provides* the
+thing on the right (the `read_csv` function). In the case of `can_lang.loc[]`, the thing on the left (the `can_lang` data frame)
+*provides* the thing on the right (the `loc[]` operation). In Python, 
+both packages (like `pandas`) *and* objects (like our `can_lang` data frame) can provide functions 
+and other objects that we access using the dot syntax.
+
+At this point, if we have done everything correctly, `aboriginal_lang` should be a data frame
+containing *only* rows where the `category` is `"Aboriginal languages"`,
+and containing *only* the `language` and `mother_tongue` columns.
+Any time you take a step in a data analysis, it's good practice to check the output
+by printing the result.
+```{code-cell} ipython3
+aboriginal_lang
+```
+We can see the original `can_lang` data set contained 214 rows
+with multiple kinds of `category`. The data frame
+`aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages. 
+So it looks like the `loc[]` operation gave us the result we wanted!
+
+### Using `sort_values` to order and `head` to select rows by value
+
+```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
 ```
 
-### Using `sort_values` to order and `iloc[]` to select rows by index number
-
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
-```
-
-We have used `df[]` and `loc[]` properties of dataframe to obtain a table with only the Aboriginal
-languages in the data set and their associated counts. However, we want to know
-the **ten** languages that are spoken most often. As a next step, we could
-order the `mother_tongue` column from greatest to least and then extract only
-the top ten rows. This is where the `sort_values` function and `.iloc[]` property come to the
-rescue! 
+We have used the `[]` and `loc[]` operations on a data frame to obtain a table
+with only the Aboriginal languages in the data set and their associated counts.
+However, we want to know the **ten** languages that are spoken most often. As a
+next step, we will order the `mother_tongue` column from largest to smallest
+value and then extract only the top ten rows. This is where the `sort_values`
+and `head` functions come to the rescue! 
 
 The `sort_values` function allows us to order the rows of a data frame by the
 values of a particular column.  We need to specify the column name
-by which we want to sort the dataframe by passing it to the argument `by`.
+by which we want to sort the data frame by passing it to the argument `by`.
 Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
 language, we will use the `sort_values` function to order the rows in our
 `selected_lang` data frame by the `mother_tongue` column. We want to
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
+**(FIGURE 1.5 FROM R BOOK MISSING HERE)**
 
 ```{code-cell} ipython3
-arranged_lang = selected_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
 arranged_lang
 ```
 
-Next we will use the `iloc[]` property, which selects rows according to their
-row number. Since we want to choose the most common ten languages, we will indicate we want the
-rows 1 to 10 using the argument `:10`.
+Next, we will obtain the ten most common Aboriginal languages by selecting only
+the first ten rows of the `arranged_lang` data frame.
+We do this using the `head` function, and specifying the argument
+`10`. 
 
 
 ```{code-cell} ipython3
-ten_lang = arranged_lang.iloc[:10]
+ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
@@ -575,9 +657,9 @@ In our data set, we can see that `language` and `mother_tongue` are in separate
 columns (or variables). In addition, there is a single row (or observation) for each language.
 The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
-book: many of the functions from `pandas` require tidy data, including the
+book: many of the functions from `pandas` require tidy data, as does the
 `altair` package that we will use shortly for our visualization. We will
-formally introduce tidy data in Chapter {ref}`wrangling`.
+formally introduce tidy data in the {ref}`wrangling` chapter.
 
 ```{index} see: plot; visualization
 ```
@@ -586,7 +668,7 @@ formally introduce tidy data in Chapter {ref}`wrangling`.
 ```
 
 We will make a bar plot to visualize our data. A bar plot is a chart where the
-heights of the bars represent certain values, like counts or proportions. We
+lengths of the bars represent certain values, like counts or proportions. We
 will make a bar plot using the `mother_tongue` and `language` columns from our
 `ten_lang` data frame. To create a bar plot of these two variables using the 
 `altair` package, we must specify the data frame, which variables
@@ -600,16 +682,17 @@ import altair as alt
 
 +++
 
-The fundamental object in Altair is the `Chart`, which takes a data frame as a single argument `alt.Chart(ten_lang)`.
+The fundamental object in `altair` is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized. 
-We first indicate what kind of geometric mark we want to use to represent the data. We can set the mark attribute 
-of the chart object using the `Chart.mark_*` methods.
-Here, as we want to plot the bar chart, so we will use `mark_bar()` method.
-Next, we need to encode the fields of the data frame using 
-the `x`(represents the x-axis position of the points) and 
-`y`(represents the y-axis position of the points) channels. The `encode()`
-method builds a key-value mapping between encoding channels (such as x, y) 
-to fields in the dataset, accessed by field name(column names)
+We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute 
+of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
+Next, we need to encode the variables of the data frame using 
+the `x` (represents the x-axis position of the points) and 
+`y` (represents the y-axis position of the points) *channels*. We use the `encode()`
+function to handle this: we specify that the `language` column should correspond to the x-axis,
+and that the `mother_tongue` column should correspond to the y-axis.
+
+**(FIGURE 1.6 FROM R BOOK IS MISSING)**
 
 +++
 
@@ -619,8 +702,8 @@ to fields in the dataset, accessed by field name(column names)
 barplot_mother_tongue = (
     alt.Chart(ten_lang)
     .mark_bar().encode(
-        x='language',
-        y='mother_tongue'
+        x="language",
+        y="mother_tongue"
     ))
     
 
@@ -651,13 +734,15 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 > **Note:** The vast majority of the
 > time, a single expression in Python must be contained in a single line of code.
 > However, there *are* a small number of situations in which you can have a
-> single Python expression span multiple lines. Above is one such case: here, Python knows that a line cannot
-> end with a `.` symbol, and so it keeps reading the next line to figure out
-> what the right-hand side of the `.` symbol should be.  We could, of course,
-> put all of the added layers on one line of code, but splitting them across
+> single Python expression span multiple lines. Above is one such case: here, Python sees that we put a left
+> parenthesis symbol `(` on the first line right after the assignment symbol `=`, and knows that our
+> expression cannot end until we close it with an appropriate corresponding right parenthesis symbol `)`. 
+> So Python keeps reading the next line to figure out
+> what the rest of the expression is.  We could, of course,
+> put all of the code on one line of code, but splitting it across
 > multiple lines helps a lot with code readability.
 
-### Formatting altair objects
+### Formatting `altair` objects
 
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
@@ -681,8 +766,7 @@ the axes titles more informative.
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
-to format the plot further, and we will explore these in Chapter
-{ref}`viz`.
+to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = (
@@ -805,10 +889,9 @@ n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 ```
 
 In the block of code below, we put everything from this chapter together, with a few
-modifications. In particular, we have actually skipped the
-`loc[]` step that we did above; since you specify the variable names to plot
-in the `altair` function, you don't actually need to select the columns in advance
-when creating a visualization. We have also provided *comments* next to 
+modifications. In particular, we have combined all of our steps into one expression
+split across multiple lines using the left and right parenthesis symbols `(` and `)`. 
+We have also provided *comments* next to 
 many of the lines of code below using the
 hash symbol `#`. When Python sees a `#` sign, it 
 will ignore all of the text that
@@ -820,7 +903,7 @@ commenting your code to improve its readability.
 This exercise demonstrates the power of Python. In relatively few lines of code, we
 performed an entire data science workflow with a highly effective data
 visualization! We asked a question, loaded the data into Python, wrangled the data
-(using `df[]`, `sort_values()` and `iloc[]`) and created a data visualization to
+(using `[]`, `loc[]`, `sort_values`, and `head`) and created a data visualization to
 help answer our question. In this chapter, you got a quick taste of the data
 science workflow; continue on with the next few chapters to learn each of 
 these steps in much more detail!
@@ -830,15 +913,20 @@ these steps in much more detail!
 can_lang = pd.read_csv("data/can_lang.csv")
 
 # obtain the 10 most common Aboriginal languages
-aboriginal_lang = can_lang[can_lang['category'] == 'Aboriginal languages']
-arranged_lang = selected_lang.sort_values(['mother_tongue'], ascending=False)
-ten_lang = arranged_lang[:10]
+ten_lang = (
+    can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+    .sort_values(by="mother_tongue", ascending=False)
+    .head(10)
+    )
 
 # create the visualization
-ten_lang_plot = (alt.Chart(ten_lang)
-                 .mark_bar().encode(
-                  x = alt.X('mother_tongue', title="Mother Tongue (Number of Canadian Residents)"),
-                  y = alt.Y('language', title="Language")))
+ten_lang_plot = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', sort='x', title='Language')
+    ))
+
 
 ```
 
@@ -871,9 +959,9 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 There are many Python functions in the `pandas` package (and beyond!), and 
 nobody can be expected to remember what every one of them does
 or all of the arguments we have to give them. Fortunately, Python provides 
-the `help` function and `__doc__` attrribute, which 
+the `help` function, which 
 provides an easy way to pull up the documentation for 
-most functions quickly. To use the `help` function to access documentation, you 
+most functions quickly. To use the `help` function to access the documentation, you 
 just put the name of the function you are curious about as an argument inside the `help` function.
 For example, if you had forgotten what the `pd.read_csv` function
 did or exactly what arguments to pass in, you could run the following
@@ -884,19 +972,10 @@ code:
 help(pd.read_csv)
 ```
 
-To use the `__doc__` attribute to access documentation, you 
-just put `.__doc__`  after the function you are curious about.
-For example, to access the documentation of `read_csv` you could run the following code:
-
-```{code-cell} ipython3
-:tags: ["remove-output"]
-print(pd.read_csv.__doc__)
-```
-
 {numref}`help_read_csv` shows the documentation that will pop up,
 including a high-level description of the function, its arguments, 
 a description of each, and more. Note that you may find some of the
-text in the documentation a bit too technical right now 
+text in the documentation a bit too technical right now.
 Fear not: as you work through this book, many of these terms will be introduced
 to you, and slowly but surely you will become more adept at understanding and navigating 
 documentation like that shown in {numref}`help_read_csv`. But do keep in mind that the documentation
@@ -913,17 +992,23 @@ name: help_read_csv
 The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.
 ```
 
++++
+
+If you are working in a Jupyter Lab environment, there are also two more convenient
+ways to access documentation for functions. **JOEL ADD TEXT AND IMAGES HERE**.
+
+
 ## Exercises
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
-in the "R and the tidyverse" row.
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+in the "Python and Pandas" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## References

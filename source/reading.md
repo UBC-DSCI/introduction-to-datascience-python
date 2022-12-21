@@ -612,10 +612,10 @@ in the data, but simply tells Python where the database is and opens up a
 communication channel that Python can use to send SQL commands to the database.
 
 > **Note:** There is another database package in python called `sqlalchemy`. 
-> That package is a bit more mature and popular than `ibis`,
+> That package is a bit more mature than `ibis`,
 > so if you want to dig deeper into working with databases in Python, that is a good next 
 > package to learn about. We will work with `ibis` in this book, as it 
-> provides a modern and friendlier syntax that is more like `pandas` for data analysis code. 
+> provides a more modern and friendlier syntax that is more like `pandas` for data analysis code. 
 
 ```{code-cell} ipython3
 import ibis
@@ -676,7 +676,7 @@ SQL query to the database yet! We need to explicitly tell `ibis` when we want to
 The reason for this is that databases are often more efficient at working with (i.e., selecting, filtering,
 joining, etc.) large data sets than Python. And typically, the database will not even
 be stored on your computer, but rather a more powerful machine somewhere on the
-web. So Python is lazy and waits to bring this data into memory until you explicitly
+web. So `ibis` is lazy and waits to bring this data into memory until you explicitly
 tell it to using the `execute` function. The `execute` function actually sends the SQL query
 to the database, and gives you the result. Let's look at the number of rows in the table by executing
 the `count` command.

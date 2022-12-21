@@ -282,7 +282,7 @@ it should start reading in the data. In the example above, we would set this
 value to 3 to read and load the data correctly.
 
 ```{code-cell} ipython3
-canlang_data = pd.read_csv("data/can_lang_meta-data.csv", skiprows=3, header=None)
+canlang_data = pd.read_csv("data/can_lang_meta-data.csv", skiprows=3)
 canlang_data
 ```
 

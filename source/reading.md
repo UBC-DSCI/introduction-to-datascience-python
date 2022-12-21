@@ -16,12 +16,6 @@ kernelspec:
 # Reading in data locally and from the web
 
 
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-import warnings
-warnings.filterwarnings('ignore')
-```
-
 ## Overview 
 
 ```{index} see: loading; reading

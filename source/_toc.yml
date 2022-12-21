@@ -1,15 +1,16 @@
 format: jb-book
 root: index.md
-options:
-  numbered: true
 parts:
-- caption: First draft
+- caption: Preamble
   chapters:
     - file: preface-text.md
     - file: foreword-text.md
     - file: acknowledgements.md
     - file: authors.md
     - file: setup.md
+- caption: Chapters
+  numbered: 3
+  chapters:
     - file: intro.md
     - file: reading.md
     - file: wrangling.md
@@ -20,5 +21,7 @@ parts:
     - file: regression2.md
     - file: clustering.md
     - file: inference.md
+- caption: Resources
+  chapters:
     - file: references.md
     - file: appendixA.md

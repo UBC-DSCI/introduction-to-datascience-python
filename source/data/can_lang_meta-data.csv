@@ -1,3 +1,6 @@
+Data source: https://ttimbers.github.io/canlang/
+Data originally published in: Statistics Canada Census of Population 2016.
+Reproduced and distributed on an as-is basis with their permission.
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -53,10 +56,12 @@ Aboriginal languages,Dogrib (Tlicho),1650,1020,165,2375
 Non-Official & Non-Aboriginal languages,"Dravidian languages, n.i.e.",490,190,0,790
 Non-Official & Non-Aboriginal languages,Dutch,99015,9565,1165,120870
 Non-Official & Non-Aboriginal languages,Edo,1670,410,0,3220
+Official languages,English,19460850,22162865,15265335,29748265
 Non-Official & Non-Aboriginal languages,Estonian,5445,975,55,6070
 Non-Official & Non-Aboriginal languages,Ewe,1760,405,10,3000
 Non-Official & Non-Aboriginal languages,Fijian,745,195,0,1665
 Non-Official & Non-Aboriginal languages,Finnish,15295,2790,105,17590
+Official languages,French,7166700,6943800,3825215,10242945
 Non-Official & Non-Aboriginal languages,Frisian,2100,185,40,2910
 Non-Official & Non-Aboriginal languages,"Fulah (Pular, Pulaar, Fulfulde)",2825,825,0,4725
 Non-Official & Non-Aboriginal languages,Ga,920,250,0,2250

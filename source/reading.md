@@ -613,7 +613,7 @@ communication channel that Python can use to send SQL commands to the database.
 > That package is a bit more mature and popular than `ibis`,
 > so if you want to dig deeper into working with databases in Python, that is a good next 
 > package to learn about. We will work with `ibis` in this book, as it 
-> provides a friendlier syntax that is more like `pandas` for data analysis code. 
+> provides a modern and friendlier syntax that is more like `pandas` for data analysis code. 
 
 ```{code-cell} ipython3
 import ibis

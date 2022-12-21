@@ -801,12 +801,13 @@ Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
 be able to connect to a database using this information.
 
 ```python
-conn = ibis.postgres.connect(database = "can_mov_db", 
-                                 host = "fakeserver.stat.ubc.ca",
-                                 port = 5432,
-                                 user = "user0001",
-                             password = "abc123"
-                            )
+conn = ibis.postgres.connect(
+    database = "can_mov_db", 
+    host = "fakeserver.stat.ubc.ca",
+    port = 5432,
+    user = "user0001",
+    password = "abc123"
+)
 ```
 
 Aside from needing to provide that additional information, `ibis` makes it so

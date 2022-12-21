@@ -910,14 +910,15 @@ that has changed (through selecting columns, filtering rows, etc.)
 to a file to share it with others or use it for another step in the analysis.
 The most straightforward way to do this is to use the `to_csv` function
 from the `pandas` package.  The default
-arguments are to use a comma (`,`) as the separator, and to include column names. 
-Below we demonstrate creating a new version of the Canadian
+arguments are to use a comma (`,`) as the separator, and to include column names 
+in the first row. We also specify `index = False` to tell `pandas` not to print
+row numbers in the `.csv` file. Below we demonstrate creating a new version of the Canadian
 languages data set without the "Official languages" category according to the
 Canadian 2016 Census, and then writing this to a `.csv` file:
 
 ```{code-cell} ipython3
 no_official_lang_data = canlang_data[canlang_data["category"] != "Official languages"]
-no_official_lang_data.to_csv("data/no_official_languages.csv")
+no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 ```
 
 % ## Obtaining data from the web 

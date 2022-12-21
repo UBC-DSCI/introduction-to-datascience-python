@@ -380,9 +380,11 @@ and finally set `header = None` to tell `pandas` that the data file does not
 contain its own column names.
 
 ```{code-cell} ipython3
-canlang_data =  pd.read_csv("data/can_lang_no_cols.tsv", 
-                           sep = "\t", 
-                           header = None)
+canlang_data =  pd.read_csv(
+    "data/can_lang_no_cols.tsv", 
+    sep = "\t", 
+    header = None
+)
 canlang_data
 ```
 

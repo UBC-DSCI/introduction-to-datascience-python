@@ -55,57 +55,19 @@ By the end of the chapter, readers will be able to do the following:
       - `.str.split`
   - Recall and use the following operators for their
     intended data wrangling tasks:
-      - `==` 
+      - `==`
       - `in`
       - `and`
       - `or`
-      - `df[]`
+      - `[]`
       - `.iloc[]`
       - `.loc[]`
-
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# By the end of the chapter, readers will be able to do the following:
-
-#   - Define the term "tidy data".
-#   - Discuss the advantages of storing data in a tidy data format.
-#   - Define what vectors, lists, and data frames are in R, and describe how they relate to
-#     each other.
-#   - Describe the common types of data in R and their uses.
-#   - Recall and use the following functions for their
-#     intended data wrangling tasks:
-#       - `across`
-#       - `c`
-#       - `filter`
-#       - `group_by`
-#       - `select`
-#       - `map`
-#       - `mutate`
-#       - `pull`
-#       - `pivot_longer`
-#       - `pivot_wider`
-#       - `rowwise`
-#       - `separate`
-#       - `summarize`
-#   - Recall and use the following operators for their
-#     intended data wrangling tasks:
-#       - `==` 
-#       - `%in%`
-#       - `!`
-#       - `&` 
-#       - `|`
-#       - `|>` and `%>%`
-```
 
 ## Data frames, series, and lists
 
 In Chapters {ref}`intro` and {ref}`reading`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
-In the remainder of this book, this pattern continues. The vast majority of tools we use will require 
+In the remainder of this book, this pattern continues. The vast majority of tools we use will require
 that data are represented as a `pandas` **data frame** in Python. Therefore, in this section,
 we will dig more deeply into what data frames are and how they are represented in Python.
 This knowledge will be helpful in effectively utilizing these objects in our data analyses.
@@ -152,44 +114,28 @@ data set. There are 13 entities in the data set in total, corresponding to the
 A data frame storing data regarding the population of various regions in Canada. In this example data frame, the row that corresponds to the observation for the city of Vancouver is colored yellow, and the column that corresponds to the population variable is colored blue.
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The following cell was removed because there is no "vector" in Python.
-```
-
-+++ {"tags": ["remove-cell"]}
-
-Python stores the columns of a data frame as either
-*lists* or *vectors*.  For example, the data frame in Figure
-{numref}`fig:02-vectors` has three vectors whose names are `region`, `year` and
-`population`. The next two sections will explain what lists and vectors are.
-
-```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.005.jpeg
-:name: fig:02-vectors
-:figclass: caption-hack
-
-Data frame with three vectors.
-```
-
-+++
-
 ### What is a series?
 
 ```{index} pandas.Series
 ```
 
-In Python, `pandas` **series** are arrays with labels. They are strictly 1-dimensional and can contain any data type (integers, strings, floats, etc), including a mix of them (objects);
-Python has several different basic data types, as shown in {numref}`tab:datatype-table`.
-You can create a `pandas` series using the `pd.Series()` function.  For 
-example, to create the vector `region` as shown in
-{numref}`fig:02-series`, you can write:
+In Python, `pandas` **series** are lists. They are ordered and can be indexed.
+They are strictly 1-dimensional and can contain any data type
+(integers, strings, floats, etc), including a mix of them; Python
+has several different basic data types, as shown in
+{numref}`tab:datatype-table`.
+You can create a `pandas` series using the
+`pd.Series()` function.  For example, to create the series `region` as shown
+in{numref}`fig:02-series`, you can write:
 
 ```{code-cell} ipython3
 import pandas as pd
+
 region = pd.Series(["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"])
 region
 ```
+
+**(FIGURE 14 NEEDS UPDATING: (a) ZERO-BASED INDEXING, (b) TYPE SHOULD BE STRING (NOT CHARACTER))**
 
 +++ {"tags": []}
 
@@ -200,41 +146,6 @@ region
 Example of a `pandas` series whose type is string.
 ```
 
-+++ {"tags": ["remove-cell"]}
-
-### What is a vector?
-
-In R, **vectors** \index{vector}\index{atomic vector|see{vector}} are objects that can contain one or more elements. The vector
-elements are ordered, and they must all be of the same **data type**;
-R has several different basic data types, as shown in {numref}`tab:datatype-table`.
-Figure \@ref(fig:02-vector) provides an example of a vector where all of the elements are
-of character type.
-You can create vectors in R using the `c` function  \index{c function} (`c` stands for "concatenate").  For 
-example, to create the vector `region` as shown in Figure
-\@ref(fig:02-vector), you would write:
-
-``` {r}
-year <- c("Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa")
-year
-```
-
-> **Note:** Technically, these objects are called "atomic vectors." In this book
-> we have chosen to call them "vectors," which is how they are most commonly
-> referred to in the R community. To be totally precise, "vector" is an umbrella term that
-> encompasses both atomic vector and list objects in R. But this creates a 
-> confusing situation where the term "vector" could 
-> mean "atomic vector" *or* "the umbrella term for atomic vector and list," 
-> depending on context. Very confusing indeed! So to keep things simple, in 
-> this book we *always* use the term "vector" to refer to "atomic vector." 
-> We encourage readers who are enthusiastic to learn more to read the
-> Vectors chapter of *Advanced R* [@wickham2019advanced].
-
-``` {r 02-vector, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Example of a vector whose type is character.", fig.retina = 2, out.width = "100%"}
-image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
-  image_crop("3632x590")
-```
-
-+++
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -265,47 +176,25 @@ image_read("img/data_frame_slides_cdn/data_frame_slides_cdn.007.jpeg") %>%
 
 ```{table} Basic data types in Python
 :name: tab:datatype-table
-| English name          | Type name  | Type Category  | Description                                   | Example                                    |
-| :-------------------- | :--------- | :------------- | :-------------------------------------------- | :----------------------------------------- |
-| integer               | `int`      | Numeric Type   | positive/negative whole numbers               | `42`                                       |
-| floating point number | `float`    | Numeric Type   | real number in decimal form                   | `3.14159`                                  |
-| boolean               | `bool`     | Boolean Values | true or false                                 | `True`                                     |
-| string                | `str`      | Sequence Type  | text                                          | `"Can I have a cheezburger?"`              |
-| list                  | `list`     | Sequence Type  | a collection of objects - mutable & ordered   | `['Ali', 'Xinyi', 'Miriam']`               |
-| tuple                 | `tuple`    | Sequence Type  | a collection of objects - immutable & ordered | `('Thursday', 6, 9, 2018)`                 |
-| dictionary            | `dict`     | Mapping Type   | mapping of key-value pairs                    | `{'name':'DSCI', 'code':100, 'credits':2}` |
-| none                  | `NoneType` | Null Object    | represents no value                           | `None`                                     |
+| Data type             | Abbreviation | Description                                   | Example                                    |
+| :-------------------- | :----------- | :-------------------------------------------- | :----------------------------------------- |
+| integer               | `int`        | positive/negative whole numbers               | `42`                                       |
+| floating point number | `float`      | real number in decimal form                   | `3.14159`                                  |
+| boolean               | `bool`       | true or false                                 | `True`                                     |
+| string                | `str`        | text                                          | `"Can I have a cheezburger?"`              |
+| none                  | `NoneType`   | represents no value                           | `None`                                     |
 ```
 
 +++
 
-It is important in Python to make sure you represent your data with the correct type. 
-Many of the `pandas` functions we use in this book treat 
+It is important in Python to make sure you represent your data with the correct type.
+Many of the `pandas` functions we use in this book treat
 the various data types differently. You should use integers and float types
 (which both fall under the "numeric" umbrella type) to represent numbers and perform
 arithmetic. Strings are used to represent data that should
-be thought of as "text", such as words, names, paths, URLs, and more. 
+be thought of as "text", such as words, names, paths, URLs, and more.
 There are other basic data types in Python, such as *set*
 and *complex*, but we do not use these in this textbook.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# It is important in R to make sure you represent your data with the correct type. 
-# Many of the `tidyverse` functions we use in this book treat 
-# the various data types differently. You should use integers and double types
-# (which both fall under the "numeric" umbrella type) to represent numbers and perform
-# arithmetic. Doubles are more common than integers in R, though; for instance, a double data type is the
-# default when you create a vector of numbers using `c()`, and when you read in
-# whole numbers via `read_csv`. Characters are used to represent data that should
-# be thought of as "text", such as words, names, paths, URLs, and more. Factors help us
-# encode variables that represent *categories*; a factor variable takes one of a discrete
-# set of values known as *levels* (one for each category). The levels can be ordered or unordered.  Even though
-# factors can sometimes *look* like characters, they are not used to represent
-# text, words, names, and paths in the way that characters are; in fact, R
-# internally stores factors using integers! There are other basic data types in R, such as *raw*
-# and *complex*, but we do not use these in this textbook.
-```
 
 ### What is a list?
 
@@ -313,28 +202,10 @@ and *complex*, but we do not use these in this textbook.
 ```
 
 Lists are built-in objects in Python that have multiple, ordered elements.
-`pandas` series can be treated as lists with labels (indices).
+`pandas` series can be treated as an array with labels (indices).
 
-```{code-cell} ipython3
-:tags: [remove-cell]
+**(FIGURE 3.4 FROM THE R-BOOK IS MISSING)**
 
-# Lists \index{list} are also objects in R that have multiple, ordered elements.
-# Vectors and lists differ by the requirement of element type
-# consistency. All elements within a single vector must be of the same type (e.g.,
-# all elements are characters), whereas elements within a single list can be of
-# different types (e.g., characters, integers, logicals, and even other lists). 
-```
-
-+++ {"tags": ["remove-cell"]}
-
-```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.008.jpeg
-:name: fig:02-vec-vs-list
-:figclass: caption-hack
-
-A vector versus a list.
-```
-
-+++
 
 ### What does this have to do with data frames?
 
@@ -345,10 +216,10 @@ A vector versus a list.
 
 A data frame is really just series stuck together that follows two rules:
 
-1. Each element itself is a series. 
+1. Each element itself is a series.
 2. Each element (series) must have the same length.
 
-Not all columns in a data frame need to be of the same type. 
+Not all columns in a data frame need to be of the same type.
 {numref}`fig:02-dataframe` shows a data frame where
 the columns are series of different types.
 
@@ -361,23 +232,6 @@ the columns are series of different types.
 Data frame and vector types.
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# A data frame \index{data frame!definition} is really a special kind of list that follows two rules:
-
-# 1. Each element itself must either be a vector or a list. 
-# 2. Each element (vector or list) must have the same length.
-
-# Not all columns in a data frame need to be of the same type. 
-# Figure \@ref(fig:02-dataframe) shows a data frame where
-# the columns are vectors of different types.
-# But remember: because the columns in this example are *vectors*, 
-# the elements must be the same data type *within each column.* 
-# On the other hand, if our data frame had *list* columns, there would be no such requirement.
-# It is generally much more common to use *vector* columns, though, 
-# as the values for a single variable are usually all of the same type.
-```
 
 ```{index} type
 ```
@@ -386,26 +240,6 @@ Data frame and vector types.
 > For example we can check the class of the Canadian languages data set,
 > `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The functions from the `tidyverse` package that we use often give us a
-# special class of data frame called a *tibble*. Tibbles have some additional \index{tibble}
-# features and benefits over the built-in data frame object. These include the
-# ability to add useful attributes (such as grouping, which we will discuss later)
-# and more predictable type preservation when subsetting. 
-# Because a tibble is just a data frame with some added features, 
-# we will collectively refer to both built-in R data frames and
-# tibbles as data frames in this book.
-
-# >  **Note:** You can use the function `class` \index{class} on a data object to assess whether a data
-# > frame is a built-in R data frame or a tibble. If the data object is a data
-# > frame, `class` will return `"data.frame"`. If the data object is a
-# > tibble it will return `"tbl_df" "tbl" "data.frame"`. You can easily convert
-# > built-in R data frames to tibbles using the `tidyverse` `as_tibble` function.
-# > For example we can check the class of the Canadian languages data set,
-# > `can_lang`, we worked with in the previous chapters and we see it is a tibble.
-```
 
 ```{code-cell} ipython3
 can_lang = pd.read_csv("data/can_lang.csv")
@@ -413,22 +247,22 @@ type(can_lang)
 ```
 
 Lists, Series and DataFrames are basic types of *data structure* in Python, which
-are core to most data analyses. We summarize them in 
-{numref}`tab:datastructure-table`. There are several other data structures in the Python programming 
+are core to most data analyses. We summarize them in
+{numref}`tab:datastructure-table`. There are several other data structures in the Python programming
 language (*e.g.,* matrices), but these are beyond the scope of this book.
 
 +++
 
-```{table} Basic data structures in Python
+<!-- ```{table} Basic data structures in Python
 :name: tab:datastructure-table
 | Data Structure | Description |
 | ---            |------------ |
-| list | An 1D ordered collection of values that can store multiple data types at once. |
-| Series | An 1D ordered collection of values *with labels* that can store multiple data types at once. |
+| list | A 1D ordered collection of values that can store multiple data types at once. |
+| Series | A 1D ordered collection of values *with labels* that can store multiple data types at once. |
 | DataFrame | A 2D labeled data structure with columns of potentially different types. |
 ```
 
-+++
++++ -->
 
 ## Tidy data
 
@@ -437,7 +271,7 @@ language (*e.g.,* matrices), but these are beyond the scope of this book.
 
 There are many ways a tabular data set can be organized. This chapter will focus
 on introducing the **tidy data** format of organization and how to make your raw
-(and likely messy) data tidy. A tidy data frame satisfies 
+(and likely messy) data tidy. A tidy data frame satisfies
 the following three criteria {cite:p}`wickham2014tidy`:
 
   - each row is a single observation,
@@ -445,7 +279,7 @@ the following three criteria {cite:p}`wickham2014tidy`:
   - each value is a single cell (i.e., its entry in the data
     frame is not shared with another value).
 
-{numref}`fig:02-tidy-image` demonstrates a tidy data set that satisfies these 
+{numref}`fig:02-tidy-image` demonstrates a tidy data set that satisfies these
 three criteria.
 
 +++ {"tags": []}
@@ -464,8 +298,8 @@ Tidy data satisfies three criteria.
 
 There are many good reasons for making sure your data are tidy as a first step in your analysis.
 The most important is that it is a single, consistent format that nearly every function
-in the `pandas` recognizes. No matter what the variables and observations 
-in your data represent, as long as the data frame 
+in the `pandas` recognizes. No matter what the variables and observations
+in your data represent, as long as the data frame
 is tidy, you can manipulate it, plot it, and analyze it using the same tools.
 If your data is *not* tidy, you will have to write special bespoke code
 in your analysis that will not only be error-prone, but hard for others to understand.
@@ -491,18 +325,18 @@ below!
 ```{index} pandas.DataFrame; melt
 ```
 
-One task that is commonly performed to get data into a tidy format 
-is to combine values that are stored in separate columns, 
+One task that is commonly performed to get data into a tidy format
+is to combine values that are stored in separate columns,
 but are really part of the same variable, into one.
-Data is often stored this way 
-because this format is sometimes more intuitive for human readability 
+Data is often stored this way
+because this format is sometimes more intuitive for human readability
 and understanding, and humans create data sets.
-In {numref}`fig:02-wide-to-long`, 
-the table on the left is in an untidy, "wide" format because the year values 
-(2006, 2011, 2016) are stored as column names. 
-And as a consequence, 
-the values for population for the various cities 
-over these years are also split across several columns. 
+In {numref}`fig:02-wide-to-long`,
+the table on the left is in an untidy, "wide" format because the year values
+(2006, 2011, 2016) are stored as column names.
+And as a consequence,
+the values for population for the various cities
+over these years are also split across several columns.
 
 For humans, this table is easy to read, which is why you will often find data
 stored in this wide format.  However, this format is difficult to work with
@@ -518,13 +352,16 @@ greatly simplified once the data is tidied.
 
 Another problem with data in this format is that we don't know what the
 numbers under each year actually represent. Do those numbers represent
-population size? Land area? It's not clear. 
-To solve both of these problems, 
-we can reshape this data set to a tidy data format 
+population size? Land area? It's not clear.
+To solve both of these problems,
+we can reshape this data set to a tidy data format
 by creating a column called "year" and a column called
 "population." This transformation&mdash;which makes the data
 "longer"&mdash;is shown as the right table in
-{numref}`fig:02-wide-to-long`.
+{numref}`fig:02-wide-to-long`. Note that the number of entries in our data frame
+can change in this transformation. The "untidy" data has 5 rows and 3 columns for
+a total of 15 data, whereas the "tidy" data on the right has 15 rows and 2 columns
+for a total of 30 data.
 
 +++ {"tags": []}
 
@@ -541,15 +378,16 @@ Melting data from a wide to long data format.
 ```
 
 We can achieve this effect in Python using the `.melt` function from the `pandas` package.
-The `.melt` function combines columns, 
-and is usually used during tidying data 
-when we need to make the data frame longer and narrower. 
+We say that we "melt" (or "pivot") the wide table into a longer format.
+The `.melt` function combines columns,
+and is usually used during tidying data
+when we need to make the data frame longer and narrower.
 To learn how to use `.melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
-counts of how many Canadians cited each language as their mother tongue for five 
+counts of how many Canadians cited each language as their mother tongue for five
 major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
-the 2016 Canadian census. 
-To get started, 
+the 2016 Canadian census.
+To get started,
 we will use `pd.read_csv` to load the (untidy) data.
 
 ```{code-cell} ipython3
@@ -557,25 +395,25 @@ lang_wide = pd.read_csv("data/region_lang_top5_cities_wide.csv")
 lang_wide
 ```
 
-What is wrong with the untidy format above? 
-The table on the left in {numref}`fig:img-pivot-longer-with-table` 
+What is wrong with the untidy format above?
+The table on the left in {numref}`fig:img-pivot-longer-with-table`
 represents the data in the "wide" (messy) format.
-From a data analysis perspective, this format is not ideal because the values of 
-the variable *region* (Toronto, Montréal, Vancouver, Calgary and Edmonton) 
+From a data analysis perspective, this format is not ideal because the values of
+the variable *region* (Toronto, Montréal, Vancouver, Calgary and Edmonton)
 are stored as column names. Thus they
 are not easily accessible to the data analysis functions we will apply
 to our data set. Additionally, the *mother tongue* variable values are
 spread across multiple columns, which will prevent us from doing any desired
 visualization or statistical tasks until we combine them into one column. For
-instance, suppose we want to know the languages with the highest number of 
+instance, suppose we want to know the languages with the highest number of
 Canadians reporting it as their mother tongue among all five regions. This
-question would be tough to answer with the data in its current format. 
-We *could* find the answer with the data in this format, 
+question would be tough to answer with the data in its current format.
+We *could* find the answer with the data in this format,
 though it would be much easier to answer if we tidy our
-data first. If mother tongue were instead stored as one column, 
-as shown in the tidy data on the right in 
+data first. If mother tongue were instead stored as one column,
+as shown in the tidy data on the right in
 {numref}`fig:img-pivot-longer-with-table`,
-we could simply use one line of code (`df["mother_tongue"].max()`) 
+we could simply use one line of code (`df["mother_tongue"].max()`)
 to get the maximum value.
 
 +++ {"tags": []}
@@ -589,7 +427,7 @@ Going from wide to long with the `.melt` function.
 
 +++
 
-{numref}`fig:img-pivot-longer` details the arguments that we need to specify 
+{numref}`fig:img-pivot-longer` details the arguments that we need to specify
 in the `.melt` function to accomplish this data transformation.
 
 +++ {"tags": []}
@@ -613,13 +451,11 @@ We use `.melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
-area. We specify `value_vars` to be all
-the columns between Toronto and Edmonton:
+area:
 
 ```{code-cell} ipython3
 lang_mother_tidy = lang_wide.melt(
     id_vars=["category", "language"],
-    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
     var_name="region",
     value_name="mother_tongue",
 )
@@ -627,11 +463,14 @@ lang_mother_tidy = lang_wide.melt(
 lang_mother_tidy
 ```
 
+**(FIGURE 3.9 FROM THE R BOOK IS MISSING)**
+
 > **Note**: In the code above, the call to the
 > `.melt` function is split across several lines. This is allowed in
-> certain cases; for example, when calling a function as above, as long as the 
-> line ends with a comma `,` Python knows to keep reading on the next line.
-> Splitting long lines like this across multiple lines is encouraged 
+> certain cases; for example, when calling a function as above, the input
+> arguments are between parentheses `()` and Python knows to keep reading on
+> the next line. Each line ends with a comma `,` making it easier to read.
+> Splitting long lines like this across multiple lines is encouraged
 > as it helps significantly with code readability. Generally speaking, you should
 > limit each line of code to about 80 characters.
 
@@ -656,17 +495,17 @@ been met:
 Suppose we have observations spread across multiple rows rather than in a single
 row. For example, in {numref}`fig:long-to-wide`, the table on the left is in an
 untidy, long format because the `count` column contains three variables
-(population, commuter, and incorporated count) and information about each observation 
-(here, population, commuter, and incorporated counts for a region) is split across three rows. 
-Remember: one of the criteria for tidy data 
+(population, commuter, and incorporated count) and information about each observation
+(here, population, commuter, and incorporated counts for a region) is split across three rows.
+Remember: one of the criteria for tidy data
 is that each observation must be in a single row.
 
 Using data in this format&mdash;where two or more variables are mixed together
 in a single column&mdash;makes it harder to apply many usual `pandas` functions.
-For example, finding the maximum number of commuters 
+For example, finding the maximum number of commuters
 would require an additional step of filtering for the commuter values
 before the maximum can be computed.
-In comparison, if the data were tidy, 
+In comparison, if the data were tidy,
 all we would have to do is compute the maximum value for the commuter column.
 To reshape this untidy data set to a tidy (and in this case, wider) format,
 we need to create columns called "population", "commuters", and "incorporated."
@@ -684,12 +523,12 @@ Going from long to wide data.
 +++
 
 To tidy this type of data in Python, we can use the `.pivot` function.
-The `.pivot` function generally increases the number of columns (widens) 
-and decreases the number of rows in a data set. 
-To learn how to use `.pivot`, 
-we will work through an example 
-with the `region_lang_top5_cities_long.csv` data set. 
-This data set contains the number of Canadians reporting 
+The `.pivot` function generally increases the number of columns (widens)
+and decreases the number of rows in a data set.
+To learn how to use `.pivot`,
+we will work through an example
+with the `region_lang_top5_cities_long.csv` data set.
+This data set contains the number of Canadians reporting
 the primary language at home and work for five
 major cities (Toronto, Montréal, Vancouver, Calgary and Edmonton).
 
@@ -698,14 +537,14 @@ lang_long = pd.read_csv("data/region_lang_top5_cities_long.csv")
 lang_long
 ```
 
-What makes the data set shown above untidy? 
-In this example, each observation is a language in a region. 
-However, each observation is split across multiple rows: 
-one where the count for `most_at_home` is recorded, 
-and the other where the count for `most_at_work` is recorded. 
-Suppose the goal with this data was to 
+What makes the data set shown above untidy?
+In this example, each observation is a language in a region.
+However, each observation is split across multiple rows:
+one where the count for `most_at_home` is recorded,
+and the other where the count for `most_at_work` is recorded.
+Suppose the goal with this data was to
 visualize the relationship between the number of
-Canadians reporting their primary language at home and work. 
+Canadians reporting their primary language at home and work.
 Doing that would be difficult with this data in its current form,
 since these two variables are stored in the same column.
 {numref}`fig:img-pivot-wider-table` shows how this data
@@ -722,7 +561,7 @@ Going from long to wide with the `.pivot` function.
 
 +++
 
-{numref}`fig:img-pivot-wider` details the arguments that we need to specify 
+{numref}`fig:img-pivot-wider` details the arguments that we need to specify
 in the `.pivot` function.
 
 +++ {"tags": []}
@@ -754,7 +593,7 @@ lang_home_tidy
 ```
 
 ```{code-cell} ipython3
-lang_home_tidy.dtypes
+lang_home_tidy.info()
 ```
 
 The data above is now tidy! We can go through the three criteria again to check
@@ -781,11 +620,11 @@ more columns, and we would see the data set "widen."
 ```{index} pandas.Series; str.split, delimiter
 ```
 
-Data are also not considered tidy when multiple values are stored in the same 
+Data are also not considered tidy when multiple values are stored in the same
 cell. The data set we show below is even messier than the ones we dealt with
 above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary` and `Edmonton` columns
 contain the number of Canadians reporting their primary language at home and
-work in one column separated by the delimiter (`/`). The column names are the 
+work in one column separated by the delimiter (`/`). The column names are the
 values of a variable, *and* each value does not have its own cell! To turn this
 messy data into tidy data, we'll have to fix these issues.
 
@@ -795,16 +634,15 @@ lang_messy
 ```
 
 First we’ll use `.melt` to create two columns, `region` and `value`,
-similar to what we did previously. 
+similar to what we did previously.
 The new `region` columns will contain the region names,
-and the new column `value` will be a temporary holding place for the 
-data that we need to further separate, i.e., the 
+and the new column `value` will be a temporary holding place for the
+data that we need to further separate, i.e., the
 number of Canadians reporting their primary language at home and work.
 
 ```{code-cell} ipython3
 lang_messy_longer = lang_messy.melt(
     id_vars=["category", "language"],
-    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
     var_name="region",
     value_name="value",
 )
@@ -812,11 +650,18 @@ lang_messy_longer = lang_messy.melt(
 lang_messy_longer
 ```
 
-Next we'll use `.str.split` to split the `value` column into two columns. 
-One column will contain only the counts of Canadians 
-that speak each language most at home, 
-and the other will contain the counts of Canadians 
-that speak each language most at work for each region. 
+Next we'll use `.str.split` to split the `value` column into two columns.
+How it works is that it takes a single string and splits it into multiple values
+based on the character you tell it to split on. For example:
+```{code-cell} ipython3
+"50/0".split("/")
+```
+
+We can use this operation on the columns of our data frame so that
+one column will contain only the counts of Canadians
+that speak each language most at home,
+and the other will contain the counts of Canadians
+that speak each language most at work for each region.
 {numref}`fig:img-separate`
 outlines what we need to specify to use `.str.split`.
 
@@ -843,7 +688,7 @@ tidy_lang
 ```
 
 ```{code-cell} ipython3
-tidy_lang.dtypes
+tidy_lang.info()
 ```
 
 Is this data set now tidy? If we recall the three criteria for tidy data:
@@ -856,17 +701,17 @@ We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Notice in the table, all of the variables are
 "object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in Section {ref}`pivot-wider`, the
 `most_at_home` and `most_at_work` variables were `int64` (integer)&mdash;you can
-verify this by calling `df.dtypes`&mdash;which is a type
+verify this by calling `df.info()`&mdash;which is a type
 of numeric data. This change is due to the delimiter (`/`) when we read in this
 messy data set. Python read these columns in as string types, and by default,
 `.str.split` will return columns as object data types.
 
 It makes sense for `region`, `category`, and `language` to be stored as a
 object type. However, suppose we want to apply any functions that treat the
-`most_at_home` and `most_at_work` columns as a number (e.g., finding rows 
-above a numeric threshold of a column). 
-In that case, 
-it won't be possible to do if the variable is stored as a `object`. 
+`most_at_home` and `most_at_work` columns as a number (e.g., finding rows
+above a numeric threshold of a column).
+In that case,
+it won't be possible to do if the variable is stored as a `object`.
 Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 like this: it will convert the columns to the best numeric data types.
 
@@ -887,12 +732,12 @@ like this: it will convert the columns to the best numeric data types.
 
 # It makes sense for `region`, `category`, and `language` to be stored as a
 # character (or perhaps factor) type. However, suppose we want to apply any functions that treat the
-# `most_at_home` and `most_at_work` columns as a number (e.g., finding rows 
-# above a numeric threshold of a column). 
-# In that case, 
-# it won't be possible to do if the variable is stored as a `character`. 
+# `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
+# above a numeric threshold of a column).
+# In that case,
+# it won't be possible to do if the variable is stored as a `character`.
 # Fortunately, the `separate` function provides a natural way to fix problems
-# like this: we can set `convert = TRUE` to convert the `most_at_home` 
+# like this: we can set `convert = TRUE` to convert the `most_at_home`
 # and `most_at_work` columns to the correct data type.
 ```
 
@@ -903,7 +748,7 @@ tidy_lang
 ```
 
 ```{code-cell} ipython3
-tidy_lang.dtypes
+tidy_lang.info()
 ```
 
 Now we see `most_at_home` and `most_at_work` columns are of `int64` data types,
@@ -911,118 +756,30 @@ indicating they are integer data types (i.e., numbers)!
 
 +++
 
-(loc-iloc)=
-## Using `.loc[]` and `.iloc[]` to extract a range of columns
+## Using `[]` to extract rows or columns
 
-```{index} pandas.DataFrame; loc[]
-```
-
-Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it 
-using the powerful suite of functions from the `pandas`. 
-For the first example, recall `.loc[]` from Chapter {ref}`intro`, 
-which lets us create a subset of columns from a data frame. 
-Suppose we wanted to select only the columns `language`, `region`,
-`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets:
-
-```{code-cell} ipython3
-selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
-selected_columns
-```
-
-```{index} pandas.DataFrame; iloc[], column range
-```
-
-Here we wrote out the names of each of the columns. However, this method is
-time-consuming, especially if you have a lot of columns! Another approach is to
-index with integers. `.iloc[]` make it easier for
-us to select columns. For instance, we can use `.iloc[]` to choose a
-range of columns rather than typing each column name out. To do this, we use the
-colon (`:`) operator to denote the range. For example, to get all the columns in 
-the `tidy_lang` data frame from `language` to `most_at_work`, we pass `:` before the comma indicating we want to retrieve all rows, and `1:` after the comma indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Here we wrote out the names of each of the columns. However, this method is
-# time-consuming, especially if you have a lot of columns! Another approach is to
-# use a "select helper". Select helpers are operators that make it easier for
-# us to select columns. For instance, we can use a select helper to choose a
-# range of columns rather than typing each column name out. To do this, we use the
-# colon (`:`) operator to denote the range. For example, to get all the columns in \index{column range}
-# the `tidy_lang` data frame from `language` to `most_at_work` we pass
-# `language:most_at_work` as the second argument to the `select` function.
-```
-
-```{code-cell} ipython3
-column_range = tidy_lang.iloc[:, 1:]
-column_range
-```
-
-Notice that we get the same output as we did above, 
-but with less (and clearer!) code. This type of operator 
-is especially handy for large data sets.
-
-```{index} pandas.Series; str.startswith
-```
-
-Suppose instead we wanted to extract columns that followed a particular pattern
-rather than just selecting a range. For example, let's say we wanted only to select the
-columns `most_at_home` and `most_at_work`. There are other functions that allow
-us to select variables based on their names. In particular, we can use the `.str.startswith` method 
-to choose only the columns that start with the word "most":
-
-```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
-```
-
-```{index} pandas.Series; str.contains
-```
-
-We could also have chosen the columns containing an underscore `_` by using the 
-`.str.contains("_")`, since we notice
-the columns we want contain underscores and the others don't. 
-
-```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
-```
-
-There are many different functions that help with selecting
-variables based on certain criteria. 
-The additional resources section at the end of this chapter 
-provides a comprehensive resource on these functions.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# There are many different `select` helpers that select
-# variables based on certain criteria. 
-# The additional resources section at the end of this chapter 
-# provides a comprehensive resource on `select` helpers.
-```
-
-## Using `df[]` to extract rows
-
-Next, we revisit the `df[]` from Chapter {ref}`intro`, 
-which lets us create a subset of rows from a data frame. 
-Recall the argument to the `df[]`:
+Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
+using the powerful suite of functions from the `pandas`.
+We revisit the `[]` from Chapter {ref}`intro`,
+which lets us create a subset of rows from a data frame.
+Recall the argument to the `[]`:
 column names or a logical statement evaluated to either `True` or `False`;
-`df[]` works by returning the rows  where the logical statement evaluates to `True`.
-This section will highlight more advanced usage of the `df[]` function.
+`[]` works by returning the rows  where the logical statement evaluates to `True`.
+This section will highlight more advanced usage of the `[]` function.
 In particular, this section provides an in-depth treatment of the variety of logical statements
-one can use in the `df[]` to select subsets of rows.
+one can use in the `[]` to select subsets of rows.
 
 +++
 
 ### Extracting rows that have a certain value with `==`
 Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
 official languages of Canada (English and French).
-We can extract these rows by using the *equivalency operator* (`==`) 
-to compare the values of the `category` column 
-with the value `"Official languages"`. 
-With these arguments, `df[]` returns a data frame with all the columns 
-of the input data frame 
-but only the rows we asked for in the logical statement, i.e., 
+We can extract these rows by using the *equivalency operator* (`==`)
+to compare the values of the `category` column
+with the value `"Official languages"`.
+With these arguments, `[]` returns a data frame with all the columns
+of the input data frame
+but only the rows we asked for in the logical statement, i.e.,
 those where the `category` column holds the value `"Official languages"`.
 We name this data frame `official_langs`.
 
@@ -1034,7 +791,7 @@ official_langs
 ### Extracting rows that do not have a certain value with `!=`
 
 What if we want all the other language categories in the data set *except* for
-those in the `"Official languages"` category? We can accomplish this with the `!=` 
+those in the `"Official languages"` category? We can accomplish this with the `!=`
 operator, which means "not equal to". So if we want to find all the rows
 where the `category` does *not* equal `"Official languages"` we write the code
 below.
@@ -1046,14 +803,14 @@ tidy_lang[tidy_lang["category"] != "Official languages"]
 (filter-and)=
 ### Extracting rows satisfying multiple conditions using `&`
 
-Suppose now we want to look at only the rows 
-for the French language in Montréal. 
-To do this, we need to filter the data set 
-to find rows that satisfy multiple conditions simultaneously. 
+Suppose now we want to look at only the rows
+for the French language in Montréal.
+To do this, we need to filter the data set
+to find rows that satisfy multiple conditions simultaneously.
 We can do this with the ampersand symbol (`&`), which
-is interpreted by Python as "and". 
-We write the code as shown below to filter the `official_langs` data frame 
-to subset the rows where `region == "Montréal"` 
+is interpreted by Python as "and".
+We write the code as shown below to filter the `official_langs` data frame
+to subset the rows where `region == "Montréal"`
 *and* the `language == "French"`.
 
 ```{code-cell} ipython3
@@ -1065,12 +822,12 @@ tidy_lang[(tidy_lang["region"] == "Montréal") & (tidy_lang["language"] == "Fren
 ### Extracting rows satisfying at least one condition using `|`
 
 Suppose we were interested in only those rows corresponding to cities in Alberta
-in the `official_langs` data set (Edmonton and Calgary). 
+in the `official_langs` data set (Edmonton and Calgary).
 We can't use `&` as we did above because `region`
-cannot be both Edmonton *and* Calgary simultaneously. 
-Instead, we can use the vertical pipe (`|`) logical operator, 
-which gives us the cases where one condition *or* 
-another condition *or* both are satisfied. 
+cannot be both Edmonton *and* Calgary simultaneously.
+Instead, we can use the vertical pipe (`|`) logical operator,
+which gives us the cases where one condition *or*
+another condition *or* both are satisfied.
 In the code below, we ask Python to return the rows
 where the `region` columns are equal to "Calgary" *or* "Edmonton".
 
@@ -1082,10 +839,10 @@ official_langs[
 
 ### Extracting rows with values in a list using `.isin()`
 
-Next, suppose we want to see the populations of our five cities. 
-Let's read in the `region_data.csv` file 
-that comes from the 2016 Canadian census, 
-as it contains statistics for number of households, land area, population 
+Next, suppose we want to see the populations of our five cities.
+Let's read in the `region_data.csv` file
+that comes from the 2016 Canadian census,
+as it contains statistics for number of households, land area, population
 and number of dwellings for different regions.
 
 ```{code-cell} ipython3
@@ -1093,9 +850,9 @@ region_data = pd.read_csv("data/region_data.csv")
 region_data
 ```
 
-To get the population of the five cities 
-we can filter the data set using the `.isin` method. 
-The `.isin` method is used to see if an element belongs to a list. 
+To get the population of the five cities
+we can filter the data set using the `.isin` method.
+The `.isin` method is used to see if an element belongs to a list.
 Here we are filtering for rows where the value in the `region` column
 matches any of the five cities we are intersted in: Toronto, Montréal,
 Vancouver, Calgary, and Edmonton.
@@ -1136,7 +893,7 @@ pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 # > elements in `vectorB`. Then the second element of `vectorA` is compared
 # > to all the elements in `vectorB`, and so on. Notice the difference between `==` and
 # > `%in%` in the example below.
-# > 
+# >
 # >``` {r}
 # >c("Vancouver", "Toronto") == c("Toronto", "Vancouver")
 # >c("Vancouver", "Toronto") %in% c("Toronto", "Vancouver")
@@ -1152,24 +909,134 @@ glue("census_popn", "{0:,.0f}".format(35151728))
 glue("most_french", "{0:,.0f}".format(2669195))
 ```
 
-We saw in Section {ref}`filter-and` that 
-{glue:text}`most_french` people reported 
-speaking French in Montréal as their primary language at home. 
-If we are interested in finding the official languages in regions 
-with higher numbers of people who speak it as their primary language at home 
-compared to French in Montréal, then we can use `df[]` to obtain rows 
-where the value of `most_at_home` is greater than 
+We saw in Section {ref}`filter-and` that
+{glue:text}`most_french` people reported
+speaking French in Montréal as their primary language at home.
+If we are interested in finding the official languages in regions
+with higher numbers of people who speak it as their primary language at home
+compared to French in Montréal, then we can use `[]` to obtain rows
+where the value of `most_at_home` is greater than
 {glue:text}`most_french`.
 
 ```{code-cell} ipython3
 official_langs[official_langs["most_at_home"] > 2669195]
 ```
 
-This operation returns a data frame with only one row, indicating that when 
-considering the official languages, 
-only English in Toronto is reported by more people 
-as their primary language at home 
+This operation returns a data frame with only one row, indicating that when
+considering the official languages,
+only English in Toronto is reported by more people
+as their primary language at home
 than French in Montréal according to the 2016 Canadian census.
+
+(loc-iloc)=
+## Using `.loc[]` to filter rows and select columns.
+```{index} pandas.DataFrame; loc[]
+```
+
+The `[]` operation is only used when you want to filter rows or select columns;
+it cannot be used to do both operations at the same time. This is where `.loc[]`
+comes in. For the first example, recall `.loc[]` from Chapter {ref}`intro`,
+which lets us create a subset of columns from a data frame.
+Suppose we wanted to select only the columns `language`, `region`,
+`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
+learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets:
+
+```{code-cell} ipython3
+selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
+selected_columns
+```
+We pass `:` before the comma indicating we want to retrieve all rows, and the list indicates
+the columns that we want.
+
+Note that we could obtain the same result by stating that we would like all of the columns
+from `language` through `most_at_work`. Instead of passing a list of all of the column
+names that we want, we can ask for the range of columns `"language":"most_at_work"`, which
+you can read as "The columns from `language` to (`:`) `most_at_work`.
+
+```{code-cell} ipython3
+selected_columns = tidy_lang.loc[:, "language":"most_at_work"]
+selected_columns
+```
+
+Similarly, you can ask for all of the columns including and after `language` by doing the following
+
+```{code-cell} ipython3
+selected_columns = tidy_lang.loc[:, "language":]
+selected_columns
+```
+
+By not putting anything after the `:`, python reads this as "from `language` until the last column".
+Although the notation for selecting a range using `:` is convienent because less code is required,
+it must be used carefully. If you were to re-order columns or add a column to the data frame, the
+output would change. Using a list is more explicit and less prone to potential confusion.
+
+Suppose instead we wanted to extract columns that followed a particular pattern
+rather than just selecting a range. For example, let's say we wanted only to select the
+columns `most_at_home` and `most_at_work`. There are other functions that allow
+us to select variables based on their names. In particular, we can use the `.str.startswith` method
+to choose only the columns that start with the word "most":
+
+```{code-cell} ipython3
+tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
+```
+
+```{index} pandas.Series; str.contains
+```
+
+We could also have chosen the columns containing an underscore `_` by using the
+`.str.contains("_")`, since we notice
+the columns we want contain underscores and the others don't.
+
+```{code-cell} ipython3
+tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
+```
+
+There are many different functions that help with selecting
+variables based on certain criteria.
+The additional resources section at the end of this chapter
+provides a comprehensive resource on these functions.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# There are many different `select` helpers that select
+# variables based on certain criteria.
+# The additional resources section at the end of this chapter
+# provides a comprehensive resource on `select` helpers.
+```
+
+## Using `.iloc[]` to extract a range of columns
+```{index} pandas.DataFrame; iloc[], column range
+```
+Another approach for selecting columns is to use `.iloc[]`
+which allows us to index with integers rather than the names of the columns.
+For example, the column names of the `tidy_lang` data frame are
+`['category', 'language', 'region', 'most_at_home', 'most_at_work']`.
+
+Then using `.iloc[]` you can ask for the `language` column by doing
+
+```{code-cell} ipython3
+column = tidy_lang.iloc[:, 1]
+column
+```
+
+You can also ask for multiple columns as we did with `[]`. We pass `:` before
+the comma indicating we want to retrieve all rows, and `1:` after the comma
+indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
+
+```{code-cell} ipython3
+column_range = tidy_lang.iloc[:, 1:]
+column_range
+```
+
+This is less commonly used and needs to be used with care; it is easy
+accidentally put in the wrong integer because you didn't remember if `language`
+was column number 1 or 2.
+
+Notice that we get the same output as we did
+
+```{index} pandas.Series; str.startswith
+```
 
 +++ {"tags": []}
 
@@ -1180,28 +1047,27 @@ than French in Montréal according to the 2016 Canadian census.
 
 ### Using `.assign` to modify columns
 
-```{index} pandas.DataFrame; df[]
+```{index} pandas.DataFrame; []
 ```
 
-In Section {ref}`str-split`, 
+In Section {ref}`str-split`,
 when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-all of the variables were "object" data types. 
-During the tidying process, 
-we used the `pandas.to_numeric` function 
-to convert the `most_at_home` and `most_at_work` columns 
-to the desired integer (i.e., numeric class) data types and then used `df[]` to overwrite columns. 
-But suppose we didn't use the `df[]`,
+all of the variables were "object" data types.
+During the tidying process,
+we used the `pandas.to_numeric` function
+to convert the `most_at_home` and `most_at_work` columns
+to the desired integer (i.e., numeric class) data types and then used `[]` to overwrite columns.
+But suppose we didn't use the `[]`,
 and needed to modify the columns some other way.
-Below we create such a situation 
+Below we create such a situation
 so that we can demonstrate how to use `.assign`
-to change the column types of a data frame. 
+to change the column types of a data frame.
 `.assign` is a useful function to modify or create new data frame columns.
 
 ```{code-cell} ipython3
 lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
 lang_messy_longer = lang_messy.melt(
     id_vars=["category", "language"],
-    value_vars=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
     var_name="region",
     value_name="value",
 )
@@ -1219,23 +1085,23 @@ official_langs_obj
 ```
 
 ```{code-cell} ipython3
-official_langs_obj.dtypes
+official_langs_obj.info()
 ```
 
-To use the `.assign` method, again we first specify the object to be the data set, 
-and in the following arguments, 
-we specify the name of the column we want to modify or create 
+To use the `.assign` method, again we first specify the object to be the data set,
+and in the following arguments,
+we specify the name of the column we want to modify or create
 (here `most_at_home` and `most_at_work`), an `=` sign,
 and then the function we want to apply (here `pandas.to_numeric`).
-In the function we want to apply, 
-we refer to the column upon which we want it to act 
+In the function we want to apply,
+we refer to the column upon which we want it to act
 (here `most_at_home` and `most_at_work`).
 In our example, we are naming the columns the same
-names as columns that already exist in the data frame 
-("most\_at\_home", "most\_at\_work") 
-and this will cause `.assign` to *overwrite* those columns 
+names as columns that already exist in the data frame
+("most\_at\_home", "most\_at\_work")
+and this will cause `.assign` to *overwrite* those columns
 (also referred to as modifying those columns *in-place*).
-If we were to give the columns a new name, 
+If we were to give the columns a new name,
 then `.assign` would create new columns with the names we specified.
 `.assign`'s general syntax is detailed in {numref}`fig:img-assign`.
 
@@ -1251,7 +1117,7 @@ Syntax for the `.assign` function.
 +++
 
 Below we use `.assign` to convert the columns `most_at_home` and `most_at_work`
-to numeric data types in the `official_langs` data set as described in 
+to numeric data types in the `official_langs` data set as described in
 {numref}`fig:img-assign`:
 
 ```{code-cell} ipython3
@@ -1264,7 +1130,7 @@ official_langs_numeric
 ```
 
 ```{code-cell} ipython3
-official_langs_numeric.dtypes
+official_langs_numeric.info()
 ```
 
 Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
@@ -1297,26 +1163,26 @@ the 2016 Canadian census. What does this number mean to us? To understand this
 number, we need context. In particular, how many people were in Toronto when
 this data was collected? From the 2016 Canadian census profile, the population
 of Toronto was reported to be
-{glue:text}`toronto_popn` people. 
-The number of people who report that English is their primary language at home 
-is much more meaningful when we report it in this context. 
-We can even go a step further and transform this count to a relative frequency 
+{glue:text}`toronto_popn` people.
+The number of people who report that English is their primary language at home
+is much more meaningful when we report it in this context.
+We can even go a step further and transform this count to a relative frequency
 or proportion.
-We can do this by dividing the number of people reporting a given language 
-as their primary language at home by the number of people who live in Toronto. 
-For example, 
-the proportion of people who reported that their primary language at home 
+We can do this by dividing the number of people reporting a given language
+as their primary language at home by the number of people who live in Toronto.
+For example,
+the proportion of people who reported that their primary language at home
 was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
 in Toronto.
 
-Let's use `.assign` to create a new column in our data frame 
-that holds the proportion of people who speak English 
-for our five cities of focus in this chapter. 
-To accomplish this, we will need to do two tasks 
+Let's use `.assign` to create a new column in our data frame
+that holds the proportion of people who speak English
+for our five cities of focus in this chapter.
+To accomplish this, we will need to do two tasks
 beforehand:
 
 1. Create a list containing the population values for the cities.
-2. Filter the `official_langs` data frame 
+2. Filter the `official_langs` data frame
 so that we only keep the rows where the language is English.
 
 To create a list containing the population values for the five cities
@@ -1328,7 +1194,7 @@ city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
 city_pops
 ```
 
-And next, we will filter the `official_langs` data frame 
+And next, we will filter the `official_langs` data frame
 so that we only keep the rows where the language is English.
 We will name the new data frame we get from this `english_langs`:
 
@@ -1337,8 +1203,8 @@ english_langs = official_langs[official_langs["language"] == "English"]
 english_langs
 ```
 
-Finally, we can use `.assign` to create a new column, 
-named `most_at_home_proportion`, that will have value that corresponds to 
+Finally, we can use `.assign` to create a new column,
+named `most_at_home_proportion`, that will have value that corresponds to
 the proportion of people reporting English as their primary
 language at home.
 We will compute this by dividing the column by our vector of city populations.
@@ -1353,14 +1219,14 @@ english_langs
 
 In the computation above, we had to ensure that we ordered the `city_pops` vector in the
 same order as the cities were listed in the `english_langs` data frame.
-This is because Python will perform the division computation we did by dividing 
-each element of the `most_at_home` column by each element of the 
+This is because Python will perform the division computation we did by dividing
+each element of the `most_at_home` column by each element of the
 `city_pops` list, matching them up by position.
 Failing to do this would have resulted in the incorrect math being performed.
 
-> **Note:** In more advanced data wrangling, 
-> one might solve this problem in a less error-prone way though using 
-> a technique called "joins". 
+> **Note:** In more advanced data wrangling,
+> one might solve this problem in a less error-prone way though using
+> a technique called "joins".
 > We link to resources that discuss this in the additional
 > resources at the end of this chapter.
 
@@ -1369,21 +1235,21 @@ Failing to do this would have resulted in the incorrect math being performed.
 <!--
 #### Creating a visualization with tidy data {-}
 
-Now that we have cleaned and wrangled the data, we can make visualizations or do 
+Now that we have cleaned and wrangled the data, we can make visualizations or do
 statistical analyses to answer questions about it! Let's suppose we want to
-answer the question "what proportion of people in each city speak English 
+answer the question "what proportion of people in each city speak English
 as their primary language at home in these five cities?" Since the data is
 cleaned already, in a few short lines of code, we can use `ggplot` to create a
 data visualization to answer this question! Here we create a bar plot to represent the proportions for
 each region and color the proportions by language.
 
-> Don't worry too much about the code to make this plot for now. We will cover 
+> Don't worry too much about the code to make this plot for now. We will cover
 > visualizations in detail in Chapter \@ref(viz).
 
 ```{r 02-plot, out.width = "100%", fig.cap = "Bar plot of proportions of Canadians reporting English as the most often spoken language at home."}
 ggplot(english_langs,
   aes(
-    x = region, 
+    x = region,
     y = most_at_home_proportion
   )
  ) +
@@ -1413,7 +1279,7 @@ frame called `data`:
 2)  filter for rows where another column, `other_col`, is more than 5, and
 3)  select only the new column `new_col` for those rows.
 
-One way of performing these three steps is to just write 
+One way of performing these three steps is to just write
 multiple lines of code, storing temporary objects as you go:
 
 ```{code-cell} ipython3
@@ -1450,7 +1316,7 @@ each subsequent line.
 +++
 
 Chaining the sequential functions solves this problem, resulting in cleaner and
-easier-to-follow code. 
+easier-to-follow code.
 The code below accomplishes the same thing as the previous
 two code blocks:
 
@@ -1468,8 +1334,8 @@ output = (
 :tags: [remove-cell]
 
 # ``` {r eval = F}
-# output <- select(filter(mutate(data, new_col = old_col * 2), 
-#                         other_col > 5), 
+# output <- select(filter(mutate(data, new_col = old_col * 2),
+#                         other_col > 5),
 #                  new_col)
 # ```
 # Code like this can also be difficult to understand. Functions compose (reading
@@ -1479,10 +1345,10 @@ output = (
 
 # The *pipe operator* (`|>`) solves this problem, resulting in cleaner and
 # easier-to-follow code. `|>` is built into R so you don't need to load any
-# packages to use it. 
+# packages to use it.
 # You can think of the pipe as a physical pipe. It takes the output from the
 # function on the left-hand side of the pipe, and passes it as the first argument
-# to the function on the right-hand side of the pipe. 
+# to the function on the right-hand side of the pipe.
 # The code below accomplishes the same thing as the previous
 # two code blocks:
 ```
@@ -1491,7 +1357,7 @@ output = (
 > lines, similar to when we did this earlier in the chapter
 > for long function calls. Again, this is allowed and recommended, especially when
 > the chained function calls create a long line of code. Doing this makes
-> your code more readable. When you do this, it is important to use parentheses 
+> your code more readable. When you do this, it is important to use parentheses
 > to tell Python that your code is continuing onto the next line.
 
 ```{code-cell} ipython3
@@ -1507,28 +1373,28 @@ output = (
 
 # > **Note:** In this textbook, we will be using the base R pipe operator syntax, `|>`.
 # > This base R `|>` pipe operator was inspired by a previous version of the pipe
-# > operator, `%>%`. The `%>%` pipe operator is not built into R 
-# > and is from the `magrittr` R package. 
-# > The `tidyverse` metapackage imports the `%>%` pipe operator via `dplyr` 
+# > operator, `%>%`. The `%>%` pipe operator is not built into R
+# > and is from the `magrittr` R package.
+# > The `tidyverse` metapackage imports the `%>%` pipe operator via `dplyr`
 # > (which in turn imports the `magrittr` R package).
-# > There are some other differences between `%>%` and `|>` related to 
-# > more advanced R uses, such as sharing and distributing code as R packages, 
-# > however, these are beyond the scope of this textbook. 
+# > There are some other differences between `%>%` and `|>` related to
+# > more advanced R uses, such as sharing and distributing code as R packages,
+# > however, these are beyond the scope of this textbook.
 # > We have this note in the book to make the reader aware that `%>%` exists
-# > as it is still commonly used in data analysis code and in many data science 
+# > as it is still commonly used in data analysis code and in many data science
 # > books and other resources.
 # > In most cases these two pipes are interchangeable and either can be used.
 
 # \index{pipe}\index{aaapipesymbb@\%>\%|see{pipe}}
 ```
 
-### Chaining `df[]` and `.loc`
+### Chaining `[]` and `.loc`
 
 +++
 
-Let's work with the tidy `tidy_lang` data set from Section {ref}`str-split`, 
-which contains the number of Canadians reporting their primary language at home 
-and work for five major cities 
+Let's work with the tidy `tidy_lang` data set from Section {ref}`str-split`,
+which contains the number of Canadians reporting their primary language at home
+and work for five major cities
 (Toronto, Montréal, Vancouver, Calgary, and Edmonton):
 
 ```{code-cell} ipython3
@@ -1537,7 +1403,7 @@ tidy_lang
 
 Suppose we want to create a subset of the data with only the languages and
 counts of each language spoken most at home for the city of Vancouver. To do
-this, we can use the `df[]` and `.loc`. First, we use `df[]` to
+this, we can use the `[]` and `.loc`. First, we use `[]` to
 create a data frame called `van_data` that contains only values for Vancouver.
 
 ```{code-cell} ipython3
@@ -1554,8 +1420,8 @@ van_data_selected
 
 Although this is valid code, there is a more readable approach we could take by
 chaining the operations. With chaining, we do not need to create an intermediate
-object to store the output from `df[]`. Instead, we can directly call `.loc` upon the
-output of `df[]`:
+object to store the output from `[]`. Instead, we can directly call `.loc` upon the
+output of `[]`:
 
 ```{code-cell} ipython3
 van_data_selected = tidy_lang[tidy_lang["region"] == "Vancouver"].loc[
@@ -1568,12 +1434,12 @@ van_data_selected
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# But wait...Why do the `select` and `filter` function calls 
-# look different in these two examples? 
-# Remember: when you use the pipe, 
-# the output of the first function is automatically provided 
-# as the first argument for the function that comes after it. 
-# Therefore you do not specify the first argument in that function call. 
+# But wait...Why do the `select` and `filter` function calls
+# look different in these two examples?
+# Remember: when you use the pipe,
+# the output of the first function is automatically provided
+# as the first argument for the function that comes after it.
+# Therefore you do not specify the first argument in that function call.
 # In the code above,
 # the first line is just the `tidy_lang` data frame with a pipe.
 # The pipe passes the left-hand side (`tidy_lang`) to the first argument of the function on the right (`filter`),
@@ -1591,21 +1457,21 @@ approach is clearer and more readable.
 
 +++
 
-Chaining can be used with any method in Python. 
-Additionally, we can chain together more than two functions. 
-For example, we can chain together three functions to: 
+Chaining can be used with any method in Python.
+Additionally, we can chain together more than two functions.
+For example, we can chain together three functions to:
 
-- extract rows (`df[]`) to include only those where the counts of the language most spoken at home are greater than 10,000, 
+- extract rows (`[]`) to include only those where the counts of the language most spoken at home are greater than 10,000,
 - extract only the columns (`.loc`) corresponding to `region`, `language` and `most_at_home`, and
-- sort the data frame rows in order (`.sort_values`) by counts of the language most spoken at home 
+- sort the data frame rows in order (`.sort_values`) by counts of the language most spoken at home
 from smallest to largest.
 
 ```{index} pandas.DataFrame; sort_values
 ```
 
-As we saw in Chapter {ref}`intro`, 
-we can use the `.sort_values` function 
-to order the rows in the data frame by the values of one or more columns. 
+As we saw in Chapter {ref}`intro`,
+we can use the `.sort_values` function
+to order the rows in the data frame by the values of one or more columns.
 Here we pass the column name `most_at_home` to sort the data frame rows by the values in that column, in ascending order.
 
 ```{code-cell} ipython3
@@ -1626,7 +1492,7 @@ large_region_lang
 # using it as the first argument of the first function. These two choices are equivalent,
 # and we get the same result.
 # ``` {r}
-# large_region_lang <- tidy_lang |> 
+# large_region_lang <- tidy_lang |>
 #   filter(most_at_home > 10000) |>
 #   select(region, language, most_at_home) |>
 #   arrange(most_at_home)
@@ -1636,12 +1502,12 @@ large_region_lang
 ```
 
 Now that we've shown you chaining as an alternative to storing
-temporary objects and composing code, does this mean you should *never* store 
-temporary objects or compose code? Not necessarily! 
-There are times when you will still want to do these things. 
-For example, you might store a temporary object before feeding it into a plot function 
+temporary objects and composing code, does this mean you should *never* store
+temporary objects or compose code? Not necessarily!
+There are times when you will still want to do these things.
+For example, you might store a temporary object before feeding it into a plot function
 so you can iteratively change the plot without having to
-redo all of your data transformations. 
+redo all of your data transformations.
 Additionally, chaining many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.
@@ -1658,12 +1524,12 @@ before moving on with further steps.
 ```
 
 As a part of many data analyses, we need to calculate a summary value for the
-data (a *summary statistic*). 
-Examples of summary statistics we might want to calculate 
-are the number of observations, the average/mean value for a column, 
-the minimum value, etc. 
-Oftentimes, 
-this summary statistic is calculated from the values in a data frame column, 
+data (a *summary statistic*).
+Examples of summary statistics we might want to calculate
+are the number of observations, the average/mean value for a column,
+the minimum value, etc.
+Oftentimes,
+this summary statistic is calculated from the values in a data frame column,
 or columns, as shown in {numref}`fig:summarize`.
 
 +++ {"tags": []}
@@ -1684,11 +1550,11 @@ First a reminder of what `region_lang` looks like:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# A useful `dplyr` function for calculating summary statistics is `summarize`, 
+# A useful `dplyr` function for calculating summary statistics is `summarize`,
 # where the first argument is the data frame and subsequent arguments
-# are the summaries we want to perform. 
-# Here we show how to use the `summarize` function to calculate the minimum 
-# and maximum number of Canadians 
+# are the summaries we want to perform.
+# Here we show how to use the `summarize` function to calculate the minimum
+# and maximum number of Canadians
 # reporting a particular language as their primary language at home.
 # First a reminder of what `region_lang` looks like:
 ```
@@ -1698,9 +1564,9 @@ region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
 ```
 
-We apply `min` to calculate the minimum 
-and `max` to calculate maximum number of Canadians 
-reporting a particular language as their primary language at home, 
+We apply `min` to calculate the minimum
+and `max` to calculate maximum number of Canadians
+reporting a particular language as their primary language at home,
 for any region, and `.assign` a column name to each:
 
 ```{code-cell} ipython3
@@ -1744,15 +1610,15 @@ people.
 ```{index} see: NaN; missing data
 ```
 
-In `pandas` DataFrame, the value `NaN` is often used to denote missing data. 
-Many of the base python statistical summary functions 
-(e.g., `max`, `min`, `sum`, etc) will return `NaN` 
-when applied to columns containing `NaN` values. 
-Usually that is not what we want to happen; 
+In `pandas` DataFrame, the value `NaN` is often used to denote missing data.
+Many of the base python statistical summary functions
+(e.g., `max`, `min`, `sum`, etc) will return `NaN`
+when applied to columns containing `NaN` values.
+Usually that is not what we want to happen;
 instead, we would usually like Python to ignore the missing entries
 and calculate the summary statistic using all of the other non-`NaN` values
 in the column.
-Fortunately `pandas` provides many equivalent methods (e.g., `.max`, `.min`, `.sum`, etc) to 
+Fortunately `pandas` provides many equivalent methods (e.g., `.max`, `.min`, `.sum`, etc) to
 these summary functions while providing an extra argument `skipna` that lets
 us tell the function what to do when it encounters `NaN` values.
 In particular, if we specify `skipna=True` (default), the function will ignore
@@ -1760,17 +1626,17 @@ missing values and return a summary of all the non-missing entries.
 We show an example of this below.
 
 First we create a new version of the `region_lang` data frame,
-named `region_lang_na`, that has a seemingly innocuous `NaN` 
+named `region_lang_na`, that has a seemingly innocuous `NaN`
 in the first row of the `most_at_home` column:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# In data frames in R, the value `NA` is often used to denote missing data. 
-# Many of the base R statistical summary functions 
-# (e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA` 
+# In data frames in R, the value `NA` is often used to denote missing data.
+# Many of the base R statistical summary functions
+# (e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA`
 # when applied to columns containing `NA` values. \index{missing data}\index{NA|see{missing data}}
-# Usually that is not what we want to happen; 
+# Usually that is not what we want to happen;
 # instead, we would usually like R to ignore the missing entries
 # and calculate the summary statistic using all of the other non-`NA` values
 # in the column.
@@ -1792,8 +1658,8 @@ region_lang_na.loc[0, "most_at_home"] = np.nan
 region_lang_na
 ```
 
-Now if we apply the Python built-in summary function as above, 
-we see that we no longer get the minimum and maximum returned, 
+Now if we apply the Python built-in summary function as above,
+we see that we no longer get the minimum and maximum returned,
 but just an `NaN` instead!
 
 ```{code-cell} ipython3
@@ -1827,11 +1693,11 @@ lang_summary_na
 ```{index} pandas.DataFrame; groupby
 ```
 
-A common pairing with summary functions is `.groupby`. Pairing these functions 
+A common pairing with summary functions is `.groupby`. Pairing these functions
 together can let you summarize values for subgroups within a data set,
-as illustrated in {numref}`fig:summarize-groupby`. 
-For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians 
-reporting the language as the primary language at home 
+as illustrated in {numref}`fig:summarize-groupby`.
+For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
+reporting the language as the primary language at home
 for each of the regions in the data set.
 
 ```{code-cell} ipython3
@@ -1839,9 +1705,9 @@ for each of the regions in the data set.
 
 # A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
 # together can let you summarize values for subgroups within a data set,
-# as illustrated in Figure \@ref(fig:summarize-groupby). 
-# For example, we can use `group_by` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians 
-# reporting the language as the primary language at home 
+# as illustrated in Figure \@ref(fig:summarize-groupby).
+# For example, we can use `group_by` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
+# reporting the language as the primary language at home
 # for each of the regions in the data set.
 
 # (ref:summarize-groupby) `summarize` and `group_by` is useful for calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
@@ -1888,11 +1754,11 @@ Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` obj
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# Notice that `group_by` on its own doesn't change the way the data looks. 
-# In the output below, the grouped data set looks the same, 
-# and it doesn't *appear* to be grouped by `region`. 
-# Instead, `group_by` simply changes how other functions work with the data, 
-# as we saw with `summarize` above.  
+# Notice that `group_by` on its own doesn't change the way the data looks.
+# In the output below, the grouped data set looks the same,
+# and it doesn't *appear* to be grouped by `region`.
+# Instead, `group_by` simply changes how other functions work with the data,
+# as we saw with `summarize` above.
 ```
 
 ```{code-cell} ipython3
@@ -1905,11 +1771,11 @@ region_lang.groupby("region")
 
 Sometimes we need to summarize statistics across many columns.
 An example of this is illustrated in {numref}`fig:summarize-across`.
-In such a case, using summary functions alone means that we have to 
+In such a case, using summary functions alone means that we have to
 type out the name of each column we want to summarize.
-In this section we will meet two strategies for performing this task. 
+In this section we will meet two strategies for performing this task.
 First we will see how we can do this using `.iloc[]` to slice the columns before applying summary functions.
-Then we will also explore how we can use a more general iteration function, 
+Then we will also explore how we can use a more general iteration function,
 `.apply`, to also accomplish this.
 
 ```{code-cell} ipython3
@@ -1917,11 +1783,11 @@ Then we will also explore how we can use a more general iteration function,
 
 # Sometimes we need to summarize statistics across many columns.
 # An example of this is illustrated in Figure \@ref(fig:summarize-across).
-# In such a case, using `summarize` alone means that we have to 
+# In such a case, using `summarize` alone means that we have to
 # type out the name of each column we want to summarize.
-# In this section we will meet two strategies for performing this task. 
+# In this section we will meet two strategies for performing this task.
 # First we will see how we can do this using `summarize` + `across`.
-# Then we will also explore how we can use a more general iteration function, 
+# Then we will also explore how we can use a more general iteration function,
 # `map`, to also accomplish this.
 ```
 
@@ -1943,9 +1809,9 @@ Then we will also explore how we can use a more general iteration function,
 ```{index} column range
 ```
 
-Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value 
+Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value
 of each of the numeric
-columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the 
+columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the
 summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames as well.
 
 ```{code-cell} ipython3
@@ -1958,35 +1824,35 @@ jupyter:
   source_hidden: true
 tags: [remove-cell]
 ---
-# To summarize statistics across many columns, we can use the 
+# To summarize statistics across many columns, we can use the
 # `summarize` function we have just recently learned about.
-# However, in such a case, using `summarize` alone means that we have to 
-# type out the name of each column we want to summarize. 
+# However, in such a case, using `summarize` alone means that we have to
+# type out the name of each column we want to summarize.
 # To do this more efficiently, we can pair `summarize` with `across` \index{across}
 # and use a colon `:` to specify a range of columns we would like  \index{column range}
 # to perform the statistical summaries on.
-# Here we demonstrate finding the maximum value 
+# Here we demonstrate finding the maximum value
 # of each of the numeric
 # columns of the `region_lang` data set.
 
 # ``` {r 02-across-data}
 # region_lang |>
 #   summarize(across(mother_tongue:lang_known, max))
-# ``` 
+# ```
 
-# > **Note:** Similar to when we use base R statistical summary functions 
-# > (e.g., `max`, `min`, `mean`, `sum`, etc) with `summarize` alone, 
-# > the use of the `summarize` + `across` functions paired 
+# > **Note:** Similar to when we use base R statistical summary functions
+# > (e.g., `max`, `min`, `mean`, `sum`, etc) with `summarize` alone,
+# > the use of the `summarize` + `across` functions paired
 # > with base R statistical summary functions
-# > also return `NA`s when we apply them to columns that 
+# > also return `NA`s when we apply them to columns that
 # > contain `NA`s in the data frame.  \index{missing data}
-# > 
+# >
 # > To avoid this, again we need to add the argument `na.rm = TRUE`,
 # > but in this case we need to use it a little bit differently.
 # > In this case, we need to add a `,` and then `na.rm = TRUE`,
-# > after specifying the function we want `summarize` + `across` to apply, 
+# > after specifying the function we want `summarize` + `across` to apply,
 # > as illustrated below:
-# > 
+# >
 # > ``` {r}
 # > region_lang_na |>
 # >   summarize(across(mother_tongue:lang_known, max, na.rm = TRUE))
@@ -2005,9 +1871,9 @@ An alternative to aggregating on a dataframe
 for applying a function to many columns is the `.apply` method.
 Let's again find the maximum value of each column of the
 `region_lang` data frame, but using `.apply` with the `max` function this time.
-We focus on the two arguments of `.apply`: 
+We focus on the two arguments of `.apply`:
 the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
-Note that `.apply` does not have an argument 
+Note that `.apply` does not have an argument
 to specify *which* columns to apply the function to.
 Therefore, we will use the `.iloc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
@@ -2018,14 +1884,14 @@ jupyter:
   source_hidden: true
 tags: [remove-cell]
 ---
-# An alternative to `summarize` and `across` 
+# An alternative to `summarize` and `across`
 # for applying a function to many columns is the `map` family of functions. \index{map}
 # Let's again find the maximum value of each column of the
 # `region_lang` data frame, but using `map` with the `max` function this time.
-# `map` takes two arguments: 
-# an object (a vector, data frame or list) that you want to apply the function to, 
+# `map` takes two arguments:
+# an object (a vector, data frame or list) that you want to apply the function to,
 # and the function that you would like to apply to each column.
-# Note that `map` does not have an argument 
+# Note that `map` does not have an argument
 # to specify *which* columns to apply the function to.
 # Therefore, we will use the `select` function before calling `map`
 # to choose the columns for which we want the maximum.
@@ -2038,15 +1904,15 @@ pd.DataFrame(region_lang.iloc[:, 3:].apply(max, axis=0)).T
 ```{index} missing data
 ```
 
-> **Note:** Similar to when we use base Python statistical summary functions 
-> (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s, 
+> **Note:** Similar to when we use base Python statistical summary functions
+> (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s,
 > `.apply` functions paired with base Python statistical summary functions
-> also return `NaN` values when we apply them to columns that 
-> contain `NaN` values. 
-> 
+> also return `NaN` values when we apply them to columns that
+> contain `NaN` values.
+>
 > To avoid this, again we need to use the `pandas` variants of summary functions (*i.e.*
 > `.max`, `.min`, `.sum`, etc.) with `skipna=True`.
-> When we use this with `.apply`, we do this by constructing a anonymous function that calls 
+> When we use this with `.apply`, we do this by constructing a anonymous function that calls
 > the `.max` method with `skipna=True`, as illustrated below:
 
 ```{code-cell} ipython3
@@ -2055,9 +1921,9 @@ pd.DataFrame(
 ).T
 ```
 
-The `.apply` function is generally quite useful for solving many problems 
-involving repeatedly applying functions in Python. 
-Additionally, a variant of `.apply` is `.applymap`, 
+The `.apply` function is generally quite useful for solving many problems
+involving repeatedly applying functions in Python.
+Additionally, a variant of `.apply` is `.applymap`,
 which can be used to apply functions element-wise.
 To learn more about these functions, see the additional resources
 section at the end of this chapter.
@@ -2065,7 +1931,7 @@ section at the end of this chapter.
 +++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
 
 <!-- > **Note:** The `map` function comes from the `purrr` package. But since
-> `purrr` is part of the tidyverse, once we call `library(tidyverse)` we 
+> `purrr` is part of the tidyverse, once we call `library(tidyverse)` we
 > do not need to load the `purrr` package separately.
 
 The output looks a bit weird... we passed in a data frame, but the output
@@ -2080,7 +1946,7 @@ region_lang |>
 ```
 
 So what do we do? Should we convert this to a data frame? We could, but a
-simpler alternative is to just use a different `map` function. There 
+simpler alternative is to just use a different `map` function. There
 are quite a few to choose from, they all work similarly, but
 their name reflects the type of output you want from the mapping operation.
 Table \@ref(tab:map-table) lists the commonly used `map` functions as well
@@ -2107,24 +1973,24 @@ region_lang |>
   map_dfr(max)
 ```
 
-> **Note:** Similar to when we use base R statistical summary functions 
-> (e.g., `max`, `min`, `mean`, `sum`, etc.) with `summarize`, 
+> **Note:** Similar to when we use base R statistical summary functions
+> (e.g., `max`, `min`, `mean`, `sum`, etc.) with `summarize`,
 > `map` functions paired with base R statistical summary functions
-> also return `NA` values when we apply them to columns that 
+> also return `NA` values when we apply them to columns that
 > contain `NA` values. \index{missing data}
-> 
+>
 > To avoid this, again we need to add the argument `na.rm = TRUE`.
-> When we use this with `map`, we do this by adding a `,` 
+> When we use this with `map`, we do this by adding a `,`
 > and then `na.rm = TRUE` after specifying the function, as illustrated below:
-> 
+>
 > ``` {r}
 > region_lang_na |>
 >   select(mother_tongue:lang_known) |>
 >   map_dfr(max, na.rm = TRUE)
 > ```
 
-The `map` functions are generally quite useful for solving many problems 
-involving repeatedly applying functions in R. 
+The `map` functions are generally quite useful for solving many problems
+involving repeatedly applying functions in R.
 Additionally, their use is not limited to columns of a data frame;
 `map` family functions can be used to apply functions to elements of a vector,
 or a list, and even to lists of (nested!) data frames.
@@ -2135,8 +2001,8 @@ section at the end of this chapter. -->
 
 ## Apply functions across many columns with `.apply`
 
-Sometimes we need to apply a function to many columns in a data frame. 
-For example, we would need to do this when converting units of measurements across many columns. 
+Sometimes we need to apply a function to many columns in a data frame.
+For example, we would need to do this when converting units of measurements across many columns.
 We illustrate such a data transformation in {numref}`fig:mutate-across`.
 
 +++ {"tags": []}
@@ -2150,11 +2016,11 @@ We illustrate such a data transformation in {numref}`fig:mutate-across`.
 
 +++
 
-For example, 
-imagine that we wanted to convert all the numeric columns 
-in the `region_lang` data frame from `int64` type to `int32` type 
+For example,
+imagine that we wanted to convert all the numeric columns
+in the `region_lang` data frame from `int64` type to `int32` type
 using the `.as_type` function.
-When we revisit the `region_lang` data frame, 
+When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 
 ```{code-cell} ipython3
@@ -2163,11 +2029,11 @@ jupyter:
   source_hidden: true
 tags: [remove-cell]
 ---
-# For example, 
-# imagine that we wanted to convert all the numeric columns 
-# in the `region_lang` data frame from double type to integer type 
+# For example,
+# imagine that we wanted to convert all the numeric columns
+# in the `region_lang` data frame from double type to integer type
 # using the `as.integer` function.
-# When we revisit the `region_lang` data frame, 
+# When we revisit the `region_lang` data frame,
 # we can see that this would be the columns from `mother_tongue` to `lang_known`.
 ```
 
@@ -2179,12 +2045,12 @@ region_lang
 ```
 
 To accomplish such a task, we can use `.apply`.
-This works in a similar way for column selection, 
+This works in a similar way for column selection,
 as we saw when we used in Section {ref}`apply-summary` earlier.
-As we did above, 
+As we did above,
 we again use `.iloc` to specify the columns
 as well as the `.apply` to specify the function we want to apply on these columns.
-However, a key difference here is that we are not using aggregating function here, 
+However, a key difference here is that we are not using aggregating function here,
 which means that we get back a data frame with the same number of rows.
 
 ```{code-cell} ipython3
@@ -2194,17 +2060,17 @@ jupyter:
 tags: [remove-cell]
 ---
 # To accomplish such a task, we can use `mutate` paired with `across`. \index{across}
-# This works in a similar way for column selection, 
+# This works in a similar way for column selection,
 # as we saw when we used `summarize` + `across` earlier.
-# As we did above, 
+# As we did above,
 # we again use `across` to specify the columns using `select` syntax
 # as well as the function we want to apply on the specified columns.
-# However, a key difference here is that we are using `mutate`, 
+# However, a key difference here is that we are using `mutate`,
 # which means that we get back a data frame with the same number of rows.
 ```
 
 ```{code-cell} ipython3
-region_lang.dtypes
+region_lang.info()
 ```
 
 ```{code-cell} ipython3
@@ -2214,19 +2080,19 @@ region_lang_int32
 ```
 
 ```{code-cell} ipython3
-region_lang_int32.dtypes
+region_lang_int32.info()
 ```
 
 We see that we get back a data frame
 with the same number of columns and rows.
-The only thing that changes is the transformation we applied 
+The only thing that changes is the transformation we applied
 to the specified columns (here `mother_tongue` to `lang_known`).
 
 +++
 
 ## Apply functions across columns within one row with `.apply`
 
-What if you want to apply a function across columns but within one row? 
+What if you want to apply a function across columns but within one row?
 We illustrate such a data transformation in {numref}`fig:rowwise`.
 
 +++ {"tags": []}
@@ -2241,12 +2107,12 @@ We illustrate such a data transformation in {numref}`fig:rowwise`.
 +++
 
 For instance, suppose we want to know the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work` 
+`most_at_home`, `most_at_work`
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
 Before we use `.apply`, we will again use `.iloc` to select only the count columns
-so we can see all the columns in the data frame's output easily in the book. 
+so we can see all the columns in the data frame's output easily in the book.
 So for this demonstration, the data set we are operating on looks like this:
 
 ```{code-cell} ipython3
@@ -2256,15 +2122,15 @@ jupyter:
 tags: [remove-cell]
 ---
 # For instance, suppose we want to know the maximum value between `mother_tongue`,
-# `most_at_home`, `most_at_work` 
+# `most_at_home`, `most_at_work`
 # and `lang_known` for each language and region
 # in the `region_lang` data set.
 # In other words, we want to apply the `max` function *row-wise.*
-# We will use the (aptly named) `rowwise` function in combination with `mutate` 
-# to accomplish this task. 
+# We will use the (aptly named) `rowwise` function in combination with `mutate`
+# to accomplish this task.
 
 # Before we apply `rowwise`, we will `select` only the count columns \index{rowwise}
-# so we can see all the columns in the data frame's output easily in the book. 
+# so we can see all the columns in the data frame's output easily in the book.
 # So for this demonstration, the data set we are operating on looks like this:
 ```
 
@@ -2274,7 +2140,7 @@ region_lang.iloc[:, 3:]
 
 Now we use `.apply` with argument `axis=1`, to tell Python that we would like
 the `max` function to be applied across, and within, a row,
-as opposed to being applied on a column 
+as opposed to being applied on a column
 (which is the default behavior of `.apply`):
 
 ```{code-cell} ipython3
@@ -2285,7 +2151,7 @@ tags: [remove-cell]
 ---
 # Now we apply `rowwise` before `mutate`, to tell R that we would like
 # the mutate function to be applied across, and within, a row,
-# as opposed to being applied on a column 
+# as opposed to being applied on a column
 # (which is the default behavior of `mutate`):
 ```
 
@@ -2297,7 +2163,7 @@ region_lang_rowwise = region_lang.assign(
 region_lang_rowwise
 ```
 
-We see that we get an additional column added to the data frame, 
+We see that we get an additional column added to the data frame,
 named `maximum`, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region.
@@ -2308,52 +2174,52 @@ jupyter:
   source_hidden: true
 tags: [remove-cell]
 ---
-# Similar to `group_by`, 
-# `rowwise` doesn't appear to do anything when it is called by itself. 
-# However, we can apply `rowwise` in combination 
+# Similar to `group_by`,
+# `rowwise` doesn't appear to do anything when it is called by itself.
+# However, we can apply `rowwise` in combination
 # with other functions to change how these other functions operate on the data.
-# Notice if we used `mutate` without `rowwise`, 
-# we would have computed the maximum value across *all* rows 
-# rather than the maximum value for *each* row. 
+# Notice if we used `mutate` without `rowwise`,
+# we would have computed the maximum value across *all* rows
+# rather than the maximum value for *each* row.
 # Below we show what would have happened had we not used
-# `rowwise`. In particular, the same maximum value is reported 
+# `rowwise`. In particular, the same maximum value is reported
 # in every single row; this code does not provide the desired result.
 
 # ```{r}
-# region_lang |> 
+# region_lang |>
 #   select(mother_tongue:lang_known) |>
-#   mutate(maximum = max(c(mother_tongue, 
-#                          most_at_home, 
-#                          most_at_home, 
+#   mutate(maximum = max(c(mother_tongue,
+#                          most_at_home,
+#                          most_at_home,
 #                          lang_known)))
 # ```
 ```
 
 ## Summary
 
-Cleaning and wrangling data can be a very time-consuming process. However, 
+Cleaning and wrangling data can be a very time-consuming process. However,
 it is a critical step in any data analysis. We have explored many different
-functions for cleaning and wrangling data into a tidy format. 
-{numref}`tab:summary-functions-table` summarizes some of the key wrangling 
-functions we learned in this chapter. In the following chapters, you will 
-learn how you can take this tidy data and do so much more with it to answer your 
+functions for cleaning and wrangling data into a tidy format.
+{numref}`tab:summary-functions-table` summarizes some of the key wrangling
+functions we learned in this chapter. In the following chapters, you will
+learn how you can take this tidy data and do so much more with it to answer your
 burning data science questions!
 
 +++
 
-```{table} Summary of wrangling functions 
+```{table} Summary of wrangling functions
 :name: tab:summary-functions-table
 
 | Function | Description |
-| ---      | ----------- | 
+| ---      | ----------- |
 | `.agg` | calculates aggregated summaries of inputs |
-| `.apply` | allows you to apply function(s) to multiple columns/rows  | 
-| `.assign` | adds or modifies columns in a data frame  | 
+| `.apply` | allows you to apply function(s) to multiple columns/rows  |
+| `.assign` | adds or modifies columns in a data frame  |
 | `.groupby` |  allows you to apply function(s) to groups of rows |
 | `.iloc` | subsets columns/rows of a data frame using integer indices |
-| `.loc` | subsets columns/rows of a data frame using labels | 
+| `.loc` | subsets columns/rows of a data frame using labels |
 | `.melt` | generally makes the data frame longer and narrower |
-| `.pivot` | generally makes a data frame wider and decreases the number of rows | 
+| `.pivot` | generally makes a data frame wider and decreases the number of rows |
 | `.str.split` | splits up a string column into multiple columns  |
 ```
 
@@ -2365,37 +2231,37 @@ tags: [remove-cell]
 ---
 # ## Summary
 
-# Cleaning and wrangling data can be a very time-consuming process. However, 
+# Cleaning and wrangling data can be a very time-consuming process. However,
 # it is a critical step in any data analysis. We have explored many different
-# functions for cleaning and wrangling data into a tidy format. 
-# Table \@ref(tab:summary-functions-table) summarizes some of the key wrangling 
-# functions we learned in this chapter. In the following chapters, you will 
-# learn how you can take this tidy data and do so much more with it to answer your 
+# functions for cleaning and wrangling data into a tidy format.
+# Table \@ref(tab:summary-functions-table) summarizes some of the key wrangling
+# functions we learned in this chapter. In the following chapters, you will
+# learn how you can take this tidy data and do so much more with it to answer your
 # burning data science questions!
 
 # \newpage
 
-# Table: (#tab:summary-functions-table) Summary of wrangling functions 
+# Table: (#tab:summary-functions-table) Summary of wrangling functions
 
 # | Function | Description |
-# | ---      | ----------- | 
-# | `across` | allows you to apply function(s) to multiple columns  | 
-# | `filter` | subsets rows of a data frame | 
+# | ---      | ----------- |
+# | `across` | allows you to apply function(s) to multiple columns  |
+# | `filter` | subsets rows of a data frame |
 # | `group_by` |  allows you to apply function(s) to groups of rows |
 # | `mutate` | adds or modifies columns in a data frame |
 # | `map` | general iteration function |
 # | `pivot_longer` | generally makes the data frame longer and narrower |
-# | `pivot_wider` | generally makes a data frame wider and decreases the number of rows | 
-# | `rowwise` | applies functions across columns within one row | 
-# | `separate` | splits up a character column into multiple columns  | 
+# | `pivot_wider` | generally makes a data frame wider and decreases the number of rows |
+# | `rowwise` | applies functions across columns within one row |
+# | `separate` | splits up a character column into multiple columns  |
 # | `select` | subsets columns of a data frame |
 # | `summarize` | calculates summaries of inputs |
 ```
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter 
-can be found in the accompanying 
+Practice exercises for the material covered in this chapter
+can be found in the accompanying
 [worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
 in the "Cleaning and wrangling data" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
@@ -2407,7 +2273,7 @@ and guidance that the worksheets provide will function as intended.
 
 +++ {"tags": []}
 
-## Additional resources 
+## Additional resources
 
 - The [`pandas` package documentation](https://pandas.pydata.org/docs/reference/index.html) is
   another resource to learn more about the functions in this
@@ -2433,14 +2299,14 @@ jupyter:
   source_hidden: true
 tags: [remove-cell]
 ---
-# ## Additional resources 
+# ## Additional resources
 
 # - As we mentioned earlier, `tidyverse` is actually an *R
 #   meta package*: it installs and loads a collection of R packages that all
 #   follow the tidy data philosophy we discussed above. One of the `tidyverse`
 #   packages is `dplyr`&mdash;a data wrangling workhorse. You have already met many
-#   of `dplyr`'s functions 
-#   (`select`, `filter`, `mutate`, `arrange`, `summarize`, and `group_by`). 
+#   of `dplyr`'s functions
+#   (`select`, `filter`, `mutate`, `arrange`, `summarize`, and `group_by`).
 #   To learn more about these functions and meet a few more useful
 #   functions, we recommend you check out Chapters 5-9 of the [STAT545 online notes](https://stat545.com/).
 #   of the data wrangling, exploration, and analysis with R book.
@@ -2450,10 +2316,10 @@ tags: [remove-cell]
 #   The site also provides a very nice cheat sheet that summarizes many of the
 #   data wrangling functions from this chapter.
 # - Check out the [`tidyselect` R package page](https://tidyselect.r-lib.org/index.html)
-#   [@tidyselect] for a comprehensive list of `select` helpers. 
-#   These helpers can be used to choose columns in a data frame when paired with  the `select` function 
+#   [@tidyselect] for a comprehensive list of `select` helpers.
+#   These helpers can be used to choose columns in a data frame when paired with  the `select` function
 #   (and other functions that use the `tidyselect` syntax, such as `pivot_longer`).
-#   The [documentation for `select` helpers](https://tidyselect.r-lib.org/reference/select_helpers.html) 
+#   The [documentation for `select` helpers](https://tidyselect.r-lib.org/reference/select_helpers.html)
 #   is a useful reference to find the helper you need for your particular problem.
 # - *R for Data Science* [@wickham2016r] has a few chapters related to
 #   data wrangling that go into more depth than this book. For example, the

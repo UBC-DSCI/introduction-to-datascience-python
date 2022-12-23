@@ -60,8 +60,8 @@ By the end of the chapter, readers will be able to do the following:
       - `and`
       - `or`
       - `[]`
-      - `.iloc[]`
       - `.loc[]`
+      - `.iloc[]`
 
 ## Data frames, series, and lists
 
@@ -881,25 +881,6 @@ pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
 pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# > **Note:** What's the difference between `==` and `%in%`? Suppose we have two
-# > vectors, `vectorA` and `vectorB`. If you type `vectorA == vectorB` into R it
-# > will compare the vectors element by element. R checks if the first element of
-# > `vectorA` equals the first element of `vectorB`, the second element of
-# > `vectorA` equals the second element of `vectorB`, and so on. On the other hand,
-# > `vectorA %in% vectorB` compares the first element of `vectorA` to all the
-# > elements in `vectorB`. Then the second element of `vectorA` is compared
-# > to all the elements in `vectorB`, and so on. Notice the difference between `==` and
-# > `%in%` in the example below.
-# >
-# >``` {r}
-# >c("Vancouver", "Toronto") == c("Toronto", "Vancouver")
-# >c("Vancouver", "Toronto") %in% c("Toronto", "Vancouver")
-# >```
-```
-
 ### Extracting rows above or below a threshold using `>` and `<`
 
 ```{code-cell} ipython3
@@ -927,6 +908,19 @@ considering the official languages,
 only English in Toronto is reported by more people
 as their primary language at home
 than French in Montréal according to the 2016 Canadian census.
+
+### Extracting rows using `.query()`
+
+You can also extract rows above, below, equal or not-equal to a threshold using the
+`.query()` method. For example the following gives us the same result as when we used
+`official_langs[official_langs["most_at_home"] > 2669195]`.
+
+```{code-cell} ipython3
+official_langs.query("most_at_home > 2669195")
+```
+
+The query (criteria we are using to select values) is input as a string. This will
+come in handy when we later talk about chaining.
 
 (loc-iloc)=
 ## Using `.loc[]` to filter rows and select columns.
@@ -1285,17 +1279,6 @@ multiple lines of code, storing temporary objects as you go:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# ## Combining functions using the pipe operator, `|>`
-
-# In R, we often have to call multiple functions in a sequence to process a data
-# frame. The basic ways of doing this can become quickly unreadable if there are
-# many steps. For example, suppose we need to perform three operations on a data
-# frame called `data`:  \index{pipe}\index{aaapipesymb@\vert{}>|see{pipe}}
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
 data = pd.DataFrame({"old_col": [1, 2, 5, 0], "other_col": [1, 10, 3, 6]})
 ```
 
@@ -1330,28 +1313,6 @@ output = (
 )
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# ``` {r eval = F}
-# output <- select(filter(mutate(data, new_col = old_col * 2),
-#                         other_col > 5),
-#                  new_col)
-# ```
-# Code like this can also be difficult to understand. Functions compose (reading
-# from left to right) in the *opposite order* in which they are computed by R
-# (above, `mutate` happens first, then `filter`, then `select`). It is also just a
-# really long line of code to read in one go.
-
-# The *pipe operator* (`|>`) solves this problem, resulting in cleaner and
-# easier-to-follow code. `|>` is built into R so you don't need to load any
-# packages to use it.
-# You can think of the pipe as a physical pipe. It takes the output from the
-# function on the left-hand side of the pipe, and passes it as the first argument
-# to the function on the right-hand side of the pipe.
-# The code below accomplishes the same thing as the previous
-# two code blocks:
-```
 
 > **Note:** You might also have noticed that we split the function calls across
 > lines, similar to when we did this earlier in the chapter
@@ -1360,35 +1321,7 @@ output = (
 > your code more readable. When you do this, it is important to use parentheses
 > to tell Python that your code is continuing onto the next line.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# > **Note:** You might also have noticed that we split the function calls across
-# > lines after the pipe, similar to when we did this earlier in the chapter
-# > for long function calls. Again, this is allowed and recommended, especially when
-# > the piped function calls create a long line of code. Doing this makes
-# > your code more readable. When you do this, it is important to end each line
-# > with the pipe operator `|>` to tell R that your code is continuing onto the
-# > next line.
-
-# > **Note:** In this textbook, we will be using the base R pipe operator syntax, `|>`.
-# > This base R `|>` pipe operator was inspired by a previous version of the pipe
-# > operator, `%>%`. The `%>%` pipe operator is not built into R
-# > and is from the `magrittr` R package.
-# > The `tidyverse` metapackage imports the `%>%` pipe operator via `dplyr`
-# > (which in turn imports the `magrittr` R package).
-# > There are some other differences between `%>%` and `|>` related to
-# > more advanced R uses, such as sharing and distributing code as R packages,
-# > however, these are beyond the scope of this textbook.
-# > We have this note in the book to make the reader aware that `%>%` exists
-# > as it is still commonly used in data analysis code and in many data science
-# > books and other resources.
-# > In most cases these two pipes are interchangeable and either can be used.
-
-# \index{pipe}\index{aaapipesymbb@\%>\%|see{pipe}}
-```
-
-### Chaining `[]` and `.loc`
+### Chaining with `.loc`
 
 +++
 
@@ -1420,36 +1353,26 @@ van_data_selected
 
 Although this is valid code, there is a more readable approach we could take by
 chaining the operations. With chaining, we do not need to create an intermediate
-object to store the output from `[]`. Instead, we can directly call `.loc` upon the
-output of `[]`:
+object to store the output from `[]`. Instead, we can directly call `.loc` to select
+the rows and columns we are interested in:
 
 ```{code-cell} ipython3
-van_data_selected = tidy_lang[tidy_lang["region"] == "Vancouver"].loc[
-    :, ["language", "most_at_home"]
+van_data_selected = tidy_lang.loc[
+    tidy_lang["region"] == "Vancouver", ["language", "most_at_home"]
 ]
-
 van_data_selected
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# But wait...Why do the `select` and `filter` function calls
-# look different in these two examples?
-# Remember: when you use the pipe,
-# the output of the first function is automatically provided
-# as the first argument for the function that comes after it.
-# Therefore you do not specify the first argument in that function call.
-# In the code above,
-# the first line is just the `tidy_lang` data frame with a pipe.
-# The pipe passes the left-hand side (`tidy_lang`) to the first argument of the function on the right (`filter`),
-# so in the `filter` function you only see the second argument (and beyond).
-# Then again after `filter` there is a pipe, which passes the result of the `filter` step
-# to the first argument of the `select` function.
 ```
 
 As you can see, both of these approaches&mdash;with and without chaining&mdash;give us the same output, but the second
 approach is clearer and more readable.
+
+<!-- Note that the following which uses `[]` and `.loc[]` is valid, but discouraged as it is more difficult to follow
+```{code-cell} ipython3
+van_data_selected = tidy_lang[tidy_lang["region"] == "Vancouver"].loc[
+    :, ["language", "most_at_home"]
+]
+van_data_selected
+``` -->
 
 +++
 
@@ -1459,12 +1382,12 @@ approach is clearer and more readable.
 
 Chaining can be used with any method in Python.
 Additionally, we can chain together more than two functions.
-For example, we can chain together three functions to:
+For example, we can chain together functions to:
 
-- extract rows (`[]`) to include only those where the counts of the language most spoken at home are greater than 10,000,
-- extract only the columns (`.loc`) corresponding to `region`, `language` and `most_at_home`, and
+- extract rows (`.loc`) to include only those where the counts of the language most spoken at home are greater than 10,000,
+- also extract only the columns (`.loc`) corresponding to `region`, `language` and `most_at_home`, and
 - sort the data frame rows in order (`.sort_values`) by counts of the language most spoken at home
-from smallest to largest.
+from smallest to largest. The first two steps can be accimplished in one use of `.loc`
 
 ```{index} pandas.DataFrame; sort_values
 ```
@@ -1476,29 +1399,13 @@ Here we pass the column name `most_at_home` to sort the data frame rows by the v
 
 ```{code-cell} ipython3
 large_region_lang = (
-    tidy_lang[tidy_lang["most_at_home"] > 10000]
-    .loc[:, ["region", "language", "most_at_home"]]
-    .sort_values(by="most_at_home")
+    tidy_lang.loc[
+      tidy_lang["most_at_home"] > 10000,
+      ["region", "language", "most_at_home"]
+    ]
+    .sort_values("most_at_home")
 )
-
 large_region_lang
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# You will notice above that we passed `tidy_lang` as the first argument of the `filter` function.
-# We can also pipe the data frame into the same sequence of functions rather than
-# using it as the first argument of the first function. These two choices are equivalent,
-# and we get the same result.
-# ``` {r}
-# large_region_lang <- tidy_lang |>
-#   filter(most_at_home > 10000) |>
-#   select(region, language, most_at_home) |>
-#   arrange(most_at_home)
-
-# large_region_lang
-# ```
 ```
 
 Now that we've shown you chaining as an alternative to storing
@@ -1731,8 +1638,8 @@ can also be used. To do this, pass a list of column names to the `by` argument.
 ```{code-cell} ipython3
 region_summary = pd.DataFrame()
 region_summary = region_summary.assign(
-    min_most_at_home=region_lang.groupby(by="region")["most_at_home"].min(),
-    max_most_at_home=region_lang.groupby(by="region")["most_at_home"].max()
+    min_most_at_home=region_lang.groupby("region")["most_at_home"].min(),
+    max_most_at_home=region_lang.groupby("region")["most_at_home"].max()
 ).reset_index()
 
 region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
@@ -1743,7 +1650,7 @@ region_summary
 
 ```{code-cell} ipython3
 region_summary = (
-    region_lang.groupby(by="region")["most_at_home"].agg(["min", "max"]).reset_index()
+    region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
 )
 region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
 region_summary
@@ -1818,47 +1725,6 @@ summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames
 pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
 ```
 
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# To summarize statistics across many columns, we can use the
-# `summarize` function we have just recently learned about.
-# However, in such a case, using `summarize` alone means that we have to
-# type out the name of each column we want to summarize.
-# To do this more efficiently, we can pair `summarize` with `across` \index{across}
-# and use a colon `:` to specify a range of columns we would like  \index{column range}
-# to perform the statistical summaries on.
-# Here we demonstrate finding the maximum value
-# of each of the numeric
-# columns of the `region_lang` data set.
-
-# ``` {r 02-across-data}
-# region_lang |>
-#   summarize(across(mother_tongue:lang_known, max))
-# ```
-
-# > **Note:** Similar to when we use base R statistical summary functions
-# > (e.g., `max`, `min`, `mean`, `sum`, etc) with `summarize` alone,
-# > the use of the `summarize` + `across` functions paired
-# > with base R statistical summary functions
-# > also return `NA`s when we apply them to columns that
-# > contain `NA`s in the data frame.  \index{missing data}
-# >
-# > To avoid this, again we need to add the argument `na.rm = TRUE`,
-# > but in this case we need to use it a little bit differently.
-# > In this case, we need to add a `,` and then `na.rm = TRUE`,
-# > after specifying the function we want `summarize` + `across` to apply,
-# > as illustrated below:
-# >
-# > ``` {r}
-# > region_lang_na |>
-# >   summarize(across(mother_tongue:lang_known, max, na.rm = TRUE))
-# > ```
-```
-
 (apply-summary)=
 #### `.apply` for calculating summary statistics on many columns
 
@@ -1875,7 +1741,7 @@ We focus on the two arguments of `.apply`:
 the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
 Note that `.apply` does not have an argument
 to specify *which* columns to apply the function to.
-Therefore, we will use the `.iloc[]` before calling `.apply`
+Therefore, we will use the `[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
@@ -1898,7 +1764,7 @@ tags: [remove-cell]
 ```
 
 ```{code-cell} ipython3
-pd.DataFrame(region_lang.iloc[:, 3:].apply(max, axis=0)).T
+pd.DataFrame(region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=0)).T
 ```
 
 ```{index} missing data
@@ -1917,7 +1783,7 @@ pd.DataFrame(region_lang.iloc[:, 3:].apply(max, axis=0)).T
 
 ```{code-cell} ipython3
 pd.DataFrame(
-    region_lang_na.iloc[:, 3:].apply(lambda col: col.max(skipna=True), axis=0)
+    region_lang_na[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.max(skipna=True), axis=0)
 ).T
 ```
 
@@ -2048,7 +1914,7 @@ To accomplish such a task, we can use `.apply`.
 This works in a similar way for column selection,
 as we saw when we used in Section {ref}`apply-summary` earlier.
 As we did above,
-we again use `.iloc` to specify the columns
+we again use `[]` to specify the columns
 as well as the `.apply` to specify the function we want to apply on these columns.
 However, a key difference here is that we are not using aggregating function here,
 which means that we get back a data frame with the same number of rows.
@@ -2074,8 +1940,8 @@ region_lang.info()
 ```
 
 ```{code-cell} ipython3
-region_lang_int32 = region_lang.iloc[:, 3:].apply(lambda col: col.astype('int32'), axis=0)
-region_lang_int32 = pd.concat((region_lang.iloc[:, :3], region_lang_int32), axis=1)
+region_lang_int32 = region_lang[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.astype('int32'), axis=0)
+region_lang_int32 = pd.concat((region_lang[:, ["most_at_home", "most_at_work"]], region_lang_int32), axis=1)
 region_lang_int32
 ```
 
@@ -2111,7 +1977,7 @@ For instance, suppose we want to know the maximum value between `mother_tongue`,
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
-Before we use `.apply`, we will again use `.iloc` to select only the count columns
+Before we use `.apply`, we will again use `[]` to select only the count columns
 so we can see all the columns in the data frame's output easily in the book.
 So for this demonstration, the data set we are operating on looks like this:
 
@@ -2135,7 +2001,7 @@ tags: [remove-cell]
 ```
 
 ```{code-cell} ipython3
-region_lang.iloc[:, 3:]
+region_lang[:, ["most_at_home", "most_at_work"]]
 ```
 
 Now we use `.apply` with argument `axis=1`, to tell Python that we would like
@@ -2157,7 +2023,7 @@ tags: [remove-cell]
 
 ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
-    maximum=region_lang.iloc[:, 3:].apply(max, axis=1)
+    maximum=region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=1)
 )
 
 region_lang_rowwise

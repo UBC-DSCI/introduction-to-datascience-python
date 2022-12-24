@@ -1022,7 +1022,7 @@ Notice that we get the same output as we did
 
 +++ {"tags": []}
 
-## Calculating summary statistics
+## Aggregating data with `.agg`
 
 +++
 
@@ -1092,7 +1092,14 @@ region_lang["most_at_home"].sum()
 
 Other handy summary statistics include the `.mean`, `.median` and `.std` for
 computing the mean, median, and standard deviation of observations, respectively.
-Also, `describe` gives us a summary:
+
+We can compute multiple statistics at once using `.agg` to "aggregate" results, say if we wanted to
+compute both the `min` and `max`:
+```{code-cell} ipython3
+region_lang["most_at_home"].agg(['min', 'max'])
+```
+
+Another handy function is `describe`; it gives us a summary:
 
 ```{code-cell} ipython3
 region_lang["most_at_home"].describe()
@@ -1101,6 +1108,8 @@ region_lang["most_at_home"].describe()
 The `count` is th total number of observations (equal to the number of rows in our data frame),
 and the numbers with percents indicate the percentiles. A 75th percentile of 30 means that 75% of
 the languages are spoken by 30 people surveyed or less.
+
+
 
 The table below provides an overview of some of the useful summary statistics that you can
 compute with `pandas`.
@@ -1116,6 +1125,7 @@ compute with `pandas`.
 | `max` | The largest value in a column |
 | `min` | The smallest value in a column |
 | `sum` | The sum of all observations |
+| `agg` | Aggregate multiple statistics together |
 | `describe` | a summary |
 ```
 
@@ -1129,22 +1139,6 @@ compute with `pandas`.
 > see an input variable `skipna`, which by default is set to `skipna=True`. This means that
 > `pandas` will skip `NaN` values when computing statistics.
 
-### Using `.assign` to store our summary statistics
-
-If you would like to use the summary statistics that you computed in a further analysis, it can be handy
-to store them in a data frame that you can use later.
-We can use `.assign` as mentioned in along with proper summary functions to create a aggregated column.
-
-For example, say we wanted to keep the minimum and maximum values in a data frame, we can (1) create a new, empty
-data frame and (2) use `.assign` to assign values to that data frame:
-```
-region_lang_min_max = pd.DataFrame()  # empty data frame
-region_lang_min_max.assign(
-  most_at_home_min = region_lang["most_at_home"].min(),
-  most_at_home_max = region_lang["most_at_home"].max()
-)
-region_lang_min_max
-```
 
 ### Calculating summary statistics for groups of rows
 
@@ -1186,9 +1180,9 @@ Calculating summary statistics on one or more column(s) for each group. It creat
 
 The `.groupby` function takes at least one argument&mdash;the columns to use in the
 grouping. Here we use only one column for grouping (`region`), but more than one
-can also be used. To do this, pass a list of column names to the `by` argument.
+can also be used. To do this, pass a list of column names.
 
-```{code-cell} ipython3
+<!-- ```{code-cell} ipython3
 region_summary = pd.DataFrame()
 region_summary = region_summary.assign(
     min_most_at_home=region_lang.groupby("region")["most_at_home"].min(),
@@ -1197,8 +1191,12 @@ region_summary = region_summary.assign(
 
 region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
 region_summary
-```
+``` -->
 
+```{code-cell} ipython3
+region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
+```
+<!--
 `pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregate functions in one line of code. We just need to pass in a list of function names to `.agg` as shown below.
 
 ```{code-cell} ipython3
@@ -1207,7 +1205,7 @@ region_summary = (
 )
 region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
 region_summary
-```
+``` -->
 
 Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
 
@@ -1240,8 +1238,8 @@ Then we will also explore how we can use a more general iteration function,
 
 +++
 
-### Aggregating data with `.agg`
-#### Aggregating on a data frame for calculating summary statistics on many columns
+<!-- ### Aggregating data with `.agg` -->
+<!-- #### Aggregating on a data frame for calculating summary statistics on many columns
 
 +++
 
@@ -1261,7 +1259,7 @@ Here we use the `.T` to "transpose" or flip the axes so that rows are columns. O
 the summary statistics would be in the rows, which is untidy! You can think of the summary
 statistics representing one observation (which should be a row).
 
-(apply-summary)=
+(apply-summary)= -->
 #### `.apply` for calculating summary statistics on many columns
 
 +++
@@ -1281,7 +1279,7 @@ Therefore, we will use the `.loc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
-pd.DataFrame(region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max)).T
+region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max)
 ```
 
 <!-- ```{index} missing data
@@ -1317,6 +1315,23 @@ section at the end of this chapter.
 ## Using `.assign` to modify or add columns
 
 +++
+
+### Using `.assign` to create a new data frame
+
+If you would like to use the summary statistics that you computed in a further analysis, it can be handy
+to store them in a data frame that you can use later.
+We can use `.assign` as mentioned in along with proper summary functions to create a aggregated column.
+
+For example, say we wanted to keep the minimum and maximum values in a data frame, we can (1) create a new, empty
+data frame and (2) use `.assign` to assign values to that data frame:
+```
+region_lang_min_max = pd.DataFrame()  # empty data frame
+region_lang_min_max.assign(
+  most_at_home_min = region_lang["most_at_home"].min(),
+  most_at_home_max = region_lang["most_at_home"].max()
+)
+region_lang_min_max
+```
 
 ### Using `.assign` to modify columns
 

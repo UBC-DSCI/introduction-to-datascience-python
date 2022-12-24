@@ -196,16 +196,6 @@ be thought of as "text", such as words, names, paths, URLs, and more.
 There are other basic data types in Python, such as *set*
 and *complex*, but we do not use these in this textbook.
 
-### What is a list?
-
-```{index} list
-```
-
-Lists are built-in objects in Python that have multiple, ordered elements.
-`pandas` series can be treated as an array with labels (indices).
-
-**(FIGURE 3.4 FROM THE R-BOOK IS MISSING)**
-
 
 ### What does this have to do with data frames?
 

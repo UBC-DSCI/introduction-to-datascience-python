@@ -38,7 +38,8 @@ By the end of the chapter, readers will be able to do the following:
 - Read tabular data with `read_csv`.
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
-- Create and organize subsets of tabular data using `[]`, `loc[]`, and `sort_values`
+- Create and organize subsets of tabular data using `[]`, `loc[]`, and `sort_values`.
+- Chain multiple operations in sequence.
 - Visualize data with an `altair` bar plot.
 
 ## Canadian languages data set

@@ -463,8 +463,6 @@ lang_mother_tidy = lang_wide.melt(
 lang_mother_tidy
 ```
 
-**(FIGURE 3.9 FROM THE R BOOK IS MISSING)**
-
 > **Note**: In the code above, the call to the
 > `.melt` function is split across several lines. This is allowed in
 > certain cases; for example, when calling a function as above, the input
@@ -919,7 +917,7 @@ You can also extract rows above, below, equal or not-equal to a threshold using 
 official_langs.query("most_at_home > 2669195")
 ```
 
-The query (criteria we are using to select values) is input as a string. This will
+The query (criteria we are using to select values) is input as a string. This
 comes in handy when we chain operations together.
 
 (loc-iloc)=
@@ -1033,6 +1031,334 @@ Notice that we get the same output as we did
 ```
 
 +++ {"tags": []}
+
+## Calculating summary statistics
+
++++
+
+### Calculating summary statistics on whole columns
+
+```{index} summarize
+```
+
+As a part of many data analyses, we need to calculate a summary value for the
+data (a *summary statistic*).
+Examples of summary statistics we might want to calculate
+are the number of observations, the average/mean value for a column,
+the minimum value, etc.
+Oftentimes,
+this summary statistic is calculated from the values in a data frame column,
+or columns, as shown in {numref}`fig:summarize`.
+
++++ {"tags": []}
+
+```{figure} img/summarize/summarize.001.jpeg
+:name: fig:summarize
+:figclass: caption-hack
+
+Calculating summary statistics on one or more column(s). In its simplest use case, it creates a new data frame with a single row containing the summary statistic(s) for each column being summarized. The darker, top row of each table represents the column headers.
+```
+
++++
+
+
+
+First a reminder of what `region_lang` looks like:
+
+```{code-cell} ipython3
+region_lang = pd.read_csv("data/region_lang.csv")
+region_lang
+```
+
+We use `.min` to calculate the minimum
+and `.max` to calculate maximum number of Canadians
+reporting a particular language as their primary language at home,
+for any region:
+
+```{code-cell} ipython3
+region_lang["most_at_home"].min()
+```
+
+```{code-cell} ipython3
+region_lang["most_at_home"].max()
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue("lang_most_people", "{0:,.0f}".format(int(lang_summary["max_most_at_home"])))
+```
+
+From this we see that there are some languages in the data set that no one speaks
+as their primary language at home. We also see that the most commonly spoken
+primary language at home is spoken by
+{glue:text}`lang_most_people`
+people.
+
+If we wanted to know the total number of people in the survey, we can use `.sum`:
+```{code-cell} ipython3
+region_lang["most_at_home"].sum()
+```
+
+Other handy summary statistics include the `.mean`, `.median` and `.std` for
+computing the mean, median, and standard deviation of observations, respectively.
+Also, `describe` gives us a summary:
+
+```{code-cell} ipython3
+region_lang["most_at_home"].describe()
+```
+
+The `count` is th total number of observations (equal to the number of rows in our data frame),
+and the numbers with percents indicate the percentiles. A 75th percentile of 30 means that 75% of
+the languages are spoken by 30 people surveyed or less.
+
+The table below provides an overview of some of the useful summary statistics that you can
+compute with `pandas`.
+
+```{table} Basic data structures in Python
+:name: tab:datastructure-table
+| Function | Description |
+| -------- | ----------- |
+| `count` | The number of observations (rows) |
+| `mean` | The mean of the observations |
+| `median` | The median value of the observations |
+| `std` | The standard deviation of the observations |
+| `max` | The largest value in a column |
+| `min` | The smallest value in a column |
+| `sum` | The sum of all observations |
+| `describe` | a summary |
+```
+
++++
++++
+
+
+> **Note:** In `pandas` DataFrame, the value `NaN` is often used to denote missing data.
+> By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
+> it ignores these values. If you look at the documentation for these functions, you will
+> see an input variable `skipna`, which by default is set to `skipna=True`. This means that
+> `pandas` will skip `NaN` values when computing statistics.
+
+### Using `.assign` to store our summary statistics
+
+If you would like to use the summary statistics that you computed in a further analysis, it can be handy
+to store them in a data frame that you can use later.
+We can use `.assign` as mentioned in along with proper summary functions to create a aggregated column.
+
+For example, say we wanted to keep the minimum and maximum values in a data frame, we can (1) create a new, empty
+data frame and (2) use `.assign` to assign values to that data frame:
+```
+region_lang_min_max = pd.DataFrame()  # empty data frame
+region_lang_min_max.assign(
+  most_at_home_min = region_lang["most_at_home"].min(),
+  most_at_home_max = region_lang["most_at_home"].max()
+)
+region_lang_min_max
+```
+
+### Calculating summary statistics for groups of rows
+
++++
+
+```{index} pandas.DataFrame; groupby
+```
+
+A common pairing with summary functions is `.groupby`. Pairing these functions
+together can let you summarize values for subgroups within a data set,
+as illustrated in {numref}`fig:summarize-groupby`.
+For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
+reporting the language as the primary language at home
+for each of the regions in the data set.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
+# together can let you summarize values for subgroups within a data set,
+# as illustrated in Figure \@ref(fig:summarize-groupby).
+# For example, we can use `group_by` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
+# reporting the language as the primary language at home
+# for each of the regions in the data set.
+
+# (ref:summarize-groupby) `summarize` and `group_by` is useful for calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
+```
+
++++ {"tags": []}
+
+```{figure} img/summarize/summarize.002.jpeg
+:name: fig:summarize-groupby
+:figclass: caption-hack
+
+Calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
+```
+
++++
+
+The `.groupby` function takes at least one argument&mdash;the columns to use in the
+grouping. Here we use only one column for grouping (`region`), but more than one
+can also be used. To do this, pass a list of column names to the `by` argument.
+
+```{code-cell} ipython3
+region_summary = pd.DataFrame()
+region_summary = region_summary.assign(
+    min_most_at_home=region_lang.groupby("region")["most_at_home"].min(),
+    max_most_at_home=region_lang.groupby("region")["most_at_home"].max()
+).reset_index()
+
+region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
+region_summary
+```
+
+`pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregate functions in one line of code. We just need to pass in a list of function names to `.agg` as shown below.
+
+```{code-cell} ipython3
+region_summary = (
+    region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
+)
+region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
+region_summary
+```
+
+Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Notice that `group_by` on its own doesn't change the way the data looks.
+# In the output below, the grouped data set looks the same,
+# and it doesn't *appear* to be grouped by `region`.
+# Instead, `group_by` simply changes how other functions work with the data,
+# as we saw with `summarize` above.
+```
+
+```{code-cell} ipython3
+region_lang.groupby("region")
+```
+
+### Calculating summary statistics on many columns
+
++++
+
+Sometimes we need to summarize statistics across many columns.
+An example of this is illustrated in {numref}`fig:summarize-across`.
+In such a case, using summary functions alone means that we have to
+type out the name of each column we want to summarize.
+In this section we will meet two strategies for performing this task.
+First we will see how we can do this using `.iloc[]` to slice the columns before applying summary functions.
+Then we will also explore how we can use a more general iteration function,
+`.apply`, to also accomplish this.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Sometimes we need to summarize statistics across many columns.
+# An example of this is illustrated in Figure \@ref(fig:summarize-across).
+# In such a case, using `summarize` alone means that we have to
+# type out the name of each column we want to summarize.
+# In this section we will meet two strategies for performing this task.
+# First we will see how we can do this using `summarize` + `across`.
+# Then we will also explore how we can use a more general iteration function,
+# `map`, to also accomplish this.
+```
+
++++ {"tags": []}
+
+```{figure} img/summarize/summarize.003.jpeg
+:name: fig:summarize-across
+:figclass: caption-hack
+
+`.iloc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
+```
+
++++
+
+### Aggregating data with `.agg`
+#### Aggregating on a data frame for calculating summary statistics on many columns
+
++++
+
+```{index} column range
+```
+
+Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value
+of each of the numeric
+columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the
+summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames as well.
+
+```{code-cell} ipython3
+pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
+```
+
+(apply-summary)=
+#### `.apply` for calculating summary statistics on many columns
+
++++
+
+```{index} pandas.DataFrame; apply
+```
+
+An alternative to aggregating on a dataframe
+for applying a function to many columns is the `.apply` method.
+Let's again find the maximum value of each column of the
+`region_lang` data frame, but using `.apply` with the `max` function this time.
+We focus on the two arguments of `.apply`:
+the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
+Note that `.apply` does not have an argument
+to specify *which* columns to apply the function to.
+Therefore, we will use the `[]` before calling `.apply`
+to choose the columns for which we want the maximum.
+
+```{code-cell} ipython3
+---
+jupyter:
+  source_hidden: true
+tags: [remove-cell]
+---
+# An alternative to `summarize` and `across`
+# for applying a function to many columns is the `map` family of functions. \index{map}
+# Let's again find the maximum value of each column of the
+# `region_lang` data frame, but using `map` with the `max` function this time.
+# `map` takes two arguments:
+# an object (a vector, data frame or list) that you want to apply the function to,
+# and the function that you would like to apply to each column.
+# Note that `map` does not have an argument
+# to specify *which* columns to apply the function to.
+# Therefore, we will use the `select` function before calling `map`
+# to choose the columns for which we want the maximum.
+```
+
+```{code-cell} ipython3
+pd.DataFrame(region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=0)).T
+```
+
+```{index} missing data
+```
+
+> **Note:** Similar to when we use base Python statistical summary functions
+> (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s,
+> `.apply` functions paired with base Python statistical summary functions
+> also return `NaN` values when we apply them to columns that
+> contain `NaN` values.
+>
+> To avoid this, again we need to use the `pandas` variants of summary functions (*i.e.*
+> `.max`, `.min`, `.sum`, etc.) with `skipna=True`.
+> When we use this with `.apply`, we do this by constructing a anonymous function that calls
+> the `.max` method with `skipna=True`, as illustrated below:
+
+```{code-cell} ipython3
+pd.DataFrame(
+    region_lang_na[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.max(skipna=True), axis=0)
+).T
+```
+
+The `.apply` function is generally quite useful for solving many problems
+involving repeatedly applying functions in Python.
+Additionally, a variant of `.apply` is `.applymap`,
+which can be used to apply functions element-wise.
+To learn more about these functions, see the additional resources
+section at the end of this chapter.
+
++++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
 
 (pandas-assign)=
 ## Using `.assign` to modify or add columns
@@ -1225,450 +1551,6 @@ Failing to do this would have resulted in the incorrect math being performed.
 > resources at the end of this chapter.
 
 +++
-
-## Aggregating data with `.assign`, `.agg` and `.apply`
-
-+++
-
-### Calculating summary statistics on whole columns
-
-```{index} summarize
-```
-
-As a part of many data analyses, we need to calculate a summary value for the
-data (a *summary statistic*).
-Examples of summary statistics we might want to calculate
-are the number of observations, the average/mean value for a column,
-the minimum value, etc.
-Oftentimes,
-this summary statistic is calculated from the values in a data frame column,
-or columns, as shown in {numref}`fig:summarize`.
-
-+++ {"tags": []}
-
-```{figure} img/summarize/summarize.001.jpeg
-:name: fig:summarize
-:figclass: caption-hack
-
-Calculating summary statistics on one or more column(s). In its simplest use case, it creates a new data frame with a single row containing the summary statistic(s) for each column being summarized. The darker, top row of each table represents the column headers.
-```
-
-+++
-
-We can use `.assign` as mentioned in Section {ref}`pandas-assign` along with proper summary functions to create a aggregated column.
-
-First a reminder of what `region_lang` looks like:
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# A useful `dplyr` function for calculating summary statistics is `summarize`,
-# where the first argument is the data frame and subsequent arguments
-# are the summaries we want to perform.
-# Here we show how to use the `summarize` function to calculate the minimum
-# and maximum number of Canadians
-# reporting a particular language as their primary language at home.
-# First a reminder of what `region_lang` looks like:
-```
-
-```{code-cell} ipython3
-region_lang = pd.read_csv("data/region_lang.csv")
-region_lang
-```
-
-We apply `min` to calculate the minimum
-and `max` to calculate maximum number of Canadians
-reporting a particular language as their primary language at home,
-for any region, and `.assign` a column name to each:
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-pd.DataFrame(region_lang["most_at_home"].agg(["min", "max"])).T
-
-# pd.DataFrame(region_lang["most_at_home"].agg(["min", "max"])).T.rename(
-#     columns={"min": "min_most_at_home", "max": "max_most_at_home"}
-# )
-```
-
-```{code-cell} ipython3
-:tags: []
-
-lang_summary = pd.DataFrame()
-lang_summary = lang_summary.assign(min_most_at_home=[min(region_lang["most_at_home"])])
-lang_summary = lang_summary.assign(max_most_at_home=[max(region_lang["most_at_home"])])
-lang_summary
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-glue("lang_most_people", "{0:,.0f}".format(int(lang_summary["max_most_at_home"])))
-```
-
-From this we see that there are some languages in the data set that no one speaks
-as their primary language at home. We also see that the most commonly spoken
-primary language at home is spoken by
-{glue:text}`lang_most_people`
-people.
-
-+++
-
-### Calculating summary statistics when there are `NaN`s
-
-```{index} missing data
-```
-
-```{index} see: NaN; missing data
-```
-
-In `pandas` DataFrame, the value `NaN` is often used to denote missing data.
-Many of the base python statistical summary functions
-(e.g., `max`, `min`, `sum`, etc) will return `NaN`
-when applied to columns containing `NaN` values.
-Usually that is not what we want to happen;
-instead, we would usually like Python to ignore the missing entries
-and calculate the summary statistic using all of the other non-`NaN` values
-in the column.
-Fortunately `pandas` provides many equivalent methods (e.g., `.max`, `.min`, `.sum`, etc) to
-these summary functions while providing an extra argument `skipna` that lets
-us tell the function what to do when it encounters `NaN` values.
-In particular, if we specify `skipna=True` (default), the function will ignore
-missing values and return a summary of all the non-missing entries.
-We show an example of this below.
-
-First we create a new version of the `region_lang` data frame,
-named `region_lang_na`, that has a seemingly innocuous `NaN`
-in the first row of the `most_at_home` column:
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In data frames in R, the value `NA` is often used to denote missing data.
-# Many of the base R statistical summary functions
-# (e.g., `max`, `min`, `mean`, `sum`, etc) will return `NA`
-# when applied to columns containing `NA` values. \index{missing data}\index{NA|see{missing data}}
-# Usually that is not what we want to happen;
-# instead, we would usually like R to ignore the missing entries
-# and calculate the summary statistic using all of the other non-`NA` values
-# in the column.
-# Fortunately many of these functions provide an argument `na.rm` that lets
-# us tell the function what to do when it encounters `NA` values.
-# In particular, if we specify `na.rm = TRUE`, the function will ignore
-# missing values and return a summary of all the non-missing entries.
-# We show an example of this combined with `summarize` below.
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-region_lang_na = region_lang.copy()
-region_lang_na.loc[0, "most_at_home"] = np.nan
-```
-
-```{code-cell} ipython3
-region_lang_na
-```
-
-Now if we apply the Python built-in summary function as above,
-we see that we no longer get the minimum and maximum returned,
-but just an `NaN` instead!
-
-```{code-cell} ipython3
-lang_summary_na = pd.DataFrame()
-lang_summary_na = lang_summary_na.assign(
-    min_most_at_home=[min(region_lang_na["most_at_home"])]
-)
-lang_summary_na = lang_summary_na.assign(
-    max_most_at_home=[max(region_lang_na["most_at_home"])]
-)
-lang_summary_na
-```
-
-We can fix this by using the `pandas` Series methods (*i.e.* `.min` and `.max`) with `skipna=True` as explained above:
-
-```{code-cell} ipython3
-lang_summary_na = pd.DataFrame()
-lang_summary_na = lang_summary_na.assign(
-    min_most_at_home=[region_lang_na["most_at_home"].min(skipna=True)]
-)
-lang_summary_na = lang_summary_na.assign(
-    max_most_at_home=[region_lang_na["most_at_home"].max(skipna=True)]
-)
-lang_summary_na
-```
-
-### Calculating summary statistics for groups of rows
-
-+++
-
-```{index} pandas.DataFrame; groupby
-```
-
-A common pairing with summary functions is `.groupby`. Pairing these functions
-together can let you summarize values for subgroups within a data set,
-as illustrated in {numref}`fig:summarize-groupby`.
-For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
-reporting the language as the primary language at home
-for each of the regions in the data set.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
-# together can let you summarize values for subgroups within a data set,
-# as illustrated in Figure \@ref(fig:summarize-groupby).
-# For example, we can use `group_by` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
-# reporting the language as the primary language at home
-# for each of the regions in the data set.
-
-# (ref:summarize-groupby) `summarize` and `group_by` is useful for calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
-```
-
-+++ {"tags": []}
-
-```{figure} img/summarize/summarize.002.jpeg
-:name: fig:summarize-groupby
-:figclass: caption-hack
-
-Calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
-```
-
-+++
-
-The `.groupby` function takes at least one argument&mdash;the columns to use in the
-grouping. Here we use only one column for grouping (`region`), but more than one
-can also be used. To do this, pass a list of column names to the `by` argument.
-
-```{code-cell} ipython3
-region_summary = pd.DataFrame()
-region_summary = region_summary.assign(
-    min_most_at_home=region_lang.groupby("region")["most_at_home"].min(),
-    max_most_at_home=region_lang.groupby("region")["most_at_home"].max()
-).reset_index()
-
-region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
-region_summary
-```
-
-`pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregate functions in one line of code. We just need to pass in a list of function names to `.agg` as shown below.
-
-```{code-cell} ipython3
-region_summary = (
-    region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
-)
-region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
-region_summary
-```
-
-Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Notice that `group_by` on its own doesn't change the way the data looks.
-# In the output below, the grouped data set looks the same,
-# and it doesn't *appear* to be grouped by `region`.
-# Instead, `group_by` simply changes how other functions work with the data,
-# as we saw with `summarize` above.
-```
-
-```{code-cell} ipython3
-region_lang.groupby("region")
-```
-
-### Calculating summary statistics on many columns
-
-+++
-
-Sometimes we need to summarize statistics across many columns.
-An example of this is illustrated in {numref}`fig:summarize-across`.
-In such a case, using summary functions alone means that we have to
-type out the name of each column we want to summarize.
-In this section we will meet two strategies for performing this task.
-First we will see how we can do this using `.iloc[]` to slice the columns before applying summary functions.
-Then we will also explore how we can use a more general iteration function,
-`.apply`, to also accomplish this.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sometimes we need to summarize statistics across many columns.
-# An example of this is illustrated in Figure \@ref(fig:summarize-across).
-# In such a case, using `summarize` alone means that we have to
-# type out the name of each column we want to summarize.
-# In this section we will meet two strategies for performing this task.
-# First we will see how we can do this using `summarize` + `across`.
-# Then we will also explore how we can use a more general iteration function,
-# `map`, to also accomplish this.
-```
-
-+++ {"tags": []}
-
-```{figure} img/summarize/summarize.003.jpeg
-:name: fig:summarize-across
-:figclass: caption-hack
-
-`.iloc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
-```
-
-+++
-
-#### Aggregating on a data frame for calculating summary statistics on many columns
-
-+++
-
-```{index} column range
-```
-
-Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value
-of each of the numeric
-columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the
-summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames as well.
-
-```{code-cell} ipython3
-pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
-```
-
-(apply-summary)=
-#### `.apply` for calculating summary statistics on many columns
-
-+++
-
-```{index} pandas.DataFrame; apply
-```
-
-An alternative to aggregating on a dataframe
-for applying a function to many columns is the `.apply` method.
-Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `.apply` with the `max` function this time.
-We focus on the two arguments of `.apply`:
-the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
-Note that `.apply` does not have an argument
-to specify *which* columns to apply the function to.
-Therefore, we will use the `[]` before calling `.apply`
-to choose the columns for which we want the maximum.
-
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# An alternative to `summarize` and `across`
-# for applying a function to many columns is the `map` family of functions. \index{map}
-# Let's again find the maximum value of each column of the
-# `region_lang` data frame, but using `map` with the `max` function this time.
-# `map` takes two arguments:
-# an object (a vector, data frame or list) that you want to apply the function to,
-# and the function that you would like to apply to each column.
-# Note that `map` does not have an argument
-# to specify *which* columns to apply the function to.
-# Therefore, we will use the `select` function before calling `map`
-# to choose the columns for which we want the maximum.
-```
-
-```{code-cell} ipython3
-pd.DataFrame(region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=0)).T
-```
-
-```{index} missing data
-```
-
-> **Note:** Similar to when we use base Python statistical summary functions
-> (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s,
-> `.apply` functions paired with base Python statistical summary functions
-> also return `NaN` values when we apply them to columns that
-> contain `NaN` values.
->
-> To avoid this, again we need to use the `pandas` variants of summary functions (*i.e.*
-> `.max`, `.min`, `.sum`, etc.) with `skipna=True`.
-> When we use this with `.apply`, we do this by constructing a anonymous function that calls
-> the `.max` method with `skipna=True`, as illustrated below:
-
-```{code-cell} ipython3
-pd.DataFrame(
-    region_lang_na[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.max(skipna=True), axis=0)
-).T
-```
-
-The `.apply` function is generally quite useful for solving many problems
-involving repeatedly applying functions in Python.
-Additionally, a variant of `.apply` is `.applymap`,
-which can be used to apply functions element-wise.
-To learn more about these functions, see the additional resources
-section at the end of this chapter.
-
-+++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
-
-<!-- > **Note:** The `map` function comes from the `purrr` package. But since
-> `purrr` is part of the tidyverse, once we call `library(tidyverse)` we
-> do not need to load the `purrr` package separately.
-
-The output looks a bit weird... we passed in a data frame, but the output
-doesn't look like a data frame. As it so happens, it is *not* a data frame, but
-rather a plain list:
-
-``` {r 02-type-out-of-map}
-region_lang |>
-  select(mother_tongue:lang_known) |>
-  map(max) |>
-  typeof()
-```
-
-So what do we do? Should we convert this to a data frame? We could, but a
-simpler alternative is to just use a different `map` function. There
-are quite a few to choose from, they all work similarly, but
-their name reflects the type of output you want from the mapping operation.
-Table \@ref(tab:map-table) lists the commonly used `map` functions as well
-as their output type. \index{map!map\_\* functions}
-
-Table: (#tab:map-table) The `map` functions in R.
-
-| `map` function | Output |
-| --- | --- |
-| `map` | list |
-| `map_lgl` | logical vector |
-| `map_int` | integer vector |
-| `map_dbl` | double vector |
-| `map_chr` | character vector |
-| `map_dfc` | data frame, combining column-wise |
-| `map_dfr` | data frame, combining row-wise |
-
-Let's get the columns' maximums again, but this time use the `map_dfr` function
-to return the output as a data frame:
-
-``` {r 02-map-df-example}
-region_lang |>
-  select(mother_tongue:lang_known) |>
-  map_dfr(max)
-```
-
-> **Note:** Similar to when we use base R statistical summary functions
-> (e.g., `max`, `min`, `mean`, `sum`, etc.) with `summarize`,
-> `map` functions paired with base R statistical summary functions
-> also return `NA` values when we apply them to columns that
-> contain `NA` values. \index{missing data}
->
-> To avoid this, again we need to add the argument `na.rm = TRUE`.
-> When we use this with `map`, we do this by adding a `,`
-> and then `na.rm = TRUE` after specifying the function, as illustrated below:
->
-> ``` {r}
-> region_lang_na |>
->   select(mother_tongue:lang_known) |>
->   map_dfr(max, na.rm = TRUE)
-> ```
-
-The `map` functions are generally quite useful for solving many problems
-involving repeatedly applying functions in R.
-Additionally, their use is not limited to columns of a data frame;
-`map` family functions can be used to apply functions to elements of a vector,
-or a list, and even to lists of (nested!) data frames.
-To learn more about the `map` functions, see the additional resources
-section at the end of this chapter. -->
-
-+++ {"tags": []}
 
 ## Apply functions across many columns with `.apply`
 
@@ -1963,49 +1845,6 @@ and guidance that the worksheets provide will function as intended.
   what you want. In that case, you may consider using [a for
   loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
 
-```{code-cell} ipython3
----
-jp-MarkdownHeadingCollapsed: true
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# ## Additional resources
-
-# - As we mentioned earlier, `tidyverse` is actually an *R
-#   meta package*: it installs and loads a collection of R packages that all
-#   follow the tidy data philosophy we discussed above. One of the `tidyverse`
-#   packages is `dplyr`&mdash;a data wrangling workhorse. You have already met many
-#   of `dplyr`'s functions
-#   (`select`, `filter`, `mutate`, `arrange`, `summarize`, and `group_by`).
-#   To learn more about these functions and meet a few more useful
-#   functions, we recommend you check out Chapters 5-9 of the [STAT545 online notes](https://stat545.com/).
-#   of the data wrangling, exploration, and analysis with R book.
-# - The [`dplyr` R package documentation](https://dplyr.tidyverse.org/) [@dplyr] is
-#   another resource to learn more about the functions in this
-#   chapter, the full set of arguments you can use, and other related functions.
-#   The site also provides a very nice cheat sheet that summarizes many of the
-#   data wrangling functions from this chapter.
-# - Check out the [`tidyselect` R package page](https://tidyselect.r-lib.org/index.html)
-#   [@tidyselect] for a comprehensive list of `select` helpers.
-#   These helpers can be used to choose columns in a data frame when paired with  the `select` function
-#   (and other functions that use the `tidyselect` syntax, such as `pivot_longer`).
-#   The [documentation for `select` helpers](https://tidyselect.r-lib.org/reference/select_helpers.html)
-#   is a useful reference to find the helper you need for your particular problem.
-# - *R for Data Science* [@wickham2016r] has a few chapters related to
-#   data wrangling that go into more depth than this book. For example, the
-#   [tidy data chapter](https://r4ds.had.co.nz/tidy-data.html) covers tidy data,
-#   `pivot_longer`/`pivot_wider` and `separate`, but also covers missing values
-#   and additional wrangling functions (like `unite`). The [data
-#   transformation chapter](https://r4ds.had.co.nz/transform.html) covers
-#   `select`, `filter`, `arrange`, `mutate`, and `summarize`. And the [`map`
-#   functions chapter](https://r4ds.had.co.nz/iteration.html#the-map-functions)
-#   provides more about the `map` functions.
-# - You will occasionally encounter a case where you need to iterate over items
-#   in a data frame, but none of the above functions are flexible enough to do
-#   what you want. In that case, you may consider using [a for
-#   loop](https://r4ds.had.co.nz/iteration.html#iteration).
-```
 
 ## References
 

@@ -3,13 +3,15 @@ root: index.md
 options:
   numbered: true
 parts:
-- caption: First draft
+- caption: Front Matter
   chapters:
     - file: preface-text.md
     - file: foreword-text.md
     - file: acknowledgements.md
     - file: authors.md
     - file: setup.md
+- caption: Chapters
+  chapters:
     - file: intro.md
     - file: reading.md
     - file: wrangling.md
@@ -20,5 +22,7 @@ parts:
     - file: regression2.md
     - file: clustering.md
     - file: inference.md
-    - file: references.md
+- caption: Appendix
+  chapters:
     - file: appendixA.md
+    - file: references.md

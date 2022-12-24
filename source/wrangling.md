@@ -1221,15 +1221,6 @@ region_summary
 
 Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Notice that `group_by` on its own doesn't change the way the data looks.
-# In the output below, the grouped data set looks the same,
-# and it doesn't *appear* to be grouped by `region`.
-# Instead, `group_by` simply changes how other functions work with the data,
-# as we saw with `summarize` above.
-```
 
 ```{code-cell} ipython3
 region_lang.groupby("region")
@@ -1244,22 +1235,9 @@ An example of this is illustrated in {numref}`fig:summarize-across`.
 In such a case, using summary functions alone means that we have to
 type out the name of each column we want to summarize.
 In this section we will meet two strategies for performing this task.
-First we will see how we can do this using `.iloc[]` to slice the columns before applying summary functions.
+First we will see how we can do this using `.loc[]` to slice the columns before applying summary functions.
 Then we will also explore how we can use a more general iteration function,
 `.apply`, to also accomplish this.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sometimes we need to summarize statistics across many columns.
-# An example of this is illustrated in Figure \@ref(fig:summarize-across).
-# In such a case, using `summarize` alone means that we have to
-# type out the name of each column we want to summarize.
-# In this section we will meet two strategies for performing this task.
-# First we will see how we can do this using `summarize` + `across`.
-# Then we will also explore how we can use a more general iteration function,
-# `map`, to also accomplish this.
-```
 
 +++ {"tags": []}
 
@@ -1267,7 +1245,7 @@ Then we will also explore how we can use a more general iteration function,
 :name: fig:summarize-across
 :figclass: caption-hack
 
-`.iloc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
+`.loc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -1280,14 +1258,18 @@ Then we will also explore how we can use a more general iteration function,
 ```{index} column range
 ```
 
-Recall that in the Section {ref}`loc-iloc`, we can use `.iloc[]` to extract a range of columns with indices. Here we demonstrate finding the maximum value
+Recall that in the Section {ref}`loc-iloc`, we can use `.loc[]` to extract a range of columns. Here we demonstrate finding the maximum value
 of each of the numeric
-columns of the `region_lang` data set through pairing `.iloc[]` and `.max`. This means that the
+columns of the `region_lang` data set through pairing `.loc[]` and `.max`. This means that the
 summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames as well.
 
 ```{code-cell} ipython3
-pd.DataFrame(region_lang.iloc[:, 3:].max(axis=0)).T
+pd.DataFrame(region_lang.loc[:, "mother_tongue":].max()).T
 ```
+
+Here we use the `.T` to "transpose" or flip the axes so that rows are columns. Otherwise,
+the summary statistics would be in the rows, which is untidy! You can think of the summary
+statistics representing one observation (which should be a row).
 
 (apply-summary)=
 #### `.apply` for calculating summary statistics on many columns
@@ -1305,33 +1287,14 @@ We focus on the two arguments of `.apply`:
 the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
 Note that `.apply` does not have an argument
 to specify *which* columns to apply the function to.
-Therefore, we will use the `[]` before calling `.apply`
+Therefore, we will use the `.loc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# An alternative to `summarize` and `across`
-# for applying a function to many columns is the `map` family of functions. \index{map}
-# Let's again find the maximum value of each column of the
-# `region_lang` data frame, but using `map` with the `max` function this time.
-# `map` takes two arguments:
-# an object (a vector, data frame or list) that you want to apply the function to,
-# and the function that you would like to apply to each column.
-# Note that `map` does not have an argument
-# to specify *which* columns to apply the function to.
-# Therefore, we will use the `select` function before calling `map`
-# to choose the columns for which we want the maximum.
+pd.DataFrame(region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max)).T
 ```
 
-```{code-cell} ipython3
-pd.DataFrame(region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=0)).T
-```
-
-```{index} missing data
+<!-- ```{index} missing data
 ```
 
 > **Note:** Similar to when we use base Python statistical summary functions
@@ -1349,7 +1312,7 @@ pd.DataFrame(region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=0)
 pd.DataFrame(
     region_lang_na[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.max(skipna=True), axis=0)
 ).T
-```
+``` -->
 
 The `.apply` function is generally quite useful for solving many problems
 involving repeatedly applying functions in Python.
@@ -1577,20 +1540,6 @@ When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 
 ```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# For example,
-# imagine that we wanted to convert all the numeric columns
-# in the `region_lang` data frame from double type to integer type
-# using the `as.integer` function.
-# When we revisit the `region_lang` data frame,
-# we can see that this would be the columns from `mother_tongue` to `lang_known`.
-```
-
-```{code-cell} ipython3
 region_lang
 ```
 
@@ -1601,34 +1550,17 @@ To accomplish such a task, we can use `.apply`.
 This works in a similar way for column selection,
 as we saw when we used in Section {ref}`apply-summary` earlier.
 As we did above,
-we again use `[]` to specify the columns
+we again use `.loc[]` to specify the columns
 as well as the `.apply` to specify the function we want to apply on these columns.
 However, a key difference here is that we are not using aggregating function here,
 which means that we get back a data frame with the same number of rows.
-
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# To accomplish such a task, we can use `mutate` paired with `across`. \index{across}
-# This works in a similar way for column selection,
-# as we saw when we used `summarize` + `across` earlier.
-# As we did above,
-# we again use `across` to specify the columns using `select` syntax
-# as well as the function we want to apply on the specified columns.
-# However, a key difference here is that we are using `mutate`,
-# which means that we get back a data frame with the same number of rows.
-```
 
 ```{code-cell} ipython3
 region_lang.info()
 ```
 
 ```{code-cell} ipython3
-region_lang_int32 = region_lang[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.astype('int32'), axis=0)
-region_lang_int32 = pd.concat((region_lang[:, ["most_at_home", "most_at_work"]], region_lang_int32), axis=1)
+region_lang_int32 = region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.astype('int32'))
 region_lang_int32
 ```
 
@@ -1664,31 +1596,12 @@ For instance, suppose we want to know the maximum value between `mother_tongue`,
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
-Before we use `.apply`, we will again use `[]` to select only the count columns
+Before we use `.apply`, we will again use `loc[]` to select only the count columns
 so we can see all the columns in the data frame's output easily in the book.
 So for this demonstration, the data set we are operating on looks like this:
 
 ```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# For instance, suppose we want to know the maximum value between `mother_tongue`,
-# `most_at_home`, `most_at_work`
-# and `lang_known` for each language and region
-# in the `region_lang` data set.
-# In other words, we want to apply the `max` function *row-wise.*
-# We will use the (aptly named) `rowwise` function in combination with `mutate`
-# to accomplish this task.
-
-# Before we apply `rowwise`, we will `select` only the count columns \index{rowwise}
-# so we can see all the columns in the data frame's output easily in the book.
-# So for this demonstration, the data set we are operating on looks like this:
-```
-
-```{code-cell} ipython3
-region_lang[:, ["most_at_home", "most_at_work"]]
+region_lang.loc[:, ["most_at_home", "most_at_work"]]
 ```
 
 Now we use `.apply` with argument `axis=1`, to tell Python that we would like
@@ -1697,20 +1610,8 @@ as opposed to being applied on a column
 (which is the default behavior of `.apply`):
 
 ```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# Now we apply `rowwise` before `mutate`, to tell R that we would like
-# the mutate function to be applied across, and within, a row,
-# as opposed to being applied on a column
-# (which is the default behavior of `mutate`):
-```
-
-```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
-    maximum=region_lang[:, ["most_at_home", "most_at_work"]].apply(max, axis=1)
+    maximum=region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max, axis=1)
 )
 
 region_lang_rowwise
@@ -1720,33 +1621,6 @@ We see that we get an additional column added to the data frame,
 named `maximum`, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region.
-
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# Similar to `group_by`,
-# `rowwise` doesn't appear to do anything when it is called by itself.
-# However, we can apply `rowwise` in combination
-# with other functions to change how these other functions operate on the data.
-# Notice if we used `mutate` without `rowwise`,
-# we would have computed the maximum value across *all* rows
-# rather than the maximum value for *each* row.
-# Below we show what would have happened had we not used
-# `rowwise`. In particular, the same maximum value is reported
-# in every single row; this code does not provide the desired result.
-
-# ```{r}
-# region_lang |>
-#   select(mother_tongue:lang_known) |>
-#   mutate(maximum = max(c(mother_tongue,
-#                          most_at_home,
-#                          most_at_home,
-#                          lang_known)))
-# ```
-```
 
 ## Summary
 
@@ -1774,41 +1648,6 @@ burning data science questions!
 | `.melt` | generally makes the data frame longer and narrower |
 | `.pivot` | generally makes a data frame wider and decreases the number of rows |
 | `.str.split` | splits up a string column into multiple columns  |
-```
-
-```{code-cell} ipython3
----
-jupyter:
-  source_hidden: true
-tags: [remove-cell]
----
-# ## Summary
-
-# Cleaning and wrangling data can be a very time-consuming process. However,
-# it is a critical step in any data analysis. We have explored many different
-# functions for cleaning and wrangling data into a tidy format.
-# Table \@ref(tab:summary-functions-table) summarizes some of the key wrangling
-# functions we learned in this chapter. In the following chapters, you will
-# learn how you can take this tidy data and do so much more with it to answer your
-# burning data science questions!
-
-# \newpage
-
-# Table: (#tab:summary-functions-table) Summary of wrangling functions
-
-# | Function | Description |
-# | ---      | ----------- |
-# | `across` | allows you to apply function(s) to multiple columns  |
-# | `filter` | subsets rows of a data frame |
-# | `group_by` |  allows you to apply function(s) to groups of rows |
-# | `mutate` | adds or modifies columns in a data frame |
-# | `map` | general iteration function |
-# | `pivot_longer` | generally makes the data frame longer and narrower |
-# | `pivot_wider` | generally makes a data frame wider and decreases the number of rows |
-# | `rowwise` | applies functions across columns within one row |
-# | `separate` | splits up a character column into multiple columns  |
-# | `select` | subsets columns of a data frame |
-# | `summarize` | calculates summaries of inputs |
 ```
 
 ## Exercises

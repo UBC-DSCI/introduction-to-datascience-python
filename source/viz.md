@@ -321,7 +321,7 @@ glue('co2_line', co2_line, display=False)
 ```
 
 > **Note:** We can change the size of the point and color of the plot by specifying
-> `mark_point(size=10, color='black')`
+> `mark_point(size=10, color="black")`
 
 :::{glue:figure} co2_line
 :figwidth: 700px
@@ -352,11 +352,10 @@ visual noise to remove. But there are a few things we must do to improve
 clarity, such as adding informative axis labels and making the font a more
 readable size.  To add axis labels, we use the `title` argument along with `alt.X` and `alt.Y` functions. To
 change the font size, we use the `configure_axis` function with the
-`titleFontSize` argument. We also set the color of the line to be black as it
-has a stronger contrast with the background than the default blue color.
+`titleFontSize` argument.
 
 ```{code-cell} ipython3
-co2_line_labels = alt.Chart(co2_df).mark_line(color='black').encode(
+co2_line_labels = alt.Chart(co2_df).mark_line().encode(
     x=alt.X("date_measured", title ="Year"),
     y=alt.Y("ppm", scale=alt.Scale(zero=False), title="Atmospheric CO2 (ppm)")
 ).configure_axis(
@@ -376,7 +375,7 @@ glue('co2_line_labels', co2_line_labels, display=False)
 Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes and labels.
 :::
 
-> **Note:** The `configure_` function in `altair` is complex and supports many other functionalities, which can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html)
+> **Note:** The `configure_` function in `altair` supports many other functionalities, which can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html)
 
 ```{index} altair; alt.Scale
 ```
@@ -396,9 +395,18 @@ to specify the upper and lower bounds to limit the axis.
 ```{code-cell} ipython3
 
 
-co2_line_scale = alt.Chart(co2_df).mark_line(color='black', clip=True).encode(
-    x=alt.X("date_measured", title="Measurement Date", axis=alt.Axis(tickCount=4), scale=alt.Scale(domain=['1990', '1994'])),
-    y=alt.Y("ppm", scale=alt.Scale(zero=False), title="Atmospheric CO2 (ppm)")
+co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
+    x=alt.X(
+        "date_measured",
+        title="Measurement Date",
+        axis=alt.Axis(tickCount=4),
+        scale=alt.Scale(domain=['1990', '1994'])
+    ),
+    y=alt.Y(
+        "ppm",
+        scale=alt.Scale(zero=False),
+        title="Atmospheric CO2 (ppm)"
+    )
 ).configure_axis(
     titleFontSize=12
 )
@@ -472,12 +480,14 @@ So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and the `mark_point` geometric object.
+By default, `altair` draws only the outline of each point. If we would
+like to fill them in, we pass the argument `filled=True` to `mark_point`.
 The result is shown in {numref}`faithful_scatter`.
 
 
 
 ```{code-cell} ipython3
-faithful_scatter = alt.Chart(faithful).mark_point(color='black', filled=True).encode(
+faithful_scatter = alt.Chart(faithful).mark_point(filled=True).encode(
     x="waiting",
     y="eruptions"
 )
@@ -506,7 +516,7 @@ labels and make the font more readable:
 
 
 ```{code-cell} ipython3
-faithful_scatter_labels = alt.Chart(faithful).mark_circle(color='black').encode(
+faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -549,7 +559,7 @@ non-official and non-Aboriginal languages)?
 To get started, we will read and inspect the data:
 
 ```{code-cell} ipython3
-can_lang =  pd.read_csv("data/can_lang.csv")
+can_lang = pd.read_csv("data/can_lang.csv")
 ```
 
 ```{code-cell} ipython3
@@ -564,7 +574,7 @@ We will begin with a scatter plot of the `mother_tongue` and `most_at_home` colu
 The resulting plot is shown in {numref}`can_lang_plot`
 
 ```{code-cell} ipython3
-can_lang_plot = alt.Chart(can_lang).mark_circle(color='black').encode(
+can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
     x="most_at_home",
     y="mother_tongue"
 )
@@ -596,7 +606,7 @@ We should also increase the font size to further
 improve readability.
 
 ```{code-cell} ipython3
-can_lang_plot_labels = alt.Chart(can_lang).mark_circle(color='black').encode(
+can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home",
         title=["Language spoken most at home", "(number of Canadian residents)"]
@@ -656,7 +666,9 @@ to Canada's two official languages by filtering the data:
 ```
 
 ```{code-cell} ipython3
-can_lang.loc[(can_lang['language']=='English') | (can_lang['language']=='French')]
+can_lang.loc[
+    (can_lang['language']=='English') | (can_lang['language']=='French')
+]
 ```
 
 ```{index} logarithmic scale, altair; logarithmic scaling
@@ -683,11 +695,11 @@ We can accomplish logarithmic scaling in the `altair` visualization
 using the argument `type="log"` in the scale functions.
 
 ```{code-cell} ipython3
-can_lang_plot_log = alt.Chart(can_lang).mark_circle(color='black').encode(
+can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home",
         title=["Language spoken most at home", "(number of Canadian residents)"],
-        scale=alt.Scale( type="log"),
+        scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
@@ -746,8 +758,10 @@ you can clearly see the mutated output from the table.
 ```
 
 ```{code-cell} ipython3
-can_lang = can_lang.assign(mother_tongue_percent = (can_lang['mother_tongue'] / 35151728) * 100,
-                          most_at_home_percent = (can_lang['most_at_home'] / 35151728) * 100)
+can_lang = can_lang.assign(
+    mother_tongue_percent=(can_lang['mother_tongue']/35151728) * 100,
+    most_at_home_percent=(can_lang['most_at_home']/35151728) * 100
+)
 can_lang[['mother_tongue_percent', 'most_at_home_percent']]
 
 ```
@@ -761,11 +775,20 @@ the final result.
 
 ```{code-cell} ipython3
 
-can_lang_plot_percent = alt.Chart(can_lang).mark_circle(color='black').encode(
-    x=alt.X("most_at_home_percent",title=["Language spoken most at home", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7)),
-    y=alt.Y("mother_tongue_percent", title=["Mother tongue", "(number of Canadian residents)"], scale=alt.Scale(type="log"), axis=alt.Axis(tickCount=7))).configure_axis(
-    titleFontSize=12)
-
+can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
+    x=alt.X(
+        "most_at_home_percent",
+        title=["Language spoken most at home", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    ),
+    y=alt.Y(
+        "mother_tongue_percent",
+        title=["Mother tongue", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    )
+).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
@@ -874,15 +897,15 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 
 
 The legend in {numref}`can_lang_plot_category`
-takes up valuable plot area.
+adds a fair bit of horizontal space.
 We can improve this by moving the legend title using the `alt.Legend` function
 with the arguments `legendX`, `legendY` and `direction`
 arguments of the `theme` function.
 Here we set the `direction` to `"vertical"` so that the legend items remain
-vertically stacked on top of each other. The default `direction` is horizontal, which won't work
-not work well for this particular visualization
-because the legend labels are quite long
-and would run off the page if displayed this way.
+vertically stacked on top of each other. The default `direction` is horizontal, which works well for many cases, but
+for this particular visualization
+because the legend labels are quite long, it is a bit cleaner if we move the
+legend above the plot instead.
 
 
 
@@ -925,8 +948,8 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color palette. But what if you want to use different
-colors? In Altair, there are many themes available, which can be viewed [here](https://vega.github.io/vega/docs/schemes/)
+the default `altair` color palette. This is an appropriate choice for most situations. If you want to use different
+colors? In Altair, there are many themes available, which can be viewed [in the documentation](https://vega.github.io/vega/docs/schemes/)
 
 To change the color scheme,
 we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
@@ -1076,11 +1099,11 @@ the `sort_values` function followed by the `iloc` property.  Then to help us mak
 space, we'll use horizontal bars instead of vertical ones. We do this by
 swapping the `x` and `y` variables:
 
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; iloc[]
+```{index} pandas.DataFrame; nlargest
 ```
 
 ```{code-cell} ipython3
-islands_top12 = islands_df.sort_values(by="size", ascending=False).iloc[:12]
+islands_top12 = islands_df.nlargest(12)
 
 islands_bar_sorted = alt.Chart(islands_top12).mark_bar().encode(
     x="size", y="landmass"
@@ -1102,7 +1125,7 @@ Bar plot of size for Earth's largest 12 landmasses.
 
 The plot in {numref}`islands_bar_sorted` is definitely clearer now,
 and allows us to answer our question
-("are the top 7 largest landmasses continents?") in the affirmative.
+("Which are the top 7 largest landmasses continents?") in the affirmative.
 But the question could be made clearer from the plot
 by organizing the bars not by alphabetical order
 but by size, and to color them based on whether they are a continent.
@@ -1134,7 +1157,7 @@ Finally, we again use the `configure_axis` function
 to change the font size.
 
 ```{code-cell} ipython3
-islands_plot_sorted = alt.Chart(islands_top12).mark_bar(color='black').encode(
+islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
     x=alt.X("size",title="Size (1000 square mi)"),
     y=alt.Y("landmass", title="Landmass", sort='x'),
     color=alt.Color("landmass_type", title="Type")
@@ -1217,13 +1240,13 @@ let's use the default arguments just to see how things look.
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X("Speed"),
-    y='count()'
+    y="count()"
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist', morley_hist, display=False)
+glue("morley_hist", morley_hist, display=False)
 ```
 
 :::{glue:figure} morley_hist
@@ -1262,9 +1285,9 @@ while *horizontal lines* are used to denote quantities on the *vertical axis*.
 To add the dashed line on top of the histogram, we will use the `+` operator. This concept is also known as layering in altair.(This is covered in the later sections of the chapter). Here, we add the `mark_rule` chart on the `morley_hist` chart of the form `mark_bar`
 
 ```{code-cell} ipython3
-v_line = alt.Chart(pd.DataFrame({'x': [792.458]})).mark_rule(
+v_line = alt.Chart(pd.DataFrame({"x": [792.458]})).mark_rule(
     strokeDash=[3,3], size=1
-).encode(x='x')
+).encode(x="x")
 
 final_plot = morley_hist + v_line
 ```
@@ -1272,7 +1295,7 @@ final_plot = morley_hist + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_viz', final_plot, display=False)
+glue("final_plot_viz", final_plot, display=False)
 ```
 
 :::{glue:figure} final_plot_viz
@@ -1344,7 +1367,7 @@ and the color will be mapped discretely. Here, we also mention `stack=False`, so
 ```{code-cell} ipython3
 morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
-    y=alt.Y('count()', stack=False),
+    y=alt.Y("count()", stack=False),
     color="Expt:N"
 )
 
@@ -1392,12 +1415,12 @@ Both the `rows` and `columns` arguments take the column names on which to split 
 
 morley_hist = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
-    y=alt.Y('count()', stack=False),
+    y=alt.Y("count()", stack=False),
     color="Expt:N"
 ).properties(height=100, width=300)
 
 final_plot_facet = (morley_hist + v_line).facet(
-    row='Expt:N', data=morley_df
+    row="Expt:N", data=morley_df
 )
 ```
 
@@ -1436,7 +1459,7 @@ To answer this question, we'll use the assign function to transform our data int
 morley_rel = morley_df
 morley_rel = morley_rel.assign(
     relative_accuracy=(
-        100 *((299000 + morley_df['Speed']) - 299792.458) / (299792.458)
+        100 *((299000 + morley_df["Speed"]) - 299792.458) / (299792.458)
     )
 )
 
@@ -1444,9 +1467,9 @@ morley_rel
 ```
 
 ```{code-cell} ipython3
-v_line = alt.Chart(pd.DataFrame({'x': [0]})).mark_rule(
+v_line = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(
     strokeDash=[3,3], size=2).encode(
-    x='x'
+    x="x"
 )
 
 morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
@@ -1456,7 +1479,7 @@ morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
         title="Relative Accuracy (%)"
     ),
     y=alt.Y(
-        'count()',
+        "count()",
         stack=False,
         title="# Measurements"
     ),
@@ -1466,14 +1489,14 @@ morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
 ).properties(height=100, width= 400)
 
 final_plot_relative = (morley_hist + v_line).facet(
-    row='Expt:N', data=morley_rel
+    row="Expt:N", data=morley_rel
 )
 
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_relative', final_plot_relative, display=True)
+glue("final_plot_relative", final_plot_relative, display=True)
 ```
 
 :::{glue:figure} final_plot_relative
@@ -1527,7 +1550,7 @@ morley_hist_default = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
         title="Relative Accuracy (%)"
     ),
     y=alt.Y(
-        'count()',
+        "count()",
         stack=False,
         title="# Measurements"
     ),
@@ -1588,16 +1611,16 @@ morley_hist_5 = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
 ).properties(height=100, width=300)
 
 final_plot_max_bins = (
-    (morley_hist_default + v_line).facet(row='Expt:N', data=morley_rel, title="default maxbins") |
-    (morley_hist_200 + v_line).facet(row='Expt:N', data=morley_rel, title="maxBins=200")) &
-    ((morley_hist_70 + v_line).facet(row='Expt:N', data=morley_rel, title="maxBins=70") |
-    (morley_hist_5 + v_line).facet(row='Expt:N', data=morley_rel, title="maxBins=5")
+    (morley_hist_default + v_line).facet(row="Expt:N", data=morley_rel, title="default maxbins") |
+    (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=200")) &
+    ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=70") |
+    (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=5")
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_max_bins', final_plot_max_bins, display=True)
+glue("final_plot_max_bins", final_plot_max_bins, display=True)
 ```
 
 :::{glue:figure} final_plot_max_bins
@@ -1624,13 +1647,13 @@ The result is shown in {numref}`morley_hist_layer`.
 ```{code-cell} ipython3
 morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed"),
-    y=alt.Y('count()'),
+    y=alt.Y("count()"),
     color="Expt:N"
 )
 
-v_line = alt.Chart(pd.DataFrame({'x': [792.458]})).mark_rule(
+v_line = alt.Chart(pd.DataFrame({"x": [792.458]})).mark_rule(
     strokeDash=[3,3], size=1).encode(
-    x='x'
+    x="x"
 )
 
 morley_hist_layer = morley_hist_colored + v_line
@@ -1638,7 +1661,7 @@ morley_hist_layer = morley_hist_colored + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_layer', morley_hist_layer, display=True)
+glue("morley_hist_layer", morley_hist_layer, display=True)
 ```
 
 :::{glue:figure} morley_hist_layer

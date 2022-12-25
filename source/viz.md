@@ -1202,8 +1202,6 @@ This coding allows us to focus on the variations in the measurements, which are 
 much smaller than 299,000.
 If we used the full large speed measurements, the variations in the measurements
 would not be noticeable, making it difficult to study the differences between the experiments.
-Note that we convert the `morley` data to a tibble to take advantage of the nicer print output
-these specialized data frames provide.
 
 ```{index} question; visualization
 ```
@@ -1484,7 +1482,8 @@ morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
         title="# Measurements"
     ),
     color=alt.Color(
-        "Expt:N",  title="Experiment ID"
+        "Expt:N",
+        title="Experiment ID"
     )
 ).properties(height=100, width= 400)
 
@@ -1511,7 +1510,7 @@ admirable job given the technology available at the time.
 
 #### Choosing a binwidth for histograms
 
-When you create a histogram in `altair`, the default number of bins used is 30.
+When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
 the `maxbins` argument in the `mark_bar` geometric object.
@@ -1535,7 +1534,7 @@ In {numref}`final_plot_max_bins`,
 we compare the default setting with three other histograms where we set the
 `maxbins` to 200, 70 and 5.
 In this case, we can see that both the default number of bins
-and the `maxbins=70` of  are effective for helping answer our question.
+and the `maxbins=70` of  are effective for helping to answer our question.
 On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, respectively.
 
 
@@ -1630,7 +1629,7 @@ glue("final_plot_max_bins", final_plot_max_bins, display=True)
 Effect of varying number of max bins on histograms.
 :::
 
-#### Adding layers to a `altair` plot object {-}
+#### Adding layers to a `altair` plot object {+}
 
 ```{index} altair; +
 ```
@@ -1652,9 +1651,8 @@ morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
 )
 
 v_line = alt.Chart(pd.DataFrame({"x": [792.458]})).mark_rule(
-    strokeDash=[3,3], size=1).encode(
-    x="x"
-)
+    strokeDash=[3,3], size=1
+).encode(x="x")
 
 morley_hist_layer = morley_hist_colored + v_line
 ```
@@ -1678,7 +1676,7 @@ We can also add a title to the chart by specifying `title` argument in the `alt.
 ```{code-cell} ipython3
 morley_hist_title=alt.Chart(morley_df, title="Histogram of Michelson's speed of light data colored by experiment").mark_bar(opacity=0.5).encode(
     x=alt.X("Speed"),
-    y=alt.Y('count()'),
+    y=alt.Y("count()"),
     color="Expt:N"
 )
 
@@ -1702,7 +1700,7 @@ Histogram of Michelson's speed of light data colored with title
 > that is the answer to the question you posed before making the visualization.
 
 ## Explaining the visualization
-#### *Tell a story* {-}
+#### *Tell a story*
 
 Typically, your visualization will not be shown entirely on its own, but rather
 it will be part of a larger presentation.  Further, visualizations can provide

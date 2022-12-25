@@ -628,6 +628,62 @@ ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
+## Combining functions by chaining the methods
+
+```{index} chaining methods
+```
+
+It took us 3 steps to answer our question: What are the 10 most commonly spoken Aboriginal languages?
+Starting from the `can_lang` data frame, we solved this in 3 steps:
+
+1) Use `loc` to: (a) filter the rows so that we only have the category `Aboriginal languages` and (b) select the colums `language` and `mother_tongue`
+2) Sort the values by `mother_tongue` with the largest values at the top
+3) Ask for only the top 10 values using `head`
+
+One way of performing these steps is to just write
+multiple lines of code, storing temporary objects as you go:
+```{code-cell} ipython3
+aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
+ten_lang = arranged_lang_sorted.head(10)
+```
+This requires creating multiple temporary, intermediate outputs, and can become hard to read.
+It also suggests that the named objects are of some importance, when really they are just intermediates.
+
+The need to call multiple methods in a sequence to process a data
+frame is quite common. The basic ways of doing this can become long and potentially unreadable if there are
+many steps. An alternative approach uses "chaining" to link multiple operations together. This can
+simplify the code and make it easier to read. The code below accomplishes the same task.
+
+```{code-cell} ipython3
+# obtain the 10 most common Aboriginal languages
+ten_lang = (
+    can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+    .sort_values(by="mother_tongue", ascending=False)
+    .head(10)
+    )
+```
+
+What just happened? The code above starts with parentheses `()` and is split over multiple lines.
+Python recognizes the content between the parentheses and knows to keep reading until the next line.
+The first line is performing filtering of rows and selecting columns with `loc`. The line after this
+starts with a period (`.`) that "chains" the output of the first line with the next operation, which
+is `sort_values`. Finally, we "chain" together the output of the sorting with `head` to ask for the 10
+most common languages. Instead of creating intermediate objects, with chaining, we take the output of
+one operation and use that to perform the next operation. In doing so, we remove the need to create and
+store intermediates. This can help with readability by simplifying the code.
+
+Now that we've shown you chaining as an alternative to storing
+temporary objects and composing code, does this mean you should *never* store
+temporary objects or compose code? Not necessarily!
+There are times when you will still want to do these things.
+For example, you might store a temporary object before feeding it into a plot function
+so you can iteratively change the plot without having to
+redo all of your data transformations.
+Chaining many functions can be overwhelming and difficult to debug;
+you may want to store a temporary object midway through to inspect your result
+before moving on with further steps.
+
 We have now answered our initial question by generating this table!
 Are we done? Well, not quite; tables are almost never the best way to present
 the result of your analysis to your audience. Even the simple table above with
@@ -638,56 +694,6 @@ gets worse. In contrast, a *visualization* would convey this information in a mu
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
 effectively communicate with your audience.
-
-
-## Combining functions by chaining the methods
-
-```{index} chaining methods
-```
-
-In Python, we often have to call multiple methods in a sequence to process a data
-frame. The basic ways of doing this can become long and potentially unreadable if there are
-many steps. Let's revisit the question: What are the 10 most commonly spoken Aboriginal languages?
-
-Starting from the `can_lang` data frame, we solved this in multiple steps:
-
-1) Filter the rows so that we only have the category `Aboriginal languages`
-2) Select the colums `language` and `mother_tongue` (Note that this can be combined with step 1 using `loc`)
-3) Sort the values by `mother_tongue` with the largest values at the top
-4) Ask for only the top 10 values using `head`
-
-One way of performing these three steps is to just write
-multiple lines of code, storing temporary objects as you go:
-```{code-cell} ipython3
-aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
-arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
-ten_lang = arranged_lang_sorted.head(10)
-```
-This requires creating multiple temporary, intermediate outputs, and can get quite long.
-
-An alternative approach uses "chaining" to link multiple operations together. This can
-simplify the code and make it easier to read. The code below accomplishes the same task:
-```{code-cell} ipython3
-# obtain the 10 most common Aboriginal languages
-ten_lang = (
-    can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
-    .sort_values(by="mother_tongue", ascending=False)
-    .head(10)
-    )
-```
-
-Now that we've shown you chaining as an alternative to storing
-temporary objects and composing code, does this mean you should *never* store
-temporary objects or compose code? Not necessarily!
-There are times when you will still want to do these things.
-For example, you might store a temporary object before feeding it into a plot function
-so you can iteratively change the plot without having to
-redo all of your data transformations.
-Additionally, chaining many functions can be overwhelming and difficult to debug;
-you may want to store a temporary object midway through to inspect your result
-before moving on with further steps.
-
-
 
 ## Exploring data with visualizations
 

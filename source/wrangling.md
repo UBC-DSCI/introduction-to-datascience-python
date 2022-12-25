@@ -41,7 +41,7 @@ By the end of the chapter, readers will be able to do the following:
 
   - Define the term "tidy data".
   - Discuss the advantages of storing data in a tidy data format.
-  - Define what lists, series and data frames are in Python, and describe how they relate to
+  - Define what series and data frames are in Python, and describe how they relate to
     each other.
   - Describe the common types of data in Python and their uses.
   - Recall and use the following functions for their
@@ -63,7 +63,7 @@ By the end of the chapter, readers will be able to do the following:
       - `.loc[]`
       - `.iloc[]`
 
-## Data frames, series, and lists
+## Data frames and series
 
 In Chapters {ref}`intro` and {ref}`reading`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
@@ -243,16 +243,17 @@ language (*e.g.,* matrices), but these are beyond the scope of this book.
 
 +++
 
-<!-- ```{table} Basic data structures in Python
+<!-- ### Other basic data structures in Python
+
+```{table} Basic data structures in Python
 :name: tab:datastructure-table
 | Data Structure | Description |
-| ---            |------------ |
+| ---            | ----------- |
 | list | A 1D ordered collection of values that can store multiple data types at once. |
+| dict | A labeled data structure where `keys` are paired with `values` |
 | Series | A 1D ordered collection of values *with labels* that can store multiple data types at once. |
 | DataFrame | A 2D labeled data structure with columns of potentially different types. |
-```
-
-+++ -->
+``` -->
 
 ## Tidy data
 
@@ -567,7 +568,9 @@ We will apply the function as detailed in {numref}`fig:img-pivot-wider`.
 
 ```{code-cell} ipython3
 lang_home_tidy = lang_long.pivot(
-    index=["region", "category", "language"], columns=["type"], values=["count"]
+    index=["region", "category", "language"],
+    columns=["type"],
+    values=["count"]
 ).reset_index()
 
 lang_home_tidy.columns = [
@@ -579,6 +582,17 @@ lang_home_tidy.columns = [
 ]
 lang_home_tidy
 ```
+
+In the first step, note that we added a call to `reset_index`. When `pivot` is called with
+multiple column names passed to the `index`, those entries become the "name" of each row that
+would be used when you filter rows with `[]` or `loc` rather than just simple numbers. This
+can be confusing... What `reset_index` does is sets us back with the usual expected behaviour
+where each row is "named" with an integer. This is a subtle point, but the main take-away is thatu
+when you call `pivot`, it is a good idea to call `reset_index` afterwards.
+
+The second operation we applied is to rename the columns. When we perform the `pivot`
+operation, it keeps the original column name `"count"` and adds the `"type"` as a second column name.
+Having two names for a column can be confusing! So we rename giving each column only one name.
 
 ```{code-cell} ipython3
 lang_home_tidy.info()
@@ -639,8 +653,8 @@ lang_messy_longer
 ```
 
 Next we'll use `.str.split` to split the `value` column into two columns.
-How it works is that it takes a single string and splits it into multiple values
-based on the character you tell it to split on. For example:
+For example if we want to split the string `"50/0"` into two numbers `["50", "0"]`
+we tell `.str.split` to split our string on the slash character `"/"` as follows
 ```{code-cell} ipython3
 "50/0".split("/")
 ```
@@ -662,18 +676,45 @@ outlines what we need to specify to use `.str.split`.
 Syntax for the `.str.split` function.
 ```
 
+We will do this in multiple steps. First, we create a new object
+that contains two columns
+
+```
+split_counts = lang_messy_longer["value"].str.split("/", expand=True)
+split_counts
+```
+The `expand=True` tells `pandas` that we want to `expand` the output into
+two columns.
+Now this doesnt have the rest of the columns including the language, region, etc.
+that were in our original dataframe. We don't want to lose this information, so
+we will contatenate (combine) the original data frame with `split_counts` using
+`pd.concat`.
+
 ```{code-cell} ipython3
 tidy_lang = (
     pd.concat(
-        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
+        (lang_messy_longer, split_counts),
         axis=1,
     )
-    .rename(columns={0: "most_at_home", 1: "most_at_work"})
+tidy_lang
+```
+
+We combine them along `axis=1` as we want to combine them horizontally
+(the default of `axis=0` would try to stack them vertically).
+
+Next, we want to rename our newly created columns that are currently called
+`0` and `1` to more meaningful names of `"most_at_home"`, and `"most_at_work"`.
+Finally we will drop the column `value` using `drop` to remove it from our dataframe.
+
+```{code-cell} ipython3
+tidy_lang = (
+    tidy_lang.rename(columns={0: "most_at_home", 1: "most_at_work"})
     .drop(columns=["value"])
 )
 
 tidy_lang
 ```
+Note that we could have chained these steps together to make our code more compact.
 
 ```{code-cell} ipython3
 tidy_lang.info()
@@ -702,32 +743,6 @@ In that case,
 it won't be possible to do if the variable is stored as a `object`.
 Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 like this: it will convert the columns to the best numeric data types.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We can see that this data now satisfies all three criteria, making it easier to
-# analyze. But we aren't done yet! Notice in the table above that the word
-# `<chr>` appears beneath each of the column names. The word under the column name
-# indicates the data type of each column. Here all of the variables are
-# "character" data types. Recall, character data types are letter(s) or digits(s)
-# surrounded by quotes. In the previous example in Section \@ref(pivot-wider), the
-# `most_at_home` and `most_at_work` variables were `<dbl>` (double)&mdash;you can
-# verify this by looking at the tables in the previous sections&mdash;which is a type
-# of numeric data. This change is due to the delimiter (`/`) when we read in this
-# messy data set. R read these columns in as character types, and by default,
-# `separate` will return columns as character data types.
-
-# It makes sense for `region`, `category`, and `language` to be stored as a
-# character (or perhaps factor) type. However, suppose we want to apply any functions that treat the
-# `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
-# above a numeric threshold of a column).
-# In that case,
-# it won't be possible to do if the variable is stored as a `character`.
-# Fortunately, the `separate` function provides a natural way to fix problems
-# like this: we can set `convert = TRUE` to convert the `most_at_home`
-# and `most_at_work` columns to the correct data type.
-```
 
 ```{code-cell} ipython3
 tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])

@@ -715,11 +715,6 @@ tidy_lang = (
 tidy_lang
 ```
 Note that we could have chained these steps together to make our code more compact.
-
-```{code-cell} ipython3
-tidy_lang.info()
-```
-
 Is this data set now tidy? If we recall the three criteria for tidy data:
 
   - each row is a single observation,

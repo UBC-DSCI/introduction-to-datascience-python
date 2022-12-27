@@ -47,7 +47,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
 
 ## Choosing the visualization
-#### *Ask a question, and answer it* {-}
+#### *Ask a question, and answer it*
 
 ```{index} question; visualization
 ```
@@ -74,7 +74,7 @@ As with most coding tasks, it is totally fine (and quite common) to make
 mistakes and iterate a few times before you find the right visualization for
 your data and question. There are many different kinds of plotting
 graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* {cite:p}`wilkeviz` for a directory).
-The types of plot that we introduce in this book are shown in {numref}`plot_sketches`
+The types of plot that we introduce in this book are shown in {numref}`plot_sketches`;
 which one you should select depends on your data
 and the question you want to answer.
 In general, the guiding principles of when to use each type of plot
@@ -110,7 +110,7 @@ alternative.
 +++
 
 ## Refining the visualization
-#### *Convey the message, minimize noise* {-}
+#### *Convey the message, minimize noise*
 
 Just being able to make a visualization in Python with `altair` (or any other tool
 for that matter) doesn't mean that it effectively communicates your message to
@@ -132,7 +132,7 @@ understand and remember your message quickly.
 - Make sure to use color schemes that are understandable by those with
   colorblindness (a surprisingly large fraction of the overall
   population&mdash;from about 1% to 10%, depending on sex and ancestry {cite:p}`deebblind`).
-  For example, [Color Schemes](https://vega.github.io/vega/docs/schemes/)
+  For example, [Color Schemes](https://altair-viz.github.io/user_guide/customization.html#customizing-colors)
   provides the ability to pick such color schemes, and you can check
   your visualizations after you have created them by uploading to online tools
   such as a [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/).
@@ -211,7 +211,8 @@ We see that there are two columns in the `co2_df` data frame; `date_measured` an
 The `date_measured` column holds the date the measurement was taken,
 and is of type `datetime64`.
 The `ppm` column holds the value of CO$_{\text{2}}$ in parts per million
-that was measured on each date, and is type `float64`.
+that was measured on each date, and is type `float64`; this is the usual
+type for decimal numbers.
 
 > **Note:** `read_csv` was able to parse the `date_measured` column into the
 > `datetime` vector type because it was entered
@@ -225,7 +226,7 @@ that was measured on each date, and is type `float64`.
 > (e.g., in the `date_measured` column in the `co2_df` data frame).
 > This means Python will not accidentally plot the dates in the wrong order
 > (i.e., not alphanumerically as would happen if it was a character vector).
-> More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html)
+> More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html).
 
 Since we are investigating a relationship between two variables
 (CO$_{\text{2}}$ concentration and date),
@@ -247,8 +248,9 @@ There are a few basic aspects of a plot that we need to specify:
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **geometric encoding**, which tells `altair` how the columns in the data frame map to properties of the visualization.
     - To create an encoding, we use the `encode()` function.
-    - The `encode()` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name(column names)
+    - The `encode()` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
     - Here, we set the `x` axis of the plot to the `date_measured` variable, and on the `y` axis, we plot the `ppm` variable.
+    - For the y-axis, we also provided the argument `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits based on the data and will keep `y=0` in view. That would make it difficult to see any trends in our data since the smallest value is >300 ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to choose a reasonable lower bound based on our data, and that lower bound doesn't have to be zero.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -307,21 +309,11 @@ co2_line = alt.Chart(co2_df).mark_line().encode(
 )
 ```
 
-For the y-axis, we also provided the argument `scale=alt.Scale(zero=False)`.
-By default, `altair` chooses the y-limits based on the data and will keep `y=0`
-in view. That would make it difficult to see any trends in our data since the
-smallest value is >300 ppm. So by providing `scale=alt.Scale(zero=False)`, we
-tell altair to choose a reasonable lower bound based on our data, and that
-lower bound doesn't have to be zero.
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 glue('co2_line', co2_line, display=False)
 ```
-
-> **Note:** We can change the size of the point and color of the plot by specifying
-> `mark_point(size=10, color="black")`
 
 :::{glue:figure} co2_line
 :figwidth: 700px
@@ -375,7 +367,7 @@ glue('co2_line_labels', co2_line_labels, display=False)
 Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes and labels.
 :::
 
-> **Note:** The `configure_` function in `altair` supports many other functionalities, which can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html)
+> **Note:** The `configure_*` function in `altair` supports many other functionalities for customizing visualizations, for example updating the size of the plot, changing the font color, or many other options that can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html).
 
 ```{index} altair; alt.Scale
 ```
@@ -391,10 +383,11 @@ In particular, here, we will use the `alt.Scale()` function to zoom in
 on just five years of data (say, 1990-1994).
 `domain` argument takes a list of length two
 to specify the upper and lower bounds to limit the axis.
+We will use `axis=alt.Axis(tickCount=4)` to add the lines corresponding to each
+year in the background to create the final visualization. This helps us to
+better visualise the change with each year.
 
 ```{code-cell} ipython3
-
-
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
     x=alt.X(
         "date_measured",
@@ -428,8 +421,6 @@ Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases 
 and finally increases again until the end of the year. In Hawaii, there are two seasons: summer from May through October, and winter from November through April.
 Therefore, the oscillating pattern in CO$_{\text{2}}$ matches up fairly closely with the two seasons.
 
-As you might have noticed from the code used to create the final visualization
-of the `co2_df` data frame, we used `axis=alt.Axis(tickCount=4)` to add the lines corresponding to each year in the background. This helps us to better visualise the change with each year.
 
 
 A useful analogy to constructing a data visualization is painting a picture.
@@ -447,6 +438,8 @@ this would be the geometric objects (e.g., `mark_point`, `mark_line`, etc.).
 And finally, we work on adding details and refinements to the painting.
 In our data visualization this would be when we fine tune axis labels,
 change the font, adjust the point size, and do other related things.
+
+
 
 ### Scatter plots: the Old Faithful eruption time data set
 
@@ -481,7 +474,7 @@ visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and the `mark_point` geometric object.
 By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`.
+like to fill them in, we pass the argument `filled=True` to `mark_point`. In place of `mark_point(filled=True)`, we can also use `mark_circle()`.
 The result is shown in {numref}`faithful_scatter`.
 
 
@@ -509,11 +502,9 @@ We can see in {numref}`faithful_scatter` that the data tend to fall
 into two groups: one with short waiting and eruption times, and one with long
 waiting and eruption times. Note that in this case, there is no overplotting:
 the points are generally nicely visually separated, and the pattern they form
-is clear.  Also, note that to make the points solid, we used `filled=True` as argument of the `mark_point` function. In place of `mark_point(filled=True)`, we can also use `mark_circle()`.
+is clear.
 In order to refine the visualization, we need only to add axis
-labels and make the font more readable:
-
-
+labels and make the font more readable.
 
 ```{code-cell} ipython3
 faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
@@ -534,6 +525,16 @@ glue('faithful_scatter_labels', faithful_scatter_labels, display=False)
 
 Scatter plot of waiting time and eruption time with clearer axes and labels.
 :::
+
+
+We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
+
+```{code-cell} ipython3
+faithful_scatter_labels = alt.Chart(size=10, color="black").mark_circle().encode(
+    x=alt.X("waiting", title="Waiting Time (mins)"),
+    y=alt.Y("eruptions", title="Eruption Duration (mins)")
+)
+```
 
 +++
 
@@ -949,7 +950,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 
 In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color palette. This is an appropriate choice for most situations. If you want to use different
-colors? In Altair, there are many themes available, which can be viewed [in the documentation](https://vega.github.io/vega/docs/schemes/)
+colors? In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors)
 
 To change the color scheme,
 we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
@@ -1773,7 +1774,7 @@ result. (4) It would be worth further investigating the differences between
 these experiments to see why they produced different results.
 
 ## Saving the visualization
-#### *Choose the right output format for your needs* {-}
+#### *Choose the right output format for your needs*
 
 ```{index} see: bitmap; raster graphics
 ```

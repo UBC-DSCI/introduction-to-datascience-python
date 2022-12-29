@@ -543,7 +543,7 @@ faithful_scatter_labels = alt.Chart(size=10, color="black").mark_circle().encode
 ```{index} Canadian languages
 ```
 
-Recall the `can_lang` data set {cite:p}`timbers2020canlang` from Chapters {ref}`intro`, {ref}`reading`, and {ref}`wrangling`,
+Recall the `can_lang` data set {cite:p}`timbers2020canlang` from the {ref}`intro`, {ref}`reading`, and {ref}`wrangling` chapters,
 which contains counts of languages from the 2016
 Canadian census.
 
@@ -638,11 +638,11 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import numpy as np
-numlang_speakers_max=max(can_lang['mother_tongue'])
+numlang_speakers_max=int(max(can_lang['mother_tongue']))
 print(numlang_speakers_max)
-numlang_speakers_min = min(can_lang['mother_tongue'])
+numlang_speakers_min = int(min(can_lang['mother_tongue']))
 print(numlang_speakers_min)
-log_result = np.floor(np.log(numlang_speakers_max/numlang_speakers_min))
+log_result = int(np.floor(np.log10(numlang_speakers_max/numlang_speakers_min)))
 print(log_result)
 glue("numlang_speakers_max", numlang_speakers_max)
 glue("numlang_speakers_min", numlang_speakers_min)
@@ -897,9 +897,11 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 
-The legend in {numref}`can_lang_plot_category`
-adds a fair bit of horizontal space.
-We can improve this by moving the legend title using the `alt.Legend` function
+<!-- The legend in {numref}`can_lang_plot_category`
+adds a fair bit of horizontal space. -->
+Another thing we can adjust is the location of the legend.
+This is a matter of preference and not critical for the visualization.
+We move the legend title using the `alt.Legend` function
 with the arguments `legendX`, `legendY` and `direction`
 arguments of the `theme` function.
 Here we set the `direction` to `"vertical"` so that the legend items remain
@@ -949,19 +951,11 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color palette. This is an appropriate choice for most situations. If you want to use different
-colors? In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors)
-
-To change the color scheme,
+the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
 we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
 
 ```{index} color palette; color blindness simulator
 ```
-
-You can use
-this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
-if your visualizations
-are color-blind friendly.
 
 Below we pick the `"dark2"` theme, with the result shown
 in {numref}`can_lang_plot_theme`
@@ -969,8 +963,11 @@ We also set the `shape` aesthetic mapping to the `category` variable as well;
 this makes the scatter point shapes different for each category. This kind of
 visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
 further improve the clarity and accessibility of your visualization.
-
-> Note: We cannot use different shapes with `mark_circle`, it can only be used with `mark_point`
+You can use
+this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
+if your visualizations are color-blind friendly.
+Note that we are switching back to the use of `mark_point` so that
+we can specify the `shape` attribute. This cannot be done with `mark_circle`.
 
 
 ```{code-cell} ipython3
@@ -1070,7 +1067,7 @@ groups of a categorical variable.
 
 We specify that we would like to use a bar plot
 via the `mark_bar` function in `altair`.
-The result is shown in {numref}`islands_bar`
+The result is shown in {numref}`islands_bar`.
 
 ```{code-cell} ipython3
 islands_bar = alt.Chart(islands_df).mark_bar().encode(
@@ -1098,13 +1095,13 @@ question we asked was only about the largest landmasses; let's make the plot a
 little bit clearer by keeping only the largest 12 landmasses. We do this using
 the `sort_values` function followed by the `iloc` property.  Then to help us make sure the labels have enough
 space, we'll use horizontal bars instead of vertical ones. We do this by
-swapping the `x` and `y` variables:
+swapping the `x` and `y` variables.
 
 ```{index} pandas.DataFrame; nlargest
 ```
 
 ```{code-cell} ipython3
-islands_top12 = islands_df.nlargest(12)
+islands_top12 = islands_df.nlargest(12, "size")
 
 islands_bar_sorted = alt.Chart(islands_top12).mark_bar().encode(
     x="size", y="landmass"
@@ -1139,12 +1136,8 @@ we will use the `altair` `sort` function
 in encoding for `y` axis to organize the landmasses by their `size` variable, which is encoded on the x-axis.
 To sort the landmasses by their size(denoted on `x` axis), we use `sort='x'`. This plots the values on `y` axis
 in the ascending order of `x` axis values.
-
 We do this here so that the largest bar will be closest to the axis line,
-which is more visually appealing.
-
-> **Note:** If we want to sort the values on `y-axis` in descending order of `x-axis`,
-> we need to specify `sort='-x'`.
+which is more visually appealing. If instead, we want to sort the values on `y-axis` in descending order of `x-axis`, we need to specify `sort='-x'`.
 
 ```{index} altair; sort
 ```
@@ -1239,7 +1232,7 @@ let's use the default arguments just to see how things look.
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X("Speed"),
-    y="count()"
+    y=alt.Y("count()")
 )
 ```
 
@@ -1273,15 +1266,13 @@ We would also like to fine tune this vertical line,
 styling it so that it is dashed and 1 point in thickness.
 A point is a measurement unit commonly used with fonts,
 and 1 point is about 0.353 mm.
-We do this by setting `strokeDash=[3,3]` and `size = 1`, respectively.
-
-Similarly, a horizontal line can be plotted using the `y` axis encoding and the dataframe with one value, which would act as the be the y-intercept
+We do this by setting `strokeDash=[3,3]` and `size = 1`, respectively.Similarly, a horizontal line can be plotted using the `y` axis encoding and the dataframe with one value, which would act as the be the y-intercept
 
 Note that
 *vertical lines* are used to denote quantities on the *horizontal axis*,
 while *horizontal lines* are used to denote quantities on the *vertical axis*.
-
-To add the dashed line on top of the histogram, we will use the `+` operator. This concept is also known as layering in altair.(This is covered in the later sections of the chapter). Here, we add the `mark_rule` chart on the `morley_hist` chart of the form `mark_bar`
+To add the dashed line on top of the histogram, we will use the `+` operator.
+This concept is also known as layering in altair. Here, we **add** the `mark_rule` chart to the `morley_hist` chart to produce our final plot.
 
 ```{code-cell} ipython3
 v_line = alt.Chart(pd.DataFrame({"x": [792.458]})).mark_rule(
@@ -1324,8 +1315,8 @@ to make the bars slightly translucent.
 ```{code-cell} ipython3
 morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed"),
-    y=alt.Y('count()'),
-    color="Expt"
+    y=alt.Y("count()"),
+    color=alt.Color("Expt")
 )
 
 final_plot_colored = morley_hist_colored + v_line
@@ -1349,7 +1340,7 @@ Histogram of Michelson's speed of light data colored by experiment.
 
 Alright great, {numref}`final_plot_colored` looks...wait a second! We are not able to distinguish
 between different Experiments in the histogram! What is going on here? Well, if you
-recall from Chapter {ref}`wrangling`, the *data type* you use for each variable
+recall from the {ref}`wrangling` chapter, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
 is currently an *integer*. But we want to treat it as a
@@ -1358,8 +1349,8 @@ is currently an *integer*. But we want to treat it as a
 ```{index} nominal, altair; :N
 ```
 
-To fix this issue we can convert the `Expt` variable into a `nominal`(categorical) type
-variable by adding a suffix `:N`(where `N` stands for nominal type variable) with the `Expt` variable.
+To fix this issue we can convert the `Expt` variable into a `nominal` (categorical) type
+variable by adding a suffix `:N` (where `N` stands for nominal type variable) with the `Expt` variable.
 By doing this, we are ensuring that `altair` will treat this variable as a categorical variable,
 and the color will be mapped discretely. Here, we also mention `stack=False`, so that the bars are not stacked on top of each other.
 
@@ -1367,11 +1358,10 @@ and the color will be mapped discretely. Here, we also mention `stack=False`, so
 morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
     y=alt.Y("count()", stack=False),
-    color="Expt:N"
+    color=alt.Color("Expt:N")
 )
 
 final_plot_categorical = morley_hist_categorical + v_line
-
 ```
 
 ```{code-cell} ipython3
@@ -1415,7 +1405,7 @@ Both the `rows` and `columns` arguments take the column names on which to split 
 morley_hist = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
     y=alt.Y("count()", stack=False),
-    color="Expt:N"
+    color=alt.Color("Expt:N")
 ).properties(height=100, width=300)
 
 final_plot_facet = (morley_hist + v_line).facet(
@@ -1451,7 +1441,7 @@ There are two finishing touches to make this visualization even clearer. First a
 using the `alt.X` and `alt.Y` function, and increase the font size to make it readable using the `configure_axis` function. Second, and perhaps more subtly, even though it
 is easy to compare the experiments on this plot to one another, it is hard to get a sense
 of just how accurate all the experiments were overall. For example, how accurate is the value 800 on the plot, relative to the true speed of light?
-To answer this question, we'll use the assign function to transform our data into a relative measure of accuracy rather than absolute measurements:
+To answer this question, we'll use the `assign` function to transform our data into a relative measure of accuracy rather than absolute measurements:
 
 ```{code-cell} ipython3
 
@@ -1515,7 +1505,6 @@ When you create a histogram in `altair`, by default, it tries to choose a reason
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
 the `maxbins` argument in the `mark_bar` geometric object.
-
 But what number of bins is the right one to use?
 
 Unfortunately there is no hard rule for what the right bin number
@@ -1524,7 +1513,6 @@ or bin width is
 the one that *helps you answer the question* you asked.
 Choosing the correct setting for your problem
 is something that commonly takes iteration.
-
 It's usually a good idea to try out several `maxbins` to see which one
 most clearly captures your data in the context of the question
 you want to answer.
@@ -1610,12 +1598,12 @@ morley_hist_5 = alt.Chart(morley_rel).mark_bar(opacity=0.6).encode(
     )
 ).properties(height=100, width=300)
 
-final_plot_max_bins = (
+final_plot_max_bins = ((
     (morley_hist_default + v_line).facet(row="Expt:N", data=morley_rel, title="default maxbins") |
     (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=200")) &
     ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=70") |
     (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=5")
-)
+))
 ```
 
 ```{code-cell} ipython3
@@ -1630,7 +1618,7 @@ glue("final_plot_max_bins", final_plot_max_bins, display=True)
 Effect of varying number of max bins on histograms.
 :::
 
-#### Adding layers to a `altair` plot object {+}
+#### Adding layers to a `altair` plot object
 
 ```{index} altair; +
 ```

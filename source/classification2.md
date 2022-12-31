@@ -17,6 +17,14 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+import warnings
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
 
 import altair as alt
 import numpy as np

@@ -12,6 +12,14 @@ kernelspec:
   name: python3
 ---
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+import warnings
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+```
+
 (classification)=
 # Classification I: training & predicting
 

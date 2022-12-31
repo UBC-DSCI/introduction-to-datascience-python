@@ -12,12 +12,16 @@ kernelspec:
   name: python3
 ---
 
+%```{code-cell} ipython3
+%:tags: [remove-cell]
+%import warnings
+%def warn(*args, **kwargs):
+%    pass
+%warnings.warn = warn
+%```
+
 ```{code-cell} ipython3
-:tags: [remove-cell]
-import warnings
-def warn(*args, **kwargs):
-    pass
-warnings.warn = warn
+from sklearn.metrics.pairwise import euclidean_distances
 ```
 
 (classification)=
@@ -332,6 +336,8 @@ tumor images with unknown diagnoses.
 :tags: [remove-cell]
 
 new_point = [2, 4]
+glue("new_point_1_0", new_point[0])
+glue("new_point_1_1", new_point[1])
 attrs = ["Perimeter", "Concavity"]
 points_df = pd.DataFrame(
     {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["Unknown"]}
@@ -342,8 +348,6 @@ perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=Tru
 my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
     len(cancer)
 ][:-1]
-glue("1-new_point_0", new_point[0])
-glue("1-new_point_1", new_point[1])
 ```
 
 ```{index} K-nearest neighbors; classification
@@ -361,8 +365,11 @@ $K$ for us. We will cover how to choose $K$ ourselves in the next chapter.
 
 To illustrate the concept of $K$-nearest neighbors classification, we 
 will walk through an example.  Suppose we have a
-new observation, with standardized perimeter of {glue:}`1-new_point_0` and standardized concavity of {glue:}`1-new_point_1`, whose 
-diagnosis "Class" is unknown. This new observation is depicted by the red, diamond point in {numref}`fig:05-knn-2`.
+new observation, with standardized perimeter 
+of {glue:}`new_point_1_0` and standardized concavity 
+of {glue:}`new_point_1_1`, whose 
+diagnosis "Class" is unknown. This new observation is 
+depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -370,21 +377,16 @@ diagnosis "Class" is unknown. This new observation is depicted by the red, diamo
 perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
-        # title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color(
-            "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
-            title="Diagnosis",
-        ),
+        color=alt.Color("Class", title="Diagnosis"),
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
     )
 )
 glue('fig:05-knn-2', perim_concav_with_new_point, display=True)
@@ -410,10 +412,11 @@ glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
 glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
 ```
 
-{numref}`fig:05-knn-3` shows that the nearest point to this new observation is **malignant** and
-located at the coordinates ({glue:}`1-neighbor_per`, {glue:}`1-neighbor_con`). The idea here is that if a point is close to another in the scatter plot,
-then the perimeter and concavity values are similar, and so we may expect that
-they would have the same diagnosis.
+{numref}`fig:05-knn-3` shows that the nearest point to this new observation is
+**malignant** and located at the coordinates ({glue:}`1-neighbor_per`,
+{glue:}`1-neighbor_con`). The idea here is that if a point is close to another
+in the scatter plot, then the perimeter and concavity values are similar, 
+and so we may expect that they would have the same diagnosis.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -430,7 +433,9 @@ glue('fig:05-knn-3', (perim_concav_with_new_point + line), display=True)
 :::{glue:figure} fig:05-knn-3
 :name: fig:05-knn-3
 
-Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a malignant label.
+Scatter plot of concavity versus perimeter. The new observation is represented
+as a red diamond with a line to the one nearest neighbor, which has a malignant
+label.
 :::
 
 ```{code-cell} ipython3
@@ -447,8 +452,8 @@ perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=T
 my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
     len(cancer)
 ][:-1]
-glue("2-new_point_0", new_point[0])
-glue("2-new_point_1", new_point[1])
+glue("new_point_2_0", new_point[0])
+glue("new_point_2_1", new_point[1])
 ```
 
 ```{code-cell} ipython3
@@ -457,7 +462,6 @@ glue("2-new_point_1", new_point[1])
 perim_concav_with_new_point2 = (
     alt.Chart(
         perim_concav_with_new_point_df2,
-        # title="Scatter plot of concavity versus perimeter with new observation represented as a red diamond.",
     )
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
@@ -465,7 +469,6 @@ perim_concav_with_new_point2 = (
         y=alt.Y("Concavity", title="Concavity (standardized)"),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -493,9 +496,10 @@ glue("2-neighbor_con", round(near_neighbor_df2.iloc[0, :]['Concavity'], 1))
 glue('fig:05-knn-4', (perim_concav_with_new_point2 + line2), display=True)
 ```
 
-Suppose we have another new observation with standardized perimeter {glue:}`2-new_point_0` and
-concavity of {glue:}`2-new_point_1`. Looking at the scatter plot in {numref}`fig:05-knn-4`, how would you
-classify this red, diamond observation? The nearest neighbor to this new point is a
+Suppose we have another new observation with standardized perimeter
+{glue:}`new_point_2_0` and concavity of {glue:}`new_point_2_1`. Looking at the
+scatter plot in {numref}`fig:05-knn-4`, how would you classify this red,
+diamond observation? The nearest neighbor to this new point is a
 **benign** observation at ({glue:}`2-neighbor_per`, {glue:}`2-neighbor_con`).
 Does this seem like the right prediction to make for this observation? Probably 
 not, if you consider the other nearby points.
@@ -505,7 +509,9 @@ not, if you consider the other nearby points.
 :::{glue:figure} fig:05-knn-4
 :name: fig:05-knn-4
 
-Scatter plot of concavity versus perimeter. The new observation is represented as a red diamond with a line to the one nearest neighbor, which has a benign label.
+Scatter plot of concavity versus perimeter. The new observation is represented
+as a red diamond with a line to the one nearest neighbor, which has a benign
+label.
 :::
 
 ```{code-cell} ipython3
@@ -575,13 +581,13 @@ next chapter.
 ```{index} distance; K-nearest neighbors, straight line; distance
 ```
 
-We decide which points are the $K$ "nearest" to our new observation
-using the *straight-line distance* (we will often just refer to this as *distance*). 
-Suppose we have two observations $a$ and $b$, each having two predictor variables, $x$ and $y$.
-Denote $a_x$ and $a_y$ to be the values of variables $x$ and $y$ for observation $a$;
-$b_x$ and $b_y$ have similar definitions for observation $b$.
-Then the straight-line distance between observation $a$ and $b$ on the x-y plane can 
-be computed using the following formula: 
+We decide which points are the $K$ "nearest" to our new observation using the
+*straight-line distance* (we will often just refer to this as *distance*).
+Suppose we have two observations $a$ and $b$, each having two predictor
+variables, $x$ and $y$.  Denote $a_x$ and $a_y$ to be the values of variables
+$x$ and $y$ for observation $a$; $b_x$ and $b_y$ have similar definitions for
+observation $b$.  Then the straight-line distance between observation $a$ and
+$b$ on the x-y plane can be computed using the following formula: 
 
 $$\mathrm{Distance} = \sqrt{(a_x -b_x)^2 + (a_y - b_y)^2}$$
 

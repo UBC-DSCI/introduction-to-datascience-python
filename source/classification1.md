@@ -15,38 +15,6 @@ kernelspec:
 (classification)=
 # Classification I: training & predicting
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-import random
-
-import altair as alt
-from altair_saver import save
-import numpy as np
-import pandas as pd
-import sklearn
-from sklearn.compose import make_column_transformer
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.metrics.pairwise import euclidean_distances
-from sklearn.preprocessing import StandardScaler
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import iplot, plot
-from IPython.display import HTML
-from myst_nb import glue
-
-alt.data_transformers.disable_max_rows()
-
-# alt.renderers.enable('altair_saver', fmts=['vega-lite', 'png'])
-
-# # Handle large data sets by not embedding them in the notebook
-# alt.data_transformers.enable('data_server')
-
-# # Save a PNG blob as a backup for when the Altair plots do not render
-# alt.renderers.enable('mimetype')
-```
-
 ## Overview 
 In previous chapters, we focused solely on descriptive and exploratory
 data analysis questions. 
@@ -155,10 +123,11 @@ guide patient treatment.
 
 Our first step is to load, wrangle, and explore the data using visualizations
 in order to better understand the data we are working with. We start by
-loading the `pandas` package needed for our analysis.
+loading the `pandas` and `altair` packages needed for our analysis.
 
 ```{code-cell} ipython3
 import pandas as pd
+import altair as alt
 ```
 
 In this case, the file containing the breast cancer data set is a `.csv`
@@ -215,6 +184,9 @@ as well as their data types and the number of non-missing entries.
 cancer.info()
 ```
 
+```{index} unique
+```
+
 From the summary of the data above, we can see that `Class` is of type `object`.
 We can use the `unique` method on the `Class` column to see all unique values
 present in that column. We see that there are two diagnoses:
@@ -224,14 +196,29 @@ benign, represented by `'B'`, and malignant, represented by `'M'`.
 cancer['Class'].unique()
 ```
 
-Since we will be working with `Class` as a categorical statistical variable,
+We will also improve the readability of our analysis
+by renaming `'M'` to `'Malignant'` and `'B'` to `'Benign'` using the `replace`
+method. The `replace` method takes one argument: a dictionary that maps
+previous values to desired new values. 
+Furthermore, since we will be working with `Class` as a categorical statistical variable,
 it is a good idea to convert it to the `category` type using the `astype` method 
-on the `cancer` data frame. We will verify the result using the `info` method
-again.
+on the `cancer` data frame. We will verify the result using the `info` 
+and `unique` methods again.
+
+```{index} replace
+```
 
 ```{code-cell} ipython3
+cancer['Class'] = cancer['Class'].replace({
+				'M' : 'Malignant',
+				'B' : 'Benign'
+				})
 cancer['Class'] = cancer['Class'].astype('category')
 cancer.info()
+```
+
+```{code-cell} ipython3
+cancer['Class'].unique()
 ```
 
 ### Exploring the cancer data
@@ -239,44 +226,65 @@ cancer.info()
 ```{index} groupby, count
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+from myst_nb import glue
+import numpy as np
+glue("benign_count", cancer['Class'].value_counts()['Benign'])
+glue("benign_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Benign'])))
+glue("malignant_count", cancer['Class'].value_counts()['Malignant'])
+glue("malignant_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Malignant'])))
+```
+
 Before we start doing any modeling, let's explore our data set. Below we use
 the `groupby` and `count` methods to find the number and percentage 
-of benign and malignant tumor observations in our data set. When paired with `.groupby()`, `.count()` counts the number of observations in each `Class` group.
-Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
+of benign and malignant tumor observations in our data set. When paired with
+`groupby`, `count` counts the number of observations for each value of the `Class`
+variable. Then we calculate the percentage in each group by dividing by the total
+number of observations and multiplying by 100. We have 
+{glue:}`benign_count` ({glue:}`benign_pct`\%) benign and
+{glue:}`malignant_count` ({glue:}`malignant_pct`\%) malignant 
+tumor observations.
 
 ```{code-cell} ipython3
-num_obs = len(cancer)
 explore_cancer = pd.DataFrame()
 explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
-explore_cancer['percentage'] = explore_cancer['count'] / num_obs * 100
+explore_cancer['percentage'] = 100 * explore_cancer['count']/len(cancer)
 explore_cancer
+```
+
+```{index} value_counts
+```
+
+The `pandas` package also has a more convenient specialized `value_counts` method for 
+counting the number of occurrences of each value in a column. If we pass no arguments
+to the method, it outputs a series containing the number of occurences
+of each value. If we instead pass the argument `normalize=True`, it instead prints the fraction
+of occurrences of each value.
+
+```{code-cell} ipython3
+cancer['Class'].value_counts()
+```
+
+```{code-cell} ipython3
+cancer['Class'].value_counts(normalize=True)
 ```
 
 ```{index} visualization; scatter
 ```
 
-Next, let's draw a scatter plot to visualize the relationship between the
-perimeter and concavity variables. Rather than use `altair's` default palette,
-we select our own colorblind-friendly colors&mdash;`"#efb13f"` 
-for light orange and `"#86bfef"` for light blue&mdash;and
- pass them as the `scale` argument in the `color` argument. 
-We also make the category labels ("B" and "M") more readable by 
-changing them to "Benign" and "Malignant" using `.apply()` method on the dataframe.
+Next, let's draw a colored scatter plot to visualize the relationship between the
+perimeter and concavity variables. Recall that `altair's` default palette
+is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
-:tags: []
-
-colors = ["#86bfef", "#efb13f"]
-cancer["Class"] = cancer["Class"].apply(
-    lambda x: "Malignant" if (x == "M") else "Benign"
-)
 perim_concav = (
     alt.Chart(cancer)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 perim_concav
@@ -305,7 +313,8 @@ you classify that new observation? If the standardized concavity and perimeter
 values are 1 and 1 respectively, the point would lie in the middle of the
 orange cloud of malignant points and thus we could probably classify it as
 malignant. Based on our visualization, it seems like 
-the *prediction of an unobserved label* might be possible.
+it may be possible to make accurate predictions of the `Class` variable (i.e., a diagnosis) for
+tumor images with unknown diagnoses.
 
 +++
 

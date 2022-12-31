@@ -83,7 +83,7 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} see: feature ; predictor
 ```
 
-In many situations, we want to make `predictions` based on the current situation
+In many situations, we want to make predictions based on the current situation
 as well as past experiences. For instance, a doctor may want to diagnose a
 patient as either diseased or healthy based on their symptoms and the doctor's
 past experience with patients; an email provider might want to tag a given
@@ -206,65 +206,32 @@ total set of variables per image in this data set is:
 ```{index} info
 ```
 
-Below we use `.info()` to preview the data frame. This method can 
-make it easier to inspect the data when we have a lot of columns, 
-as it prints the data such that the columns go down 
-the page (instead of across).
+Below we use the `info` method to preview the data frame. This method can 
+make it easier to inspect the data when we have a lot of columns:
+it prints only the column names down the page (instead of across),
+as well as their data types and the number of non-missing entries.
 
 ```{code-cell} ipython3
 cancer.info()
 ```
 
-From the summary of the data above, we can see that `Class` is of type object.
-
-+++
-
-Given that we only have two different values in our `Class` column (B for benign and M 
-for malignant), we only expect to get two names back.
+From the summary of the data above, we can see that `Class` is of type `object`.
+We can use the `unique` method on the `Class` column to see all unique values
+present in that column. We see that there are two diagnoses:
+benign, represented by `'B'`, and malignant, represented by `'M'`.
 
 ```{code-cell} ipython3
 cancer['Class'].unique()
 ```
 
+Since we will be working with `Class` as a categorical statistical variable,
+it is a good idea to convert it to the `category` type using the `astype` method 
+on the `cancer` data frame. We will verify the result using the `info` method
+again.
+
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-## The above was based on the following text and code in R textbook. ##
-#######################################################################
-# Below we use `glimpse` \index{glimpse} to preview the data frame. This function can
-# make it easier to inspect the data when we have a lot of columns,
-# as it prints the data such that the columns go down
-# the page (instead of across).
-
-# ```{r 05-glimpse}
-# glimpse(cancer)
-# ```
-
-# From the summary of the data above, we can see that `Class` is of type character
-# (denoted by `<chr>`). Since we will be working with `Class` as a
-# categorical statistical variable, we will convert it to a factor using the
-# function `as_factor`. \index{factor!as\_factor}
-
-# ```{r 05-class}
-# cancer <- cancer |>
-#   mutate(Class = as_factor(Class))
-# glimpse(cancer)
-# ```
-
-# Recall that factors have what are called "levels", which you can think of as categories. We
-# can verify the levels of the `Class` column by using the `levels` \index{levels}\index{factor!levels} function.
-# This function should return the name of each category in that column. Given
-# that we only have two different values in our `Class` column (B for benign and M
-# for malignant), we only expect to get two names back.  Note that the `levels` function requires a *vector* argument;
-# so we use the `pull` function to extract a single column (`Class`) and
-# pass that into the `levels` function to see the categories
-# in the `Class` column.
-
-# ```{r 05-levels}
-# cancer |>
-#   pull(Class) |>
-#   levels()
-# ```
+cancer['Class'] = cancer['Class'].astype('category')
+cancer.info()
 ```
 
 ### Exploring the cancer data
@@ -273,7 +240,7 @@ cancer['Class'].unique()
 ```
 
 Before we start doing any modeling, let's explore our data set. Below we use
-the `.groupby()`, `.count()` methods to find the number and percentage 
+the `groupby` and `count` methods to find the number and percentage 
 of benign and malignant tumor observations in our data set. When paired with `.groupby()`, `.count()` counts the number of observations in each `Class` group.
 Then we calculate the percentage in each group by dividing by the total number of observations. We have 357 (63\%) benign and 212 (37\%) malignant tumor observations.
 

@@ -1995,7 +1995,7 @@ Scatter plot of smoothness versus area where background color indicates the deci
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Classification I: training and predicting" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

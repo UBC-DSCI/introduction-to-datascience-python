@@ -18,7 +18,15 @@ kernelspec:
 #def warn(*args, **kwargs):
 #    pass
 #warnings.warn = warn
+
+from myst_nb import glue
+import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
+from IPython.display import HTML
+
+import plotly.express as px
+import plotly.graph_objs as go
+from plotly.offline import iplot, plot
 ```
 
 (classification)=
@@ -237,8 +245,6 @@ cancer['Class'].unique()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-from myst_nb import glue
-import numpy as np
 glue("benign_count", cancer['Class'].value_counts()['Benign'])
 glue("benign_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Benign'])))
 glue("malignant_count", cancer['Class'].value_counts()['Malignant'])
@@ -600,6 +606,13 @@ the $K=5$ neighbors that are nearest to our new point.
 You will see in the code below, we compute the straight-line
 distance using the formula above: we square the differences between the two observations' perimeter 
 and concavity coordinates, add the squared differences, and then take the square root.
+In order to find the $K=5$ nearest neighbors, we will use the `nsmallest` function from `pandas`.
+
+> **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
+> the ten rows with the *largest* values of a variable. We could have instead used the `nlargest` function
+> from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
+> as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
+> In general, it is good to use more specialized functions when they are available!
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -620,7 +633,6 @@ perim_concav_with_new_point3 = (
         y=alt.Y("Concavity", title="Concavity (standardized)"),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -647,13 +659,14 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
-cancer_dist = cancer.loc[:, ["ID", "Perimeter", "Concavity", "Class"]]
-cancer_dist = cancer_dist.assign(dist_from_new = np.sqrt(
-    (cancer_dist["Perimeter"] - new_obs_Perimeter) ** 2
-    + (cancer_dist["Concavity"] - new_obs_Concavity) ** 2
-))
-# sort the rows in ascending order and take the first 5 rows
-cancer_dist = cancer_dist.sort_values(by="dist_from_new").head(5)
+cancer_dist = (cancer
+           .loc[:, ["Perimeter", "Concavity", "Class"]]
+           .assign(dist_from_new = (
+               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+             + (cancer["Concavity"] - new_obs_Concavity) ** 2
+           )**(1/2))
+           .nsmallest(5, "dist_from_new")
+      )
 cancer_dist
 ```
 
@@ -662,36 +675,21 @@ we computed the `dist_from_new` variable (the
 distance to the new observation) for each of the 5 nearest neighbors in the
 training data.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## Couldn't find ways to have nice Latex equations in pandas dataframe
-
-# cancer_dist_eq = cancer_dist.copy()
-# cancer_dist_eq['Perimeter'] = round(cancer_dist_eq['Perimeter'], 2)
-# cancer_dist_eq['Concavity'] = round(cancer_dist_eq['Concavity'], 2)
-# for i in list(cancer_dist_eq.index):
-#     cancer_dist_eq.loc[
-#         i, "Distance"
-#     ] = f"[({new_obs_Perimeter} - {round(cancer_dist_eq.loc[i, 'Perimeter'], 2)})² + ({new_obs_Concavity} - {round(cancer_dist_eq.loc[i, 'Concavity'], 2)})²]¹/² = {round(cancer_dist_eq.loc[i, 'dist_from_new'], 2)}"
-# cancer_dist_eq[["Perimeter", "Concavity", "Distance", "Class"]]
-```
-
 ```{table} Evaluating the distances from the new observation to each of its 5 nearest neighbors
 :name: tab:05-multiknn-mathtable
 | Perimeter | Concavity | Distance            | Class |
 |-----------|-----------|----------------------------------------|-------|
-| 0.24      | 2.65      | $\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$| B     |
-| 0.75      | 2.87      | $\sqrt{(0-0.75)^2+(3.5-2.87)^2}=0.98$| M     |
-| 0.62      | 2.54      | $\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$| M     |
-| 0.42      | 2.31      | $\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$| M     |
-| -1.16     | 4.04      | $\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$| B     |
+| 0.24      | 2.65      | $\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$| Benign     |
+| 0.75      | 2.87      | $\sqrt{(0-0.75)^2+(3.5-2.87)^2}=0.98$| Malignant     |
+| 0.62      | 2.54      | $\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$| Malignant     |
+| 0.42      | 2.31      | $\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$| Malignant     |
+| -1.16     | 4.04      | $\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$| Benign     |
 ```
 
 +++
 
 The result of this computation shows that 3 of the 5 nearest neighbors to our new observation are
-malignant (`M`); since this is the majority, we classify our new observation as malignant. 
+malignant; since this is the majority, we classify our new observation as malignant. 
 These 5 neighbors are circled in {numref}`fig:05-multiknn-3`.
 
 ```{code-cell} ipython3
@@ -758,18 +756,20 @@ three predictors.
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
 new_obs_Symmetry = 1
-cancer_dist2 = cancer.loc[:, ["ID", "Perimeter", "Concavity", "Symmetry", "Class"]]
-cancer_dist2["dist_from_new"] = np.sqrt(
-    (cancer_dist2["Perimeter"] - new_obs_Perimeter) ** 2
-    + (cancer_dist2["Concavity"] - new_obs_Concavity) ** 2
-    + (cancer_dist2["Symmetry"] - new_obs_Symmetry) ** 2
-)
-# sort the rows in ascending order and take the first 5 rows
-cancer_dist2 = cancer_dist2.sort_values(by="dist_from_new").head(5)
+cancer_dist2 = (cancer
+           .loc[:, ["Perimeter", "Concavity", "Symmetry", "Class"]]
+           .assign(dist_from_new = (
+               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+             + (cancer["Concavity"] - new_obs_Concavity) ** 2
+             + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
+           )**(1/2))
+           .nsmallest(5, "dist_from_new")
+      )
 cancer_dist2
 ```
 
-Based on $K=5$ nearest neighbors with these three predictors we would classify the new observation as malignant since 4 out of 5 of the nearest neighbors are malignant class. 
+Based on $K=5$ nearest neighbors with these three predictors we would classify 
+the new observation as malignant since 4 out of 5 of the nearest neighbors are malignant class. 
 {numref}`fig:05-more` shows what the data look like when we visualize them 
 as a 3-dimensional scatter with lines from the new observation to its five nearest neighbors.
 
@@ -832,7 +832,7 @@ for i, d in enumerate(fig.data):
     fig.data[i].marker.symbol = symbols[fig.data[i].name]
 
 # specify trace names and colors in a dict
-colors = {"Malignant": "#86bfef", "Benign": "#efb13f", "Unknown": "red"}
+colors = {"Malignant": "#ff7f0e", "Benign": "#1f77b4", "Unknown": "red"}
 
 # set all colors in fig
 for i, d in enumerate(fig.data):
@@ -861,7 +861,6 @@ for neighbor_df in neighbor_df_list:
 fig.update_layout(margin=dict(l=0, r=0, b=0, t=1), template="plotly_white")
 
 plot(fig, filename="img/classification1/fig05-more.html", auto_open=False)
-# display(HTML("img/classification1/fig05-more.html"))
 ```
 
 ```{code-cell} ipython3
@@ -874,7 +873,10 @@ display(HTML("img/classification1/fig05-more.html"))
 :name: fig:05-more
 :figclass: caption-hack
 
-3D scatter plot of the standardized symmetry, concavity, and perimeter variables. Note that in general we recommend against using 3D visualizations; here we show the data in 3D only to illustrate what higher dimensions and nearest neighbors look like, for learning purposes.
+3D scatter plot of the standardized symmetry, concavity, and perimeter
+variables. Note that in general we recommend against using 3D visualizations;
+here we show the data in 3D only to illustrate what higher dimensions and
+nearest neighbors look like, for learning purposes.
 ```
 
 +++
@@ -884,9 +886,8 @@ display(HTML("img/classification1/fig05-more.html"))
 In order to classify a new observation using a $K$-nearest neighbor classifier, we have to do the following:
 
 1. Compute the distance between the new observation and each observation in the training set.
-2. Sort the data table in ascending order according to the distances.
-3. Choose the top $K$ rows of the sorted table.
-4. Classify the new observation based on a majority vote of the neighbor classes.
+2. Find the $K$ rows corresponding to the $K$ smallest distances.
+3. Classify the new observation based on a majority vote of the neighbor classes.
 
 +++
 
@@ -901,28 +902,9 @@ or predict the class for multiple new observations. Thankfully, in Python,
 the $K$-nearest neighbors algorithm is 
 implemented in [the `scikit-learn` Python package](https://scikit-learn.org/stable/index.html) {cite:p}`sklearn_api` along with 
 many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions 
-in the `scikit-learn` package will help keep our code simple, readable and accurate; the 
+in the `scikit-learn` package (named `sklearn` in Python) will help keep our code simple, readable and accurate; the 
 less we have to code ourselves, the fewer mistakes we will likely make. We 
 start by importing `KNeighborsClassifier` from the `sklearn.neighbors` module.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## The above was based on:
-
-# Coding the $K$-nearest neighbors algorithm in R ourselves can get complicated,
-# especially if we want to handle multiple classes, more than two variables,
-# or predict the class for multiple new observations. Thankfully, in R,
-# the $K$-nearest neighbors algorithm is
-# implemented in [the `parsnip` R package](https://parsnip.tidymodels.org/) [@parsnip]
-# included in `tidymodels`, along with
-# many [other models](https://www.tidymodels.org/find/parsnip/) \index{tidymodels}\index{parsnip}
-#  that you will encounter in this and future chapters of the book. The `tidymodels` collection
-# provides tools to help make and use models, such as classifiers.  Using the packages
-# in this collection will help keep our code simple, readable and accurate; the
-# less we have to code ourselves, the fewer mistakes we will likely make. We
-# start by loading `tidymodels`.
-```
 
 ```{code-cell} ipython3
 from sklearn.neighbors import KNeighborsClassifier

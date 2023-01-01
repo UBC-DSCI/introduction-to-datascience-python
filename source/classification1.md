@@ -12,15 +12,12 @@ kernelspec:
   name: python3
 ---
 
-%```{code-cell} ipython3
-%:tags: [remove-cell]
+```{code-cell} ipython3
+:tags: [remove-cell]
 %import warnings
 %def warn(*args, **kwargs):
 %    pass
 %warnings.warn = warn
-%```
-
-```{code-cell} ipython3
 from sklearn.metrics.pairwise import euclidean_distances
 ```
 

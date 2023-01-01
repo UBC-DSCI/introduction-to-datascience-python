@@ -15,13 +15,13 @@ kernelspec:
 (classification2)=
 # Classification II: evaluation & tuning
 
-%```{code-cell} ipython3
+```{code-cell} ipython3
 %:tags: [remove-cell]
 %import warnings
 %def warn(*args, **kwargs):
 %    pass
 %warnings.warn = warn
-%```
+```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

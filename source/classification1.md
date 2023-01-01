@@ -915,103 +915,63 @@ We will use the `cancer` data set from above, with
 perimeter and concavity as predictors and $K = 5$ neighbors to build our classifier. Then
 we will use the classifier to predict the diagnosis label for a new observation with
 perimeter 0, concavity 3.5, and an unknown diagnosis label. Let's pick out our two desired
-predictor variables and class label and store them as a new data set named `cancer_train`:
+predictor variables and class label and store them with the name `cancer_train`:
 
 ```{code-cell} ipython3
-cancer_train = cancer.loc[:, ['Class', 'Perimeter', 'Concavity']]
+cancer_train = cancer[['Class', 'Perimeter', 'Concavity']]
 cancer_train
 ```
 
-```{index} scikit-learn; model instance, scikit-learn; KNeighborsClassifier
+```{index} scikit-learn; model object, scikit-learn; KNeighborsClassifier
 ```
 
-Next, we create a *model specification* for $K$-nearest neighbors classification
-by creating a `KNeighborsClassifier` instance, specifying that we want to use $K = 5$ neighbors
-(we will discuss how to choose $K$ in the next chapter) and the straight-line 
-distance (`weights="uniform"`). The `weights` argument controls
-how neighbors vote when classifying a new observation; by setting it to `"uniform"`,
-each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
-which weigh each neighbor's vote differently, can be found on 
-[the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
+Next, we create a *model object* for $K$-nearest neighbors classification
+by creating a `KNeighborsClassifier` instance, specifying that we want to use $K = 5$ neighbors;
+we will discuss how to choose $K$ in the next chapter.
+
+> **Note:** You can specify the `weights` argument in order to control
+> how neighbors vote when classifying a new observation. The default is `"uniform"`, where
+> each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
+> which weigh each neighbor's vote differently, can be found on 
+> [the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
+
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-## The above was based on:
-
-# Next, we create a *model specification* for \index{tidymodels!model specification} $K$-nearest neighbors classification
-# by calling the `nearest_neighbor` function, specifying that we want to use $K = 5$ neighbors
-# (we will discuss how to choose $K$ in the next chapter) and the straight-line 
-# distance (`weight_func = "rectangular"`). The `weight_func` argument controls
-# how neighbors vote when classifying a new observation; by setting it to `"rectangular"`,
-# each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
-# which weigh each neighbor's vote differently, can be found on 
-# [the `parsnip` website](https://parsnip.tidymodels.org/reference/nearest_neighbor.html).
-# In the `set_engine` \index{tidymodels!engine} argument, we specify which package or system will be used for training
-# the model. Here `kknn` is the R package we will use for performing $K$-nearest neighbors classification.
-# Finally, we specify that this is a classification problem with the `set_mode` function.
-```
-
-```{code-cell} ipython3
-knn_spec = KNeighborsClassifier(n_neighbors=5)
-knn_spec
+knn = KNeighborsClassifier(n_neighbors=5)
+knn
 ```
 
 ```{index} scikit-learn; X & y
 ```
 
-In order to fit the model on the breast cancer data, we need to call `fit` on the classifier object and pass the data in the argument. We also need to specify what variables to use as predictors and what variable to use as the target. Below, the `X=cancer_train[["Perimeter", "Concavity"]]` and the `y=cancer_train['Class']` argument specifies 
-that `Class` is the target variable (the one we want to predict),
-and both `Perimeter` and `Concavity` are to be used as the predictors.
+In order to fit the model on the breast cancer data, we need to call `fit` on
+the model object. The `X` argument is used to specify the data for the predictor
+variables, while the `y` argument is used to specify the data for the response variable.
+So below, we set `X=cancer_train[["Perimeter", "Concavity"]]` and
+`y=cancer_train['Class']` to specify that `Class` is the target
+variable (the one we want to predict), and both `Perimeter` and `Concavity` are
+to be used as the predictors. Note that the `fit` function might look like it does not
+do much from the outside, but it is actually doing all the heavy lifting to train
+the K-nearest neighbors model, and modifies the `knn` model object.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-## The above was based on:
-
-# In order to fit the model on the breast cancer data, we need to pass the model specification
-# and the data set to the `fit` function. We also need to specify what variables to use as predictors
-# and what variable to use as the target. Below, the `Class ~ Perimeter + Concavity` argument specifies 
-# that `Class` is the target variable (the one we want to predict),
-# and both `Perimeter` and `Concavity` are to be used as the predictors.
-
-
-# We can also use a convenient shorthand syntax using a period, `Class ~ .`, to indicate
-# that we want to use every variable *except* `Class` \index{tidymodels!model formula} as a predictor in the model.
-# In this particular setup, since `Concavity` and `Perimeter` are the only two predictors in the `cancer_train`
-# data frame, `Class ~ Perimeter + Concavity` and `Class ~ .` are equivalent.
-# In general, you can choose individual predictors using the `+` symbol, or you can specify to
-# use *all* predictors using the `.` symbol.
-```
-
-```{code-cell} ipython3
-knn_spec.fit(X=cancer_train[["Perimeter", "Concavity"]], y=cancer_train["Class"]);
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Here you can see the final trained model summary. It confirms that the computational engine used
-# to train the model  was `kknn::train.kknn`. It also shows the fraction of errors made by
-# the nearest neighbor model, but we will ignore this for now and discuss it in more detail
-# in the next chapter.
-# Finally, it shows (somewhat confusingly) that the "best" weight function 
-# was "rectangular" and "best" setting of $K$ was 5; but since we specified these earlier,
-# R is just repeating those settings to us here. In the next chapter, we will actually
-# let R find the value of $K$ for us. 
+knn.fit(X=cancer_train[["Perimeter", "Concavity"]], y=cancer_train["Class"]);
 ```
 
 ```{index} scikit-learn; predict
 ```
 
-Finally, we make the prediction on the new observation by calling `predict` on the classifier object,
-passing the new observation itself. As above, 
-when we ran the $K$-nearest neighbors
-classification algorithm manually, the `knn_fit` object classifies the new observation as "Malignant". Note that the `predict` function outputs a `numpy` array with the model's prediction.
+After using the `fit` function, we can make a prediction on a new observation
+by calling `predict` on the classifier object, passing the new observation
+itself. As above, when we ran the $K$-nearest neighbors classification
+algorithm manually, the `knn` model object classifies the new observation as
+"Malignant". Note that the `predict` function outputs an `array` with the
+model's prediction; you can actually make multiple predictions at the same
+time using the `predict` function, which is why the output is stored as an `array`.
 
 ```{code-cell} ipython3
 new_obs = pd.DataFrame({'Perimeter': [0], 'Concavity': [3.5]})
-knn_spec.predict(new_obs)
+knn.predict(new_obs)
 ```
 
 Is this predicted malignant label the true class for this observation? 

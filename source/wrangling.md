@@ -723,7 +723,7 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Notice in the table, all of the variables are
-"object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in Section {ref}`pivot-wider`, the
+"object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in the section on {ref}`pivot-wider`, the
 `most_at_home` and `most_at_work` variables were `int64` (integer)&mdash;you can
 verify this by calling `df.info()`&mdash;which is a type
 of numeric data. This change is due to the delimiter (`/`) when we read in this
@@ -758,7 +758,7 @@ indicating they are integer data types (i.e., numbers)!
 
 Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
 using the powerful suite of functions from the `pandas`.
-We revisit the `[]` from Chapter {ref}`intro`,
+We revisit the `[]` from the chapter on {ref}`intro`,
 which lets us create a subset of rows from a data frame.
 Recall the argument to the `[]`:
 column names or a logical statement evaluated to either `True` or `False`;
@@ -888,7 +888,7 @@ glue("census_popn", "{0:,.0f}".format(35151728))
 glue("most_french", "{0:,.0f}".format(2669195))
 ```
 
-We saw in Section {ref}`filter-and` that
+We saw in the section on {ref}`filter-and` that
 {glue:text}`most_french` people reported
 speaking French in Montréal as their primary language at home.
 If we are interested in finding the official languages in regions
@@ -931,7 +931,7 @@ comes in. For the first example, recall `.loc[]` from Chapter {ref}`intro`,
 which lets us create a subset of columns from a data frame.
 Suppose we wanted to select only the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets.
+learned in the chapter on {ref}`intro`, we would pass all of these column names into the square brackets.
 
 ```{code-cell} ipython3
 selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
@@ -1349,7 +1349,7 @@ region_lang_min_max
 ```{index} pandas.DataFrame; []
 ```
 
-In Section {ref}`str-split`,
+In the section on {ref}`str-split`,
 when we first read in the `"region_lang_top5_cities_messy.csv"` data,
 all of the variables were "object" data types.
 During the tidying process,
@@ -1564,7 +1564,7 @@ region_lang
 
 To accomplish such a task, we can use `.apply`.
 This works in a similar way for column selection,
-as we saw when we used in Section {ref}`apply-summary` earlier.
+as we saw when we used in the Section on {ref}`apply-summary` earlier.
 As we did above,
 we again use `.loc[]` to specify the columns
 as well as the `.apply` to specify the function we want to apply on these columns.
@@ -1614,7 +1614,7 @@ in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
 Before we use `.apply`, we will again use `loc[]` to select only the count columns
 so we can see all the columns in the data frame's output easily in the book.
-So for this demonstration, the data set we are operating on looks like this:
+So for this demonstration, the data set we are operating on looks like this.
 
 ```{code-cell} ipython3
 region_lang.loc[:, ["most_at_home", "most_at_work"]]
@@ -1623,7 +1623,7 @@ region_lang.loc[:, ["most_at_home", "most_at_work"]]
 Now we use `.apply` with argument `axis=1`, to tell Python that we would like
 the `max` function to be applied across, and within, a row,
 as opposed to being applied on a column
-(which is the default behavior of `.apply`):
+(which is the default behavior of `.apply`).
 
 ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
@@ -1676,7 +1676,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the chapter on {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++ {"tags": []}

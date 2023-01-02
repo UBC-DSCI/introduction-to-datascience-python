@@ -65,7 +65,7 @@ By the end of the chapter, readers will be able to do the following:
 
 ## Data frames and series
 
-In Chapters {ref}`intro` and {ref}`reading`, *data frames* were the focus:
+In the chapters on {ref}`intro` and {ref}`reading`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require
 that data are represented as a `pandas` **data frame** in Python. Therefore, in this section,
@@ -126,7 +126,7 @@ has several different basic data types, as shown in
 {numref}`tab:datatype-table`.
 You can create a `pandas` series using the
 `pd.Series()` function.  For example, to create the series `region` as shown
-in{numref}`fig:02-series`, you can write:
+in{numref}`fig:02-series`, you can write
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -442,7 +442,7 @@ We use `.melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
-area:
+area
 
 ```{code-cell} ipython3
 lang_mother_tidy = lang_wide.melt(
@@ -931,7 +931,7 @@ comes in. For the first example, recall `.loc[]` from Chapter {ref}`intro`,
 which lets us create a subset of columns from a data frame.
 Suppose we wanted to select only the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets:
+learned in Chapter {ref}`intro`, we would pass all of these column names into the square brackets.
 
 ```{code-cell} ipython3
 selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
@@ -1073,7 +1073,7 @@ region_lang
 We use `.min` to calculate the minimum
 and `.max` to calculate maximum number of Canadians
 reporting a particular language as their primary language at home,
-for any region:
+for any region.
 
 ```{code-cell} ipython3
 region_lang["most_at_home"].min()
@@ -1104,12 +1104,13 @@ Other handy summary statistics include the `.mean`, `.median` and `.std` for
 computing the mean, median, and standard deviation of observations, respectively.
 
 We can compute multiple statistics at once using `.agg` to "aggregate" results, say if we wanted to
-compute both the `min` and `max`:
+compute both the `min` and `max`, we could do the following.
+
 ```{code-cell} ipython3
 region_lang["most_at_home"].agg(['min', 'max'])
 ```
 
-Another handy function is `describe`; it gives us a summary:
+Another handy function is `describe`; it gives us a summary.
 
 ```{code-cell} ipython3
 region_lang["most_at_home"].describe()
@@ -1333,7 +1334,7 @@ to store them in a data frame that you can use later.
 We can use `.assign` as mentioned in along with proper summary functions to create a aggregated column.
 
 For example, say we wanted to keep the minimum and maximum values in a data frame, we can (1) create a new, empty
-data frame and (2) use `.assign` to assign values to that data frame:
+data frame and (2) use `.assign` to assign values to that data frame.
 ```
 region_lang_min_max = pd.DataFrame()  # empty data frame
 region_lang_min_max.assign(
@@ -1416,7 +1417,7 @@ Syntax for the `.assign` function.
 
 Below we use `.assign` to convert the columns `most_at_home` and `most_at_work`
 to numeric data types in the `official_langs` data set as described in
-{numref}`fig:img-assign`:
+{numref}`fig:img-assign`.
 
 ```{code-cell} ipython3
 official_langs_numeric = official_langs_obj.assign(
@@ -1485,7 +1486,7 @@ so that we only keep the rows where the language is English.
 
 To create a list containing the population values for the five cities
 (Toronto, Montréal, Vancouver, Calgary, Edmonton),
-we will use the `[]` (recall that we can also use `list()` to create a list):
+we will use the `[]` (recall that we can also use `list()` to create a list).
 
 ```{code-cell} ipython3
 city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
@@ -1494,7 +1495,7 @@ city_pops
 
 And next, we will filter the `official_langs` data frame
 so that we only keep the rows where the language is English.
-We will name the new data frame we get from this `english_langs`:
+We will name the new data frame we get from this `english_langs`.
 
 ```{code-cell} ipython3
 english_langs = official_langs[official_langs["language"] == "English"]

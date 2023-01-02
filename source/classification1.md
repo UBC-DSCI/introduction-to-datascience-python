@@ -14,10 +14,10 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-#import warnings
-#def warn(*args, **kwargs):
-#    pass
-#warnings.warn = warn
+import warnings
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
 
 from myst_nb import glue
 import numpy as np

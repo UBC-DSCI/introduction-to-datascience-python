@@ -192,6 +192,15 @@ For this book, we are going to focus on the last 40 years of the data set,
 **Question:** Does the concentration of atmospheric CO$_{\text{2}}$ change over time,
 and are there any interesting patterns to note?
 
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+mauna_loa = pd.read_csv("data/mauna_loa.csv")
+mauna_loa['day']=1
+mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
+mauna_loa = mauna_loa[['date_measured', 'ppm']].query('ppm>0 and date_measured>"1980-1-1"')
+mauna_loa.to_csv("data/mauna_loa_data.csv", index=False)
+```
+
 To get started, we will read and inspect the data:
 
 ```{code-cell} ipython3

@@ -250,13 +250,14 @@ type(can_lang)
 
 ### Data structures in Python
 
-
 Series and DataFrames are basic types of *data structure* in Python, which
 are core to most data analyses.
-
 The functions from `pandas` that we use often give us back a `DataFrame`
 or a `Series` depending on the operation.
-These include the ability to add useful attributes (such as grouping, which we will discuss later) and more predictable type preservation when subsetting.
+These include the ability to add useful attributes (such as grouping, which we will
+discuss later) and more predictable type preservation when subsetting. Because
+`Series` are essentially simple `DataFrames`, we will refer
+to both `DataFrames` and `Series` as "data frames" in the text.
 
 There are other types that represent data structures in Python. We summarize the
 most common ones in {numref}`tab:datastructure-table`.
@@ -407,8 +408,8 @@ by creating a column called "year" and a column called
 "longer"&mdash;is shown as the right table in
 {numref}`fig:02-wide-to-long`. Note that the number of entries in our data frame
 can change in this transformation. The "untidy" data has 5 rows and 3 columns for
-a total of 15 data, whereas the "tidy" data on the right has 15 rows and 2 columns
-for a total of 30 data.
+a total of 15 entries, whereas the "tidy" data on the right has 15 rows and 2 columns
+for a total of 30 entries.
 
 +++ {"tags": []}
 
@@ -425,7 +426,6 @@ Melting data from a wide to long data format.
 ```
 
 We can achieve this effect in Python using the `.melt` function from the `pandas` package.
-We say that we "melt" (or "pivot") the wide table into a longer format.
 The `.melt` function combines columns,
 and is usually used during tidying data
 when we need to make the data frame longer and narrower.
@@ -478,6 +478,8 @@ Going from wide to long with the `.melt` function.
 in the `.melt` function to accomplish this data transformation.
 
 +++ {"tags": []}
+
+**(FIGURE UPDATE NEEDED TO MATCH THE CODE BELOW)**
 
 ```{figure} img/wrangling/pandas_melt_args_labels.png
 :name: fig:img-pivot-longer
@@ -650,6 +652,14 @@ The second operation we applied is to rename the columns. When we perform the `p
 operation, it keeps the original column name `"count"` and adds the `"type"` as a second column name.
 Having two names for a column can be confusing! So we rename giving each column only one name.
 
+We can print out some useful information about our data frame using the `info` function.
+In the first row it tells us the `type` of `lang_home_tidy` (a pandas `DataFrame`). The second
+row tells us how many rows there are: 1070, and to index those rows, you can use numbers between
+0 and 1069 (remember that Python starts counting at 0!). Next, there is a print out about the data
+colums. Here there are 5 columns total. The little table it prints out tells you the name of each
+column, the number of non-null values (e.g. the number of entries that are not missing values), and
+the type of the entries. Finally the last two rows summarize the types of each column and how much
+memory the data frame is using on your computer.
 ```{code-cell} ipython3
 lang_home_tidy.info()
 ```
@@ -669,6 +679,7 @@ we did in the messy one. Therefore `.pivot` didn't really "widen" the data.
 This is just because the original `type` column only had
 two categories in it. If it had more than two, `.pivot` would have created
 more columns, and we would see the data set "widen."
+
 
 +++
 

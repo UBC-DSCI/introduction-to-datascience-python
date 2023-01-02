@@ -1429,39 +1429,25 @@ what the data would look like if the cancer was rare. We will do this by
 picking only 3 observations from the malignant group, and keeping all
 of the benign observations. We choose these 3 observations using the `.head()`
 method, which takes the number of rows to select from the top (`n`).
-The new imbalanced data is shown in {numref}`fig:05-unbalanced`.
+We use the [`concat`](https://pandas.pydata.org/docs/reference/api/pandas.concat.html) 
+function from `pandas` to glue the two resulting filtered
+data frames back together by passing them together in a sequence.
+The new imbalanced data is shown in {numref}`fig:05-unbalanced`, 
+and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# To better illustrate the problem, let's revisit the scaled breast cancer data, 
-# `cancer`; except now we will remove many of the observations of malignant tumors, simulating
-# what the data would look like if the cancer was rare. We will do this by
-# picking only 3 observations from the malignant group, and keeping all
-# of the benign observations. We choose these 3 observations using the `slice_head`
-# function, which takes two arguments: a data frame-like object,
-# and the number of rows to select from the top (`n`).
-# The new imbalanced data is shown in Figure \@ref(fig:05-unbalanced).
-```
-
-```{code-cell} ipython3
-cancer = pd.read_csv("data/wdbc.csv")
 rare_cancer = pd.concat(
-    (cancer.query("Class == 'B'"), cancer.query("Class == 'M'").head(3))
-)
-colors = ["#86bfef", "#efb13f"]
-rare_cancer["Class"] = rare_cancer["Class"].apply(
-    lambda x: "Malignant" if (x == "M") else "Benign"
-)
+    (cancer[cancer["Class"] == 'Benign'],
+     cancer[cancer["Class"] == 'Malignant'].head(3)
+    ))
+
 rare_plot = (
-    alt.Chart(
-        rare_cancer
-    )
+    alt.Chart(rare_cancer)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 rare_plot
@@ -1472,6 +1458,10 @@ rare_plot
 :figclass: caption-hack
 
 Imbalanced data.
+```
+
+```{code-cell} ipython3
+rare_cancer['Class'].value_counts()
 ```
 
 +++
@@ -1510,7 +1500,6 @@ rare_plot = (
         y=alt.Y("Concavity", title="Concavity (standardized)"),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -1525,9 +1514,9 @@ min_7_idx = np.argpartition(my_distances, 7)[:7]
 
 # For loop: each iteration adds a line segment of corresponding color
 for i in range(7):
-    clr = "#86bfef"
+    clr = "#1f77b4"
     if rare_cancer.iloc[min_7_idx[i], :]["Class"] == "Malignant":
-        clr = "#efb13f"
+        clr = "#ff7f0e"
     neighbor = pd.concat(
         (
             rare_cancer.iloc[min_7_idx[i], :][attrs],
@@ -1560,21 +1549,24 @@ always "benign," corresponding to the blue color.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-knn_spec = KNeighborsClassifier(n_neighbors=7)
-knn_spec.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"])
+knn = KNeighborsClassifier(n_neighbors=7)
+knn.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"])
 
 # create a prediction pt grid
 per_grid = np.linspace(
-    rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max(), 100
+    rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max(), 50
 )
 con_grid = np.linspace(
-    rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max(), 100
+    rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max(), 50
 )
 pcgrid = np.array(np.meshgrid(per_grid, con_grid)).reshape(2, -1).T
 pcgrid = pd.DataFrame(pcgrid, columns=["Perimeter", "Concavity"])
-knnPredGrid = knn_spec.predict(pcgrid)
+pcgrid
+
+knnPredGrid = knn.predict(pcgrid)
 prediction_table = pcgrid.copy()
 prediction_table["Class"] = knnPredGrid
+prediction_table
 
 # create the scatter plot
 rare_plot = (
@@ -1585,7 +1577,7 @@ rare_plot = (
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -1595,7 +1587,7 @@ prediction_plot = (
         prediction_table,
         title="Imbalanced data",
     )
-    .mark_point(opacity=0.02, filled=True, size=200)
+    .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
         x=alt.X(
             "Perimeter",
@@ -1611,10 +1603,10 @@ prediction_plot = (
                 domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
             ),
         ),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
-rare_plot + prediction_plot
+#rare_plot + prediction_plot
 glue("fig:05-upsample-2", (rare_plot + prediction_plot))
 ```
 
@@ -1633,27 +1625,16 @@ Despite the simplicity of the problem, solving it in a statistically sound manne
 fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
 For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. 
 In other words, we will replicate rare observations multiple times in our data set to give them more
-voting power in the $K$-nearest neighbor algorithm. In order to do this, we will need an oversampling
-step with the `resample` function from the `sklearn` Python package.
-We show below how to do this, and also
-use the `.groupby()` and `.count()` methods to see that our classes are now balanced:
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Despite the simplicity of the problem, solving it in a statistically sound manner is actually
-# fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
-# For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. \index{oversampling}
-# In other words, we will replicate rare observations multiple times in our data set to give them more
-# voting power in the $K$-nearest neighbor algorithm. In order to do this, we will add an oversampling
-# step to the earlier `uc_recipe` recipe with the `step_upsample` function from the `themis` R package. \index{recipe!step\_upsample}
-# We show below how to do this, and also
-# use the `group_by` and `summarize` functions to see that our classes are now balanced:
-```
-
-```{code-cell} ipython3
-rare_cancer['Class'].value_counts()
-```
+voting power in the $K$-nearest neighbor algorithm. In order to do this, we will 
+first separate the classes out into their own data frames by filtering.
+Then, we will
+use the [`resample`](https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html) function 
+from the `sklearn` package to increase the number of `Malignant` observations to be the same as the number 
+of `Benign` observations. We set the `n_samples` argument to be the number of `Malignant` observations we want. 
+We also set the `random_state` to be some integer
+so that our results are reproducible; if we do not set this argument, we will get a different upsampling each time
+we run the code. Finally, we use the `value_counts` method
+ to see that our classes are now balanced.
 
 ```{code-cell} ipython3
 from sklearn.utils import resample
@@ -1664,7 +1645,7 @@ malignant_cancer_upsample = resample(
     malignant_cancer, n_samples=len(benign_cancer), random_state=100
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
-upsampled_cancer.groupby(by='Class')['Class'].count()
+upsampled_cancer['Class'].value_counts()
 ```
 
 Now suppose we train our $K$-nearest neighbor classifier with $K=7$ on this *balanced* data. 
@@ -1677,13 +1658,13 @@ closer to the benign tumor observations.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-knn_spec = KNeighborsClassifier(n_neighbors=7)
-knn_spec.fit(
+knn = KNeighborsClassifier(n_neighbors=7)
+knn.fit(
     X=upsampled_cancer.loc[:, ["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
 )
 
 # create a prediction pt grid
-knnPredGrid = knn_spec.predict(pcgrid)
+knnPredGrid = knn.predict(pcgrid)
 prediction_table = pcgrid
 prediction_table["Class"] = knnPredGrid
 
@@ -1706,21 +1687,21 @@ rare_plot = (
                 domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
             ),
         ),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
 # add a prediction layer, also scatter plot
 upsampled_plot = (
     alt.Chart(prediction_table)
-    .mark_point(opacity=0.02, filled=True, size=200)
+    .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
-rare_plot + upsampled_plot
+#rare_plot + upsampled_plot
 glue("fig:05-upsample-plot", (rare_plot + upsampled_plot))
 ```
 
@@ -1759,7 +1740,7 @@ First we will load the data, create a model, and specify a preprocessor for how 
 unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
 
 # create the KNN model
-knn_spec = KNeighborsClassifier(n_neighbors=7)
+knn = KNeighborsClassifier(n_neighbors=7)
 
 # create the centering / scaling preprocessor
 preprocessor = make_column_transformer(
@@ -1800,7 +1781,7 @@ for simple pipeline construction.
 ```
 
 ```{code-cell} ipython3
-knn_fit = make_pipeline(preprocessor, knn_spec).fit(
+knn_fit = make_pipeline(preprocessor, knn).fit(
     X=unscaled_cancer.loc[:, ["Area", "Smoothness"]], y=unscaled_cancer["Class"]
 )
 
@@ -1819,7 +1800,7 @@ one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `
 
 # As before, the fit object lists the function that trains the model as well as the "best" settings
 # for the number of neighbors and weight function (for now, these are just the values we chose
-#  manually when we created `knn_spec` above). But now the fit object also includes information about
+#  manually when we created `knn` above). But now the fit object also includes information about
 # the overall workflow, including the centering and scaling preprocessing steps.
 # In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
 # observation, it will first apply the same recipe steps to the new observation. 

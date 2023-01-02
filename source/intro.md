@@ -661,7 +661,7 @@ ten_lang = (
     can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
     .sort_values(by="mother_tongue", ascending=False)
     .head(10)
-    )
+)
 ```
 
 What just happened? The code above starts with parentheses `()` and is split over multiple lines.

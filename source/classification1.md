@@ -55,7 +55,8 @@ By the end of the chapter, readers will be able to do the following:
 - Compute, by hand, the straight-line (Euclidean) distance between points on a graph when there are two predictor variables.
 - Explain the $K$-nearest neighbor classification algorithm.
 - Perform $K$-nearest neighbor classification in Python using `scikit-learn`.
-- Use `StandardScaler` to preprocess data to be centered, scaled, and balanced.
+- Use `StandardScaler` and `make_column_transformer` to preprocess data to be centered and scaled.
+- Use `resample` to preprocess data to be balanced.
 - Combine preprocessing and model training using `make_pipeline`.
 
 +++

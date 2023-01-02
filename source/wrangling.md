@@ -119,7 +119,7 @@ A data frame storing data regarding the population of various regions in Canada.
 ```{index} pandas.Series
 ```
 
-In Python, `pandas` **series** are are objects that can contain one or more elements;
+In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
 `pandas` stores each of the columns of a data frame as a `Series` object.
 They are a single column, are ordered and can be indexed.
 They can contain any data type: integers, strings, floats, etc. `Series` can contain a
@@ -185,7 +185,7 @@ Example of a `pandas` series whose type is string.
 | integer               | `int`        | positive/negative whole numbers               | `42`                                       |
 | floating point number | `float`      | real number in decimal form                   | `3.14159`                                  |
 | boolean               | `bool`       | true or false                                 | `True`                                     |
-| string                | `str`        | text                                          | `"Can I have a cheezburger?"`              |
+| string                | `str`        | text                                          | `"Hello World"`                            |
 | none                  | `NoneType`   | represents no value                           | `None`                                     |
 ```
 
@@ -211,14 +211,19 @@ and *complex*, but we do not use these in this textbook.
 ```{index} data frame; definition
 ```
 
-A data frame is really just series stuck together that follows two rules:
+A data frame is really just a collection of series that are stuck together; it follow two rules:
 
 1. Each element itself is a series.
 2. Each element (series) must have the same length.
 
 Not all columns in a data frame need to be of the same type.
 {numref}`fig:02-dataframe` shows a data frame where
-the columns are series of different types.
+the columns are series of different types. But each element in
+one column should usually be the same type, since the values for a single variable
+are usually all of the same type. For example, if the variable is the name of a city,
+that name should be a string, whereas if the variable is a year, that should be an
+integer. So even though series let you put different types in them, it is most common
+(and good practice!) to have just one type per column.
 
 +++ {"tags": []}
 
@@ -243,14 +248,16 @@ can_lang = pd.read_csv("data/can_lang.csv")
 type(can_lang)
 ```
 
- We summarize them in
-.
-
-### Other data structures in Python
+### Data structures in Python
 
 
 Series and DataFrames are basic types of *data structure* in Python, which
 are core to most data analyses.
+
+The functions from `pandas` that we use often give us back a `DataFrame`
+or a `Series` depending on the operation.
+These include the ability to add useful attributes (such as grouping, which we will discuss later) and more predictable type preservation when subsetting.
+
 There are other types that represent data structures in Python. We summarize the
 most common ones in {numref}`tab:datastructure-table`.
 
@@ -293,12 +300,11 @@ A dictionary can be converted to a data frame. The "key"
 become the column names, and the values are the entries in
 those columns. Dictionaries on their own are quite simple objects; it is preferable to work with a data frame
 because then we have access to the built-in functionality in
-`pandas`!
+`pandas` (e.g. `loc`, `[]` and many functions that we will discuss in the upcoming sections)!
 ```
 population_in_2016 = pd.DataFrame(population_in_2016)
 population_in_2016
 ```
-
 
 There are several other data structures in the Python programming
 language (*e.g.,* matrices), but these are beyond the scope of this book.

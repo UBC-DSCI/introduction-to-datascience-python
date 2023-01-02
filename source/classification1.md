@@ -903,8 +903,16 @@ the $K$-nearest neighbors algorithm is
 implemented in [the `scikit-learn` Python package](https://scikit-learn.org/stable/index.html) {cite:p}`sklearn_api` along with 
 many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions 
 in the `scikit-learn` package (named `sklearn` in Python) will help keep our code simple, readable and accurate; the 
-less we have to code ourselves, the fewer mistakes we will likely make. We 
-start by importing `KNeighborsClassifier` from the `sklearn.neighbors` module.
+less we have to code ourselves, the fewer mistakes we will likely make. 
+Before getting started with $K$-nearest neighbors, we need to tell the `sklearn` package 
+that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
+```{code-cell} ipython3
+from sklearn import set_config
+set_config(transform_output="pandas")
+```
+
+We can now get started with $K$-nearest neighbors. The first step is to
+ import the `KNeighborsClassifier` from the `sklearn.neighbors` module.
 
 ```{code-cell} ipython3
 from sklearn.neighbors import KNeighborsClassifier
@@ -1030,19 +1038,26 @@ is said to be *standardized*, and all variables in a data set will have a mean o
 and a standard deviation of 1. To illustrate the effect that standardization can have on the $K$-nearest
 neighbor algorithm, we will read in the original, unstandardized Wisconsin breast
 cancer data set; we have been using a standardized version of the data set up
-until now. To keep things simple, we will just use the `Area`, `Smoothness`, and `Class`
+until now. We will apply the same initial wrangling steps as we did earlier,
+and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
-unscaled_cancer = unscaled_cancer[['Class', 'Area', 'Smoothness']]
+unscaled_cancer = (
+            pd.read_csv("data/unscaled_wdbc.csv")
+            .loc[:, ['Class', 'Area', 'Smoothness']]
+            .replace({
+               'M' : 'Malignant',
+               'B' : 'Benign'
+            })
+    )
+unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
 unscaled_cancer
 ```
 
 Looking at the unscaled and uncentered data above, you can see that the differences
 between the values for area measurements are much larger than those for
-smoothness. Will this affect
-predictions? In order to find out, we will create a scatter plot of these two
+smoothness. Will this affect predictions? In order to find out, we will create a scatter plot of these two
 predictors (colored by diagnosis) for both the unstandardized data we just
 loaded, and the standardized version of that same data. But first, we need to
 standardize the `unscaled_cancer` data set with `scikit-learn`.
@@ -1053,31 +1068,27 @@ standardize the `unscaled_cancer` data set with `scikit-learn`.
 ```{index} double: scikit-learn; pipeline
 ```
 
-In the `scikit-learn` framework, all data preprocessing and modeling can be built using a [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), or a more convenient function [`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline) for simple pipeline construction.
-Here we will initialize a preprocessor using `make_column_transformer` for 
-the `unscaled_cancer` data above, specifying
-that we want to standardize the predictors `Area` and `Smoothness`:
+The `scikit-learn` framework provides a collection of *preprocessors* used to manipulate
+data in the [`preprocessing` module](https://scikit-learn.org/stable/modules/preprocessing.html).
+Here we will use the `StandardScaler` transformer to standardize the predictor variables in
+the `unscaled_cancer` data. In order to tell the `StandardScaler` which variables to standardize,
+we wrap it in a 
+[`ColumnTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer) object
+using the [`make_column_transformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html#sklearn.compose.make_column_transformer) function. `ColumnTransformer` objects also enable the use of multiple preprocessors at
+once, which is especially handy when you want to apply different preprocessing to each of the predictor variables. 
+The primary argument of the `make_column_transformer` function is a sequence of
+pairs of (1) a preprocessor, and (2) the columns to which you want to apply that preprocessor.
+In the present case, we just have the one `StandardScaler` preprocessor to apply to the `Area` and `Smoothness` columns.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import make_column_transformer
 
-## The above was based on:
-
-# In the `tidymodels` framework, all data preprocessing happens 
-# using a `recipe` from [the `recipes` R package](https://recipes.tidymodels.org/) [@recipes]
-# Here we will initialize a recipe \index{recipe} \index{tidymodels!recipe|see{recipe}} for 
-# the `unscaled_cancer` data above, specifying
-# that the `Class` variable is the target, and all other variables are predictors:
-```
-
-```{code-cell} ipython3
 preprocessor = make_column_transformer(
     (StandardScaler(), ["Area", "Smoothness"]),
 )
 preprocessor
 ```
-
-So far, we have built a preprocessor so that each of the predictors have a mean of 0 and standard deviation of 1.
 
 ```{index} scikit-learn; ColumnTransformer, scikit-learn; StandardScaler, scikit-learn; fit_transform
 ```
@@ -1088,68 +1099,74 @@ So far, we have built a preprocessor so that each of the predictors have a mean 
 ```{index} scikit-learn; fit, scikit-learn; transform
 ```
 
-You can now see that the recipe includes a scaling and centering step for all predictor variables.
-Note that when you add a step to a `ColumnTransformer`, you must specify what columns to apply the step to.
-Here we specified that `StandardScaler` should be applied to 
-all predictor variables.
+You can see that the preprocessor includes a single standardization step
+that is applied to the `Area` and `Smoothness` columns. 
+Note that here we specified which columns to apply the preprocessing step to 
+by individual names; this approach can become quite difficult, e.g., when we have many
+predictor variables. Rather than writing out the column names individually,
+we can instead use the 
+[`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For example, if we wanted to standardize all *numerical* predictors,
+we would use `make_column_selector` and specify the `dtype_include` argument to be `np.number`
+(from the `numpy` package). This creates a preprocessor equivalent to the one we
+created previously.
+
+```{code-cell} ipython3
+import numpy as np
+from sklearn.compose import make_column_selector
+
+preprocessor = make_column_transformer(
+           (StandardScaler(), make_column_selector(dtype_include=np.number)),
+      )
+preprocessor
+```
 
 ```{index} see: fit, transform, fit_transform; scikit-learn
 ```
 
-At this point, the data are not yet scaled and centered. To actually scale and center 
-the data, we need to call `fit` and `transform` on the unscaled data ( can be combined into `fit_transform`).
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# So far, there is not much in the recipe; just a statement about the number of targets
-# and predictors. Let's add 
-# scaling (`step_scale`) \index{recipe!step\_scale} and 
-# centering (`step_center`) \index{recipe!step\_center} steps for 
-# all of the predictors so that they each have a mean of 0 and standard deviation of 1.
-# Note that `tidyverse` actually provides `step_normalize`, which does both centering and scaling in
-# a single recipe step; in this book we will keep `step_scale` and `step_center` separate
-# to emphasize conceptually that there are two steps happening. 
-# The `prep` function finalizes the recipe by using the data (here, `unscaled_cancer`)  \index{tidymodels!prep}\index{prep|see{tidymodels}}
-# to compute anything necessary to run the recipe (in this case, the column means and standard
-# deviations):
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# You can now see that the recipe includes a scaling and centering step for all predictor variables.
-# Note that when you add a step to a recipe, you must specify what columns to apply the step to.
-# Here we used the `all_predictors()` \index{recipe!all\_predictors} function to specify that each step should be applied to 
-# all predictor variables. However, there are a number of different arguments one could use here,
-# as well as naming particular columns with the same syntax as the `select` function. 
-# For example:
-
-# - `all_nominal()` and `all_numeric()`: specify all categorical or all numeric variables
-# - `all_predictors()` and `all_outcomes()`: specify all predictor or all target variables
-# - `Area, Smoothness`: specify both the `Area` and `Smoothness` variable
-# - `-Class`: specify everything except the `Class` variable
-
-# You can find a full set of all the steps and variable selection functions
-# on the [`recipes` reference page](https://recipes.tidymodels.org/reference/index.html).
-
-# At this point, we have calculated the required statistics based on the data input into the 
-# recipe, but the data are not yet scaled and centered. To actually scale and center 
-# the data, we need to apply the `bake` \index{tidymodels!bake} \index{bake|see{tidymodels}} function to the unscaled data.
-```
+We are now ready to standardize the numerical predictor columns in the `unscaled_cancer` data frame.
+This happens in two steps. We first use the `fit` function to compute the values necessary to apply
+the standardization (the mean and standard deviation of each variable), passing the `unscaled_cancer` data as an argument.
+Then we use the `transform` function to actually apply the standardization.  
+It may seem a bit unnecessary to use two steps---`fit` *and* `transform`---to standardize the data.
+However, we do this in two steps so that we can specify a different data set in the `transform` step if we want. 
+This enables us to compute the quantities needed to standardize using one data set, and then 
+apply that standardization to another data set.
 
 ```{code-cell} ipython3
 preprocessor.fit(unscaled_cancer)
 scaled_cancer = preprocessor.transform(unscaled_cancer)
-# scaled_cancer = preprocessor.fit_transform(unscaled_cancer)
-scaled_cancer = pd.DataFrame(scaled_cancer, columns=['Area', 'Smoothness'])
-scaled_cancer['Class'] = unscaled_cancer['Class']
 scaled_cancer
 ```
+```{code-cell} ipython3
 
-It may seem redundant that we had to both `fit` *and* `transform` to scale and center the data.
- However, we do this in two steps so we can specify a different data set in the `transform` step if we want. 
- For example, we may want to specify new data that were not part of the training set. 
+```
+It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
+But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
+the columns from the input to `transform` (here, `unscaled_cancer`) that had a preprocessing step applied
+to them. The default behavior of the `ColumnTransformer` that we build using `make_column_transformer` 
+is to *drop* the remaining columns. This default behavior works well with the rest of `sklearn` (as we will see below
+in the {ref}`08:puttingittogetherworkflow` section), but for visualizing the result of preprocessing it can be useful to keep the other columns
+in our original data frame, such as the `Class` variable here.
+To keep other columns, we need to set the `remainder` argument to `'passthrough'` in the `make_column_transformer` function.
+ Furthermore, you can see that the new column names---{glue:}`scaled_cancer.columns[0]`
+and {glue:}`scaled_cancer.columns[1]`---include the name
+of the preprocessing step separated by underscores. This default behavior is useful in `sklearn` because we sometimes want to apply
+multiple different preprocessing steps to the same columns; but again, for visualization it can be useful to preserve
+the original column names. To keep original column names, we need to set the `verbose_feature_names_out` argument to `False`.
+
+> **Note:** Only specify the `remainder` and `verbose_feature_names_out` arguments when you want to examine the result
+> of your preprocessing step. In most cases, you should leave these arguments at their default values.
+
+```{code-cell} ipython3
+preprocessor_keep_all = make_column_transformer(
+           (StandardScaler(), make_column_selector(dtype_include=np.number)),
+            remainder='passthrough',
+            verbose_feature_names_out=False
+      )
+preprocessor_keep_all.fit(unscaled_cancer)
+scaled_cancer_all = preprocessor_keep_all.transform(unscaled_cancer)
+scaled_cancer_all
+```
 
 You may wonder why we are doing so much work just to center and
 scale our variables. Can't we just manually scale and center the `Area` and
@@ -1158,32 +1175,13 @@ technically *yes*; but doing so is error-prone.  In particular, we might
 accidentally forget to apply the same centering / scaling when making
 predictions, or accidentally apply a *different* centering / scaling than what
 we used while training. Proper use of a `ColumnTransformer` helps keep our code simple,
-readable, and error-free. Furthermore, note that using `fit` and `transform` on the preprocessor is required only when you want to inspect the result of the preprocessing steps
-yourself. You will see further on in
-Section {ref}`08:puttingittogetherworkflow` that `scikit-learn` provides tools to
-automatically streamline the preprocesser and the model so that you can call`fit` 
+readable, and error-free. Furthermore, note that using `fit` and `transform` on
+the preprocessor is required only when you want to inspect the result of the
+preprocessing steps
+yourself. You will see further on in the
+{ref}`08:puttingittogetherworkflow` section that `scikit-learn` provides tools to
+automatically streamline the preprocesser and the model so that you can call `fit` 
 and `transform` on the `Pipeline` as necessary without additional coding effort.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# It may seem redundant that we had to both `bake` *and* `prep` to scale and center the data.
-#  However, we do this in two steps so we can specify a different data set in the `bake` step if we want. 
-#  For example, we may want to specify new data that were not part of the training set. 
-
-# You may wonder why we are doing so much work just to center and
-# scale our variables. Can't we just manually scale and center the `Area` and
-# `Smoothness` variables ourselves before building our $K$-nearest neighbor model? Well,
-# technically *yes*; but doing so is error-prone.  In particular, we might
-# accidentally forget to apply the same centering / scaling when making
-# predictions, or accidentally apply a *different* centering / scaling than what
-# we used while training. Proper use of a `recipe` helps keep our code simple,
-# readable, and error-free. Furthermore, note that using `prep` and `bake` is
-# required only when you want to inspect the result of the preprocessing steps
-# yourself. You will see further on in Section
-# \@ref(puttingittogetherworkflow) that `tidymodels` provides tools to
-# automatically apply `prep` and `bake` as necessary without additional coding effort.
-```
 
 {numref}`fig:05-scaling-plt` shows the two scatter plots side-by-side&mdash;one for `unscaled_cancer` and one for
 `scaled_cancer`. Each has the same new observation annotated with its $K=3$ nearest neighbors.
@@ -1214,7 +1212,7 @@ def class_dscp(x):
 
 
 attrs = ["Area", "Smoothness"]
-new_obs = pd.DataFrame({"Class": ["Unknwon"], "Area": 400, "Smoothness": 0.135})
+new_obs = pd.DataFrame({"Class": ["Unknown"], "Area": 400, "Smoothness": 0.135})
 unscaled_cancer["Class"] = unscaled_cancer["Class"].apply(class_dscp)
 area_smoothness_new_df = pd.concat((unscaled_cancer, new_obs), ignore_index=True)
 my_distances = euclidean_distances(area_smoothness_new_df.loc[:, attrs])[
@@ -1231,7 +1229,6 @@ area_smoothness_new_point = (
         y=alt.Y("Smoothness"),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -1288,13 +1285,13 @@ area_smoothness_new_point = area_smoothness_new_point + line1 + line2 + line3
 :tags: [remove-cell]
 
 attrs = ["Area", "Smoothness"]
-new_obs_scaled = pd.DataFrame({"Class": ["Unknwon"], "Area": -0.72, "Smoothness": 2.8})
-scaled_cancer["Class"] = scaled_cancer["Class"].apply(class_dscp)
+new_obs_scaled = pd.DataFrame({"Class": ["Unknown"], "Area": -0.72, "Smoothness": 2.8})
+scaled_cancer_all["Class"] = scaled_cancer_all["Class"].apply(class_dscp)
 area_smoothness_new_df_scaled = pd.concat(
-    (scaled_cancer, new_obs_scaled), ignore_index=True
+    (scaled_cancer_all, new_obs_scaled), ignore_index=True
 )
 my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled.loc[:, attrs])[
-    len(scaled_cancer)
+    len(scaled_cancer_all)
 ][:-1]
 area_smoothness_new_point_scaled = (
     alt.Chart(
@@ -1307,7 +1304,6 @@ area_smoothness_new_point_scaled = (
         y=alt.Y("Smoothness", title="Smoothness (standardized)"),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -1319,21 +1315,21 @@ area_smoothness_new_point_scaled = (
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
 neighbor1_scaled = pd.concat(
     (
-        scaled_cancer.loc[min_3_idx_scaled[0], attrs],
+        scaled_cancer_all.loc[min_3_idx_scaled[0], attrs],
         new_obs_scaled[attrs].T,
     ),
     axis=1,
 ).T
 neighbor2_scaled = pd.concat(
     (
-        scaled_cancer.loc[min_3_idx_scaled[1], attrs],
+        scaled_cancer_all.loc[min_3_idx_scaled[1], attrs],
         new_obs_scaled[attrs].T,
     ),
     axis=1,
 ).T
 neighbor3_scaled = pd.concat(
     (
-        scaled_cancer.loc[min_3_idx_scaled[2], attrs],
+        scaled_cancer_all.loc[min_3_idx_scaled[2], attrs],
         new_obs_scaled[attrs].T,
     ),
     axis=1,
@@ -1380,24 +1376,6 @@ Comparison of K = 3 nearest neighbors with standardized and unstandardized data.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# Could not find something mimicing `facet_zoom` in R, here are 2 plots trying to
-# illustrate similar points
-# 1. interactive plot which allows zooming in/out
-glue('fig:05-scaling-plt-interactive', area_smoothness_new_point.interactive())
-```
-
-+++ {"tags": ["remove-cell"]}
-
-:::{glue:figure} fig:05-scaling-plt-interactive
-:name: fig:05-scaling-plt-interactive
-
-Close-up of three nearest neighbors for unstandardized data.
-:::
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# 2. Static plot, Zoom-in
 zoom_area_smoothness_new_point = (
     alt.Chart(
         area_smoothness_new_df,
@@ -1409,7 +1387,6 @@ zoom_area_smoothness_new_point = (
         y=alt.Y("Smoothness", scale=alt.Scale(domain=(0.08, 0.14))),
         color=alt.Color(
             "Class",
-            scale=alt.Scale(range=["#86bfef", "#efb13f", "red"]),
             title="Diagnosis",
         ),
         shape=alt.Shape(
@@ -1514,7 +1491,7 @@ in the training data that were tagged as malignant.
 attrs = ["Perimeter", "Concavity"]
 new_point = [2, 2]
 new_point_df = pd.DataFrame(
-    {"Class": ["Unknwon"], "Perimeter": new_point[0], "Concavity": new_point[1]}
+    {"Class": ["Unknown"], "Perimeter": new_point[0], "Concavity": new_point[1]}
 )
 rare_cancer["Class"] = rare_cancer["Class"].apply(class_dscp)
 rare_cancer_with_new_df = pd.concat((rare_cancer, new_point_df), ignore_index=True)
@@ -1798,6 +1775,13 @@ placed in a `Pipeline`.
 
 We will now place these steps in a `Pipeline` using the `make_pipeline` function, 
 and finally we will call `.fit()` to run the whole `Pipeline` on the `unscaled_cancer` data.
+
+all data preprocessing and modeling can be
+built using a
+[`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline),
+or a more convenient function
+[`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline)
+for simple pipeline construction. 
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

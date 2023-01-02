@@ -1714,30 +1714,28 @@ Upsampled data with background color indicating the decision of the classifier.
 +++
 
 (08:puttingittogetherworkflow)=
-## Putting it together in a `pipeline`
+## Putting it together in a `Pipeline`
 
 ```{index} scikit-learn; pipeline
 ```
 
-The `scikit-learn` package collection also provides the `pipeline`, a way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
-To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
-First we will load the data, create a model, and specify a preprocessor for how the data should be preprocessed:
+The `scikit-learn` package collection also provides the [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), 
+a  way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
+To illustrate the whole workflow, let's start from scratch with the `unscaled_wdbc.csv` data.
+First we will load the data, create a model, and specify a preprocessor for the data.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+# load the unscaled cancer data, make Class readable
+unscaled_cancer = (
+            pd.read_csv("data/unscaled_wdbc.csv")
+            .replace({
+               'M' : 'Malignant',
+               'B' : 'Benign'
+            })
+    )
+# make Class a categorical type
+unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
 
-# The `tidymodels` package collection also provides the `workflow`, 
-# a way to chain\index{tidymodels!workflow}\index{workflow|see{tidymodels}} 
-# together multiple data analysis steps without a lot of otherwise necessary code 
-# for intermediate steps.
-# To illustrate the whole pipeline, let's start from scratch with the `unscaled_wdbc.csv` data.
-# First we will load the data, create a model, 
-# and specify a recipe for how the data should be preprocessed:
-```
-
-```{code-cell} ipython3
-# load the unscaled cancer data
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
 
 # create the KNN model
 knn = KNeighborsClassifier(n_neighbors=7)
@@ -1748,65 +1746,38 @@ preprocessor = make_column_transformer(
 )
 ```
 
-You will also notice that we did not call `.fit()` on the preprocessor; this is unnecessary when it is
-placed in a `Pipeline`.
-
 ```{index} scikit-learn; make_pipeline, scikit-learn; fit
 ```
 
-We will now place these steps in a `Pipeline` using the `make_pipeline` function, 
-and finally we will call `.fit()` to run the whole `Pipeline` on the `unscaled_cancer` data.
-
-all data preprocessing and modeling can be
-built using a
-[`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline),
-or a more convenient function
-[`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline)
-for simple pipeline construction. 
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Note that each of these steps is exactly the same as earlier, except for one major difference:
-# we did not use the `select` function to extract the relevant variables from the data frame,
-# and instead simply specified the relevant variables to use via the 
-# formula `Class ~ Area + Smoothness` (instead of `Class ~ .`) in the recipe.
-# You will also notice that we did not call `prep()` on the recipe; this is unnecessary when it is
-# placed in a workflow.
-
-# We will now place these steps in a `workflow` using the `add_recipe` and `add_model` functions, \index{tidymodels!add\_recipe}\index{tidymodels!add\_model}
-# and finally we will use the `fit` function to run the whole workflow on the `unscaled_cancer` data.
-# Note another difference from earlier here: we do not include a formula in the `fit` function. This \index{tidymodels!fit}
-# is again because we included the formula in the recipe, so there is no need to respecify it:
-```
+Next we place these steps in a `Pipeline` using 
+the [`make_pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline) function.
+The `make_pipeline` function takes a list of steps to apply in your data analysis; in this
+case, we just have the `preprocessor` and `knn` steps.
+Finally, we call `fit` on the pipeline.
+Notice that we do not need to separately call `fit` and `transform` on the `preprocessor`; the
+pipeline handles doing this properly for us.
+Also notice that when we call `fit` on the pipeline, we can pass
+the whole `unscaled_cancer` data frame to the `X` argument, since the preprocessing
+step drops all the variables except the two we listed: `Area` and `Smoothness`.
+For the `y` response variable argument, we pass the `unscaled_cancer["Class"]` series as before.
 
 ```{code-cell} ipython3
+from sklearn.pipeline import make_pipeline
+
 knn_fit = make_pipeline(preprocessor, knn).fit(
-    X=unscaled_cancer.loc[:, ["Area", "Smoothness"]], y=unscaled_cancer["Class"]
+    X=unscaled_cancer, 
+    y=unscaled_cancer["Class"]
 )
 
 knn_fit
 ```
 
 As before, the fit object lists the function that trains the model. But now the fit object also includes information about
-the overall workflow, including the standardizing preprocessing step.
+the overall workflow, including the standardization preprocessing step.
 In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
 observation, it will first apply the same preprocessing steps to the new observation. 
 As an example, we will predict the class label of two new observations:
 one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# As before, the fit object lists the function that trains the model as well as the "best" settings
-# for the number of neighbors and weight function (for now, these are just the values we chose
-#  manually when we created `knn` above). But now the fit object also includes information about
-# the overall workflow, including the centering and scaling preprocessing steps.
-# In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
-# observation, it will first apply the same recipe steps to the new observation. 
-# As an example, we will predict the class label of two new observations:
-# one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
-```
 
 ```{code-cell} ipython3
 new_observation = pd.DataFrame({"Area": [500, 1500], "Smoothness": [0.075, 0.1]})
@@ -1814,8 +1785,8 @@ prediction = knn_fit.predict(new_observation)
 prediction
 ```
 
-The classifier predicts that the first observation is benign ("B"), while the second is
-malignant ("M"). {numref}`fig:05-workflow-plot-show` visualizes the predictions that this 
+The classifier predicts that the first observation is benign, while the second is
+malignant. {numref}`fig:05-workflow-plot-show` visualizes the predictions that this 
 trained $K$-nearest neighbor model will make on a large range of new observations.
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
@@ -1829,12 +1800,13 @@ predict the label of each, and visualize the predictions with a colored scatter 
 > visualizations in their own data analyses.
 
 ```{code-cell} ipython3
+:tags: [remove-output]
 # create the grid of area/smoothness vals, and arrange in a data frame
 are_grid = np.linspace(
-    unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 100
+    unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 50
 )
 smo_grid = np.linspace(
-    unscaled_cancer["Smoothness"].min(), unscaled_cancer["Smoothness"].max(), 100
+    unscaled_cancer["Smoothness"].min(), unscaled_cancer["Smoothness"].max(), 50
 )
 asgrid = np.array(np.meshgrid(are_grid, smo_grid)).reshape(2, -1).T
 asgrid = pd.DataFrame(asgrid, columns=["Area", "Smoothness"])
@@ -1871,7 +1843,7 @@ unscaled_plot = (
                 )
             ),
         ),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -1882,11 +1854,15 @@ prediction_plot = (
     .encode(
         x=alt.X("Area"),
         y=alt.Y("Smoothness"),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
-
 unscaled_plot + prediction_plot
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+glue("fig:05-upsample-2", (unscaled_plot + prediction_plot))
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -1908,7 +1884,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

@@ -763,6 +763,7 @@ tidy_lang = (
         (lang_messy_longer, split_counts),
         axis=1,
     )
+)
 tidy_lang
 ```
 
@@ -1437,7 +1438,7 @@ lang_messy_longer = lang_messy.melt(
     var_name="region",
     value_name="value",
 )
-tidy_lang_obj = (
+tidy_lang = (
     pd.concat(
         (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
         axis=1,
@@ -1445,13 +1446,13 @@ tidy_lang_obj = (
     .rename(columns={0: "most_at_home", 1: "most_at_work"})
     .drop(columns=["value"])
 )
-official_langs_obj = tidy_lang_obj[tidy_lang_obj["category"] == "Official languages"]
+official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
 
-official_langs_obj
+official_langs
 ```
 
 ```{code-cell} ipython3
-official_langs_obj.info()
+official_langs.info()
 ```
 
 To use the `.assign` method, again we first specify the object to be the data set,
@@ -1487,9 +1488,9 @@ to numeric data types in the `official_langs` data set as described in
 {numref}`fig:img-assign`.
 
 ```{code-cell} ipython3
-official_langs_numeric = official_langs_obj.assign(
-    most_at_home=pd.to_numeric(official_langs_obj["most_at_home"]),
-    most_at_work=pd.to_numeric(official_langs_obj["most_at_work"]),
+official_langs_numeric = official_langs.assign(
+    most_at_home=pd.to_numeric(official_langs["most_at_home"]),
+    most_at_work=pd.to_numeric(official_langs["most_at_work"]),
 )
 
 official_langs_numeric
@@ -1500,6 +1501,9 @@ official_langs_numeric.info()
 ```
 
 Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
+Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
+the power to over-write the entires of a column, it is a good idea to create a new data frame object so that if
+you make a mistake, you can start again from the original data frame.
 
 +++
 
@@ -1510,8 +1514,8 @@ Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (
 
 number_most_home = int(
     official_langs[
-        (official_langs["language"] == "English")
-        & (official_langs["region"] == "Toronto")
+        (official_langs["language"] == "English") &
+        (official_langs["region"] == "Toronto")
     ]["most_at_home"]
 )
 
@@ -1626,7 +1630,7 @@ we can see that this would be the columns from `mother_tongue` to `lang_known`.
 region_lang
 ```
 
-```{index} pandas.DataFrame; apply, pandas.DataFrame; iloc[]
+```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
 ```
 
 To accomplish such a task, we can use `.apply`.
@@ -1643,9 +1647,15 @@ region_lang.info()
 ```
 
 ```{code-cell} ipython3
-region_lang_int32 = region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(lambda col: col.astype('int32'))
+region_lang_int32 = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype('int32'))
 region_lang_int32
 ```
+
+You will notice that we passed a `lambda` function as an argument to `apply`. This is a way to write instructions
+for `apply` to use. It starts with the word `lambda` which is a special word in python to signal "what follows is
+a function. Following this we then state the name of the variable that the function will act on `col` and then a
+colon `:`. After the colon are the instructions: take the column and turn it into type `int32`. Now you
+can see that the columns from `mother_tongue` to `lang_known` are type `int32`.
 
 ```{code-cell} ipython3
 region_lang_int32.info()
@@ -1675,7 +1685,6 @@ We illustrate such a data transformation in {numref}`fig:rowwise`.
 +++
 
 For instance, suppose we want to know the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work`
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
@@ -1684,7 +1693,7 @@ so we can see all the columns in the data frame's output easily in the book.
 So for this demonstration, the data set we are operating on looks like this.
 
 ```{code-cell} ipython3
-region_lang.loc[:, ["most_at_home", "most_at_work"]]
+region_lang.loc[:, "mother_tongue":"lang_known"]
 ```
 
 Now we use `.apply` with argument `axis=1`, to tell Python that we would like
@@ -1694,7 +1703,7 @@ as opposed to being applied on a column
 
 ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
-    maximum=region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max, axis=1)
+    maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
 )
 
 region_lang_rowwise

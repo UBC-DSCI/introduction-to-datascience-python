@@ -628,55 +628,117 @@ ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
-## Combining functions by chaining the methods
+## Combining analysis steps with chaining and multiline expressions
 
 ```{index} chaining methods
 ```
 
-It took us 3 steps to answer our question: What are the 10 most commonly spoken Aboriginal languages?
-Starting from the `can_lang` data frame, we solved this in 3 steps:
+It took us 3 steps to find the ten Aboriginal languages most often reported in
+2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:
 
-1) Use `loc` to: (a) filter the rows so that we only have the category `Aboriginal languages` and (b) select the colums `language` and `mother_tongue`
-2) Sort the values by `mother_tongue` with the largest values at the top
-3) Ask for only the top 10 values using `head`
+1) used `loc` to filter the rows so that only the 
+   `Aboriginal languages` category remained, and selected the 
+   `language` and `mother_tongue` columns,
+2) used `sort_values` to sort the rows by `mother_tongue` in descending order, and
+3) obtained only the top 10 values using `head`.
 
 One way of performing these steps is to just write
-multiple lines of code, storing temporary objects as you go:
+multiple lines of code, storing temporary, intermediate objects as you go.
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
 ten_lang = arranged_lang_sorted.head(10)
 ```
-This requires creating multiple temporary, intermediate outputs, and can become hard to read.
-It also suggests that the named objects are of some importance, when really they are just intermediates.
 
-The need to call multiple methods in a sequence to process a data
-frame is quite common. The basic ways of doing this can become long and potentially unreadable if there are
-many steps. An alternative approach uses "chaining" to link multiple operations together. This can
-simplify the code and make it easier to read. The code below accomplishes the same task.
+```{index} multi-line expression
+```
+
+You might find that code hard to read. You're not wrong; it is!
+There are two main issues with readability here. First, each line of code is quite long.
+It is hard to keep track of what methods are being called, and what arguments were used.
+Second, each line introduces a new temporary object. In this case, both `aboriginal_lang` and `arranged_lang_sorted`
+are just temporary results on the way to producing the `ten_lang` data frame.
+This makes the code hard to read, as one has to trace where each temporary object
+goes, and hard to understand, since introducing many named objects also suggests that they 
+are of some importance, when really they are just intermediates.
+The need to call multiple methods in a sequence to process a data frame is
+quite common, so this is an important issue to address!
+
+To solve the first problem, we can actually split the long expressions above across
+multiple lines. Although in most cases, a single expression in Python must be contained
+in a single line of code, there are a small number of situations where lets us do this. 
+Let's rewrite this code in a more readable format using multiline expressions.
+
+```{code-cell} ipython3
+aboriginal_lang = can_lang.loc[
+                    can_lang["category"] == "Aboriginal languages", 
+                    ["language", "mother_tongue"]]
+arranged_lang_sorted = aboriginal_lang.sort_values(
+                    by='mother_tongue', 
+                    ascending=False)
+ten_lang = arranged_lang_sorted.head(10)
+```
+
+This code is the same as the code we showed earlier; you can see the same
+sequence of methods and arguments is used. But long expressions are split
+across multiple lines when they would otherwise get long and unwieldy,
+improving the readability of the code. 
+How does Python know when to keep
+reading on the next line for a single expression?
+For the line starting with `aboriginal_lang = ...`, Python sees that the line ends with a left
+bracket symbol `[`, and knows that our
+expression cannot end until we close it with an appropriate corresponding right bracket symbol `]`.
+We put the same two arguments as we did before, and then
+the corresponding right bracket appears after `["language", "mother_tongue"]`).
+For the line starting with `arranged_lang_sorted = ...`, Python sees that the line ends with a left parenthesis symbol `(`,
+and knows the expression cannot end until we close it with the corresponding right parenthesis symbol `)`.
+Again we use the same two arguments as before, and then the 
+corresponding right parenthesis appears right after `ascending=False`.
+In both cases, Python keeps reading the next line to figure out
+what the rest of the expression is. We could, of course,
+put all of the code on one line of code, but splitting it across
+multiple lines helps a lot with code readability.
+
+We still have to handle the issue that each line of code---i.e., each step in the analysis---introduces
+a new temporary object. To address this issue, we can *chain* multiple operations together without
+assigning intermediate objects. The key idea of chaining is that the *output* of 
+each step in the analysis is a data frame, which means that you can just directly keep calling methods
+that operate on the output of each step in a sequence! This simplifies the code and makes it
+easier to read. The code below demonstrates the use of both multiline expressions and chaining together.
+The code is now much cleaner, and the `ten_lang` data frame that we get is equivalent to the one
+from the messy code above!
 
 ```{code-cell} ipython3
 # obtain the 10 most common Aboriginal languages
 ten_lang = (
-    can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+    can_lang.loc[
+       can_lang["category"] == "Aboriginal languages", 
+       ["language", "mother_tongue"]
+    ]
     .sort_values(by="mother_tongue", ascending=False)
     .head(10)
 )
+ten_lang
 ```
 
-What just happened? The code above starts with parentheses `()` and is split over multiple lines.
-Python recognizes the content between the parentheses and knows to keep reading until the next line.
-The first line is performing filtering of rows and selecting columns with `loc`. The line after this
-starts with a period (`.`) that "chains" the output of the first line with the next operation, which
-is `sort_values`. Finally, we "chain" together the output of the sorting with `head` to ask for the 10
-most common languages. Instead of creating intermediate objects, with chaining, we take the output of
+Let's parse this new block of code piece by piece. 
+The code above starts with a left parenthesis, `(`, and so Python
+knows to keep reading to subsequent lines until it finds the corresponding
+right parenthesis symbol `)`. The `loc` method performs the filtering and selecting steps as before. The line after this
+starts with a period (`.`) that "chains" the output of the `loc` step with the next operation, 
+`sort_values`. Since the output of `loc` is a data frame, we can use the `sort_values` method on it 
+without first giving it a name! That is what the `.sort_values` does on the next line.
+Finally, we once again "chain" together the output of `sort_values` with `head` to ask for the 10
+most common languages. Finally, the right parenthesis `)` corresponding to the very first left parenthesis 
+appears on the second last line, completing the multiline expression.
+Instead of creating intermediate objects, with chaining, we take the output of
 one operation and use that to perform the next operation. In doing so, we remove the need to create and
 store intermediates. This can help with readability by simplifying the code.
 
 Now that we've shown you chaining as an alternative to storing
 temporary objects and composing code, does this mean you should *never* store
 temporary objects or compose code? Not necessarily!
-There are times when you will still want to do these things.
+There are times when temporary objects are handy to keep around.
 For example, you might store a temporary object before feeding it into a plot function
 so you can iteratively change the plot without having to
 redo all of your data transformations.
@@ -684,7 +746,7 @@ Chaining many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.
 
-We have now answered our initial question by generating this table!
+We have now answered our initial question by generating the `ten_lang` table!
 Are we done? Well, not quite; tables are almost never the best way to present
 the result of your analysis to your audience. Even the simple table above with
 only two columns presents some difficulty: for example, you have to scrutinize
@@ -784,20 +846,6 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 ```{index} see: .; chaining methods
 ```
-
-```{index} multi-line expression
-```
-
-> **Note:** The vast majority of the
-> time, a single expression in Python must be contained in a single line of code.
-> However, there *are* a small number of situations in which you can have a
-> single Python expression span multiple lines. Above is one such case: here, Python sees that we put a left
-> parenthesis symbol `(` on the first line right after the assignment symbol `=`, and knows that our
-> expression cannot end until we close it with an appropriate corresponding right parenthesis symbol `)`.
-> So Python keeps reading the next line to figure out
-> what the rest of the expression is.  We could, of course,
-> put all of the code on one line of code, but splitting it across
-> multiple lines helps a lot with code readability.
 
 ### Formatting `altair` objects
 

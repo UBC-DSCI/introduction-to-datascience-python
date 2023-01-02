@@ -119,14 +119,18 @@ A data frame storing data regarding the population of various regions in Canada.
 ```{index} pandas.Series
 ```
 
-In Python, `pandas` **series** are lists. They are ordered and can be indexed.
-They are strictly 1-dimensional and can contain any data type
-(integers, strings, floats, etc), including a mix of them; Python
+In Python, `pandas` **series** are are objects that can contain one or more elements;
+`pandas` stores each of the columns of a data frame as a `Series` object.
+They are a single column, are ordered and can be indexed.
+They can contain any data type: integers, strings, floats, etc. `Series` can contain a
+mix of data types, but it is good practice to only include a single type in a series
+because all observations of one variable should be the same type.
+Python
 has several different basic data types, as shown in
 {numref}`tab:datatype-table`.
 You can create a `pandas` series using the
 `pd.Series()` function.  For example, to create the series `region` as shown
-in{numref}`fig:02-series`, you can write
+in {numref}`fig:02-series`, you can write the following.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -190,9 +194,12 @@ Example of a `pandas` series whose type is string.
 It is important in Python to make sure you represent your data with the correct type.
 Many of the `pandas` functions we use in this book treat
 the various data types differently. You should use integers and float types
-(which both fall under the "numeric" umbrella type) to represent numbers and perform
-arithmetic. Strings are used to represent data that should
+to represent numbers and perform arithmetic. Integers have no decimals while floats contain decimals.
+Booleans are variables that can only take on one of two values: True or False.
+Strings are used to represent data that should
 be thought of as "text", such as words, names, paths, URLs, and more.
+A `NoneType` is a special type in Python that is used to indicate no-value; this can occur when
+you have missing data.
 There are other basic data types in Python, such as *set*
 and *complex*, but we do not use these in this textbook.
 
@@ -236,14 +243,16 @@ can_lang = pd.read_csv("data/can_lang.csv")
 type(can_lang)
 ```
 
-Lists, Series and DataFrames are basic types of *data structure* in Python, which
-are core to most data analyses. We summarize them in
-{numref}`tab:datastructure-table`. There are several other data structures in the Python programming
-language (*e.g.,* matrices), but these are beyond the scope of this book.
+ We summarize them in
+.
 
-+++
+### Other data structures in Python
 
-<!-- ### Other basic data structures in Python
+
+Series and DataFrames are basic types of *data structure* in Python, which
+are core to most data analyses.
+There are other types that represent data structures in Python. We summarize the
+most common ones in {numref}`tab:datastructure-table`.
 
 ```{table} Basic data structures in Python
 :name: tab:datastructure-table
@@ -253,7 +262,48 @@ language (*e.g.,* matrices), but these are beyond the scope of this book.
 | dict | A labeled data structure where `keys` are paired with `values` |
 | Series | A 1D ordered collection of values *with labels* that can store multiple data types at once. |
 | DataFrame | A 2D labeled data structure with columns of potentially different types. |
-``` -->
+```
+
+A `list` is an ordered collection of values; it a smple data structure in Python.
+To create a list, we put a variable name on the left and the contents of the list in between
+square brackets `[]`. Each item of the list is separated by a comma. The example below contains 6 entries that are strings.
+```{code-cell} ipython3
+cities = ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"]
+cities
+```
+A list can directly be converted to a pandas `Series`.
+```
+cities_series = pd.Series(cities)
+cities_series
+```
+
+A `dict`, or dictionary, contains pairs of "keys" which you use to look up a "value". Dictionaries are create
+using curly brackets `{}`. Each entry starts with the
+"key" on the left, this is often a string. This is followed by a `:` and then the value. A dictionary can have multiple key-value pairs, each separted by a comma.
+ In the example below,
+we create a dictionary that has two keys: `"cities"` and `"population"` and the values associated with each are a list.
+```{code-cell} ipython3
+population_in_2016 = {
+  "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
+  "population": [2235145, 1027613, 1823281, 544870, 571146, 321484]
+}
+population_in_2016
+```
+A dictionary can be converted to a data frame. The "key"
+become the column names, and the values are the entries in
+those columns. Dictionaries on their own are quite simple objects; it is preferable to work with a data frame
+because then we have access to the built-in functionality in
+`pandas`!
+```
+population_in_2016 = pd.DataFrame(population_in_2016)
+population_in_2016
+```
+
+
+There are several other data structures in the Python programming
+language (*e.g.,* matrices), but these are beyond the scope of this book.
+
++++
 
 ## Tidy data
 

@@ -417,6 +417,8 @@ for a total of 30 entries.
 :name: fig:02-wide-to-long
 :figclass: caption-hack
 
+
+
 Melting data from a wide to long data format.
 ```
 

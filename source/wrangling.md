@@ -1318,8 +1318,10 @@ You can also ask for grouped summary statistics on the whole dataframe
 region_lang.groupby("region").agg(["min", "max"])
 ```
 
-If you want to ask for only some rows, but not all, you might think about
-combining `groupby` and `loc`. But this doesn't work! If we try applying
+If you want to ask for only some columns, for example
+the columns between `"most_at_home"` and `"lang_known"`,
+you might think about first appling `loc` and then `groupby`
+But this doesn't work! If we try using
 `loc` and then `groupby`, we will get an error: `KeyError: 'region'`.
 ```{code-cell} ipython3
 region_lang.loc[:, "most_at_home":"lang_known"].groupby("region").max()
@@ -1327,8 +1329,15 @@ region_lang.loc[:, "most_at_home":"lang_known"].groupby("region").max()
 This is because when we use `loc` we selected only the columns between
 `"most_at_home"` and `"lang_known"`, which doesn't include `"region"`!
 If instead, we did `groupby` first, we would create a `groupby` object
-which doesn't work with `loc`. Instead, we will need to use `apply`, which
-we will talk about next.
+which doesn't work with `loc`. Instead, we would need to call `loc`
+with a list of column names that includes `region` and then use
+`groupby`
+```{code-cell} ipython3
+region_lang.loc[
+  :,
+  ["region", "mother_tongue", "most_at_home", "most_at_work", "lang_known"]
+].groupby("region").max()
+```
 
 
 
@@ -1379,7 +1388,7 @@ the summary statistics would be in the rows, which is untidy! You can think of t
 statistics representing one observation (which should be a row).
 
 (apply-summary)= -->
-#### `.apply` for calculating summary statistics on many columns
+### `.apply` for calculating summary statistics on many columns
 
 +++
 
@@ -1686,21 +1695,25 @@ which means that we get back a data frame with the same number of rows.
 region_lang.info()
 ```
 
+Now, we need a way to tell `appy` what function to perform to each column
+so that we can convert them from `int64` to `int32`. We will use what is called a `lambda` function in python. This is a way to write instructions
+for `apply` to use.
+Let's consider a simple example. Say we want a function that multiplies a number by two, we could then do
 ```{code-cell} ipython3
-region_lang_int32 = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype('int32'))
-region_lang_int32
+multiply_by_two = lambda x: 2*x
+multiply_by_two(2)
 ```
+It starts with the word `lambda` which is a special word in python to signal "what follows is
+a function. Following this we then state the name of the variable that the function will act on `x` and then a
+colon `:`. After the colon are the instructions: take the value provided and multiply it by 2.
 
-You will notice that we passed a `lambda` function as an argument to `apply`. This is a way to write instructions
-for `apply` to use. It starts with the word `lambda` which is a special word in python to signal "what follows is
-a function. Following this we then state the name of the variable that the function will act on `col` and then a
-colon `:`. After the colon are the instructions: take the column and turn it into type `int32`. Now you
-can see that the columns from `mother_tongue` to `lang_known` are type `int32`.
-
+Returning to our example, to convert the columns `"mother_tongue":"lang_known"` to `int32`, we do the following.
 ```{code-cell} ipython3
+region_lang_int32 = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
 region_lang_int32.info()
 ```
-
+Now you
+can see that the columns from `mother_tongue` to `lang_known` are type `int32`.
 We see that we get back a data frame
 with the same number of columns and rows.
 The only thing that changes is the transformation we applied

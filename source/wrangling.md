@@ -1390,25 +1390,7 @@ statistics representing one observation (which should be a row).
 (apply-summary)= -->
 ### `.apply` for calculating summary statistics on many columns
 
-+++
 
-```{index} pandas.DataFrame; apply
-```
-
-An alternative to aggregating on a dataframe
-for applying a function to many columns is the `.apply` method.
-Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `.apply` with the `max` function this time.
-We focus on the two arguments of `.apply`:
-the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
-Note that `.apply` does not have an argument
-to specify *which* columns to apply the function to.
-Therefore, we will use the `loc[]` before calling `.apply`
-to choose the columns for which we want the maximum.
-
-```{code-cell} ipython3
-region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
-```
 
 <!-- ```{index} missing data
 ```
@@ -1430,229 +1412,33 @@ pd.DataFrame(
 ).T
 ``` -->
 
-The `.apply` function is generally quite useful for solving many problems
+<!-- The `.apply` function is generally quite useful for solving many problems
 involving repeatedly applying functions in Python.
 Additionally, a variant of `.apply` is `.applymap`,
 which can be used to apply functions element-wise.
 To learn more about these functions, see the additional resources
-section at the end of this chapter.
+section at the end of this chapter. -->
 
 +++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
 
-(pandas-assign)=
-## Using `.assign` to modify or add columns
-
-+++
-
-### Using `.assign` to create a new data frame
-
-If you would like to use the summary statistics that you computed in a further analysis, it can be handy
-to store them in a data frame that you can use later.
-We can use `.assign` as mentioned in along with proper summary functions to create a aggregated column.
-
-For example, say we wanted to keep the minimum and maximum values in a data frame, we can (1) create a new, empty
-data frame and (2) use `.assign` to assign values to that data frame.
-```
-region_lang_min_max = pd.DataFrame()  # empty data frame
-region_lang_min_max.assign(
-  most_at_home_min = region_lang["most_at_home"].min(),
-  most_at_home_max = region_lang["most_at_home"].max()
-)
-region_lang_min_max
-```
-
-### Using `.assign` to modify columns
-
-```{index} pandas.DataFrame; []
-```
-
-In the section on {ref}`str-split`,
-when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-all of the variables were "object" data types.
-During the tidying process,
-we used the `pandas.to_numeric` function
-to convert the `most_at_home` and `most_at_work` columns
-to the desired integer (i.e., numeric class) data types and then used `[]` to overwrite columns.
-But suppose we didn't use the `[]`,
-and needed to modify the columns some other way.
-Below we create such a situation
-so that we can demonstrate how to use `.assign`
-to change the column types of a data frame.
-`.assign` is a useful function to modify or create new data frame columns.
-
-```{code-cell} ipython3
-lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
-lang_messy_longer = lang_messy.melt(
-    id_vars=["category", "language"],
-    var_name="region",
-    value_name="value",
-)
-tidy_lang = (
-    pd.concat(
-        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
-        axis=1,
-    )
-    .rename(columns={0: "most_at_home", 1: "most_at_work"})
-    .drop(columns=["value"])
-)
-official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
-
-official_langs
-```
-
-```{code-cell} ipython3
-official_langs.info()
-```
-
-To use the `.assign` method, again we first specify the object to be the data set,
-and in the following arguments,
-we specify the name of the column we want to modify or create
-(here `most_at_home` and `most_at_work`), an `=` sign,
-and then the function we want to apply (here `pandas.to_numeric`).
-In the function we want to apply,
-we refer to the column upon which we want it to act
-(here `most_at_home` and `most_at_work`).
-In our example, we are naming the columns the same
-names as columns that already exist in the data frame
-("most\_at\_home", "most\_at\_work")
-and this will cause `.assign` to *overwrite* those columns
-(also referred to as modifying those columns *in-place*).
-If we were to give the columns a new name,
-then `.assign` would create new columns with the names we specified.
-`.assign`'s general syntax is detailed in {numref}`fig:img-assign`.
-
-+++ {"tags": []}
-
-```{figure} img/wrangling/pandas_assign_args_labels.png
-:name: fig:img-assign
-:figclass: caption-hack
-
-Syntax for the `.assign` function.
-```
-
-+++
-
-Below we use `.assign` to convert the columns `most_at_home` and `most_at_work`
-to numeric data types in the `official_langs` data set as described in
-{numref}`fig:img-assign`.
-
-```{code-cell} ipython3
-official_langs_numeric = official_langs.assign(
-    most_at_home=pd.to_numeric(official_langs["most_at_home"]),
-    most_at_work=pd.to_numeric(official_langs["most_at_work"]),
-)
-
-official_langs_numeric
-```
-
-```{code-cell} ipython3
-official_langs_numeric.info()
-```
-
-Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
-Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
-the power to over-write the entires of a column, it is a good idea to create a new data frame object so that if
-you make a mistake, you can start again from the original data frame.
-
-+++
-
-### Using `.assign` to create new columns
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-number_most_home = int(
-    official_langs[
-        (official_langs["language"] == "English") &
-        (official_langs["region"] == "Toronto")
-    ]["most_at_home"]
-)
-
-toronto_popn = int(region_data[region_data["region"] == "Toronto"]["population"])
-
-glue("number_most_home", "{0:,.0f}".format(number_most_home))
-glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
-glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
-```
-
-We can see in the table that
-{glue:text}`number_most_home` people reported
-speaking English in Toronto as their primary language at home, according to
-the 2016 Canadian census. What does this number mean to us? To understand this
-number, we need context. In particular, how many people were in Toronto when
-this data was collected? From the 2016 Canadian census profile, the population
-of Toronto was reported to be
-{glue:text}`toronto_popn` people.
-The number of people who report that English is their primary language at home
-is much more meaningful when we report it in this context.
-We can even go a step further and transform this count to a relative frequency
-or proportion.
-We can do this by dividing the number of people reporting a given language
-as their primary language at home by the number of people who live in Toronto.
-For example,
-the proportion of people who reported that their primary language at home
-was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
-in Toronto.
-
-Let's use `.assign` to create a new column in our data frame
-that holds the proportion of people who speak English
-for our five cities of focus in this chapter.
-To accomplish this, we will need to do two tasks
-beforehand:
-
-1. Create a list containing the population values for the cities.
-2. Filter the `official_langs` data frame
-so that we only keep the rows where the language is English.
-
-To create a list containing the population values for the five cities
-(Toronto, Montréal, Vancouver, Calgary, Edmonton),
-we will use the `[]` (recall that we can also use `list()` to create a list).
-
-```{code-cell} ipython3
-city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
-city_pops
-```
-
-And next, we will filter the `official_langs` data frame
-so that we only keep the rows where the language is English.
-We will name the new data frame we get from this `english_langs`.
-
-```{code-cell} ipython3
-english_langs = official_langs[official_langs["language"] == "English"]
-english_langs
-```
-
-Finally, we can use `.assign` to create a new column,
-named `most_at_home_proportion`, that will have value that corresponds to
-the proportion of people reporting English as their primary
-language at home.
-We will compute this by dividing the column by our vector of city populations.
-
-```{code-cell} ipython3
-english_langs = english_langs.assign(
-    most_at_home_proportion=english_langs["most_at_home"] / city_pops
-)
-
-english_langs
-```
-
-In the computation above, we had to ensure that we ordered the `city_pops` vector in the
-same order as the cities were listed in the `english_langs` data frame.
-This is because Python will perform the division computation we did by dividing
-each element of the `most_at_home` column by each element of the
-`city_pops` list, matching them up by position.
-Failing to do this would have resulted in the incorrect math being performed.
-
-> **Note:** In more advanced data wrangling,
-> one might solve this problem in a less error-prone way though using
-> a technique called "joins".
-> We link to resources that discuss this in the additional
-> resources at the end of this chapter.
-
-+++
-
 ## Apply functions across many columns with `.apply`
 
+An alternative to aggregating on a dataframe
+for applying a function to many columns is the `.apply` method.
+Let's again find the maximum value of each column of the
+`region_lang` data frame, but using `.apply` with the `max` function this time.
+We focus on the two arguments of `.apply`:
+the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
+Note that `.apply` does not have an argument
+to specify *which* columns to apply the function to.
+Therefore, we will use the `loc[]` before calling `.apply`
+to choose the columns for which we want the maximum.
+
+```{code-cell} ipython3
+region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
+```
+
+We can use `apply` for much more than summary statistics.
 Sometimes we need to apply a function to many columns in a data frame.
 For example, we would need to do this when converting units of measurements across many columns.
 We illustrate such a data transformation in {numref}`fig:mutate-across`.
@@ -1754,18 +1540,258 @@ the `max` function to be applied across, and within, a row,
 as opposed to being applied on a column
 (which is the default behavior of `.apply`).
 
-```{code-cell} ipython3
+<!-- ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
     maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
 )
 
 region_lang_rowwise
+``` -->
+```{code-cell} ipython3
+region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
 ```
 
-We see that we get an additional column added to the data frame,
+<!-- We see that we get an additional column added to the data frame,
+named `maximum`, which is the maximum value between `mother_tongue`,
+`most_at_home`, `most_at_work` and `lang_known` for each language
+and region. -->
+
+We see that we get a column, which is the maximum value between `mother_tongue`,
+`most_at_home`, `most_at_work` and `lang_known` for each language
+and region. Now this might be a column that we want to have included in our `region_lang`
+data frame so that we can make plots or continue our analysis. To make this happen,
+we will use `assign` to create a new column. This is discussed in the next section.
+
+(pandas-assign)=
+## Using `assign` to modify or add columns
+
+
+```{index} pandas.DataFrame; []
+```
+
+<!--
+
+```{code-cell} ipython3
+lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
+lang_messy_longer = lang_messy.melt(
+    id_vars=["category", "language"],
+    var_name="region",
+    value_name="value",
+)
+tidy_lang = (
+    pd.concat(
+        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
+        axis=1,
+    )
+    .rename(columns={0: "most_at_home", 1: "most_at_work"})
+    .drop(columns=["value"])
+)
+official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
+
+official_langs
+```
+
+```{code-cell} ipython3
+official_langs.info()
+``` -->
+### Using `assign` to create new columns
+
+When we compute summary statistics with `agg` or apply functions using `apply`
+those give us new data frames. But what if we want to include that information
+in an exsisting data frame? This is where we make use of `assign`.
+
+For example, say we wanted the maximum values from the columns between `"mother_tongue"`
+and `"lang_known"` (just as we computed in the last section)
+in a data frame, we can (1) create a new, empty
+data frame and (2) use `assign` to assign values to that data frame.
+
+To use the `assign` method, again we first specify the object to be the data set,
+and in the following arguments. Before the `=` we provide the name of the column
+we want to add `maximum` and then what the contents should be. In this case we use
+`loc` and `apply` just as we did in the previous section to give us the maximum values.
+```{code-cell} ipython3
+region_lang.assign(
+  maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
+)
+region_lang
+```
+This gives us the same data frame but now with an additional column,
 named `maximum`, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region.
+
+
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+number_most_home = int(
+    official_langs[
+        (official_langs["language"] == "English") &
+        (official_langs["region"] == "Toronto")
+    ]["most_at_home"]
+)
+
+toronto_popn = int(region_data[region_data["region"] == "Toronto"]["population"])
+
+glue("number_most_home", "{0:,.0f}".format(number_most_home))
+glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
+glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
+```
+
+We can see in the table that
+{glue:text}`number_most_home` people reported
+speaking English in Toronto as their primary language at home, according to
+the 2016 Canadian census. What does this number mean to us? To understand this
+number, we need context. In particular, how many people were in Toronto when
+this data was collected? From the 2016 Canadian census profile, the population
+of Toronto was reported to be
+{glue:text}`toronto_popn` people.
+The number of people who report that English is their primary language at home
+is much more meaningful when we report it in this context.
+We can even go a step further and transform this count to a relative frequency
+or proportion.
+We can do this by dividing the number of people reporting a given language
+as their primary language at home by the number of people who live in Toronto.
+For example,
+the proportion of people who reported that their primary language at home
+was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
+in Toronto.
+
+Let's use `assign` to create a new column in our data frame
+that holds the proportion of people who speak English
+for our five cities of focus in this chapter.
+To accomplish this, we will need to do two tasks
+beforehand:
+
+1. Create a list containing the population values for the cities.
+2. Filter the `official_langs` data frame
+so that we only keep the rows where the language is English.
+
+To create a list containing the population values for the five cities
+(Toronto, Montréal, Vancouver, Calgary, Edmonton),
+we will use the `[]` (recall that we can also use `list()` to create a list).
+
+```{code-cell} ipython3
+city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
+city_pops
+```
+
+And next, we will filter the `official_langs` data frame
+so that we only keep the rows where the language is English.
+We will name the new data frame we get from this `english_langs`.
+
+```{code-cell} ipython3
+english_langs = official_langs[official_langs["language"] == "English"]
+english_langs
+```
+
+Finally, we can use `assign` to create a new column,
+named `most_at_home_proportion`, that will have value that corresponds to
+the proportion of people reporting English as their primary
+language at home.
+We will compute this by dividing the column by our vector of city populations.
+
+```{code-cell} ipython3
+english_langs = english_langs.assign(
+    most_at_home_proportion=english_langs["most_at_home"] / city_pops
+)
+
+english_langs
+```
+
+In the computation above, we had to ensure that we ordered the `city_pops` vector in the
+same order as the cities were listed in the `english_langs` data frame.
+This is because Python will perform the division computation we did by dividing
+each element of the `most_at_home` column by each element of the
+`city_pops` list, matching them up by position.
+Failing to do this would have resulted in the incorrect math being performed.
+
+> **Note:** In more advanced data wrangling,
+> one might solve this problem in a less error-prone way though using
+> a technique called "joins".
+> We link to resources that discuss this in the additional
+> resources at the end of this chapter.
+
++++
+
+
+### Using `assign` to modify columns
+
+
+In the section on {ref}`str-split`,
+when we first read in the `"region_lang_top5_cities_messy.csv"` data,
+all of the variables were "object" data types.
+During the tidying process,
+we used the `pandas.to_numeric` function
+to convert the `most_at_home` and `most_at_work` columns
+to the desired integer (i.e., numeric class) data types and then used `[]` to overwrite columns.
+We can do the same thing using `assign`.
+
+Below we use `assign` to convert the columns `most_at_home` and `most_at_work`
+to numeric data types in the `official_langs` data set as described in
+{numref}`fig:img-assign`. In our example, we are naming the columns the same
+names as columns that already exist in the data frame
+("most\_at\_home", "most\_at\_work")
+and this will cause `assign` to *overwrite* those columns
+(also referred to as modifying those columns *in-place*).
+If we were to give the columns a new name,
+then `assign` would create new columns with the names we specified.
+`assign`'s general syntax is detailed in {numref}`fig:img-assign`.
+
+```{code-cell} ipython3
+official_langs_numeric = official_langs.assign(
+    most_at_home=pd.to_numeric(official_langs["most_at_home"]),
+    most_at_work=pd.to_numeric(official_langs["most_at_work"]),
+)
+
+official_langs_numeric
+```
+
++++ {"tags": []}
+
+```{figure} img/wrangling/pandas_assign_args_labels.png
+:name: fig:img-assign
+:figclass: caption-hack
+
+Syntax for the `assign` function.
+```
+
++++
+
+
+```{code-cell} ipython3
+official_langs_numeric.info()
+```
+
+Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
+Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
+the power to over-write the entires of a column, it is a good idea to create a new data frame object so that if
+you make a mistake, you can start again from the original data frame.
+
+<!-- Why use `assign` over `[]`? It can be quite handy when you want to  -->
+
++++
+
+
+### Using `assign` to create a new data frame
+
+Sometimes you want to create a new data frame. You can use `assign` to create a data frame from scratch.
+For example, say we wanted the maximum values from the columns between `"mother_tongue"`
+and `"lang_known"` (just as we computed in the last section)
+in a data frame, we can (1) create a new, empty
+data frame and (2) use `assign` to assign values to that data frame.
+```
+region_lang_max = pd.DataFrame()  # empty data frame
+region_lang_max = region_lang_max.assign(
+  region=region_lang["region"],
+  maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
+)
+region_lang_max
+```
+This gives us a data frame with a single column called `maximum`. That might be useful in  -->
+
+
 
 ## Summary
 

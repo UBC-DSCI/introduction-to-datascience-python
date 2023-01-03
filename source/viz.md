@@ -746,7 +746,7 @@ glue("result", result)
 
 ```
 
-Similar to some of the examples in Chapter {ref}`wrangling`,
+Similar to some of the examples in the chapter on {ref}`wrangling`,
 we can convert the counts to percentages to give them context
 and make them easier to understand.
 We can do this by dividing the number of people reporting a given language
@@ -1155,7 +1155,7 @@ To label the x and y axes, we will use the `alt.X` and `alt.Y` function
 The default label is the name of the column being mapped to `color`. Here that
 would be `landmass_type`;
 however `landmass_type` is not proper English (and so is less readable).
-Thus we use the `title` argument inside `alt.Color` to change that to "Type"
+Thus we use the `title` argument inside `alt.Color` to change that to "Type".
 Finally, we again use the `configure_axis` function
 to change the font size.
 
@@ -1216,6 +1216,7 @@ First, we read in the data.
 
 ```{code-cell} ipython3
 morley_df = pd.read_csv("data/morley.csv")
+morley_df
 ```
 
 ```{index} distribution, altair; histogram
@@ -1235,7 +1236,10 @@ by separating the data into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
 To create a histogram in `altair` we will use the `mark_bar` geometric
-object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `count()`. As usual,
+object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `count()`.
+There is no `count()` column-name in `morley_df`; we use `count()` to tell `altair`
+that we want to count the number of values in the `Speed` column in each bin.
+As usual,
 let's use the default arguments just to see how things look.
 
 ```{code-cell} ipython3

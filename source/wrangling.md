@@ -121,9 +121,8 @@ A data frame storing data regarding the population of various regions in Canada.
 
 In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
 `pandas` stores each of the columns of a data frame as a `Series` object.
-They are a single column, are ordered and can be indexed.
-They can contain any data type: integers, strings, floats, etc. `Series` can contain a
-mix of data types, but it is good practice to only include a single type in a series
+They are a single column, are ordered, can be indexed, and can contain any data type. 
+`Series` can contain a mix of data types, but it is good practice to only include a single type in a series
 because all observations of one variable should be the same type.
 Python
 has several different basic data types, as shown in
@@ -195,13 +194,13 @@ It is important in Python to make sure you represent your data with the correct 
 Many of the `pandas` functions we use in this book treat
 the various data types differently. You should use integers and float types
 to represent numbers and perform arithmetic. Integers have no decimals while floats contain decimals.
-Booleans are variables that can only take on one of two values: True or False.
+Booleans are variables that can only take on one of two values: `True` or `False`.
 Strings are used to represent data that should
 be thought of as "text", such as words, names, paths, URLs, and more.
-A `NoneType` is a special type in Python that is used to indicate no-value; this can occur when
-you have missing data.
-There are other basic data types in Python, such as *set*
-and *complex*, but we do not use these in this textbook.
+A `NoneType` is a special type in Python that is used to indicate no value; this can occur,
+for example, when you have missing data.
+There are other basic data types in Python, but we will generally 
+not use these in this textbook.
 
 
 ### What does this have to do with data frames?
@@ -211,14 +210,11 @@ and *complex*, but we do not use these in this textbook.
 ```{index} data frame; definition
 ```
 
-A data frame is really just a collection of series that are stuck together; it follow two rules:
-
-1. Each element itself is a series.
-2. Each element (series) must have the same length.
-
-Not all columns in a data frame need to be of the same type.
+A data frame is really just a collection of series that are stuck together, 
+where each series corresponds to one column and all must have the same length.
+But not all columns in a data frame need to be of the same type.
 {numref}`fig:02-dataframe` shows a data frame where
-the columns are series of different types. But each element in
+the columns are series of different types. But each element *within*
 one column should usually be the same type, since the values for a single variable
 are usually all of the same type. For example, if the variable is the name of a city,
 that name should be a string, whereas if the variable is a year, that should be an
@@ -250,46 +246,49 @@ type(can_lang)
 
 ### Data structures in Python
 
-Series and DataFrames are basic types of *data structure* in Python, which
+The `Series` and `DataFrame` types are *data structure* in Python, which
 are core to most data analyses.
 The functions from `pandas` that we use often give us back a `DataFrame`
-or a `Series` depending on the operation.
-These include the ability to add useful attributes (such as grouping, which we will
-discuss later) and more predictable type preservation when subsetting. Because
+or a `Series` depending on the operation. Because
 `Series` are essentially simple `DataFrames`, we will refer
 to both `DataFrames` and `Series` as "data frames" in the text.
-
-There are other types that represent data structures in Python. We summarize the
-most common ones in {numref}`tab:datastructure-table`.
+There are other types that represent data structures in Python. 
+We summarize the most common ones in {numref}`tab:datastruc-table`.
 
 ```{table} Basic data structures in Python
-:name: tab:datastructure-table
+:name: tab:datastruc-table
 | Data Structure | Description |
 | ---            | ----------- |
-| list | A 1D ordered collection of values that can store multiple data types at once. |
+| list | An ordered collection of values that can store multiple data types at once. |
 | dict | A labeled data structure where `keys` are paired with `values` |
-| Series | A 1D ordered collection of values *with labels* that can store multiple data types at once. |
-| DataFrame | A 2D labeled data structure with columns of potentially different types. |
+| Series | An ordered collection of values *with labels* that can store multiple data types at once. |
+| DataFrame | A labeled data structure with `Series` columns of potentially different types. |
 ```
 
-A `list` is an ordered collection of values; it a smple data structure in Python.
-To create a list, we put a variable name on the left and the contents of the list in between
-square brackets `[]`. Each item of the list is separated by a comma. The example below contains 6 entries that are strings.
+A `list` is an ordered collection of values. To create a list, we put the contents of the list in between
+square brackets `[]`, where each item of the list is separated by a comma. A `list` can contain values
+of different types. The example below contains 6 `str` entries.
+
 ```{code-cell} ipython3
 cities = ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"]
 cities
 ```
 A list can directly be converted to a pandas `Series`.
-```
+```{code-cell} ipython3
 cities_series = pd.Series(cities)
 cities_series
 ```
 
-A `dict`, or dictionary, contains pairs of "keys" which you use to look up a "value". Dictionaries are create
+A `dict`, or dictionary, contains pairs of "keys" and "values." 
+You use a key to look up its corresponding value. Dictionaries are created
 using curly brackets `{}`. Each entry starts with the
-"key" on the left, this is often a string. This is followed by a `:` and then the value. A dictionary can have multiple key-value pairs, each separted by a comma.
+key on the left, followed by a colon symbol `:`, and then the value. 
+A dictionary can have multiple key-value pairs, each separted by a comma.
+Keys can take a wide variety of types (`int` and `str` are commonly used), and values can take any type;
+the key-value pairs in a dictionary can all be of different types, too.
  In the example below,
-we create a dictionary that has two keys: `"cities"` and `"population"` and the values associated with each are a list.
+we create a dictionary that has two keys: `"cities"` and `"population"`. 
+The values associated with each are lists.
 ```{code-cell} ipython3
 population_in_2016 = {
   "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
@@ -297,18 +296,15 @@ population_in_2016 = {
 }
 population_in_2016
 ```
-A dictionary can be converted to a data frame. The "key"
-become the column names, and the values are the entries in
+A dictionary can be converted to a data frame. Keys
+become the column names, and the values become the entries in
 those columns. Dictionaries on their own are quite simple objects; it is preferable to work with a data frame
 because then we have access to the built-in functionality in
-`pandas` (e.g. `loc`, `[]` and many functions that we will discuss in the upcoming sections)!
-```
+`pandas` (e.g. `loc`, `[]`, and many functions that we will discuss in the upcoming sections)!
+```{code-cell} ipython3
 population_in_2016 = pd.DataFrame(population_in_2016)
 population_in_2016
 ```
-
-There are several other data structures in the Python programming
-language (*e.g.,* matrices), but these are beyond the scope of this book.
 
 +++
 
@@ -647,7 +643,7 @@ In the first step, note that we added a call to `reset_index`. When `pivot` is c
 multiple column names passed to the `index`, those entries become the "name" of each row that
 would be used when you filter rows with `[]` or `loc` rather than just simple numbers. This
 can be confusing... What `reset_index` does is sets us back with the usual expected behaviour
-where each row is "named" with an integer. This is a subtle point, but the main take-away is thatu
+where each row is "named" with an integer. This is a subtle point, but the main take-away is that
 when you call `pivot`, it is a good idea to call `reset_index` afterwards.
 
 The second operation we applied is to rename the columns. When we perform the `pivot`
@@ -721,20 +717,24 @@ lang_messy_longer = lang_messy.melt(
 lang_messy_longer
 ```
 
-Next we'll use `.str.split` to split the `value` column into two columns.
-For example if we want to split the string `"50/0"` into two numbers `["50", "0"]`
-we tell `.str.split` to split our string on the slash character `"/"` as follows
+Next we'll split the `value` column into two columns.
+In basic Python, if we wanted to split the string `"50/0"` into two numbers `["50", "0"]`
+we would use the  `split` method on the string to split our string on the 
+slash character `"/"`.
 ```{code-cell} ipython3
 "50/0".split("/")
 ```
 
-We can use this operation on the columns of our data frame so that
+The `pandas` package provides similar functions that we can access
+by using the `str` method. So, to split all of the entries for an entire
+column in a data frame, we would use the `str.split` method.
+Once we use this method,
 one column will contain only the counts of Canadians
 that speak each language most at home,
 and the other will contain the counts of Canadians
 that speak each language most at work for each region.
 {numref}`fig:img-separate`
-outlines what we need to specify to use `.str.split`.
+outlines what we need to specify to use `str.split`.
 
 +++ {"tags": []}
 
@@ -742,39 +742,37 @@ outlines what we need to specify to use `.str.split`.
 :name: fig:img-separate
 :figclass: caption-hack
 
-Syntax for the `.str.split` function.
+Syntax for the `str.split` function.
 ```
 
 We will do this in multiple steps. First, we create a new object
-that contains two columns
+that contains two columns. We will set the `expand` argument to `True` 
+to tell `pandas` that we want to expand the output into two columns.
 
-```
+```{code-cell} ipython3
 split_counts = lang_messy_longer["value"].str.split("/", expand=True)
 split_counts
 ```
-The `expand=True` tells `pandas` that we want to `expand` the output into
-two columns.
-Now this doesnt have the rest of the columns including the language, region, etc.
+Since we only operated on the `value` column, the `split_counts` data frame 
+doesn't have the rest of the columns (`language`, `region`, etc.)
 that were in our original dataframe. We don't want to lose this information, so
 we will contatenate (combine) the original data frame with `split_counts` using
-`pd.concat`.
+the `concat` function from `pandas`. The `concat` function *concatenates* data frames
+along an axis. By default, it concatenates the data frames vertically along `axis=0` yielding a single
+*taller* data frame. Since we want to concatenate our old columns to our
+new `split_counts` data frame (to obtain a *wider* data frame), we will specify `axis=1`.
 
 ```{code-cell} ipython3
-tidy_lang = (
-    pd.concat(
+tidy_lang = pd.concat(
         (lang_messy_longer, split_counts),
         axis=1,
-    )
 )
 tidy_lang
 ```
 
-We combine them along `axis=1` as we want to combine them horizontally
-(the default of `axis=0` would try to stack them vertically).
-
-Next, we want to rename our newly created columns that are currently called
-`0` and `1` to more meaningful names of `"most_at_home"`, and `"most_at_work"`.
-Finally we will drop the column `value` using `drop` to remove it from our dataframe.
+Next, we will rename our newly created columns (currently called
+`0` and `1`) to the more meaningful names `"most_at_home"` and `"most_at_work"`,
+and drop the `value` column from our data frame using the `drop` method.
 
 ```{code-cell} ipython3
 tidy_lang = (
@@ -793,19 +791,23 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Notice in the table, all of the variables are
-"object" data types. Object data types are columns of strings or columns with mixed types. In the previous example in the section on {ref}`pivot-wider`, the
-`most_at_home` and `most_at_work` variables were `int64` (integer)&mdash;you can
-verify this by calling `df.info()`&mdash;which is a type
-of numeric data. This change is due to the delimiter (`/`) when we read in this
-messy data set. Python read these columns in as string types, and by default,
-`.str.split` will return columns as object data types.
+"object" data types. We can check this using the `info` method.
+```{code-cell} ipython3
+tidy_lang.info()
+```
 
-It makes sense for `region`, `category`, and `language` to be stored as a
-object type. However, suppose we want to apply any functions that treat the
+Object columns in `pandas` data frames are columns of strings or columns with
+mixed types. In the previous example in the section on {ref}`pivot-wider`, the
+`most_at_home` and `most_at_work` variables were `int64` (integer), which is a type of numeric data.
+This change is due to the delimiter (`/`) when we read in this messy data set.
+Python read these columns in as string types, and by default, `str.split` will
+return columns with the `object` data type.
+
+It makes sense for `region`, `category`, and `language` to be stored as an
+`object` type. However, suppose we want to apply any functions that treat the
 `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
 above a numeric threshold of a column).
-In that case,
-it won't be possible to do if the variable is stored as a `object`.
+That won't be possible if the variable is stored as a `object`.
 Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 like this: it will convert the columns to the best numeric data types.
 

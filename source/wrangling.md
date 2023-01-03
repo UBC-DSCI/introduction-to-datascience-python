@@ -1105,7 +1105,7 @@ would end up having a bug that might be quite hard to track down.
 
 +++ {"tags": []}
 
-## Aggregating data with `.agg`
+## Aggregating data with `agg`
 
 +++
 
@@ -1353,7 +1353,7 @@ type out the name of each column we want to summarize.
 In this section we will meet two strategies for performing this task.
 First we will see how we can do this using `loc[]` to slice the columns before applying summary functions.
 Then we will also explore how we can use a more general iteration function,
-`.apply`, to also accomplish this.
+`apply`, to also accomplish this.
 
 +++ {"tags": []}
 
@@ -1361,12 +1361,12 @@ Then we will also explore how we can use a more general iteration function,
 :name: fig:summarize-across
 :figclass: caption-hack
 
-`loc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
+`loc[]` or `apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
 ```
 
 +++ -->
 
-<!-- ### Aggregating data with `.agg` -->
+<!-- ### Aggregating data with `agg` -->
 <!-- #### Aggregating on a data frame for calculating summary statistics on many columns
 
 +++
@@ -1388,7 +1388,7 @@ the summary statistics would be in the rows, which is untidy! You can think of t
 statistics representing one observation (which should be a row).
 
 (apply-summary)= -->
-### `.apply` for calculating summary statistics on many columns
+### `apply` for calculating summary statistics on many columns
 
 
 
@@ -1397,13 +1397,13 @@ statistics representing one observation (which should be a row).
 
 > **Note:** Similar to when we use base Python statistical summary functions
 > (e.g., `max`, `min`, `sum`, etc.) when there are `NaN`s,
-> `.apply` functions paired with base Python statistical summary functions
+> `apply` functions paired with base Python statistical summary functions
 > also return `NaN` values when we apply them to columns that
 > contain `NaN` values.
 >
 > To avoid this, again we need to use the `pandas` variants of summary functions (*i.e.*
 > `.max`, `.min`, `.sum`, etc.) with `skipna=True`.
-> When we use this with `.apply`, we do this by constructing a anonymous function that calls
+> When we use this with `apply`, we do this by constructing a anonymous function that calls
 > the `.max` method with `skipna=True`, as illustrated below:
 
 ```{code-cell} ipython3
@@ -1412,26 +1412,26 @@ pd.DataFrame(
 ).T
 ``` -->
 
-<!-- The `.apply` function is generally quite useful for solving many problems
+<!-- The `apply` function is generally quite useful for solving many problems
 involving repeatedly applying functions in Python.
-Additionally, a variant of `.apply` is `.applymap`,
+Additionally, a variant of `apply` is `.applymap`,
 which can be used to apply functions element-wise.
 To learn more about these functions, see the additional resources
 section at the end of this chapter. -->
 
 +++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
 
-## Apply functions across many columns with `.apply`
+## Apply functions across many columns with `apply`
 
 An alternative to aggregating on a dataframe
-for applying a function to many columns is the `.apply` method.
+for applying a function to many columns is the `apply` method.
 Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `.apply` with the `max` function this time.
-We focus on the two arguments of `.apply`:
+`region_lang` data frame, but using `apply` with the `max` function this time.
+We focus on the two arguments of `apply`:
 the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
-Note that `.apply` does not have an argument
+Note that `apply` does not have an argument
 to specify *which* columns to apply the function to.
-Therefore, we will use the `loc[]` before calling `.apply`
+Therefore, we will use the `loc[]` before calling `apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
@@ -1449,7 +1449,7 @@ We illustrate such a data transformation in {numref}`fig:mutate-across`.
 :name: fig:mutate-across
 :figclass: caption-hack
 
-`.apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
+`apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -1468,12 +1468,12 @@ region_lang
 ```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
 ```
 
-To accomplish such a task, we can use `.apply`.
+To accomplish such a task, we can use `apply`.
 This works in a similar way for column selection,
 as we saw when we used in the Section on {ref}`apply-summary` earlier.
 As we did above,
 we again use `loc[]` to specify the columns
-as well as the `.apply` to specify the function we want to apply on these columns.
+as well as the `apply` to specify the function we want to apply on these columns.
 However, a key difference here is that we are not using aggregating function here,
 which means that we get back a data frame with the same number of rows.
 
@@ -1507,7 +1507,7 @@ to the specified columns (here `mother_tongue` to `lang_known`).
 
 +++
 
-## Apply functions across columns within one row with `.apply`
+## Apply functions across columns within one row with `apply`
 
 What if you want to apply a function across columns but within one row?
 We illustrate such a data transformation in {numref}`fig:rowwise`.
@@ -1518,7 +1518,7 @@ We illustrate such a data transformation in {numref}`fig:rowwise`.
 :name: fig:rowwise
 :figclass: caption-hack
 
-`.apply` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
+`apply` is useful for applying functions across columns within one row. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -1527,7 +1527,7 @@ For instance, suppose we want to know the maximum value between `mother_tongue`,
 and `lang_known` for each language and region
 in the `region_lang` data set.
 In other words, we want to apply the `max` function *row-wise.*
-Before we use `.apply`, we will again use `loc[]` to select only the count columns
+Before we use `apply`, we will again use `loc[]` to select only the count columns
 so we can see all the columns in the data frame's output easily in the book.
 So for this demonstration, the data set we are operating on looks like this.
 
@@ -1535,10 +1535,10 @@ So for this demonstration, the data set we are operating on looks like this.
 region_lang.loc[:, "mother_tongue":"lang_known"]
 ```
 
-Now we use `.apply` with argument `axis=1`, to tell Python that we would like
+Now we use `apply` with argument `axis=1`, to tell Python that we would like
 the `max` function to be applied across, and within, a row,
 as opposed to being applied on a column
-(which is the default behavior of `.apply`).
+(which is the default behavior of `apply`).
 
 <!-- ```{code-cell} ipython3
 region_lang_rowwise = region_lang.assign(
@@ -1685,6 +1685,8 @@ We will name the new data frame we get from this `english_langs`.
 english_langs = official_langs[official_langs["language"] == "English"]
 english_langs
 ```
+
+Recall how we created
 
 Finally, we can use `assign` to create a new column,
 named `most_at_home_proportion`, that will have value that corresponds to
@@ -1849,7 +1851,7 @@ and guidance that the worksheets provide will function as intended.
   `.melt` and `.pivot`, but also covers missing values
   and additional wrangling functions (like `.stack`). The [data
   aggregation chapter](https://wesmckinney.com/book/data-aggregation.html) covers
-  `.groupby`, aggregating functions, `.apply`, etc.
+  `.groupby`, aggregating functions, `apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items
   in a data frame, but none of the above functions are flexible enough to do
   what you want. In that case, you may consider using [a for

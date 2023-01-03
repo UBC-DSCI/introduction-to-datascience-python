@@ -121,7 +121,7 @@ A data frame storing data regarding the population of various regions in Canada.
 
 In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
 `pandas` stores each of the columns of a data frame as a `Series` object.
-They are a single column, are ordered, can be indexed, and can contain any data type. 
+They are a single column, are ordered, can be indexed, and can contain any data type.
 `Series` can contain a mix of data types, but it is good practice to only include a single type in a series
 because all observations of one variable should be the same type.
 Python
@@ -199,7 +199,7 @@ Strings are used to represent data that should
 be thought of as "text", such as words, names, paths, URLs, and more.
 A `NoneType` is a special type in Python that is used to indicate no value; this can occur,
 for example, when you have missing data.
-There are other basic data types in Python, but we will generally 
+There are other basic data types in Python, but we will generally
 not use these in this textbook.
 
 
@@ -210,7 +210,7 @@ not use these in this textbook.
 ```{index} data frame; definition
 ```
 
-A data frame is really just a collection of series that are stuck together, 
+A data frame is really just a collection of series that are stuck together,
 where each series corresponds to one column and all must have the same length.
 But not all columns in a data frame need to be of the same type.
 {numref}`fig:02-dataframe` shows a data frame where
@@ -252,7 +252,7 @@ The functions from `pandas` that we use often give us back a `DataFrame`
 or a `Series` depending on the operation. Because
 `Series` are essentially simple `DataFrames`, we will refer
 to both `DataFrames` and `Series` as "data frames" in the text.
-There are other types that represent data structures in Python. 
+There are other types that represent data structures in Python.
 We summarize the most common ones in {numref}`tab:datastruc-table`.
 
 ```{table} Basic data structures in Python
@@ -279,15 +279,15 @@ cities_series = pd.Series(cities)
 cities_series
 ```
 
-A `dict`, or dictionary, contains pairs of "keys" and "values." 
+A `dict`, or dictionary, contains pairs of "keys" and "values."
 You use a key to look up its corresponding value. Dictionaries are created
 using curly brackets `{}`. Each entry starts with the
-key on the left, followed by a colon symbol `:`, and then the value. 
+key on the left, followed by a colon symbol `:`, and then the value.
 A dictionary can have multiple key-value pairs, each separted by a comma.
 Keys can take a wide variety of types (`int` and `str` are commonly used), and values can take any type;
 the key-value pairs in a dictionary can all be of different types, too.
  In the example below,
-we create a dictionary that has two keys: `"cities"` and `"population"`. 
+we create a dictionary that has two keys: `"cities"` and `"population"`.
 The values associated with each are lists.
 ```{code-cell} ipython3
 population_in_2016 = {
@@ -719,7 +719,7 @@ lang_messy_longer
 
 Next we'll split the `value` column into two columns.
 In basic Python, if we wanted to split the string `"50/0"` into two numbers `["50", "0"]`
-we would use the  `split` method on the string to split our string on the 
+we would use the  `split` method on the string to split our string on the
 slash character `"/"`.
 ```{code-cell} ipython3
 "50/0".split("/")
@@ -746,14 +746,14 @@ Syntax for the `str.split` function.
 ```
 
 We will do this in multiple steps. First, we create a new object
-that contains two columns. We will set the `expand` argument to `True` 
+that contains two columns. We will set the `expand` argument to `True`
 to tell `pandas` that we want to expand the output into two columns.
 
 ```{code-cell} ipython3
 split_counts = lang_messy_longer["value"].str.split("/", expand=True)
 split_counts
 ```
-Since we only operated on the `value` column, the `split_counts` data frame 
+Since we only operated on the `value` column, the `split_counts` data frame
 doesn't have the rest of the columns (`language`, `region`, etc.)
 that were in our original dataframe. We don't want to lose this information, so
 we will contatenate (combine) the original data frame with `split_counts` using
@@ -1163,7 +1163,7 @@ glue("lang_most_people", "{0:,.0f}".format(int(region_lang["most_at_home"].max()
 From this we see that there are some languages in the data set that no one speaks
 as their primary language at home. We also see that the most commonly spoken
 primary language at home is spoken by
-{glue:text}`lang_most_people` people. If instead we wanted to know the 
+{glue:text}`lang_most_people` people. If instead we wanted to know the
 total number of people in the survey, we could use the `sum` summary statistic method.
 ```{code-cell} ipython3
 region_lang["most_at_home"].sum()
@@ -1177,11 +1177,11 @@ compute both the `min` and `max` at once, we could use `agg` with the argument `
 Note that `agg` outputs a `Series` object.
 
 ```{code-cell} ipython3
-region_lang["most_at_home"].agg(['min', 'max'])
+region_lang["most_at_home"].agg(["min", "max"])
 ```
 
 The `pandas` package also provides the `describe` method,
-which is a handy function that computes many common summary statistics at once; it 
+which is a handy function that computes many common summary statistics at once; it
 gives us a *summary* of a variable.
 
 ```{code-cell} ipython3
@@ -1190,12 +1190,12 @@ region_lang["most_at_home"].describe()
 
 In addition to the summary methods we introduced earlier, the `describe` method
 outputs a `count` (the total number of observations, or rows, in our data frame),
-as well as the 25th, 50th, and 75th percentiles. 
-{numref}`tab:datastructure-table` provides an overview of some of the useful 
+as well as the 25th, 50th, and 75th percentiles.
+{numref}`tab:basic-summary-statistics` provides an overview of some of the useful
 summary statistics that you can compute with `pandas`.
 
-```{table} Basic data structures in Python
-:name: tab:datastructure-table
+```{table} Basic summary statistics
+:name: tab:basic-summary-statistics
 | Function | Description |
 | -------- | ----------- |
 | `count` | The number of observations (rows) |
@@ -1219,6 +1219,41 @@ summary statistics that you can compute with `pandas`.
 > see an input variable `skipna`, which by default is set to `skipna=True`. This means that
 > `pandas` will skip `NaN` values when computing statistics.
 
+### Calculating summary statistics on the dataframe
+
+What if you want to calculate summary statistics on an entire dataframe? Well,
+it turns out that the functions in Table {numref}`tab:basic-summary-statistics`
+can be applied to a whole data frame!
+
+For example, we can ask for the number of rows that each column has using `count`.
+```{code-cell} ipython3
+region_lang.count()
+```
+Not surprisingly, they are all the same. We could ask for the `mean`, but `pandas` doesn't
+know how to compute the mean of `"Vancouver"` and `"Halifax"`. So we provide the keyword
+`numeric_only=True` so that it only computes the mean of columns with numeric values. This
+is also needed if you want the `sum` or the `std`.
+```{code-cell} ipython3
+region_lang.mean(numeric_only=True)
+```
+If we ask for the `max` or the `min`, `pandas` will give you the largest or smallest number
+for columns with numeric values. For columns with text, it will return the most repeated value for `max`
+and the least repeated for `min`. Again, if you only want the minimum and maximum value for
+numeric columns, you can provide `numeric_only=True`.
+```{code-cell} ipython3
+region_lang.max()
+```
+```{code-cell} ipython3
+region_lang.min()
+```
+
+Similarly, if there are only some columns that you would like to get summary statistics of,
+we can first use `loc[]` and then ask for the summary statistic. Lets say that we want to know
+the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
+We use `loc[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
+```{code-cell} ipython3
+region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
+```
 
 ### Calculating summary statistics for groups of rows
 
@@ -1226,8 +1261,9 @@ summary statistics that you can compute with `pandas`.
 
 ```{index} pandas.DataFrame; groupby
 ```
-
-A common pairing with summary functions is `groupby`. Pairing summary functions
+What happens if we want to know how languages vary by region? In this case,
+we need a new tool that lets us group rows by region. This can be achieved
+using the `groupby` function in `pandas`. Pairing summary functions
 with `groupby` lets you summarize values for subgroups within a data set,
 as illustrated in {numref}`fig:summarize-groupby`.
 For example, we can use `groupby` to group the regions of the `tidy_lang` data
@@ -1241,7 +1277,7 @@ for each of the regions in the data set.
 :name: fig:summarize-groupby
 :figclass: caption-hack
 
-A summary statistic paired with `groupby` is useful for calculating that statistic 
+A summary statistic paired with `groupby` is useful for calculating that statistic
 on one or more column(s) for each group. It
 creates a new data frame&mdash;with one row for each group&mdash;containing the
 summary statistic(s) for each column being summarized. It also creates a column
@@ -1254,23 +1290,50 @@ represented in this cartoon example.
 +++
 
 The `groupby` function takes at least one argument&mdash;the columns to use in the
-grouping. Here we use only one column for grouping (`region`), but more than one
-can also be used. To do this, pass a list of column names.
+grouping. Here we use only one column for grouping (`region`).
 
 ```{code-cell} ipython3
 region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 ```
 
+<!-- LJH Note: this paragraph is a bit out of place -->
 Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy`
 object, which contains information about the groups of the dataframe. We can
-then apply aggregating functions to the `DataFrameGroupBy` object.
-
-
+then apply aggregating functions to the `DataFrameGroupBy` object. This can be handy if you would like to perform multiple operations and assign
+each output to its own object.
 ```{code-cell} ipython3
 region_lang.groupby("region")
 ```
 
-### Calculating summary statistics on many columns
+You can also pass multiple column names. For example, if we wanted to
+know about how othe different categories of languages (Aboriginal, Non-Official &
+Non-Aboriginal, and  Official) are spoken at home in different regions, we would pass a
+list including `region` and `category` to `groupby`.
+```{code-cell} ipython3
+region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
+```
+
+You can also ask for grouped summary statistics on the whole dataframe
+```{code-cell} ipython3
+region_lang.groupby("region").agg(["min", "max"])
+```
+
+If you want to ask for only some rows, but not all, you might think about
+combining `groupby` and `loc`. But this doesn't work! If we try applying
+`loc` and then `groupby`, we will get an error: `KeyError: 'region'`.
+```{code-cell} ipython3
+region_lang.loc[:, "most_at_home":"lang_known"].groupby("region").max()
+```
+This is because when we use `loc` we selected only the columns between
+`"most_at_home"` and `"lang_known"`, which doesn't include `"region"`!
+If instead, we did `groupby` first, we would create a `groupby` object
+which doesn't work with `loc`. Instead, we will need to use `apply`, which
+we will talk about next.
+
+
+
+
+<!-- ### Calculating summary statistics on many columns
 
 +++
 
@@ -1292,7 +1355,7 @@ Then we will also explore how we can use a more general iteration function,
 `loc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
 ```
 
-+++
++++ -->
 
 <!-- ### Aggregating data with `.agg` -->
 <!-- #### Aggregating on a data frame for calculating summary statistics on many columns
@@ -1335,7 +1398,7 @@ Therefore, we will use the `loc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
-region_lang.loc[:, ["most_at_home", "most_at_work"]].apply(max)
+region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
 ```
 
 <!-- ```{index} missing data

@@ -46,13 +46,13 @@ By the end of the chapter, readers will be able to do the following:
   - Describe the common types of data in Python and their uses.
   - Recall and use the following functions for their
     intended data wrangling tasks:
-      - `.agg`
-      - `.apply`
-      - `.assign`
-      - `.groupby`
-      - `.melt`
-      - `.pivot`
-      - `.str.split`
+      - `agg`
+      - `apply`
+      - `assign`
+      - `groupby`
+      - `melt`
+      - `pivot`
+      - `str.split`
   - Recall and use the following operators for their
     intended data wrangling tasks:
       - `==`
@@ -1134,9 +1134,8 @@ Calculating summary statistics on one or more column(s). In its simplest use cas
 
 +++
 
-
-
-First a reminder of what `region_lang` looks like:
+We will start by showing how to compute the minimum and maximum number of Canadians reporting a particular
+language as their primary language at home. First, a reminder of what `region_lang` looks like:
 
 ```{code-cell} ipython3
 region_lang = pd.read_csv("data/region_lang.csv")
@@ -1158,45 +1157,42 @@ region_lang["most_at_home"].max()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-glue("lang_most_people", "{0:,.0f}".format(int(lang_summary["max_most_at_home"])))
+glue("lang_most_people", "{0:,.0f}".format(int(region_lang["most_at_home"].max())))
 ```
 
 From this we see that there are some languages in the data set that no one speaks
 as their primary language at home. We also see that the most commonly spoken
 primary language at home is spoken by
-{glue:text}`lang_most_people`
-people.
-
-If we wanted to know the total number of people in the survey, we can use `.sum`:
+{glue:text}`lang_most_people` people. If instead we wanted to know the 
+total number of people in the survey, we could use the `sum` summary statistic method.
 ```{code-cell} ipython3
 region_lang["most_at_home"].sum()
 ```
 
-Other handy summary statistics include the `.mean`, `.median` and `.std` for
+Other handy summary statistics include the `mean`, `median` and `std` for
 computing the mean, median, and standard deviation of observations, respectively.
-
-We can compute multiple statistics at once using `.agg` to "aggregate" results, say if we wanted to
-compute both the `min` and `max`, we could do the following.
+We can also compute multiple statistics at once using `agg` to "aggregate" results.
+For example, if we wanted to
+compute both the `min` and `max` at once, we could use `agg` with the argument `['min', 'max']`.
+Note that `agg` outputs a `Series` object.
 
 ```{code-cell} ipython3
 region_lang["most_at_home"].agg(['min', 'max'])
 ```
 
-Another handy function is `describe`; it gives us a summary.
+The `pandas` package also provides the `describe` method,
+which is a handy function that computes many common summary statistics at once; it 
+gives us a *summary* of a variable.
 
 ```{code-cell} ipython3
 region_lang["most_at_home"].describe()
 ```
 
-The `count` is th total number of observations (equal to the number of rows in our data frame),
-and the numbers with percents indicate the percentiles. A 75th percentile of 30 means that 75% of
-the languages are spoken by 30 people surveyed or less.
-
-
-
-The table below provides an overview of some of the useful summary statistics that you can
-compute with `pandas`.
+In addition to the summary methods we introduced earlier, the `describe` method
+outputs a `count` (the total number of observations, or rows, in our data frame),
+as well as the 25th, 50th, and 75th percentiles. 
+{numref}`tab:datastructure-table` provides an overview of some of the useful 
+summary statistics that you can compute with `pandas`.
 
 ```{table} Basic data structures in Python
 :name: tab:datastructure-table
@@ -1231,25 +1227,13 @@ compute with `pandas`.
 ```{index} pandas.DataFrame; groupby
 ```
 
-A common pairing with summary functions is `.groupby`. Pairing these functions
-together can let you summarize values for subgroups within a data set,
+A common pairing with summary functions is `groupby`. Pairing summary functions
+with `groupby` lets you summarize values for subgroups within a data set,
 as illustrated in {numref}`fig:summarize-groupby`.
-For example, we can use `.groupby` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
+For example, we can use `groupby` to group the regions of the `tidy_lang` data
+frame and then calculate the minimum and maximum number of Canadians
 reporting the language as the primary language at home
 for each of the regions in the data set.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# A common pairing with `summarize` is `group_by`. Pairing these functions \index{group\_by}
-# together can let you summarize values for subgroups within a data set,
-# as illustrated in Figure \@ref(fig:summarize-groupby).
-# For example, we can use `group_by` to group the regions of the `tidy_lang` data frame and then calculate the minimum and maximum number of Canadians
-# reporting the language as the primary language at home
-# for each of the regions in the data set.
-
-# (ref:summarize-groupby) `summarize` and `group_by` is useful for calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
-```
 
 +++ {"tags": []}
 
@@ -1257,41 +1241,29 @@ for each of the regions in the data set.
 :name: fig:summarize-groupby
 :figclass: caption-hack
 
-Calculating summary statistics on one or more column(s) for each group. It creates a new data frame&mdash;with one row for each group&mdash;containing the summary statistic(s) for each column being summarized. It also creates a column listing the value of the grouping variable. The darker, top row of each table represents the column headers. The gray, blue, and green colored rows correspond to the rows that belong to each of the three groups being represented in this cartoon example.
+A summary statistic paired with `groupby` is useful for calculating that statistic 
+on one or more column(s) for each group. It
+creates a new data frame&mdash;with one row for each group&mdash;containing the
+summary statistic(s) for each column being summarized. It also creates a column
+listing the value of the grouping variable. The darker, top row of each table
+represents the column headers. The gray, blue, and green colored rows
+correspond to the rows that belong to each of the three groups being
+represented in this cartoon example.
 ```
 
 +++
 
-The `.groupby` function takes at least one argument&mdash;the columns to use in the
+The `groupby` function takes at least one argument&mdash;the columns to use in the
 grouping. Here we use only one column for grouping (`region`), but more than one
 can also be used. To do this, pass a list of column names.
-
-<!-- ```{code-cell} ipython3
-region_summary = pd.DataFrame()
-region_summary = region_summary.assign(
-    min_most_at_home=region_lang.groupby("region")["most_at_home"].min(),
-    max_most_at_home=region_lang.groupby("region")["most_at_home"].max()
-).reset_index()
-
-region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
-region_summary
-``` -->
 
 ```{code-cell} ipython3
 region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 ```
-<!--
-`pandas` also has a convenient method `.agg` (shorthand for `.aggregate`) that allows us to apply multiple aggregate functions in one line of code. We just need to pass in a list of function names to `.agg` as shown below.
 
-```{code-cell} ipython3
-region_summary = (
-    region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
-)
-region_summary.columns = ["region", "min_most_at_home", "max_most_at_home"]
-region_summary
-``` -->
-
-Notice that `.groupby` converts a `DataFrame` object to a `DataFrameGroupBy` object, which contains information about the groups of the dataframe. We can then apply aggregating functions to the `DataFrameGroupBy` object.
+Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy`
+object, which contains information about the groups of the dataframe. We can
+then apply aggregating functions to the `DataFrameGroupBy` object.
 
 
 ```{code-cell} ipython3

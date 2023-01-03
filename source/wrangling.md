@@ -60,8 +60,8 @@ By the end of the chapter, readers will be able to do the following:
       - `and`
       - `or`
       - `[]`
-      - `.loc[]`
-      - `.iloc[]`
+      - `loc[]`
+      - `iloc[]`
 
 ## Data frames and series
 
@@ -832,9 +832,9 @@ Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
 using the powerful suite of functions from the `pandas`.
 We revisit the `[]` from the chapter on {ref}`intro`,
 which lets us create a subset of rows from a data frame.
-Recall the argument to the `[]`:
-column names or a logical statement evaluated to either `True` or `False`;
-`[]` works by returning the rows  where the logical statement evaluates to `True`.
+Recall the argument to `[]`:
+a list of column names, or a logical statement that evaluates to either `True` or `False`,
+where `[]` returns the rows where the logical statement evaluates to `True`.
 This section will highlight more advanced usage of the `[]` function.
 In particular, this section provides an in-depth treatment of the variety of logical statements
 one can use in the `[]` to select subsets of rows.
@@ -881,7 +881,7 @@ We can do this with the ampersand symbol (`&`), which
 is interpreted by Python as "and".
 We write the code as shown below to filter the `official_langs` data frame
 to subset the rows where `region == "Montréal"`
-*and* the `language == "French"`.
+*and* `language == "French"`.
 
 ```{code-cell} ipython3
 tidy_lang[(tidy_lang["region"] == "Montréal") & (tidy_lang["language"] == "French")]
@@ -979,10 +979,10 @@ only English in Toronto is reported by more people
 as their primary language at home
 than French in Montréal according to the 2016 Canadian census.
 
-### Extracting rows using `.query()`
+### Extracting rows using `query`
 
 You can also extract rows above, below, equal or not-equal to a threshold using the
-`.query()` method. For example the following gives us the same result as when we used
+`query` method. For example the following gives us the same result as when we used
 `official_langs[official_langs["most_at_home"] > 2669195]`.
 
 ```{code-cell} ipython3
@@ -993,13 +993,13 @@ The query (criteria we are using to select values) is input as a string. This
 comes in handy when we chain operations together.
 
 (loc-iloc)=
-## Using `.loc[]` to filter rows and select columns.
+## Using `loc[]` to filter rows and select columns.
 ```{index} pandas.DataFrame; loc[]
 ```
 
 The `[]` operation is only used when you want to filter rows or select columns;
-it cannot be used to do both operations at the same time. This is where `.loc[]`
-comes in. For the first example, recall `.loc[]` from Chapter {ref}`intro`,
+it cannot be used to do both operations at the same time. This is where `loc[]`
+comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
 which lets us create a subset of columns from a data frame.
 Suppose we wanted to select only the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
@@ -1069,35 +1069,36 @@ provides a comprehensive resource on these functions.
 # provides a comprehensive resource on `select` helpers.
 ```
 
-## Using `.iloc[]` to extract a range of columns
+## Using `iloc[]` to extract a range of columns
 ```{index} pandas.DataFrame; iloc[], column range
 ```
-Another approach for selecting columns is to use `.iloc[]`
-which allows us to index with integers rather than the names of the columns.
+Another approach for selecting columns is to use `iloc[]`,
+which provides the ability to index with integers rather than the names of the columns.
 For example, the column names of the `tidy_lang` data frame are
 `['category', 'language', 'region', 'most_at_home', 'most_at_work']`.
-
-Then using `.iloc[]` you can ask for the `language` column by doing
+Using `iloc[]`, you can ask for the `language` column by requesting the
+column at index `1` (remember that Python starts counting at `0`, so the second item `'language'`
+has index `1`!).
 
 ```{code-cell} ipython3
 column = tidy_lang.iloc[:, 1]
 column
 ```
 
-You can also ask for multiple columns as we did with `[]`. We pass `:` before
-the comma indicating we want to retrieve all rows, and `1:` after the comma
-indicating we want only columns from index 1 (*i.e.* `language`) and afterwords.
+You can also ask for multiple columns, just like we did with `[]`. We pass `:` before
+the comma, indicating we want to retrieve all rows, and `1:` after the comma
+indicating we want columns after and including index 1 (*i.e.* `language`).
 
 ```{code-cell} ipython3
 column_range = tidy_lang.iloc[:, 1:]
 column_range
 ```
 
-This is less commonly used and needs to be used with care; it is easy
-accidentally put in the wrong integer because you didn't remember if `language`
-was column number 1 or 2.
-
-Notice that we get the same output as we did
+The `iloc[]` method is less commonly used, and needs to be used with care.
+For example, it is easy to
+accidentally put in the wrong integer index! If you did not correctly remember
+that the `language` column was index `1`, and used `2` instead, your code
+would end up having a bug that might be quite hard to track down.
 
 ```{index} pandas.Series; str.startswith
 ```
@@ -1306,7 +1307,7 @@ An example of this is illustrated in {numref}`fig:summarize-across`.
 In such a case, using summary functions alone means that we have to
 type out the name of each column we want to summarize.
 In this section we will meet two strategies for performing this task.
-First we will see how we can do this using `.loc[]` to slice the columns before applying summary functions.
+First we will see how we can do this using `loc[]` to slice the columns before applying summary functions.
 Then we will also explore how we can use a more general iteration function,
 `.apply`, to also accomplish this.
 
@@ -1316,7 +1317,7 @@ Then we will also explore how we can use a more general iteration function,
 :name: fig:summarize-across
 :figclass: caption-hack
 
-`.loc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
+`loc[]` or `.apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
 ```
 
 +++
@@ -1329,9 +1330,9 @@ Then we will also explore how we can use a more general iteration function,
 ```{index} column range
 ```
 
-Recall that in the Section {ref}`loc-iloc`, we can use `.loc[]` to extract a range of columns. Here we demonstrate finding the maximum value
+Recall that in the Section {ref}`loc-iloc`, we can use `loc[]` to extract a range of columns. Here we demonstrate finding the maximum value
 of each of the numeric
-columns of the `region_lang` data set through pairing `.loc[]` and `.max`. This means that the
+columns of the `region_lang` data set through pairing `loc[]` and `.max`. This means that the
 summary methods (*e.g.* `.min`, `.max`, `.sum` etc.) can be used for data frames as well.
 
 ```{code-cell} ipython3
@@ -1358,7 +1359,7 @@ We focus on the two arguments of `.apply`:
 the function that you would like to apply to each column, and the `axis` along which the function will be applied (`0` for columns, `1` for rows).
 Note that `.apply` does not have an argument
 to specify *which* columns to apply the function to.
-Therefore, we will use the `.loc[]` before calling `.apply`
+Therefore, we will use the `loc[]` before calling `.apply`
 to choose the columns for which we want the maximum.
 
 ```{code-cell} ipython3
@@ -1641,7 +1642,7 @@ To accomplish such a task, we can use `.apply`.
 This works in a similar way for column selection,
 as we saw when we used in the Section on {ref}`apply-summary` earlier.
 As we did above,
-we again use `.loc[]` to specify the columns
+we again use `loc[]` to specify the columns
 as well as the `.apply` to specify the function we want to apply on these columns.
 However, a key difference here is that we are not using aggregating function here,
 which means that we get back a data frame with the same number of rows.
@@ -1735,15 +1736,15 @@ burning data science questions!
 
 | Function | Description |
 | ---      | ----------- |
-| `.agg` | calculates aggregated summaries of inputs |
-| `.apply` | allows you to apply function(s) to multiple columns/rows  |
-| `.assign` | adds or modifies columns in a data frame  |
-| `.groupby` |  allows you to apply function(s) to groups of rows |
-| `.iloc` | subsets columns/rows of a data frame using integer indices |
-| `.loc` | subsets columns/rows of a data frame using labels |
-| `.melt` | generally makes the data frame longer and narrower |
-| `.pivot` | generally makes a data frame wider and decreases the number of rows |
-| `.str.split` | splits up a string column into multiple columns  |
+| `agg` | calculates aggregated summaries of inputs |
+| `apply` | allows you to apply function(s) to multiple columns/rows  |
+| `assign` | adds or modifies columns in a data frame  |
+| `groupby` |  allows you to apply function(s) to groups of rows |
+| `iloc` | subsets columns/rows of a data frame using integer indices |
+| `loc` | subsets columns/rows of a data frame using labels |
+| `melt` | generally makes the data frame longer and narrower |
+| `pivot` | generally makes a data frame wider and decreases the number of rows |
+| `str.split` | splits up a string column into multiple columns  |
 ```
 
 ## Exercises

@@ -1129,7 +1129,10 @@ or columns, as shown in {numref}`fig:summarize`.
 :name: fig:summarize
 :figclass: caption-hack
 
-Calculating summary statistics on one or more column(s). In its simplest use case, it creates a new data frame with a single row containing the summary statistic(s) for each column being summarized. The darker, top row of each table represents the column headers.
+Calculating summary statistics on one or more column(s) in `pandas` generally
+creates a series object containing the summary statistic(s) for each column 
+being summarized. The darker, top row of each
+table represents column headers.
 ```
 
 +++

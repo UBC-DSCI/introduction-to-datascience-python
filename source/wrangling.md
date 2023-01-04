@@ -314,9 +314,10 @@ population_in_2016
 ```{index} tidy data; definition
 ```
 
-There are many ways a tabular data set can be organized. This chapter will focus
-on introducing the **tidy data** format of organization and how to make your raw
-(and likely messy) data tidy. A tidy data frame satisfies
+There are many ways a tabular data set can be organized.  The data frames we
+have looked at so far have all been using the **tidy data** format of
+organization.  This chapter will focus on introducing the tidy data format and
+how to make your raw (and likely messy) data tidy. A tidy data frame satisfies
 the following three criteria {cite:p}`wickham2014tidy`:
 
   - each row is a single observation,
@@ -773,7 +774,7 @@ new `split_counts` data frame (to obtain a *wider* data frame), we will specify 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang = pd.concat(
-    (lang_messy_longer, split_counts),
+    [lang_messy_longer, split_counts],
     axis=1,
 )
 tidy_lang
@@ -984,7 +985,9 @@ If we are interested in finding the official languages in regions
 with higher numbers of people who speak it as their primary language at home
 compared to French in Montréal, then we can use `[]` to obtain rows
 where the value of `most_at_home` is greater than
-{glue:text}`most_french`.
+{glue:text}`most_french`. We use the `>` symbol to look for values *above* a threshold,
+and the `<` symbol to look for values *below* a threshold. The `>=` and `<=` 
+symbols similarly look for *equal to or above* a threshold and *equal to or below* a threshold.
 
 ```{code-cell} ipython3
 official_langs[official_langs["most_at_home"] > 2669195]
@@ -1006,8 +1009,9 @@ You can also extract rows above, below, equal or not-equal to a threshold using 
 official_langs.query("most_at_home > 2669195")
 ```
 
-The query (criteria we are using to select values) is input as a string. This
-comes in handy when we chain operations together.
+The query (criteria we are using to select values) is input as a string. The `query` method
+is less often used than the earlier approaches we introduced, but it can come in handy
+to make long chains of filtering operations a bit easier to read.
 
 (loc-iloc)=
 ## Using `loc[]` to filter rows and select columns.
@@ -1125,7 +1129,7 @@ would end up having a bug that might be quite hard to track down.
 
 +++ {"tags": []}
 
-## Aggregating data with `agg`
+## Aggregating data
 
 +++
 

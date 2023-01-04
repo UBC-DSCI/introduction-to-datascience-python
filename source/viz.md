@@ -1858,21 +1858,18 @@ bad, while raster images eventually start to look "pixelated."
 > store *both* raster and vector formats. If you try to open a PDF and it's taking a long time
 > to load, it may be because there is a complicated vector graphics image that your computer is rendering.
 
-Let's learn how to save plot images to these different file formats using a
-scatter plot of
-the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)
-{cite:p}`faithfuldata`,
-shown in {numref}`faithful_scatter_labels`
+Let's learn how to save plot images to `.png` and `.svg` file formats using a
+scatter plot of the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)
+{cite:p}`faithfuldata`, shown in {numref}`faithful_scatter_labels`
 
-Now that we have a named `altair` plot object, we can use the `chart.save` function
-to save a file containing this image.
-`chart.save` works by taking the path to the directory where you would like to save the file
-(e.g., `img/filename.png` to save a file named `filename` to the `img` directory),
-The kind of image to save is specified by the file extension.
-For example,
-to create a PNG image file, we specify that the file extension is `.png`.
-Below we demonstrate how to save PNG and SVG file types
-for the `faithful_scater_labels` plot:
+Now that we have a named `altair` plot object, we can use the `chart.save`
+function to save a file containing this image.  `chart.save` works by taking
+the path to the directory where you would like to save the file (e.g.,
+`img/filename.png` to save a file named `filename` to the `img` directory), The
+kind of image to save is specified by the file extension.  For example, to
+create a PNG image file, we specify that the file extension is `.png`.  Below
+we demonstrate how to save PNG and SVG file types for the
+`faithful_scater_labels` plot:
 
 
 ```{code-cell} ipython3

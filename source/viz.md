@@ -1880,7 +1880,7 @@ save the file (e.g., `img/filename.png` to save a file named `filename.png` to t
 The kind of image to save is specified by the file extension.  For example, to
 create a PNG image file, we specify that the file extension is `.png`.  Below
 we demonstrate how to save PNG and SVG file types for the
-`faithful_scatter_labels` plot:
+`faithful_scatter_labels` plot.
 
 ```{code-cell} ipython3
 from altair_saver import save
@@ -1900,9 +1900,6 @@ glue("png_size", png_size)
 glue("svg_size", svg_size)
 ```
 
-
-
-
 ```{list-table} File sizes of the scatter plot of the Old Faithful data set when saved as different file formats.
 :header-rows: 1
 :name: png-vs-svg-table
@@ -1919,20 +1916,16 @@ glue("svg_size", svg_size)
 ```
 
 Take a look at the file sizes in {numref}`png-vs-svg-table`
-Wow, that's quite a difference! Notice that for such a simple plot with few
-graphical elements (points), the vector graphics format (SVG) is over 100 times
-smaller than the uncompressed raster images.
-
-In {numref}`png-vs-svg`, we also show what
+Wow, that's quite a difference! In this case, the `.png` image is almost 4 times 
+smaller than the `.svg` image. Since there are a decent number of points in the plot,
+the vector graphics format image (`.svg`) is bigger than the raster image (`.png`), which 
+just stores the image data itself.
+In {numref}`png-vs-svg`, we show what
 the images look like when we zoom in to a rectangle with only 3 data points.
 You can see why vector graphics formats are so useful: because they're just
 based on mathematical formulas, vector graphics can be scaled up to arbitrary
 sizes.  This makes them great for presentation media of all sizes, from papers
 to posters to billboards.
-
-
-
-
 
 ```{figure} img/png-vs-svg.png
 ---
@@ -1952,7 +1945,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources

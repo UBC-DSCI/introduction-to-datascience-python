@@ -40,9 +40,9 @@ By the end of the chapter, readers will be able to do the following:
     - mark objects
     - encodings
 - Use the altair library in Python to create and refine the above visualizations using:
-    - mark objects: mark_point, mark_line, mark_bar
-    - encodings : x, y, fill, color, shape
-    - subplots: facet
+    - mark objects: `mark_point`, `mark_line`, `mark_bar`
+    - encodings : `x`, `y`, `fill`, `color`, `shape`
+    - subplots: `facet`
 - Describe the difference in raster and vector output formats.
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
 

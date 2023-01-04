@@ -227,7 +227,7 @@ integer. So even though series let you put different types in them, it is most c
 :name: fig:02-dataframe
 :figclass: caption-hack
 
-Data frame and vector types.
+Data frame and series types.
 ```
 
 
@@ -364,7 +364,7 @@ below!
 
 +++
 
-### Tidying up: going from wide to long using `.melt`
+### Tidying up: going from wide to long using `melt`
 
 ```{index} pandas.DataFrame; melt
 ```
@@ -423,11 +423,11 @@ Melting data from a wide to long data format.
 ```{index} Canadian languages
 ```
 
-We can achieve this effect in Python using the `.melt` function from the `pandas` package.
-The `.melt` function combines columns,
+We can achieve this effect in Python using the `melt` function from the `pandas` package.
+The `melt` function combines columns,
 and is usually used during tidying data
 when we need to make the data frame longer and narrower.
-To learn how to use `.melt`, we will work through an example with the
+To learn how to use `melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five
 major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
@@ -467,13 +467,13 @@ to get the maximum value.
 :name: fig:img-pivot-longer-with-table
 :figclass: caption-hack
 
-Going from wide to long with the `.melt` function.
+Going from wide to long with the `melt` function.
 ```
 
 +++
 
 {numref}`fig:img-pivot-longer` details the arguments that we need to specify
-in the `.melt` function to accomplish this data transformation.
+in the `melt` function to accomplish this data transformation.
 
 +++ {"tags": []}
 
@@ -494,7 +494,7 @@ Syntax for the `melt` function.
 ```{index} see: :; column range
 ```
 
-We use `.melt` to combine the Toronto, Montréal,
+We use `melt` to combine the Toronto, Montréal,
 Vancouver, Calgary, and Edmonton columns into a single column called `region`,
 and create a column called `mother_tongue` that contains the count of how many
 Canadians report each language as their mother tongue for each metropolitan
@@ -511,7 +511,7 @@ lang_mother_tidy
 ```
 
 > **Note**: In the code above, the call to the
-> `.melt` function is split across several lines. This is allowed in
+> `melt` function is split across several lines. This is allowed in
 > certain cases; for example, when calling a function as above, the input
 > arguments are between parentheses `()` and Python knows to keep reading on
 > the next line. Each line ends with a comma `,` making it easier to read.
@@ -532,7 +532,7 @@ been met:
 +++
 
 (pivot-wider)=
-### Tidying up: going from long to wide using `.pivot`
+### Tidying up: going from long to wide using `pivot`
 
 ```{index} pandas.DataFrame; pivot
 ```
@@ -567,10 +567,10 @@ Going from long to wide data.
 
 +++
 
-To tidy this type of data in Python, we can use the `.pivot` function.
-The `.pivot` function generally increases the number of columns (widens)
+To tidy this type of data in Python, we can use the `pivot` function.
+The `pivot` function generally increases the number of columns (widens)
 and decreases the number of rows in a data set.
-To learn how to use `.pivot`,
+To learn how to use `pivot`,
 we will work through an example
 with the `region_lang_top5_cities_long.csv` data set.
 This data set contains the number of Canadians reporting
@@ -593,7 +593,7 @@ Canadians reporting their primary language at home and work.
 Doing that would be difficult with this data in its current form,
 since these two variables are stored in the same column.
 {numref}`fig:img-pivot-wider-table` shows how this data
-will be tidied using the `.pivot` function.
+will be tidied using the `pivot` function.
 
 +++ {"tags": []}
 
@@ -601,13 +601,13 @@ will be tidied using the `.pivot` function.
 :name: fig:img-pivot-wider-table
 :figclass: caption-hack
 
-Going from long to wide with the `.pivot` function.
+Going from long to wide with the `pivot` function.
 ```
 
 +++
 
 {numref}`fig:img-pivot-wider` details the arguments that we need to specify
-in the `.pivot` function.
+in the `pivot` function.
 
 +++ {"tags": []}
 
@@ -615,7 +615,7 @@ in the `.pivot` function.
 :name: fig:img-pivot-wider
 :figclass: caption-hack
 
-Syntax for the `.pivot` function.
+Syntax for the `pivot` function.
 ```
 
 +++
@@ -673,16 +673,16 @@ that this data is a tidy data set.
     frame is not shared with another value).
 
 You might notice that we have the same number of columns in the tidy data set as
-we did in the messy one. Therefore `.pivot` didn't really "widen" the data.
+we did in the messy one. Therefore `pivot` didn't really "widen" the data.
 This is just because the original `type` column only had
-two categories in it. If it had more than two, `.pivot` would have created
+two categories in it. If it had more than two, `pivot` would have created
 more columns, and we would see the data set "widen."
 
 
 +++
 
 (str-split)=
-### Tidying up: using `.str.split` to deal with multiple delimiters
+### Tidying up: using `str.split` to deal with multiple delimiters
 
 ```{index} pandas.Series; str.split, delimiter
 ```
@@ -700,7 +700,7 @@ lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
 lang_messy
 ```
 
-First we’ll use `.melt` to create two columns, `region` and `value`,
+First we’ll use `melt` to create two columns, `region` and `value`,
 similar to what we did previously.
 The new `region` columns will contain the region names,
 and the new column `value` will be a temporary holding place for the
@@ -907,7 +907,7 @@ official_langs[
 ]
 ```
 
-### Extracting rows with values in a list using `.isin()`
+### Extracting rows with values in a list using `isin`
 
 Next, suppose we want to see the populations of our five cities.
 Let's read in the `region_data.csv` file
@@ -921,8 +921,8 @@ region_data
 ```
 
 To get the population of the five cities
-we can filter the data set using the `.isin` method.
-The `.isin` method is used to see if an element belongs to a list.
+we can filter the data set using the `isin` method.
+The `isin` method is used to see if an element belongs to a list.
 Here we are filtering for rows where the value in the `region` column
 matches any of the five cities we are intersted in: Toronto, Montréal,
 Vancouver, Calgary, and Edmonton.
@@ -933,7 +933,7 @@ five_cities = region_data[region_data["region"].isin(city_names)]
 five_cities
 ```
 
-> **Note:** What's the difference between `==` and `.isin`? Suppose we have two
+> **Note:** What's the difference between `==` and `isin`? Suppose we have two
 > Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
 > will compare the series element by element. Python checks if the first element of
 > `seriesA` equals the first element of `seriesB`, the second element of
@@ -941,7 +941,7 @@ five_cities
 > `seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
 > elements in `seriesB`. Then the second element of `seriesA` is compared
 > to all the elements in `seriesB`, and so on. Notice the difference between `==` and
-> `.isin` in the example below.
+> `isin` in the example below.
 
 ```{code-cell} ipython3
 pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
@@ -1015,7 +1015,7 @@ the columns that we want.
 Note that we could obtain the same result by stating that we would like all of the columns
 from `language` through `most_at_work`. Instead of passing a list of all of the column
 names that we want, we can ask for the range of columns `"language":"most_at_work"`, which
-you can read as "The columns from `language` to (`:`) `most_at_work`.
+you can read as "The columns from `language` to `most_at_work`".
 
 ```{code-cell} ipython3
 selected_columns = tidy_lang.loc[:, "language":"most_at_work"]
@@ -1617,16 +1617,11 @@ quite a few cities here. Let's focus on five that we know the population of:
 Toronto, Montréal, Vancouver, Calgary, Edmonton.
 
 This means we again need to
-filter rows by `region` using `[]`. Here we will keep multiple cities by using
-`|` to say: "keep the rows where the region is: Toronto or Montréal or Vancouver or Calgary or Edmonton"
+filter rows by `region`. Here we will use `isin` and `[]` to keep the rows where
+the region is one of the five cities we are interested in.
 ```{code-cell} ipython3
-english_lang = english_lang[
-  (english_lang["region"] == "Toronto") |
-  (english_lang["region"] == "Montréal") |
-  (english_lang["region"] == "Vancouver") |
-  (english_lang["region"] == "Calgary") |
-  (english_lang["region"] == "Edmonton")
-]
+five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
+english_lang = english_lang[english_lang["region"].isin(five_cities)]
 english_lang
 ```
 
@@ -1648,77 +1643,13 @@ english_lang.assign(proportion=english_lang["most_at_home"]/english_lang["city_p
 english_lang
 ```
 
-
-<!-- We can see in the table that
-{glue:text}`number_most_home` people reported
-speaking English in Toronto as their primary language at home, according to
-the 2016 Canadian census. What does this number mean to us? To understand this
-number, we need context. In particular, how many people were in Toronto when
-this data was collected? From the 2016 Canadian census profile, the population
-of Toronto was reported to be
-{glue:text}`toronto_popn` people.
-The number of people who report that English is their primary language at home
-is much more meaningful when we report it in this context.
-We can even go a step further and transform this count to a relative frequency
-or proportion.
-We can do this by dividing the number of people reporting a given language
-as their primary language at home by the number of people who live in Toronto.
-For example,
-the proportion of people who reported that their primary language at home
-was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
-in Toronto. -->
-
-<!-- Let's use `assign` to create a new column in our data frame
-that holds the proportion of people who speak English
-for our five cities of focus in this chapter.
-To accomplish this, we will need to do two tasks
-beforehand:
-
-1. Create a list containing the population values for the cities.
-2. Filter the `official_langs` data frame
-so that we only keep the rows where the language is English.
-
-To create a list containing the population values for the five cities
-(Toronto, Montréal, Vancouver, Calgary, Edmonton),
-we will use the `[]` (recall that we can also use `list()` to create a list).
-
-```{code-cell} ipython3
-city_pops = [5928040, 4098927, 2463431, 1392609, 1321426]
-city_pops
-```
-
-And next, we will filter the `official_langs` data frame
-so that we only keep the rows where the language is English.
-
-
-Recall how we created
-
-Finally, we can use `assign` to create a new column,
-named `most_at_home_proportion`, that will have value that corresponds to
-the proportion of people reporting English as their primary
-language at home.
-We will compute this by dividing the column by our vector of city populations.
-
-```{code-cell} ipython3
-english_langs = english_langs.assign(
-    most_at_home_proportion=english_langs["most_at_home"] / city_pops
-)
-
-english_langs
-```
-
-In the computation above, we had to ensure that we ordered the `city_pops` vector in the
-same order as the cities were listed in the `english_langs` data frame.
-This is because Python will perform the division computation we did by dividing
-each element of the `most_at_home` column by each element of the
-`city_pops` list, matching them up by position.
-Failing to do this would have resulted in the incorrect math being performed.
-
-> **Note:** In more advanced data wrangling,
+> **Note**: In more advanced data wrangling,
 > one might solve this problem in a less error-prone way though using
-> a technique called "joins".
-> We link to resources that discuss this in the additional
-> resources at the end of this chapter. -->
+> a function called `merge`. This lets you combine two data frames. Rather than
+> adding the column, we would create a new data frame with the city populations
+> and city names and `merge` together the two data frames. We will show you an
+> example at the end of the chapter.
+
 
 +++
 
@@ -1739,7 +1670,7 @@ Below we use `assign` to convert the columns `most_at_home` and `most_at_work`
 to numeric data types in the `official_langs` data set as described in
 {numref}`fig:img-assign`. In our example, we are naming the columns the same
 names as columns that already exist in the data frame
-("most\_at\_home", "most\_at\_work")
+(`"most_at_home"`, `"most_at_work"`)
 and this will cause `assign` to *overwrite* those columns
 (also referred to as modifying those columns *in-place*).
 If we were to give the columns a new name,
@@ -1776,28 +1707,56 @@ Note that we were careful here and created a new data frame object `official_lan
 the power to over-write the entires of a column, it is a good idea to create a new data frame object so that if
 you make a mistake, you can start again from the original data frame.
 
-<!-- Why use `assign` over `[]`? It can be quite handy when you want to  -->
-
 +++
 
 
 ### Using `assign` to create a new data frame
 
-Sometimes you want to create a new data frame. You can use `assign` to create a data frame from scratch.
-For example, say we wanted the maximum values from the columns between `"mother_tongue"`
-and `"lang_known"` (just as we computed in the last section)
-in a data frame, we can (1) create a new, empty
-data frame and (2) use `assign` to assign values to that data frame.
-```
-region_lang_max = pd.DataFrame()  # empty data frame
-region_lang_max = region_lang_max.assign(
-  region=region_lang["region"],
-  maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
-)
-region_lang_max
-```
-This gives us a data frame with a single column called `maximum`. That might be useful in  -->
+```{code-cell} ipython3
+:tags: [remove-cell]
 
+english_lang = region_lang[region_lang["language"] == "English"]
+five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
+english_lang = english_lang[english_lang["region"].isin(five_cities)]
+english_lang
+```
+
+Sometimes you want to create a new data frame. You can use `assign` to create a data frame from scratch.
+Lets return to the example of wanting to compute the proportions of people who speak English
+most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
+our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
+of interest.
+```{code-cell} ipython3
+english_lang
+```
+We then wanted to add the populations of these cities as a column using `assign`
+(Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
+Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
+right order, and it could be easy to make a mistake this way. An alternative approach, that we demonstrate here
+is to (1) create a new, empty data frame, (2) use `assign` to assign the city names and populations in that
+data frame, and (3) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
+
+We start by creating a new, empty data frame by calling `pd.DataFrame` and assigning the output
+to `city_populations`. We then use `assign` to add the city names in a column called `"region"`
+and their populations in a column called `"population"`.
+```{code-cell} ipython3
+city_populations = pd.DataFrame()  # empty data frame
+city_populations = city_populations.assign(
+  region=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+  population=[5928040, 4098927, 2463431, 1392609, 1321426]
+)
+city_populations
+```
+This new data frame has the same `region` column as the `english_lang` data frame. The order of
+the cities is different, but that is okay, we can use the `merge` function in `pandas` to say
+we would like to combine the two data frames by matching the `region` between them. The argument
+`on="region"` tells pandas we would like to use the `region` column to match up the entries.
+```{code-cell} ipython3
+english_lang = english_lang.merge(city_populations, on="region")
+english_lang
+```
+You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
+and we could proceed to with our analysis from here.
 
 
 ## Summary
@@ -1824,6 +1783,7 @@ burning data science questions!
 | `iloc` | subsets columns/rows of a data frame using integer indices |
 | `loc` | subsets columns/rows of a data frame using labels |
 | `melt` | generally makes the data frame longer and narrower |
+| `merge` | combine two data frames |
 | `pivot` | generally makes a data frame wider and decreases the number of rows |
 | `str.split` | splits up a string column into multiple columns  |
 ```
@@ -1853,10 +1813,10 @@ and guidance that the worksheets provide will function as intended.
 - *Python for Data Analysis* {cite:p}`mckinney2012python` has a few chapters related to
   data wrangling that go into more depth than this book. For example, the
   [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
-  `.melt` and `.pivot`, but also covers missing values
-  and additional wrangling functions (like `.stack`). The [data
+  `melt` and `pivot`, but also covers missing values
+  and additional wrangling functions (like `stack`). The [data
   aggregation chapter](https://wesmckinney.com/book/data-aggregation.html) covers
-  `.groupby`, aggregating functions, `apply`, etc.
+  `groupby`, aggregating functions, `apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items
   in a data frame, but none of the above functions are flexible enough to do
   what you want. In that case, you may consider using [a for

@@ -1130,7 +1130,7 @@ or columns, as shown in {numref}`fig:summarize`.
 :figclass: caption-hack
 
 Calculating summary statistics on one or more column(s) in `pandas` generally
-creates a series or data frame containing the summary statistic(s) for each column 
+creates a series or data frame containing the summary statistic(s) for each column
 being summarized. The darker, top row of each table represents column headers.
 ```
 
@@ -1230,17 +1230,17 @@ For example, we can ask for the number of rows that each column has using `count
 ```{code-cell} ipython3
 region_lang.count()
 ```
-Not surprisingly, they are all the same. We could also ask for the `mean`, but 
+Not surprisingly, they are all the same. We could also ask for the `mean`, but
 some of the columns in `region_lang` contain string data with words like `"Vancouver"`
-and `"Halifax"`---for these columns there is no way for `pandas` to compute the mean. 
+and `"Halifax"`---for these columns there is no way for `pandas` to compute the mean.
 So we provide the keyword `numeric_only=True` so that it only computes the mean of columns with numeric values. This
 is also needed if you want the `sum` or `std`.
 ```{code-cell} ipython3
 region_lang.mean(numeric_only=True)
 ```
 If we ask for the `min` or the `max`, `pandas` will give you the smallest or largest number
-for columns with numeric values. For columns with text, it will return the 
-least repeated value for `min` and the most repeated value for `max`. Again, 
+for columns with numeric values. For columns with text, it will return the
+least repeated value for `min` and the most repeated value for `max`. Again,
 if you only want the minimum and maximum value for
 numeric columns, you can provide `numeric_only=True`.
 ```{code-cell} ipython3
@@ -1251,14 +1251,26 @@ region_lang.min()
 ```
 
 Similarly, if there are only some columns that you would like to get summary statistics of,
-we can first use `loc[]` and then ask for the summary statistic. Lets say that we want to know
+we can first use `loc[]` and then ask for the summary statistic. An example of this is illustrated in {numref}`fig:summarize-across`.
+Later, we will talk about how you can use a more general function, `apply`, to also accomplish this.
+
+```{figure} img/summarize/summarize.003.jpeg
+:name: fig:summarize-across
+:figclass: caption-hack
+
+`loc[]` or `apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
+```
+
+Lets say that we want to know
 the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
 We use `loc[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
 ```{code-cell} ipython3
 region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
 
-### Calculating summary statistics for groups of rows
+
+
+## Performing operations on groups of rows using `groupby`
 
 +++
 
@@ -1323,7 +1335,7 @@ region_lang.groupby("region").agg(["min", "max"])
 If you want to ask for only some columns, for example
 the columns between `"most_at_home"` and `"lang_known"`,
 you might think about first applying `groupby` and then `loc`;
-but `groupby` returns a `DataFrameGroupBy` object, which does not 
+but `groupby` returns a `DataFrameGroupBy` object, which does not
 work with `loc`. The other option is to do things the other way around:
 first use `loc`, then use `groupby`.
 This usually does work, but you have to be careful! For example,
@@ -1337,7 +1349,7 @@ KeyError: 'region'
 ```
 This is because when we use `loc` we selected only the columns between
 `"most_at_home"` and `"lang_known"`, which doesn't include `"region"`!
-Instead, we need to call `loc` with a list of column names that 
+Instead, we need to call `loc` with a list of column names that
 includes `region`, and then use `groupby`.
 ```{code-cell} ipython3
 region_lang.loc[
@@ -1346,31 +1358,7 @@ region_lang.loc[
 ].groupby("region").max()
 ```
 
-<!-- ### Calculating summary statistics on many columns
 
-+++
-
-Sometimes we need to summarize statistics across many columns.
-An example of this is illustrated in {numref}`fig:summarize-across`.
-In such a case, using summary functions alone means that we have to
-type out the name of each column we want to summarize.
-In this section we will meet two strategies for performing this task.
-First we will see how we can do this using `loc[]` to slice the columns before applying summary functions.
-Then we will also explore how we can use a more general iteration function,
-`apply`, to also accomplish this.
-
-+++ {"tags": []}
-
-```{figure} img/summarize/summarize.003.jpeg
-:name: fig:summarize-across
-:figclass: caption-hack
-
-`loc[]` or `apply` is useful for efficiently calculating summary statistics on many columns at once. The darker, top row of each table represents the column headers.
-```
-
-+++ -->
-
-<!-- ### Aggregating data with `agg` -->
 <!-- #### Aggregating on a data frame for calculating summary statistics on many columns
 
 +++
@@ -1392,7 +1380,7 @@ the summary statistics would be in the rows, which is untidy! You can think of t
 statistics representing one observation (which should be a row).
 
 (apply-summary)= -->
-### `apply` for calculating summary statistics on many columns
+<!-- ### `apply` for calculating summary statistics on many columns -->
 
 
 
@@ -1423,9 +1411,15 @@ which can be used to apply functions element-wise.
 To learn more about these functions, see the additional resources
 section at the end of this chapter. -->
 
-+++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]}
+<!-- +++ {"jp-MarkdownHeadingCollapsed": true, "tags": ["remove-cell"]} -->
 
-## Apply functions across many columns with `apply`
+
+
++++
+
+## Apply functions across multiple columns with `apply`
+
+### Apply functions across many columns with `apply`
 
 An alternative to aggregating on a dataframe
 for applying a function to many columns is the `apply` method.
@@ -1473,28 +1467,19 @@ region_lang
 ```
 
 To accomplish such a task, we can use `apply`.
-This works in a similar way for column selection,
-as we saw when we used in the Section on {ref}`apply-summary` earlier.
 As we did above,
 we again use `loc[]` to specify the columns
 as well as the `apply` to specify the function we want to apply on these columns.
-However, a key difference here is that we are not using aggregating function here,
-which means that we get back a data frame with the same number of rows.
-
-```{code-cell} ipython3
-region_lang.info()
-```
-
-Now, we need a way to tell `appy` what function to perform to each column
+Now, we need a way to tell `apply` what function to perform to each column
 so that we can convert them from `int64` to `int32`. We will use what is called a `lambda` function in python. This is a way to write instructions
 for `apply` to use.
-Let's consider a simple example. Say we want a function that multiplies a number by two, we could then do
+Let's consider a simple example. Say we want a function that multiplies a number by two; we can create a lambda function to do this.
 ```{code-cell} ipython3
 multiply_by_two = lambda x: 2*x
 multiply_by_two(2)
 ```
 It starts with the word `lambda` which is a special word in python to signal "what follows is
-a function. Following this we then state the name of the variable that the function will act on `x` and then a
+a function." Following this we then state the name of the variable that the function will act on `x` and then a
 colon `:`. After the colon are the instructions: take the value provided and multiply it by 2.
 
 Returning to our example, to convert the columns `"mother_tongue":"lang_known"` to `int32`, we do the following.
@@ -1509,9 +1494,9 @@ with the same number of columns and rows.
 The only thing that changes is the transformation we applied
 to the specified columns (here `mother_tongue` to `lang_known`).
 
-+++
 
-## Apply functions across columns within one row with `apply`
+
+### Apply functions across columns within one row with `apply`
 
 What if you want to apply a function across columns but within one row?
 We illustrate such a data transformation in {numref}`fig:rowwise`.
@@ -1544,21 +1529,9 @@ the `max` function to be applied across, and within, a row,
 as opposed to being applied on a column
 (which is the default behavior of `apply`).
 
-<!-- ```{code-cell} ipython3
-region_lang_rowwise = region_lang.assign(
-    maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
-)
-
-region_lang_rowwise
-``` -->
 ```{code-cell} ipython3
 region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
 ```
-
-<!-- We see that we get an additional column added to the data frame,
-named `maximum`, which is the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work` and `lang_known` for each language
-and region. -->
 
 We see that we get a column, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
@@ -1573,31 +1546,6 @@ we will use `assign` to create a new column. This is discussed in the next secti
 ```{index} pandas.DataFrame; []
 ```
 
-<!--
-
-```{code-cell} ipython3
-lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
-lang_messy_longer = lang_messy.melt(
-    id_vars=["category", "language"],
-    var_name="region",
-    value_name="value",
-)
-tidy_lang = (
-    pd.concat(
-        (lang_messy_longer, lang_messy_longer["value"].str.split("/", expand=True)),
-        axis=1,
-    )
-    .rename(columns={0: "most_at_home", 1: "most_at_work"})
-    .drop(columns=["value"])
-)
-official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
-
-official_langs
-```
-
-```{code-cell} ipython3
-official_langs.info()
-``` -->
 ### Using `assign` to create new columns
 
 When we compute summary statistics with `agg` or apply functions using `apply`
@@ -1605,16 +1553,19 @@ those give us new data frames. But what if we want to include that information
 in an exsisting data frame? This is where we make use of `assign`.
 
 For example, say we wanted the maximum values from the columns between `"mother_tongue"`
-and `"lang_known"` (just as we computed in the last section)
-in a data frame, we can (1) create a new, empty
-data frame and (2) use `assign` to assign values to that data frame.
+and `"lang_known"` (just as we computed in the last section),
+and assign that as a new column in the same data frame.
+To do this, we will (1) compute the maximum if those columns using `loc` and `apply`
+and (2) use `assign` to assign values to a new column in our data frame.
 
-To use the `assign` method, again we first specify the object to be the data set,
-and in the following arguments. Before the `=` we provide the name of the column
-we want to add `maximum` and then what the contents should be. In this case we use
+To use the `assign` method, we first specify the object to be the data set, `region_lang`.
+We then call the `assign` function to specify the new column.
+Before the `=` we provide the name of the column
+we want to add, `maximum`. After the `=`, we specify and then what the contents of that column
+should be. In this case we use
 `loc` and `apply` just as we did in the previous section to give us the maximum values.
 ```{code-cell} ipython3
-region_lang.assign(
+region_lang = region_lang.assign(
   maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
 )
 region_lang
@@ -1622,7 +1573,8 @@ region_lang
 This gives us the same data frame but now with an additional column,
 named `maximum`, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
-and region.
+and region, just as we specified!
+
 
 
 
@@ -1643,7 +1595,61 @@ glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
 glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
 ```
 
-We can see in the table that
+As another example, we ask the question: "What proportion of people who
+reported English as their primary language at home in the 2016 census?"
+In Toronto, {glue:text}`number_most_home` people reported
+speaking English in Toronto as their primary language at home, and the
+popilation of Toronto was reported to be
+{glue:text}`toronto_popn` people. So the proportion of people reporting English
+as their primary language in Toronto in the 2016 census was {glue:text}`prop_eng_tor`.
+How could we figure this out starting from the `region_lang` data frame?
+
+First, we need to filter the `region_lang` dataframe data frame
+so that we only keep the rows where the language is English.
+We will do this using `[]` and name the new data frame `english_langs`.
+```{code-cell} ipython3
+english_lang = region_lang[region_lang["language"] == "English"]
+english_lang
+```
+
+Okay, now we have a data frame focussed on English-speakers. There are
+quite a few cities here. Let's focus on five that we know the population of:
+Toronto, Montréal, Vancouver, Calgary, Edmonton.
+
+This means we again need to
+filter rows by `region` using `[]`. Here we will keep multiple cities by using
+`|` to say: "keep the rows where the region is: Toronto or Montréal or Vancouver or Calgary or Edmonton"
+```{code-cell} ipython3
+english_lang = english_lang[
+  (english_lang["region"] == "Toronto") |
+  (english_lang["region"] == "Montréal") |
+  (english_lang["region"] == "Vancouver") |
+  (english_lang["region"] == "Calgary") |
+  (english_lang["region"] == "Edmonton")
+]
+english_lang
+```
+
+The populations of these five cities in 2016 were Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
+Calgary: 1392609, and Edmonton: 1321426.
+We add this information to our data frame by using `assign`. Let's create a column called
+`city_pops`. Note that the order of the rows is Montréal, Toronto, Calgary, Edmonton, Vancouver.
+So we will create a column called `city_pops` where we list the populations of those cities in that
+order and add it to our data frame.
+```{code-cell} ipython3
+english_lang = english_lang.assign(city_pops=[4098927, 5928040, 1392609, 1321426, 2463431])
+english_lang
+```
+Now we have a new column with the populations for each city. Finally, we calculate the
+proportion of people who speak English the most at home by taking the ratio of the columns
+`most_at_home` and `city_pops`. We will again add this to our data frame using `assign`.
+```{code-cell} ipython3
+english_lang.assign(proportion=english_lang["most_at_home"]/english_lang["city_pops"])
+english_lang
+```
+
+
+<!-- We can see in the table that
 {glue:text}`number_most_home` people reported
 speaking English in Toronto as their primary language at home, according to
 the 2016 Canadian census. What does this number mean to us? To understand this
@@ -1660,9 +1666,9 @@ as their primary language at home by the number of people who live in Toronto.
 For example,
 the proportion of people who reported that their primary language at home
 was English in the 2016 Canadian census was {glue:text}`prop_eng_tor`
-in Toronto.
+in Toronto. -->
 
-Let's use `assign` to create a new column in our data frame
+<!-- Let's use `assign` to create a new column in our data frame
 that holds the proportion of people who speak English
 for our five cities of focus in this chapter.
 To accomplish this, we will need to do two tasks
@@ -1683,12 +1689,7 @@ city_pops
 
 And next, we will filter the `official_langs` data frame
 so that we only keep the rows where the language is English.
-We will name the new data frame we get from this `english_langs`.
 
-```{code-cell} ipython3
-english_langs = official_langs[official_langs["language"] == "English"]
-english_langs
-```
 
 Recall how we created
 
@@ -1717,7 +1718,7 @@ Failing to do this would have resulted in the incorrect math being performed.
 > one might solve this problem in a less error-prone way though using
 > a technique called "joins".
 > We link to resources that discuss this in the additional
-> resources at the end of this chapter.
+> resources at the end of this chapter. -->
 
 +++
 

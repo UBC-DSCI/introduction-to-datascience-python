@@ -12,6 +12,19 @@ kernelspec:
   name: python3
 ---
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# ignore warnings from altair
+
+import warnings
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+```
+
+
+
 (viz)=
 # Effective data visualization
 
@@ -1858,19 +1871,16 @@ bad, while raster images eventually start to look "pixelated."
 > store *both* raster and vector formats. If you try to open a PDF and it's taking a long time
 > to load, it may be because there is a complicated vector graphics image that your computer is rendering.
 
-Let's learn how to save plot images to `.png` and `.svg` file formats using a
-scatter plot of the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)
-{cite:p}`faithfuldata`, shown in {numref}`faithful_scatter_labels`
-
-Now that we have a named `altair` plot object, we can use the `chart.save`
-function to save a file containing this image.  `chart.save` works by taking
-the path to the directory where you would like to save the file (e.g.,
-`img/filename.png` to save a file named `filename` to the `img` directory), The
-kind of image to save is specified by the file extension.  For example, to
+Let's learn how to save plot images to `.png` and `.svg` file formats using the
+`faithful_scatter_labels` scatter plot of the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)
+{cite:p}`faithfuldata` that we created earlier, shown in {numref}`faithful_scatter_labels`.
+To save the plot to a file, we can use the `save`
+method. The `save` method takes the path to the filename where you would like to 
+save the file (e.g., `img/filename.png` to save a file named `filename.png` to the `img` directory).
+The kind of image to save is specified by the file extension.  For example, to
 create a PNG image file, we specify that the file extension is `.png`.  Below
 we demonstrate how to save PNG and SVG file types for the
-`faithful_scater_labels` plot:
-
+`faithful_scatter_labels` plot:
 
 ```{code-cell} ipython3
 from altair_saver import save
@@ -1902,13 +1912,11 @@ svg_size = os.path.getsize("data/faithful_plot.svg")/1000000
   - Image size
 * - Raster
   - PNG
-  - {glue:}`png_size`
+  - {glue:}`png_size` MB
 * - Vector
   - SVG
-  - {glue:}`svg_size`
+  - {glue:}`svg_size` MB
 ```
-
-
 
 Take a look at the file sizes in {numref}`png-vs-svg-table`
 Wow, that's quite a difference! Notice that for such a simple plot with few

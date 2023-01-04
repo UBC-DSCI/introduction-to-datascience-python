@@ -796,7 +796,7 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
   - each value is a single cell.
 
 We can see that this data now satisfies all three criteria, making it easier to
-analyze. But we aren't done yet! Notice in the table, all of the variables are
+analyze. But we aren't done yet! Although we can't see it in the data frame above, all of the variables are actually
 "object" data types. We can check this using the `info` method.
 ```{code-cell} ipython3
 tidy_lang.info()

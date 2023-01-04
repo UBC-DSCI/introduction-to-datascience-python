@@ -63,7 +63,7 @@ if you aren't standing at the poster explaining things, an effective
 visualization will convey your message to the audience.
 
 Recall the different data analysis questions
-from Chapter \@ref(intro).
+from the {ref}`intro` chapter.
 With the visualizations we will cover in this chapter,
 we will be able to answer *only descriptive and exploratory* questions.
 Be careful to not answer any *predictive, inferential, causal*
@@ -251,15 +251,25 @@ There are a few basic aspects of a plot that we need to specify:
 ```
 
 - The name of the **data frame** object to visualize.
-    - Here, we specify the `co2_df` data frame as an argument to the `alt.Chart()` function
+    - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
 - The **geometric object**, which specifies how the mapped data should be displayed.
-    - To create a geometric object, we use `Chart.mark_*` methods (see the [altair reference](https://altair-viz.github.io/user_guide/marks.html) for a list of geometric objects).
+	- To create a geometric object, we use `Chart.mark_*` methods (see the
+	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
+	  for a list of geometric objects).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **geometric encoding**, which tells `altair` how the columns in the data frame map to properties of the visualization.
-    - To create an encoding, we use the `encode()` function.
-    - The `encode()` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
-    - Here, we set the `x` axis of the plot to the `date_measured` variable, and on the `y` axis, we plot the `ppm` variable. We use `alt.X` and `alt.Y` which allow you to control properties of the `x` and `y` axes.
-    - For the y-axis, we also provided the argument `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits based on the data and will keep `y=0` in view. That would make it difficult to see any trends in our data since the smallest value is >300 ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to choose a reasonable lower bound based on our data, and that lower bound doesn't have to be zero.
+    - To create an encoding, we use the `encode` function.
+    - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
+	- Here, we set the `x` axis of the plot to the `date_measured` variable,
+	  and on the `y` axis, we plot the `ppm` variable. We use `alt.X` and
+	  `alt.Y` which allow you to control properties of the `x` and `y` axes.
+	- For the y-axis, we also provided the argument
+	  `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
+	  based on the data and will keep `y=0` in view. That would make it
+	  difficult to see any trends in our data since the smallest value is >300
+	  ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
+	  choose a reasonable lower bound based on our data, and that lower bound
+	  doesn't have to be zero.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -285,7 +295,7 @@ glue('co2_scatter', co2_scatter, display=False)
 Scatter plot of atmospheric concentration of CO$_{2}$ over time.
 :::
 
-Certainly, the visualization in {numref}`co2_scatter`
+The visualization in {numref}`co2_scatter`
 shows a clear upward trend
 in the atmospheric concentration of CO$_{\text{2}}$ over time.
 This plot answers the first part of our question in the affirmative,
@@ -386,7 +396,7 @@ answer. We will accomplish this by using *scale*,
 another important feature of `altair` that easily transforms the different
 variables and set limits.  We scale the horizontal axis using the `alt.Scale(domain=['1990', '1993'])` by restricting the x-axis values between 1990 and 1994,
 and the vertical axis with the `alt.Scale(zero=False)` function, to not start the y-axis with zero.
-In particular, here, we will use the `alt.Scale()` function to zoom in
+In particular, here, we will use the `alt.Scale` function to zoom in
 on just five years of data (say, 1990-1994). The
 `domain` argument takes a list of length two
 to specify the upper and lower bounds to limit the axis.
@@ -425,9 +435,12 @@ glue('co2_line_scale', co2_line_scale, display=False)
 Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1994.
 :::
 
-Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases until it reaches its peak somewhere around April, decreases until around late September,
-and finally increases again until the end of the year. In Hawaii, there are two seasons: summer from May through October, and winter from November through April.
-Therefore, the oscillating pattern in CO$_{\text{2}}$ matches up fairly closely with the two seasons.
+Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases
+until it reaches its peak somewhere around April, decreases until around late
+September, and finally increases again until the end of the year. In Hawaii,
+there are two seasons: summer from May through October, and winter from
+November through April.  Therefore, the oscillating pattern in CO$_{\text{2}}$
+matches up fairly closely with the two seasons.
 
 
 
@@ -482,7 +495,8 @@ visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and the `mark_point` geometric object.
 By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`. In place of `mark_point(filled=True)`, we can also use `mark_circle()`.
+like to fill them in, we pass the argument `filled=True` to `mark_point`. In 
+place of `mark_point(filled=True)`, we can also use `mark_circle`.
 The result is shown in {numref}`faithful_scatter`.
 
 ```{code-cell} ipython3
@@ -535,7 +549,7 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
 
 ```{code-cell} ipython3
-faithful_scatter_labels_black = alt.Chart(size=10, color="black").mark_circle().encode(
+faithful_scatter_labels_black = alt.Chart(faithful).mark_circle(size=10, color="black").encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -800,13 +814,13 @@ the final result.
 can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home_percent",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
         "mother_tongue_percent",
-        title=["Mother tongue", "(number of Canadian residents)"],
+        title=["Mother tongue", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     )
@@ -890,13 +904,13 @@ plot.
 can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home_percent",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
         "mother_tongue_percent",
-        title=["Mother tongue", "(number of Canadian residents)"],
+        title=["Mother tongue", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
@@ -935,13 +949,13 @@ legend above the plot instead.
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home_percent",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
         "mother_tongue_percent",
-        title=["Mother tongue", "(number of Canadian residents)"],
+        title=["Mother tongue", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
@@ -994,7 +1008,7 @@ we can specify the `shape` attribute. This cannot be done with `mark_circle`.
 can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     x=alt.X(
         "most_at_home_percent",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),

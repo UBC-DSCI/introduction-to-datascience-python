@@ -918,8 +918,6 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 
-<!-- The legend in {numref}`can_lang_plot_category`
-adds a fair bit of horizontal space. -->
 Another thing we can adjust is the location of the legend.
 This is a matter of preference and not critical for the visualization.
 We move the legend title using the `alt.Legend` function

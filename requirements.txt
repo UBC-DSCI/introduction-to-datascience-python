@@ -1,4 +1,0 @@
-git+https://github.com/executablebooks/jupyter-book
-altair_saver
-scikit-learn
-ibis-framework

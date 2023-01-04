@@ -1109,7 +1109,7 @@ would end up having a bug that might be quite hard to track down.
 
 +++
 
-### Calculating summary statistics on whole columns
+### Calculating summary statistics on individual columns
 
 ```{index} summarize
 ```
@@ -1130,9 +1130,8 @@ or columns, as shown in {numref}`fig:summarize`.
 :figclass: caption-hack
 
 Calculating summary statistics on one or more column(s) in `pandas` generally
-creates a series object containing the summary statistic(s) for each column 
-being summarized. The darker, top row of each
-table represents column headers.
+creates a series or data frame containing the summary statistic(s) for each column 
+being summarized. The darker, top row of each table represents column headers.
 ```
 
 +++
@@ -1222,26 +1221,27 @@ summary statistics that you can compute with `pandas`.
 > see an input variable `skipna`, which by default is set to `skipna=True`. This means that
 > `pandas` will skip `NaN` values when computing statistics.
 
-### Calculating summary statistics on the dataframe
+### Calculating summary statistics on dataframes
 
 What if you want to calculate summary statistics on an entire dataframe? Well,
-it turns out that the functions in Table {numref}`tab:basic-summary-statistics`
+it turns out that the functions in {numref}`tab:basic-summary-statistics`
 can be applied to a whole data frame!
-
 For example, we can ask for the number of rows that each column has using `count`.
 ```{code-cell} ipython3
 region_lang.count()
 ```
-Not surprisingly, they are all the same. We could ask for the `mean`, but `pandas` doesn't
-know how to compute the mean of `"Vancouver"` and `"Halifax"`. So we provide the keyword
-`numeric_only=True` so that it only computes the mean of columns with numeric values. This
-is also needed if you want the `sum` or the `std`.
+Not surprisingly, they are all the same. We could also ask for the `mean`, but 
+some of the columns in `region_lang` contain string data with words like `"Vancouver"`
+and `"Halifax"`---for these columns there is no way for `pandas` to compute the mean. 
+So we provide the keyword `numeric_only=True` so that it only computes the mean of columns with numeric values. This
+is also needed if you want the `sum` or `std`.
 ```{code-cell} ipython3
 region_lang.mean(numeric_only=True)
 ```
-If we ask for the `max` or the `min`, `pandas` will give you the largest or smallest number
-for columns with numeric values. For columns with text, it will return the most repeated value for `max`
-and the least repeated for `min`. Again, if you only want the minimum and maximum value for
+If we ask for the `min` or the `max`, `pandas` will give you the smallest or largest number
+for columns with numeric values. For columns with text, it will return the 
+least repeated value for `min` and the most repeated value for `max`. Again, 
+if you only want the minimum and maximum value for
 numeric columns, you can provide `numeric_only=True`.
 ```{code-cell} ipython3
 region_lang.max()
@@ -1280,11 +1280,10 @@ for each of the regions in the data set.
 :name: fig:summarize-groupby
 :figclass: caption-hack
 
-A summary statistic paired with `groupby` is useful for calculating that statistic
+A summary statistic function paired with `groupby` is useful for calculating that statistic
 on one or more column(s) for each group. It
-creates a new data frame&mdash;with one row for each group&mdash;containing the
-summary statistic(s) for each column being summarized. It also creates a column
-listing the value of the grouping variable. The darker, top row of each table
+creates a new data frame with one row for each group
+and one column for each summary statistic.The darker, top row of each table
 represents the column headers. The gray, blue, and green colored rows
 correspond to the rows that belong to each of the three groups being
 represented in this cartoon example.
@@ -1323,27 +1322,29 @@ region_lang.groupby("region").agg(["min", "max"])
 
 If you want to ask for only some columns, for example
 the columns between `"most_at_home"` and `"lang_known"`,
-you might think about first appling `loc` and then `groupby`
-But this doesn't work! If we try using
-`loc` and then `groupby`, we will get an error: `KeyError: 'region'`.
+you might think about first applying `groupby` and then `loc`;
+but `groupby` returns a `DataFrameGroupBy` object, which does not 
+work with `loc`. The other option is to do things the other way around:
+first use `loc`, then use `groupby`.
+This usually does work, but you have to be careful! For example,
+in our case, if we try using `loc` and then `groupby`, we get an error.
 ```{code-cell} ipython3
+:tags: [remove-output]
 region_lang.loc[:, "most_at_home":"lang_known"].groupby("region").max()
+```
+```
+KeyError: 'region'
 ```
 This is because when we use `loc` we selected only the columns between
 `"most_at_home"` and `"lang_known"`, which doesn't include `"region"`!
-If instead, we did `groupby` first, we would create a `groupby` object
-which doesn't work with `loc`. Instead, we would need to call `loc`
-with a list of column names that includes `region` and then use
-`groupby`
+Instead, we need to call `loc` with a list of column names that 
+includes `region`, and then use `groupby`.
 ```{code-cell} ipython3
 region_lang.loc[
   :,
   ["region", "mother_tongue", "most_at_home", "most_at_work", "lang_known"]
 ].groupby("region").max()
 ```
-
-
-
 
 <!-- ### Calculating summary statistics on many columns
 

@@ -1470,8 +1470,8 @@ to `int32`. To accomplish this we create a `lambda` function that takes one argu
 of the data frame, which we will name `col`---and apply the `astype` method to it.
 Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
 ```{code-cell} ipython3
-region_lang_int32 = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
-region_lang_int32.info()
+region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
+region_lang_nums.info()
 ```
 You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`.
 You can also see that `apply` returns a data frame with the same number of columns and rows
@@ -1497,22 +1497,15 @@ darker, top row of each table represents the column headers.
 
 For instance, suppose we want to know the maximum value between `mother_tongue`,
 and `lang_known` for each language and region
-in the `region_lang` data set.
+in the `region_lang_nums` data set.
 In other words, we want to apply the `max` function *row-wise.*
-Before we use `apply`, we will again use `loc[]` to select only the count columns
-so we can see all the columns in the data frame's output easily in the book.
-
-```{code-cell} ipython3
-region_lang.loc[:, "mother_tongue":"lang_known"]
-```
-
 In order to tell `apply` that we want to work row-wise (as opposed to acting on each column
 individually, which is the default behavior), we just specify the argument `axis=1`.
 For example, in the case of the `max` function, this tells Python that we would like
 the `max` within each row of the input, as opposed to being applied on each column.
 
 ```{code-cell} ipython3
-region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
+region_lang_nums.apply(max, axis=1)
 ```
 
 We see that we get a column, which is the maximum value between `mother_tongue`,
@@ -1532,34 +1525,33 @@ we will use `assign` to create a new column. This is discussed in the next secti
 ### Using `assign` to create new columns
 
 When we compute summary statistics with `agg` or apply functions using `apply`
-those give us new data frames. But what if we want to include that information
-in an exsisting data frame? This is where we make use of `assign`.
+those give us new data frames. But what if we want to append that information
+to an existing data frame? This is where we make use of the `assign` method.
+For example, say we wanted the maximum values of the `region_lang_nums` data frame,
+and to create a new data frame consisting of all the columns of `region_lang` as well as that additional column.
+To do this, we will (1) compute the maximum of those columns using `apply`,
+and (2) use `assign` to assign values to create a new column in the `region_lang` data frame.
+Note that `assign` does not by default modify the data frame itself; it creates a copy
+with the new column added to it.
 
-For example, say we wanted the maximum values from the columns between `"mother_tongue"`
-and `"lang_known"` (just as we computed in the last section),
-and assign that as a new column in the same data frame.
-To do this, we will (1) compute the maximum if those columns using `loc` and `apply`
-and (2) use `assign` to assign values to a new column in our data frame.
-
-To use the `assign` method, we first specify the object to be the data set, `region_lang`.
-We then call the `assign` function to specify the new column.
-Before the `=` we provide the name of the column
-we want to add, `maximum`. After the `=`, we specify and then what the contents of that column
-should be. In this case we use
-`loc` and `apply` just as we did in the previous section to give us the maximum values.
+To use the `assign` method, we specify one argument for each column we want to create.
+In this case we want to create one new column named `maximum`, so the argument
+to `assign` begins with `maximum = `. 
+Then after the `=`, we specify what the contents of that new column
+should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
+Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang = region_lang.assign(
-  maximum=region_lang.loc[:, "mother_tongue":"lang_known"].apply(max, axis=1)
+region_lang.assign(
+  maximum = region_lang_nums.apply(max, axis=1)
 )
-region_lang
 ```
-This gives us the same data frame but now with an additional column,
-named `maximum`, which is the maximum value between `mother_tongue`,
+This gives us a new data frame that looks like the `region_lang` data frame, 
+except that it has an additional column named `maximum`.
+The `maximum` column contains
+the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region, just as we specified!
-
-
 
 
 ```{code-cell} ipython3
@@ -1579,64 +1571,79 @@ glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
 glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
 ```
 
-As another example, we ask the question: "What proportion of people who
-reported English as their primary language at home in the 2016 census?"
-In Toronto, {glue:text}`number_most_home` people reported
-speaking English in Toronto as their primary language at home, and the
-popilation of Toronto was reported to be
+As another example, we might ask the question: "What proportion of 
+the population reported English as their primary language at home in the 2016 census?"
+For example, in Toronto, {glue:text}`number_most_home` people reported
+speaking English as their primary language at home, and the
+population of Toronto was reported to be
 {glue:text}`toronto_popn` people. So the proportion of people reporting English
 as their primary language in Toronto in the 2016 census was {glue:text}`prop_eng_tor`.
 How could we figure this out starting from the `region_lang` data frame?
 
 First, we need to filter the `region_lang` data frame
 so that we only keep the rows where the language is English.
-We will do this using `[]` and name the new data frame `english_langs`.
+We will also restrict our attention to the five major cities
+in the `five_cities` data frame: Toronto, Montréal, Vancouver, Calgary, and Edmonton.
+We will filter to keep only those rows pertaining to the English language
+and pertaining to the five aforementioned cities. To combine these two logical statements
+we will use the `&` symbol.
+and with the `[]` operation,
+ `"English"` as the `language` and filter the rows,
+and name the new data frame `english_langs`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-english_lang = region_lang[region_lang["language"] == "English"]
+english_lang = region_lang[
+				(region_lang["language"] == "English") &
+				(region_lang["region"].isin(five_cities["region"]))
+			]
 english_lang
 ```
 
-Okay, now we have a data frame focussed on English-speakers. There are
-quite a few cities here. Let's focus on five that we know the population of:
-Toronto, Montréal, Vancouver, Calgary, Edmonton.
-
-This means we again need to
-filter rows by `region`. Here we will use `isin` and `[]` to keep the rows where
-the region is one of the five cities we are interested in.
+Okay, now we have a data frame that pertains only to the English language
+and the five cities mentioned earlier. 
+In order to compute the proportion of the population speaking English in each of these cities,
+we need to add the population data from the `five_cities` data frame.
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
-five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
-english_lang = english_lang[english_lang["region"].isin(five_cities)]
-english_lang
+five_cities
 ```
-
-The populations of these five cities in 2016 were Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
-Calgary: 1392609, and Edmonton: 1321426.
-We add this information to our data frame by using `assign`. Let's create a column called
-`city_pops`. Note that the order of the rows is Montréal, Toronto, Calgary, Edmonton, Vancouver.
+The data frame above shows that the populations of the five cities in 2016 were 
+5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
+We will add this information to our data frame in a new column named `city_pops` by using `assign`. 
+Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`, 
+and finally the data in the column.
+Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.
 So we will create a column called `city_pops` where we list the populations of those cities in that
-order and add it to our data frame.
+order, and add it to our data frame.
+Also note that we write `english_lang = ` on the left so that the newly created data frame overwrites our
+old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not 
+modify the original data frame directly!
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-english_lang = english_lang.assign(city_pops=[4098927, 5928040, 1392609, 1321426, 2463431])
+english_lang = english_lang.assign(
+				city_pops=[4098927, 
+						   5928040, 
+						   1392609, 
+						   1321426, 
+						   2463431
+				])
 english_lang
 ```
-Now we have a new column with the populations for each city. Finally, we calculate the
+> **Note**: Inserting data manually in this is generally very error-prone and is not recommended.
+> We do it here to demonstrate another usage of `assign` that does not involve `apply`. 
+> But in more advanced data wrangling,
+> one would solve this problem in a less error-prone way using
+> the `merge` function, which lets you combine two data frames. We will show you an
+> example using `merge` at the end of the chapter!
+
+Now we have a new column with the population for each city. Finally, we calculate the
 proportion of people who speak English the most at home by taking the ratio of the columns
 `most_at_home` and `city_pops`. We will again add this to our data frame using `assign`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-english_lang.assign(proportion=english_lang["most_at_home"]/english_lang["city_pops"])
-english_lang
+english_lang.assign(
+          proportion=english_lang["most_at_home"]/english_lang["city_pops"]
+      )
 ```
-
-> **Note**: In more advanced data wrangling,
-> one might solve this problem in a less error-prone way though using
-> a function called `merge`. This lets you combine two data frames. Rather than
-> adding the column, we would create a new data frame with the city populations
-> and city names and `merge` together the two data frames. We will show you an
-> example at the end of the chapter.
 
 
 +++
@@ -1663,7 +1670,7 @@ and this will cause `assign` to *overwrite* those columns
 (also referred to as modifying those columns *in-place*).
 If we were to give the columns a new name,
 then `assign` would create new columns with the names we specified.
-`assign`'s general syntax is detailed in {numref}`fig:img-assign`.
+The syntax is detailed in {numref}`fig:img-assign`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -1693,7 +1700,7 @@ official_langs_numeric.info()
 
 Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
 Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
-the power to over-write the entires of a column, it is a good idea to create a new data frame object so that if
+the power to overwrite the entries of a column, it is a good idea to create a new data frame object so that if
 you make a mistake, you can start again from the original data frame.
 
 +++
@@ -1726,19 +1733,18 @@ right order, and it could be easy to make a mistake this way. An alternative app
 is to (1) create a new, empty data frame, (2) use `assign` to assign the city names and populations in that
 data frame, and (3) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
 
-We start by creating a new, empty data frame by calling `pd.DataFrame` and assigning the output
-to `city_populations`. We then use `assign` to add the city names in a column called `"region"`
+We create a new, empty data frame by calling `pd.DataFrame` with no arguments. 
+We then use `assign` to add the city names in a column called `"region"`
 and their populations in a column called `"population"`.
 ```{code-cell} ipython3
-city_populations = pd.DataFrame()  # empty data frame
-city_populations = city_populations.assign(
+city_populations = pd.DataFrame().assign(
   region=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
   population=[5928040, 4098927, 2463431, 1392609, 1321426]
 )
 city_populations
 ```
 This new data frame has the same `region` column as the `english_lang` data frame. The order of
-the cities is different, but that is okay, we can use the `merge` function in `pandas` to say
+the cities is different, but that is okay! We can use the `merge` function in `pandas` to say
 we would like to combine the two data frames by matching the `region` between them. The argument
 `on="region"` tells pandas we would like to use the `region` column to match up the entries.
 ```{code-cell} ipython3
@@ -1748,7 +1754,6 @@ english_lang
 ```
 You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
 and we could proceed to with our analysis from here.
-
 
 ## Summary
 

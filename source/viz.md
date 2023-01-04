@@ -1140,25 +1140,25 @@ swapping the `x` and `y` variables.
 ```{code-cell} ipython3
 islands_top12 = islands_df.nlargest(12, "size")
 
-islands_bar_sorted = alt.Chart(islands_top12).mark_bar().encode(
+islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
     x="size", y="landmass"
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_bar_sorted', islands_bar_sorted, display=True)
+glue('islands_bar_top', islands_bar_top, display=True)
 ```
 
-:::{glue:figure} islands_bar_sorted
+:::{glue:figure} islands_bar_top
 :figwidth: 700px
-:name: islands_bar_sorted
+:name: islands_bar_top
 
 Bar plot of size for Earth's largest 12 landmasses.
 :::
 
 
-The plot in {numref}`islands_bar_sorted` is definitely clearer now,
+The plot in {numref}`islands_bar_top` is definitely clearer now,
 and allows us to answer our question
 ("Which are the top 7 largest landmasses continents?") in the affirmative.
 But the question could be made clearer from the plot
@@ -1212,11 +1212,14 @@ The plot in {numref}`islands_plot_sorted` is now a very effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that continents are the largest seven landmasses.
-
-There is one more finishing touch we will make... We can also add a title to the chart by specifying `title` argument in the `alt.Chart` function
+We can make one more finishing touch in {numref}`islands_plot_titled`: we will 
+add a title to the chart by specifying `title` argument in the `alt.Chart` function.
+Note that plot titles are not always required; usually plots appear as part 
+of other media (e.g., in a slide presentation, on a poster, in a paper) where
+the title may be redundant with the surrounding context.
 
 ```{code-cell} ipython3
-islands_plot_sorted = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
+islands_plot_titled = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
     x=alt.X("size",title="Size (1000 square mi)"),
     y=alt.Y("landmass", title="Landmass", sort="x"),
     color=alt.Color("landmass_type", title="Type")
@@ -1225,19 +1228,15 @@ islands_plot_sorted = alt.Chart(islands_top12, title="Largest 12 landmasses on E
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_plot_sorted', islands_plot_sorted, display=True)
+glue('islands_plot_titled', islands_plot_titled, display=True)
 ```
 
-:::{glue:figure} islands_plot_sorted
+:::{glue:figure} islands_plot_titled
 :figwidth: 700px
-:name: islands_plot_sorted
+:name: islands_plot_titled
 
-Bar plot of size for Earth's largest 12 landmasses now with a title.
+Bar plot of size for Earth's largest 12 landmasses with a title.
 :::
-
-> **Note:** Good visualization titles clearly communicate
-> the take home message to the audience. Typically,
-> that is the answer to the question you posed before making the visualization.
 
 ### Histograms: the Michelson speed of light data set
 
@@ -1251,7 +1250,6 @@ Five experiments were performed,
 and in each experiment, 20 runs were performed&mdash;meaning that
 20 measurements of the speed of light were collected
 in each experiment {cite:p}`lightdata`.
-
 Because the speed of light is a very large number
 (the true value is 299,792.458 km/sec), the data is coded
 to be the measured speed of light minus 299,000.
@@ -1290,8 +1288,8 @@ by separating the data into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
 To create a histogram in `altair` we will use the `mark_bar` geometric
-object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `count()`.
-There is no `count()` column-name in `morley_df`; we use `count()` to tell `altair`
+object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
+There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
 that we want to count the number of values in the `Speed` column in each bin.
 As usual,
 let's use the default arguments just to see how things look.
@@ -1324,15 +1322,6 @@ Histogram of Michelson's speed of light data.
 However,
 we cannot tell how accurate the measurements are using this visualization
 unless we can see the true value.
-
-One of the powerful features of `altair` is that you
-can continue to iterate on a single plot object, adding and refining
-one layer at a time. If you stored your plot as a named object
-using the assignment symbol (`=`), you can
-add to it using the `+` operator.
-For example, if we wanted to add a vertical line to the last plot we created (`morley_hist`),
-we can use the `+` operator to add a vertical line chart layer with the `mark_rule` function.
-
 In order to visualize the true speed of light,
 we will add a vertical line with the `mark_rule` function.
 To draw a vertical line with `mark_rule`,
@@ -1347,36 +1336,44 @@ we do this by setting `strokeDash=[3]`. Note that you could also
 change the thickness of the line by providing `size=2` if you wanted to.
 Similarly, a horizontal line can be plotted using the `y` axis encoding and
 the dataframe with one value, which would act as the be the y-intercept.
-
 Note that
 *vertical lines* are used to denote quantities on the *horizontal axis*,
 while *horizontal lines* are used to denote quantities on the *vertical axis*.
-To add the dashed line on top of the histogram, we use the `+` operator.
-This concept is also known as layering in altair. Here, we **add** the `mark_rule` chart to the `morley_hist` chart to produce our final plot.
+
+To add the dashed line on top of the histogram, we 
+**add** the `mark_rule` chart to the `morley_hist` 
+using the `+` operator.
+Adding features to a plot using the `+` operator is known as *layering* in `altair`. 
+This is a very powerful feature of `altair`; you
+can continue to iterate on a single plot object, adding and refining
+one layer at a time. If you stored your plot as a named object
+using the assignment symbol (`=`), you can add to it using the `+` operator.
+Below we add a vertical line created using `mark_rule`
+to the last plot we created, `morley_hist`, using the `+` operator.
 
 ```{code-cell} ipython3
 v_line = alt.Chart().mark_rule(strokeDash=[3]).encode(
     x=alt.datum(792.458)
 )
 
-final_plot = morley_hist + v_line
+morley_hist_line = morley_hist + v_line
 ```
 
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue("final_plot", final_plot, display=False)
+glue("morley_hist_line", morley_hist_line, display=False)
 ```
 
-:::{glue:figure} final_plot
+:::{glue:figure} morley_hist_line
 :figwidth: 700px
-:name: final_plot
+:name: morley_hist_line
 
 Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
 :::
 
-In {numref}`final_plot`,
-we still cannot tell which experiments (denoted in the `Expt` column)
+In {numref}`morley_hist_line`,
+we still cannot tell which experiments (denoted by the `Expt` column)
 led to which measurements;
 perhaps some experiments were more accurate than others.
 To fully answer our question,
@@ -1399,18 +1396,18 @@ morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     color=alt.Color("Expt")
 )
 
-final_plot_colored = morley_hist_colored + v_line
+morley_hist_colored = morley_hist_colored + v_line
 
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_colored', final_plot_colored, display=True)
+glue('morley_hist_colored', morley_hist_colored, display=True)
 ```
 
-:::{glue:figure} final_plot_colored
+:::{glue:figure} morley_hist_colored
 :figwidth: 700px
-:name: final_plot_colored
+:name: morley_hist_colored
 
 Histogram of Michelson's speed of light data colored by experiment.
 :::
@@ -1418,21 +1415,27 @@ Histogram of Michelson's speed of light data colored by experiment.
 ```{index} integer
 ```
 
-Alright great, {numref}`final_plot_colored` looks... wait a second! We are not able to distinguish
+Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to distinguish
 between different Experiments in the histogram! What is going on here? Well, if you
 recall from the {ref}`wrangling` chapter, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
-is currently an *integer*. But we want to treat it as a
+is currently an *integer*---specifically, an `int64` type. But we want to treat it as a
 *category*, i.e., there should be one category per type of experiment.
+```{code-cell} ipython3
+morley_df.info()
+```
 
 ```{index} nominal, altair; :N
 ```
 
-To fix this issue we can convert the `Expt` variable into a `nominal` (categorical) type
-variable by adding a suffix `:N` (where `N` stands for nominal type variable) with the `Expt` variable.
-By doing this, we are ensuring that `altair` will treat this variable as a categorical variable,
-and the color will be mapped discretely. Here, we also mention `stack=False`, so that the bars are not stacked on top of each other.
+To fix this issue we can convert the `Expt` variable into a `nominal`
+(i.e., categorical) type variable by adding a suffix `:N`
+to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
+will treat a variable as a categorical variable, and
+hence use a discrete color map in visualizations. 
+We also specify the `stack=False` argument in the `y` encoding so
+that the bars are not stacked on top of each other.
 
 ```{code-cell} ipython3
 morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
@@ -1441,23 +1444,23 @@ morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     color=alt.Color("Expt:N")
 )
 
-final_plot_categorical = morley_hist_categorical + v_line
+morley_hist_categorical = morley_hist_categorical + v_line
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_categorical', final_plot_categorical, display=True)
+glue('morley_hist_categorical', morley_hist_categorical, display=True)
 ```
 
-:::{glue:figure} final_plot_categorical
+:::{glue:figure} morley_hist_categorical
 :figwidth: 700px
-:name: final_plot_categorical
+:name: morley_hist_categorical
 
 Histogram of Michelson's speed of light data colored by experiment as a categorical variable.
 :::
 
 Unfortunately, the attempt to separate out the experiment number visually has
-created a bit of a mess. All of the colors in {numref}`final_plot_categorical` are blending together, and although it is
+created a bit of a mess. All of the colors in {numref}`morley_hist_categorical` are blending together, and although it is
 possible to derive *some* insight from this (e.g., experiments 1 and 3 had some
 of the most incorrect measurements), it isn't the clearest way to convey our
 message and answer the question. Let's try a different strategy of creating
@@ -1478,14 +1481,8 @@ us to compare along the `x`-axis as our vertical-line is in the same
 horizontal position. If instead you wanted to use a single row, you could
 specify `rows=1`.
 
-<!-- If the plot is to be split horizontally, into rows,
-then the `rows` argument is used.
-If the plot is to be split vertically, into columns,
-then the `columns` argument is used. -->
-<!-- Both the `rows` and `columns` arguments take the column names on which to split the data when creating the subplots. -->
-
-There is another important change we have made. You will notice that when
-we define `morley_hist`, we are no longer supplying `morley_df` as an
+There is another important change we have to make. When
+we define `morley_hist`, we no longer supply `morley_df` as an
 argument to `alt.Chart`. This is because `facet` takes care of separating
 the data by `Expt` and providing it to each of the facet sub-plots.
 
@@ -1497,7 +1494,7 @@ morley_hist = alt.Chart().mark_bar(opacity=0.5).encode(
     color=alt.Color("Expt:N")
 ).properties(height=100, width=400)
 
-final_plot_facet = (morley_hist + v_line).facet(
+morley_hist_facet = (morley_hist + v_line).facet(
     "Expt",
     data=morley_df,
     columns=1
@@ -1506,17 +1503,17 @@ final_plot_facet = (morley_hist + v_line).facet(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('final_plot_facet', final_plot_facet, display=True)
+glue('morley_hist_facet', morley_hist_facet, display=True)
 ```
 
-:::{glue:figure} final_plot_facet
+:::{glue:figure} morley_hist_facet
 :figwidth: 700px
-:name: final_plot_facet
+:name: morley_hist_facet
 
 Histogram of Michelson's speed of light data split vertically by experiment.
 :::
 
-The visualization in {numref}`final_plot_facet`
+The visualization in {numref}`morley_hist_facet`
 now makes it quite clear how accurate the different experiments were
 with respect to one another.
 The most variable measurements came from Experiment 1.
@@ -1528,11 +1525,17 @@ The most different experiments still obtained quite similar results!
 ```{index} altair; alt.X, altair; alt.Y, altair; configure_axis
 ```
 
-There are three finishing touches to make this visualization even clearer. First and foremost, we need to add informative axis labels
-using the `alt.X` and `alt.Y` function, and increase the font size to make it readable using the `configure_axis` function. We should add a title! For a `facet` plot, this is done by providing the `title` to the facet function. Finally, and perhaps most subtly, even though it
-is easy to compare the experiments on this plot to one another, it is hard to get a sense
-of just how accurate all the experiments were overall. For example, how accurate is the value 800 on the plot, relative to the true speed of light?
-To answer this question, we'll use the `assign` function to transform our data into a relative measure of accuracy rather than absolute measurements:
+There are three finishing touches to make this visualization even clearer.
+First and foremost, we need to add informative axis labels using the `alt.X`
+and `alt.Y` function, and increase the font size to make it readable using the
+`configure_axis` function. We can also add a title; for a `facet` plot, this is
+done by providing the `title` to the facet function. Finally, and perhaps most
+subtly, even though it is easy to compare the experiments on this plot to one
+another, it is hard to get a sense of just how accurate all the experiments
+were overall. For example, how accurate is the value 800 on the plot, relative
+to the true speed of light?  To answer this question, we'll use the `assign`
+function to transform our data into a relative measure of accuracy rather than
+absolute measurements.
 
 ```{code-cell} ipython3
 
@@ -1569,7 +1572,7 @@ morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
     )
 ).properties(height=100, width=400)
 
-final_plot_relative = (morley_hist + v_line).facet(
+morley_hist_relative = (morley_hist + v_line).facet(
     "Expt",
     data=morley_rel,
     columns=1,
@@ -1580,18 +1583,20 @@ final_plot_relative = (morley_hist + v_line).facet(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue("final_plot_relative", final_plot_relative, display=True)
+glue("morley_hist_relative", morley_hist_relative, display=True)
 ```
 
-:::{glue:figure} final_plot_relative
+:::{glue:figure} morley_hist_relative
 :figwidth: 700px
-:name: final_plot_relative
+:name: morley_hist_relative
 
 Histogram of relative accuracy split vertically by experiment with clearer axes and labels
 :::
 
-Wow, impressive! These measurements of the speed of light from 1879 had errors around *0.05%* of the true speed. {numref}`final_plot_relative` shows you that even though experiments 2 and 5 were perhaps the most accurate, all of the experiments did quite an
-admirable job given the technology available at the time.
+Wow, impressive! These measurements of the speed of light from 1879 had errors
+around *0.05%* of the true speed. {numref}`morley_hist_relative` shows you that
+even though experiments 2 and 5 were perhaps the most accurate, all of the
+experiments did quite an admirable job given the technology available at the time.
 
 #### Choosing a binwidth for histograms
 
@@ -1613,7 +1618,7 @@ you want to answer.
 
 To get a sense for how different bin affect visualizations,
 let's experiment with the histogram that we have been working on in this section.
-In {numref}`final_plot_max_bins`,
+In {numref}`morley_hist_max_bins`,
 we compare the default setting with three other histograms where we set the
 `maxbins` to 200, 70 and 5.
 In this case, we can see that both the default number of bins
@@ -1692,7 +1697,7 @@ morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
     )
 ).properties(height=100, width=200)
 
-final_plot_max_bins = ((
+morley_hist_max_bins = ((
     (morley_hist_default + v_line).facet(row="Expt:N", data=morley_rel, title="default maxbins") |
     (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=200")) &
     ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=70") |
@@ -1702,12 +1707,12 @@ final_plot_max_bins = ((
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue("final_plot_max_bins", final_plot_max_bins, display=True)
+glue("morley_hist_max_bins", morley_hist_max_bins, display=True)
 ```
 
-:::{glue:figure} final_plot_max_bins
+:::{glue:figure} morley_hist_max_bins
 :figwidth: 700px
-:name: final_plot_max_bins
+:name: morley_hist_max_bins
 
 Effect of varying number of max bins on histograms.
 :::
@@ -1813,10 +1818,11 @@ perfectly re-created when loading and displaying, with the hope that the change
 is not noticeable. *Lossless* formats, on the other hand, allow a perfect
 display of the original image.
 
-- *Common file types:*
-
+- *Common file types:* 
+    - [JPEG](https://en.wikipedia.org/wiki/JPEG) (`.jpg`, `.jpeg`): lossy, usually used for photographs 
     - [PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics) (`.png`): lossless, usually used for plots / line drawings
-
+    - [BMP](https://en.wikipedia.org/wiki/BMP_file_format) (`.bmp`): lossless, raw image data, no compression (rarely used)
+    - [TIFF](https://en.wikipedia.org/wiki/TIFF) (`.tif`, `.tiff`): typically lossless, no compression, used mostly in graphic arts, publishing
 - *Open-source software:* [GIMP](https://www.gimp.org/)
 
 ```{index} vector graphics; file types
@@ -1826,9 +1832,9 @@ display of the original image.
 objects (lines, surfaces, shapes, curves). When the computer displays the image, it
 redraws all of the elements using their mathematical formulas.
 
-- *Common file types:*
-    - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use
-
+- *Common file types:* 
+    - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use 
+    - [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) (`.eps`), general-purpose use (rarely used)
 - *Open-source software:* [Inkscape](https://inkscape.org/)
 
 Raster and vector images have opposing advantages and disadvantages. A raster

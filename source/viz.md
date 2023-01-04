@@ -1885,19 +1885,19 @@ we demonstrate how to save PNG and SVG file types for the
 ```{code-cell} ipython3
 from altair_saver import save
 
-faithful_scatter_labels.save("faithful_plot.png")
-faithful_scatter_labels.save("faithful_plot.svg")
+faithful_scatter_labels.save("img/faithful_plot.png")
+faithful_scatter_labels.save("img/faithful_plot.svg")
 
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
 import os
-png_size = os.path.getsize("data/faithful_plot.png")/1000000
-svg_size = os.path.getsize("data/faithful_plot.svg")/1000000
+import numpy as np
+png_size = np.round(os.path.getsize("img/faithful_plot.png")/(1024*1024), 2)
+svg_size = np.round(os.path.getsize("img/faithful_plot.svg")/(1024*1024), 2)
 
-# glue("png_size", png_size)
-# glue("svg_size", svg_size)
+glue("png_size", png_size)
+glue("svg_size", svg_size)
 ```
 
 

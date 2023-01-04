@@ -246,7 +246,7 @@ type(can_lang)
 
 ### Data structures in Python
 
-The `Series` and `DataFrame` types are *data structure* in Python, which
+The `Series` and `DataFrame` types are *data structures* in Python, which
 are core to most data analyses.
 The functions from `pandas` that we use often give us back a `DataFrame`
 or a `Series` depending on the operation. Because
@@ -267,7 +267,7 @@ We summarize the most common ones in {numref}`tab:datastruc-table`.
 
 A `list` is an ordered collection of values. To create a list, we put the contents of the list in between
 square brackets `[]`, where each item of the list is separated by a comma. A `list` can contain values
-of different types. The example below contains 6 `str` entries.
+of different types. The example below contains six `str` entries.
 
 ```{code-cell} ipython3
 cities = ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"]
@@ -1269,7 +1269,7 @@ region_lang.min()
 ```
 
 Similarly, if there are only some columns that you would like to get summary statistics of,
-we can first use `loc[]` and then ask for the summary statistic. An example of this is illustrated in {numref}`fig:summarize-across`.
+we can first use `[]` and then ask for the summary statistic. An example of this is illustrated in {numref}`fig:summarize-across`.
 Later, we will talk about how you can use a more general function, `apply`, to also accomplish this.
 
 ```{figure} img/summarize/summarize.003.jpeg
@@ -1281,9 +1281,9 @@ Later, we will talk about how you can use a more general function, `apply`, to a
 
 Lets say that we want to know
 the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
-We use `loc[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
+We use `[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
 ```{code-cell} ipython3
-region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
+region_lang["mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
 
 

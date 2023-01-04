@@ -1,9 +1,5 @@
-#######################################################################################
-# Config file for EOSC211 jupyter book
-#######################################################################################
 # Book settings
-
-title: Data Science: A First Introduction (Python Edition)
+title: "Data Science: A First Introduction (Python Edition)"
 author: UBC
 copyright: "2022" # Copyright year to be placed in the footer
 logo: "" # A path to the book logo
@@ -65,19 +61,15 @@ latex:
   latex_engine: pdflatex # one of 'pdflatex', 'xelatex' (recommended for unicode), 'luatex', 'platex', 'uplatex'
   use_jupyterbook_latex: true # use sphinx-jupyterbook-latex for pdf builds as default
 
-  
 #######################################################################################
-
 # Launch button settings
 launch_buttons:
   binderhub_url: ""
 
-
-
 repository:
   url: https://github.com/UBC-DSCI/introduction-to-datascience-python # The URL to your book's repository
-  path_to_book: "" # A path to your book's folder, relative to the repository root.
-  branch: main # Which branch of the repository should be used when creating links
+  path_to_book: "source" # A path to your book's folder, relative to the repository root.
+  branch: production # Which branch of the repository should be used when creating links
 
 #######################################################################################
 # Advanced and power-user settings

@@ -4,9 +4,11 @@ parts:
 - caption: Front Matter
   chapters:
     - file: preface-text.md
+    #- file: foreword.md
     - file: acknowledgements.md
     - file: authors.md
-    - file: setup.md
+    - file: editors.md
+    #- file: setup.md
 - caption: Chapters
   numbered: 3
   chapters:

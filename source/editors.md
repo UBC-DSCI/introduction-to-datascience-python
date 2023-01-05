@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# About the Python Edition editors
+# About the editors of the Python Edition
 
 **Trevor Campbell** is an Assistant Professor in the Department of Statistics at
 the University of British Columbia. His research focuses on automated, scalable

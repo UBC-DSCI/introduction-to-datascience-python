@@ -313,7 +313,7 @@ to read data into Python.
 
 ```{figure} img/read_csv_function.png
 ---
-height: 200px
+height: 300px
 name: img-read-csv
 ---
 Syntax for the `read_csv` function
@@ -488,7 +488,7 @@ or one of the names we have given to objects in the code we have already written
 
 ```{figure} img/filter_rows.png
 ---
-height: 200px
+height: 300px
 name: img-filter
 ---
 Syntax for using the `[]` operation to filter rows.
@@ -520,7 +520,7 @@ containing those two column names inside the square brackets of the `[]` operati
 
 ```{figure} img/select_columns.png
 ---
-height: 200px
+height: 300px
 name: img-select
 ---
 Syntax for using the `[]` operation to select columns.
@@ -550,11 +550,9 @@ that with the `.loc[]` method. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
-**(This figure is wrong-- should be for .loc[] operation below)**
-
-```{figure} img/read_csv_function.jpeg
+```{figure} img/filter_rows_and_columns.png
 ---
-height: 200px
+height: 300px
 name: img-loc
 ---
 Syntax for using the `loc[]` operation to filter rows and select columns.
@@ -609,7 +607,13 @@ language, we will use the `sort_values` function to order the rows in our
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
-**(FIGURE 1.5 FROM R BOOK MISSING HERE)**
+```{figure} img/sort_values.png
+---
+height: 300px
+name: img-sort-values
+---
+Syntax for using `sort_values` to arrange rows in decending order.
+```
 
 ```{code-cell} ipython3
 arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
@@ -670,11 +674,11 @@ Let's rewrite this code in a more readable format using multiline expressions.
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[
-                    can_lang["category"] == "Aboriginal languages",
-                    ["language", "mother_tongue"]]
+  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
+]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-                    by='mother_tongue',
-                    ascending=False)
+  by='mother_tongue', ascending=False
+)
 ten_lang = arranged_lang_sorted.head(10)
 ```
 
@@ -810,7 +814,13 @@ the `x` (represents the x-axis position of the points) and
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 
-**(FIGURE 1.6 FROM R BOOK IS MISSING)**
+```{figure} img/altair-syntax.png
+---
+height: 300px
+name: img-altair
+---
+Syntax for using `altair` to make a bar chart.
+```
 
 +++
 
@@ -818,11 +828,8 @@ and that the `mother_tongue` column should correspond to the y-axis.
 :tags: []
 
 barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x="language",
-        y="mother_tongue"
-    ))
+  alt.Chart(ten_lang).mark_bar().encode(x="language", y="mother_tongue")
+)
 
 
 ```

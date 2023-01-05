@@ -25,7 +25,7 @@ kernelspec:
 
 ## Overview
 
-```{index}
+```{index} git, GitHub
 ```
 
 This chapter will introduce the concept of using version control systems 
@@ -33,8 +33,8 @@ to track changes to a project over its lifespan, to share
 and edit code in a collaborative team, 
 and to distribute the finished project to its intended audience.
 This chapter will also introduce how to use 
-the two most common version control tools: Git \index{git} for local version control, 
-and GitHub \index{GitHub} for remote version control. 
+the two most common version control tools: Git for local version control, 
+and GitHub for remote version control. 
 We will focus on the most common version control operations 
 used day-to-day in a standard data science project. 
 There are many user interfaces for Git; in this chapter 
@@ -89,12 +89,12 @@ and multiple people often end up editing the project simultaneously.
 In such a situation, determining who has the latest version of the 
 project&mdash;and how to resolve conflicting edits&mdash;can be a real challenge.
 
-```{index}
+```{index} version control
 ```
 
 
 
-*Version control* \index{version control} helps solve these challenges. Version control is the process
+*Version control* helps solve these challenges. Version control is the process
 of keeping a record of changes to documents, including when the changes were
 made and who made them, throughout the history of their development.  It also
 provides the means both to view earlier versions of the project and to revert
@@ -110,13 +110,13 @@ and what you're planning to do next!
 
 +++
 
-```{index}
+```{index} version control;system, version control;repository hosting
 ```
 
 
 
 To version control a project, you generally need two things: 
-a *version control system* \index{version control!system} and a *repository hosting service*. \index{version control!repository hosting}
+a *version control system* and a *repository hosting service*. 
 The version control system is the software responsible 
 for tracking changes, sharing changes you make with others, 
 obtaining changes from others, and resolving conflicting edits.
@@ -148,18 +148,18 @@ and repository hosting services in use today.
 
 ## Version control repositories
 
-```{index}
+```{index} repository, repository;local, repository;remote 
 ```
 
 Typically, when we put a data analysis project under version control, 
-we create two copies of the repository \index{repository} ({numref}`vc1-no-changes`). 
+we create two copies of the repository ({numref}`vc1-no-changes`). 
 One copy we use as our primary workspace where we create, edit, and delete files.
-This copy is commonly referred to as \index{repository!local} the **local repository**. The local
+This copy is commonly referred to as the **local repository**. The local
 repository most commonly exists on our computer or laptop, but can also exist within
 a workspace on a server (e.g., JupyterHub).
 The other copy is typically stored in a repository hosting service (e.g., GitHub), where
 we can easily share it with our collaborators. 
-This copy is commonly referred to as \index{repository!remote} the **remote repository**.
+This copy is commonly referred to as the **remote repository**.
 
 ```{figure} img/vc1-no-changes.png
 ---
@@ -168,19 +168,19 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} working directory, git;commit
 ```
 
 
 
-Both copies of the repository have a **working directory** \index{working directory} 
+Both copies of the repository have a **working directory**  
 where you can create, store, edit, and delete 
 files (e.g., `analysis.ipynb` in {numref}`vc1-no-changes`).
 Both copies of the repository also maintain a full project history 
 ({numref}`vc1-no-changes`).  This history is a record of all versions of the
 project files that have been created.  The repository history is not
 automatically generated; Git must be explicitly told when to record
-a version of the project.  These records are \index{git!commit} called **commits**. They 
+a version of the project.  These records are called **commits**. They 
 are a snapshot of the file contents as well
 metadata about the repository at that time the record was created (who made the
 commit, when it was made, etc.). In the local and remote repositories shown in
@@ -198,12 +198,12 @@ the message can help you identify which commit to view or revert to.
 In {numref}`vc1-no-changes`, you can see two such messages, 
 one for each commit: `Created README.md` and `Added analysis draft`.
 
-```{index}
+```{index} hash
 ```
 
 
 
-The hash \index{hash} is a string of characters consisting of about 40 letters and numbers.
+The hash is a string of characters consisting of about 40 letters and numbers.
 The purpose of the hash is to serve as a unique identifier for the commit,
 and is used by Git to index project history. Although hashes are quite long&mdash;imagine 
 having to type out 40 precise characters to view an old project version!&mdash;Git is able
@@ -241,7 +241,7 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} git;add, staging area
 ```
 
 
@@ -250,7 +250,7 @@ Once you reach a point that you want Git to keep a record
 of the current version of your work, you need to commit 
 (i.e., snapshot) your changes. A prerequisite to this is telling Git which
 files should be included in that snapshot. We call this step **adding** the 
-files to the **staging area**. \index{git!add, staging area}
+files to the **staging area**. 
 Note that the staging area is not a real physical location on your computer; 
 it is instead a conceptual placeholder for these files until they are committed.
 The benefit of the Git version control system using a staging area is that you 
@@ -298,13 +298,13 @@ Schematic of local and remote version control repositories.
 
 ### Pushing changes to a remote repository
 
-```{index}
+```{index} git;push
 ```
 
 
 
 Once you have made one or more commits that you want to share with your collaborators, 
-you need \index{git!push} to **push** (i.e., send) those commits back to GitHub ({numref}`vc5-push`). This updates 
+you need to **push** (i.e., send) those commits back to GitHub ({numref}`vc5-push`). This updates 
 the history in the remote repository (i.e., GitHub) to match what you have in your 
 local repository. Now when collaborators interact with the remote repository, they will be able
 to see the changes you made. And you can also take comfort in the fact that your work is now backed 
@@ -341,13 +341,11 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} git;pull
 ```
 
-
-
 To obtain the new changes from the remote repository on GitHub, you will need
-to **pull** \index{git!pull} those changes to your own local repository.  By pulling changes,
+to **pull** those changes to your own local repository.  By pulling changes,
 you synchronize your local repository to what is present on GitHub ({numref}`vc7-pull`).
 Additionally, until you pull changes from the remote repository, you will not
 be able to push any more changes yourself (though you will still be able to
@@ -368,7 +366,7 @@ Schematic of local and remote version control repositories.
 
 ## Working with remote repositories using GitHub 
 
-```{index}
+```{index} repository;remote, GitHub, git;clone
 ```
 
 
@@ -377,9 +375,9 @@ Now that you have been introduced to some of the key general concepts
 and workflows of Git version control, we will walk through the practical steps. 
 There are several different ways to start using version control
 with a new project. For simplicity and ease of setup, 
-we recommend creating a remote repository \index{repository!remote} first.
-This section covers how to both create and edit a remote repository on \index{GitHub} GitHub.
-Once you have a remote repository set up, we recommend **cloning** (or copying) that \index{git!clone} 
+we recommend creating a remote repository first.
+This section covers how to both create and edit a remote repository on GitHub.
+Once you have a remote repository set up, we recommend **cloning** (or copying) that  
 repository to create a local repository in which you primarily work.
 You can clone the repository either
 on your own computer or in a workspace on a server (e.g., a JupyterHub server).
@@ -410,7 +408,7 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} repository;public
 ```
 
 
@@ -418,7 +416,7 @@ Schematic of local and remote version control repositories.
 Repositories can be set up with a variety of configurations, including a name, 
 optional description,  and the inclusion (or not) of several template files. 
 One of the most important configuration items to choose is the visibility to the outside world,
-either public or private. *Public* repositories \index{repository!public} can be viewed by anyone.
+either public or private. *Public* repositories  can be viewed by anyone.
 *Private* repositories can be viewed by only you. Both public and private repositories
 are only editable by you, but you can change that by giving access to other collaborators.
 
@@ -467,12 +465,10 @@ Schematic of local and remote version control repositories.
 
 ### Editing files on GitHub with the pen tool
 
-```{index}
+```{index} GitHub; pen tool
 ```
 
-
-
-The pen tool \index{GitHub!pen tool} can be used to edit existing plain text files. When you click on 
+The pen tool can be used to edit existing plain text files. When you click on 
 the pen tool, the file will be opened in a text box where you can use your 
 keyboard to make changes ({numref}`pen-tool-01` and {numref}`pen-tool-02`).
 
@@ -504,7 +500,7 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} GitHub; commit
 ```
 
 
@@ -514,7 +510,7 @@ changes. When you *commit a file* in a repository, the version control system
 takes a snapshot of what the file looks like. As you continue working on the 
 project, over time you will possibly make many commits to a single file; this 
 generates a useful version history for that file. On GitHub, if you click the 
-green "Commit changes" button, \index{GitHub!commit} it will save the file and then make a commit
+green "Commit changes" button, it will save the file and then make a commit
 ({numref}`pen-tool-03`).
 
 Recall from Section \@ref(commit-changes) that you normally have to add files
@@ -543,12 +539,12 @@ Schematic of local and remote version control repositories.
 
 ### Creating files on GitHub with the "Add file" menu
 
-```{index}
+```{index} GitHub; add file
 ```
 
 
 
-The "Add file" menu \index{GitHub!add file} can be used to create new plain text files and upload files 
+The "Add file" menu can be used to create new plain text files and upload files 
 from your computer. To create a new plain text file, click the "Add file" 
 drop-down menu and select the "Create new file" option 
 ({numref}`create-new-file-01`).
@@ -566,7 +562,7 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} markdown
 ```
 
 
@@ -576,7 +572,7 @@ larger text box where the desired file content text can be entered. Note the two
 tabs, "Edit new file" and "Preview". Toggling between them lets you enter and 
 edit text and view what the text will look like when rendered, respectively
 ({numref}`create-new-file-02`). 
-Note that GitHub understands and renders `.md` files \index{markdown} using a 
+Note that GitHub understands and renders `.md` files using a 
 [markdown syntax](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf) 
 very similar to Jupyter notebooks, so the "Preview" tab is especially helpful 
 for checking markdown code correctness.
@@ -662,7 +658,7 @@ of any of the actual content of your project!
 
 ## Working with local repositories using Jupyter {#local-repo-jupyter}
 
-```{index}
+```{index} git;Jupyter extension
 ```
 
 
@@ -675,14 +671,14 @@ with Python code directly on GitHub.  Thus, it is useful to be able to connect t
 remote repository that was created on GitHub to a local coding environment.  This
 can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using
-the Jupyter Git extension. The Jupyter Git \index{git!Jupyter extension} extension
+the Jupyter Git extension. The Jupyter Git extension
 can be run by Jupyter on your local computer, or on a JupyterHub server. 
 *Note: we recommend reading Chapter \@ref(getting-started-with-jupyter)* 
 *to learn how to use Jupyter before reading this chapter.*
 
 ### Generating a GitHub personal access token
 
-```{index}
+```{index} GitHub; personal access token
 ```
 
 
@@ -695,7 +691,7 @@ There are several methods to do this,
 but for beginners we recommend using the HTTPS method 
 because it is easier and requires less setup.
 In order to use the HTTPS method, 
-GitHub requires you to provide a *personal access token*. \index{GitHub!personal access token} 
+GitHub requires you to provide a *personal access token*.  
 A personal access token is like a password&mdash;so keep it a secret!&mdash;but it gives
 you more fine-grained control over what parts of your account
 the token can be used to access, and lets you set an expiry date for the authentication.
@@ -774,12 +770,12 @@ Schematic of local and remote version control repositories.
 <!--Now that we have everything we need for authentication,
 the next step is -->
 
-```{index}
+```{index} git;clone
 ```
 
 
 
-*Cloning* a \index{git!clone} remote repository from GitHub
+*Cloning* a remote repository from GitHub
 to create a local repository results in a 
 copy that knows where it was obtained from so that it knows where to send/receive 
 new committed edits. In order to do this, first copy the URL from the HTTPS tab 
@@ -868,13 +864,13 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} git;add
 ```
 
 
 
 This opens the Jupyter Git graphical user interface pane. Next,
-click the plus sign (+) beside the file(s) that you want to "add"  \index{git!add}
+click the plus sign (+) beside the file(s) that you want to "add"  
 ({numref}`git-add-02`). Note that because this is the 
 first change for this file, it falls under the "Untracked" heading. 
 However, next time you edit this file  and want to add the changes,
@@ -924,14 +920,14 @@ Schematic of local and remote version control repositories.
 
 ### Making the commit
 
-```{index}
+```{index} git;commit
 ```
 
 
 
 To snapshot the changes with an associated commit message, 
 you must put a message in the text box at the bottom of the Git pane 
-and click on the blue "Commit" button ({numref}`git-commit-01`). \index{git!commit}
+and click on the blue "Commit" button ({numref}`git-commit-01`). 
 It is highly recommended to write useful and meaningful messages about what 
 was changed. These commit messages, and the datetime stamp for a given 
 commit, are the primary means to navigate through the project's history in the 
@@ -972,13 +968,13 @@ Schematic of local and remote version control repositories.
 
 ### Pushing the commits to GitHub
 
-```{index}
+```{index} git;push
 ```
 
 
 
 To send the committed changes back to the remote repository on 
-GitHub, you need to *push* them. \index{git!push} To do this, 
+GitHub, you need to *push* them. To do this, 
 click on the cloud icon with the up arrow on the Jupyter Git tab 
 ({numref}`git-push-01`).
 
@@ -1053,14 +1049,14 @@ Schematic of local and remote version control repositories.
 
 ### Giving collaborators access to your project
 
-```{index}
+```{index} GitHub; collaborator access
 ```
 
 
 
 As mentioned earlier, GitHub allows you to control who has access to your 
 project. The default of both public and private projects are that only the 
-person who created the GitHub \index{GitHub!collaborator access} repository has permissions to create, edit and 
+person who created the GitHub repository has permissions to create, edit and 
 delete files (*write access*). To give your collaborators write access to the 
 projects, navigate to the "Settings" tab ({numref}`add-collab-01`).
 
@@ -1166,12 +1162,12 @@ name: vc1-no-changes
 Schematic of local and remote version control repositories.
 ```
 
-```{index}
+```{index} git;pull
 ```
 
 
 
-You can tell Git to "pull" by \index{git!pull} clicking on the cloud icon with 
+You can tell Git to "pull" by clicking on the cloud icon with 
 the down arrow in Jupyter ({numref}`git-pull-01`).
 
 ```{r git-pull-01, fig.pos = "H", out.extra="", fig.cap = 'The Jupyter Git extension clone button.', fig.retina = 2, out.width="100%"}
@@ -1286,12 +1282,12 @@ Schematic of local and remote version control repositories.
 
 ### Handling merge conflicts
 
-```{index}
+```{index} git;merge conflict
 ```
 
 
 
-To fix the merge conflict, \index{git!merge conflict} you need to open the offending file
+To fix the merge conflict, you need to open the offending file
 in a plain text editor and look for special marks that Git puts in the file to
 tell you where the merge conflict occurred ({numref}`merge-conflict-04`). 
 
@@ -1359,10 +1355,10 @@ communication surrounding the project. Email and messaging apps are both very po
 designed for project-specific communication: they both generally do not have facilities for organizing conversations by project subtopics,
 searching for conversations related to particular bugs or software versions, etc.
 
-```{index}
+```{index} GitHub;issues
 ```
 
-GitHub *issues* \index{GitHub!issues} are an alternative written communication medium to email and 
+GitHub *issues* are an alternative written communication medium to email and 
 messaging apps, and were designed specifically to facilitate project-specific 
 communication. Issues are *opened* from the "Issues" tab on the project's
 GitHub page, and they persist there even after the conversation is over and the issue is *closed* (in 

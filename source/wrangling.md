@@ -1354,7 +1354,7 @@ region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 ```
 
 The resulting dataframe has `region` as an index name.
-This is similar to what happened when we reshaped dataframes in the previous chapter,
+This is similar to what happened when we reshaped data frames in the previous chapter,
 and just as we did then,
 you can use `reset_index` to get back to a regular dataframe
 with `region` as a column name.
@@ -1405,7 +1405,23 @@ this approach always works.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.groupby("region")[["most_at_home", "lang_known"]].max()
+region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max()
+```
+
+To see how many observations there are in each group,
+we can use `value_counts`.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+region_lang.value_counts("region")
+```
+
+Which takes the `normalize` parameter to show the output as proportion
+instead of a count.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+region_lang.value_counts("region", normalize=True)
 ```
 
 +++

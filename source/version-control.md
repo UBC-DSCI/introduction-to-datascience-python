@@ -56,6 +56,15 @@ By the end of the chapter, readers will be able to do the following:
 - Communicate with collaborators using GitHub issues.
 - Use best practices when collaborating on a project with others.
 
+## A Caveat for this Chapter
+
+This book was originally written for the R programming language, and
+has been edited to focus instead on Python. This chapter on version control
+has not yet been fully updated to focus on Python; it has images and examples from 
+the R version of the book. But the concepts related to version control are generally
+the same. We are currently working on producing new Python-based images and examples 
+for this chapter.
+
 ## What is version control, and why should I use it?
 
 Data analysis projects often require iteration 

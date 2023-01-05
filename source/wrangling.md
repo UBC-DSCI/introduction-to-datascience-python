@@ -1013,60 +1013,6 @@ The query (criteria we are using to select values) is input as a string. The `qu
 is less often used than the earlier approaches we introduced, but it can come in handy
 to make long chains of filtering operations a bit easier to read.
 
-## Using `[]` to select ranges of columns
-
-Suppose we wanted to select only the columns `language`, `region`,
-`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in the chapter on {ref}`intro`, we would pass all of these column names into the square brackets.
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
-```
-
-Note that we could obtain the same result by stating that we would like all of the columns
-from `language` through `most_at_work`. Instead of passing a list of all of the column
-names that we want, we can ask for the range of columns `"language":"most_at_work"`, which
-you can read as "The columns from `language` to `most_at_work`".
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang["language":"most_at_work"]
-```
-
-Similarly, you can ask for all of the columns including and after `language` by doing the following
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang["language":]
-```
-
-By not putting anything after the `:`, Python reads this as "from `language` until the last column".
-Although the notation for selecting a range using `:` is convenient because less code is required,
-it must be used carefully. If you were to re-order columns or add a column to the data frame, the
-output would change. Using a list is more explicit and less prone to potential confusion.
-
-Suppose instead we wanted to extract columns that followed a particular pattern
-rather than just selecting a range. For example, let's say we wanted only to select the
-columns `most_at_home` and `most_at_work`. There are other functions that allow
-us to select variables based on their names. In particular, we can use the `.str.startswith` method
-to choose only the columns that start with the word "most":
-
-```{code-cell} ipython3
-tidy_lang[tidy_lang.columns.str.startswith('most')]
-```
-
-```{index} pandas.Series; str.contains
-```
-
-We could also have chosen the columns containing an underscore `_` by using the
-`.str.contains("_")`, since we notice
-the columns we want contain underscores and the others don't.
-
-```{code-cell} ipython3
-tidy_lang[tidy_lang.columns.str.contains('_')]
-```
-
 (loc-iloc)=
 ## Using `loc[]` to filter rows and select columns
 
@@ -1086,14 +1032,64 @@ tidy_lang.loc[
 ]
 ```
 
-Just as `[]`, `loc` also works with ranges of columns:
+### Using `loc[]` to select ranges of columns
+
+Suppose we wanted to select only the columns `language`, `region`,
+`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
+learned in the chapter on {ref}`intro`, we would pass all of these column names into the square brackets.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-tidy_lang.loc[
-    tidy_lang['region'] == 'Toronto',
-    "language":"most_at_work"
-]
+tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+```
+
+Note that we could obtain the same result by stating that we would like all of the columns
+from `language` through `most_at_work`. Instead of passing a list of all of the column
+names that we want, we can ask for the range of columns `"language":"most_at_work"`, which
+you can read as "The columns from `language` to `most_at_work`".
+This `:`-syntax is supported by the `loc` function,
+but not by the `[]`, so we need to switch to using `loc[]` here.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang.loc[:, "language":"most_at_work"]
+```
+
+We pass `:` before the comma indicating we want to retrieve all rows,
+i.e. we are not filtering any rows in this expression.
+Similarly, you can ask for all of the columns including and after `language` by doing the following
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang.loc[:, "language":]
+```
+
+By not putting anything after the `:`, Python reads this as "from `language` until the last column".
+Although the notation for selecting a range using `:` is convenient because less code is required,
+it must be used carefully. If you were to re-order columns or add a column to the data frame, the
+output would change. Using a list is more explicit and less prone to potential confusion.
+
+Suppose instead we wanted to extract columns that followed a particular pattern
+rather than just selecting a range. For example, let's say we wanted only to select the
+columns `most_at_home` and `most_at_work`. There are other functions that allow
+us to select variables based on their names. In particular, we can use the `.str.startswith` method
+to choose only the columns that start with the word "most".
+Since the `str.starswith` expression returns a list of column names
+we can use either `[]` or `loc[]` here.
+
+```{code-cell} ipython3
+tidy_lang[tidy_lang.columns.str.startswith('most')]
+```
+
+```{index} pandas.Series; str.contains
+```
+
+We could also have chosen the columns containing an underscore `_` by using the
+`.str.contains("_")`, since we notice
+the columns we want contain underscores and the others don't.
+
+```{code-cell} ipython3
+tidy_lang[tidy_lang.columns.str.contains('_')]
 ```
 
 ## Using `iloc[]` to extract rows and columns by position
@@ -1111,7 +1107,6 @@ has index `1`!).
 tidy_lang.iloc[:, 1]
 ```
 
-We pass `:` before the comma indicating we want to retrieve all rows.
 You can also ask for multiple columns,
 we pass `1:` after the comma
 indicating we want columns after and including index 1 (*i.e.* `language`).

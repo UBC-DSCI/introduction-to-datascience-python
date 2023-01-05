@@ -13,17 +13,8 @@ kernelspec:
   name: python3
 ---
 
-# Combining code and text with Jupyter {#getting-started-with-jupyter}
-
-```{r jupyter-setup, echo = FALSE, message = FALSE, warning = FALSE}
-library(magick)
-library(magrittr)
-library(knitr)
-library(fontawesome)
-
-knitr::opts_chunk$set(message = FALSE, 
-                      fig.align = "center")
-```
+(getting-started-with-jupyter)=
+# Combining code and text with Jupyter 
 
 ## Overview
 
@@ -36,7 +27,7 @@ document. In this chapter, we will focus on the *use* of Jupyter notebooks to pr
 text via a web interface. 
 These skills are essential to getting your analysis running; think of it like getting dressed in the morning!
 Note that we assume that you already have Jupyter set up and ready to use. If that is not the case, please first read
-Chapter \@ref(move-to-your-own-machine) to learn how to install and configure Jupyter on your own
+the {ref}`move-to-your-own-machine` chapter to learn how to install and configure Jupyter on your own
 computer. 
 
 ## Chapter learning objectives
@@ -64,8 +55,12 @@ to make a conscious effort to perform data analysis in a reproducible manner.
 An example of what a Jupyter notebook looks like is shown in 
 Figure \@ref(fig:img-jupyter).
 
-```{r img-jupyter, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "A screenshot of a Jupyter Notebook.", fig.retina = 2, out.width="100%"}
-knitr::include_graphics("img/jupyter.png")
+
+```{figure} img/jupyter.png
+---
+name: img-jupyter
+---
+A screenshot of a Jupyter Notebook.
 ```
 
 ### Accessing Jupyter
@@ -94,15 +89,21 @@ also have a number inside the square brackets to the left of the cell.
 This number indicates the order in which the cells were run 
 (Figure \@ref(fig:code-cell-run)).
 
-```{r code-cell-not-run, echo = FALSE, fig.cap = "A code cell in Jupyter that has not yet been executed.", fig.retina = 2, out.width="100%"}
-image_read("img/code-cell-not-run.png") |> 
-  image_crop("3632x1000")
+```{figure} img/code-cell-not-run.png
+---
+name: code-cell-not-run
+---
+A code cell in Jupyter that has not yet been executed.
 ```
 
-```{r code-cell-run, echo = FALSE, fig.cap = "A code cell in Jupyter that has been executed.", fig.retina = 2, out.width="100%"}
-image_read("img/code-cell-run.png") |> 
-  image_crop("3632x2000")
+```{figure} img/code-cell-run.png
+---
+name: code-cell-run
+---
+A code cell in Jupyter that has been executed.
 ```
+
+
 
 +++
 
@@ -123,9 +124,13 @@ has been activated (Figure \@ref(fig:activate-and-run-button)), the cell can be 
 button in the toolbar, or by using a keyboard shortcut of 
 `Shift + Enter`.
 
-```{r activate-and-run-button, echo = FALSE, fig.cap = "An activated cell that is ready to be run. The red arrow points to the blue rectangle to the cell's left. The blue rectangle indicates that it is ready to be run. This can be done by clicking the run button (circled in red).", fig.retina = 2, out.width="100%"}
-image_read("img/activate-and-run-button-annotated.png") |> 
-  image_crop("3632x900")
+```{figure} img/activate-and-run-button-annotated.png
+---
+name: activate-and-run-button
+---
+An activated cell that is ready to be run. The red arrow points to the blue
+rectangle to the cell's left. The blue rectangle indicates that it is ready to
+be run. This can be done by clicking the run button (circled in red).
 ```
 
 To execute all of the code cells in an entire notebook, you have three options:
@@ -145,10 +150,13 @@ command was run will be deleted. In other words, restarting the session and
 then running all cells (options 2 or 3) emulates how your notebook code would
 run if you completely restarted Jupyter before executing your entire notebook.
 
-```{r restart-kernel-run-all, echo = FALSE, fig.cap = "Restarting the R session can be accomplished by clicking Restart Kernel and Run All Cells...", fig.retina = 2, out.width="100%"}
-image_read("img/restart-kernel-run-all.png") |> 
-  image_crop("3632x900")
+```{figure} img/restart-kernel-run-all.png
+---
+name: restart-kernel-run-all
+---
+Restarting the R session can be accomplished by clicking Restart Kernel and Run All Cells...
 ```
+
 
 ### The Kernel
 The kernel \index{kernel}\index{Jupyter notebook!kernel|see{kernel}} is a program that executes the code inside your notebook and 
@@ -175,9 +183,11 @@ toolbar. By default, all new cells in Jupyter start out as code cells,
 so after this, all you have to do is write R code within the new cell you just 
 created!
 
-```{r create-new-code-cell, echo = FALSE, fig.cap = "New cells can be created by clicking the + button, and are by default code cells.", fig.retina = 2, out.width="100%"}
-image_read("img/create-new-code-cell.png") |> 
-  image_crop("3632x900")
+```{figure} img/create-new-code-cell.png
+---
+name: create-new-code-cell
+---
+New cells can be created by clicking the + button, and are by default code cells.
 ```
 
 ## Markdown cells
@@ -201,14 +211,18 @@ can then use your keyboard to edit the text. To view the formatted
 (or *rendered*) text (Figure \@ref(fig:markdown-cell-run)), click the **Run** (`r fa("play", height = "11px")`) button in the toolbar, 
 or use the `Shift + Enter` keyboard shortcut.
 
-```{r markdown-cell-not-run, echo = FALSE, fig.cap = "A Markdown cell in Jupyter that has not yet been rendered and can be edited.", fig.retina = 2, out.width="100%"}
-image_read("img/markdown-cell-not-run.png") |> 
-  image_crop("3632x900")
+```{figure} img/markdown-cell-not-run.png
+---
+name: markdown-cell-not-run
+---
+A Markdown cell in Jupyter that has not yet been rendered and can be edited.
 ```
 
-```{r markdown-cell-run, echo = FALSE, fig.cap = "A Markdown cell in Jupyter that has been rendered and exhibits rich text formatting. ", fig.retina = 2, out.width="100%"}
-image_read("img/markdown-cell-run.png") |> 
-  image_crop("3632x900")
+```{figure} img/markdown-cell-run.png
+---
+name: markdown-cell-run
+---
+A Markdown cell in Jupyter that has been rendered and exhibits rich text formatting.
 ```
 
 ### Creating new Markdown cells
@@ -220,9 +234,11 @@ cell. To do this, click on the cell with your cursor to
 ensure it is activated.  Then click on the drop-down box on the toolbar that says "Code" (it
 is next to the `r fa("fast-forward", height = "11px")` button), and change it from "**Code**" to "**Markdown**" (Figure \@ref(fig:convert-to-markdown-cell)).
 
-```{r convert-to-markdown-cell, echo = FALSE, fig.cap = "New cells are by default code cells. To create Markdown cells, the cell format must be changed.", fig.retina = 2, out.width="100%"}
-image_read("img/convert-to-markdown-cell.png") |> 
-  image_crop("3632x900")
+```{figure} img/convert-to-markdown-cell.png
+---
+name: convert-to-markdown-cell
+---
+New cells are by default code cells. To create Markdown cells, the cell format must be changed.
 ```
 
 ## Saving your work
@@ -268,24 +284,37 @@ the future, this would lead
 to errors when the notebook is run in the conventional 
 linear order (Figure \@ref(fig:out-of-order-3)).
 
-```{r out-of-order-1, echo = FALSE, fig.cap = "Code that was written out of order, but not yet executed.", fig.retina = 2, out.width="100%"}
-image_read("img/out-of-order-1.png") |> 
-  image_crop("3632x800")
+```{figure} img/out-of-order-1.png
+---
+name: out-of-order-1
+---
+Code that was written out of order, but not yet executed.
 ```
 
-```{r out-of-order-2, echo = FALSE, fig.cap = "Code that was written out of order, and was executed using the run button in a nonlinear order without error. The order of execution can be traced by following the numbers to the left of the code cells; their order indicates the order in which the cells were executed.", fig.retina = 2, out.width="100%"}
-image_read("img/out-of-order-2.png") |> 
-  image_crop("3632x800")
+```{figure} img/out-of-order-2.png
+---
+name: out-of-order-2
+---
+Code that was written out of order, and was executed using the run button in a
+nonlinear order without error. The order of execution can be traced by
+following the numbers to the left of the code cells; their order indicates the
+order in which the cells were executed.
 ```
 
 +++
 
-(ref:out-of-order-3) Code that was written out of order, and was executed in a linear order using "Restart Kernel and Run All Cells..." This resulted in an error at the execution of the second code cell and it failed to run all code cells in the notebook.
 
-```{r out-of-order-3, echo = FALSE, fig.cap = '(ref:out-of-order-3)', fig.retina = 2, out.width="100%"}
-image_read("img/out-of-order-3.png") |> 
-  image_crop("3632x800")
+```{figure} img/out-of-order-3.png
+---
+name: out-of-order-3
+---
+Code that was written out of order, and was executed in a linear order using
+"Restart Kernel and Run All Cells..." This resulted in an error at the
+execution of the second code cell and it failed to run all code cells in the
+notebook.
 ```
+
+
 
 You can also accidentally create a nonfunctioning notebook by
 creating an object in a cell that later gets deleted. In such a 
@@ -366,15 +395,21 @@ for you, and you will not be able to see the column delimiters, and therefore
 you will not know which function to use, nor which arguments to use and values 
 to specify for them.
 
-```{r open-data-w-editor-1, echo = FALSE, fig.cap = "Opening data files with an editor in Jupyter.", fig.retina = 2, out.width="100%"}
-image_read("img/open_data_w_editor_01.png") |> 
-  image_crop("3632x2000")
+```{figure} img/open_data_w_editor_01.png
+---
+name: open-data-w-editor-1
+---
+Opening data files with an editor in Jupyter.
 ```
 
-```{r open-data-w-editor-2, echo = FALSE, fig.cap = "A data file as viewed in an editor in Jupyter.", fig.retina = 2, out.width="100%"}
-image_read("img/open_data_w_editor_02.png") |> 
-  image_crop("3632x2000")
+```{figure} img/open_data_w_editor_02.png
+---
+name: open-data-w-editor-2
+---
+A data file as viewed in an editor in Jupyter.
 ```
+
+
 
 ## Exporting to a different file format 
 
@@ -414,9 +449,11 @@ the R icon under the **Notebook** heading. If no **Launcher** tab is visible,
 you can get a new one via clicking the **+** button at the top of the Jupyter 
 file explorer (Figure \@ref(fig:launcher)). 
 
-```{r launcher, echo = FALSE, fig.cap = "Clicking on the R icon under the Notebook heading will create a new Jupyter notebook with an R kernel.", fig.retina = 2, out.width="100%"}
-image_read("img/launcher-annotated.png") |> 
-  image_crop("3632x2000")
+```{figure} img/launcher-annotated.png
+---
+name: launcher
+---
+Clicking on the R icon under the Notebook heading will create a new Jupyter notebook with an R kernel.
 ```
 
 +++

@@ -23,7 +23,7 @@ that help tell the story of the analysis. In fact, ideally, we would like to *in
 with the text and images serving as narration for the code and its output.
 In this chapter we will show you how to accomplish this using Jupyter notebooks, a common coding platform in 
 data science. Jupyter notebooks do precisely what we need: they let you combine text, images, and (executable!) code in a single
-document. In this chapter, we will focus on the *use* of Jupyter notebooks to program in R and write
+document. In this chapter, we will focus on the *use* of Jupyter notebooks to program in Python and write
 text via a web interface. 
 These skills are essential to getting your analysis running; think of it like getting dressed in the morning!
 Note that we assume that you already have Jupyter set up and ready to use. If that is not the case, please first read
@@ -35,10 +35,19 @@ computer.
 By the end of the chapter, readers will be able to do the following:
 
 - Create new Jupyter notebooks.
-- Write, edit, and execute R code in a Jupyter notebook.
+- Write, edit, and execute Python code in a Jupyter notebook.
 - Write, edit, and view text in a Jupyter notebook.
 - Open and view plain text data files in Jupyter.
 - Export Jupyter notebooks to other standard file types (e.g., `.html`, `.pdf`).
+
+## A Caveat for this Chapter
+
+This book was originally written for the R programming language, and
+has been edited to focus instead on Python. This chapter on Jupyter notebooks
+has not yet been fully updated to focus on Python; it has images and examples from 
+the R version of the book. But the concepts related to Jupyter notebooks are generally
+the same. We are currently working on producing new Python-based images and examples 
+for this chapter.
 
 ## Jupyter
 
@@ -72,7 +81,7 @@ A screenshot of a Jupyter Notebook.
 ```
 
 One of the easiest ways to start working with Jupyter is to use a 
-web-based platform called JupyterHub. JupyterHubs often have Jupyter, R, a number of R 
+web-based platform called JupyterHub. JupyterHubs often have Jupyter, Python, a number of Python 
 packages, and collaboration tools installed, configured and ready to use. 
 JupyterHubs are usually created and provisioned by organizations,
 and require authentication to gain access. For example, if you are reading
@@ -124,7 +133,7 @@ A code cell in Jupyter that has been executed.
 Code cells can be run independently or as part of executing the entire notebook 
 using one of the "**Run all**" commands found in the **Run** or **Kernel** menus 
 in Jupyter. Running a single code cell independently is a workflow typically 
-used when editing or writing your own R code. Executing an entire notebook is a 
+used when editing or writing your own Python code. Executing an entire notebook is a 
 workflow typically used to ensure that your analysis runs in its entirety before 
 sharing it with others, and when using a notebook as part of an automated 
 process.
@@ -132,8 +141,8 @@ process.
 To run a code cell independently, the cell needs to first be activated. This
 is done by clicking on it with the cursor. Jupyter will indicate a cell has been
 activated by highlighting it with a blue rectangle to its left. After the cell
-has been activated ({numref}`activate-and-run-button`), the cell can be run by either pressing the **Run** (`r fa("play", height = "11px")`) 
-button in the toolbar, or by using a keyboard shortcut of 
+has been activated ({numref}`activate-and-run-button`), the cell can be run by either pressing 
+the **Run** (&blacktriangleright;) button in the toolbar, or by using a keyboard shortcut of 
 `Shift + Enter`.
 
 ```{figure} img/activate-and-run-button-annotated.png
@@ -151,12 +160,12 @@ To execute all of the code cells in an entire notebook, you have three options:
 
 2. Select **Kernel** >> **Restart Kernel and Run All Cells...** from the menu ({numref}`restart-kernel-run-all`).
 
-3. Click the (`r fa("fast-forward", height = "11px")`) button in the tool bar.
+3. Click the (&#x23ED;) button in the tool bar.
 
 All of these commands result in all of the code cells in a notebook being run.
 However, there is a slight difference between them.  In particular, only
-options 2 and 3 above will restart the R session before running all of the
-cells; option 1 will not restart the session. Restarting the R session means
+options 2 and 3 above will restart the Python session before running all of the
+cells; option 1 will not restart the session. Restarting the Python session means
 that all previous objects that were created from running cells before this
 command was run will be deleted. In other words, restarting the session and
 then running all cells (options 2 or 3) emulates how your notebook code would
@@ -166,7 +175,7 @@ run if you completely restarted Jupyter before executing your entire notebook.
 ---
 name: restart-kernel-run-all
 ---
-Restarting the R session can be accomplished by clicking Restart Kernel and Run All Cells...
+Restarting the Python session can be accomplished by clicking Restart Kernel and Run All Cells...
 ```
 
 
@@ -178,11 +187,11 @@ Restarting the R session can be accomplished by clicking Restart Kernel and Run 
 The kernel is a program that executes the code inside your notebook and 
 outputs the results. Kernels for many different programming languages have 
 been created for Jupyter, which means that Jupyter can interpret and execute 
-the code of many different programming languages. To run R code, your notebook 
-will need an R kernel. In the top right of your window, you can see a circle 
-that indicates the status of your kernel. If the circle is empty (`r fa("circle", fill = "white", stroke = "black", stroke_width = "10px", height = "11px")`), 
-the kernel is idle and ready to execute code. If the circle is filled in (`r fa("circle", fill = "black", stroke = "black", stroke_width = "10px", height = "12px")`), 
-the kernel is busy running some code.
+the code of many different programming languages. To run Python code, your notebook 
+will need an Python kernel. In the top right of your window, you can see a circle 
+that indicates the status of your kernel. If the circle is empty 
+(&#x25EF;), the kernel is idle and ready to execute code. If the circle is filled in 
+(&#x2B24;), the kernel is busy running some code.
 
 ```{index} kernel; interrupt, kernel; restart
 ```
@@ -199,7 +208,7 @@ connection. If this happens, try the following steps:
 
 To create a new code cell in Jupyter ({numref}`create-new-code-cell`), click the `+` button in the 
 toolbar. By default, all new cells in Jupyter start out as code cells, 
-so after this, all you have to do is write R code within the new cell you just 
+so after this, all you have to do is write Python code within the new cell you just 
 created!
 
 ```{figure} img/create-new-code-cell.png
@@ -230,7 +239,7 @@ To edit a Markdown cell in Jupyter, you need to double click on the cell. Once
 you do this,  the unformatted (or *unrendered*) version of the text will be
 shown ({numref}`markdown-cell-not-run`). You 
 can then use your keyboard to edit the text. To view the formatted
-(or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (`r fa("play", height = "11px")`) button in the toolbar, 
+(or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (&blacktriangleright;) button in the toolbar, 
 or use the `Shift + Enter` keyboard shortcut.
 
 ```{figure} img/markdown-cell-not-run.png
@@ -254,7 +263,7 @@ By default, all new cells in Jupyter start as code cells, so
 the cell format needs to be changed to be recognized and rendered as a Markdown 
 cell. To do this, click on the cell with your cursor to 
 ensure it is activated.  Then click on the drop-down box on the toolbar that says "Code" (it
-is next to the `r fa("fast-forward", height = "11px")` button), and change it from "**Code**" to "**Markdown**" ({numref}`convert-to-markdown-cell`).
+is next to the &#x23ED; button), and change it from "**Code**" to "**Markdown**" ({numref}`convert-to-markdown-cell`).
 
 ```{figure} img/convert-to-markdown-cell.png
 ---
@@ -281,10 +290,10 @@ Mac OS).
 ```
 
 As you might know (or at least imagine) by now, Jupyter notebooks are great for
-interactively editing, writing and running R code; this is what they were 
+interactively editing, writing and running Python code; this is what they were 
 designed for! Consequently, Jupyter notebooks are flexible in regards to code 
 cell execution order. This flexibility means that code cells can be run in any 
-arbitrary order using the **Run** (`r fa("play", height = "11px")`) button. But this flexibility has a downside: 
+arbitrary order using the **Run** (&blacktriangleright;) button. But this flexibility has a downside: 
 it can lead to Jupyter notebooks whose code cannot be executed in a linear 
 order (from top to bottom of the notebook). A nonlinear notebook is problematic 
 because a linear order is the conventional way code documents are run, and 
@@ -293,11 +302,11 @@ code is used in some automated process, it will need to run in a linear order,
 from top to bottom of the notebook. 
 
 The most common way to inadvertently create a nonlinear notebook is to rely solely 
-on using the `r fa("play", height = "11px")` button to execute cells. For example, 
-suppose you write some R code that creates an R object, say a variable named 
+on using the (&blacktriangleright;) button to execute cells. For example, 
+suppose you write some Python code that creates an Python object, say a variable named 
 `y`. When you execute that cell and create `y`, it will continue 
-to exist until it is deliberately deleted with R code, or when the Jupyter 
-notebook R session (*i.e.*, kernel) is stopped or restarted. It can also be 
+to exist until it is deliberately deleted with Python code, or when the Jupyter 
+notebook Python session (*i.e.*, kernel) is stopped or restarted. It can also be 
 referenced in another distinct code cell ({numref}`out-of-order-1`). 
 Together, this means that you could then write a code cell further above in the
 notebook that references `y` and execute it without error in the current session 
@@ -343,54 +352,55 @@ notebook.
 
 You can also accidentally create a nonfunctioning notebook by
 creating an object in a cell that later gets deleted. In such a 
-scenario, that object only exists for that one particular R session and will 
+scenario, that object only exists for that one particular Python session and will 
 not exist once the notebook is restarted and run again. If that 
 object was referenced in another cell in that notebook, an error 
 would occur when the notebook was run again in a new session.
 
-These events may not negatively affect the current R session when 
+These events may not negatively affect the current Python session when 
 the code is being written; but as you might now see, they will likely lead to 
 errors when that notebook is run in a future session. Regularly executing 
-the entire notebook in a fresh R session will help guard 
+the entire notebook in a fresh Python session will help guard 
 against this. If you restart your session and new errors seem to pop up when
 you run all of your cells in linear order, you can at least be aware that there
 is an issue. Knowing this sooner rather than later will allow you to 
 fix the issue and ensure your notebook can be run linearly from start to finish.
 
-We recommend as a best practice to run the entire notebook in a fresh R session
+We recommend as a best practice to run the entire notebook in a fresh Python session
 at least 2&ndash;3 times within any period of work. Note that,
-critically, you *must do this in a fresh R session* by restarting your kernel.
+critically, you *must do this in a fresh Python session* by restarting your kernel.
 We recommend using either the **Kernel** >> 
-**Restart Kernel and Run All Cells...** command from the menu or the `r fa("fast-forward", height = "11px")` 
+**Restart Kernel and Run All Cells...** command from the menu or the &#x23ED; 
 button in the toolbar. Note that the **Run** >> **Run All Cells** 
 menu item will not restart the kernel, and so it is not sufficient 
 to guard against these errors.
 
-### Best practices for including R packages in notebooks
+### Best practices for including Python packages in notebooks
 
-Most data analyses these days depend on functions from external R packages that 
-are not built into R. One example is the `tidyverse` metapackage that we 
+Most data analyses these days depend on functions from external Python packages that 
+are not built into Python. One example is the `pandas` package that we 
 heavily rely on in this book. This package provides us access to functions like 
-`read_csv` for reading data, `select` for subsetting columns, and `ggplot` for 
-creating high-quality graphics. 
+`read_csv` for reading data, and `loc[]` for subsetting rows and columns.
+We also use the `altair` package for  creating high-quality graphics. 
 
-As mentioned earlier in the book, external R packages need to be loaded before 
+As mentioned earlier in the book, external Python packages need to be loaded before 
 the functions they contain can be used. Our recommended way to do this is via 
-`library(package_name)`. But where should this line of code be written in a 
+`import package_name`, and perhaps also to give it a shorter alias like
+`import package_name as pn`. But where should this line of code be written in a 
 Jupyter notebook? One idea could be to load the library right before the 
 function is used in the notebook. However, although this technically works, this 
-causes hidden, or at least non-obvious, R package dependencies when others view 
+causes hidden, or at least non-obvious, Python package dependencies when others view 
 or try to run the notebook. These hidden dependencies can lead to errors when 
-the notebook is executed on another computer if the needed R packages are not 
+the notebook is executed on another computer if the needed Python packages are not 
 installed. Additionally, if the data analysis code takes a long time to run, 
 uncovering the hidden dependencies that need to be installed so that the 
 analysis can run without error can take a great deal of time to uncover.
 
-Therefore, we recommend you load all R packages in a code cell near the top of 
+Therefore, we recommend you load all Python packages in a code cell near the top of 
 the Jupyter notebook. Loading all your packages at the start ensures that all 
 packages are loaded before their functions are called, assuming the notebook is 
 run in a linear order from top to bottom as recommended above. It also makes it 
-easy for others viewing or running the notebook to see what external R packages 
+easy for others viewing or running the notebook to see what external Python packages 
 are used in the analysis, and hence, what packages they should install on 
 their computer to run the analysis successfully.
 
@@ -400,15 +410,15 @@ their computer to run the analysis successfully.
 
 2. As you write code in a Jupyter notebook, run the notebook in a linear order 
 and in its entirety often (2&ndash;3 times every work session) via the **Kernel** >> 
-**Restart Kernel and Run All Cells...** command from the Jupyter menu or the `r fa("fast-forward", height = "11px")` 
+**Restart Kernel and Run All Cells...** command from the Jupyter menu or the &#x23ED;
 button in the toolbar.
 
-3. Write the code that loads external R packages near the top of the Jupyter 
+3. Write the code that loads external Python packages near the top of the Jupyter 
 notebook.
 
 ## Exploring data files
 
-It is essential to preview data files before you try to read them into R to see
+It is essential to preview data files before you try to read them into Python to see
 whether or not there are column names, what the delimiters are, and if there are 
 lines you need to skip. In Jupyter, you preview data files stored as plain text 
 files (e.g., comma- and tab-separated files) in their plain text format ({numref}`open-data-w-editor-2`) by 
@@ -441,7 +451,7 @@ A data file as viewed in an editor in Jupyter.
 ```{index} Jupyter notebook; export
 ```
 
-In Jupyter, viewing, editing and running R code is done in the Jupyter notebook 
+In Jupyter, viewing, editing and running Python code is done in the Jupyter notebook 
 file format with file extension `.ipynb`. This file format is not easy to open and 
 view outside of Jupyter. Thus, to share your analysis with people who do not 
 commonly use Jupyter, it is recommended that you export your executed analysis 
@@ -473,7 +483,7 @@ like. The font, page margins, and other details will appear different in the `.p
 At some point, you will want to create a new, fresh Jupyter notebook for your 
 own project instead of viewing, running or editing a notebook that was started 
 by someone else. To do this, navigate to the **Launcher** tab, and click on 
-the R icon under the **Notebook** heading. If no **Launcher** tab is visible, 
+the Python icon under the **Notebook** heading. If no **Launcher** tab is visible, 
 you can get a new one via clicking the **+** button at the top of the Jupyter 
 file explorer ({numref}`launcher`). 
 
@@ -481,7 +491,7 @@ file explorer ({numref}`launcher`).
 ---
 name: launcher
 ---
-Clicking on the R icon under the Notebook heading will create a new Jupyter notebook with an R kernel.
+Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with an Python kernel.
 ```
 
 +++

@@ -671,7 +671,7 @@ Although there are several ways to create and edit files on GitHub, they are
 not quite powerful enough for efficiently creating and editing complex files,
 or files that need to be executed to assess whether they work (e.g., files
 containing code).  For example, you wouldn't be able to run an analysis written
-with R code directly on GitHub.  Thus, it is useful to be able to connect the
+with Python code directly on GitHub.  Thus, it is useful to be able to connect the
 remote repository that was created on GitHub to a local coding environment.  This
 can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using

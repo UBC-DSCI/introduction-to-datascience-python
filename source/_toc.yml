@@ -6,6 +6,7 @@ parts:
     - file: preface-text.md
     #- file: foreword.md
     - file: acknowledgements.md
+    - file: acknowledgements-python.md
     - file: authors.md
     - file: editors.md
     #- file: setup.md

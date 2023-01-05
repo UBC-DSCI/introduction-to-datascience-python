@@ -1341,26 +1341,38 @@ The `groupby` function takes at least one argument&mdash;the columns to use in t
 grouping. Here we use only one column for grouping (`region`).
 
 ```{code-cell} ipython3
-region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
+region_lang.groupby("region")
 ```
 
 Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy`
 object, which contains information about the groups of the data frame. We can
 then apply aggregating functions to the `DataFrameGroupBy` object. This can be handy if you would like to perform multiple operations and assign
 each output to its own object.
+
 ```{code-cell} ipython3
-region_lang.groupby("region")
+region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 ```
 
+The resulting dataframe has `region` as an index name.
+This is similar to what happened when we reshaped dataframes in the previous chapter,
+and just as we did then,
+you can use `reset_index` to get back to a regular dataframe
+with `region` as a column name.
+
+```{code-cell} ipython3
+region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
+```
 You can also pass multiple column names to `groupby`. For example, if we wanted to
 know about how the different categories of languages (Aboriginal, Non-Official &
 Non-Aboriginal, and  Official) are spoken at home in different regions, we would pass a
 list including `region` and `category` to `groupby`.
+
 ```{code-cell} ipython3
 region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
 ```
 
 You can also ask for grouped summary statistics on the whole data frame
+
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 region_lang.groupby("region").agg(["min", "max"])
@@ -1368,29 +1380,32 @@ region_lang.groupby("region").agg(["min", "max"])
 
 If you want to ask for only some columns, for example
 the columns between `"most_at_home"` and `"lang_known"`,
-you might think about first applying `groupby` and then `loc`;
+you might think about first applying `groupby` and then `["most_at_home":"lang_known"]`;
 but `groupby` returns a `DataFrameGroupBy` object, which does not
-work with `loc`. The other option is to do things the other way around:
-first use `loc`, then use `groupby`.
-This usually does work, but you have to be careful! For example,
-in our case, if we try using `loc` and then `groupby`, we get an error.
+work with ranges inside `[]`.
+The other option is to do things the other way around:
+first use  `["most_at_home":"lang_known"]`, then use `groupby`.
+This can work, but you have to be careful! For example,
+in our case, we get an error.
+
 ```{code-cell} ipython3
 :tags: [remove-output]
-region_lang.loc[:, "most_at_home":"lang_known"].groupby("region").max()
+region_lang["most_at_home":"lang_known"].groupby("region").max()
 ```
+
 ```
 KeyError: 'region'
 ```
-This is because when we use `loc` we selected only the columns between
+
+This is because when we use `[]` we selected only the columns between
 `"most_at_home"` and `"lang_known"`, which doesn't include `"region"`!
-Instead, we need to call `loc` with a list of column names that
-includes `region`, and then use `groupby`.
+Instead, we need to use `groupby` first
+and then call `[]` with a list of column names that includes `region`;
+this approach always works.
+
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.loc[
-  :,
-  ["region", "mother_tongue", "most_at_home", "most_at_work", "lang_known"]
-].groupby("region").max()
+region_lang.groupby("region")[["most_at_home", "lang_known"]].max()
 ```
 
 +++

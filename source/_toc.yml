@@ -4,7 +4,6 @@ parts:
 - caption: Front Matter
   chapters:
     - file: preface-text.md
-    - file: foreword-text.md
     - file: acknowledgements.md
     - file: authors.md
     - file: setup.md

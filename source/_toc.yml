@@ -1,7 +1,5 @@
 format: jb-book
 root: index.md
-options:
-  numbered: true
 parts:
 - caption: Front Matter
   chapters:
@@ -11,6 +9,7 @@ parts:
     - file: authors.md
     - file: setup.md
 - caption: Chapters
+  numbered: 3
   chapters:
     - file: intro.md
     - file: reading.md

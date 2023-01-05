@@ -28,7 +28,13 @@ program at the University of Toronto.
 +++
 
 **Lindsey Heagy** is an Assistant Professor in the Department of Earth, Ocean, and Atmospheric 
-Sciences at the University of British Columbia. 
+Sciences and director of the Geophysical Inversion Facility at the University of British Columbia. 
+Her research combines computational methods in numerical simulations, inversions, and machine 
+learning to answer questions about the subsurface of the Earth. Primary applications include 
+mineral exploration, carbon sequestration, groundwater and environmental studies. She 
+completed her BSc at the University of Alberta, her PhD at the University of British Columbia, 
+and held a Postdoctoral research position at the University of California Berkeley prior to 
+starting her current position at UBC. 
 
 +++
 

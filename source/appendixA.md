@@ -13,9 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Appendix
-
-# Downloading files from JupyterHub {#appendixA}
+# Downloading files from JupyterHub 
 
 This section will help you
 save your work from a JupyterHub web-based platform to your own computer. 

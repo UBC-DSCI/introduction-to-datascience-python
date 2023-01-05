@@ -1013,26 +1013,16 @@ The query (criteria we are using to select values) is input as a string. The `qu
 is less often used than the earlier approaches we introduced, but it can come in handy
 to make long chains of filtering operations a bit easier to read.
 
-(loc-iloc)=
-## Using `loc[]` to filter rows and select columns.
-```{index} pandas.DataFrame; loc[]
-```
+## Using `[]` to select ranges of columns
 
-The `[]` operation is only used when you want to filter rows or select columns;
-it cannot be used to do both operations at the same time. This is where `loc[]`
-comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
-which lets us create a subset of columns from a data frame.
 Suppose we wanted to select only the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
 learned in the chapter on {ref}`intro`, we would pass all of these column names into the square brackets.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-selected_columns = tidy_lang.loc[:, ["language", "region", "most_at_home", "most_at_work"]]
-selected_columns
+tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
 ```
-We pass `:` before the comma indicating we want to retrieve all rows, and the list indicates
-the columns that we want.
 
 Note that we could obtain the same result by stating that we would like all of the columns
 from `language` through `most_at_work`. Instead of passing a list of all of the column
@@ -1041,20 +1031,18 @@ you can read as "The columns from `language` to `most_at_work`".
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-selected_columns = tidy_lang.loc[:, "language":"most_at_work"]
-selected_columns
+tidy_lang["language":"most_at_work"]
 ```
 
 Similarly, you can ask for all of the columns including and after `language` by doing the following
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-selected_columns = tidy_lang.loc[:, "language":]
-selected_columns
+tidy_lang["language":]
 ```
 
-By not putting anything after the `:`, python reads this as "from `language` until the last column".
-Although the notation for selecting a range using `:` is convienent because less code is required,
+By not putting anything after the `:`, Python reads this as "from `language` until the last column".
+Although the notation for selecting a range using `:` is convenient because less code is required,
 it must be used carefully. If you were to re-order columns or add a column to the data frame, the
 output would change. Using a list is more explicit and less prone to potential confusion.
 
@@ -1065,7 +1053,7 @@ us to select variables based on their names. In particular, we can use the `.str
 to choose only the columns that start with the word "most":
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
+tidy_lang[tidy_lang.columns.str.startswith('most')]
 ```
 
 ```{index} pandas.Series; str.contains
@@ -1076,46 +1064,73 @@ We could also have chosen the columns containing an underscore `_` by using the
 the columns we want contain underscores and the others don't.
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
+tidy_lang[tidy_lang.columns.str.contains('_')]
 ```
 
-There are many different functions that help with selecting
-variables based on certain criteria.
-The additional resources section at the end of this chapter
-provides a comprehensive resource on these functions.
+(loc-iloc)=
+## Using `loc[]` to filter rows and select columns
+
+```{index} pandas.DataFrame; loc[]
+```
+
+The `[]` operation is only used when you want to either filter rows **or** select columns;
+it cannot be used to do both operations at the same time. This is where `loc[]`
+comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
+which lets us create a subset of columns from a data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# There are many different `select` helpers that select
-# variables based on certain criteria.
-# The additional resources section at the end of this chapter
-# provides a comprehensive resource on `select` helpers.
+:tags: ["output_scroll"]
+tidy_lang.loc[
+    tidy_lang['region'] == 'Toronto',
+    ["language", "region", "most_at_home", "most_at_work"]
+]
 ```
 
-## Using `iloc[]` to extract a range of columns
+Just as `[]`, `loc` also works with ranges of columns:
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang.loc[
+    tidy_lang['region'] == 'Toronto',
+    "language":"most_at_work"
+]
+```
+
+## Using `iloc[]` to extract rows and columns by position
 ```{index} pandas.DataFrame; iloc[], column range
 ```
-Another approach for selecting columns is to use `iloc[]`,
-which provides the ability to index with integers rather than the names of the columns.
-For example, the column names of the `tidy_lang` data frame are
+Another approach for selecting rows and columns is to use `iloc[]`,
+which provides the ability to index with the position rather than the label of the columns.
+For example, the column labels of the `tidy_lang` data frame are
 `['category', 'language', 'region', 'most_at_home', 'most_at_work']`.
 Using `iloc[]`, you can ask for the `language` column by requesting the
 column at index `1` (remember that Python starts counting at `0`, so the second item `'language'`
 has index `1`!).
 
 ```{code-cell} ipython3
-column = tidy_lang.iloc[:, 1]
-column
+tidy_lang.iloc[:, 1]
 ```
 
-You can also ask for multiple columns, just like we did with `[]`. We pass `:` before
-the comma, indicating we want to retrieve all rows, and `1:` after the comma
+We pass `:` before the comma indicating we want to retrieve all rows.
+You can also ask for multiple columns,
+we pass `1:` after the comma
 indicating we want columns after and including index 1 (*i.e.* `language`).
 
 ```{code-cell} ipython3
-column_range = tidy_lang.iloc[:, 1:]
-column_range
+tidy_lang.iloc[:, 1:]
+```
+
+We can also use `iloc[]` to select ranges of rows, using a similar syntax.
+For example to select the ten first rows we could use the following:
+
+```{code-cell} ipython3
+tidy_lang.iloc[:10, :]
+```
+
+`pandas` also provides a shorthand for selecting ranges of rows by using `[]`:
+
+```{code-cell} ipython3
+tidy_lang[:10]
 ```
 
 The `iloc[]` method is less commonly used, and needs to be used with care.

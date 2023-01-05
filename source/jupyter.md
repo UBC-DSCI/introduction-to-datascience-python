@@ -56,7 +56,7 @@ analyzing the same data. Although this sounds like something that should always
 be true of any data analysis, in reality, this is not often the case; one needs 
 to make a conscious effort to perform data analysis in a reproducible manner.
 An example of what a Jupyter notebook looks like is shown in 
-Figure \@ref(fig:img-jupyter).
+{numref}`img-jupyter`.
 
 
 ```{figure} img/jupyter.png
@@ -80,7 +80,7 @@ this book as part of a course, your instructor may have a JupyterHub
 already set up for you to use! <!--- Insert link to public JupyterHub here if we can get 
 access/permission (either 2i2c collaboration, or 
 https://notebooks.gesis.org/hub/home) --> Jupyter can also be installed on your
-own computer; see Chapter \@ref(move-to-your-own-machine) for instructions.
+own computer; see the {ref}`move-to-your-own-machine` chapter for instructions.
 
 ## Code cells
 
@@ -90,13 +90,13 @@ own computer; see Chapter \@ref(move-to-your-own-machine) for instructions.
 The sections of a Jupyter notebook that contain code are referred to as code cells. 
 A code cell that has not yet been 
 executed has no number inside the square brackets to the left of the cell 
-(Figure \@ref(fig:code-cell-not-run)). Running a code cell will execute all of 
+({numref}`code-cell-not-run`). Running a code cell will execute all of 
 the code it contains, and the output (if any exists) will be displayed directly
 underneath the code that generated it. Outputs may include printed text or 
 numbers, data frames and data visualizations. Cells that have been executed 
 also have a number inside the square brackets to the left of the cell. 
 This number indicates the order in which the cells were run 
-(Figure \@ref(fig:code-cell-run)).
+({numref}`code-cell-run`).
 
 ```{figure} img/code-cell-not-run.png
 ---
@@ -132,7 +132,7 @@ process.
 To run a code cell independently, the cell needs to first be activated. This
 is done by clicking on it with the cursor. Jupyter will indicate a cell has been
 activated by highlighting it with a blue rectangle to its left. After the cell
-has been activated (Figure \@ref(fig:activate-and-run-button)), the cell can be run by either pressing the **Run** (`r fa("play", height = "11px")`) 
+has been activated ({numref}`activate-and-run-button`), the cell can be run by either pressing the **Run** (`r fa("play", height = "11px")`) 
 button in the toolbar, or by using a keyboard shortcut of 
 `Shift + Enter`.
 
@@ -149,7 +149,7 @@ To execute all of the code cells in an entire notebook, you have three options:
 
 1. Select **Run** >> **Run All Cells** from the menu.
 
-2. Select **Kernel** >> **Restart Kernel and Run All Cells...** from the menu (Figure \@ref(fig:restart-kernel-run-all)).
+2. Select **Kernel** >> **Restart Kernel and Run All Cells...** from the menu ({numref}`restart-kernel-run-all`).
 
 3. Click the (`r fa("fast-forward", height = "11px")`) button in the tool bar.
 
@@ -197,7 +197,7 @@ connection. If this happens, try the following steps:
 
 ### Creating new code cells
 
-To create a new code cell in Jupyter (Figure \@ref(fig:create-new-code-cell)), click the `+` button in the 
+To create a new code cell in Jupyter ({numref}`create-new-code-cell`), click the `+` button in the 
 toolbar. By default, all new cells in Jupyter start out as code cells, 
 so after this, all you have to do is write R code within the new cell you just 
 created!
@@ -228,9 +228,9 @@ where you can start learning Markdown.
 
 To edit a Markdown cell in Jupyter, you need to double click on the cell. Once
 you do this,  the unformatted (or *unrendered*) version of the text will be
-shown (Figure \@ref(fig:markdown-cell-not-run)). You 
+shown ({numref}`markdown-cell-not-run`). You 
 can then use your keyboard to edit the text. To view the formatted
-(or *rendered*) text (Figure \@ref(fig:markdown-cell-run)), click the **Run** (`r fa("play", height = "11px")`) button in the toolbar, 
+(or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (`r fa("play", height = "11px")`) button in the toolbar, 
 or use the `Shift + Enter` keyboard shortcut.
 
 ```{figure} img/markdown-cell-not-run.png
@@ -254,7 +254,7 @@ By default, all new cells in Jupyter start as code cells, so
 the cell format needs to be changed to be recognized and rendered as a Markdown 
 cell. To do this, click on the cell with your cursor to 
 ensure it is activated.  Then click on the drop-down box on the toolbar that says "Code" (it
-is next to the `r fa("fast-forward", height = "11px")` button), and change it from "**Code**" to "**Markdown**" (Figure \@ref(fig:convert-to-markdown-cell)).
+is next to the `r fa("fast-forward", height = "11px")` button), and change it from "**Code**" to "**Markdown**" ({numref}`convert-to-markdown-cell`).
 
 ```{figure} img/convert-to-markdown-cell.png
 ---
@@ -298,16 +298,16 @@ suppose you write some R code that creates an R object, say a variable named
 `y`. When you execute that cell and create `y`, it will continue 
 to exist until it is deliberately deleted with R code, or when the Jupyter 
 notebook R session (*i.e.*, kernel) is stopped or restarted. It can also be 
-referenced in another distinct code cell (Figure \@ref(fig:out-of-order-1)). 
+referenced in another distinct code cell ({numref}`out-of-order-1`). 
 Together, this means that you could then write a code cell further above in the
 notebook that references `y` and execute it without error in the current session 
-(Figure \@ref(fig:out-of-order-2)). This could also be done successfully in 
+({numref}`out-of-order-2`). This could also be done successfully in 
 future sessions if, and only if, you run the cells in the same unconventional 
 order. However, it is difficult to remember this unconventional order, and it 
 is not the order that others would expect your code to be executed in. Thus, in 
 the future, this would lead 
 to errors when the notebook is run in the conventional 
-linear order (Figure \@ref(fig:out-of-order-3)).
+linear order ({numref}`out-of-order-3`).
 
 ```{figure} img/out-of-order-1.png
 ---
@@ -411,9 +411,9 @@ notebook.
 It is essential to preview data files before you try to read them into R to see
 whether or not there are column names, what the delimiters are, and if there are 
 lines you need to skip. In Jupyter, you preview data files stored as plain text 
-files (e.g., comma- and tab-separated files) in their plain text format (Figure \@ref(fig:open-data-w-editor-2)) by 
+files (e.g., comma- and tab-separated files) in their plain text format ({numref}`open-data-w-editor-2`) by 
 right-clicking on the file's name in the Jupyter file explorer, selecting 
-**Open with**, and then selecting **Editor** (Figure \@ref(fig:open-data-w-editor-1)). 
+**Open with**, and then selecting **Editor** ({numref}`open-data-w-editor-1`). 
 Suppose you do not specify to open 
 the data file with an editor. In that case, Jupyter will render a nice table 
 for you, and you will not be able to see the column delimiters, and therefore 
@@ -475,7 +475,7 @@ own project instead of viewing, running or editing a notebook that was started
 by someone else. To do this, navigate to the **Launcher** tab, and click on 
 the R icon under the **Notebook** heading. If no **Launcher** tab is visible, 
 you can get a new one via clicking the **+** button at the top of the Jupyter 
-file explorer (Figure \@ref(fig:launcher)). 
+file explorer ({numref}`launcher`). 
 
 ```{figure} img/launcher-annotated.png
 ---

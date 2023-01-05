@@ -152,7 +152,7 @@ and repository hosting services in use today.
 ```
 
 Typically, when we put a data analysis project under version control, 
-we create two copies of the repository \index{repository} (Figure \@ref(fig:vc1-no-changes)). 
+we create two copies of the repository \index{repository} ({numref}`vc1-no-changes`). 
 One copy we use as our primary workspace where we create, edit, and delete files.
 This copy is commonly referred to as \index{repository!local} the **local repository**. The local
 repository most commonly exists on our computer or laptop, but can also exist within
@@ -175,16 +175,16 @@ Schematic of local and remote version control repositories.
 
 Both copies of the repository have a **working directory** \index{working directory} 
 where you can create, store, edit, and delete 
-files (e.g., `analysis.ipynb` in Figure \@ref(fig:vc1-no-changes)).
+files (e.g., `analysis.ipynb` in {numref}`vc1-no-changes`).
 Both copies of the repository also maintain a full project history 
-(Figure \@ref(fig:vc1-no-changes)).  This history is a record of all versions of the
+({numref}`vc1-no-changes`).  This history is a record of all versions of the
 project files that have been created.  The repository history is not
 automatically generated; Git must be explicitly told when to record
 a version of the project.  These records are \index{git!commit} called **commits**. They 
 are a snapshot of the file contents as well
 metadata about the repository at that time the record was created (who made the
 commit, when it was made, etc.). In the local and remote repositories shown in
-Figure \@ref(fig:vc1-no-changes), there are two commits represented as gray
+{numref}`vc1-no-changes`, there are two commits represented as gray
 circles.  Each commit can be identified by a 
 human-readable **message**, which you write when you make a commit, and a
 **commit hash** that Git automatically adds for you.  
@@ -195,7 +195,7 @@ Messages act as a very useful narrative
 of the changes to a project over its lifespan. 
 If you ever want to view or revert to an earlier version of the project,
 the message can help you identify which commit to view or revert to.
-In Figure \@ref(fig:vc1-no-changes), you can see two such messages, 
+In {numref}`vc1-no-changes`, you can see two such messages, 
 one for each commit: `Created README.md` and `Added analysis draft`.
 
 ```{index}
@@ -207,7 +207,7 @@ The hash \index{hash} is a string of characters consisting of about 40 letters a
 The purpose of the hash is to serve as a unique identifier for the commit,
 and is used by Git to index project history. Although hashes are quite long&mdash;imagine 
 having to type out 40 precise characters to view an old project version!&mdash;Git is able
-to work with shorter versions of hashes. In Figure \@ref(fig:vc1-no-changes), you can see
+to work with shorter versions of hashes. In {numref}`vc1-no-changes`, you can see
 two of these shortened hashes, one for each commit: `Daa29d6` and `884c7ce`.
 
 ## Version control workflows
@@ -227,7 +227,7 @@ In this section we will discuss all three of these steps in detail.
 
 When working on files in your local version control 
 repository (e.g., using Jupyter) and saving your work, these changes will only initially exist in the
-working directory of the local repository (Figure \@ref(fig:vc2-changes)).
+working directory of the local repository ({numref}`vc2-changes`).
 
 ```{r vc2-changes, fig.cap = 'Local repository with changes to files.', fig.retina = 2, out.width="100%"}
 image_read("img/vc2-changes.png") |>
@@ -255,7 +255,7 @@ Note that the staging area is not a real physical location on your computer;
 it is instead a conceptual placeholder for these files until they are committed.
 The benefit of the Git version control system using a staging area is that you 
 can choose to commit changes in only certain files. For example, 
-in Figure \@ref(fig:vc-ba2-add), we add only the two files 
+in {numref}`vc-ba2-add`, we add only the two files 
 that are important to the analysis project (`analysis.ipynb` and `README.md`)
 and not our personal scratch notes for the project (`notes.txt`).
 
@@ -273,10 +273,10 @@ Schematic of local and remote version control repositories.
 
 
 Once the files we wish to commit have been added 
-to the staging area, we can then commit those files to the repository history (Figure \@ref(fig:vc-ba3-commit)).
+to the staging area, we can then commit those files to the repository history ({numref}`vc-ba3-commit`).
 When we do this, we are required to include a helpful *commit message* to tell 
 collaborators (which often includes future you!) about the changes that were
-made. In Figure \@ref(fig:vc-ba3-commit), the message is `Message about changes...`; in 
+made. In {numref}`vc-ba3-commit`, the message is `Message about changes...`; in 
 your work you should make sure to replace this with an
 informative message about what changed. It is also important to note here that
 these changes are only being committed to the local repository's history.  The
@@ -304,7 +304,7 @@ Schematic of local and remote version control repositories.
 
 
 Once you have made one or more commits that you want to share with your collaborators, 
-you need \index{git!push} to **push** (i.e., send) those commits back to GitHub (Figure \@ref(fig:vc5-push)). This updates 
+you need \index{git!push} to **push** (i.e., send) those commits back to GitHub ({numref}`vc5-push`). This updates 
 the history in the remote repository (i.e., GitHub) to match what you have in your 
 local repository. Now when collaborators interact with the remote repository, they will be able
 to see the changes you made. And you can also take comfort in the fact that your work is now backed 
@@ -328,7 +328,7 @@ If you are working on a project with collaborators, they will also be making cha
 (e.g., to the analysis code in a Jupyter notebook and the project's README file),
 committing them to their own local repository, and pushing their commits to the remote GitHub repository
 to share them with you. When they push their changes, those changes will only initially exist in 
-the remote GitHub repository and not in your local repository (Figure \@ref(fig:vc6-remote-changes)).
+the remote GitHub repository and not in your local repository ({numref}`vc6-remote-changes`).
 
 ```{r vc6-remote-changes, fig.cap = 'Changes pushed by collaborators, or created directly on GitHub will not be automatically sent to your local repository.', fig.retina = 2, out.width="100%"}
 image_read("img/vc6-remote-changes.png") |>
@@ -348,7 +348,7 @@ Schematic of local and remote version control repositories.
 
 To obtain the new changes from the remote repository on GitHub, you will need
 to **pull** \index{git!pull} those changes to your own local repository.  By pulling changes,
-you synchronize your local repository to what is present on GitHub (Figure \@ref(fig:vc7-pull)).
+you synchronize your local repository to what is present on GitHub ({numref}`vc7-pull`).
 Additionally, until you pull changes from the remote repository, you will not
 be able to push any more changes yourself (though you will still be able to
 work and make commits in your own local repository). 
@@ -393,7 +393,7 @@ at [https://github.com/](https://github.com/).
 Once you have logged into your account, you can create a new repository to host 
 your project by clicking on the "+" icon in the upper right-hand 
 corner, and then on "New Repository," as shown in 
-Figure \@ref(fig:new-repository-01).
+{numref}`new-repository-01`.
 
 (ref:new-repository-01) New repositories on GitHub can be created by clicking on "New Repository" from the + menu. 
 
@@ -423,7 +423,7 @@ either public or private. *Public* repositories \index{repository!public} can be
 are only editable by you, but you can change that by giving access to other collaborators.
 
 To get started with a *public* repository having a template `README.md` file, take the 
-following steps shown in Figure \@ref(fig:new-repository-02): 
+following steps shown in {numref}`new-repository-02`: 
 
 1. Enter the name of your project repository. In the example below, we use `canadian_languages`. Most repositories follow a similar naming convention involving only lowercase letter words separated by either underscores or hyphens.
 2. Choose an option for the privacy of your repository.
@@ -446,7 +446,7 @@ Schematic of local and remote version control repositories.
 
 
 A newly created public repository with a `README.md` template file should look something
-like what is shown in Figure \@ref(fig:new-repository-03).
+like what is shown in {numref}`new-repository-03`.
 
 ```{r new-repository-03, fig.cap = 'Respository configuration for a project that is public and initialized with a README.md template file.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/new_repository_03.png") |>
@@ -474,7 +474,7 @@ Schematic of local and remote version control repositories.
 
 The pen tool \index{GitHub!pen tool} can be used to edit existing plain text files. When you click on 
 the pen tool, the file will be opened in a text box where you can use your 
-keyboard to make changes (Figures \@ref(fig:pen-tool-01) and \@ref(fig:pen-tool-02)).
+keyboard to make changes ({numref}`pen-tool-01` and {numref}`pen-tool-02`).
 
 ```{r pen-tool-01, fig.cap = 'Clicking on the pen tool opens a text box for editing plain text files.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/pen-tool_01.png") |>
@@ -515,7 +515,7 @@ takes a snapshot of what the file looks like. As you continue working on the
 project, over time you will possibly make many commits to a single file; this 
 generates a useful version history for that file. On GitHub, if you click the 
 green "Commit changes" button, \index{GitHub!commit} it will save the file and then make a commit
-(Figure \@ref(fig:pen-tool-03)).
+({numref}`pen-tool-03`).
 
 Recall from Section \@ref(commit-changes) that you normally have to add files
 to the staging area before committing them. Why don't we have to do that when
@@ -551,7 +551,7 @@ Schematic of local and remote version control repositories.
 The "Add file" menu \index{GitHub!add file} can be used to create new plain text files and upload files 
 from your computer. To create a new plain text file, click the "Add file" 
 drop-down menu and select the "Create new file" option 
-(Figure \@ref(fig:create-new-file-01)).
+({numref}`create-new-file-01`).
 
 ```{r create-new-file-01, fig.cap = 'New plain text files can be created directly on GitHub.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/create-new-file_01.png") |>
@@ -575,7 +575,7 @@ A page will open with a small text box for the file name to be entered, and a
 larger text box where the desired file content text can be entered. Note the two 
 tabs, "Edit new file" and "Preview". Toggling between them lets you enter and 
 edit text and view what the text will look like when rendered, respectively
-(Figure \@ref(fig:create-new-file-02)). 
+({numref}`create-new-file-02`). 
 Note that GitHub understands and renders `.md` files \index{markdown} using a 
 [markdown syntax](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf) 
 very similar to Jupyter notebooks, so the "Preview" tab is especially helpful 
@@ -597,7 +597,7 @@ Schematic of local and remote version control repositories.
 
 
 Save and commit your changes by clicking the green "Commit changes" button at the 
-bottom of the page (Figure \@ref(fig:create-new-file-03)).
+bottom of the page ({numref}`create-new-file-03`).
 
 ```{r create-new-file-03, fig.cap = 'To be saved, newly created files are required to be committed along with an associated commit message.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/create-new-file_03.png") |>
@@ -614,12 +614,12 @@ Schematic of local and remote version control repositories.
 
 You can also upload files that you have created on your local machine by using 
 the "Add file" drop-down menu and selecting "Upload files"
-(Figure \@ref(fig:upload-files-01)).
+({numref}`upload-files-01`).
 To select the files from your local computer to upload, you can either drag and 
 drop them into the gray box area shown below, or click the "choose your files" 
 link to access a file browser dialog. Once the files you want to upload have 
 been selected, click the green "Commit changes" button at the bottom of the 
-page (Figure \@ref(fig:upload-files-02)).
+page ({numref}`upload-files-02`).
 
 ```{r upload-files-01, fig.cap = 'New files of any type can be uploaded to GitHub.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/upload-files_01.png") |>
@@ -702,7 +702,7 @@ the token can be used to access, and lets you set an expiry date for the authent
 To generate a personal access token, 
 you must first visit [https://github.com/settings/tokens](https://github.com/settings/tokens),
 which will take you to the "Personal access tokens" page in your account settings.
-Once there, click "Generate new token" (Figure \@ref(fig:generate-pat-01)).
+Once there, click "Generate new token" ({numref}`generate-pat-01`).
 Note that you may be asked to re-authenticate with your username 
 and password to proceed.
 
@@ -724,10 +724,10 @@ You will be asked to add a note to describe the purpose for your personal access
 Next, you need to select permissions for the token; this is where
 you can control what parts of your account the token can be used to access.
 Make sure to choose only those permissions that you absolutely require. In
-Figure \@ref(fig:generate-pat-02), we tick only the "repo" box, which gives the 
+{numref}`generate-pat-02`, we tick only the "repo" box, which gives the 
 token access to our repositories (so that we can push and pull) but none of our other GitHub 
 account features. Finally, to generate the token, scroll to the bottom of that page 
-and click the green "Generate token" button (Figure \@ref(fig:generate-pat-02)).
+and click the green "Generate token" button ({numref}`generate-pat-02`).
 
 (ref:generate-pat-02) Webpage for creating a new personal access token.
 
@@ -744,7 +744,7 @@ Schematic of local and remote version control repositories.
 
 
 Finally, you will be taken to a page where you will be able to see 
-and copy the personal access token you just generated (Figure \@ref(fig:generate-pat-03)). 
+and copy the personal access token you just generated ({numref}`generate-pat-03`). 
 Since it provides access to certain parts of your account, you should
 treat this token like a password; for example, you should consider 
 securely storing it (and your other passwords and tokens, too!) using a password manager.
@@ -783,7 +783,7 @@ the next step is -->
 to create a local repository results in a 
 copy that knows where it was obtained from so that it knows where to send/receive 
 new committed edits. In order to do this, first copy the URL from the HTTPS tab 
-of the Code drop-down menu on GitHub (Figure \@ref(fig:clone-02)).
+of the Code drop-down menu on GitHub ({numref}`clone-02`).
 
 (ref:clone-02) The green "Code" drop-down menu contains the remote address (URL) corresponding to the location of the remote GitHub repository.
 
@@ -801,7 +801,7 @@ Schematic of local and remote version control repositories.
 
 
 Open Jupyter, and click the Git+ icon on the file browser tab 
-(Figure \@ref(fig:clone-01)).
+({numref}`clone-01`).
 
 ```{r clone-01, fig.pos = "H", out.extra="", fig.cap = 'The Jupyter Git Clone icon (red circle).', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/clone_01.png") |>
@@ -817,7 +817,7 @@ Schematic of local and remote version control repositories.
 
 
 Paste the URL of the GitHub project repository you 
-created and click the blue "CLONE" button (Figure \@ref(fig:clone-03)).
+created and click the blue "CLONE" button ({numref}`clone-03`).
 
 ```{r clone-03, fig.pos = "H", out.extra="", fig.cap = 'Prompt where the remote address (URL) corresponding to the location of the GitHub repository needs to be input in Jupyter.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/clone_03.png") |>
@@ -833,7 +833,7 @@ Schematic of local and remote version control repositories.
 
 
 On the file browser tab, you will now see a folder for the repository.
-Inside this folder  will be all the files that existed on GitHub (Figure \@ref(fig:clone-04)).
+Inside this folder  will be all the files that existed on GitHub ({numref}`clone-04`).
 
 ```{r clone-04, fig.pos = "H", out.extra="", fig.cap = 'Cloned GitHub repositories can been seen and accessed via the Jupyter file browser.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/clone_04.png") |>
@@ -852,10 +852,10 @@ Schematic of local and remote version control repositories.
 Now that you have cloned the remote repository from GitHub to create a local repository,
 you can get to work editing, creating, and deleting files. 
 For example, suppose you created and saved a new file (named `eda.ipynb`) that you would 
-like to send back to the project repository on GitHub (Figure \@ref(fig:git-add-01)).
+like to send back to the project repository on GitHub ({numref}`git-add-01`).
 To "add" this modified file to the staging area (i.e., flag that this is a
 file whose changes we would like to commit), click the Jupyter Git extension 
-icon on the far left-hand side of Jupyter (Figure \@ref(fig:git-add-01)).
+icon on the far left-hand side of Jupyter ({numref}`git-add-01`).
 
 ```{r git-add-01, fig.pos = "H", out.extra="", fig.cap = 'Jupyter Git extension icon (circled in red).', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_add_01.png") |>
@@ -875,7 +875,7 @@ Schematic of local and remote version control repositories.
 
 This opens the Jupyter Git graphical user interface pane. Next,
 click the plus sign (+) beside the file(s) that you want to "add"  \index{git!add}
-(Figure \@ref(fig:git-add-02)). Note that because this is the 
+({numref}`git-add-02`). Note that because this is the 
 first change for this file, it falls under the "Untracked" heading. 
 However, next time you edit this file  and want to add the changes,
 you will find it under the "Changed" heading.
@@ -902,7 +902,7 @@ Schematic of local and remote version control repositories.
 
 Clicking the plus sign (+) moves the file from the "Untracked" heading to the "Staged" heading, 
 so that Git knows you want a snapshot of its current state 
-as a commit (Figure \@ref(fig:git-add-03)).
+as a commit ({numref}`git-add-03`).
 Now you are ready to "commit" the changes. 
 Make sure to include a (clear and helpful!) message about what was changed
 so that your collaborators (and future you) know what happened in this commit. 
@@ -931,7 +931,7 @@ Schematic of local and remote version control repositories.
 
 To snapshot the changes with an associated commit message, 
 you must put a message in the text box at the bottom of the Git pane 
-and click on the blue "Commit" button (Figure \@ref(fig:git-commit-01)). \index{git!commit}
+and click on the blue "Commit" button ({numref}`git-commit-01`). \index{git!commit}
 It is highly recommended to write useful and meaningful messages about what 
 was changed. These commit messages, and the datetime stamp for a given 
 commit, are the primary means to navigate through the project's history in the 
@@ -955,7 +955,7 @@ Schematic of local and remote version control repositories.
 
 After "committing" the file(s), you will see there are 0 "Staged" files. 
 You are now ready to push your changes
-to the remote repository on GitHub (Figure \@ref(fig:git-commit-03)).
+to the remote repository on GitHub ({numref}`git-commit-03`).
 
 ```{r git-commit-03, fig.pos = "H", out.extra="", fig.cap = 'After recording a commit, the staging area should be empty.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_commit_03.png") |>
@@ -980,7 +980,7 @@ Schematic of local and remote version control repositories.
 To send the committed changes back to the remote repository on 
 GitHub, you need to *push* them. \index{git!push} To do this, 
 click on the cloud icon with the up arrow on the Jupyter Git tab 
-(Figure \@ref(fig:git-push-01)).
+({numref}`git-push-01`).
 
 (ref:git-push-01) The Jupyter Git extension "push" button (circled in red).
 
@@ -1000,7 +1000,7 @@ Schematic of local and remote version control repositories.
 You will then be prompted to enter your GitHub username 
 and the personal access token that you generated
 earlier (not your account password!). Click 
-the blue "OK" button to initiate the push (Figure \@ref(fig:git-push-02)).
+the blue "OK" button to initiate the push ({numref}`git-push-02`).
 
 ```{r git-push-02, fig.pos = "H", out.extra="", fig.cap = 'Enter your Git credentials to authorize the push to the remote repository.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_push_02.png") |>
@@ -1016,7 +1016,7 @@ Schematic of local and remote version control repositories.
 
 
 If the files were successfully pushed to the project repository on 
-GitHub, you will be shown a success message (Figure \@ref(fig:git-push-03)). 
+GitHub, you will be shown a success message ({numref}`git-push-03`). 
 Click "Dismiss" to continue working in Jupyter.
 
 ```{r git-push-03, fig.pos = "H", out.extra="", fig.cap = 'The prompt that the push was successful.', fig.retina = 2, out.width="100%"}
@@ -1034,7 +1034,7 @@ Schematic of local and remote version control repositories.
 
 If you visit the remote repository on GitHub, 
 you will see that the changes now exist there too
-(Figure \@ref(fig:git-push-04))!
+({numref}`git-push-04`)!
 
 ```{r git-push-04, fig.pos = "H", out.extra="", fig.cap = 'The GitHub web interface shows a preview of the commit message, and the time of the most recently pushed commit for each file.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_push_04.png") |>
@@ -1062,7 +1062,7 @@ As mentioned earlier, GitHub allows you to control who has access to your
 project. The default of both public and private projects are that only the 
 person who created the GitHub \index{GitHub!collaborator access} repository has permissions to create, edit and 
 delete files (*write access*). To give your collaborators write access to the 
-projects, navigate to the "Settings" tab (Figure \@ref(fig:add-collab-01)).
+projects, navigate to the "Settings" tab ({numref}`add-collab-01`).
 
 (ref:add-collab-01) The "Settings" tab on the GitHub web interface.
 
@@ -1079,7 +1079,7 @@ Schematic of local and remote version control repositories.
 
 
 
-Then click "Manage access" (Figure \@ref(fig:add-collab-02)).
+Then click "Manage access" ({numref}`add-collab-02`).
 
 (ref:add-collab-02) The "Manage access" tab on the GitHub web interface.
 
@@ -1096,7 +1096,7 @@ Schematic of local and remote version control repositories.
 
 
 
-(Figure \@ref(fig:add-collab-03)).
+({numref}`add-collab-03`).
 
 (ref:add-collab-03) The "Invite a collaborator" button on the GitHub web interface.
 
@@ -1114,7 +1114,7 @@ Schematic of local and remote version control repositories.
 
 
 Type in the collaborator's GitHub username or email, 
-and select their name when it appears (Figure \@ref(fig:add-collab-04)).
+and select their name when it appears ({numref}`add-collab-04`).
 
 ```{r add-collab-04, fig.pos = "H", out.extra="", fig.cap = "The text box where a collaborator's GitHub username or email can be entered.", fig.retina = 2, out.width="100%"}
 image_read("img/version_control/add_collab_04.png") |>
@@ -1129,7 +1129,7 @@ Schematic of local and remote version control repositories.
 
 
 
-Finally, click the green "Add <COLLABORATORS_GITHUB_USER_NAME> to this repository" button (Figure \@ref(fig:add-collab-05)).
+Finally, click the green "Add <COLLABORATORS_GITHUB_USER_NAME> to this repository" button ({numref}`add-collab-05`).
 
 ```{r add-collab-05, fig.pos = "H", out.extra="", fig.cap = 'The confirmation button for adding a collaborator to a repository on the GitHub web interface.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/add_collab_05.png") |>
@@ -1153,7 +1153,7 @@ to enable write access.
 
 We will now walk through how to use the Jupyter Git extension tool to pull changes 
 to our `eda.ipynb` analysis file that were made by a collaborator 
-(Figure \@ref(fig:git-pull-00)).
+({numref}`git-pull-00`).
 
 ```{r git-pull-00, fig.pos = "H", out.extra="", fig.cap = 'The GitHub interface indicates the name of the last person to push a commit to the remote repository, a preview of the associated commit message, the unique commit identifier, and how long ago the commit was snapshotted.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_pull_00.png") |>
@@ -1172,7 +1172,7 @@ Schematic of local and remote version control repositories.
 
 
 You can tell Git to "pull" by \index{git!pull} clicking on the cloud icon with 
-the down arrow in Jupyter (Figure \@ref(fig:git-pull-01)).
+the down arrow in Jupyter ({numref}`git-pull-01`).
 
 ```{r git-pull-01, fig.pos = "H", out.extra="", fig.cap = 'The Jupyter Git extension clone button.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_pull_01.png") |>
@@ -1188,7 +1188,7 @@ Schematic of local and remote version control repositories.
 
 
 Once the files are successfully pulled from GitHub, you need to click "Dismiss"
-to keep working (Figure \@ref(fig:git-pull-02)).
+to keep working ({numref}`git-pull-02`).
 
 ```{r git-pull-02, fig.pos = "H", out.extra="", fig.cap = 'The prompt after changes have been successfully pulled from a remote repository.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_pull_02.png") |>
@@ -1204,7 +1204,7 @@ Schematic of local and remote version control repositories.
 
 
 And then when you open (or refresh) the files whose changes you just pulled,
-you should be able to see them (Figure \@ref(fig:git-pull-03)).
+you should be able to see them ({numref}`git-pull-03`).
 
 (ref:git-pull-03) Changes made by the collaborator to `eda.ipynb` (code highlighted by red arrows).
 
@@ -1223,7 +1223,7 @@ Schematic of local and remote version control repositories.
 
 It can be very useful to review the history of the changes to your project. You
 can do this directly in Jupyter by clicking "History" in the Git tab 
-(Figure \@ref(fig:git-pull-04)).
+({numref}`git-pull-04`).
 
 ```{r git-pull-04, fig.pos = "H", out.extra="", fig.cap = 'Version control repository history viewed using the Jupyter Git extension.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/git_pull_04.png") |>
@@ -1244,7 +1244,7 @@ If you do not do this,
 and your collaborators have pushed some changes to the project to GitHub, 
 then you will be unable to push your changes to GitHub until you pull. 
 This situation can be recognized by the error message 
-shown in Figure \@ref(fig:merge-conflict-01).
+shown in {numref}`merge-conflict-01`.
 
 ```{r merge-conflict-01, fig.pos = "H", out.extra="", fig.cap = 'Error message that indicates that there are changes on the remote repository that you do not have locally.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/merge_conflict_01.png") |>
@@ -1269,7 +1269,7 @@ If, however, you and your collaborators made changes to the same line of the
 same file, Git will not be able to automatically merge the changes&mdash;it will
 not know whether to keep your version of the line(s), your collaborators
 version of the line(s), or some blend of the two. When this happens, Git will
-tell you that you have a merge conflict in certain file(s) (Figure \@ref(fig:merge-conflict-03)).
+tell you that you have a merge conflict in certain file(s) ({numref}`merge-conflict-03`).
 
 ```{r merge-conflict-03, fig.cap = 'Error message that indicates you and your collaborators made changes to the same line of the same file and that Git will not be able to automatically merge the changes.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/merge_conflict_03.png") |>
@@ -1293,7 +1293,7 @@ Schematic of local and remote version control repositories.
 
 To fix the merge conflict, \index{git!merge conflict} you need to open the offending file
 in a plain text editor and look for special marks that Git puts in the file to
-tell you where the merge conflict occurred (Figure \@ref(fig:merge-conflict-04)). 
+tell you where the merge conflict occurred ({numref}`merge-conflict-04`). 
 
 ```{r merge-conflict-04, fig.cap = 'How to open a Jupyter notebook as a plain text file view in Jupyter.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/merge_conflict_04.png") |>
@@ -1313,7 +1313,7 @@ conflict is preceded by `<<<<<<< HEAD` and the end of the merge conflict is
 marked by `>>>>>>>`. Between these markings, Git also inserts a separator 
 (`=======`). The version of the change before the separator is your change, and 
 the version that follows the separator was the change that existed on GitHub.
-In Figure \@ref(fig:merge-conflict-05), you can see that in your local repository
+In {numref}`merge-conflict-05`, you can see that in your local repository
 there is a line of code that calls `scale_color_manual` with three color values (`deeppink2`, `cyan4`, and `purple1`).
 It looks like your collaborator made an edit to that line too, except with different colors (to `blue3`, `red3`, and `black`)!
 
@@ -1332,7 +1332,7 @@ Schematic of local and remote version control repositories.
 
 Once you have decided which version of the change (or what combination!) to
 keep, you need to use the plain text editor to remove the special marks that
-Git added (Figure \@ref(fig:merge-conflict-06)).  
+Git added ({numref}`merge-conflict-06`).  
 
 ```{r merge-conflict-06, fig.cap = 'File where a merge conflict has been resolved.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/merge_conflict_06.png") |>
@@ -1375,7 +1375,7 @@ thread. Replying to issues from email is also possible. Given all of these advan
  we highly recommend the use of issues for project-related communication.
 
 To open a GitHub issue, 
-first click on the "Issues" tab (Figure \@ref(fig:issue-01)).
+first click on the "Issues" tab ({numref}`issue-01`).
 
 (ref:issue-01) The "Issues" tab on the GitHub web interface.
 
@@ -1394,7 +1394,7 @@ Schematic of local and remote version control repositories.
 
 \newpage
 
-Next click the "New issue" button (Figure \@ref(fig:issue-02)).
+Next click the "New issue" button ({numref}`issue-02`).
 
 (ref:issue-02) The "New issues" button on the GitHub web interface.
 
@@ -1413,7 +1413,7 @@ Schematic of local and remote version control repositories.
 
 Add an issue title (which acts like an email subject line), and then put the 
 body of the message in the larger text box. Finally, click "Submit new issue"
-to post the issue to share with others (Figure \@ref(fig:issue-03)).
+to post the issue to share with others ({numref}`issue-03`).
 
 ```{r issue-03, fig.pos = "H", out.extra="", fig.cap = 'Dialog boxes and submission button for creating new GitHub issues.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/issue_03.png") |>
@@ -1429,7 +1429,7 @@ Schematic of local and remote version control repositories.
 
 
 You can reply to an issue that someone opened by adding your written response to
-the large text box and clicking comment (Figure \@ref(fig:issue-04)).
+the large text box and clicking comment ({numref}`issue-04`).
 
 ```{r issue-04, fig.pos = "H", out.extra="", fig.cap = 'Dialog box for replying to GitHub issues.', fig.retina = 2, out.width="100%"}
 image_read("img/version_control/issue_04.png") |>
@@ -1446,7 +1446,7 @@ Schematic of local and remote version control repositories.
 
 When a conversation is resolved, you can click "Close issue". 
 The closed issue can be later viewed by clicking the "Closed" header link 
-in the "Issue" tab (Figure \@ref(fig:issue-06)).
+in the "Issue" tab ({numref}`issue-06`).
 
 (ref:issue-06) The "Closed" issues tab on the GitHub web interface.
 

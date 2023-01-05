@@ -40,3 +40,12 @@ starting her current position at UBC.
 
 **Joel Ostblom** is an Assistant Professor of Teaching in the Department of
 Statistics at the University of British Columbia. 
+During his PhD, Joel developed a passion for data science and reproducibility
+through the development of quantitative image analysis pipelines for studying
+stem cell and developmental biology. He has since co-created or lead the
+development of several courses and workshops at the University of Toronto and
+is now an assistant professor of teaching in the statistics department at the
+University of British Columbia. Joel cares deeply about spreading data literacy
+and excitement over programmatic data analysis, which is reflected in his
+contributions to open source projects and data science learning resources. You
+can read more about Joel on his [personal page](https://joelostblom.com/).

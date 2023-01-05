@@ -1266,51 +1266,43 @@ summary statistics that you can compute with `pandas`.
 What if you want to calculate summary statistics on an entire data frame? Well,
 it turns out that the functions in {numref}`tab:basic-summary-statistics`
 can be applied to a whole data frame!
-For example, we can ask for the number of rows that each column has using `count`.
-```{code-cell} ipython3
-region_lang.count()
-```
-Not surprisingly, they are all the same. We could also ask for the `mean`, but
-some of the columns in `region_lang` contain string data with words like `"Vancouver"`
-and `"Halifax"`---for these columns there is no way for `pandas` to compute the mean.
-So we provide the keyword `numeric_only=True` so that it only computes the mean of columns with numeric values. This
-is also needed if you want the `sum` or `std`.
-```{code-cell} ipython3
-region_lang.mean(numeric_only=True)
-```
-If we ask for the `min` or the `max`, `pandas` will give you the smallest or largest number
-for columns with numeric values. For columns with text, it will return the
-least repeated value for `min` and the most repeated value for `max`. Again,
-if you only want the minimum and maximum value for
-numeric columns, you can provide `numeric_only=True`.
+For example, we can ask for the maximum value of each each column has using `max`.
+
 ```{code-cell} ipython3
 region_lang.max()
 ```
+
+We can see that for columns that contain string data
+with words like `"Vancouver"` and `"Halifax"`,
+the maximum value is determined by sorting the string alphabetically
+and returning the last value.
+If we only want the maximum value for
+numeric columns,
+we can provide `numeric_only=True`:
+
 ```{code-cell} ipython3
-region_lang.min()
+region_lang.max(numeric_only=True)
 ```
 
-Similarly, if there are only some columns for which you would like to get summary statistics,
-you can first use `loc[]` and then ask for the summary statistic. An example of this is illustrated in {numref}`fig:summarize-across`.
-Later, we will talk about how you can also use a more general function, `apply`, to accomplish this.
+We could also ask for the `mean` for each columns in the dataframe.
+It does not make sense to compute the mean of the string columns,
+so in this case we *must* provide the keyword `numeric_only=True`
+so that the mean is only computed on columns with numeric values.
 
-```{figure} img/summarize/summarize.003.jpeg
-:name: fig:summarize-across
-:figclass: figure
-
-`loc[]` or `apply` is useful for efficiently calculating summary statistics on
-many columns at once. The darker, top row of each table represents the column
-headers.
+```{code-cell} ipython3
+region_lang.mean(numeric_only=True)
 ```
 
+If there are only some columns for which you would like to get summary statistics,
+you can first use `[]` to select those columns
+and then ask for the summary statistic,
+as we did for a single column previously:
 Lets say that we want to know
 the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
-We use `loc[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
+We use `[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
 ```{code-cell} ipython3
-region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
+region_lang["mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
-
-
 
 ## Performing operations on groups of rows using `groupby`
 

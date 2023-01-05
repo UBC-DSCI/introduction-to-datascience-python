@@ -4,10 +4,12 @@ parts:
 - caption: Front Matter
   chapters:
     - file: preface-text.md
-    - file: foreword-text.md
+    #- file: foreword.md
     - file: acknowledgements.md
+    - file: acknowledgements-python.md
     - file: authors.md
-    - file: setup.md
+    - file: editors.md
+    #- file: setup.md
 - caption: Chapters
   numbered: 3
   chapters:
@@ -26,4 +28,4 @@ parts:
 - caption: Appendix
   chapters:
     - file: appendixA.md
-    - file: references.md
+    #- file: references.md

@@ -224,7 +224,7 @@ affiliations, cities' populations, etc.
 
 ```{figure} img/spreadsheet_vs_df.png
 ---
-height: 400px
+height: 500px
 name: img-spreadsheet-vs-data frame
 ---
 A spreadsheet versus a data frame in Python
@@ -311,11 +311,9 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python.
 
-**(FIGURE 1.2 FROM R BOOK IS NOT MISSING, BUT STILL R VERSION. NEEDS PD.READ_CSV)**
-
-```{figure} img/read_csv_function.jpeg
+```{figure} img/read_csv_function.png
 ---
-height: 200px
+height: 220px
 name: img-read-csv
 ---
 Syntax for the `read_csv` function
@@ -324,6 +322,7 @@ Syntax for the `read_csv` function
 
 +++
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 pd.read_csv("data/can_lang.csv")
 
 ```
@@ -426,6 +425,7 @@ variables (i.e., columns) are printed just underneath the data frame (214 rows a
 Printing a few rows from data frame like this is a handy way to get a quick sense for what is contained in it.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 can_lang
 ```
 
@@ -486,11 +486,9 @@ or one of the names we have given to objects in the code we have already written
 > of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
 > Try both out for yourself!
 
-**(This figure is wrong-- should be for [] operation below)**
-
-```{figure} img/read_csv_function.jpeg
+```{figure} img/filter_rows.png
 ---
-height: 200px
+height: 220px
 name: img-filter
 ---
 Syntax for using the `[]` operation to filter rows.
@@ -500,6 +498,7 @@ This operation returns a data frame that has all the columns of the input data f
 but only those rows corresponding to Aboriginal languages that we asked for in the logical statement.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 can_lang[can_lang["category"] == "Aboriginal languages"]
 ```
 
@@ -519,11 +518,9 @@ selecting only the `language` and `mother_tongue` columns from our original
 `can_lang` data frame, we put the list `["language", "mother_tongue"]`
 containing those two column names inside the square brackets of the `[]` operation.
 
-**(This figure is wrong-- should be for [] operation below)**
-
-```{figure} img/read_csv_function.jpeg
+```{figure} img/select_columns.png
 ---
-height: 200px
+height: 220px
 name: img-select
 ---
 Syntax for using the `[]` operation to select columns.
@@ -553,18 +550,18 @@ that with the `.loc[]` method. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
-**(This figure is wrong-- should be for .loc[] operation below)**
-
-```{figure} img/read_csv_function.jpeg
+```{figure} img/filter_rows_and_columns.png
 ---
-height: 200px
+height: 220px
 name: img-loc
 ---
 Syntax for using the `loc[]` operation to filter rows and select columns.
 ```
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
+aboriginal_lang = can_lang.loc[
+  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
+]
 ```
 There is one very important thing to notice in this code example.
 The first is that we used the `loc[]` operation on the `can_lang` data frame by
@@ -610,7 +607,13 @@ language, we will use the `sort_values` function to order the rows in our
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
-**(FIGURE 1.5 FROM R BOOK MISSING HERE)**
+```{figure} img/sort_values.png
+---
+height: 220px
+name: img-sort-values
+---
+Syntax for using `sort_values` to arrange rows in decending order.
+```
 
 ```{code-cell} ipython3
 arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
@@ -636,8 +639,8 @@ ten_lang
 It took us 3 steps to find the ten Aboriginal languages most often reported in
 2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:
 
-1) used `loc` to filter the rows so that only the 
-   `Aboriginal languages` category remained, and selected the 
+1) used `loc` to filter the rows so that only the
+   `Aboriginal languages` category remained, and selected the
    `language` and `mother_tongue` columns,
 2) used `sort_values` to sort the rows by `mother_tongue` in descending order, and
 3) obtained only the top 10 values using `head`.
@@ -659,30 +662,30 @@ It is hard to keep track of what methods are being called, and what arguments we
 Second, each line introduces a new temporary object. In this case, both `aboriginal_lang` and `arranged_lang_sorted`
 are just temporary results on the way to producing the `ten_lang` data frame.
 This makes the code hard to read, as one has to trace where each temporary object
-goes, and hard to understand, since introducing many named objects also suggests that they 
+goes, and hard to understand, since introducing many named objects also suggests that they
 are of some importance, when really they are just intermediates.
 The need to call multiple methods in a sequence to process a data frame is
 quite common, so this is an important issue to address!
 
 To solve the first problem, we can actually split the long expressions above across
 multiple lines. Although in most cases, a single expression in Python must be contained
-in a single line of code, there are a small number of situations where lets us do this. 
+in a single line of code, there are a small number of situations where lets us do this.
 Let's rewrite this code in a more readable format using multiline expressions.
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[
-                    can_lang["category"] == "Aboriginal languages", 
-                    ["language", "mother_tongue"]]
+  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
+]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-                    by='mother_tongue', 
-                    ascending=False)
+  by='mother_tongue', ascending=False
+)
 ten_lang = arranged_lang_sorted.head(10)
 ```
 
 This code is the same as the code we showed earlier; you can see the same
 sequence of methods and arguments is used. But long expressions are split
 across multiple lines when they would otherwise get long and unwieldy,
-improving the readability of the code. 
+improving the readability of the code.
 How does Python know when to keep
 reading on the next line for a single expression?
 For the line starting with `aboriginal_lang = ...`, Python sees that the line ends with a left
@@ -692,7 +695,7 @@ We put the same two arguments as we did before, and then
 the corresponding right bracket appears after `["language", "mother_tongue"]`).
 For the line starting with `arranged_lang_sorted = ...`, Python sees that the line ends with a left parenthesis symbol `(`,
 and knows the expression cannot end until we close it with the corresponding right parenthesis symbol `)`.
-Again we use the same two arguments as before, and then the 
+Again we use the same two arguments as before, and then the
 corresponding right parenthesis appears right after `ascending=False`.
 In both cases, Python keeps reading the next line to figure out
 what the rest of the expression is. We could, of course,
@@ -701,7 +704,7 @@ multiple lines helps a lot with code readability.
 
 We still have to handle the issue that each line of code---i.e., each step in the analysis---introduces
 a new temporary object. To address this issue, we can *chain* multiple operations together without
-assigning intermediate objects. The key idea of chaining is that the *output* of 
+assigning intermediate objects. The key idea of chaining is that the *output* of
 each step in the analysis is a data frame, which means that you can just directly keep calling methods
 that operate on the output of each step in a sequence! This simplifies the code and makes it
 easier to read. The code below demonstrates the use of both multiline expressions and chaining together.
@@ -712,7 +715,7 @@ from the messy code above!
 # obtain the 10 most common Aboriginal languages
 ten_lang = (
     can_lang.loc[
-       can_lang["category"] == "Aboriginal languages", 
+       can_lang["category"] == "Aboriginal languages",
        ["language", "mother_tongue"]
     ]
     .sort_values(by="mother_tongue", ascending=False)
@@ -721,15 +724,15 @@ ten_lang = (
 ten_lang
 ```
 
-Let's parse this new block of code piece by piece. 
+Let's parse this new block of code piece by piece.
 The code above starts with a left parenthesis, `(`, and so Python
 knows to keep reading to subsequent lines until it finds the corresponding
 right parenthesis symbol `)`. The `loc` method performs the filtering and selecting steps as before. The line after this
-starts with a period (`.`) that "chains" the output of the `loc` step with the next operation, 
-`sort_values`. Since the output of `loc` is a data frame, we can use the `sort_values` method on it 
+starts with a period (`.`) that "chains" the output of the `loc` step with the next operation,
+`sort_values`. Since the output of `loc` is a data frame, we can use the `sort_values` method on it
 without first giving it a name! That is what the `.sort_values` does on the next line.
 Finally, we once again "chain" together the output of `sort_values` with `head` to ask for the 10
-most common languages. Finally, the right parenthesis `)` corresponding to the very first left parenthesis 
+most common languages. Finally, the right parenthesis `)` corresponding to the very first left parenthesis
 appears on the second last line, completing the multiline expression.
 Instead of creating intermediate objects, with chaining, we take the output of
 one operation and use that to perform the next operation. In doing so, we remove the need to create and
@@ -811,7 +814,13 @@ the `x` (represents the x-axis position of the points) and
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 
-**(FIGURE 1.6 FROM R BOOK IS MISSING)**
+```{figure} img/altair_syntax.png
+---
+height: 220px
+name: img-altair
+---
+Syntax for using `altair` to make a bar chart.
+```
 
 +++
 
@@ -819,11 +828,8 @@ and that the `mother_tongue` column should correspond to the y-axis.
 :tags: []
 
 barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x="language",
-        y="mother_tongue"
-    ))
+  alt.Chart(ten_lang).mark_bar().encode(x="language", y="mother_tongue")
+)
 
 
 ```
@@ -1099,9 +1105,50 @@ The documentation for the read_csv function including a high-level description, 
 
 +++
 
-If you are working in a Jupyter Lab environment, there are also two more convenient
-ways to access documentation for functions. **JOEL ADD TEXT AND IMAGES HERE**.
+If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
+and access the documentation.
+You can type the first characters of the function you want to use,
+and then press <kbd>Tab</kbd> to bring up small menu
+that shows you all the available functions
+that starts with those characters.
+This is helpful both for remembering function names
+and to prevent typos.
 
++++
+
+```{figure} img/completion_menu.png
+---
+height: 400px
+name: completion_menu
+---
+The suggestions that are shown after typing `pd.read` and pressing <kbd>Tab</kbd>.
+```
+
++++
+
+To get more info on the function you want to use,
+you can type out the full name
+and then hold <kbd>Shift</kbd> while pressing <kbd>Tab</kbd>
+to bring up a help dialogue including the same information as when using `help()`.
+
++++
+
+```{figure} img/help_dialog.png
+---
+height: 400px
+name: help_dialog
+---
+The help dialog that is shown after typing `pd.read_csv` and then pressing <kbd>Shift</kbd> + <kbd>Tab</kbd>.
+```
+
++++
+
+Finally,
+it can be helpful to have this help dialog open at all times,
+especially when you start out learning about programming and data science.
+You can achieve this by clicking on the `Help` text
+in the menu bar at the top
+and then selecting `Show Contextual Help`.
 
 ## Exercises
 

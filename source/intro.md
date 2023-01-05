@@ -1099,9 +1099,50 @@ The documentation for the read_csv function including a high-level description, 
 
 +++
 
-If you are working in a Jupyter Lab environment, there are also two more convenient
-ways to access documentation for functions. **JOEL ADD TEXT AND IMAGES HERE**.
+If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
+and access the documentation.
+You can type the first characters of the function you want to use,
+and then press <kbd>Tab</kbd> to bring up small menu
+that shows you all the available functions
+that starts with those characters.
+This is helpful both for remembering function names
+and to prevent typos.
 
++++
+
+```{figure} img/completion_menu.png
+---
+height: 400px
+name: completion_menu
+---
+The suggestions that are shown after typing `pd.read` and pressing <kbd>Tab</kbd>.
+```
+
++++
+
+To get more info on the function you want to use,
+you can type out the full name
+and then hold <kbd>Shift</kbd> while pressing <kbd>Tab</kbd>
+to bring up a help dialogue including the same information as when using `help()`.
+
++++
+
+```{figure} img/help_dialog.png
+---
+height: 400px
+name: help_dialog
+---
+The help dialog that is shown after typing `pd.read_csv` and then pressing <kbd>Shift</kbd> + <kbd>Tab</kbd>.
+```
+
++++
+
+Finally,
+it can be helpful to have this help dialog open at all times,
+especially when you start out learning about programming and data science.
+You can achieve this by clicking on the `Help` text
+in the menu bar at the top
+and then selecting `Show Contextual Help`.
 
 ## Exercises
 

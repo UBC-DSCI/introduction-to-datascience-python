@@ -25,4 +25,4 @@ parts:
 - caption: Appendix
   chapters:
     - file: appendixA.md
-    - file: references.md
+    #- file: references.md

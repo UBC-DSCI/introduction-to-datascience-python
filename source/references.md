@@ -13,6 +13,6 @@ kernelspec:
   name: python3
 ---
 
-`r if (knitr:::is_html_output()) '
-# References -- TBD
-'`
+# References 
+
+

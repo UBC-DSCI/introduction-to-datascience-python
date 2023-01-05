@@ -217,7 +217,8 @@ editing, and deleting files as you normally would&mdash;you must:
 
 In this section we will discuss all three of these steps in detail.
 
-### Committing changes to a local repository {#commit-changes}
+(commit-changes)=
+### Committing changes to a local repository 
 
 When working on files in your local version control 
 repository (e.g., using Jupyter) and saving your work, these changes will only initially exist in the
@@ -348,7 +349,7 @@ Once you have a remote repository set up, we recommend **cloning** (or copying) 
 repository to create a local repository in which you primarily work.
 You can clone the repository either
 on your own computer or in a workspace on a server (e.g., a JupyterHub server).
-Section \@ref(local-repo-jupyter) below will cover this second step in detail.
+Section {numref}`local-repo-jupyter` below will cover this second step in detail.
 
 ### Creating a remote repository on GitHub
 
@@ -360,9 +361,6 @@ your project by clicking on the "+" icon in the upper right-hand
 corner, and then on "New Repository," as shown in 
 {numref}`new-repository-01`.
 
-(ref:new-repository-01) 
-
-
 ```{figure} img/version_control/new_repository_01.png
 ---
 name: new-repository-01
@@ -372,7 +370,6 @@ New repositories on GitHub can be created by clicking on "New Repository" from t
 
 ```{index} repository;public
 ```
-
 
 
 Repositories can be set up with a variety of configurations, including a name, 
@@ -450,7 +447,7 @@ generates a useful version history for that file. On GitHub, if you click the
 green "Commit changes" button, it will save the file and then make a commit
 ({numref}`pen-tool-03`).
 
-Recall from Section \@ref(commit-changes) that you normally have to add files
+Recall from {numref}`commit-changes` that you normally have to add files
 to the staging area before committing them. Why don't we have to do that when
 we work directly on GitHub? Behind the scenes, when you click the green "Commit changes"
 button, GitHub *is* adding that one file to the staging area prior to committing it.
@@ -552,7 +549,7 @@ be human-readable. Committing one big archive defeats the whole purpose of using
 version control: you won't be able to see, interpret, or find changes in the history
 of any of the actual content of your project!
 
-## Working with local repositories using Jupyter {#local-repo-jupyter}
+## Working with local repositories using Jupyter
 
 ```{index} git;Jupyter extension
 ```
@@ -569,7 +566,7 @@ can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using
 the Jupyter Git extension. The Jupyter Git extension
 can be run by Jupyter on your local computer, or on a JupyterHub server. 
-*Note: we recommend reading Chapter \@ref(getting-started-with-jupyter)* 
+*Note: we recommend reading the {ref}`getting-started-with-jupyter` chapter* 
 *to learn how to use Jupyter before reading this chapter.*
 
 ### Generating a GitHub personal access token
@@ -587,7 +584,7 @@ There are several methods to do this,
 but for beginners we recommend using the HTTPS method 
 because it is easier and requires less setup.
 In order to use the HTTPS method, 
-GitHub requires you to provide a *personal access token*.  
+GitHub requires you to provide a *personal access token*.
 A personal access token is like a password&mdash;so keep it a secret!&mdash;but it gives
 you more fine-grained control over what parts of your account
 the token can be used to access, and lets you set an expiry date for the authentication.
@@ -685,7 +682,7 @@ The Jupyter Git Clone icon (red circle).
 Paste the URL of the GitHub project repository you 
 created and click the blue "CLONE" button ({numref}`clone-03`).
 
-```{figure} img/version_control/clone-03.png
+```{figure} img/version_control/clone_03.png
 ---
 name: clone-03
 ---
@@ -724,7 +721,7 @@ Jupyter Git extension icon (circled in red).
 
 
 This opens the Jupyter Git graphical user interface pane. Next,
-click the plus sign (+) beside the file(s) that you want to "add"  
+click the plus sign (+) beside the file(s) that you want to "add"
 ({numref}`git-add-02`). Note that because this is the 
 first change for this file, it falls under the "Untracked" heading. 
 However, next time you edit this file  and want to add the changes,
@@ -744,8 +741,7 @@ name: git-add-02
 
 Clicking the plus sign (+) moves the file from the "Untracked" heading to the "Staged" heading, 
 so that Git knows you want a snapshot of its current state 
-as a commit ({numref}`git-add-03`).
-Now you are ready to "commit" the changes. 
+as a commit ({numref}`git-add-03`). Now you are ready to "commit" the changes. 
 Make sure to include a (clear and helpful!) message about what was changed
 so that your collaborators (and future you) know what happened in this commit. 
 
@@ -1146,13 +1142,13 @@ The "Closed" issues tab on the GitHub web interface.
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Collaboration with version control" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter \@ref(move-to-your-own-machine). This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources {#vc-add-res}
@@ -1175,7 +1171,5 @@ you can expand your knowledge through the resources listed below:
   perfectly fine to just stick with GitHub. Just be aware that you have options!
 - GitHub's [documentation on creating a personal access
   token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-  and the *Happy Git and GitHub for the useR* 
-  [personal access tokens chapter](https://happygitwithr.com/https-pat.html) are both
-  excellent additional resources to consult if you need additional help
+  is an excellent additional resource to consult if you need help
   generating and using personal access tokens.

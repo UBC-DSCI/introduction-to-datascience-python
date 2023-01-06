@@ -194,7 +194,7 @@ It is important in Python to make sure you represent your data with the correct 
 Many of the `pandas` functions we use in this book treat
 the various data types differently. You should use `int` and `float` types
 to represent numbers and perform arithmetic. The `int` type is for integers that have no decimal point,
-while the `float` type is for numbers that have a decimal point. 
+while the `float` type is for numbers that have a decimal point.
 The `bool` type are boolean variables that can only take on one of two values: `True` or `False`.
 The `string` type is used to represent data that should
 be thought of as "text", such as words, names, paths, URLs, and more.
@@ -479,8 +479,6 @@ Going from wide to long with the `melt` function.
 in the `melt` function to accomplish this data transformation.
 
 +++ {"tags": []}
-
-**(FIGURE UPDATE NEEDED TO MATCH THE CODE BELOW)**
 
 ```{figure} img/wrangling/pandas_melt_args_labels.png
 :name: fig:img-pivot-longer
@@ -986,7 +984,7 @@ with higher numbers of people who speak it as their primary language at home
 compared to French in Montréal, then we can use `[]` to obtain rows
 where the value of `most_at_home` is greater than
 {glue:text}`most_french`. We use the `>` symbol to look for values *above* a threshold,
-and the `<` symbol to look for values *below* a threshold. The `>=` and `<=` 
+and the `<` symbol to look for values *below* a threshold. The `>=` and `<=`
 symbols similarly look for *equal to or above* a threshold and *equal to or below* a threshold.
 
 ```{code-cell} ipython3
@@ -1448,14 +1446,14 @@ so that we can convert them from `int64` to `int32`. We will use what is called
 a `lambda` function in python; `lambda` functions are just regular functions,
 except that you don't need to give them a name.
 That means you can pass them as an argument into `apply` easily!
-Let's consider a simple example of a `lambda` function that 
+Let's consider a simple example of a `lambda` function that
 multiplies a number by two.
 ```{code-cell} ipython3
 lambda x: 2*x
 ```
-We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word 
+We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word
 that tells Python "what follows is
-a function." Following this, we then state the name of the arguments of the function. 
+a function." Following this, we then state the name of the arguments of the function.
 In this case, we just have one argument named `x`. After the list of arguments, we put a
 colon `:`. And finally after the colon are the instructions: take the value provided and multiply it by 2.
 Let's call our shiny new `lambda` function with the argument `2` (so the output should be `4`).
@@ -1463,13 +1461,13 @@ Just like a regular function, we pass its argument between parentheses `()` symb
 ```{code-cell} ipython3
 (lambda x: 2*x)(2)
 ```
-> **Note:** Because we didn't give the `lambda` function a name, we have to surround it with 
+> **Note:** Because we didn't give the `lambda` function a name, we have to surround it with
 > parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
 > and think that `(2)` was part of the instructions that comprise the `lambda` function.
 > As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
-> we can pass a `lambda` function as an argument to `apply` without any parentheses. 
+> we can pass a `lambda` function as an argument to `apply` without any parentheses.
 
-Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"` 
+Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"`
 to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
 of the data frame, which we will name `col`---and apply the `astype` method to it.
 Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
@@ -1514,8 +1512,8 @@ region_lang_nums.apply(max, axis=1)
 
 We see that we get a column, which is the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
-and region. It is often the case that we want to include a column result 
-from using `apply` row-wise as a new column in the data frame, so that we can make 
+and region. It is often the case that we want to include a column result
+from using `apply` row-wise as a new column in the data frame, so that we can make
 plots or continue our analysis. To make this happen,
 we will use `assign` to create a new column. This is discussed in the next section.
 
@@ -1540,7 +1538,7 @@ with the new column added to it.
 
 To use the `assign` method, we specify one argument for each column we want to create.
 In this case we want to create one new column named `maximum`, so the argument
-to `assign` begins with `maximum = `. 
+to `assign` begins with `maximum = `.
 Then after the `=`, we specify what the contents of that new column
 should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
 Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
@@ -1550,7 +1548,7 @@ region_lang.assign(
   maximum = region_lang_nums.apply(max, axis=1)
 )
 ```
-This gives us a new data frame that looks like the `region_lang` data frame, 
+This gives us a new data frame that looks like the `region_lang` data frame,
 except that it has an additional column named `maximum`.
 The `maximum` column contains
 the maximum value between `mother_tongue`,
@@ -1575,7 +1573,7 @@ glue("toronto_popn", "{0:,.0f}".format(toronto_popn))
 glue("prop_eng_tor", "{0:.2f}".format(number_most_home / toronto_popn))
 ```
 
-As another example, we might ask the question: "What proportion of 
+As another example, we might ask the question: "What proportion of
 the population reported English as their primary language at home in the 2016 census?"
 For example, in Toronto, {glue:text}`number_most_home` people reported
 speaking English as their primary language at home, and the
@@ -1604,36 +1602,32 @@ english_lang
 ```
 
 Okay, now we have a data frame that pertains only to the English language
-and the five cities mentioned earlier. 
+and the five cities mentioned earlier.
 In order to compute the proportion of the population speaking English in each of these cities,
 we need to add the population data from the `five_cities` data frame.
 ```{code-cell} ipython3
 five_cities
 ```
-The data frame above shows that the populations of the five cities in 2016 were 
+The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
-We will add this information to our data frame in a new column named `city_pops` by using `assign`. 
-Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`, 
+We will add this information to our data frame in a new column named `city_pops` by using `assign`.
+Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`,
 and finally the data in the column.
 Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.
 So we will create a column called `city_pops` where we list the populations of those cities in that
 order, and add it to our data frame.
 Also note that we write `english_lang = ` on the left so that the newly created data frame overwrites our
-old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not 
+old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not
 modify the original data frame directly!
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang = english_lang.assign(
-				city_pops=[4098927, 
-						   5928040, 
-						   1392609, 
-						   1321426, 
-						   2463431
-				])
+  city_pops=[4098927, 5928040, 1392609, 1321426, 2463431]
+)
 english_lang
 ```
 > **Note**: Inserting data manually in this is generally very error-prone and is not recommended.
-> We do it here to demonstrate another usage of `assign` that does not involve `apply`. 
+> We do it here to demonstrate another usage of `assign` that does not involve `apply`.
 > But in more advanced data wrangling,
 > one would solve this problem in a less error-prone way using
 > the `merge` function, which lets you combine two data frames. We will show you an
@@ -1645,8 +1639,8 @@ proportion of people who speak English the most at home by taking the ratio of t
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang.assign(
-          proportion=english_lang["most_at_home"]/english_lang["city_pops"]
-      )
+    proportion=english_lang["most_at_home"]/english_lang["city_pops"]
+)
 ```
 
 
@@ -1737,7 +1731,7 @@ right order, and it could be easy to make a mistake this way. An alternative app
 is to (1) create a new, empty data frame, (2) use `assign` to assign the city names and populations in that
 data frame, and (3) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
 
-We create a new, empty data frame by calling `pd.DataFrame` with no arguments. 
+We create a new, empty data frame by calling `pd.DataFrame` with no arguments.
 We then use `assign` to add the city names in a column called `"region"`
 and their populations in a column called `"population"`.
 ```{code-cell} ipython3

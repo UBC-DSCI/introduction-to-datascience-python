@@ -138,8 +138,6 @@ region = pd.Series(["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"])
 region
 ```
 
-<!-- **(FIGURE 14 NEEDS UPDATING: (a) ZERO-BASED INDEXING, (b) TYPE SHOULD BE STRING (NOT CHARACTER))** -->
-
 +++ {"tags": []}
 
 ```{figure} img/wrangling/pandas_dataframe_series.png
@@ -1595,9 +1593,9 @@ and name the new data frame `english_langs`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang = region_lang[
-				(region_lang["language"] == "English") &
-				(region_lang["region"].isin(five_cities["region"]))
-			]
+    (region_lang["language"] == "English") &
+    (region_lang["region"].isin(five_cities["region"]))
+]
 english_lang
 ```
 

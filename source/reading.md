@@ -764,6 +764,7 @@ rows in a database, even though `pandas` does.
 ```
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_table_selected.tail(6)
 ```
 

@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# Acknowledgments -- TBD
+# Acknowledgments
 
 We'd like to thank everyone that has contributed to the development of 
 [*Data Science: A First Introduction*](https://datasciencebook.ca).

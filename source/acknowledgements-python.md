@@ -15,11 +15,11 @@ kernelspec:
 
 # Acknowledgments for the Python Edition
 
-We'd like to thank everyone that has contributed to the development of 
+We'd like to thank everyone that has contributed to the development of
 [*Data Science: A First Introduction (Python Edition)*](https://ubc-dsci.github.io/introduction-to-datascience-python/).
 This is an open source Python translation of the original [*Data Science: A First Introduction*](https://datasciencebook.ca);
-the original focused on the R programming language. Both of these books are 
-used to teach DSCI 100, a new introductory data science course 
+the original focused on the R programming language. Both of these books are
+used to teach DSCI 100, a new introductory data science course
 at the University of British Columbia (UBC).
 
 We will finalize this acknowledgements section after the book is complete!

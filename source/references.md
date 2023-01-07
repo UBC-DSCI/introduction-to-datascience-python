@@ -13,6 +13,6 @@ kernelspec:
   name: python3
 ---
 
-# References 
+# References
 
 

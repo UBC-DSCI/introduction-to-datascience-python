@@ -2,10 +2,10 @@ name: Rebuild and deploy book to gh-pages branch
 on:
   push:
     branches:
-      - production
+      - main
     paths:
       - source/**
-      
+
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
@@ -17,8 +17,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          ref: 'production'
-          
+          ref: 'main'
+
       - name: Build the book
         run: |
           ./build_html.sh

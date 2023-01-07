@@ -1160,7 +1160,7 @@ make sure to follow the instructions for computer setup
 found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-## Additional resources {#vc-add-res}
+## Additional resources
 
 Now that you've picked up the basics of version control with Git and GitHub, 
 you can expand your knowledge through the resources listed below:

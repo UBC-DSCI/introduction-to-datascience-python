@@ -1916,7 +1916,7 @@ glue("svg_size", svg_size)
   - {glue:}`svg_size` MB
 ```
 
-Take a look at the file sizes in {numref}`png-vs-svg-table`
+Take a look at the file sizes in {numref}`png-vs-svg-table`.
 Wow, that's quite a difference! In this case, the `.png` image is almost 4 times
 smaller than the `.svg` image. Since there are a decent number of points in the plot,
 the vector graphics format image (`.svg`) is bigger than the raster image (`.png`), which

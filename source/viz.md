@@ -1891,16 +1891,12 @@ faithful_scatter_labels.save("img/faithful_plot.svg")
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
 import os
 import numpy as np
 png_size = np.round(os.path.getsize("img/faithful_plot.png")/(1024*1024), 2)
 svg_size = np.round(os.path.getsize("img/faithful_plot.svg")/(1024*1024), 2)
 
-png_size, svg_size
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
 glue("png_size", png_size)
 glue("svg_size", svg_size)
 ```

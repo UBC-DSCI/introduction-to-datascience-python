@@ -30,6 +30,15 @@ Note that we assume that you already have Jupyter set up and ready to use. If th
 the {ref}`move-to-your-own-machine` chapter to learn how to install and configure Jupyter on your own
 computer. 
 
+```{note}
+This book was originally written for the R programming language, and
+has been edited to focus instead on Python. This chapter on Jupyter notebooks
+has not yet been fully updated to focus on Python; it has images and examples from 
+the R version of the book. But the concepts related to Jupyter notebooks are generally
+the same. We are currently working on producing new Python-based images and examples 
+for this chapter.
+```
+
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
@@ -39,15 +48,6 @@ By the end of the chapter, readers will be able to do the following:
 - Write, edit, and view text in a Jupyter notebook.
 - Open and view plain text data files in Jupyter.
 - Export Jupyter notebooks to other standard file types (e.g., `.html`, `.pdf`).
-
-## A Caveat for this Chapter
-
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on Jupyter notebooks
-has not yet been fully updated to focus on Python; it has images and examples from 
-the R version of the book. But the concepts related to Jupyter notebooks are generally
-the same. We are currently working on producing new Python-based images and examples 
-for this chapter.
 
 ## Jupyter
 

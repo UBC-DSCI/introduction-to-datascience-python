@@ -29,26 +29,26 @@ kernelspec:
 import altair as alt
 import numpy as np
 import pandas as pd
-import sklearn
-from sklearn.compose import make_column_transformer
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-from sklearn.metrics.pairwise import euclidean_distances
-from sklearn.model_selection import (
-    GridSearchCV,
-    RandomizedSearchCV,
-    cross_validate,
-    train_test_split,
-)
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
-alt.data_transformers.disable_max_rows()
-# alt.renderers.enable("mimetype")
+# import sklearn
+# from sklearn.compose import make_column_transformer
+# from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+# from sklearn.metrics.pairwise import euclidean_distances
+# from sklearn.model_selection import (
+#     GridSearchCV,
+#     RandomizedSearchCV,
+#     cross_validate,
+#     train_test_split,
+# )
+# from sklearn.neighbors import KNeighborsClassifier
+# from sklearn.pipeline import Pipeline, make_pipeline
+# from sklearn.preprocessing import OneHotEncoder, StandardScaler
+# 
+# alt.data_transformers.disable_max_rows()
+#  alt.renderers.enable("mimetype")
 
 from myst_nb import glue
 
-pd.options.display.max_colwidth = 100
+#pd.options.display.max_colwidth = 100
 ```
 
 ## Overview 
@@ -196,61 +196,62 @@ value, you get the same result!
 Let's use an example to investigate how randomness works in Python. Say we 
 have a series object containing the integers from 0 to 9. We want
 to randomly pick 10 numbers from that list, but we want it to be reproducible.
-We construct a `RandomState` object from the `numpy` package (with the short name `np`), 
-and pass it any integer as the `seed` argument. Below we use the seed number `1`. At 
-that point, the `RandomState` object can be used to keep track of the randomness that Python
-uses by passing it to functions that need randomness. For example, we can call the `sample` method
-on the series of numbers, passing it the `RandomState` object that we created
-as the `random_state` argument, and `n = 10` to indicate that we want 10 samples.
+Before randomly picking the 10 numbers,
+we call the `seed` function from the `numpy` package, and pass it any integer as the argument. 
+Below we use the seed number `1`. At 
+that point, Python will keep track of the randomness that occurs throughout the code.
+For example, we can call the `sample` method
+on the series of numbers, passing the argument `n = 10` to indicate that we want 10 samples.
 
 ```{code-cell} ipython3
 import numpy as np
 
-rnd = np.random.RandomState(seed = 1)
+np.random.seed(1)
+
 nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-random_numbers1 = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers1 = nums_0_to_9.sample(n = 10).values
 random_numbers1
 ```
 You can see that `random_numbers1` is a list of 10 numbers
 from 0 to 9 that, from all appearances, looks random. If 
-we run the `sample` method again, passing it the `rnd` object as the `random_state`, 
+we run the `sample` method again, 
 we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
-random_numbers2 = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers2 = nums_0_to_9.sample(n = 10).values
 random_numbers2
 ```
 
 If we want to force Python to produce the same sequences of random numbers,
-we can simply re-initialize the random state with the seed value `1` and then
-call the `sample` method again.
+we can simply call the `np.random.seed` function with the seed value `1`---the same
+as before---and then call the `sample` method again.
 
 ```{code-cell} ipython3
-rnd = np.random.RandomState(seed = 1)
-random_numbers1_again = nums_0_to_9.sample(n = 10, random_state = rnd).values
+np.random.seed(1)
+random_numbers1_again = nums_0_to_9.sample(n = 10).values
 random_numbers1_again
 ```
 
 ```{code-cell} ipython3
-random_numbers2_again = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers2_again = nums_0_to_9.sample(n = 10).values
 random_numbers2_again
 ```
 
-Notice that after re-initializing the `RandomState` object, we get the same
+Notice that after calling `np.random.seed`, we get the same
 two sequences of numbers in the same order. `random_numbers1` and `random_numbers1_again`
 produce the same sequence of numbers, and the same can be said about `random_numbers2` and
 `random_numbers2_again`. And if we choose a different value for the seed---say, 4235---we
 obtain a different sequence of random numbers.
 
 ```{code-cell} ipython3
-rnd = np.random.RandomState(seed = 4235)
-random_numbers = nums_0_to_9.sample(n = 10, random_state = rnd).values
+np.random.seed(4235)
+random_numbers = nums_0_to_9.sample(n = 10).values
 random_numbers
 ```
 
 ```{code-cell} ipython3
-random_numbers = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers = nums_0_to_9.sample(n = 10).values
 random_numbers
 ```
 
@@ -261,22 +262,56 @@ So what does this mean for data analysis? Well, `sample` is certainly not the
 only data frame method that uses randomness in Python. Many of the functions
 that we use in `scikit-learn`, `pandas`, and beyond use randomness&mdash;many
 of them without even telling you about it.  Also note that when Python starts
-up, it creates its own seed to use. So if you do not explicitly call the
-`np.random.seed` function in your code or specify the `random_state` argument
-in `scikit-learn` functions (where it is available), your results will likely
-not be reproducible.  And finally, be careful to set the seed *only once* at
+up, it creates its own seed to use. So if you do not explicitly 
+call the `np.random.seed` function, your results 
+will likely not be reproducible. Finally, be careful to set the seed *only once* at
 the beginning of a data analysis. Each time you set the seed, you are inserting
-your own human input, thereby influencing the analysis. If you use
-`np.random.choice` many times throughout your analysis, the randomness that
-Python uses will not look as random as it should.
+your own human input, thereby influencing the analysis. For example, if you use
+the `sample` many times throughout your analysis but set the seed each time, the 
+randomness that Python uses will not look as random as it should.
 
 In summary: if you want your analysis to be reproducible, i.e., produce *the same result*
-each time you run it, make sure to create a `RandomState` object exactly once
-at the beginning of the analysis, and pass that object to each function that
-uses randomness via the `random_state` argument. Different `seed` argument values
-will lead to different patterns of randomness, but as long as you pick the same
-argument value your result will be the same. In the remainder of the textbook,
+each time you run it, make sure to use `np.random.seed` exactly once
+at the beginning of the analysis. Different argument values
+in `np.random.seed` will lead to different patterns of randomness, but as long as you pick the same
+value your analysis results will be the same. In the remainder of the textbook,
 we will set the seed once at the beginning of each chapter.
+
+````{note}
+When you use `np.random.seed`, you are really setting the seed for the `numpy`
+package's *default random number generator*. Using the global default random
+number generator is easier than other methods, but has some potential drawbacks. For example,
+other code that you may not notice (e.g., code buried inside some
+other package) could potentially *also* call `np.random.seed`, thus modifying
+your analysis in an undesirable way. Furthermore, not *all* functions use 
+`numpy`'s random number generator; some may use another one entirely.
+In that case, setting `np.random.seed` may not actually make your whole analysis 
+reproducible.
+
+In this book, we will generally only use packages that play nicely with `numpy`'s
+default random number generator, so we will stick with `np.random.seed`. 
+You can achieve more careful control over randomness in your analysis 
+by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html) once at the beginning of your analysis, and passing it to 
+the `random_state` argument that is available in many `pandas` and `scikit-learn`
+functions. For example, we can reproduce our earlier example by using a `RandomState`
+object with the `seed` value set to 1; we get the same lists of numbers once again.
+```{code}
+rnd = np.random.RandomState(seed = 1)
+random_numbers1_third = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers1_third
+``` 
+```{code}
+array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
+```
+```{code}
+random_numbers2_third = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers2_third
+``` 
+```{code}
+array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
+```
+
+````
 
 ## Evaluating accuracy with `scikit-learn`
 
@@ -2140,6 +2175,7 @@ and guidance that the worksheets provide will function as intended.
   variables. Note that while this book is still a very accessible introductory
   text, it requires a bit more mathematical background than we require.
 
+ 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 

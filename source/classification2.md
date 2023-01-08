@@ -113,7 +113,6 @@ labels for new observations without known class labels.
 
 ```{figure} img/training_test.jpeg
 :name: fig:06-training-test
-:figclass: caption-hack
 
 Splitting the data into training and testing sets.
 ```
@@ -349,7 +348,6 @@ perim_concav
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 :name: fig:06-precode
-:figclass: caption-hack
 
 Scatter plot of tumor cell concavity versus smoothness colored by diagnosis label.
 ```
@@ -937,7 +935,6 @@ resulting in 5 different choices for the **validation set**; we call this
 
 ```{figure} img/cv.png
 :name: fig:06-cv-image
-:figclass: caption-hack
 
 5-fold cross-validation.
 ```
@@ -1509,7 +1506,6 @@ process is summarized in {numref}`fig:06-overview`.
 
 ```{figure} img/train-test-overview.jpeg
 :name: fig:06-overview
-:figclass: caption-hack
 
 Overview of KNN classification.
 ```

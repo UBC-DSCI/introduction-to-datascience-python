@@ -64,7 +64,7 @@ By the end of the chapter, readers will be able to do the following:
 - Describe what training, validation, and test data sets are and how they are used in classification.
 - Split data into training, validation, and test data sets.
 - Describe what a random seed is and its importance in reproducible data analysis.
-- Set the random seed in Python using either the `numpy.random.seed` function or `random_state` argument in `scikit-learn` functions.
+- Set the random seed in Python using the `numpy.random.seed` function. 
 - Evaluate classification accuracy in Python using a validation data set and appropriate metrics.
 - Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
 - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
@@ -291,9 +291,11 @@ reproducible.
 In this book, we will generally only use packages that play nicely with `numpy`'s
 default random number generator, so we will stick with `np.random.seed`. 
 You can achieve more careful control over randomness in your analysis 
-by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html) once at the beginning of your analysis, and passing it to 
+by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html) 
+once at the beginning of your analysis, and passing it to 
 the `random_state` argument that is available in many `pandas` and `scikit-learn`
-functions. For example, we can reproduce our earlier example by using a `RandomState`
+functions. Those functions will then use your `RandomState` to generate random numbers instead of 
+`numpy`'s default generator. For example, we can reproduce our earlier example by using a `RandomState`
 object with the `seed` value set to 1; we get the same lists of numbers once again.
 ```{code}
 rnd = np.random.RandomState(seed = 1)
@@ -327,8 +329,8 @@ We begin the analysis by loading the packages we require,
 reading in the breast cancer data,
 and then making a quick scatter plot visualization of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
-You will also notice that we set the random seed using either the `np.random.seed` function
-or `random_state` argument, as described in Section {ref}`randomseeds`.
+You will also notice that we set the random seed using the `np.random.seed` function, 
+as described in the {ref}`randomseeds` section.
 
 ```{code-cell} ipython3
 # load packages
@@ -340,15 +342,16 @@ np.random.seed(1)
 
 # load data
 cancer = pd.read_csv("data/unscaled_wdbc.csv")
-## re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign'
-cancer["Class"] = cancer["Class"].apply(
-    lambda x: "Malignant" if (x == "M") else "Benign"
-)
+# re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign',
+# and change the Class variable to have a category type
+cancer['Class'] = cancer['Class'].replace({
+				'M' : 'Malignant',
+				'B' : 'Benign'
+				})
+cancer['Class'] = cancer['Class'].astype('category')
 
 # create scatter plot of tumor cell concavity versus smoothness,
 # labeling the points be diagnosis class
-## create a list of colors that will be used to customize the color of points
-colors = ["#86bfef", "#efb13f"]
 
 perim_concav = (
     alt.Chart(cancer)
@@ -356,7 +359,7 @@ perim_concav = (
     .encode(
         x="Smoothness",
         y="Concavity",
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -389,7 +392,9 @@ and 25% for testing.
 
 The `train_test_split` function from `scikit-learn` handles the procedure of splitting
 the data for us. We can specify two very important parameters when using `train_test_split` to ensure
-that the accuracy estimates from the test data are reasonable. First, `shuffle=True` (default) means the data will be shuffled before splitting, which ensures that any ordering present
+that the accuracy estimates from the test data are reasonable. First,
+setting `shuffle=True` (which is the default) means the data will be shuffled before splitting,
+which ensures that any ordering present
 in the data does not influence the data that ends up in the training and testing sets.
 Second, by specifying the `stratify` parameter to be the target column of the training set,
 it **stratifies** the data by the class label, to ensure that roughly
@@ -401,7 +406,8 @@ so specifying `stratify` as the class column ensures that roughly 63% of the tra
 and the same proportions exist in the testing data.
 
 Let's use the `train_test_split` function to create the training and testing sets.
-We will specify that `train_size=0.75` so that 75% of our original data set ends up
+We first need to import the function from the `sklearn` package. Then
+we will specify that `train_size=0.75` so that 75% of our original data set ends up
 in the training set. We will also set the `stratify` argument to the categorical label variable
 (here, `cancer['Class']`) to ensure that the training and testing subsets contain the
 right proportions of each category of observation.
@@ -409,35 +415,10 @@ Note that the `train_test_split` function uses randomness, so we shall set `rand
 the split reproducible.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.model_selection import train_test_split
 
-# The `initial_split` function \index{tidymodels!initial\_split} from `tidymodels` handles the procedure of splitting
-# the data for us. It also applies two very important steps when splitting to ensure
-# that the accuracy estimates from the test data are reasonable. First, it
-# **shuffles** the \index{shuffling} data before splitting, which ensures that any ordering present
-# in the data does not influence the data that ends up in the training and testing sets.
-# Second, it **stratifies** the \index{stratification} data by the class label, to ensure that roughly
-# the same proportion of each class ends up in both the training and testing sets. For example,
-# in our data set, roughly 63% of the
-# observations are from the benign class (`B`), and 37% are from the malignant class (`M`),
-# so `initial_split` ensures that roughly 63% of the training data are benign, 
-# 37% of the training data are malignant,
-# and the same proportions exist in the testing data.
-
-# Let's use the `initial_split` function to create the training and testing sets.
-# We will specify that `prop = 0.75` so that 75% of our original data set ends up
-# in the training set. We will also set the `strata` argument to the categorical label variable
-# (here, `Class`) to ensure that the training and testing subsets contain the
-# right proportions of each category of observation.
-# The `training` and `testing` functions then extract the training and testing
-# data sets into two separate data frames.
-# Note that the `initial_split` function uses randomness, but since we set the 
-# seed earlier in the chapter, the split will be reproducible.
-```
-
-```{code-cell} ipython3
 cancer_train, cancer_test = train_test_split(
-    cancer, train_size=0.75, stratify=cancer["Class"], random_state=1
+    cancer, train_size=0.75, stratify=cancer["Class"]
 )
 cancer_train.info()
 ```
@@ -458,40 +439,28 @@ glue("cancer_test_nrow", len(cancer_test))
 
 We can see from `.info()` in the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
-a train / test split of 75% / 25%, as desired. Recall from Chapter {ref}`classification`
-that we use the `.info()` method to view data with a large number of columns,
-as it prints the data such that the columns go down the page (instead of across).
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We can see from `glimpse` in \index{glimpse} the code above that the training set contains `r nrow(cancer_train)`
-# observations, while the test set contains `r nrow(cancer_test)` observations. This corresponds to
-# a train / test split of 75% / 25%, as desired. Recall from Chapter \@ref(classification)
-# that we use the `glimpse` function to view data with a large number of columns,
-# as it prints the data such that the columns go down the page (instead of across).
-```
+a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification` chapter
+that we use the `.info()` method to preview the number of rows, the variable names, their data types, and 
+missing entries of a data frame.
 
 ```{index} groupby, count
 ```
 
-We can use `.groupby()` and `.count()` to find the percentage of malignant and benign classes 
-in `cancer_train` and we see about {glue:}`cancer_train_b_prop`% of the training
+We can use the `value_counts` method with the `normalize` argument set to `True` 
+to find the percentage of malignant and benign classes 
+in `cancer_train`. We see about {glue:}`cancer_train_b_prop`% of the training
 data are benign and {glue:}`cancer_train_m_prop`% 
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
 
 ```{code-cell} ipython3
-cancer_proportions = pd.DataFrame()
-cancer_proportions['n'] = cancer_train.groupby('Class')['ID'].count()
-cancer_proportions['percent'] = 100 * cancer_proportions['n'] / len(cancer_train)
-cancer_proportions
+cancer_train["Class"].value_counts(normalize = True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_train_b_prop", round(cancer_proportions.iloc[0, 1]))
-glue("cancer_train_m_prop", round(cancer_proportions.iloc[1, 1]))
+glue("cancer_train_b_prop", round(cancer_train["Class"].value_counts(normalize = True)["Benign"]*100))
+glue("cancer_train_m_prop", round(cancer_train["Class"].value_counts(normalize = True)["Malignant"]*100))
 ```
 
 ### Preprocess the data
@@ -509,17 +478,15 @@ training and test data sets.
 ```{index} pipeline, pipeline; make_column_transformer, pipeline; StandardScaler
 ```
 
-Fortunately, the `Pipeline` framework (together with column transformer) from `scikit-learn` helps us handle this properly. Below we construct and prepare the preprocessor using `make_column_transformer`. Later after we construct a full `Pipeline`, we will only fit it with the training data.
+Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our 
+analysis steps in a `Pipeline`, as in the {ref}`classification1` chapter.
+So below we construct and prepare
+the preprocessor using `make_column_transformer` just as before.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import make_column_transformer
 
-# Fortunately, the `recipe` framework from `tidymodels` helps us handle \index{recipe}\index{recipe!step\_scale}\index{recipe!step\_center}
-# this properly. Below we construct and prepare the recipe using only the training
-# data (due to `data = cancer_train` in the first line).
-```
-
-```{code-cell} ipython3
 cancer_preprocessor = make_column_transformer(
     (StandardScaler(), ["Smoothness", "Concavity"]),
 )
@@ -530,34 +497,23 @@ cancer_preprocessor = make_column_transformer(
 Now that we have split our original data set into training and test sets, we
 can create our $K$-nearest neighbors classifier with only the training set using
 the technique we learned in the previous chapter. For now, we will just choose
-the number $K$ of neighbors to be 3. To fit the model with only concavity and smoothness as the
-predictors, we need to explicitly create `X` (predictors) and `y` (target) based on `cancer_train`.
-As before we need to create a model specification, combine
-the model specification and preprocessor into a workflow, and then finally
-use `fit` with `X` and `y` to build the classifier.
+the number $K$ of neighbors to be 3, and use only the concavity and smoothness predictors by
+selecting them from the `cancer_train` data frame. 
+We will first import the `KNeighborsClassifier` model and `make_pipeline` from `sklearn`. 
+Then as before we will create a model object, combine
+the model object and preprocessor into a `Pipeline` using the `make_pipeline` function, and then finally
+use the `fit` method to build the classifier.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import make_pipeline
 
-# Now that we have split our original data set into training and test sets, we
-# can create our $K$-nearest neighbors classifier with only the training set using
-# the technique we learned in the previous chapter. For now, we will just choose
-# the number $K$ of neighbors to be 3, and use concavity and smoothness as the
-# predictors. As before we need to create a model specification, combine
-# the model specification and recipe into a workflow, and then finally
-# use `fit` with the training data `cancer_train` to build the classifier.
-```
-
-```{code-cell} ipython3
-# hidden seed
-# np.random.seed(1)
-
-knn_spec = KNeighborsClassifier(n_neighbors=3)  ## weights="uniform"
+knn = KNeighborsClassifier(n_neighbors=3) 
 
 X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 
-knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
 knn_fit
 ```
@@ -568,53 +524,19 @@ knn_fit
 ```
 
 Now that we have a $K$-nearest neighbors classifier object, we can use it to
-predict the class labels for our test set.  We use the `pandas.concat()` to add the
-column of predictions to the original test data, creating the
+predict the class labels for our test set.  We will use the `assign` method to 
+augment the original test data with a column of predictions, creating the
 `cancer_test_predictions` data frame. The `Class` variable contains the true
 diagnoses, while the `predicted` contains the predicted diagnoses from the
-classifier.
+classifier. Note that below we print out just the `ID`, `Class`, and `predicted`
+variables in the output data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we have a $K$-nearest neighbors classifier object, we can use it to
-# predict the class labels for our test set.  We use the `bind_cols` \index{bind\_cols} to add the
-# column of predictions to the original test data, creating the
-# `cancer_test_predictions` data frame.  The `Class` variable contains the true
-# diagnoses, while the `.pred_class` contains the predicted diagnoses from the
-# classifier.
-```
-
-```{code-cell} ipython3
-cancer_test_predictions = knn_fit.predict(
-    cancer_test.loc[:, ["Smoothness", "Concavity"]]
-)
-
-cancer_test_predictions = pd.concat(
-    [
-        pd.DataFrame(cancer_test_predictions, columns=["predicted"]),
-        cancer_test.reset_index(drop=True),
-    ],
-    axis=1,
-)  # add the predictions column to the original test data
-
-cancer_test_predictions
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## alternative way to add a column
-
-# # add the predictions column to the original test data
-# cancer_test_predictions = cancer_test.reset_index(drop=True).assign(
-#     predicted=cancer_test_predictions
-# )
-
-# # move the `predicted` column to the first column for easy visualization
-# col_order = cancer_test_predictions.columns.tolist()
-# col_order = col_order[-1:] + col_order[:-1]
-# cancer_test_predictions[col_order]
+cancer_test_predictions = cancer_test.assign(
+                  predicted = knn_fit.predict(
+                         cancer_test.loc[:, ["Smoothness", "Concavity"]]
+                  ))	
+cancer_test_predictions[['ID', 'Class', 'predicted']]
 ```
 
 ### Compute the accuracy
@@ -622,26 +544,30 @@ cancer_test_predictions
 ```{index} scikit-learn; score
 ```
 
-Finally, we can assess our classifier's accuracy. To do this we use the `score` method 
-from `scikit-learn` to get the statistics about the quality of our model, specifying
-the `X` and `y` arguments based on `cancer_test`.
-
+Finally, we can assess our classifier's accuracy. We could compute the accuracy manually
+by using our earlier formula: the number of correct predictions divided by the total
+number of predictions. First we filter the rows to find the number of correct predictions,
+and then divide the number of rows with correct predictions by the total number of rows
+using the `len` function.
 ```{code-cell} ipython3
-:tags: [remove-cell]
+correct_preds = cancer_test_predictions[
+    cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
+    ]
 
-# Finally, we can assess our classifier's accuracy. To do this we use the `metrics` function \index{tidymodels!metrics}
-# from `tidymodels` to get the statistics about the quality of our model, specifying
-# the `truth` and `estimate` arguments:
+len(correct_preds) / len(cancer_test_predictions)
 ```
 
+The `scitkit-learn` package also provides a more convenient way to do this using
+the `score` method. To use the `score` method, we need to specify two arguments:
+predictors and true labels. We pass the same test data
+for the predictors that we originally passed into `predict` when making predictions,
+and we provide the true labels via the `cancer_test["Class"]` series.
+
 ```{code-cell} ipython3
-# np.random.seed(1)
-
-X_test = cancer_test.loc[:, ["Smoothness", "Concavity"]]
-y_test = cancer_test["Class"]
-
-cancer_acc_1 = knn_fit.score(X_test, y_test)
-
+cancer_acc_1 = knn_fit.score(
+                cancer_test.loc[:, ["Smoothness", "Concavity"]],
+                cancer_test["Class"]
+              )
 cancer_acc_1
 ```
 
@@ -651,56 +577,33 @@ cancer_acc_1
 glue("cancer_acc_1", round(100*cancer_acc_1))
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In the metrics data frame, we filtered the `.metric` column since we are 
-# interested in the `accuracy` row. Other entries involve more advanced metrics that
-# are beyond the scope of this book. Looking at the value of the `.estimate` variable
-#  shows that the estimated accuracy of the classifier on the test data 
-# was `r round(100*cancer_acc_1$.estimate, 0)`%.
-```
++++
 
 The output shows that the estimated accuracy of the classifier on the test data 
 was {glue:}`cancer_acc_1`%.
-
-+++
-
-We can also look at the *confusion matrix* for the classifier as a `numpy` array using the `confusion_matrix` function:
-
-```{code-cell} ipython3
-# np.random.seed(1)
-
-confusion = confusion_matrix(
-    cancer_test_predictions["Class"],
-    cancer_test_predictions["predicted"],
-    labels=knn_fit.classes_,
-)
-
-confusion
-```
-
-It is hard for us to interpret the confusion matrix as shown above. We could use the `ConfusionMatrixDisplay` function of the `scikit-learn` package to plot the confusion matrix.
+We can also look at the *confusion matrix* for the classifier 
+using the `crosstab` function from `pandas`. The `crosstab` function
+takes two arguments: the true labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
-from sklearn.metrics import ConfusionMatrixDisplay
-
-confusion_display = ConfusionMatrixDisplay(
-    confusion_matrix=confusion, display_labels=knn_fit.classes_
-)
-confusion_display.plot();
+pd.crosstab(cancer_test_predictions["Class"],
+            cancer_test_predictions["predicted"]
+           )
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+_ctab = pd.crosstab(cancer_test_predictions["Class"],
+            cancer_test_predictions["predicted"]
+           )
 
-glue("confu11", confusion[1, 1])
-glue("confu00", confusion[0, 0])
-glue("confu10", confusion[1, 0])
-glue("confu01", confusion[0, 1])
-glue("confu11_00", confusion[1, 1] + confusion[0, 0])
-glue("confu10_11", confusion[1, 0] + confusion[1, 1])
-glue("confu_fal_neg", round(100 * confusion[1, 0] / (confusion[1, 0] + confusion[1, 1])))
+glue("confu11", _ctab["Malignant"]["Malignant"])
+glue("confu00", _ctab["Benign"]["Benign"])
+glue("confu10", _ctab["Benign"]["Malignant"])
+glue("confu01", _ctab["Malignant"]["Benign"])
+glue("confu11_00", _ctab["Malignant"]["Malignant"] + _ctab["Benign"]["Benign"])
+glue("confu10_11", _ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])
+glue("confu_fal_neg", round(100 * _ctab["Benign"]["Malignant"] / (_ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])))
 ```
 
 The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
@@ -754,7 +657,7 @@ As an example, in the breast cancer data, recall the proportions of benign and m
 observations in the training data are as follows:
 
 ```{code-cell} ipython3
-cancer_proportions
+cancer_train["Class"].value_counts(normalize = True)
 ```
 
 Since the benign class represents the majority of the training data,
@@ -770,7 +673,8 @@ the $K$-nearest neighbors classifier improved quite a bit on the basic
 majority classifier. Hooray! But we still need to be cautious; in 
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
-that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
+that the classifier does, indeed, misdiagnose a significant number of 
+malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
 Therefore, even though the accuracy improved upon the majority classifier,
 our critical analysis suggests that this classifier may not have appropriate performance
 for the application.

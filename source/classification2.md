@@ -582,7 +582,9 @@ glue("cancer_acc_1", round(100*cancer_acc_1))
 The output shows that the estimated accuracy of the classifier on the test data 
 was {glue:}`cancer_acc_1`%.
 We can also look at the *confusion matrix* for the classifier 
-using the `crosstab` function from `pandas`. The `crosstab` function
+using the `crosstab` function from `pandas`. A confusion matrix shows how many 
+observations of each (true) label were classified as each (predicted) label.
+The `crosstab` function
 takes two arguments: the true labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
@@ -744,92 +746,67 @@ models, and evaluate their accuracy. We will start with just a single
 split.
 
 ```{code-cell} ipython3
-# create the 25/75 split of the training data into training and validation
+# create the 25/75 split of the *training data* into sub-training and validation
 cancer_subtrain, cancer_validation = train_test_split(
-    cancer_train, test_size=0.25, random_state=1
+    cancer_train, test_size=0.25
 )
 
-# could reuse the standardization preprocessor from before
-# (but now we want to fit with the cancer_subtrain)
+# fit the model on the sub-training data
+knn = KNeighborsClassifier(n_neighbors=3) 
 X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
 y = cancer_subtrain["Class"]
-knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
-# get predictions on the validation data
-validation_predicted = knn_fit.predict(
-    cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-)
-validation_predicted = pd.concat(
-    [
-        pd.DataFrame(validation_predicted, columns=["predicted"]),
-        cancer_validation.reset_index(drop=True),
-    ],
-    axis=1,
-)  # to add the predictions column to the original test data
-
-# compute the accuracy
-X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-y_valid = cancer_validation["Class"]
-acc = knn_fit.score(X_valid, y_valid)
-
+# compute the score on validation data
+acc = knn_fit.score(
+        cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+        cancer_validation["Class"]
+       )
 acc
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue(f"acc_seed1", round(100 * acc, 1))
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-accuracies = []
-for i in range(1, 6):
+accuracies = [acc]
+for i in range(1, 5):
     # create the 25/75 split of the training data into training and validation
     cancer_subtrain, cancer_validation = train_test_split(
-        cancer_train, test_size=0.25, random_state=i
+        cancer_train, test_size=0.25
     )
 
-    # could reuse the standardization preprocessor from before
-    # (but now we want to fit with the cancer_subtrain)
+    # fit the model on the sub-training data
+    knn = KNeighborsClassifier(n_neighbors=3) 
     X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
-    knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+    knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
-    # get predictions on the validation data
-    validation_predicted = knn_fit.predict(
-        cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-    )
-    validation_predicted = pd.concat(
-        [
-            pd.DataFrame(validation_predicted, columns=["predicted"]),
-            cancer_validation.reset_index(drop=True),
-        ],
-        axis=1,
-    )  # to add the predictions column to the original test data
-
-    # compute the accuracy
-    X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-    y_valid = cancer_validation["Class"]
-    acc_ = knn_fit.score(X_valid, y_valid)
-    accuracies.append(acc_)
-accuracies
+    # compute the score on validation data
+    accuracies.append(knn_fit.score(
+        cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+        cancer_validation["Class"]
+       ))
+avg_accuracy = np.round(np.array(accuracies).mean()*100,1)
+accuracies = list(np.round(np.array(accuracies)*100, 1))
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-for i in range(1, 6):
-    glue(f"acc_split{i}", round(100 * accuracies[i-1], 1))
-glue("avg_5_splits", round(100 * sum(accuracies) / len(accuracies)))
+glue(f"acc_seed1", np.round(100 * acc,1))
+glue("avg_5_splits", avg_accuracy)
+glue("accuracies", accuracies)
 ```
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+```
+
+
 
 The accuracy estimate using this split is {glue:}`acc_seed1`%.
 Now we repeat the above code 4 more times, which generates 4 more splits.
 Therefore we get five different shuffles of the data, and therefore five different values for
-accuracy: {glue:}`acc_split1`%, {glue:}`acc_split2`%, {glue:}`acc_split3`%, 
-{glue:}`acc_split4`%, {glue:}`acc_split5`%. None of these values are
+accuracy: {glue:}`accuracies` (each a percentage). None of these values are
 necessarily "more correct" than any other; they're
 just five estimates of the true, underlying accuracy of our classifier built
 using our overall training data. We can combine the estimates by taking their

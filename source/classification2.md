@@ -1771,7 +1771,7 @@ training over 1000 candidate models with $m=10$ predictors, forward selection re
 
 +++
 
-### Forward selection in Python
+### Forward selection in `scikit-learn`
  
 We now turn to implementing forward selection in Python.
 The function [`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 

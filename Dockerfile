@@ -18,6 +18,7 @@ RUN mamba install --quiet --yes \
         'numpy' \
         'jinja2' \
         'altair_data_server' \
+        'altair_saver' \
         'click' \
         'ibis-framework' \
         'ghp-import' \

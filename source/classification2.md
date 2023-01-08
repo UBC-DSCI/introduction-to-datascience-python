@@ -64,7 +64,7 @@ By the end of the chapter, readers will be able to do the following:
 - Describe what training, validation, and test data sets are and how they are used in classification.
 - Split data into training, validation, and test data sets.
 - Describe what a random seed is and its importance in reproducible data analysis.
-- Set the random seed in Python using the `numpy.random.seed` function or `random_state` argument in some of the `scikit-learn` functions.
+- Set the random seed in Python using either the `numpy.random.seed` function or `random_state` argument in `scikit-learn` functions.
 - Evaluate classification accuracy in Python using a validation data set and appropriate metrics.
 - Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
 - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
@@ -146,7 +146,6 @@ books on this topic.
 
 ```{figure} img/ML-paradigm-test.png
 :name: fig:06-ML-paradigm-test
-:figclass: caption-hack
 
 Process for splitting the data and finding the prediction accuracy.
 ```

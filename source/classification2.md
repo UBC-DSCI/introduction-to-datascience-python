@@ -415,6 +415,13 @@ Note that the `train_test_split` function uses randomness, so we shall set `rand
 the split reproducible.
 
 ```{code-cell} ipython3
+# seed hacking to get a split that makes 10-fold have a lower std error than 5-fold
+np.random.seed(5)
+```
+
+
+
+```{code-cell} ipython3
 from sklearn.model_selection import train_test_split
 
 cancer_train, cancer_test = train_test_split(
@@ -837,88 +844,54 @@ resulting in 5 different choices for the **validation set**; we call this
 5-fold cross-validation.
 ```
 
-+++
-
-To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
-function: `cross_validate`. This function splits our training data into `cv` folds
-automatically. 
-According to its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html), the parameter `cv`:
-
-> For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, [`StratifiedKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold) is used.
-
-This means `cross_validate` will ensure that the training and validation subsets contain the
-right proportions of each category of observation.
 
 +++
 
 ```{index} cross-validation; cross_validate, scikit-learn; cross_validate
 ```
 
-When we run the `cross_validate` function, cross-validation is carried out on each
-train/validation split. We can set `return_train_score=True` to obtain the training scores as well as the validation scores. The `cross_validate` function outputs a dictionary, and we use `pd.DataFrame` to convert it to a `pandas` dataframe for better visualization. (Noteworthy, the `test_score` column is actually the validation scores that we are interested in.)
+To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
+function: `cross_validate`. This function requires that we specify 
+a modelling `Pipeline` as the `estimator` argument,
+the number of folds as the `cv` argument,
+and the training data predictors and labels as the `X` and `y` arguments.
+Since the `cross_validate` function outputs a dictionary, we use `pd.DataFrame` to convert it to a `pandas`
+dataframe for better visualization. 
+Note that the `cross_validate` function handles stratifying the classes in
+each train and validate fold automatically. 
+We begin by importing the `cross_validate` function from `sklearn`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.model_selection import cross_validate
 
-# To perform 5-fold cross-validation in R with `tidymodels`, we use another
-# function: `vfold_cv`. \index{tidymodels!vfold\_cv}\index{cross-validation!vfold\_cv} This function splits our training data into `v` folds
-# automatically. We set the `strata` argument to the categorical label variable
-# (here, `Class`) to ensure that the training and validation subsets contain the
-# right proportions of each category of observation.
-```
-
-```{code-cell} ipython3
-cancer_pipe = make_pipeline(cancer_preprocessor, knn_spec)
-X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
-y = cancer_subtrain["Class"]
-cv_5 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=5,
-    return_train_score=True,
+knn = KNeighborsClassifier(n_neighbors=3) 
+cancer_pipe = make_pipeline(cancer_preprocessor, knn)
+X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_train["Class"]
+cv_5_df = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=5,
+        X=X,
+        y=y
+    )
 )
 
-cv_5_df = pd.DataFrame(cv_5)
 cv_5_df
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Then, when we create our data analysis workflow, we use the `fit_resamples` function \index{cross-validation!fit\_resamples}\index{tidymodels!fit\_resamples}
-# instead of the `fit` function for training. This runs cross-validation on each
-# train/validation split. 
-```
-
+The validation scores we are interested in are contained in the `test_score` column.
 We can then aggregate the *mean* and *standard error*
 of the classifier's validation accuracy across the folds. 
 You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
-error (`std`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
+error (`sem`) is a measure of how uncertain we are in that mean value. A detailed treatment of this
 is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:}`cv_5_mean` and standard
 error is {glue:}`cv_5_std`, you can expect the *true* average accuracy of the 
 classifier to be somewhere roughly between {glue:}`cv_5_lower`% and {glue:}`cv_5_upper`% (although it may
 fall outside this range). You may ignore the other columns in the metrics data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The `collect_metrics` \index{tidymodels!collect\_metrics}\index{cross-validation!collect\_metrics} function is used to aggregate the *mean* and *standard error*
-# of the classifier's validation accuracy across the folds. You will find results
-# related to the accuracy in the row with `accuracy` listed under the `.metric` column. 
-# You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
-# error (`std_err`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
-# is beyond the scope of this chapter; but roughly, if your estimated mean is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2)` and standard
-# error is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2)`, you can expect the *true* average accuracy of the 
-# classifier to be somewhere roughly between `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) - round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% and `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) + round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% (although it may
-# fall outside this range). You may ignore the other columns in the metrics data frame,
-# as they do not provide any additional insight.
-# You can also ignore the entire second row with `roc_auc` in the `.metric` column,
-# as it is beyond the scope of this book.
-```
-
-```{code-cell} ipython3
-cv_5_metrics = cv_5_df.aggregate(func=['mean', 'std'])
+cv_5_metrics = cv_5_df.agg(['mean', 'sem'])
 cv_5_metrics
 ```
 
@@ -926,14 +899,14 @@ cv_5_metrics
 :tags: [remove-cell]
 
 glue("cv_5_mean", round(cv_5_metrics.loc["mean", "test_score"], 2))
-glue("cv_5_std", round(cv_5_metrics.loc["std", "test_score"], 2))
+glue("cv_5_std", round(cv_5_metrics.loc["sem", "test_score"], 2))
 glue(
     "cv_5_upper",
     round(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
-            + round(cv_5_metrics.loc["std", "test_score"], 2)
+            + round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
     ),
 )
@@ -943,7 +916,7 @@ glue(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
-            - round(cv_5_metrics.loc["std", "test_score"], 2)
+            - round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
     ),
 )
@@ -957,52 +930,41 @@ it takes to run the analysis. So when you do cross-validation, you need to
 consider the size of the data, the speed of the algorithm (e.g., $K$-nearest
 neighbors), and the speed of your computer. In practice, this is a 
 trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
-we will try 10-fold cross-validation to see if we get a lower standard error:
+we will try 10-fold cross-validation to see if we get a lower standard error.
 
 ```{code-cell} ipython3
-cv_10 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=10,
-    return_train_score=True,
+cv_10 = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=10,
+        X=X,
+        y=y
+    )
 )
 
 cv_10_df = pd.DataFrame(cv_10)
-cv_10_metrics = cv_10_df.aggregate(func=['mean', 'std'])
+cv_10_metrics = cv_10_df.agg(['mean', 'sem'])
 cv_10_metrics
 ```
 
-In this case, using 10-fold instead of 5-fold cross validation did increase the standard error. In fact, due to the randomness in how the data are split, sometimes
-you might even end up with a *lower* standard error when increasing the number of folds!
-The increase in standard error can become more dramatic by increasing the number of folds 
+In this case, using 10-fold instead of 5-fold cross validation did 
+reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
+you might even end up with a *higher* standard error when increasing the number of folds!
+We can make the reduction in standard error more dramatic by increasing the number of folds 
 by a large amount. In the following code we show the result when $C = 50$; 
-picking such a large number of folds often takes a long time to run in practice, 
+picking such a large number of folds can take a long time to run in practice, 
 so we usually stick to 5 or 10.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In this case, using 10-fold instead of 5-fold cross validation did reduce the standard error, although
-# by only an insignificant amount. In fact, due to the randomness in how the data are split, sometimes
-# you might even end up with a *higher* standard error when increasing the number of folds!
-# We can make the reduction in standard error more dramatic by increasing the number of folds 
-# by a large amount. In the following code we show the result when $C = 50$; 
-# picking such a large number of folds often takes a long time to run in practice, 
-# so we usually stick to 5 or 10.
-```
-
-```{code-cell} ipython3
-cv_50 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=50,
-    return_train_score=True,
+cv_50_df = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=50,
+        X=X,
+        y=y
+    )
 )
-
-cv_50_df = pd.DataFrame(cv_50)
-cv_50_metrics = cv_50_df.aggregate(func=['mean', 'std'])
+cv_50_metrics = cv_50_df.agg(['mean', 'sem'])
 cv_50_metrics
 ```
 
@@ -1027,7 +989,10 @@ In order to improve our classifier, we have one choice of parameter: the number 
 neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
 classifier, we can use cross-validation to calculate an accuracy for each value
 of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-best accuracy. The `scikit-learn` package collection provides 2 build-in methods for tuning parameters. Each parameter in the model can be adjusted rather than given a specific value. We can define a set of values for each hyperparameters and find the best parameters in this set.
+best accuracy. The `scikit-learn` package collection provides two built-in methods 
+for tuning parameters. Each parameter in the model can be adjusted rather 
+than given a specific value. We can define a set of values for each hyperparameters 
+and find the best parameters in this set.
 
 - Exhaustive grid search
     - [`sklearn.model_selection.GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
@@ -1201,7 +1166,7 @@ $K =$ {glue:}`best_k_unique` for the classifier.
 ### Under/Overfitting
 
 To build a bit more intuition, what happens if we keep increasing the number of
-neighbors $K$? In fact, the accuracy actually starts to decrease! 
+neighbors $K$? In fact, the cross-validation accuracy actually estimate starts to decrease! 
 Let's specify a much larger range of values of $K$ to try in the `param_grid` 
 argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as 
 we vary $K$ from 1 to almost the number of observations in the data set.
@@ -1420,7 +1385,7 @@ The overall workflow for performing $K$-nearest neighbors classification using `
 3. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
 4. Use the `GridSearchCV` function (or `RandomizedSearchCV`) to estimate the classifier accuracy for a range of $K$ values. Pass the parameter grid and the pipeline defined in step 2 and step 3 as the `param_grid` argument and the `estimator` argument, respectively.
 5. Call `fit` on the `GridSearchCV` instance created in step 4, passing the training data.
-6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
+6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
 
@@ -1435,7 +1400,7 @@ The overall workflow for performing $K$-nearest neighbors classification using `
 # 3. Create a `recipe` that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the `data` argument of the recipe.
 # 4. Create a `nearest_neighbors` model specification, with `neighbors = tune()`.
 # 5. Add the recipe and model specification to a `workflow()`, and use the `tune_grid` function on the train/validation splits to estimate the classifier accuracy for a range of $K$ values.
-# 6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
+# 6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 # 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier using the `fit` function.
 # 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
 ```
@@ -1582,7 +1547,7 @@ for i in range(len(ks)):
     )
 
     cv_5 = cross_validate(estimator=cancer_fixed_pipe, X=X, y=y, cv=5)
-    cv_5_metrics = pd.DataFrame(cv_5).aggregate(func=["mean", "std"])
+    cv_5_metrics = pd.DataFrame(cv_5).agg(["mean", "sem"])
     fixedaccs.append(cv_5_metrics.loc["mean", "test_score"])
 ```
 
@@ -1859,7 +1824,10 @@ This means that {glue:}`sequentialfeatureselector_n_features` features were sele
 
 +++
 
-Now, let's code the actual algorithm by ourselves. The key idea of the forward selection code is to properly extract each subset of predictors for which we want to build a model, pass them to the preprocessor and fit the pipeline with them.
+Now, let's code the actual algorithm by ourselves. The key idea of the forward
+selection code is to properly extract each subset of predictors for which we
+want to build a model, pass them to the preprocessor and fit the pipeline with
+them.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

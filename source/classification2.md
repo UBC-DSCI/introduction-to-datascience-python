@@ -989,113 +989,116 @@ In order to improve our classifier, we have one choice of parameter: the number 
 neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
 classifier, we can use cross-validation to calculate an accuracy for each value
 of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-best accuracy. The `scikit-learn` package collection provides two built-in methods 
-for tuning parameters. Each parameter in the model can be adjusted rather 
-than given a specific value. We can define a set of values for each hyperparameters 
-and find the best parameters in this set.
+best accuracy. The `scikit-learn` package collection provides built-in 
+functionality, named `GridSearchCV`, to automatically handle the details for us.
+Before we use `GridSearchCV`, we need to create a new pipeline
+with a `KNeighborsClassifier` that has the number of neighbors left unspecified.
 
-- Exhaustive grid search
-    - [`sklearn.model_selection.GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
-    - A user specifies a set of values for each hyperparameter.
-    - The method considers product of the sets and then evaluates each combination one by one.
-    
-- Randomized hyperparameter optimization
-    - [`sklearn.model_selection.RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
-    - Samples configurations at random until certain budget (e.g., time) is exhausted
+```{code-cell} ipython3
+knn = KNeighborsClassifier()
+cancer_tune_pipe = make_pipeline(cancer_preprocessor, knn)
+```
 
 +++
 
-Let us walk through how to use `GridSearchCV` to tune the model. `RandomizedSearchCV` follows a similar workflow, and you will get to practice both of them in the worksheet.
-
+Next we specify the grid of parameter values that we want to try for 
+each tunable parameter. We do this in a Python dictionary: the key is 
+the identifier of the parameter to tune, and the value is a list of parameter values
+to try when tuning. We can find the "identifier" of a parameter by using
+the `get_params` method on the pipeline.
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In order to improve our classifier, we have one choice of parameter: the number of
-# neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
-# classifier, we can use cross-validation to calculate an accuracy for each value
-# of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-# best accuracy. The `tidymodels` package collection provides a very simple
-# syntax for tuning models: each parameter in the model to be tuned should be specified
-# as `tune()` in the model specification rather than given a particular value.
+cancer_tune_pipe.get_params()
 ```
-
-Before we use `GridSearchCV` (or `RandomizedSearchCV`), we should define the parameter grid by passing the set of values for each parameters that you would like to tune in a Python dictionary; below we create the `param_grid` dictionary with `kneighborsclassifier__n_neighbors` as the key and pair it with the values we would like to tune from 1 to 100 (stepping by 5) using the `range` function.  We would also need to redefine the pipeline to use default values for parameters.
-
+Wow, there's quite a bit of *stuff* there! If you sift through the muck
+a little bit, you will see one parameter identifier that stands out:
+`"kneighborsclassifier__n_neighbors"`. This identifier combines the name
+of the K nearest neighbors classification step in our pipeline, `kneighborsclassifier`,
+with the name of the parameter, `n_neighbors`.
+We now construct the `parameter_grid` dictionary that will tell `GridSearchCV`
+what parameter values to try.
+Note that you can specify multiple tunable parameters
+by creating a dictionary with multiple key-value pairs, but
+here we just have to tune the number of neighbors.
 ```{code-cell} ipython3
-param_grid = {
+parameter_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 100, 5),
 }
-cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+```
+The `range` function in Python that we used above allows us to specify a sequence of values.
+The first argument is the starting number (here, `1`), 
+the second argument is *one greater than* the final number (here, `100`),
+and the third argument is the number to values to skip between steps in the sequence (here, `5`).
+So in this case we generate the sequence 1, 6, 11, 16, ..., 96.
+If we instead specified `range(0, 100, 5)`, we would get the sequence 0, 5, 10, 15, ..., 90, 95.
+The number 100 is not included because the third argument is *one greater than* the final possible
+number in the sequence. There are two additional useful ways to employ `range`.
+If we call `range` with just one argument, Python counts
+up to that number starting at 0. So `range(4)` is the same as `range(0, 4, 1)` and generates the sequence 0, 1, 2, 3.
+If we call `range` with two arguments, Python counts starting at the first number up to the second number.
+So `range(1, 4)` is the same as `range(1, 4, 1)` and generates the sequence `1, 2, 3`.
+
+```{index} cross-validation; GridSearchCV, scikit-learn; GridSearchCV, scikit-learn; RandomizedSearchCV
 ```
 
-```{index} cross-validation; GridSearchCV, cross-validation; RandomizedSearchCV, scikit-learn; GridSearchCV, scikit-learn; RandomizedSearchCV
-```
+Okay! We are finally ready to create the `GridSearchCV` object.
+First we import it from the `sklearn` package.
+Then we pass it the `cancer_tune_pipe` pipeline in the `estimator` argument,
+the `parameter_grid` in the `param_grid` argument,
+and specify `cv=10` folds. Note that this does not actually run
+the tuning yet; just as before, we will have to use the `fit` method.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.model_selection import GridSearchCV
 
-# Then instead of using `fit` or `fit_resamples`, we will use the `tune_grid` function \index{cross-validation!tune\_grid}\index{tidymodels!tune\_grid}
-# to fit the model for each value in a range of parameter values. 
-# In particular, we first create a data frame with a `neighbors`
-# variable that contains the sequence of values of $K$ to try; below we create the `k_vals`
-# data frame with the `neighbors` variable containing values from 1 to 100 (stepping by 5) using 
-# the `seq` function.
-# Then we pass that data frame to the `grid` argument of `tune_grid`.
-```
-
-Now, let us create the `GridSearchCV` object and the `RandomizedSearchCV` object by passing the new pipeline `cancer_tune_pipe` and the `param_grid` dictionary to the respective functions. `n_jobs=-1` means using all the available processors.
-
-```{code-cell} ipython3
 cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
-    param_grid=param_grid,
-    cv=10,
-    n_jobs=-1,
-    return_train_score=True,
+    param_grid=parameter_grid,
+    cv=10
 )
 ```
 
-Now, let us fit the model to the training data. The attribute `cv_results_` of the fitted model is a dictionary of `numpy` arrays containing all cross-validation results from different choices of parameters. We can visualize them more clearly through a dataframe.
+Now we use the `fit` method on the `GridSearchCV` object to begin the tuning process.
+We pass the training data predictors and labels as the two arguments to `fit` as usual.
+The `cv_results_` attribute of the output contains the resulting cross-validation
+accuracy estimate for each choice of `n_neighbors`, but it isn't in an easily used
+format. We will wrap it in a `pd.DataFrame` to make it easier to understand,
+and print the `info` of the result.
 
 ```{code-cell} ipython3
-X_tune = cancer_train.loc[:, ["Smoothness", "Concavity"]]
-y_tune = cancer_train["Class"]
-
-cancer_model_grid = cancer_tune_grid.fit(X_tune, y_tune)
-
-accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
+accuracies_grid = pd.DataFrame(
+             cancer_tune_grid
+             .fit(cancer_train.loc[:, ["Smoothness", "Concavity"]],
+                  cancer_train["Class"]
+            ).cv_results_)
 ```
 
 ```{code-cell} ipython3
 accuracies_grid.info()
 ```
+There is a lot of information to look at here, but we are most interested
+in three quantities: the number of neighbors (`param_kneighbors_classifier__n_neighbors`),
+the cross-validation accuracy estimate (`mean_test_score`), 
+and the standard error of the accuracy estimate. Unfortunately `GridSearchCV` does
+not directly output the standard error for each cross-validation accuracy; but
+it *does* output the standard *deviation* (`std_test_score`). We can compute
+the standard error from the standard deviation by dividing it by the square
+root of the number of folds, i.e., 
+  
+$$\text{Standard Error} = \frac{1}{\sqrt{\text{# Folds}}}\text{Standard Deviation}.$$
 
-`cv_results_` gives abundant information, but for our purpose, we only focus on `param_kneighborsclassifier__n_neighbors` (the $K$, number of neighbors), `mean_test_score` (the mean validation score across all folds), and `std_test_score` (the standard deviation of the validation scores).
+We will also rename the parameter name column to be a bit more readable,
+and drop the now unused `std_test_score` column.
 
 ```{code-cell} ipython3
-accuracies_grid[
-    ["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
-]
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-sorted_accuracies = accuracies_grid.sort_values(by='mean_test_score', ascending=False)
-best_k_list = sorted_accuracies[
-    sorted_accuracies["mean_test_score"]
-    == sorted_accuracies.iloc[0, :]["mean_test_score"]
-]["param_kneighborsclassifier__n_neighbors"].tolist()
-
-# If there are more than 1 hyperparameter yielding the highest validation score
-if len(best_k_list) > 1:
-    i = 1
-    for k in best_k_list:
-        glue(f"best_k_{i}", k)
-        i += 1
-else:
-    glue("best_k_unique", best_k_list[0])
-glue("best_acc", round(sorted_accuracies.iloc[0]["mean_test_score"] * 100, 2))
+accuracies_grid = accuracies_grid[["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
+              ].assign(
+                  sem_test_score = accuracies_grid["std_test_score"] / 10**(1/2)
+              ).rename(
+                  columns = {"param_kneighborsclassifier__n_neighbors" : "n_neighbors"}
+              ).drop(
+                  columns = ["std_test_score"]
+              )
+accuracies_grid
 ```
 
 We can decide which number of neighbors is best by plotting the accuracy versus $K$,
@@ -1109,7 +1112,7 @@ accuracy_vs_k = (
     .mark_line(point=True)
     .encode(
         x=alt.X(
-            "param_kneighborsclassifier__n_neighbors",
+            "n_neighbors",
             title="Neighbors",
         ),
         y=alt.Y(
@@ -1140,7 +1143,7 @@ Plot of estimated accuracy versus the number of neighbors.
 Setting the number of 
 neighbors to $K =$ {glue:}`best_k_unique`
 provides the highest accuracy ({glue:}`best_acc`%). But there is no exact or perfect answer here;
-any selection from $K = 20$ and $55$ would be reasonably justified, as all
+any selection from $K = 30$ to $80$ or so would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
 classifier. Although the 
@@ -1166,7 +1169,7 @@ $K =$ {glue:}`best_k_unique` for the classifier.
 ### Under/Overfitting
 
 To build a bit more intuition, what happens if we keep increasing the number of
-neighbors $K$? In fact, the cross-validation accuracy actually estimate starts to decrease! 
+neighbors $K$? In fact, the cross-validation accuracy estimate actually starts to decrease! 
 Let's specify a much larger range of values of $K$ to try in the `param_grid` 
 argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as 
 we vary $K$ from 1 to almost the number of observations in the data set.
@@ -1174,23 +1177,25 @@ we vary $K$ from 1 to almost the number of observations in the data set.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-param_grid_lots = {
+large_param_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 385, 10),
 }
 
-cancer_tune_grid_lots = GridSearchCV(
+large_cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
-    param_grid=param_grid_lots,
-    cv=10,
-    n_jobs=-1,
-    return_train_score=True,
+    param_grid=large_param_grid,
+    cv=10
 )
 
-cancer_model_grid_lots = cancer_tune_grid_lots.fit(X_tune, y_tune)
-accuracies_grid_lots = pd.DataFrame(cancer_model_grid_lots.cv_results_)
+large_accuracies_grid = pd.DataFrame(
+                    large_cancer_tune_grid.fit(
+                          cancer_train.loc[:, ["Smoothness", "Concavity"]],
+                          cancer_train["Class"]
+                    ).cv_results_
+                  )
 
-accuracy_vs_k_lots = (
-    alt.Chart(accuracies_grid_lots)
+large_accuracy_vs_k = (
+    alt.Chart(large_accuracies_grid)
     .mark_line(point=True)
     .encode(
         x=alt.X(
@@ -1205,13 +1210,13 @@ accuracy_vs_k_lots = (
     )
 )
 
-accuracy_vs_k_lots
+large_accuracy_vs_k
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:06-lots-of-ks", accuracy_vs_k_lots)
+glue("fig:06-lots-of-ks", large_accuracy_vs_k)
 ```
 
 :::{glue:figure} fig:06-lots-of-ks
@@ -1254,9 +1259,6 @@ training data, it is said to **overfit** the data.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# create the scatter plot
-colors = ["#86bfef", "#efb13f"]
-
 cancer_plot = (
     alt.Chart(
         cancer_train,
@@ -1281,7 +1283,7 @@ cancer_plot = (
                 )
             ),
         ),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -1317,12 +1319,10 @@ for k in [1, 7, 20, 300]:
         .encode(
             x=alt.X("Smoothness"),
             y=alt.Y("Concavity"),
-            color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+            color=alt.Color("Class", title="Diagnosis"),
         )
     )
     plot_list.append(cancer_plot + prediction_plot)
-    
-# (plot_list[0] | plot_list[1]) & (plot_list[2] | plot_list[3])
 ```
 
 ```{code-cell} ipython3
@@ -1345,25 +1345,27 @@ Effect of K in overfitting and underfitting.
 
 +++
 
-Both overfitting and underfitting are problematic and will lead to a model 
-that does not generalize well to new data. When fitting a model, we need to strike
-a balance between the two. You can see these two effects in {numref}`fig:06-decision-grid-K`, which shows how the classifier changes as 
-we set the number of neighbors $K$ to 1, 7, 20, and 300.
+Both overfitting and underfitting are problematic and will lead to a model that
+does not generalize well to new data. When fitting a model, we need to strike a
+balance between the two. You can see these two effects in
+{numref}`fig:06-decision-grid-K`, which shows how the classifier changes as we
+set the number of neighbors $K$ to 1, 7, 20, and 300.
 
 +++
 
 ## Summary
 
 Classification algorithms use one or more quantitative variables to predict the
-value of another categorical variable. In particular, the $K$-nearest neighbors algorithm 
-does this by first finding the $K$ points in the training data nearest
-to the new observation, and then returning the majority class vote from those
-training observations. We can evaluate a classifier by splitting the data
-randomly into a training and test data set, using the training set to build the
-classifier, and using the test set to estimate its accuracy. Finally, we
-can tune the classifier (e.g., select the number of neighbors $K$ in $K$-NN)
-by maximizing estimated accuracy via cross-validation. The overall 
-process is summarized in {numref}`fig:06-overview`.
+value of another categorical variable. In particular, the $K$-nearest neighbors
+algorithm does this by first finding the $K$ points in the training data
+nearest to the new observation, and then returning the majority class vote from
+those training observations. We can tune and evaluate a classifier by splitting
+the data randomly into a training and test data set. The training set is used
+to build the classifier and we can tune the classifier (e.g., select the number
+of neighbors in $K$-nearest neighbors) by maximizing estimated accuracy via
+cross-validation. After we have tuned the model we can use the test set to
+estimate its accuracy.  The overall process is summarized in
+{numref}`fig:06-overview`.
 
 +++
 
@@ -1381,29 +1383,13 @@ Overview of KNN classification.
 The overall workflow for performing $K$-nearest neighbors classification using `scikit-learn` is as follows:
 
 1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
-2. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
-3. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
-4. Use the `GridSearchCV` function (or `RandomizedSearchCV`) to estimate the classifier accuracy for a range of $K$ values. Pass the parameter grid and the pipeline defined in step 2 and step 3 as the `param_grid` argument and the `estimator` argument, respectively.
-5. Call `fit` on the `GridSearchCV` instance created in step 4, passing the training data.
+2. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
+3. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
+4. Use `GridSearchCV` to estimate the classifier accuracy for a range of $K$ values. Pass the pipeline and parameter grid defined in steps 2. and 3. as the `param_grid` argument and the `estimator` argument, respectively.
+5. Execute the grid search by passing the training data to the `fit` method on the `GridSearchCV` instance created in step 4.
 6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The overall workflow for performing $K$-nearest neighbors classification using `tidymodels` is as follows:
-# \index{tidymodels}\index{recipe}\index{cross-validation}\index{K-nearest neighbors!classification}\index{classification}
-
-# 1. Use the `initial_split` function to split the data into a training and test set. Set the `strata` argument to the class label variable. Put the test set aside for now.
-# 2. Use the `vfold_cv` function to split up the training data for cross-validation.
-# 3. Create a `recipe` that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the `data` argument of the recipe.
-# 4. Create a `nearest_neighbors` model specification, with `neighbors = tune()`.
-# 5. Add the recipe and model specification to a `workflow()`, and use the `tune_grid` function on the train/validation splits to estimate the classifier accuracy for a range of $K$ values.
-# 6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
-# 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier using the `fit` function.
-# 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
-```
 
 In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 
 but there are many other methods we could have used to predict a categorical label. 

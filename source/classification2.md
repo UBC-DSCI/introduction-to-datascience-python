@@ -1130,6 +1130,8 @@ accuracy_vs_k
 :tags: [remove-cell]
 
 glue("fig:06-find-k", accuracy_vs_k)
+glue("best_k_unique", accuracies_grid["n_neighbors"][accuracies_grid["mean_test_score"].idxmax()])
+glue("best_acc", np.round(accuracies_grid["mean_test_score"].max()*100,1)])
 ```
 
 :::{glue:figure} fig:06-find-k
@@ -1410,6 +1412,7 @@ the $K$-NN here.
 
 +++
 
+<!--
 ## Predictor variable selection
 
 > **Note:** This section is not required reading for the remainder of the textbook. It is included for those readers 
@@ -1970,6 +1973,8 @@ Estimated accuracy versus the number of predictors for the sequence of models bu
 > part of tuning your classifier, you *cannot use your test data* for this
 > process! 
 
+-->
+
 ## Exercises
 
 Practice exercises for the material covered in this chapter 
@@ -2011,32 +2016,6 @@ and guidance that the worksheets provide will function as intended.
   text, it requires a bit more mathematical background than we require.
 
  
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
-#   reference for more details on, and advanced usage of, the functions and
-#   packages in the past two chapters. Aside from that, it also has a [nice
-#   beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
-#   of more advanced examples](https://www.tidymodels.org/learn/) that you can use
-#   to continue learning beyond the scope of this book. It's worth noting that the
-#   `tidymodels` package does a lot more than just classification, and so the
-#   examples on the website similarly go beyond classification as well. In the next
-#   two chapters, you'll learn about another kind of predictive modeling setting,
-#   so it might be worth visiting the website only after reading through those
-#   chapters.
-# - *An Introduction to Statistical Learning* [@james2013introduction] provides 
-#   a great next stop in the process of
-#   learning about classification. Chapter 4 discusses additional basic techniques
-#   for classification that we do not cover, such as logistic regression, linear
-#   discriminant analysis, and naive Bayes. Chapter 5 goes into much more detail
-#   about cross-validation. Chapters 8 and 9 cover decision trees and support
-#   vector machines, two very popular but more advanced classification methods.
-#   Finally, Chapter 6 covers a number of methods for selecting predictor
-#   variables. Note that while this book is still a very accessible introductory
-#   text, it requires a bit more mathematical background than we require.
-```
-
 ## References
 
 +++

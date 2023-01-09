@@ -29,26 +29,8 @@ kernelspec:
 import altair as alt
 import numpy as np
 import pandas as pd
-# import sklearn
-# from sklearn.compose import make_column_transformer
-# from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-# from sklearn.metrics.pairwise import euclidean_distances
-# from sklearn.model_selection import (
-#     GridSearchCV,
-#     RandomizedSearchCV,
-#     cross_validate,
-#     train_test_split,
-# )
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.pipeline import Pipeline, make_pipeline
-# from sklearn.preprocessing import OneHotEncoder, StandardScaler
-# 
-# alt.data_transformers.disable_max_rows()
-#  alt.renderers.enable("mimetype")
-
+ 
 from myst_nb import glue
-
-#pd.options.display.max_colwidth = 100
 ```
 
 ## Overview 
@@ -1131,7 +1113,7 @@ accuracy_vs_k
 
 glue("fig:06-find-k", accuracy_vs_k)
 glue("best_k_unique", accuracies_grid["n_neighbors"][accuracies_grid["mean_test_score"].idxmax()])
-glue("best_acc", np.round(accuracies_grid["mean_test_score"].max()*100,1)])
+glue("best_acc", np.round(accuracies_grid["mean_test_score"].max()*100,1))
 ```
 
 :::{glue:figure} fig:06-find-k
@@ -1259,7 +1241,9 @@ completely different.  In general, if the model *is influenced too much* by the
 training data, it is said to **overfit** the data.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+
+alt.data_transformers.disable_max_rows()
+alt.renderers.enable("mimetype")
 
 cancer_plot = (
     alt.Chart(

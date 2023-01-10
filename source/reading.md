@@ -16,7 +16,7 @@ kernelspec:
 # Reading in data locally and from the web
 
 
-## Overview 
+## Overview
 
 ```{index} see: loading; reading
 ```
@@ -46,10 +46,10 @@ By the end of the chapter, readers will be able to do the following:
     - **U**niform **R**esource **L**ocator (URL)
 - Read data into Python using an absolute path, relative path and a URL.
 - Compare and contrast the following functions:
-    - `read_csv` 
+    - `read_csv`
     - `read_excel`
 - Match the following `pandas` `read_csv` function arguments to their descriptions:
-    - `filepath_or_buffer` 
+    - `filepath_or_buffer`
     - `sep`
     - `names`
     - `skiprows`
@@ -76,7 +76,7 @@ This chapter will discuss the different functions we can use to import data
 into Python, but before we can talk about *how* we read the data into Python with these
 functions, we first need to talk about *where* the data lives. When you load a
 data set into Python, you first need to tell Python where those files live. The file
-could live on your computer (*local*) or somewhere on the internet (*remote*). 
+could live on your computer (*local*) or somewhere on the internet (*remote*).
 
 The place where the file lives on your computer is called the "path". You can
 think of the path as directions to the file. There are two kinds of paths:
@@ -90,7 +90,7 @@ in respect to the computer's filesystem base (or root) folder.
 
 Suppose our computer's filesystem looks like the picture in
 {numref}`Filesystem`, and we are working in a
-file titled `worksheet_02.ipynb`. If we want to 
+file titled `worksheet_02.ipynb`. If we want to
 read the `.csv` file named `happiness_report.csv` into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.
@@ -124,24 +124,24 @@ happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv"
 
 +++
 
-So which one should you use? Generally speaking, to ensure your code can be run 
-on a different computer, you should use relative paths. An added bonus is that 
-it's also less typing! Generally, you should use relative paths because the file's 
-absolute path (the names of 
-folders between the computer's root `/` and the file) isn't usually the same 
-across different computers. For example, suppose Fatima and Jayden are working on a 
-project together on the `happiness_report.csv` data. Fatima's file is stored at 
+So which one should you use? Generally speaking, to ensure your code can be run
+on a different computer, you should use relative paths. An added bonus is that
+it's also less typing! Generally, you should use relative paths because the file's
+absolute path (the names of
+folders between the computer's root `/` and the file) isn't usually the same
+across different computers. For example, suppose Fatima and Jayden are working on a
+project together on the `happiness_report.csv` data. Fatima's file is stored at
 
 ```
 /home/Fatima/project/data/happiness_report.csv
 ```
 
-while Jayden's is stored at 
+while Jayden's is stored at
 
 ```
 /home/Jayden/project/data/happiness_report.csv
 ```
- 
+
 Even though Fatima and Jayden stored their files in the same place on their
 computers (in their home folders), the absolute paths are different due to
 their different usernames.  If Jayden has code that loads the
@@ -154,10 +154,10 @@ relative paths will work on both!
 ```
 
 Your file could be stored locally, as we discussed, or it could also be
-somewhere on the internet (remotely). For this purpose we use a 
+somewhere on the internet (remotely). For this purpose we use a
 *Uniform Resource Locator (URL)*, i.e., a web address that looks something
 like https://google.com/. URLs indicate the location of a resource on the internet and
-helps us retrieve that resource. 
+helps us retrieve that resource.
 
 ## Reading tabular data from a plain text file into Python
 
@@ -168,26 +168,26 @@ helps us retrieve that resource.
 ```
 
 Now that we have learned about *where* data could be, we will learn about *how*
-to import data into Python using various functions. Specifically, we will learn how 
+to import data into Python using various functions. Specifically, we will learn how
 to *read* tabular data from a plain text file (a document containing only text)
 *into* Python and *write* tabular data to a file *out of* Python. The function we use to do this
 depends on the file's format. For example, in the last chapter, we learned about using
 the `read_csv` function from `pandas` when reading `.csv` (**c**omma-**s**eparated **v**alues)
 files. In that case, the *separator* that divided our columns was a
-comma (`,`). We only learned the case where the data matched the expected defaults 
-of the `read_csv` function 
-(column names are present, and commas are used as the separator between columns). 
-In this section, we will learn how to read 
+comma (`,`). We only learned the case where the data matched the expected defaults
+of the `read_csv` function
+(column names are present, and commas are used as the separator between columns).
+In this section, we will learn how to read
 files that do not satisfy the default expectations of `read_csv`.
 
 ```{index} Canadian languages; canlang data
 ```
 
-Before we jump into the cases where the data aren't in the expected default format 
+Before we jump into the cases where the data aren't in the expected default format
 for `pandas` and `read_csv`, let's revisit the more straightforward
 case where the defaults hold, and the only argument we need to give to the function
-is the path to the file, `data/can_lang.csv`. The `can_lang` data set contains 
-language data from the 2016 Canadian census. 
+is the path to the file, `data/can_lang.csv`. The `can_lang` data set contains
+language data from the 2016 Canadian census.
 We put `data/` before the file's
 name when we are loading the data set because this data set is located in a
 sub-folder, named `data`, relative to where we are running our Python code.
@@ -209,18 +209,19 @@ Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```{index} pandas
 ```
 
-And here is a review of how we can use `read_csv` to load it into Python. First we 
+And here is a review of how we can use `read_csv` to load it into Python. First we
 load the `pandas` package to gain access to useful
-functions for reading the data. 
+functions for reading the data.
 
 ```{code-cell} ipython3
-import pandas as pd 
+import pandas as pd
 ```
 
 Next we use `read_csv` to load the data into Python, and in that call we specify the
 relative path to the file.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data = pd.read_csv("data/can_lang.csv")
 canlang_data
 ```
@@ -269,19 +270,20 @@ ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
 ```{index} read function; skiprows argument
 ```
 
-To successfully read data like this into Python, the `skiprows` 
-argument can be useful to tell Python 
+To successfully read data like this into Python, the `skiprows`
+argument can be useful to tell Python
 how many rows to skip before
 it should start reading in the data. In the example above, we would set this
 value to 3 to read and load the data correctly.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data = pd.read_csv("data/can_lang_meta-data.csv", skiprows=3)
 canlang_data
 ```
 
 How did we know to skip three rows? We looked at the data! The first three rows
-of the data had information we didn't need to import: 
+of the data had information we didn't need to import:
 
 ```code
 Data source: https://ttimbers.github.io/canlang/
@@ -289,13 +291,13 @@ Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
 ```
 
-The column names began at row 4, so we skipped the first three rows. 
+The column names began at row 4, so we skipped the first three rows.
 
 ### Using the `sep` argument for different separators
 
 Another common way data is stored is with tabs as the separator. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
-commas. 
+commas.
 
 ```code
 category	language	mother_tongue	most_at_home	most_at_work	lang_known
@@ -318,26 +320,27 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 ```{index} tsv, read function; read_tsv
 ```
 
-To read in `.tsv` (**t**ab **s**eparated **v**alues) files, we can set the `sep` argument 
+To read in `.tsv` (**t**ab **s**eparated **v**alues) files, we can set the `sep` argument
 in the `read_csv` function to the *tab character* `\t`.
 
 ```{index} escape character
 ```
 
-> **Note:** `\t` is an example of an *escaped character*, 
+> **Note:** `\t` is an example of an *escaped character*,
 > which always starts with a backslash (`\`).
-> Escaped characters are used to represent non-printing characters 
+> Escaped characters are used to represent non-printing characters
 > (like the tab) or characters with special meanings (such as quotation marks).
 
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
 
 Let's compare the data frame here to the resulting data frame in Section
 {ref}`readcsv` after using `read_csv`. Notice anything? They look the same; they have
-the same number of columns and rows, and have the same column names! 
+the same number of columns and rows, and have the same column names!
 So even though we needed to use different
 arguments depending on the file format, our resulting data frame
 (`canlang_data`) in both cases was the same.
@@ -365,7 +368,7 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 ```
 
 Data frames in Python need to have column names.  Thus if you read in data that
-don't have column names, Python will assign names automatically. In this example, 
+don't have column names, Python will assign names automatically. In this example,
 Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
 To read this data into Python, we specify the first
 argument as the path to the file (as done with `read_csv`), and then provide
@@ -374,9 +377,10 @@ and finally set `header = None` to tell `pandas` that the data file does not
 contain its own column names.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data =  pd.read_csv(
-    "data/can_lang_no_cols.tsv", 
-    sep = "\t", 
+    "data/can_lang_no_cols.tsv",
+    sep = "\t",
     header = None
 )
 canlang_data
@@ -387,10 +391,10 @@ canlang_data
 
 It is best to rename your columns manually in this scenario. The current column names
 (`0, 1`, etc.) are problematic for two reasons: first, because they not very descriptive names, which will make your analysis
-confusing; and second, because your column names should generally be *strings*, but are currently *integers*. 
+confusing; and second, because your column names should generally be *strings*, but are currently *integers*.
 To rename your columns, you can use the `rename` function
-from the [pandas package](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html#). 
-The argument of the `rename` function is `columns`, which takes a mapping between the old column names and the new column names. 
+from the [pandas package](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html#).
+The argument of the `rename` function is `columns`, which takes a mapping between the old column names and the new column names.
 In this case, we want to rename the old columns (`0, 1, ..., 5`) in the `canlang_data` data frame to more descriptive names.
 
 To specify the mapping, we create a *dictionary*: a Python object that represents
@@ -400,6 +404,7 @@ Below, we create a dictionary called `col_map` that maps the old column names in
 names, and then pass it to the `rename` function.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 col_map = {
     0 : "category",
     1 : "language",
@@ -415,10 +420,11 @@ canlang_data_renamed
 ```{index} read function; names argument
 ```
 
-The column names can also be assigned to the data frame immediately upon reading it from the file by passing a 
-list of column names to the `names` argument in `read_csv`. 
+The column names can also be assigned to the data frame immediately upon reading it from the file by passing a
+list of column names to the `names` argument in `read_csv`.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data = pd.read_csv(
     "data/can_lang_no_cols.tsv",
     sep="\t",
@@ -448,6 +454,7 @@ path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 url = "https://raw.githubusercontent.com/UBC-DSCI/introduction-to-datascience-python/reading/source/data/can_lang.csv"
 pd.read_csv(url)
 canlang_data = pd.read_csv(url)
@@ -497,8 +504,8 @@ t                                                       8f??3wn
                        ?Pd(??J-?E???7?'t(?-GZ?????y???c~N?g[^_r?4
                                                                   yG?O
                                                                       ?K??G?
-                                                                      
-                                                                                                                    
+
+
      ]TUEe??O??c[???????6q??s??d?m???\???H?^????3} ?rZY? ?:L60?^?????XTP+?|?
 X?a??4VT?,D?Jq
 ```
@@ -509,11 +516,12 @@ X?a??4VT?,D?Jq
 This type of file representation allows Excel files to store additional things
 that you cannot store in a `.csv` file, such as fonts, text formatting,
 graphics, multiple sheets and more. And despite looking odd in a plain text
-editor, we can read Excel spreadsheets into Python using the `pandas` package's `read_excel` 
-function developed specifically for this 
+editor, we can read Excel spreadsheets into Python using the `pandas` package's `read_excel`
+function developed specifically for this
 purpose.
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_data = pd.read_excel("data/can_lang.xlsx")
 canlang_data
 ```
@@ -522,13 +530,13 @@ If the `.xlsx` file has multiple sheets, you have to use the `sheet_name` argume
 to specify the sheet number or name. This functionality is useful when a single sheet contains
 multiple tables (a sad thing that happens to many Excel spreadsheets since this
 makes reading in data more difficult). You can also specify cell ranges using the
-`usecols` argument (e.g., `usecols="A:D"` for including columns from `A` to `D`). 
+`usecols` argument (e.g., `usecols="A:D"` for including columns from `A` to `D`).
 
 As with plain text files, you should always explore the data file before
 importing it into Python. Exploring the data beforehand helps you decide which
 arguments you need to load the data into Python successfully. If you do not have
 the Excel program on your computer, you can use other programs to preview the
-file. Examples include Google Sheets and Libre Office. 
+file. Examples include Google Sheets and Libre Office.
 
 In {numref}`read_func` we summarize the `read_csv` and `read_excel` functions we covered
 in this chapter. We also include the arguments for data separated by
@@ -547,20 +555,20 @@ European countries).
 * - Comma (`,`) separated files
   - `read_csv`
   - just the file path
-* - Tab (`\t`) separated files 
+* - Tab (`\t`) separated files
   - `read_csv`
   - `sep="\t"`
 * - Missing header
   - `read_csv`
   - `header=None`
 * - European-style numbers, semicolon (`;`) separators
-  - `read_csv` 
+  - `read_csv`
   - `sep=";"`, `thousands="."`, `decimal=","`
 * - Excel files (`.xlsx`)
   - `read_excel`
   - `sheet_name`, `usecols`
-  
-  
+
+
 ```
 
 ## Reading data from a database
@@ -576,7 +584,7 @@ different relational database management systems each have their own advantages
 and limitations. Almost all employ SQL (*structured query language*) to obtain
 data from the database. But you don't need to know SQL to analyze data from
 a database; several packages have been written that allow you to connect to
-relational databases and use the Python programming language 
+relational databases and use the Python programming language
 to obtain data. In this book, we will give examples of how to do this
 using Python with SQLite and PostgreSQL databases.
 
@@ -588,8 +596,8 @@ using Python with SQLite and PostgreSQL databases.
 SQLite is probably the simplest relational database system
 that one can use in combination with Python. SQLite databases are self-contained and
 usually stored and accessed locally on one computer. Data is usually stored in
-a file with a `.db` extension (or sometimes a `.sqlite` extension). 
-Similar to Excel files, these are not plain text files and cannot be read in a plain text editor. 
+a file with a `.db` extension (or sometimes a `.sqlite` extension).
+Similar to Excel files, these are not plain text files and cannot be read in a plain text editor.
 
 ```{index} database; connect, ibis, ibis; ibis
 ```
@@ -598,18 +606,18 @@ Similar to Excel files, these are not plain text files and cannot be read in a p
 ```
 
 The first thing you need to do to read data into Python from a database is to
-connect to the database. For an SQLite database, we will do that using 
+connect to the database. For an SQLite database, we will do that using
 the `connect` function from the
 `sqlite` backend in the
 `ibis` package. This command does not read
 in the data, but simply tells Python where the database is and opens up a
 communication channel that Python can use to send SQL commands to the database.
 
-> **Note:** There is another database package in python called `sqlalchemy`. 
+> **Note:** There is another database package in python called `sqlalchemy`.
 > That package is a bit more mature than `ibis`,
-> so if you want to dig deeper into working with databases in Python, that is a good next 
-> package to learn about. We will work with `ibis` in this book, as it 
-> provides a more modern and friendlier syntax that is more like `pandas` for data analysis code. 
+> so if you want to dig deeper into working with databases in Python, that is a good next
+> package to learn about. We will work with `ibis` in this book, as it
+> provides a more modern and friendlier syntax that is more like `pandas` for data analysis code.
 
 ```{code-cell} ipython3
 import ibis
@@ -621,7 +629,7 @@ conn = ibis.sqlite.connect("data/can_lang.db")
 ```
 
 Often relational databases have many tables; thus, in order to retrieve
-data from a database, you need to know the name of the table 
+data from a database, you need to know the name of the table
 in which the data is stored. You can get the names of
 all the tables in the database using the `list_tables`
 function:
@@ -636,22 +644,22 @@ tables
 
 The `list_tables` function returned only one name---`"can_lang"`---which tells us
 that there is only one table in this database. To reference a table in the
-database (so that we can perform operations like selecting columns and filtering rows), we 
+database (so that we can perform operations like selecting columns and filtering rows), we
 use the `table` function from the `conn` object. The object returned
 by the `table` function allows us to work with data
 stored in databases as if they were just regular `pandas` data frames; but secretly, behind
-the scenes, `ibis` will turn your commands into SQL queries! 
+the scenes, `ibis` will turn your commands into SQL queries!
 
 ```{code-cell} ipython3
 canlang_table = conn.table("can_lang")
-canlang_table 
+canlang_table
 ```
 
 ```{index} database; count, ibis; count
 ```
 
 Although it looks like we might have obtained the whole data frame from the database, we didn't!
-It's a *reference*; the data is still stored only in the SQLite database. The `canlang_table` object  
+It's a *reference*; the data is still stored only in the SQLite database. The `canlang_table` object
 is an `AlchemyTable` (`ibis` is using `sqlalchemy` under the hood!), which, when printed, tells
 you which columns are available in the table. But unlike a usual `pandas` data frame,
 we do not immediately know how many rows are in the table. In order to find out how many
@@ -665,7 +673,7 @@ canlang_table.count()
 ```{index} execute, ibis; execute
 ```
 
-Wait a second...this isn't the number of rows in the database. In fact, we haven't actually sent our 
+Wait a second...this isn't the number of rows in the database. In fact, we haven't actually sent our
 SQL query to the database yet! We need to explicitly tell `ibis` when we want to send the query.
 The reason for this is that databases are often more efficient at working with (i.e., selecting, filtering,
 joining, etc.) large data sets than Python. And typically, the database will not even
@@ -693,23 +701,24 @@ str(canlang_table.count().compile())
 The output above shows the SQL code that is sent to the database. When we
 write `canlang_table.count().execute()` in Python, in the background, the `execute` function is
 translating the Python code into SQL, sending that SQL to the database, and then translating the
-response for us. So `ibis` does all the hard work of translating from Python to SQL and back for us; 
-we can just stick with Python! 
+response for us. So `ibis` does all the hard work of translating from Python to SQL and back for us;
+we can just stick with Python!
 
 The `ibis` package provides lots of `pandas`-like tools for working with database tables.
-For example, we can look at the first few rows of the table by using the `head` function---and 
+For example, we can look at the first few rows of the table by using the `head` function---and
 we won't forget to `execute` to see the result!
 
 ```{index} database; head, ibis;
 ```
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_table.head(10).execute()
 ```
 
 You can see that `ibis` actually returned a `pandas` data frame to us after we executed the query,
 which is very convenient for working with the data after getting it from the database.
-So now that we have the `canlang_table` table reference for the 2016 Canadian Census data in hand, we 
+So now that we have the `canlang_table` table reference for the 2016 Canadian Census data in hand, we
 can mostly continue onward as if it were a regular data frame. For example, let's do the same exercise
 from Chapter 1: we will obtain only those rows corresponding to Aboriginal languages, and keep only
 the `language` and `mother_tongue` columns.
@@ -723,7 +732,7 @@ to obtain only certain rows. Below we filter the data to include only Aboriginal
 canlang_table_filtered = canlang_table[canlang_table["category"] == "Aboriginal languages"]
 canlang_table_filtered
 ```
-Above you can see that we have not yet executed this command; `canlang_table_filtered` is just showing 
+Above you can see that we have not yet executed this command; `canlang_table_filtered` is just showing
 the first part of our query (the part that starts with `Selection[r0]` above).
 We didn't call `execute` because we are not ready to bring the data into Python yet.
 We can still use the database to do some work to obtain *only* the small amount of data we want to work with locally
@@ -746,7 +755,7 @@ aboriginal_lang_data
 
 `ibis` provides many more functions (not just the `[]` operation)
 that you can use to manipulate the data within the database before calling
-`execute` to obtain the data in Python. But `ibis` does not provide *every* function 
+`execute` to obtain the data in Python. But `ibis` does not provide *every* function
 that we need for analysis; we do eventually need to call `execute`.
 For example, `ibis` does not provide the `tail` function to look at the last
 rows in a database, even though `pandas` does.
@@ -755,6 +764,7 @@ rows in a database, even though `pandas` does.
 ```
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 canlang_table_selected.tail(6)
 ```
 
@@ -768,14 +778,14 @@ But be very careful using `execute`: databases are often *very* big,
 and reading an entire table into Python might take a long time to run or even possibly
 crash your machine. So make sure you select and filter the database table
 to reduce the data to a reasonable size before using `execute` to read it into Python!
- 
-### Reading data from a PostgreSQL database 
+
+### Reading data from a PostgreSQL database
 
 ```{index} database; PostgreSQL
 ```
 
 PostgreSQL (also called Postgres) is a very popular
-and open-source option for relational database software. 
+and open-source option for relational database software.
 Unlike SQLite,
 PostgreSQL uses a client–server database engine, as it was designed to be used
 and accessed on a network. This means that you have to provide more information
@@ -790,13 +800,13 @@ need to include when you call the `connect` function is listed below:
 
 Below we demonstrate how to connect to a version of
 the `can_mov_db` database, which contains information about Canadian movies.
-Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and 
-`password` (`abc123`) below are *not real*; you will not actually 
+Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
+`password` (`abc123`) below are *not real*; you will not actually
 be able to connect to a database using this information.
 
 ```python
 conn = ibis.postgres.connect(
-    database = "can_mov_db", 
+    database = "can_mov_db",
     host = "fakeserver.stat.ubc.ca",
     port = 5432,
     user = "user0001",
@@ -819,7 +829,7 @@ conn.list_tables()
 
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
-database. 
+database.
 
 ```python
 ratings_table = conn.table("ratings")
@@ -887,18 +897,18 @@ then use `ibis` to translate `pandas`-like
 commands (the `[]` operation, `head`, etc.) into SQL queries that the database
 understands, and then finally `execute` them. And not all `pandas` commands can currently be translated
 via `ibis` into database queries. So you might be wondering: why should we use
-databases at all? 
+databases at all?
 
 Databases are beneficial in a large-scale setting:
 
 - They enable storing large data sets across multiple computers with backups.
 - They provide mechanisms for ensuring data integrity and validating input.
 - They provide security and data access control.
-- They allow multiple users to access data simultaneously 
+- They allow multiple users to access data simultaneously
   and remotely without conflicts and errors.
-  For example, there are billions of Google searches conducted daily in 2021 {cite:p}`googlesearches`. 
-  Can you imagine if Google stored all of the data 
-  from those searches in a single `.csv` file!? Chaos would ensue! 
+  For example, there are billions of Google searches conducted daily in 2021 {cite:p}`googlesearches`.
+  Can you imagine if Google stored all of the data
+  from those searches in a single `.csv` file!? Chaos would ensue!
 
 ## Writing data from Python to a `.csv` file
 
@@ -910,7 +920,7 @@ that has changed (through selecting columns, filtering rows, etc.)
 to a file to share it with others or use it for another step in the analysis.
 The most straightforward way to do this is to use the `to_csv` function
 from the `pandas` package.  The default
-arguments are to use a comma (`,`) as the separator, and to include column names 
+arguments are to use a comma (`,`) as the separator, and to include column names
 in the first row. We also specify `index = False` to tell `pandas` not to print
 row numbers in the `.csv` file. Below we demonstrate creating a new version of the Canadian
 languages data set without the "Official languages" category according to the
@@ -921,18 +931,18 @@ no_official_lang_data = canlang_data[canlang_data["category"] != "Official langu
 no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 ```
 
-% ## Obtaining data from the web 
-% 
+% ## Obtaining data from the web
+%
 % > **Note:** This section is not required reading for the remainder of the textbook. It
 % > is included for those readers interested in learning a little bit more about
 % > how to obtain different types of data from the web.
-% 
+%
 % ```{index} see: application programming interface; API
 % ```
-% 
+%
 % ```{index} API
 % ```
-% 
+%
 % Data doesn't just magically appear on your computer; you need to get it from
 % somewhere. Earlier in the chapter we showed you how to access data stored in a
 % plain text, spreadsheet-like format (e.g., comma- or tab-separated) from a web
@@ -946,16 +956,16 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % data they have access to, and *how much* data they can access.  Typically, the
 % website owner will give you a *token* (a secret string of characters somewhat
 % like a password) that you have to provide when accessing the API.
-% 
+%
 % ```{index} web scraping, CSS, HTML
 % ```
-% 
+%
 % ```{index} see: hypertext markup language; HTML
 % ```
-% 
+%
 % ```{index} see: cascading style sheet; CSS
 % ```
-% 
+%
 % Another interesting thought: websites themselves *are* data! When you type a
 % URL into your browser window, your browser asks the *web server* (another
 % computer on the internet whose job it is to respond to requests for the
@@ -963,117 +973,117 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % data into something you can see. If the website shows you some information that
 % you're interested in, you could *create* a data set for yourself by copying and
 % pasting that information into a file. This process of taking information
-% directly from what a website displays is called 
+% directly from what a website displays is called
 % *web scraping* (or sometimes *screen scraping*). Now, of course, copying and pasting
 % information manually is a painstaking and error-prone process, especially when
 % there is a lot of information to gather. So instead of asking your browser to
 % translate the information that the web server provides into something you can
 % see, you can collect that data programmatically&mdash;in the form of
-% **h**yper**t**ext **m**arkup **l**anguage 
-% (HTML) 
-% and **c**ascading **s**tyle **s**heet (CSS) code&mdash;and process it 
+% **h**yper**t**ext **m**arkup **l**anguage
+% (HTML)
+% and **c**ascading **s**tyle **s**heet (CSS) code&mdash;and process it
 % to extract useful information. HTML provides the
 % basic structure of a site and tells the webpage how to display the content
 % (e.g., titles, paragraphs, bullet lists etc.), whereas CSS helps style the
-% content and tells the webpage how the HTML elements should 
-% be presented (e.g., colors, layouts, fonts etc.). 
-% 
+% content and tells the webpage how the HTML elements should
+% be presented (e.g., colors, layouts, fonts etc.).
+%
 % This subsection will show you the basics of both web scraping
 % with the [`BeautifulSoup` Python package](https://beautiful-soup-4.readthedocs.io/en/latest/) {cite:p}`beautifulsoup`
 % and accessing the Twitter API
 % using the [`tweepy` Python package](https://github.com/tweepy/tweepy) {cite:p}`tweepy`.
-% 
+%
 % +++
-% 
+%
 % ### Web scraping
-% 
+%
 % #### HTML and CSS selectors
-% 
+%
 % ```{index} web scraping, HTML; selector, CSS; selector, Craiglist
 % ```
-% 
+%
 % When you enter a URL into your browser, your browser connects to the
 % web server at that URL and asks for the *source code* for the website.
-% This is the data that the browser translates 
+% This is the data that the browser translates
 % into something you can see; so if we
 % are going to create our own data by scraping a website, we have to first understand
 % what that data looks like! For example, let's say we are interested
 % in knowing the average rental price (per square foot) of the most recently
-% available one-bedroom apartments in Vancouver 
+% available one-bedroom apartments in Vancouver
 % on [Craiglist](https://vancouver.craigslist.org). When we visit the Vancouver Craigslist
-% website and search for one-bedroom apartments, 
+% website and search for one-bedroom apartments,
 % we should see something similar to {numref}`fig:craigslist-human`.
-% 
+%
 % +++
-% 
+%
 % ```{figure} img/craigslist_human.png
 % :name: fig:craigslist-human
-% 
+%
 % Craigslist webpage of advertisements for one-bedroom apartments.
 % ```
-% 
+%
 % +++
-% 
+%
 % Based on what our browser shows us, it's pretty easy to find the size and price
 % for each apartment listed. But we would like to be able to obtain that information
 % using Python, without any manual human effort or copying and pasting. We do this by
 % examining the *source code* that the web server actually sent our browser to
-% display for us. We show a snippet of it below; the 
-% entire source 
+% display for us. We show a snippet of it below; the
+% entire source
 % is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
-% 
+%
 % ```html
 %         <span class="result-meta">
 %                 <span class="result-price">$800</span>
-% 
+%
 %                 <span class="housing">
 %                     1br -
 %                 </span>
-% 
+%
 %                 <span class="result-hood"> (13768 108th Avenue)</span>
-% 
+%
 %                 <span class="result-tags">
 %                     <span class="maptag" data-pid="6786042973">map</span>
 %                 </span>
-% 
+%
 %                 <span class="banish icon icon-trash" role="button">
 %                     <span class="screen-reader-text">hide this posting</span>
 %                 </span>
-% 
+%
 %             <span class="unbanish icon icon-trash red" role="button" aria-hidden
 %             <a href="#" class="restore-link">
 %                 <span class="restore-narrow-text">restore</span>
 %                 <span class="restore-wide-text">restore this posting</span>
 %             </a>
-% 
+%
 %         </span>
 %     </p>
 % </li>
 %          <li class="result-row" data-pid="6788463837">
-%                   
+%
 %         <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu
 %                 <span class="result-price">$2285</span>
 %         </a>
 % ```
-% 
+%
 % Oof...you can tell that the source code for a web page is not really designed
 % for humans to understand easily. However, if you look through it closely, you
 % will find that the information we're interested in is hidden among the muck.
 % For example, near the top of the snippet
 % above you can see a line that looks like
-% 
+%
 % ```html
 % <span class="result-price">$800</span>
 % ```
-% 
+%
 % That is definitely storing the price of a particular apartment. With some more
 % investigation, you should be able to find things like the date and time of the
 % listing, the address of the listing, and more. So this source code most likely
 % contains all the information we are interested in!
-% 
+%
 % ```{index} HTML; tag
 % ```
-% 
+%
 % Let's dig into that line above a bit more. You can see that
 % that bit of code has an *opening tag* (words between `<` and `>`, like
 % `<span>`) and a *closing tag* (the same with a slash, like `</span>`). HTML
@@ -1087,86 +1097,86 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % apartment prices, maybe we can look for all the tags with the `"result-price"`
 % class, and grab the information between the opening and closing tag. Indeed,
 % take a look at another line of the source snippet above:
-% 
+%
 % ```html
 % <span class="result-price">$2285</span>
 % ```
-% 
+%
 % It's yet another price for an apartment listing, and the tags surrounding it
 % have the `"result-price"` class. Wonderful! Now that we know what pattern we
 % are looking for&mdash;a dollar amount between opening and closing tags that have the
-% `"result-price"` class&mdash;we should be able to use code to pull out all of the 
+% `"result-price"` class&mdash;we should be able to use code to pull out all of the
 % matching patterns from the source code to obtain our data. This sort of "pattern"
 % is known as a *CSS selector* (where CSS stands for **c**ascading **s**tyle **s**heet).
-% 
-% The above was a simple example of "finding the pattern to look for"; many 
+%
+% The above was a simple example of "finding the pattern to look for"; many
 % websites are quite a bit larger and more complex, and so is their website
 % source code. Fortunately, there are tools available to make this process
-% easier. For example, 
-% [SelectorGadget](https://selectorgadget.com/) is 
-% an open-source tool that simplifies identifying the generating 
-% and finding of CSS selectors. 
+% easier. For example,
+% [SelectorGadget](https://selectorgadget.com/) is
+% an open-source tool that simplifies identifying the generating
+% and finding of CSS selectors.
 % At the end of the chapter in the additional resources section, we include a link to
-% a short video on how to install and use the SelectorGadget tool to 
-% obtain CSS selectors for use in web scraping. 
-% After installing and enabling the tool, you can click the 
-% website element for which you want an appropriate selector. For 
+% a short video on how to install and use the SelectorGadget tool to
+% obtain CSS selectors for use in web scraping.
+% After installing and enabling the tool, you can click the
+% website element for which you want an appropriate selector. For
 % example, if we click the price of an apartment listing, we
 % find that SelectorGadget shows us the selector `.result-price`
 % in its toolbar, and highlights all the other apartment
 % prices that would be obtained using that selector ({numref}`fig:sg1`).
-% 
+%
 % ```{figure} img/sg1.png
 % :name: fig:sg1
-% 
+%
 % Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
 % ```
-% 
+%
 % If we then click the size of an apartment listing, SelectorGadget shows us
 % the `span` selector, and highlights many of the lines on the page; this indicates that the
-% `span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`). 
-% 
+% `span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`).
+%
 % ```{figure} img/sg3.png
 % :name: fig:sg3
-% 
+%
 % Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
 % ```
-% 
+%
 % To narrow the selector, we can click one of the highlighted elements that
-% we *do not* want. For example, we can deselect the "pic/map" links, 
+% we *do not* want. For example, we can deselect the "pic/map" links,
 % resulting in only the data we want highlighted using the `.housing` selector ({numref}`fig:sg2`).
-% 
+%
 % ```{figure} img/sg2.png
 % :name: fig:sg2
-% 
+%
 % Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
 % ```
-% 
+%
 % So to scrape information about the square footage and rental price
 % of apartment listings, we need to use
 % the two CSS selectors `.housing` and `.result-price`, respectively.
 % The selector gadget returns them to us as a comma-separated list (here
 % `.housing , .result-price`), which is exactly the format we need to provide to
 % Python if we are using more than one CSS selector.
-% 
+%
 % **Stop! Are you allowed to scrape that website?**
-% 
+%
 % ```{index} web scraping; permission
 % ```
-% 
+%
 % +++
-% 
+%
 % *Before* scraping data from the web, you should always check whether or not
 % you are *allowed* to scrape it! There are two documents that are important
 % for this: the `robots.txt` file and the Terms of Service
 % document. If we take a look at [Craigslist's Terms of Service document](https://www.craigslist.org/about/terms.of.use),
-% we find the following text: *"You agree not to copy/collect CL content 
+% we find the following text: *"You agree not to copy/collect CL content
 % via robots, spiders, scripts, scrapers, crawlers, or any automated or manual equivalent (e.g., by hand)."*
 % So unfortunately, without explicit permission, we are not allowed to scrape the website.
-% 
+%
 % ```{index} Wikipedia
 % ```
-% 
+%
 % What to do now? Well, we *could* ask the owner of Craigslist for permission to scrape.
 % However, we are not likely to get a response, and even if we did they would not likely give us permission.
 % The more realistic answer is that we simply cannot scrape Craigslist. If we still want
@@ -1174,122 +1184,122 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % To continue learning how to scrape data from the web, let's instead
 % scrape data on the population of Canadian cities from Wikipedia.
 % We have checked the [Terms of Service document](https://foundation.wikimedia.org/wiki/Terms_of_Use/en),
-% and it does not mention that web scraping is disallowed. 
+% and it does not mention that web scraping is disallowed.
 % We will use the SelectorGadget tool to pick elements that we are interested in
-% (city names and population counts) and deselect others to indicate that we are not 
+% (city names and population counts) and deselect others to indicate that we are not
 % interested in them (province names), as shown in {numref}`fig:sg4`.
-% 
+%
 % ```{figure} img/selectorgadget-wiki-updated.png
 % :name: fig:sg4
-% 
+%
 % Using the SelectorGadget on a Wikipedia webpage.
 % ```
-% 
+%
 % We include a link to a short video tutorial on this process at the end of the chapter
 % in the additional resources section. SelectorGadget provides in its toolbar
 % the following list of CSS selectors to use:
-% 
+%
 % +++
-% 
+%
 % ```code
-% td:nth-child(8) , 
-% td:nth-child(6) , 
-% td:nth-child(4) , 
+% td:nth-child(8) ,
+% td:nth-child(6) ,
+% td:nth-child(4) ,
 % .mw-parser-output div tr+ tr td:nth-child(2)
 % ```
-% 
+%
 % +++
-% 
+%
 % Now that we have the CSS selectors that describe the properties of the elements
 % that we want to target (e.g., has a tag name `price`), we can use them to find
 % certain elements in web pages and extract data.
-% 
+%
 % +++
-% 
+%
 % **Using `pandas.read_html`**
-% 
+%
 % +++
-% 
+%
 % The easiest way to read a table from HTML is to use [`pandas.read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html). We can see that the Wikipedia page of "Canada" has 18 tables.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % canada_wiki = pd.read_html("https://en.wikipedia.org/wiki/Canada")
 % len(canada_wiki)
 % ```
-% 
+%
 % ```
 % 18
 % ```
-% 
+%
 % +++
-% 
+%
 % With some inspection, we find that the table that shows the population of the most populated provinces is of index 1.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % df = canada_wiki[1]
 % df.columns = df.columns.droplevel()
 % df
 % ```
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-input]
-% 
+%
 % df = pd.read_csv("data/canada-wiki-read_html.csv", index_col=0)
 % df
 % ```
-% 
+%
 % **Using `BeautifulSoup`**
-% 
+%
 % ```{index} BeautifulSoup, requests
 % ```
-% 
+%
 % Now that we have our CSS selectors we can use the `requests` and `BeautifulSoup` Python packages to scrape our desired data from the website. We start by loading the packages:
-% 
+%
 % ```{code-cell} ipython3
 % import requests
 % from bs4 import BeautifulSoup
 % ```
-% 
+%
 % Next, we tell Python what page we want to scrape by providing the webpage's URL in quotations to the function `requests.get` and pass it into the `BeautifulSoup` function for parsing:
-% 
+%
 % ```{code-cell} ipython3
 % wiki = requests.get("https://en.wikipedia.org/wiki/Canada")
 % page = BeautifulSoup(wiki.content, "html.parser")
 % ```
-% 
+%
 % The `requests.get` function sends a `GET` request to the specified URL and returns the server's response to the HTTP request (*i.e.* a `requests.Response` object). The `BeautifulSoup` function takes the content of the response and returns the HTML source code itself, which we have
 % stored in the `page` variable. Next, we use the `select` method of the page object along with the CSS selectors we obtained from the SelectorGadget tool. Make sure to surround the selectors with quotation marks; `select` expects that
-% argument is a string. It selects *nodes* from the HTML document that 
+% argument is a string. It selects *nodes* from the HTML document that
 % match the CSS selectors you specified. A *node* is an HTML tag pair (e.g.,
 % `<td>` and `</td>` which defines the cell of a table) combined with the content
 % stored between the tags. For our CSS selector `td:nth-child(6)`, an example
 % node that would be selected would be:
-% 
+%
 % +++
-% 
+%
 % ```
 % <td style="text-align:left;background:#f0f0f0;">
 % <a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
 % </td>
 % ```
-% 
+%
 % +++
-% 
+%
 % We store the result of the `select` function in the `population_nodes` variable. Note that it returns a list, and we slice the list to only print the first 5 elements.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % population_nodes = page.select(
 %     "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
 % )
 % population_nodes[:5]
 % ```
-% 
+%
 % ```
 % [<td style="text-align:left;"><a href="/wiki/Greater_Toronto_Area" title="Greater Toronto Area">Toronto</a></td>,
 %  <td style="text-align:right;">6,202,225</td>,
@@ -1298,27 +1308,27 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %  </td>,
 %  <td style="text-align:left;"><a href="/wiki/Greater_Montreal" title="Greater Montreal">Montreal</a></td>]
 % ```
-% 
+%
 % +++
-% 
-% Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from 
+%
+% Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from
 % the nodes using the `get_text`
 % function. In the case of the example
 % node above, `get_text` function returns `"London"`.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % [row.get_text() for row in population_nodes][:5]
 % ```
-% 
+%
 % ```
 % ['Toronto', '6,202,225', 'London', '543,551\n', 'Montreal']
 % ```
-% 
+%
 % +++
-% 
-% Fantastic! We seem to have extracted the data of interest from the 
+%
+% Fantastic! We seem to have extracted the data of interest from the
 % raw HTML source code. But we are not quite done; the data
 % is not yet in an optimal format for data analysis. Both the city names and
 % population are encoded as characters in a single vector, instead of being in a
@@ -1328,14 +1338,14 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % dealing with numbers), and some even contain a line break character at the end
 % (`\n`). In Chapter {ref}`wrangling`, we will learn more about how to *wrangle* data
 % such as this into a more useful format for data analysis using Python.
-% 
+%
 % +++
-% 
+%
 % ### Using an API
-% 
+%
 % ```{index} API
 % ```
-% 
+%
 % Rather than posting a data file at a URL for you to download, many websites these days
 % provide an API that must be accessed through a programming language like Python. The benefit of this
 % is that data owners have much more control over the data they provide to users. However, unlike
@@ -1343,87 +1353,87 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % has its own API designed especially for its own use case. Therefore we will just provide one example
 % of accessing data through an API in this book, with the hope that it gives you enough of a basic
 % idea that you can learn how to use another API if needed.
-% 
+%
 % ```{index} API; tweepy, tweepy, Twitter, API; token
 % ```
-% 
+%
 % +++
-% 
+%
 % In particular, in this book we will show you the basics of how to use
 % the `tweepy` package in Python to access
 % data from the Twitter API. `tweepy` requires the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to get tokens and secrets from that, through which your access to the data will then be authenticated and controlled.
-% 
+%
 % +++
-% 
+%
 % First, we go to the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an account if you do not have one yet. Note that you will need a valid phone number to associate with your developer account. After filling out the basic information, we will get the *essential access* to the Twitter API. Then we can create an app and hit the "get key" button, and we will get the API key and API key secret of the app (along with the bearer token which will not be used in this demonstration). **We need to store the key and secret at a safe place, and make sure do not show them to anyone else (also do not accidentally push it to the GitHub repository).** If you lose the key, you can always regenerate it. Next, we go to the "Keys and tokens" tab of the app, and generate an access token and an access token secret. **Save the access token and the access token secret at a safe place as well.** Your app will look something like {numref}`fig:twitter-API-keys-tokens`.
-% 
+%
 % +++
-% 
+%
 % ```{figure} img/twitter-API-keys-tokens.png
 % :name: fig:twitter-API-keys-tokens
-% 
-% Generating the API key-secret pair and the access token-secret pair in Twitter API. 
+%
+% Generating the API key-secret pair and the access token-secret pair in Twitter API.
 % ```
-% 
+%
 % +++
-% 
+%
 % Once you get the access keys and secrets, you can follow along with the examples that we show here.
 % To get started, load the `tweepy` package and authenticate our access to the Twitter developer portal account.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % import tweepy
-% 
+%
 % # replace these with the api key, api key secret, access token and access token secret
 % # generated on your own
-% api_key = "8OxHWiIWjy8M39LvnC8OfSXrj" 
+% api_key = "8OxHWiIWjy8M39LvnC8OfSXrj"
 % api_key_secret = "scqjRqX5stoy4pYB5Zu52tCBKzhGLDh5nRqTEM6CMoLRkRLR8F"
-% 
+%
 % access_token = "1556029189484007425-mYwaDCI1WnCxjuMt0jb2UYD2ns8BYB"
 % access_token_secret = "pDG4Ta7giYLY3mablPhd6y9bB5y2Aer1Cn18rihIJFBB7"
-% 
+%
 % # Authenticate to Twitter
 % auth = tweepy.OAuthHandler(api_key, api_key_secret)
 % auth.set_access_token(access_token, access_token_secret)
-% 
+%
 % api = tweepy.API(auth)
-% 
+%
 % try:
 %     api.verify_credentials()
 %     print("Successful Authentication")
 % except:
 %     print("Failed authentication")
 % ```
-% 
+%
 % ```
 % Successful Authentication
 % ```
-% 
+%
 % +++
-% 
-% `tweepy` provides an extensive set of functions to search 
-% Twitter for tweets, users, their followers, and more. 
-% Let's construct a small data set of the last 200 tweets and 
+%
+% `tweepy` provides an extensive set of functions to search
+% Twitter for tweets, users, their followers, and more.
+% Let's construct a small data set of the last 200 tweets and
 % retweets from the [@scikit_learn](https://twitter.com/scikit_learn) account. A few of the most recent tweets
 % are shown in {numref}`fig:01-scikit-learn-twitter`.
-% 
+%
 % +++
-% 
+%
 % ```{figure} img/scikit-learn-twitter.png
 % :name: fig:01-scikit-learn-twitter
-% 
+%
 % The `scikit-learn` account Twitter feed.
 % ```
-% 
+%
 % +++
-% 
+%
 % **Stop! Think about your API usage carefully!**
-% 
+%
 % When you access an API, you are initiating a transfer of data from a web server
 % to your computer. Web servers are expensive to run and do not have infinite resources.
-% If you try to ask for *too much data* at once, you can use up a huge amount of the server's bandwidth. 
-% If you try to ask for data *too frequently*&mdash;e.g., if you 
+% If you try to ask for *too much data* at once, you can use up a huge amount of the server's bandwidth.
+% If you try to ask for data *too frequently*&mdash;e.g., if you
 % make many requests to the server in quick succession&mdash;you can also bog the server down and make
 % it unable to talk to anyone else. Most servers have mechanisms to revoke your access if you are not
 % careful, but you should try to prevent issues from happening in the first place by being extra careful
@@ -1432,19 +1442,19 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % Be careful not to overrun your quota! In this example, we should take a look at
 %  [the Twitter website](https://developer.twitter.com/en/docs/twitter-api/rate-limits) to see what limits
 % we should abide by when using the API.
-% 
+%
 % +++
-% 
+%
 % **Using `tweepy`**
-% 
+%
 % After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
 % So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % userID = "scikit_learn"
-% 
+%
 % scikit_learn_tweets = api.user_timeline(
 %     screen_name=userID,
 %     count=200,
@@ -1452,69 +1462,69 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %     tweet_mode="extended",
 % )
 % ```
-% 
+%
 % Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % for info in scikit_learn_tweets[:3]:
 %     print("ID: {}".format(info.id))
 %     print(info.created_at)
 %     print(info.full_text)
 %     print("\n")
 % ```
-% 
+%
 % ```
 % ID: 1555686128971403265
 % 2022-08-05 22:44:11+00:00
 % scikit-learn 1.1.2 is out on https://t.co/lSpi4eDc2t and conda-forge!
-% 
+%
 % This is a small maintenance release that fixes a couple of regressions:
 % https://t.co/Oa84ES0qpG
-% 
-% 
+%
+%
 % ID: 1549321048943988737
 % 2022-07-19 09:11:37+00:00
 % RT @MarenWestermann: @scikit_learn It is worth highlighting that this scikit-learn sprint is seeing the highest participation of women out…
-% 
-% 
+%
+%
 % ID: 1548339716465930244
 % 2022-07-16 16:12:09+00:00
 % @StefanieMolin @theBodlina @RichardKlima We continue pulling requests here in Dublin. Putting some Made in Ireland code in the scikit-learn codebase 🇮🇪 . Current stats: 18 PRs opened, 12 merged 🚀 https://t.co/ccWy8vh8YI
 % ```
-% 
+%
 % +++
-% 
+%
 % A full list of available attributes provided by Twitter API can be found [here](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
-% 
+%
 % +++
-% 
+%
 % For the demonstration purpose, let's only use a
 % few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
 % and `full_text`, and construct a `pandas` DataFrame using the extracted information.
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-output]
-% 
+%
 % columns = ["time", "user", "is_retweet", "text"]
 % data = []
 % for tweet in scikit_learn_tweets:
 %     data.append(
 %         [tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text]
 %     )
-% 
+%
 % scikit_learn_tweets_df = pd.DataFrame(data, columns=columns)
 % scikit_learn_tweets_df
 % ```
-% 
+%
 % ```{code-cell} ipython3
 % :tags: [remove-input]
-% 
+%
 % scikit_learn_tweets_df = pd.read_csv("data/reading_api_df.csv", index_col=0)
 % scikit_learn_tweets_df
 % ```
-% 
+%
 % If you look back up at the image of the [@scikit_learn](https://twitter.com/scikit_learn) Twitter page, you will
 % recognize the text of the most recent few tweets in the above data frame.  In
 % other words, we have successfully created a small data set using the Twitter
@@ -1522,21 +1532,21 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % the extracted information can be easily converted into a `pandas` data frame (although not *every* API will provide data in such a nice format).
 % From this point onward, the `scikit_learn_tweets_df` data frame is stored on your
 % machine, and you can play with it to your heart's content. For example, you can use
-% `pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later; 
+% `pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later;
 % and after reading the next few chapters you will have the skills to
 % compute the percentage of retweets versus tweets, find the most oft-retweeted
-% account, make visualizations of the data, and much more! If you decide that you want 
-% to ask the Twitter API for more data 
+% account, make visualizations of the data, and much more! If you decide that you want
+% to ask the Twitter API for more data
 % (see [the `tweepy` page](https://github.com/tweepy/tweepy)
 % for more examples of what is possible), just be mindful as usual about how much
 % data you are requesting and how frequently you are making requests.
-% 
+%
 % +++
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter 
-can be found in the accompanying 
+Practice exercises for the material covered in this chapter
+can be found in the accompanying
 [worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Reading in data locally and from the web" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
@@ -1548,7 +1558,7 @@ and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
 
-- The [`pandas` documentation](https://pandas.pydata.org/docs/getting_started/index.html) 
+- The [`pandas` documentation](https://pandas.pydata.org/docs/getting_started/index.html)
   provides the documentation for many of the reading functions we cover in this chapter.
   It is where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.

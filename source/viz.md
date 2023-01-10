@@ -508,7 +508,7 @@ visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and the `mark_point` geometric object.
 By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`. In 
+like to fill them in, we pass the argument `filled=True` to `mark_point`. In
 place of `mark_point(filled=True)`, we can also use `mark_circle`.
 The result is shown in {numref}`faithful_scatter`.
 
@@ -1225,9 +1225,9 @@ The plot in {numref}`islands_plot_sorted` is now a very effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that continents are the largest seven landmasses.
-We can make one more finishing touch in {numref}`islands_plot_titled`: we will 
+We can make one more finishing touch in {numref}`islands_plot_titled`: we will
 add a title to the chart by specifying `title` argument in the `alt.Chart` function.
-Note that plot titles are not always required; usually plots appear as part 
+Note that plot titles are not always required; usually plots appear as part
 of other media (e.g., in a slide presentation, on a poster, in a paper) where
 the title may be redundant with the surrounding context.
 
@@ -1353,10 +1353,10 @@ Note that
 *vertical lines* are used to denote quantities on the *horizontal axis*,
 while *horizontal lines* are used to denote quantities on the *vertical axis*.
 
-To add the dashed line on top of the histogram, we 
-**add** the `mark_rule` chart to the `morley_hist` 
+To add the dashed line on top of the histogram, we
+**add** the `mark_rule` chart to the `morley_hist`
 using the `+` operator.
-Adding features to a plot using the `+` operator is known as *layering* in `altair`. 
+Adding features to a plot using the `+` operator is known as *layering* in `altair`.
 This is a very powerful feature of `altair`; you
 can continue to iterate on a single plot object, adding and refining
 one layer at a time. If you stored your plot as a named object
@@ -1446,7 +1446,7 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 (i.e., categorical) type variable by adding a suffix `:N`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
-hence use a discrete color map in visualizations. 
+hence use a discrete color map in visualizations.
 We also specify the `stack=False` argument in the `y` encoding so
 that the bars are not stacked on top of each other.
 
@@ -1831,8 +1831,8 @@ perfectly re-created when loading and displaying, with the hope that the change
 is not noticeable. *Lossless* formats, on the other hand, allow a perfect
 display of the original image.
 
-- *Common file types:* 
-    - [JPEG](https://en.wikipedia.org/wiki/JPEG) (`.jpg`, `.jpeg`): lossy, usually used for photographs 
+- *Common file types:*
+    - [JPEG](https://en.wikipedia.org/wiki/JPEG) (`.jpg`, `.jpeg`): lossy, usually used for photographs
     - [PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics) (`.png`): lossless, usually used for plots / line drawings
     - [BMP](https://en.wikipedia.org/wiki/BMP_file_format) (`.bmp`): lossless, raw image data, no compression (rarely used)
     - [TIFF](https://en.wikipedia.org/wiki/TIFF) (`.tif`, `.tiff`): typically lossless, no compression, used mostly in graphic arts, publishing
@@ -1845,8 +1845,8 @@ display of the original image.
 objects (lines, surfaces, shapes, curves). When the computer displays the image, it
 redraws all of the elements using their mathematical formulas.
 
-- *Common file types:* 
-    - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use 
+- *Common file types:*
+    - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) (`.svg`): general-purpose use
     - [EPS](https://en.wikipedia.org/wiki/Encapsulated_PostScript) (`.eps`), general-purpose use (rarely used)
 - *Open-source software:* [Inkscape](https://inkscape.org/)
 
@@ -1875,7 +1875,7 @@ Let's learn how to save plot images to `.png` and `.svg` file formats using the
 `faithful_scatter_labels` scatter plot of the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)
 {cite:p}`faithfuldata` that we created earlier, shown in {numref}`faithful_scatter_labels`.
 To save the plot to a file, we can use the `save`
-method. The `save` method takes the path to the filename where you would like to 
+method. The `save` method takes the path to the filename where you would like to
 save the file (e.g., `img/filename.png` to save a file named `filename.png` to the `img` directory).
 The kind of image to save is specified by the file extension.  For example, to
 create a PNG image file, we specify that the file extension is `.png`.  Below
@@ -1891,6 +1891,7 @@ faithful_scatter_labels.save("img/faithful_plot.svg")
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
 import os
 import numpy as np
 png_size = np.round(os.path.getsize("img/faithful_plot.png")/(1024*1024), 2)
@@ -1915,10 +1916,10 @@ glue("svg_size", svg_size)
   - {glue:}`svg_size` MB
 ```
 
-Take a look at the file sizes in {numref}`png-vs-svg-table`
-Wow, that's quite a difference! In this case, the `.png` image is almost 4 times 
+Take a look at the file sizes in {numref}`png-vs-svg-table`.
+Wow, that's quite a difference! In this case, the `.png` image is almost 4 times
 smaller than the `.svg` image. Since there are a decent number of points in the plot,
-the vector graphics format image (`.svg`) is bigger than the raster image (`.png`), which 
+the vector graphics format image (`.svg`) is bigger than the raster image (`.png`), which
 just stores the image data itself.
 In {numref}`png-vs-svg`, we show what
 the images look like when we zoom in to a rectangle with only 3 data points.

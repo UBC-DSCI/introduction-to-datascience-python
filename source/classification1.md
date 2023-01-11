@@ -390,7 +390,8 @@ perim_concav_with_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
 )
 glue('fig:05-knn-2', perim_concav_with_new_point, display=True)

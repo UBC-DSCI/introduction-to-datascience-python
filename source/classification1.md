@@ -1734,15 +1734,12 @@ First we will load the data, create a model, and specify a preprocessor for the 
 
 ```{code-cell} ipython3
 # load the unscaled cancer data, make Class readable
-unscaled_cancer = (
-            pd.read_csv("data/unscaled_wdbc.csv")
-            .replace({
-               'M' : 'Malignant',
-               'B' : 'Benign'
-            })
-    )
-# make Class a categorical type
-unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
+unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
+unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+}).astype('category')
+unscaled_cancer
 
 
 # create the KNN model

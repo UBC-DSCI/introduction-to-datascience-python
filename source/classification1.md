@@ -1431,9 +1431,9 @@ and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
 rare_cancer = pd.concat(
-    (cancer[cancer["Class"] == 'Benign'],
-     cancer[cancer["Class"] == 'Malignant'].head(3)
-    ))
+    cancer[cancer["Class"] == 'Benign'],
+    cancer[cancer["Class"] == 'Malignant'].head(3)
+))
 
 rare_plot = (
     alt.Chart(rare_cancer)

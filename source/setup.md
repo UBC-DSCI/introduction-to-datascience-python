@@ -14,7 +14,7 @@ kernelspec:
 ---
 
 (move-to-your-own-machine)=
-# Setting up your computer -- TBD
+# Setting up your computer
 
 ## Overview
 
@@ -26,9 +26,14 @@ needed to do the data science covered in this book on your own computer.
 By the end of the chapter, readers will be able to do the following:
 
 - Install the Git version control software.
-- Install and launch a local instance of JupyterLab with the R kernel.
+- Install and launch a local instance of JupyterLab with the Python kernel.
 - Download the worksheets that accompany the chapters of this book from GitHub.
 
+```{note}
+This chapter is not available in the Python version of the textbook yet.
+```
+
+<!--
 ## Installing software on your own computer
 
 This section will provide instructions for installing the software required by
@@ -298,3 +303,5 @@ clicking the green "Code" button, and then selecting "Download ZIP".
 The worksheets are contained within the compressed zip folder that will be downloaded.
 Once you unzip the downloaded file, you can open the folder and run each worksheet
 using Jupyter. See Chapter \@ref(getting-started-with-jupyter) for instructions on how to use Jupyter.
+
+-->

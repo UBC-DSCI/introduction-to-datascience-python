@@ -9,7 +9,7 @@ parts:
     - file: acknowledgements-python.md
     - file: authors.md
     - file: editors.md
-    #- file: setup.md
+    - file: setup.md
 - caption: Chapters
   numbered: 3
   chapters:

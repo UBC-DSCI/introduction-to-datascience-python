@@ -1160,10 +1160,10 @@ the original column names. To keep original column names, we need to set the `ve
 
 ```{code-cell} ipython3
 preprocessor_keep_all = make_column_transformer(
-           (StandardScaler(), make_column_selector(dtype_include=np.number)),
-            remainder='passthrough',
-            verbose_feature_names_out=False
-      )
+    (StandardScaler(), make_column_selector(dtype_include=np.number)),
+    remainder='passthrough',
+    verbose_feature_names_out=False
+)
 preprocessor_keep_all.fit(unscaled_cancer)
 scaled_cancer_all = preprocessor_keep_all.transform(unscaled_cancer)
 scaled_cancer_all

@@ -1068,7 +1068,8 @@ Here we will use the `StandardScaler` transformer to standardize the predictor v
 the `unscaled_cancer` data. In order to tell the `StandardScaler` which variables to standardize,
 we wrap it in a 
 [`ColumnTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer) object
-using the [`make_column_transformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html#sklearn.compose.make_column_transformer) function. `ColumnTransformer` objects also enable the use of multiple preprocessors at
+using the [`make_column_transformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html#sklearn.compose.make_column_transformer) function. 
+`ColumnTransformer` objects also enable the use of multiple preprocessors at
 once, which is especially handy when you want to apply different preprocessing to each of the predictor variables. 
 The primary argument of the `make_column_transformer` function is a sequence of
 pairs of (1) a preprocessor, and (2) the columns to which you want to apply that preprocessor.
@@ -1099,17 +1100,16 @@ Note that here we specified which columns to apply the preprocessing step to
 by individual names; this approach can become quite difficult, e.g., when we have many
 predictor variables. Rather than writing out the column names individually,
 we can instead use the 
-[`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For example, if we wanted to standardize all *numerical* predictors,
-we would use `make_column_selector` and specify the `dtype_include` argument to be `np.number`
-(from the `numpy` package). This creates a preprocessor equivalent to the one we
-created previously.
+[`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For
+example, if we wanted to standardize all *numerical* predictors,
+we would use `make_column_selector` and specify the `dtype_include` argument to be `'number'`. 
+This creates a preprocessor equivalent to the one we created previously.
 
 ```{code-cell} ipython3
-import numpy as np
 from sklearn.compose import make_column_selector
 
 preprocessor = make_column_transformer(
-    (StandardScaler(), make_column_selector(dtype_include=np.number)),
+    (StandardScaler(), make_column_selector(dtype_include='number')),
 )
 preprocessor
 ```
@@ -1153,7 +1153,7 @@ the original column names. To keep original column names, we need to set the `ve
 
 ```{code-cell} ipython3
 preprocessor_keep_all = make_column_transformer(
-    (StandardScaler(), make_column_selector(dtype_include=np.number)),
+    (StandardScaler(), make_column_selector(dtype_include='number')),
     remainder='passthrough',
     verbose_feature_names_out=False
 )
@@ -1799,6 +1799,8 @@ predict the label of each, and visualize the predictions with a colored scatter 
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+import numpy as np
+
 # create the grid of area/smoothness vals, and arrange in a data frame
 are_grid = np.linspace(
     unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 50

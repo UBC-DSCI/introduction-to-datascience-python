@@ -1040,15 +1040,12 @@ and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = (
-            pd.read_csv("data/unscaled_wdbc.csv")
-            .loc[:, ['Class', 'Area', 'Smoothness']]
-            .replace({
-               'M' : 'Malignant',
-               'B' : 'Benign'
-            })
-    )
-unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
+unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")[['Class', 'Area', 'Smoothness']]
+unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+}).astype('category')
+unscaled_cancer
 unscaled_cancer
 ```
 

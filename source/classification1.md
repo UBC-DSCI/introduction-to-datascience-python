@@ -296,7 +296,7 @@ is colorblind-friendly, so we can stick with that here.
 ```{code-cell} ipython3
 perim_concav = (
     alt.Chart(cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),

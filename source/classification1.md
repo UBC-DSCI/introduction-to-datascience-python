@@ -1430,7 +1430,7 @@ The new imbalanced data is shown in {numref}`fig:05-unbalanced`,
 and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
-rare_cancer = pd.concat(
+rare_cancer = pd.concat((
     cancer[cancer["Class"] == 'Benign'],
     cancer[cancer["Class"] == 'Malignant'].head(3)
 ))

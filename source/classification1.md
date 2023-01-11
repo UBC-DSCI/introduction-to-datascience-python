@@ -1440,7 +1440,7 @@ rare_cancer = pd.concat(
 
 rare_plot = (
     alt.Chart(rare_cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),

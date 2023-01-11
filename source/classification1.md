@@ -1794,7 +1794,7 @@ prediction
 ```
 
 The classifier predicts that the first observation is benign, while the second is
-malignant. {numref}`fig:05-workflow-plot-show` visualizes the predictions that this 
+malignant. {numref}`fig:05-workflow-plot` visualizes the predictions that this 
 trained $K$-nearest neighbor model will make on a large range of new observations.
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
@@ -1858,7 +1858,7 @@ unscaled_plot = (
 # 2. the faded colored scatter for the grid points
 prediction_plot = (
     alt.Chart(prediction_table)
-    .mark_point(opacity=0.02, filled=True, size=200)
+    .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
         x=alt.X("Area"),
         y=alt.Y("Smoothness"),
@@ -1870,11 +1870,11 @@ unscaled_plot + prediction_plot
 
 ```{code-cell} ipython3
 :tags: [remove-input]
-glue("fig:05-upsample-2", (unscaled_plot + prediction_plot))
+glue("fig:05-workflow-plot", (unscaled_plot + prediction_plot))
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
-:name: fig:05-workflow-plot-show
+:name: fig:05-workflow-plot
 :figclass: caption-hack
 
 Scatter plot of smoothness versus area where background color indicates the decision of the classifier.

@@ -656,15 +656,15 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
-cancer_dist = (cancer
-           .loc[:, ["Perimeter", "Concavity", "Class"]]
-           .assign(dist_from_new = (
-               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
-             + (cancer["Concavity"] - new_obs_Concavity) ** 2
-           )**(1/2))
-           .nsmallest(5, "dist_from_new")
-      )
-cancer_dist
+(
+    cancer
+   [["Perimeter", "Concavity", "Class"]]
+   .assign(dist_from_new = (
+       (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+     + (cancer["Concavity"] - new_obs_Concavity) ** 2
+   )**(1/2))
+   .nsmallest(5, "dist_from_new")
+)
 ```
 
 In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how

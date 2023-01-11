@@ -1132,7 +1132,9 @@ scaled_cancer = preprocessor.transform(unscaled_cancer)
 scaled_cancer
 ```
 ```{code-cell} ipython3
-
+:tags: [remove-cell]
+glue('scaled-cancer-column-0', scaled_cancer.columns[0])
+glue('scaled-cancer-column-1', scaled_cancer.columns[1])
 ```
 It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
 But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
@@ -1142,8 +1144,8 @@ is to *drop* the remaining columns. This default behavior works well with the re
 in the {ref}`08:puttingittogetherworkflow` section), but for visualizing the result of preprocessing it can be useful to keep the other columns
 in our original data frame, such as the `Class` variable here.
 To keep other columns, we need to set the `remainder` argument to `'passthrough'` in the `make_column_transformer` function.
- Furthermore, you can see that the new column names---{glue:}`scaled_cancer.columns[0]`
-and {glue:}`scaled_cancer.columns[1]`---include the name
+ Furthermore, you can see that the new column names---{glue:}`scaled-cancer-column-0`
+and {glue:}`scaled-cancer-column-1`---include the name
 of the preprocessing step separated by underscores. This default behavior is useful in `sklearn` because we sometimes want to apply
 multiple different preprocessing steps to the same columns; but again, for visualization it can be useful to preserve
 the original column names. To keep original column names, we need to set the `verbose_feature_names_out` argument to `False`.

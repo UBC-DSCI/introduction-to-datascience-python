@@ -156,6 +156,7 @@ arguments, and then inspect its contents:
 ```
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 cancer = pd.read_csv("data/wdbc.csv")
 cancer
 ```

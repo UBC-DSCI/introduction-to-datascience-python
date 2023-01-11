@@ -382,7 +382,7 @@ perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
     )
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),

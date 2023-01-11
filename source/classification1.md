@@ -1117,7 +1117,7 @@ from sklearn.compose import make_column_selector
 
 preprocessor = make_column_transformer(
     (StandardScaler(), make_column_selector(dtype_include=np.number)),
-      )
+)
 preprocessor
 ```
 

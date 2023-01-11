@@ -15,18 +15,13 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 import warnings
-def warn(*args, **kwargs):
-    pass
-warnings.warn = warn
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 from myst_nb import glue
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 from IPython.display import HTML
-
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import iplot, plot
 ```
 
 (classification)=

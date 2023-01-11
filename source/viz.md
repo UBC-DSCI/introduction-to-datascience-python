@@ -16,11 +16,9 @@ kernelspec:
 :tags: [remove-cell]
 
 # ignore warnings from altair
-
 import warnings
-def warn(*args, **kwargs):
-    pass
-warnings.warn = warn
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 ```
 
 

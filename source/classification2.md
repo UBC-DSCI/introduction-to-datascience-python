@@ -396,8 +396,6 @@ right proportions of each category of observation.
 np.random.seed(5)
 ```
 
-
-
 ```{code-cell} ipython3
 from sklearn.model_selection import train_test_split
 
@@ -421,10 +419,10 @@ glue("cancer_test_nrow", len(cancer_test))
 ```{index} info
 ```
 
-We can see from `.info()` in the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
+We can see from the `info` method above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
 a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification` chapter
-that we use the `.info()` method to preview the number of rows, the variable names, their data types, and 
+that we use the `info` method to preview the number of rows, the variable names, their data types, and 
 missing entries of a data frame.
 
 ```{index} groupby, count

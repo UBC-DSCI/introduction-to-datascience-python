@@ -377,7 +377,7 @@ perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
     )
-    .mark_circle()
+    .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
@@ -474,7 +474,8 @@ perim_concav_with_new_point2 = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
 )
 
@@ -635,7 +636,8 @@ perim_concav_with_new_point3 = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
 )
 
@@ -1230,7 +1232,8 @@ area_smoothness_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
     )
 )
 
@@ -1305,7 +1308,8 @@ area_smoothness_new_point_scaled = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
     )
 )
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
@@ -1379,7 +1383,7 @@ zoom_area_smoothness_new_point = (
     )
     .mark_point(clip=True, opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Area", scale=alt.Scale(domain=(380, 420))),
+        x=alt.X("Area", scale=alt.Scale(domain=(395, 405))),
         y=alt.Y("Smoothness", scale=alt.Scale(domain=(0.08, 0.14))),
         color=alt.Color(
             "Class",
@@ -1388,7 +1392,8 @@ zoom_area_smoothness_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
     )
 )
 zoom_area_smoothness_new_point + line1 + line2 + line3
@@ -1501,7 +1506,8 @@ rare_plot = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30))
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
     )
 )
 
@@ -1830,14 +1836,14 @@ unscaled_plot = (
     .encode(
         x=alt.X(
             "Area",
-            title="Area (standardized)",
+            title="Area",
             scale=alt.Scale(
                 domain=(unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max())
             ),
         ),
         y=alt.Y(
             "Smoothness",
-            title="Smoothness (standardized)",
+            title="Smoothness",
             scale=alt.Scale(
                 domain=(
                     unscaled_cancer["Smoothness"].min(),

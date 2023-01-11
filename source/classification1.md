@@ -1797,7 +1797,7 @@ trained $K$-nearest neighbor model will make on a large range of new observation
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
 For the interested reader who wants a learning challenge, we now include it below. 
-The basic idea is to create a grid of synthetic new observations using the `numpy.meshgrid` function, 
+The basic idea is to create a grid of synthetic new observations using the `meshgrid` function from `numpy`, 
 predict the label of each, and visualize the predictions with a colored scatter having a very high transparency 
 (low `opacity` value) and large point radius. See if you can figure out what each line is doing!
 

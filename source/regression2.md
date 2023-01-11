@@ -35,9 +35,9 @@ from IPython.display import HTML
 from myst_nb import glue
 ```
 
-## Overview 
+## Overview
 Up to this point, we have solved all of our predictive problems&mdash;both classification
-and regression&mdash;using K-nearest neighbors (KNN)-based approaches. In the context of regression, 
+and regression&mdash;using K-nearest neighbors (KNN)-based approaches. In the context of regression,
 there is another commonly used method known as *linear regression*. This chapter provides an introduction
 to the basic concept of linear regression, shows how to use `scikit-learn` to perform linear regression in Python,
 and characterizes its strengths and weaknesses compared to KNN regression. The focus is, as usual,
@@ -45,7 +45,7 @@ on the case where there is a single predictor and single response variable of in
 concludes with an example using *multivariable linear regression* when there is more than one
 predictor.
 
-## Chapter learning objectives 
+## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
 * Use Python and `scikit-learn` to fit a linear regression model on training data.
@@ -63,9 +63,9 @@ By the end of the chapter, readers will be able to do the following:
 At the end of the previous chapter, we noted some limitations of KNN regression.
 While the method is simple and easy to understand, KNN regression does not
 predict well beyond the range of the predictors in the training data, and
-the method gets significantly slower as the training data set grows. 
+the method gets significantly slower as the training data set grows.
 Fortunately, there is an alternative to KNN regression&mdash;*linear regression*&mdash;that addresses
-both of these limitations. Linear regression is also very commonly 
+both of these limitations. Linear regression is also very commonly
 used in practice because it provides an interpretable mathematical equation that describes
 the relationship between the predictor and response variables. In this first part of the chapter, we will focus on *simple* linear regression,
 which involves only one predictor variable and one response variable; later on, we will consider
@@ -74,7 +74,7 @@ which involves only one predictor variable and one response variable; later on, 
 predicting a numerical response variable (like race time, house price, or height);
 but *how* it makes those predictions for a new observation is quite different from KNN regression.
  Instead of looking at the K nearest neighbors and averaging
-over their values for a prediction, in simple linear regression, we create a 
+over their values for a prediction, in simple linear regression, we create a
 straight line of best fit through the training data and then
 "look up" the prediction using the line.
 
@@ -83,16 +83,16 @@ straight line of best fit through the training data and then
 ```{index} regression; logistic
 ```
 
-> **Note:** Although we did not cover it in earlier chapters, there 
+> **Note:** Although we did not cover it in earlier chapters, there
 > is another popular method for classification called *logistic
 > regression* (it is used for classification even though the name, somewhat confusingly,
 > has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
 > "fit" the model to the training data and then "look up" the prediction for each new observation.
-> Logistic regression and KNN classification have an advantage/disadvantage comparison 
+> Logistic regression and KNN classification have an advantage/disadvantage comparison
 > similar to that of linear regression and KNN
 > regression. It is useful to have a good understanding of linear regression before learning about
 > logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
-> classification chapters to learn more about logistic regression. 
+> classification chapters to learn more about logistic regression.
 
 +++
 
@@ -101,7 +101,7 @@ straight line of best fit through the training data and then
 
 Let's return to the Sacramento housing data from Chapter {ref}`regression1` to learn
 how to apply linear regression and compare it to KNN regression. For now, we
-will consider 
+will consider
 a smaller version of the housing data to help make our visualizations clear.
 Recall our predictive question: can we use the size of a house in the Sacramento, CA area to predict
 its sale price? In particular, recall that we have come across a new 2,000 square-foot house we are interested
@@ -155,7 +155,7 @@ Scatter plot of sale price versus size with line of best fit for subset of the S
 ```{index} straight line; equation
 ```
 
-The equation for the straight line is: 
+The equation for the straight line is:
 
 $$\text{house sale price} = \beta_0 + \beta_1 \cdot (\text{house size}),$$
 where
@@ -163,18 +163,18 @@ where
 - $\beta_0$ is the *vertical intercept* of the line (the price when house size is 0)
 - $\beta_1$ is the *slope* of the line (how quickly the price increases as you increase house size)
 
-Therefore using the data to find the line of best fit is equivalent to finding coefficients 
+Therefore using the data to find the line of best fit is equivalent to finding coefficients
 $\beta_0$ and $\beta_1$ that *parametrize* (correspond to) the line of best fit.
 Now of course, in this particular problem, the idea of a 0 square-foot house is a bit silly;
-but you can think of $\beta_0$ here as the "base price," and 
+but you can think of $\beta_0$ here as the "base price," and
 $\beta_1$ as the increase in price for each square foot of space.
-Let's push this thought even further: what would happen in the equation for the line if you 
+Let's push this thought even further: what would happen in the equation for the line if you
 tried to evaluate the price of a house with size 6 *million* square feet?
 Or what about *negative* 2,000 square feet? As it turns out, nothing in the formula breaks; linear
 regression will happily make predictions for crazy predictor values if you ask it to. But even though
 you *can* make these wild predictions, you shouldn't. You should only make predictions roughly within
 the range of your original data, and perhaps a bit beyond it only if it makes sense. For example,
-the data in {numref}`fig:08-lin-reg1` only reaches around 600 square feet on the low end, but 
+the data in {numref}`fig:08-lin-reg1` only reaches around 600 square feet on the low end, but
 it would probably be reasonable to use the linear regression model to make a prediction at 500 square feet, say.
 
 Back to the example! Once we have the coefficients $\beta_0$ and $\beta_1$, we can use the equation
@@ -234,10 +234,10 @@ Scatter plot of sale price versus size with line of best fit and a red dot at th
 +++
 
 By using simple linear regression on this small data set to predict the sale price
-for a 2,000 square-foot house, we get a predicted value of 
+for a 2,000 square-foot house, we get a predicted value of
 \${glue:text}`pred_2000`. But wait a minute...how
 exactly does simple linear regression choose the line of best fit? Many
-different lines could be drawn through the data points. 
+different lines could be drawn through the data points.
 Some plausible examples are shown in {numref}`fig:08-several-lines`.
 
 ```{code-cell} ipython3
@@ -292,8 +292,8 @@ Scatter plot of sale price versus size with many possible lines that could be dr
 
 Simple linear regression chooses the straight line of best fit by choosing
 the line that minimizes the **average squared vertical distance** between itself and
-each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates 
-these vertical distances as red lines. Finally, to assess the predictive 
+each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates
+these vertical distances as red lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
 we use RMSPE&mdash;the same measure of predictive performance we used with KNN regression.
 
@@ -342,8 +342,8 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 ```
 
 We can perform simple linear regression in Python using `scikit-learn` in a
-very similar manner to how we performed KNN regression. 
-To do this, instead of creating a `KNeighborsRegressor` model specification, 
+very similar manner to how we performed KNN regression.
+To do this, instead of creating a `KNeighborsRegressor` model specification,
 we use a `LinearRegression` model specification.
 Another difference is that we do not need to choose $K$ in the
 context of linear regression, and so we do not need to perform cross-validation.
@@ -361,7 +361,7 @@ can come back to after we choose our final model. Let's take care of that now.
 :tags: [remove-cell]
 
 # We can perform simple linear regression in R using `tidymodels` \index{tidymodels} in a
-# very similar manner to how we performed KNN regression. 
+# very similar manner to how we performed KNN regression.
 # To do this, instead of creating a `nearest_neighbor` model specification with
 # the `kknn` engine, we use a `linear_reg` model specification
 # with the `lm` engine. Another difference is that we do not need to choose $K$ in the
@@ -431,17 +431,17 @@ glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_[0]))
 
 +++
 
-Our coefficients are 
+Our coefficients are
 (intercept) $\beta_0=$ {glue:}`train_lm_intercept`
 and (slope) $\beta_1=$ {glue:}`train_lm_slope`.
 This means that the equation of the line of best fit is
 
 $\text{house sale price} =$ {glue:}`train_lm_intercept` $+$ {glue:}`train_lm_slope` $\cdot (\text{house size}).$
 
-In other words, the model predicts that houses 
+In other words, the model predicts that houses
 start at \${glue:text}`train_lm_intercept_f` for 0 square feet, and that
-every extra square foot increases the cost of 
-the house by \${glue:text}`train_lm_slope_f`. Finally, 
+every extra square foot increases the cost of
+the house by \${glue:text}`train_lm_slope_f`. Finally,
 we predict on the test data set to assess how well our model does:
 
 ```{code-cell} ipython3
@@ -472,7 +472,7 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 ```
 
 Our final model's test error as assessed by RMSPE
-is {glue:text}`sacr_RMSPE`. 
+is {glue:text}`sacr_RMSPE`.
 Remember that this is in units of the target/response variable, and here that
 is US Dollars (USD). Does this mean our model is "good" at predicting house
 sale price based off of the predictor of home size? Again, answering this is
@@ -480,10 +480,10 @@ tricky and requires knowledge of how you intend to use the prediction.
 
 To visualize the simple linear regression model, we can plot the predicted house
 sale price across all possible house sizes we might encounter superimposed on a scatter
-plot of the original housing price data. There is a function in 
+plot of the original housing price data. There is a function in
 the `altair`, `transform_regression`, that
 allows us to add a layer on our plot with the simple
-linear regression predicted line of best fit. 
+linear regression predicted line of best fit.
 {numref}`fig:08-lm-predict-all` displays the result.
 
 ```{code-cell} ipython3
@@ -491,7 +491,7 @@ linear regression predicted line of best fit.
 
 # To visualize the simple linear regression model, we can plot the predicted house
 # sale price across all possible house sizes we might encounter superimposed on a scatter
-# plot of the original housing price data. There is a plotting function in 
+# plot of the original housing price data. There is a plotting function in
 # the `tidyverse`, `geom_smooth`, that
 # allows us to add a layer on our plot with the simple
 # linear regression predicted line of best fit. By default `geom_smooth` adds some other information
@@ -680,20 +680,20 @@ What differences do we observe in {numref}`fig:08-compareRegression`? One obviou
 difference is the shape of the blue lines. In simple linear regression we are
 restricted to a straight line, whereas in KNN regression our line is much more
 flexible and can be quite wiggly. But there is a major interpretability advantage in limiting the
-model to a straight line. A 
+model to a straight line. A
 straight line can be defined by two numbers, the
 vertical intercept and the slope. The intercept tells us what the prediction is when
 all of the predictors are equal to 0; and the slope tells us what unit increase in the target/response
 variable we predict given a unit increase in the predictor
 variable. KNN regression, as simple as it is to implement and understand, has no such
-interpretability from its wiggly line. 
+interpretability from its wiggly line.
 
 ```{index} underfitting; regression
 ```
 
 There can, however, also be a disadvantage to using a simple linear regression
 model in some cases, particularly when the relationship between the target and
-the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In 
+the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
 these cases the prediction model from a simple linear regression
 will underfit (have high bias), meaning that model/predicted values do not
 match the actual observed values very well. Such a model would probably have a
@@ -704,7 +704,7 @@ are other types of regression you can learn about in future books that may do
 even better at predicting with such data.
 
 How do these two models compare on the Sacramento house prices data set? In
-{numref}`fig:08-compareRegression`, we also printed the RMSPE as calculated from 
+{numref}`fig:08-compareRegression`, we also printed the RMSPE as calculated from
 predicting on the test data set that was not used to train/fit the models. The RMSPE for the simple linear
 regression model is slightly lower than the RMSPE for the KNN regression model.
 Considering that the simple linear regression model is also more interpretable,
@@ -720,10 +720,10 @@ predicts a constant slope. Predicting outside the range of the observed
 data is known as *extrapolation*; KNN and linear models behave quite differently
 when extrapolating. Depending on the application, the flat
 or constant slope trend may make more sense. For example, if our housing
-data were slightly different, the linear model may have actually predicted 
+data were slightly different, the linear model may have actually predicted
 a *negative* price for a small house (if the intercept $\beta_0$ was negative),
 which obviously does not match reality. On the other hand, the trend of increasing
-house size corresponding to increasing house price probably continues for large houses, 
+house size corresponding to increasing house price probably continues for large houses,
 so the "flat" extrapolation of KNN likely does not match reality.
 
 +++
@@ -739,49 +739,49 @@ so the "flat" extrapolation of KNN likely does not match reality.
 ```
 
 As in KNN classification and KNN regression, we can move beyond the simple
-case of only one predictor to the case with multiple predictors, 
+case of only one predictor to the case with multiple predictors,
 known as *multivariable linear regression*.
 To do this, we follow a very similar approach to what we did for
-KNN regression: we just specify the training data by adding more predictors. 
+KNN regression: we just specify the training data by adding more predictors.
 But recall that we do not need to use cross-validation to choose any parameters,
-nor do we need to standardize (i.e., center and scale) the data for linear regression. 
+nor do we need to standardize (i.e., center and scale) the data for linear regression.
 Note once again that we have the same concerns regarding multiple predictors
  as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
-better. But because the same predictor selection 
+better. But because the same predictor selection
 algorithm from the classification chapter extends to the setting of linear regression,
 it will not be covered again in this chapter.
 
 ```{index} Sacramento real estate
 ```
 
-We will demonstrate multivariable linear regression using the Sacramento real estate 
+We will demonstrate multivariable linear regression using the Sacramento real estate
 data with both house size
 (measured in square feet) as well as number of bedrooms as our predictors, and
-continue to use house sale price as our response variable. We will start by 
-specifying the training data to 
+continue to use house sale price as our response variable. We will start by
+specifying the training data to
 include both the `sqft` and `beds` variables as predictors:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 # As in KNN classification and KNN regression, we can move beyond the simple
-# case of only one predictor to the case with multiple predictors, 
+# case of only one predictor to the case with multiple predictors,
 # known as *multivariable linear regression*. \index{regression!multivariable linear}\index{regression!multivariable linear equation|see{plane equation}}
 # To do this, we follow a very similar approach to what we did for
-# KNN regression: we just add more predictors to the model formula in the 
+# KNN regression: we just add more predictors to the model formula in the
 # recipe. But recall that we do not need to use cross-validation to choose any parameters,
-# nor do we need to standardize (i.e., center and scale) the data for linear regression. 
+# nor do we need to standardize (i.e., center and scale) the data for linear regression.
 # Note once again that we have the same concerns regarding multiple predictors
 #  as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
-# better. But because the same predictor selection 
+# better. But because the same predictor selection
 # algorithm from the classification chapter extends to the setting of linear regression,
 # it will not be covered again in this chapter.
 
 # We will demonstrate multivariable linear regression using the Sacramento real estate  \index{Sacramento real estate}
 # data with both house size
 # (measured in square feet) as well as number of bedrooms as our predictors, and
-# continue to use house sale price as our response variable. We will start by 
-# changing the formula in the recipe to 
+# continue to use house sale price as our response variable. We will start by
+# changing the formula in the recipe to
 # include both the `sqft` and `beds` variables as predictors:
 ```
 
@@ -899,8 +899,8 @@ Linear regression plane of best fit overlaid on top of the data (using price, ho
 +++
 
 We see that the predictions from linear regression with two predictors form a
-flat plane. This is the hallmark of linear regression, and differs from the 
-wiggly, flexible surface we get from other methods such as KNN regression. 
+flat plane. This is the hallmark of linear regression, and differs from the
+wiggly, flexible surface we get from other methods such as KNN regression.
  As discussed, this can be advantageous in one aspect, which is that for each
 predictor, we can get slopes/intercept from linear regression, and thus describe the
 plane mathematically. We can extract those slope values from our model object
@@ -917,7 +917,7 @@ mlm.intercept_
 ```{index} plane equation
 ```
 
-And then use those slopes to write a mathematical equation to describe the prediction plane: 
+And then use those slopes to write a mathematical equation to describe the prediction plane:
 
 $$\text{house sale price} = \beta_0 + \beta_1\cdot(\text{house size}) + \beta_2\cdot(\text{number of bedrooms}),$$
 where:
@@ -944,9 +944,9 @@ $\text{house sale price} =$ {glue:text}`icept` $+$ {glue:text}`sqftc` $\cdot (\t
 
 This model is more interpretable than the multivariable KNN
 regression model; we can write a mathematical equation that explains how
-each predictor is affecting the predictions. But as always, we should 
+each predictor is affecting the predictions. But as always, we should
 question how well multivariable linear regression is doing compared to
-the other tools we have, such as simple linear regression 
+the other tools we have, such as simple linear regression
 and multivariable KNN regression. If this comparison is part of
 the model tuning process&mdash;for example, if we are trying
  out many different sets of predictors for multivariable linear
@@ -963,25 +963,25 @@ lm_mult_test_RMSPE
 ```{index} RMSPE
 ```
 
-We obtain an RMSPE for the multivariable linear regression model 
+We obtain an RMSPE for the multivariable linear regression model
 of {glue:text}`sacr_mult_RMSPE`. This prediction error
  is less than the prediction error for the multivariable KNN regression model,
 indicating that we should likely choose linear regression for predictions of
 house sale price on this data set. Revisiting the simple linear regression model
-with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was 
-{glue:text}`sacr_RMSPE`, 
+with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was
+{glue:text}`sacr_RMSPE`,
 which is slightly higher than that of our more complex model. Our model with two predictors
-provided a slightly better fit on test data than our model with just one. 
+provided a slightly better fit on test data than our model with just one.
 As mentioned earlier, this is not always the case: sometimes including more
-predictors can negatively impact the prediction performance on unseen 
+predictors can negatively impact the prediction performance on unseen
 test data.
 
 +++
 
 ## Multicollinearity and outliers
 
-What can go wrong when performing (possibly multivariable) linear regression? 
-This section will introduce two common issues&mdash;*outliers* and *collinear predictors*&mdash;and 
+What can go wrong when performing (possibly multivariable) linear regression?
+This section will introduce two common issues&mdash;*outliers* and *collinear predictors*&mdash;and
 illustrate their impact on predictions.
 
 +++
@@ -993,7 +993,7 @@ illustrate their impact on predictions.
 
 Outliers are data points that do not follow the usual pattern of the rest of the data.
 In the setting of linear regression, these are points that
- have a vertical distance to the line of best fit that is either much higher or much lower 
+ have a vertical distance to the line of best fit that is either much higher or much lower
 than you might expect based on the rest of the data. The problem with outliers is that
 they can have *too much influence* on the line of best fit. In general, it is very difficult
 to judge accurately which data are outliers without advanced techniques that are beyond
@@ -1003,7 +1003,7 @@ But to illustrate what can happen when you have outliers, {numref}`fig:08-lm-out
 shows a small subset of the Sacramento housing data again, except we have added a *single* data point (highlighted
 in red). This house is 5,000 square feet in size, and sold for only \$50,000. Unbeknownst to the
 data analyst, this house was sold by a parent to their child for an absurdly low price. Of course,
-this is not representative of the real housing market values that the other data points follow; 
+this is not representative of the real housing market values that the other data points follow;
 the data point is an *outlier*. In blue we plot the original line of best fit, and in red
 we plot the new line of best fit including the outlier. You can see how different the red line
 is from the blue line, which is entirely caused by that one extra outlier data point.
@@ -1144,7 +1144,7 @@ Scatter plot of the full data, with outlier highlighted in red.
 ```
 
 The second, and much more subtle, issue can occur when performing multivariable
-linear regression.  In particular, if you include multiple predictors that are 
+linear regression.  In particular, if you include multiple predictors that are
 strongly linearly related to one another, the coefficients that describe the
 plane of best fit can be very unreliable&mdash;small changes to the data can
 result in large changes in the coefficients. Consider an extreme example using
@@ -1263,15 +1263,15 @@ book; see the list of additional resources at the end of this chapter to find ou
 We were quite fortunate in our initial exploration to find a predictor variable (house size)
 that seems to have a meaningful and nearly linear relationship with our response variable (sale price).
 But what should we do if we cannot immediately find such a nice variable?
-Well, sometimes it is just a fact that the variables in the data do not have enough of 
+Well, sometimes it is just a fact that the variables in the data do not have enough of
 a relationship with the response variable to provide useful predictions. For example,
 if the only available predictor was "the current house owner's favorite ice cream flavor",
 we likely would have little hope of using that variable to predict the house's sale price
-(barring any future remarkable scientific discoveries about the relationship between 
-the housing market and homeowner ice cream preferences). In cases like these, 
+(barring any future remarkable scientific discoveries about the relationship between
+the housing market and homeowner ice cream preferences). In cases like these,
 the only option is to obtain measurements of more useful variables.
 
-There are, however, a wide variety of cases where the predictor variables do have a 
+There are, however, a wide variety of cases where the predictor variables do have a
 meaningful relationship with the response variable, but that relationship does not fit
 the assumptions of the regression method you have chosen. For example, a data frame `df`
 with two variables&mdash;`x` and `y`&mdash;with a nonlinear relationship between the two variables
@@ -1328,7 +1328,7 @@ Example of a data set with a nonlinear relationship between the predictor and th
 Instead of trying to predict the response `y` using a linear regression on `x`,
 we might have some scientific background about our problem to suggest that `y`
 should be a cubic function of `x`. So before performing regression,
-we might *create a new predictor variable* `z`: 
+we might *create a new predictor variable* `z`:
 
 ```{code-cell} ipython3
 df["z"] = df["x"] ** 3
@@ -1336,8 +1336,8 @@ df["z"] = df["x"] ** 3
 
 Then we can perform linear regression for `y` using the predictor variable `z`,
 as shown in {numref}`fig:08-predictor-design-2`.
-Here you can see that the transformed predictor `z` helps the 
-linear regression model make more accurate predictions. 
+Here you can see that the transformed predictor `z` helps the
+linear regression model make more accurate predictions.
 Note that none of the `y` response values have changed between {numref}`fig:08-predictor-design`
 and {numref}`fig:08-predictor-design-2`; the only change is that the `x` values
 have been replaced by `z` values.
@@ -1378,7 +1378,7 @@ The process of
 transforming predictors (and potentially combining multiple predictors in the process)
 is known as *feature engineering*. In real data analysis
 problems, you will need to rely on
-a deep understanding of the problem&mdash;as well as the wrangling tools 
+a deep understanding of the problem&mdash;as well as the wrangling tools
 from previous chapters&mdash;to engineer useful new features that improve
 predictive performance.
 
@@ -1395,11 +1395,11 @@ So far in this textbook we have used regression only in the context of
 prediction. However, regression can also be seen as a method to understand and
 quantify the effects of individual variables on a response / outcome of interest.
 In the housing example from this chapter, beyond just using past data
-to predict future sale prices, 
+to predict future sale prices,
 we might also be interested in describing the
 individual relationships of house size and the number of bedrooms with house price,
 quantifying how strong each of these relationships are, and assessing how accurately we
-can estimate their magnitudes. And even beyond that, we may be interested in 
+can estimate their magnitudes. And even beyond that, we may be interested in
 understanding whether the predictors *cause* changes in the price.
 These sides of regression are well beyond the scope of this book; but
 the material you have learned here should give you a foundation of knowledge
@@ -1409,8 +1409,8 @@ that will serve you well when moving to more advanced books on the topic.
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter 
-can be found in the accompanying 
+Practice exercises for the material covered in this chapter
+can be found in the accompanying
 [worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
 in the "Regression II: linear regression" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
@@ -1426,7 +1426,7 @@ and guidance that the worksheets provide will function as intended.
 
 - The [`scikit-learn` website](https://scikit-learn.org/stable/) is an excellent
   reference for more details on, and advanced usage of, the functions and
-  packages in the past two chapters. Aside from that, it also offers many 
+  packages in the past two chapters. Aside from that, it also offers many
   useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) and [an extensive list
   of more advanced examples](https://scikit-learn.org/stable/auto_examples/index.html#general-examples)
   that you can use to continue learning beyond the scope of this book.
@@ -1438,7 +1438,7 @@ and guidance that the worksheets provide will function as intended.
   "explanatory" / "inferential" approach to regression in general (in Chapters 5,
   6, and 10), which provides a nice complement to the predictive tack we take in
   the present book.
-- *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides 
+- *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides
   a great next stop in the process of
   learning about regression. Chapter 3 covers linear regression at a slightly
   more mathematical level than we do here, but it is not too large a leap and so
@@ -1459,7 +1459,7 @@ and guidance that the worksheets provide will function as intended.
 #   packages in the past two chapters. Aside from that, it also has a [nice
 #   beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
 #   of more advanced examples](https://www.tidymodels.org/learn/) that you can use
-#   to continue learning beyond the scope of this book. 
+#   to continue learning beyond the scope of this book.
 # - *Modern Dive* [@moderndive] is another textbook that uses the
 #   `tidyverse` / `tidymodels` framework. Chapter 6 complements the material in
 #   the current chapter well; it covers some slightly more advanced concepts than
@@ -1468,7 +1468,7 @@ and guidance that the worksheets provide will function as intended.
 #   "explanatory" / "inferential" approach to regression in general (in Chapters 5,
 #   6, and 10), which provides a nice complement to the predictive tack we take in
 #   the present book.
-# - *An Introduction to Statistical Learning* [@james2013introduction] provides 
+# - *An Introduction to Statistical Learning* [@james2013introduction] provides
 #   a great next stop in the process of
 #   learning about regression. Chapter 3 covers linear regression at a slightly
 #   more mathematical level than we do here, but it is not too large a leap and so

@@ -15,18 +15,13 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 import warnings
-def warn(*args, **kwargs):
-    pass
-warnings.warn = warn
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 from myst_nb import glue
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 from IPython.display import HTML
-
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import iplot, plot
 ```
 
 (classification)=
@@ -156,6 +151,7 @@ arguments, and then inspect its contents:
 ```
 
 ```{code-cell} ipython3
+:tags: ["output_scroll"]
 cancer = pd.read_csv("data/wdbc.csv")
 cancer
 ```
@@ -228,10 +224,9 @@ and `unique` methods again.
 
 ```{code-cell} ipython3
 cancer['Class'] = cancer['Class'].replace({
-				'M' : 'Malignant',
-				'B' : 'Benign'
-				})
-cancer['Class'] = cancer['Class'].astype('category')
+    'M' : 'Malignant',
+    'B' : 'Benign'
+}).astype('category')
 cancer.info()
 ```
 
@@ -296,7 +291,7 @@ is colorblind-friendly, so we can stick with that here.
 ```{code-cell} ipython3
 perim_concav = (
     alt.Chart(cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
@@ -382,7 +377,7 @@ perim_concav_with_new_point = (
     alt.Chart(
         perim_concav_with_new_point_df,
     )
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
@@ -390,7 +385,8 @@ perim_concav_with_new_point = (
         shape=alt.Shape(
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
-        size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
+        size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
 )
 glue('fig:05-knn-2', perim_concav_with_new_point, display=True)
@@ -660,15 +656,15 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
-cancer_dist = (cancer
-           .loc[:, ["Perimeter", "Concavity", "Class"]]
-           .assign(dist_from_new = (
-               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
-             + (cancer["Concavity"] - new_obs_Concavity) ** 2
-           )**(1/2))
-           .nsmallest(5, "dist_from_new")
-      )
-cancer_dist
+(
+    cancer
+   [["Perimeter", "Concavity", "Class"]]
+   .assign(dist_from_new = (
+       (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+     + (cancer["Concavity"] - new_obs_Concavity) ** 2
+   )**(1/2))
+   .nsmallest(5, "dist_from_new")
+)
 ```
 
 In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how
@@ -757,16 +753,16 @@ three predictors.
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
 new_obs_Symmetry = 1
-cancer_dist2 = (cancer
-           .loc[:, ["Perimeter", "Concavity", "Symmetry", "Class"]]
-           .assign(dist_from_new = (
-               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
-             + (cancer["Concavity"] - new_obs_Concavity) ** 2
-             + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
-           )**(1/2))
-           .nsmallest(5, "dist_from_new")
-      )
-cancer_dist2
+(
+    cancer
+    [["Perimeter", "Concavity", "Symmetry", "Class"]]
+    .assign(dist_from_new = (
+        (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+        + (cancer["Concavity"] - new_obs_Concavity) ** 2
+        + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
+    )**(1/2))
+    .nsmallest(5, "dist_from_new")
+)
 ```
 
 Based on $K=5$ nearest neighbors with these three predictors we would classify 
@@ -944,7 +940,6 @@ we will discuss how to choose $K$ in the next chapter.
 > which weigh each neighbor's vote differently, can be found on 
 > [the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
 
-
 ```{code-cell} ipython3
 knn = KNeighborsClassifier(n_neighbors=5)
 knn
@@ -1044,15 +1039,11 @@ and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = (
-            pd.read_csv("data/unscaled_wdbc.csv")
-            .loc[:, ['Class', 'Area', 'Smoothness']]
-            .replace({
-               'M' : 'Malignant',
-               'B' : 'Benign'
-            })
-    )
-unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
+unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")[['Class', 'Area', 'Smoothness']]
+unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+}).astype('category')
 unscaled_cancer
 ```
 
@@ -1075,7 +1066,8 @@ Here we will use the `StandardScaler` transformer to standardize the predictor v
 the `unscaled_cancer` data. In order to tell the `StandardScaler` which variables to standardize,
 we wrap it in a 
 [`ColumnTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer) object
-using the [`make_column_transformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html#sklearn.compose.make_column_transformer) function. `ColumnTransformer` objects also enable the use of multiple preprocessors at
+using the [`make_column_transformer`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html#sklearn.compose.make_column_transformer) function. 
+`ColumnTransformer` objects also enable the use of multiple preprocessors at
 once, which is especially handy when you want to apply different preprocessing to each of the predictor variables. 
 The primary argument of the `make_column_transformer` function is a sequence of
 pairs of (1) a preprocessor, and (2) the columns to which you want to apply that preprocessor.
@@ -1106,18 +1098,17 @@ Note that here we specified which columns to apply the preprocessing step to
 by individual names; this approach can become quite difficult, e.g., when we have many
 predictor variables. Rather than writing out the column names individually,
 we can instead use the 
-[`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For example, if we wanted to standardize all *numerical* predictors,
-we would use `make_column_selector` and specify the `dtype_include` argument to be `np.number`
-(from the `numpy` package). This creates a preprocessor equivalent to the one we
-created previously.
+[`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For
+example, if we wanted to standardize all *numerical* predictors,
+we would use `make_column_selector` and specify the `dtype_include` argument to be `'number'`. 
+This creates a preprocessor equivalent to the one we created previously.
 
 ```{code-cell} ipython3
-import numpy as np
 from sklearn.compose import make_column_selector
 
 preprocessor = make_column_transformer(
-           (StandardScaler(), make_column_selector(dtype_include=np.number)),
-      )
+    (StandardScaler(), make_column_selector(dtype_include='number')),
+)
 preprocessor
 ```
 
@@ -1139,7 +1130,9 @@ scaled_cancer = preprocessor.transform(unscaled_cancer)
 scaled_cancer
 ```
 ```{code-cell} ipython3
-
+:tags: [remove-cell]
+glue('scaled-cancer-column-0', scaled_cancer.columns[0])
+glue('scaled-cancer-column-1', scaled_cancer.columns[1])
 ```
 It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
 But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
@@ -1149,8 +1142,8 @@ is to *drop* the remaining columns. This default behavior works well with the re
 in the {ref}`08:puttingittogetherworkflow` section), but for visualizing the result of preprocessing it can be useful to keep the other columns
 in our original data frame, such as the `Class` variable here.
 To keep other columns, we need to set the `remainder` argument to `'passthrough'` in the `make_column_transformer` function.
- Furthermore, you can see that the new column names---{glue:}`scaled_cancer.columns[0]`
-and {glue:}`scaled_cancer.columns[1]`---include the name
+Furthermore, you can see that the new column names---{glue:}`scaled-cancer-column-0`
+and {glue:}`scaled-cancer-column-1`---include the name
 of the preprocessing step separated by underscores. This default behavior is useful in `sklearn` because we sometimes want to apply
 multiple different preprocessing steps to the same columns; but again, for visualization it can be useful to preserve
 the original column names. To keep original column names, we need to set the `verbose_feature_names_out` argument to `False`.
@@ -1160,10 +1153,10 @@ the original column names. To keep original column names, we need to set the `ve
 
 ```{code-cell} ipython3
 preprocessor_keep_all = make_column_transformer(
-           (StandardScaler(), make_column_selector(dtype_include=np.number)),
-            remainder='passthrough',
-            verbose_feature_names_out=False
-      )
+    (StandardScaler(), make_column_selector(dtype_include='number')),
+    remainder='passthrough',
+    verbose_feature_names_out=False
+)
 preprocessor_keep_all.fit(unscaled_cancer)
 scaled_cancer_all = preprocessor_keep_all.transform(unscaled_cancer)
 scaled_cancer_all
@@ -1437,14 +1430,14 @@ The new imbalanced data is shown in {numref}`fig:05-unbalanced`,
 and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
-rare_cancer = pd.concat(
-    (cancer[cancer["Class"] == 'Benign'],
-     cancer[cancer["Class"] == 'Malignant'].head(3)
-    ))
+rare_cancer = pd.concat((
+    cancer[cancer["Class"] == 'Benign'],
+    cancer[cancer["Class"] == 'Malignant'].head(3)
+))
 
 rare_plot = (
     alt.Chart(rare_cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x=alt.X("Perimeter", title="Perimeter (standardized)"),
         y=alt.Y("Concavity", title="Concavity (standardized)"),
@@ -1632,10 +1625,17 @@ Then, we will
 use the [`resample`](https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html) function 
 from the `sklearn` package to increase the number of `Malignant` observations to be the same as the number 
 of `Benign` observations. We set the `n_samples` argument to be the number of `Malignant` observations we want. 
-We also set the `random_state` to be some integer
-so that our results are reproducible; if we do not set this argument, we will get a different upsampling each time
-we run the code. Finally, we use the `value_counts` method
- to see that our classes are now balanced.
+Finally, we use the `value_counts` method to see that our classes are now balanced.
+Note that `resample` picks which data to replicate *randomly*; we will learn more about properly handling randomness
+in data analysis in the {ref}`classification2` chapter.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+# hidden seed call to make the below resample reproducible
+# we haven't taught students about seeds / prngs yet, so 
+# for now just hide this.
+np.random.seed(1)
+```
 
 ```{code-cell} ipython3
 from sklearn.utils import resample
@@ -1643,7 +1643,7 @@ from sklearn.utils import resample
 malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
 benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
 malignant_cancer_upsample = resample(
-    malignant_cancer, n_samples=len(benign_cancer), random_state=100
+    malignant_cancer, n_samples=len(benign_cancer)
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer['Class'].value_counts()
@@ -1727,16 +1727,12 @@ First we will load the data, create a model, and specify a preprocessor for the 
 
 ```{code-cell} ipython3
 # load the unscaled cancer data, make Class readable
-unscaled_cancer = (
-            pd.read_csv("data/unscaled_wdbc.csv")
-            .replace({
-               'M' : 'Malignant',
-               'B' : 'Benign'
-            })
-    )
-# make Class a categorical type
-unscaled_cancer['Class'] = unscaled_cancer['Class'].astype('category')
-
+unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
+unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+}).astype('category')
+unscaled_cancer
 
 # create the KNN model
 knn = KNeighborsClassifier(n_neighbors=7)
@@ -1787,12 +1783,12 @@ prediction
 ```
 
 The classifier predicts that the first observation is benign, while the second is
-malignant. {numref}`fig:05-workflow-plot-show` visualizes the predictions that this 
+malignant. {numref}`fig:05-workflow-plot` visualizes the predictions that this 
 trained $K$-nearest neighbor model will make on a large range of new observations.
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
 For the interested reader who wants a learning challenge, we now include it below. 
-The basic idea is to create a grid of synthetic new observations using the `numpy.meshgrid` function, 
+The basic idea is to create a grid of synthetic new observations using the `meshgrid` function from `numpy`, 
 predict the label of each, and visualize the predictions with a colored scatter having a very high transparency 
 (low `opacity` value) and large point radius. See if you can figure out what each line is doing!
 
@@ -1802,6 +1798,8 @@ predict the label of each, and visualize the predictions with a colored scatter 
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+import numpy as np
+
 # create the grid of area/smoothness vals, and arrange in a data frame
 are_grid = np.linspace(
     unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 50
@@ -1851,7 +1849,7 @@ unscaled_plot = (
 # 2. the faded colored scatter for the grid points
 prediction_plot = (
     alt.Chart(prediction_table)
-    .mark_point(opacity=0.02, filled=True, size=200)
+    .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
         x=alt.X("Area"),
         y=alt.Y("Smoothness"),
@@ -1863,11 +1861,11 @@ unscaled_plot + prediction_plot
 
 ```{code-cell} ipython3
 :tags: [remove-input]
-glue("fig:05-upsample-2", (unscaled_plot + prediction_plot))
+glue("fig:05-workflow-plot", (unscaled_plot + prediction_plot))
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
-:name: fig:05-workflow-plot-show
+:name: fig:05-workflow-plot
 :figclass: caption-hack
 
 Scatter plot of smoothness versus area where background color indicates the decision of the classifier.

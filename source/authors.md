@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-# About the authors -- TBD
+# About the authors
 
 **Tiffany Timbers** is an Assistant Professor of Teaching in the Department of
 Statistics and Co-Director for the Master of Data Science program (Vancouver

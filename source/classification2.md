@@ -389,8 +389,6 @@ we will specify that `train_size=0.75` so that 75% of our original data set ends
 in the training set. We will also set the `stratify` argument to the categorical label variable
 (here, `cancer['Class']`) to ensure that the training and testing subsets contain the
 right proportions of each category of observation.
-Note that the `train_test_split` function uses randomness, so we shall set `random_state` to make
-the split reproducible.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

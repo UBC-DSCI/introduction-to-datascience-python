@@ -17,14 +17,10 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-#import warnings
-#def warn(*args, **kwargs):
-#    pass
-#warnings.warn = warn
-```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 import altair as alt
 import numpy as np
@@ -397,6 +393,7 @@ Note that the `train_test_split` function uses randomness, so we shall set `rand
 the split reproducible.
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
 # seed hacking to get a split that makes 10-fold have a lower std error than 5-fold
 np.random.seed(5)
 ```

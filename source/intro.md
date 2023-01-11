@@ -38,7 +38,7 @@ By the end of the chapter, readers will be able to do the following:
 - Read tabular data with `read_csv`.
 - Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
-- Create and organize subsets of tabular data using `[]`, `loc[]`, and `sort_values`.
+- Create and organize subsets of tabular data using `[]`, `loc[]`, `sort_values`, and `head`.
 - Chain multiple operations in sequence.
 - Visualize data with an `altair` bar plot.
 
@@ -586,7 +586,7 @@ with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages.
 So it looks like the `loc[]` operation gave us the result we wanted!
 
-### Using `sort_values` to order and `head` to select rows by value
+### Using `sort_values` and `head` to select rows by ordered values
 
 ```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
 ```

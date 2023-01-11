@@ -1632,10 +1632,17 @@ Then, we will
 use the [`resample`](https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html) function 
 from the `sklearn` package to increase the number of `Malignant` observations to be the same as the number 
 of `Benign` observations. We set the `n_samples` argument to be the number of `Malignant` observations we want. 
-We also set the `random_state` to be some integer
-so that our results are reproducible; if we do not set this argument, we will get a different upsampling each time
-we run the code. Finally, we use the `value_counts` method
- to see that our classes are now balanced.
+Finally, we use the `value_counts` method to see that our classes are now balanced.
+Note that `resample` picks which data to replicate *randomly*; we will learn more about properly handling randomness
+in data analysis in the {ref}`classification2` chapter.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+# hidden seed call to make the below resample reproducible
+# we haven't taught students about seeds / prngs yet, so 
+# for now just hide this.
+np.random.seed(1)
+```
 
 ```{code-cell} ipython3
 from sklearn.utils import resample
@@ -1643,7 +1650,7 @@ from sklearn.utils import resample
 malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
 benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
 malignant_cancer_upsample = resample(
-    malignant_cancer, n_samples=len(benign_cancer), random_state=100
+    malignant_cancer, n_samples=len(benign_cancer)
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer['Class'].value_counts()

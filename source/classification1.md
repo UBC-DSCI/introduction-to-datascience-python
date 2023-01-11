@@ -753,16 +753,16 @@ three predictors.
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
 new_obs_Symmetry = 1
-cancer_dist2 = (cancer
-           .loc[:, ["Perimeter", "Concavity", "Symmetry", "Class"]]
-           .assign(dist_from_new = (
-               (cancer["Perimeter"] - new_obs_Perimeter) ** 2
-             + (cancer["Concavity"] - new_obs_Concavity) ** 2
-             + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
-           )**(1/2))
-           .nsmallest(5, "dist_from_new")
-      )
-cancer_dist2
+(
+    cancer
+    [["Perimeter", "Concavity", "Symmetry", "Class"]]
+    .assign(dist_from_new = (
+        (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+        + (cancer["Concavity"] - new_obs_Concavity) ** 2
+        + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
+    )**(1/2))
+    .nsmallest(5, "dist_from_new")
+)
 ```
 
 Based on $K=5$ nearest neighbors with these three predictors we would classify 

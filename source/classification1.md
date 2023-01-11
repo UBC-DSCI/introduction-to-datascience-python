@@ -229,10 +229,9 @@ and `unique` methods again.
 
 ```{code-cell} ipython3
 cancer['Class'] = cancer['Class'].replace({
-				'M' : 'Malignant',
-				'B' : 'Benign'
-				})
-cancer['Class'] = cancer['Class'].astype('category')
+    'M' : 'Malignant',
+    'B' : 'Benign'
+}).astype('category')
 cancer.info()
 ```
 

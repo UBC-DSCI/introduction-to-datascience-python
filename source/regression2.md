@@ -18,18 +18,23 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import altair as alt
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import StandardScaler
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import plot
+
+# from sklearn.linear_model import LinearRegression
+# from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+# from sklearn.compose import make_column_transformer
+# from sklearn.neighbors import KNeighborsRegressor
+# from sklearn.pipeline import Pipeline, make_pipeline
+# from sklearn.preprocessing import StandardScaler
+# import plotly.express as px
+# import plotly.graph_objs as go
+# from plotly.offline import plot
 from IPython.display import HTML
 
 from myst_nb import glue
@@ -115,13 +120,15 @@ in {numref}`fig:08-lin-reg1`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+np.random.seed(2)
+
 sacramento = pd.read_csv("data/sacramento.csv")
 
-small_sacramento = sacramento.sample(n=30, random_state=2)
+small_sacramento = sacramento.sample(n=30)
 
 small_plot = (
     alt.Chart(small_sacramento)
-    .mark_circle(color="black")
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -140,7 +147,6 @@ small_plot
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 glue("fig:08-lin-reg1", small_plot)
 ```
 
@@ -183,6 +189,7 @@ predictor variable&mdash;here 2,000 square feet. {numref}`fig:08-lin-reg2` demon
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+from sklearn.linear_model import LinearRegression
 
 lm = LinearRegression()
 lm.fit(small_sacramento[["sqft"]], small_sacramento[["price"]])
@@ -344,65 +351,53 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 We can perform simple linear regression in Python using `scikit-learn` in a
 very similar manner to how we performed KNN regression.
 To do this, instead of creating a `KNeighborsRegressor` model specification,
-we use a `LinearRegression` model specification.
+we use a `LinearRegression` model specification;
+and as usual, we first have to import it from `sklearn`.
 Another difference is that we do not need to choose $K$ in the
 context of linear regression, and so we do not need to perform cross-validation.
 Below we illustrate how we can use the usual `scikit-learn` workflow to predict house sale
-price given house size using a simple linear regression approach using the full
+price given house size. We use a simple linear regression approach on the full
 Sacramento real estate data set.
 
 ```{index} scikit-learn; random_state
 ```
 
-As usual, we start by loading packages, setting the seed, loading data, and putting some test data away in a lock box (setting the `random_state`) that we
+As usual, we start by loading packages, setting the seed, loading data, and
+putting some test data away in a lock box that we
 can come back to after we choose our final model. Let's take care of that now.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We can perform simple linear regression in R using `tidymodels` \index{tidymodels} in a
-# very similar manner to how we performed KNN regression.
-# To do this, instead of creating a `nearest_neighbor` model specification with
-# the `kknn` engine, we use a `linear_reg` model specification
-# with the `lm` engine. Another difference is that we do not need to choose $K$ in the
-# context of linear regression, and so we do not need to perform cross-validation.
-# Below we illustrate how we can use the usual `tidymodels` workflow to predict house sale
-# price given house size using a simple linear regression approach using the full
-# Sacramento real estate data set.
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# As usual, we start by loading packages, setting the seed, loading data, and putting some test data away in a lock box that we
-# can come back to after we choose our final model. Let's take care of that now.
-# \index{seed!set.seed}
-```
-
-```{code-cell} ipython3
 import pandas as pd
+import altair as alt
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+np.random.seed(1)
 
 sacramento = pd.read_csv("data/sacramento.csv")
 
 sacramento_train, sacramento_test = train_test_split(
-    sacramento, train_size=0.6, random_state=1234
+    sacramento, train_size=0.6
 )
 ```
 
-Now that we have our training data, we will create the model specification
-and recipe, and fit our simple linear regression model:
+Now that we have our training data, we will create 
+and fit the linear regression model object.
+We will also extract the slope of the line
+via the `coef_[0]` property, as well as the
+intercept of the line via the `intercept_` property.
 
 ```{index} scikit-learn; fit
 ```
 
 ```{code-cell} ipython3
-lm = LinearRegression()
-X_train = sacramento_train[["sqft"]]
-y_train = sacramento_train[["price"]]
-
 # fit the linear regression model
-lm.fit(X_train, y_train)
+lm = LinearRegression()
+lm.fit(
+   sacramento_train[["sqft"]],
+   sacramento_train[["price"]]
+)
 
 # make a dataframe containing slope and intercept coefficients
 pd.DataFrame({"slope": lm.coef_[0], "intercept": lm.intercept_})
@@ -442,19 +437,15 @@ In other words, the model predicts that houses
 start at \${glue:text}`train_lm_intercept_f` for 0 square feet, and that
 every extra square foot increases the cost of
 the house by \${glue:text}`train_lm_slope_f`. Finally,
-we predict on the test data set to assess how well our model does:
+we predict on the test data set to assess how well our model does.
 
 ```{code-cell} ipython3
-X_test = sacramento_test[["sqft"]]
-y_test = sacramento_test[["price"]]
-
-# predict on test data
-sacr_preds = sacramento_test
-sacr_preds = sacr_preds.assign(predicted=lm.predict(X_test))
+# make predictions
+sacr_preds = sacramento_test.assign(
+              predicted = lm.predict(sacramento_test[["sqft"]])
+)
 
 # calculate RMSPE
-from sklearn.metrics import mean_squared_error
-
 RMSPE = np.sqrt(
     mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
 )
@@ -487,24 +478,11 @@ linear regression predicted line of best fit.
 {numref}`fig:08-lm-predict-all` displays the result.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# To visualize the simple linear regression model, we can plot the predicted house
-# sale price across all possible house sizes we might encounter superimposed on a scatter
-# plot of the original housing price data. There is a plotting function in
-# the `tidyverse`, `geom_smooth`, that
-# allows us to add a layer on our plot with the simple
-# linear regression predicted line of best fit. By default `geom_smooth` adds some other information
-# to the plot that we are not interested in at this point; we provide the argument `se = FALSE` to
-# tell `geom_smooth` not to show that information. Figure \@ref(fig:08-lm-predict-all) displays the result.
-```
-
-```{code-cell} ipython3
 :tags: [remove-output]
 
 lm_plot_final = (
     alt.Chart(sacramento_train)
-    .mark_circle(color="black", opacity=0.3)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -517,7 +495,7 @@ lm_plot_final = (
 )
 
 lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(
-    color="blue"
+    color="#ff7f0e"
 )
 
 lm_plot_final
@@ -535,21 +513,6 @@ glue("fig:08-lm-predict-all", lm_plot_final)
 Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
 :::
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We can extract the coefficients from our model by accessing the
-# fit object that is output by the `fit` \index{tidymodels!fit} function; we first have to extract
-# it from the workflow using the `pull_workflow_fit` function, and then apply
-# the `tidy` function to convert the result into a data frame:
-
-# ```{r 08-lm-get-coeffs}
-# coeffs <- lm_fit |>
-#              pull_workflow_fit() |>
-#              tidy()
-# coeffs
-# ```
-```
 
 ## Comparing simple linear and KNN regression
 
@@ -565,26 +528,25 @@ obtained from the same problem, shown in {numref}`fig:08-compareRegression`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+from sklearn.model_selection import GridSearchCV
+from sklearn.compose import make_column_transformer
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline_knn = make_pipeline(
-    sacr_preprocessor, KNeighborsRegressor(n_neighbors=31)
-)  # 31 is the best parameter obtained through cross validation in regression1 chapter
+    sacr_preprocessor, KNeighborsRegressor(n_neighbors=25)
+)  # 25 is the best parameter obtained through cross validation in regression1 chapter
 
-sacr_pipeline_knn.fit(X_train, y_train)
+sacr_pipeline_knn.fit(sacramento_train[["sqft"]], sacramento_train[["price"]])
 
 # knn in-sample predictions (on training split)
 sacr_preds_knn = sacramento_train
 sacr_preds_knn = sacr_preds_knn.assign(
     knn_predicted=sacr_pipeline_knn.predict(sacramento_train)
 )
-
-# sacr_rmse_knn = np.sqrt(
-#     mean_squared_error(
-#         y_true=sacr_preds_knn["price"], y_pred=sacr_preds_knn["knn_predicted"]
-#     )
-# )
 
 # knn out-of-sample predictions (on test split)
 sacr_preds_knn_test = sacramento_test
@@ -601,7 +563,7 @@ sacr_rmspe_knn = np.sqrt(
 # plot knn in-sample predictions overlaid on scatter plot
 knn_plot_final = (
     alt.Chart(sacr_preds_knn, title="KNN regression")
-    .mark_circle(color="black", opacity=0.3)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -615,7 +577,7 @@ knn_plot_final = (
 
 knn_plot_final = (
     knn_plot_final
-    + knn_plot_final.mark_line(color="blue").encode(x="sqft", y="knn_predicted")
+    + knn_plot_final.mark_line(color="#ff7f0e").encode(x="sqft", y="knn_predicted")
     + alt.Chart(  # add the text
         pd.DataFrame(
             {
@@ -633,7 +595,7 @@ knn_plot_final = (
 # add more components to lm_plot_final
 lm_plot_final = (
     alt.Chart(sacramento_train, title="linear regression")
-    .mark_circle(color="black", opacity=0.3)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -647,7 +609,7 @@ lm_plot_final = (
 
 lm_plot_final = (
     lm_plot_final
-    + lm_plot_final.transform_regression("sqft", "price").mark_line(color="blue")
+    + lm_plot_final.transform_regression("sqft", "price").mark_line(color="#ff7f0e")
     + alt.Chart(  # add the text
         pd.DataFrame(
             {
@@ -677,7 +639,7 @@ Comparison of simple linear regression and KNN regression.
 +++
 
 What differences do we observe in {numref}`fig:08-compareRegression`? One obvious
-difference is the shape of the blue lines. In simple linear regression we are
+difference is the shape of the orange lines. In simple linear regression we are
 restricted to a straight line, whereas in KNN regression our line is much more
 flexible and can be quite wiggly. But there is a major interpretability advantage in limiting the
 model to a straight line. A

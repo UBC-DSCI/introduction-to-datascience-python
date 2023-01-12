@@ -719,72 +719,29 @@ it will not be covered again in this chapter.
 We will demonstrate multivariable linear regression using the Sacramento real estate
 data with both house size
 (measured in square feet) as well as number of bedrooms as our predictors, and
-continue to use house sale price as our response variable. We will start by
-specifying the training data to
-include both the `sqft` and `beds` variables as predictors:
+continue to use house sale price as our response variable. 
+The `scikit-learn` framework makes this easy to do: we just need to set 
+both the `sqft` and `beds` variables as predictors, and then use the `fit`
+method as usual.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
 
-# As in KNN classification and KNN regression, we can move beyond the simple
-# case of only one predictor to the case with multiple predictors,
-# known as *multivariable linear regression*. \index{regression!multivariable linear}\index{regression!multivariable linear equation|see{plane equation}}
-# To do this, we follow a very similar approach to what we did for
-# KNN regression: we just add more predictors to the model formula in the
-# recipe. But recall that we do not need to use cross-validation to choose any parameters,
-# nor do we need to standardize (i.e., center and scale) the data for linear regression.
-# Note once again that we have the same concerns regarding multiple predictors
-#  as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
-# better. But because the same predictor selection
-# algorithm from the classification chapter extends to the setting of linear regression,
-# it will not be covered again in this chapter.
-
-# We will demonstrate multivariable linear regression using the Sacramento real estate  \index{Sacramento real estate}
-# data with both house size
-# (measured in square feet) as well as number of bedrooms as our predictors, and
-# continue to use house sale price as our response variable. We will start by
-# changing the formula in the recipe to
-# include both the `sqft` and `beds` variables as predictors:
-```
-
-```{code-cell} ipython3
-mlm = LinearRegression()
-X_train = sacramento_train[["sqft", "beds"]]
-y_train = sacramento_train[["price"]]
-```
-
-Now we can fit the model:
-
-```{code-cell} ipython3
-mlm.fit(X_train, y_train)
-
-# make a dataframe containing slope and intercept coefficients
-pd.DataFrame(
-    {
-        "slope_sqft": mlm.coef_[0][0],
-        "slope_beds": mlm.coef_[0][1],
-        "intercept": mlm.intercept_,
-    }
+mlm = LinearRegression().fit(
+    sacramento_train[["sqft", "beds"]],
+    sacramento_train[["price"]]
 )
 ```
-
-And finally, we make predictions on the test data set to assess the quality of our model:
+Finally, we make predictions on the test data set to assess the quality of our model.
 
 ```{code-cell} ipython3
-X_test = sacramento_test[["sqft", "beds"]]
-y_test = sacramento_test[["price"]]
-
-# predict on test data
-sacr_preds = sacramento_test
-sacr_preds = sacr_preds.assign(predicted=mlm.predict(X_test))
-
-# calculate RMSPE
-from sklearn.metrics import mean_squared_error
-
-lm_mult_test_RMSPE = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+sacr_preds = sacramento_test.assign(
+               predicted=mlm.predict(sacramento_test[["sqft","beds"]])
 )
 
+lm_mult_test_RMSPE = mean_squared_error(
+               y_true=sacr_preds["price"], 
+               y_pred=sacr_preds["predicted"]
+        )**(1/2)
 lm_mult_test_RMSPE
 ```
 
@@ -855,7 +812,10 @@ display(HTML("img/regression2/fig08-3DlinReg.html"))
 :name: fig:08-3DlinReg
 :figclass: caption-hack
 
-Linear regression plane of best fit overlaid on top of the data (using price, house size, and number of bedrooms as predictors). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the regression plane looks like for learning purposes.
+Linear regression plane of best fit overlaid on top of the data (using price,
+house size, and number of bedrooms as predictors). Note that in general we
+recommend against using 3D visualizations; here we use a 3D visualization only
+to illustrate what the regression plane looks like for learning purposes.
 ```
 
 +++
@@ -865,8 +825,9 @@ flat plane. This is the hallmark of linear regression, and differs from the
 wiggly, flexible surface we get from other methods such as KNN regression.
  As discussed, this can be advantageous in one aspect, which is that for each
 predictor, we can get slopes/intercept from linear regression, and thus describe the
-plane mathematically. We can extract those slope values from our model object
-as shown below:
+plane mathematically. We can extract those slope values from the `coef_` property 
+of our model object, and the intercept from the `intercept_` property,
+as shown below.
 
 ```{code-cell} ipython3
 mlm.coef_
@@ -875,6 +836,14 @@ mlm.coef_
 ```{code-cell} ipython3
 mlm.intercept_
 ```
+
+When we have multiple predictor variables, it is not easy to
+know which variable goes with which coefficient in `mlm.coef_`. In particular,
+you will see that `mlm.coef_` above is just an array of values without any variable names. 
+Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coef_` appear
+in the *same order* as the columns of the predictor data frame you used when training.
+So since we used `sacramento_train[["sqft", "beds"]]` when training, 
+we have that `mlm.coef_[0][0]` corresponds to `sqft`, and `mlm.coef_[0][1]` corresponds to `beds`.
 
 ```{index} plane equation
 ```
@@ -966,9 +935,9 @@ shows a small subset of the Sacramento housing data again, except we have added 
 in red). This house is 5,000 square feet in size, and sold for only \$50,000. Unbeknownst to the
 data analyst, this house was sold by a parent to their child for an absurdly low price. Of course,
 this is not representative of the real housing market values that the other data points follow;
-the data point is an *outlier*. In blue we plot the original line of best fit, and in red
+the data point is an *outlier*. In orange we plot the original line of best fit, and in red
 we plot the new line of best fit including the outlier. You can see how different the red line
-is from the blue line, which is entirely caused by that one extra outlier data point.
+is from the orange line, which is entirely caused by that one extra outlier data point.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -979,7 +948,7 @@ sacramento_concat_df = pd.concat((sacramento_train_small, sacramento_outlier))
 
 lm_plot_outlier = (
     alt.Chart(sacramento_train_small)
-    .mark_circle(color="black", opacity=0.4)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -991,7 +960,7 @@ lm_plot_outlier = (
     )
 )
 lm_plot_outlier += lm_plot_outlier.transform_regression("sqft", "price").mark_line(
-    color="blue"
+    color="#ff7f0e"
 )
 
 outlier_pt = (
@@ -1003,7 +972,7 @@ outlier_pt = (
 outlier_line = (
     (
         alt.Chart(sacramento_concat_df)
-        .mark_circle(color="black", opacity=0.4)
+        .mark_circle()
         .encode(
             x=alt.X(
                 "sqft", title="House size (square feet)", scale=alt.Scale(zero=False)
@@ -1049,7 +1018,7 @@ sacramento_concat_df = pd.concat((sacramento_train, sacramento_outlier))
 
 lm_plot_outlier_large = (
     alt.Chart(sacramento_train)
-    .mark_circle(color="black", opacity=0.4)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -1062,12 +1031,12 @@ lm_plot_outlier_large = (
 )
 lm_plot_outlier_large += lm_plot_outlier_large.transform_regression(
     "sqft", "price"
-).mark_line(color="blue")
+).mark_line(color="#ff7f0e")
 
 outlier_line = (
     (
         alt.Chart(sacramento_concat_df)
-        .mark_circle(color="black", opacity=0.4)
+        .mark_circle()
         .encode(
             x=alt.X(
                 "sqft", title="House size (square feet)", scale=alt.Scale(zero=False)
@@ -1141,7 +1110,7 @@ sacramento_train
 
 lm_plot_multicol_1 = (
     alt.Chart(sacramento_train)
-    .mark_circle(color="black", opacity=0.4)
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size measurement 1 (square feet)"),
         y=alt.Y("sqft1", title="House size measurement 2 (square feet)"),
@@ -1260,7 +1229,7 @@ df
 
 curve_plt = (
     alt.Chart(df)
-    .mark_circle(color="black")
+    .mark_circle()
     .encode(
         x=alt.X("x", scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -1271,7 +1240,7 @@ curve_plt = (
 )
 
 
-curve_plt += curve_plt.transform_regression("x", "y").mark_line(color="blue")
+curve_plt += curve_plt.transform_regression("x", "y").mark_line(color="#ff7f0e")
 
 glue("fig:08-predictor-design", curve_plt)
 ```
@@ -1309,7 +1278,7 @@ have been replaced by `z` values.
 
 curve_plt2 = (
     alt.Chart(df)
-    .mark_circle(color="black")
+    .mark_circle()
     .encode(
         x=alt.X("z", title="z = x³" ,scale=alt.Scale(zero=False)),
         y=alt.Y(
@@ -1320,7 +1289,7 @@ curve_plt2 = (
 )
 
 
-curve_plt2 += curve_plt2.transform_regression("z", "y").mark_line(color="blue")
+curve_plt2 += curve_plt2.transform_regression("z", "y").mark_line(color="#ff7f0e")
 
 glue("fig:08-predictor-design-2", curve_plt2)
 ```
@@ -1411,37 +1380,6 @@ and guidance that the worksheets provide will function as intended.
   computational efficiency of linear regression. In contrast, the KNN methods we
   covered earlier are indeed more flexible but become very slow when given lots
   of data.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# ## Additional resources
-# - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
-#   reference for more details on, and advanced usage of, the functions and
-#   packages in the past two chapters. Aside from that, it also has a [nice
-#   beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
-#   of more advanced examples](https://www.tidymodels.org/learn/) that you can use
-#   to continue learning beyond the scope of this book.
-# - *Modern Dive* [@moderndive] is another textbook that uses the
-#   `tidyverse` / `tidymodels` framework. Chapter 6 complements the material in
-#   the current chapter well; it covers some slightly more advanced concepts than
-#   we do without getting mathematical. Give this chapter a read before moving on
-#   to the next reference. It is also worth noting that this book takes a more
-#   "explanatory" / "inferential" approach to regression in general (in Chapters 5,
-#   6, and 10), which provides a nice complement to the predictive tack we take in
-#   the present book.
-# - *An Introduction to Statistical Learning* [@james2013introduction] provides
-#   a great next stop in the process of
-#   learning about regression. Chapter 3 covers linear regression at a slightly
-#   more mathematical level than we do here, but it is not too large a leap and so
-#   should provide a good stepping stone. Chapter 6 discusses how to pick a subset
-#   of "informative" predictors when you have a data set with many predictors, and
-#   you expect only a few of them to be relevant. Chapter 7 covers regression
-#   models that are more flexible than linear regression models but still enjoy the
-#   computational efficiency of linear regression. In contrast, the KNN methods we
-#   covered earlier are indeed more flexible but become very slow when given lots
-#   of data.
-```
 
 ## References
 

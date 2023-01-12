@@ -18,18 +18,23 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import altair as alt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import StandardScaler
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import plot
+
+# from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+# from sklearn.compose import make_column_transformer
+# from sklearn.neighbors import KNeighborsRegressor
+# from sklearn.pipeline import Pipeline, make_pipeline
+# from sklearn.preprocessing import StandardScaler
+
+# import plotly.express as px
+# import plotly.graph_objs as go
+# from plotly.offline import plot
 from IPython.display import HTML
 
 from myst_nb import glue
@@ -46,8 +51,8 @@ to classification: for example, just as in the case of classification,
 we will split our data into training, validation, and test sets, we will
 use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
-Because of how similar these procedures are, make sure to read Chapters
-{ref}`classification` and {ref}`classification2` before reading
+Because of how similar these procedures are, make sure to read the
+{ref}`classification` and {ref}`classification2` chapters before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor,
@@ -141,29 +146,18 @@ Can we use the size of a house in the Sacramento, CA area to predict
 its sale price? A rigorous, quantitative answer to this question might help
 a realtor advise a client as to whether the price of a particular listing
 is fair, or perhaps how to set the price of a new listing.
-We begin the analysis by loading and examining the data.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In this chapter and the next, we will study
-# a data set \index{Sacramento real estate} of
-# [932 real estate transactions in Sacramento, California](https://support.spatialkey.com/spatialkey-sample-csv-data/)
-# originally reported in the *Sacramento Bee* newspaper.
-# We first need to formulate a precise question that
-# we want to answer. In this example, our question is again predictive:
-# \index{question!regression} Can we use the size of a house in the Sacramento, CA area to predict
-# its sale price? A rigorous, quantitative answer to this question might help
-# a realtor advise a client as to whether the price of a particular listing
-# is fair, or perhaps how to set the price of a new listing.
-# We begin the analysis by loading and examining the data, and setting the seed value.
-
-# \index{seed!set.seed}
-```
+We begin the analysis by loading and examining the data,
+as well as setting the seed value.
 
 ```{code-cell} ipython3
 import pandas as pd
 import altair as alt
+from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+np.random.seed(10)
 
 sacramento = pd.read_csv("data/sacramento.csv")
 sacramento
@@ -190,7 +184,7 @@ want to predict (sale price) on the y-axis.
 
 eda = (
     alt.Chart(sacramento)
-    .mark_circle(opacity=0.4, color='black')
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
@@ -202,7 +196,6 @@ eda
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 glue("fig:07-edaRegr", eda)
 ```
 
@@ -244,11 +237,11 @@ this chapter we will use all the data.
 ```
 
 To take a small random sample of size 30, we'll use the
-`sample` method of a `pandas.DataFrame` object, and input the number of rows
-to randomly select (`n`) and the random seed (`random_state`).
+`sample` method on the `sacramento` data frame, specifying
+that we want to select `n=30` rows.
 
 ```{code-cell} ipython3
-small_sacramento = sacramento.sample(n=30, random_state=10)
+small_sacramento = sacramento.sample(n=30)
 ```
 
 Next let's say we come across a  2,000 square-foot house in Sacramento we are
@@ -266,7 +259,7 @@ the sale price?
 
 small_plot = (
     alt.Chart(small_sacramento)
-    .mark_circle(color='black')
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
@@ -307,8 +300,7 @@ of a house that is 2,000 square feet.
 ```{code-cell} ipython3
 nearest_neighbors = (
     small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
-    .sort_values("diff")
-    .head(5)
+    .nsmallest(5, "diff")
 )
 
 nearest_neighbors
@@ -401,15 +393,14 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions
 about what the data must look like for it to work.
 
-+++ {"tags": []}
++++ 
 
 ## Training, evaluating, and tuning the model
 
 ```{index} training data, test data
 ```
 
-As usual,
-we must start by putting some test data away in a lock box
+As usual, we must start by putting some test data away in a lock box
 that we will come back to only after we choose our final model.
 Let's take care of that now.
 Note that for the remainder of the chapter
@@ -419,12 +410,14 @@ that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 
 +++
 
-> Note that we are not specifying the `stratify` argument here as we did in Chapter {ref}`classification2`,
-> since `sklearn.model_selection.train_test_split` cannot stratify based on a continuous variable. However, some functions inside other packages are able to do that.
+> Note that we are not specifying the `stratify` argument here like we did in
+> the {ref}`classification2` chapter, since
+> the `train_test_split` function cannot stratify based on a
+> quantitative variable.
 
 ```{code-cell} ipython3
 sacramento_train, sacramento_test = train_test_split(
-    sacramento, train_size=0.75, random_state=5
+    sacramento, train_size=0.75
 )
 ```
 
@@ -467,6 +460,8 @@ us the smallest RMSPE.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+from sklearn.neighbors import KNeighborsRegressor
+
 # (synthetic) new prediction points
 pts = pd.DataFrame({"sqft": [1250, 1850, 2250], "price": [250000, 200000, 500000]})
 finegrid = pd.DataFrame({"sqft": np.arange(900, 3901, 10)})
@@ -497,7 +492,7 @@ errors_plot = (
     small_plot
     + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
     + alt.Chart(sacr_new_preds_hid)
-    .mark_circle(color="black")
+    .mark_circle()
     .encode(x="sqft", y="price")
 )
 for i in pts["sqft"]:
@@ -542,25 +537,37 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 ```
 
 Now that we know how we can assess how well our model predicts a numerical
-value, let's use Python to perform cross-validation and to choose the optimal $K$.
-First, we will create a recipe for preprocessing our data.
-Note that we include standardization
-in our preprocessing to build good habits, but since we only have one
-predictor, it is technically not necessary; there is no risk of comparing two predictors
-of different scales.
-Next we create a model pipeline for K-nearest neighbors regression. Note
-that we use `KNeighborsRegressor`
-now in the model specification to denote a regression problem, as opposed to the classification
-problems from the previous chapters.
-The use of `KNeighborsRegressor` essentially
- tells `scikit-learn` that we need to use different metrics (instead of accuracy)
-for tuning and evaluation.
-Next we specify a dictionary of parameter grid containing the numbers of neighbors ranging from 1 to 200.
-Then we create a 5-fold `GridSearchCV` object, and pass in the pipeline and parameter grid. We also
-need to specify that `scoring="neg_root_mean_squared_error"` to get *negative* RMSPE from `scikit-learn`.
-The reason that `scikit-learn` negates the regular RMSPE is that the function always tries to maximize
-the scores, while RMSPE should be minimized. Hence, in order to see the actual RMSPE, we need to negate
-back the `mean_test_score`.
+value, let's use Python to perform cross-validation and to choose the optimal
+$K$.  First, we will create a transformer for preprocessing our data.  Note
+that we include standardization in our preprocessing to build good habits, but
+since we only have one predictor, it is technically not necessary; there is no
+risk of comparing two predictors of different scales.  Next we create a model
+pipeline for K-nearest neighbors regression. Note that we use the
+`KNeighborsRegressor` model object now to denote a regression problem, as
+opposed to the classification problems from the previous chapters.  The use of
+`KNeighborsRegressor` essentially tells `scikit-learn` that we need to use
+different metrics (instead of accuracy) for tuning and evaluation.  Next we
+specify a parameter grid containing the numbers of neighbors
+ranging from 1 to 200.  Then we create a 5-fold `GridSearchCV` object, and
+pass in the pipeline and parameter grid. 
+
+There is one additional slight complication: the models in `scikit-learn`
+always try to *maximize* a score when you use the `fit` method. When training
+a classification model as in the {ref}`classification1` and {ref}`classification2` chapters,
+this made sense: higher accuracy is better. But the RMSE in regression
+is the *opposite* of a score---higher is worse, and lower is better!  
+So `scikit-learn` is clever, and works with the *negative* RMSE instead.
+But that means that we need to explicitly ask `scikit-learn` to output the
+usual RMSE instead of the negative RMSE that it uses internally.
+We do this by setting the `scoring` argument to `"neg_root_mean_squared_error"`.
+
+So we need to tell `scikit-learn` that we are interested in beb We also need to specify that we want
+that
+`scoring="neg_root_mean_squared_error"` to get *negative* RMSPE from
+`scikit-learn`.  The reason that `scikit-learn` negates the regular RMSPE is
+that the function always tries to maximize the scores, while RMSPE should be
+minimized. Hence, in order to see the actual RMSPE, we need to negate back the
+`mean_test_score`.
 
 +++
 
@@ -574,32 +581,17 @@ error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 
 fall outside this range). You may ignore the other columns in the metrics data frame,
 as they do not provide any additional insight.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we know how we can assess how well our model predicts a numerical
-# value, let's use R to perform cross-validation and to choose the optimal $K$.
-# First, we will create a recipe for preprocessing our data.
-# Note that we include standardization
-# in our preprocessing to build good habits, but since we only have one
-# predictor, it is technically not necessary; there is no risk of comparing two predictors
-# of different scales.
-# Next we create a model specification for K-nearest neighbors regression. Note
-# that we use `set_mode("regression")`
-# now in the model specification to denote a regression problem, as opposed to the classification
-# problems from the previous chapters.
-# The use of `set_mode("regression")` essentially
-#  tells `tidymodels` that we need to use different metrics (RMSPE, not accuracy)
-# for tuning and evaluation.
-# Then we create a 5-fold cross-validation object, and put the recipe and model specification together
-# in a workflow.
-# \index{tidymodels}\index{recipe}\index{workflow}
-```
+> **Note:** We obtained the identifier of the parameter representing the number of neighbours,
+> `"kneighborsregressor__n_neighbors"` by examining the output of `sacr_pipeline.get_params()`,
+> as we did in the {ref}`classification1` chapter.
 
 ```{index} scikit-learn; GridSearchCV
 ```
 
 ```{code-cell} ipython3
+# import the KNN regression model
+from sklearn.neighbors import KNeighborsRegressor
+
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
@@ -615,11 +607,13 @@ param_grid = {
 sacr_gridsearch = GridSearchCV(
     estimator=sacr_pipeline,
     param_grid=param_grid,
-    n_jobs=-1,
     cv=5,
     scoring="neg_root_mean_squared_error",
 )
+```
 
+
+```{code-cell} ipython3
 # fit the GridSearchCV object
 sacr_gridsearch.fit(X, y)
 

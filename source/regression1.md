@@ -26,7 +26,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 
-# from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+# from sklearn.model_selection import GridSearchCV, train_test_split
 # from sklearn.compose import make_column_transformer
 # from sklearn.neighbors import KNeighborsRegressor
 # from sklearn.pipeline import Pipeline, make_pipeline
@@ -152,7 +152,7 @@ as well as setting the seed value.
 ```{code-cell} ipython3
 import pandas as pd
 import altair as alt
-from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -547,43 +547,19 @@ pipeline for K-nearest neighbors regression. Note that we use the
 opposed to the classification problems from the previous chapters.  The use of
 `KNeighborsRegressor` essentially tells `scikit-learn` that we need to use
 different metrics (instead of accuracy) for tuning and evaluation.  Next we
-specify a parameter grid containing the numbers of neighbors
+specify a parameter grid containing numbers of neighbors
 ranging from 1 to 200.  Then we create a 5-fold `GridSearchCV` object, and
 pass in the pipeline and parameter grid. 
+There is one additional slight complication: unlike classification models in `scikit-learn`---which
+by default use accuracy for tuning, as desired---regression models in `scikit-learn`
+do not use the RMSPE for tuning by default. 
+So we need to specify that we want to use the RMSPE for tuning by setting the
+`scoring` argument to `"neg_root_mean_squared_error"`.
 
-There is one additional slight complication: the models in `scikit-learn`
-always try to *maximize* a score when you use the `fit` method. When training
-a classification model as in the {ref}`classification1` and {ref}`classification2` chapters,
-this made sense: higher accuracy is better. But the RMSE in regression
-is the *opposite* of a score---higher is worse, and lower is better!  
-So `scikit-learn` is clever, and works with the *negative* RMSE instead.
-But that means that we need to explicitly ask `scikit-learn` to output the
-usual RMSE instead of the negative RMSE that it uses internally.
-We do this by setting the `scoring` argument to `"neg_root_mean_squared_error"`.
-
-So we need to tell `scikit-learn` that we are interested in beb We also need to specify that we want
-that
-`scoring="neg_root_mean_squared_error"` to get *negative* RMSPE from
-`scikit-learn`.  The reason that `scikit-learn` negates the regular RMSPE is
-that the function always tries to maximize the scores, while RMSPE should be
-minimized. Hence, in order to see the actual RMSPE, we need to negate back the
-`mean_test_score`.
-
-+++
-
-In the output of the `sacr_results`
-results data frame, we see that the `param_kneighborsregressor__n_neighbors` variable contains the values of $K$,
-the `RMSPE` variable contains the value of the RMSPE estimated via cross-validation,
-which was obtained through negating the `mean_test_score` variable,
-and the standard error (`std_test_score`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
-is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
-error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
-fall outside this range). You may ignore the other columns in the metrics data frame,
-as they do not provide any additional insight.
-
-> **Note:** We obtained the identifier of the parameter representing the number of neighbours,
-> `"kneighborsregressor__n_neighbors"` by examining the output of `sacr_pipeline.get_params()`,
-> as we did in the {ref}`classification1` chapter.
+> **Note:** We obtained the identifier of the parameter representing the number
+> of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
+> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification`
+> chapter.
 
 ```{index} scikit-learn; GridSearchCV
 ```
@@ -595,10 +571,6 @@ from sklearn.neighbors import KNeighborsRegressor
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
-
-# create the predictor and target
-X = sacramento_train[["sqft"]]
-y = sacramento_train[["price"]]
 
 # create the 5-fold GridSearchCV object
 param_grid = {
@@ -612,48 +584,72 @@ sacr_gridsearch = GridSearchCV(
 )
 ```
 
+Next, we use the run cross validation by calling the `fit` method
+on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
+we will wrap the `cv_results_` output in a data frame, extract
+only the relevant columns, compute the standard error based on 5 folds, 
+and rename the parameter column to be more readable.
 
 ```{code-cell} ipython3
-# fit the GridSearchCV object
-sacr_gridsearch.fit(X, y)
-
-# retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
-# negate mean_test_score (negative RMSPE) to get the actual RMSPE
-sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
-
-sacr_results[
-    [
-        "param_kneighborsregressor__n_neighbors",
-        "RMSPE",
-        "mean_test_score",
-        "std_test_score",
-    ]
-]
+# fit the GridSearchCV object and retrieve the CV scores
+sacr_results = pd.DataFrame(
+                sacr_gridsearch
+               .fit(
+                  sacramento_train[["sqft"]],
+                  sacramento_train[["price"]]
+              ).cv_results_)
+sacr_results = sacr_results[
+                ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
+               ].assign(
+                  sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
+              ).rename(
+                  columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
+              ).drop(
+                  columns = ["std_test_score"]
+              )
+sacr_results
 ```
+
+In the `sacr_results` results data frame, we see that the
+`n_neighbors` variable contains the values of $K$,
+and `mean_test_score` variable contains the value of the RMSPE estimated via
+cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative? 
+Recall that when we specified the `scoring` argument in the `GridSearchCV` object,
+we used the value `"neg_root_mean_squared_error"`. See the `neg_` at the start?
+That stands for *negative*! As it turns out, `scikit-learn` always tries to *maximize* a score
+when it tunes a model. But we want to *minimize* the RMSPE when we tune a regression
+model. So `scikit-learn` gets around this by working with the *negative* RMSPE instead.
+It is a little convoluted, but we need to add one more step to convert the negative
+RMSPE back to the regular RMSPE.
+
+```{code-cell} ipython3
+sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
+sacr_results
+```
+
+Alright, now the `mean_test_score` variable actually has values of the RMSPE 
+for different numbers of neighbors. Finally, the `sem_test_score` variable
+contains the standard error of our cross-validation RMSPE estimate, which
+is a measure of how uncertain we are in the mean value. Roughly, if
+your estimated mean RMSPE is 100,000 and standard error is 1,000, you can expect the
+*true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it
+may fall outside this range).
+
+{numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
+We take the *minimum* RMSPE to find the best setting for the number of neighbors.
+The smallest RMSPE occurs when $K$ is {glue:}`best_k_sacr`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-# Next we run cross-validation for a grid of numbers of neighbors ranging from 1 to 200.
-# The following code tunes
-# the model and returns the RMSPE for each number of neighbors. In the output of the `sacr_results`
-# results data frame, we see that the `neighbors` variable contains the value of $K$,
-# the mean (`mean`) contains the value of the RMSPE estimated via cross-validation,
-# and the standard error (`std_err`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
-# is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
-# error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
-# fall outside this range). You may ignore the other columns in the metrics data frame,
-# as they do not provide any additional insight.
-# \index{cross-validation!collect\_metrics}
+glue("best_k_sacr", sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()])
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 sacr_tunek_plot = alt.Chart(sacr_results).mark_line(point=True).encode(
-    x=alt.X("param_kneighborsregressor__n_neighbors", title="Neighbors"),
-    y=alt.Y("RMSPE", scale=alt.Scale(zero=False))
+    x=alt.X("n_neighbors", title="Neighbors"),
+    y=alt.Y("mean_test_score", scale=alt.Scale(zero=False), title="Cross-Validation RMSPE Estimate")
 )
 
 sacr_tunek_plot
@@ -670,32 +666,6 @@ glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
 
 Effect of the number of neighbors on the RMSPE.
 :::
-
-+++
-
-{numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
-We take the *minimum* RMSPE to find the best setting for the number of neighbors:
-
-```{code-cell} ipython3
-# show only the row of minimum RMSPE
-sacr_min = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
-sacr_min[
-    [
-        "param_kneighborsregressor__n_neighbors",
-        "RMSPE",
-        "mean_test_score",
-        "std_test_score",
-    ]
-]
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-glue("kmin", int(sacr_min['param_kneighborsregressor__n_neighbors']))
-```
-
-The smallest RMSPE occurs when $K =$ {glue:}`kmin`.
 
 +++
 

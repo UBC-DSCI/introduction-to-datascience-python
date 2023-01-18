@@ -546,9 +546,9 @@ and we provide the true labels via the `cancer_test["Class"]` series.
 
 ```{code-cell} ipython3
 cancer_acc_1 = knn_fit.score(
-                cancer_test.loc[:, ["Smoothness", "Concavity"]],
-                cancer_test["Class"]
-              )
+    cancer_test.loc[:, ["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
 cancer_acc_1
 ```
 

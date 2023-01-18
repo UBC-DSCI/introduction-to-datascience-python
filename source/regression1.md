@@ -998,15 +998,15 @@ sacr_fit = GridSearchCV(
 
 # retrieve the CV scores
 sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-                ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-               ]
+    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
+]
 sacr_results = sacr_results.assign(
-                  sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-              ).rename(
-                  columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-              ).drop(
-                  columns = ["std_test_score"]
-              )
+    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
+).rename(
+    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
+).drop(
+    columns = ["std_test_score"]
+)
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE

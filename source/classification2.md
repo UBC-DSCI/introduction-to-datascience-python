@@ -1233,7 +1233,7 @@ completely different.  In general, if the model *is influenced too much* by the
 training data, it is said to **overfit** the data.
 
 ```{code-cell} ipython3
-
+:tags: [remove-cell]
 alt.data_transformers.disable_max_rows()
 
 cancer_plot = (

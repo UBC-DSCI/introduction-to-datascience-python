@@ -741,9 +741,9 @@ knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
 # compute the score on validation data
 acc = knn_fit.score(
-        cancer_validation.loc[:, ["Smoothness", "Concavity"]],
-        cancer_validation["Class"]
-       )
+    cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+    cancer_validation["Class"]
+)
 acc
 ```
 

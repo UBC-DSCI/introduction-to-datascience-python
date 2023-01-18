@@ -735,7 +735,7 @@ Finally, we make predictions on the test data set to assess the quality of our m
 
 ```{code-cell} ipython3
 sacr_preds = sacramento_test.assign(
-               predicted=mlm.predict(sacramento_test[["sqft","beds"]])
+    predicted=mlm.predict(sacramento_test[["sqft","beds"]])
 )
 
 lm_mult_test_RMSPE = mean_squared_error(

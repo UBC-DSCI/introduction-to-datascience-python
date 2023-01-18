@@ -822,9 +822,9 @@ sacr_preds = sacramento_test.assign(
     predicted = sacr_fit.best_estimator_.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
-             y_true = sacr_preds["price"], 
-             y_pred=sacr_preds["predicted"]
-         )**(1/2)
+    y_true = sacr_preds["price"], 
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 RMSPE
 ```
 

@@ -819,7 +819,7 @@ model uses a different default scoring metric than the RMSPE.
 from sklearn.metrics import mean_squared_error
 
 sacr_preds = sacramento_test.assign(
-                   predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
              y_true = sacr_preds["price"], 

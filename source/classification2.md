@@ -641,7 +641,7 @@ As an example, in the breast cancer data, recall the proportions of benign and m
 observations in the training data are as follows:
 
 ```{code-cell} ipython3
-cancer_train["Class"].value_counts(normalize = True)
+cancer_train["Class"].value_counts(normalize=True)
 ```
 
 Since the benign class represents the majority of the training data,

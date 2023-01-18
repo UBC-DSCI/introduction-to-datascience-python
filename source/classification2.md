@@ -534,7 +534,7 @@ correct_preds = cancer_test_predictions[
     cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
 ]
 
-len(correct_preds) / len(cancer_test_predictions)
+correct_preds.shape[0] / cancer_test_predictions.shape[0]
 ```
 
 The `scitkit-learn` package also provides a more convenient way to do this using

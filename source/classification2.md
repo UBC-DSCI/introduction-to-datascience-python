@@ -533,7 +533,7 @@ using the `len` function.
 ```{code-cell} ipython3
 correct_preds = cancer_test_predictions[
     cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
-    ]
+]
 
 len(correct_preds) / len(cancer_test_predictions)
 ```

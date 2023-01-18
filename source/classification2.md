@@ -434,7 +434,7 @@ data are benign and {glue:}`cancer_train_m_prop`%
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
 
 ```{code-cell} ipython3
-cancer_train["Class"].value_counts(normalize = True)
+cancer_train["Class"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3

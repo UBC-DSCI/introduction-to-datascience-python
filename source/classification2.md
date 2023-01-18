@@ -514,9 +514,8 @@ variables in the output data frame.
 
 ```{code-cell} ipython3
 cancer_test_predictions = cancer_test.assign(
-                  predicted = knn_fit.predict(
-                         cancer_test.loc[:, ["Smoothness", "Concavity"]]
-                  ))	
+    predicted = knn_fit.predict(cancer_test.loc[:, ["Smoothness", "Concavity"]])
+)
 cancer_test_predictions[['ID', 'Class', 'predicted']]
 ```
 

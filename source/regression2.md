@@ -442,7 +442,7 @@ we predict on the test data set to assess how well our model does.
 ```{code-cell} ipython3
 # make predictions
 sacr_preds = sacramento_test.assign(
-              predicted = lm.predict(sacramento_test[["sqft"]])
+    predicted = lm.predict(sacramento_test[["sqft"]])
 )
 
 # calculate RMSPE

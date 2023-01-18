@@ -1881,8 +1881,6 @@ we demonstrate how to save PNG and SVG file types for the
 `faithful_scatter_labels` plot.
 
 ```{code-cell} ipython3
-from altair_saver import save
-
 faithful_scatter_labels.save("img/faithful_plot.png")
 faithful_scatter_labels.save("img/faithful_plot.svg")
 

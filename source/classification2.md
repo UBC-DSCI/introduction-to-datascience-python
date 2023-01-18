@@ -332,7 +332,7 @@ cancer['Class'] = cancer['Class'].replace({
 
 perim_concav = (
     alt.Chart(cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x="Smoothness",
         y="Concavity",

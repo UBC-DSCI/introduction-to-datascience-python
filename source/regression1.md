@@ -1042,7 +1042,7 @@ use the `predict` method on the test data, and finally use the `mean_squared_err
 to compute the RMSPE.
 ```{code-cell} ipython3
 sacr_preds = sacramento_test.assign(
-                   predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
 )
 RMSPE_mult = mean_squared_error(
              y_true = sacr_preds["price"], 

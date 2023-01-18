@@ -188,7 +188,7 @@ np.random.seed(1)
 
 nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-random_numbers1 = nums_0_to_9.sample(n = 10).values
+random_numbers1 = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers1
 ```
 You can see that `random_numbers1` is a list of 10 numbers
@@ -197,7 +197,7 @@ we run the `sample` method again,
 we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
-random_numbers2 = nums_0_to_9.sample(n = 10).values
+random_numbers2 = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers2
 ```
 
@@ -207,12 +207,12 @@ as before---and then call the `sample` method again.
 
 ```{code-cell} ipython3
 np.random.seed(1)
-random_numbers1_again = nums_0_to_9.sample(n = 10).values
+random_numbers1_again = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers1_again
 ```
 
 ```{code-cell} ipython3
-random_numbers2_again = nums_0_to_9.sample(n = 10).values
+random_numbers2_again = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers2_again
 ```
 
@@ -224,12 +224,12 @@ obtain a different sequence of random numbers.
 
 ```{code-cell} ipython3
 np.random.seed(4235)
-random_numbers = nums_0_to_9.sample(n = 10).values
+random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers
 ```
 
 ```{code-cell} ipython3
-random_numbers = nums_0_to_9.sample(n = 10).values
+random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers
 ```
 
@@ -277,14 +277,14 @@ functions. Those functions will then use your `RandomState` to generate random n
 object with the `seed` value set to 1; we get the same lists of numbers once again.
 ```{code}
 rnd = np.random.RandomState(seed = 1)
-random_numbers1_third = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers1_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
 random_numbers1_third
 ``` 
 ```{code}
 array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
 ```{code}
-random_numbers2_third = nums_0_to_9.sample(n = 10, random_state = rnd).values
+random_numbers2_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
 random_numbers2_third
 ``` 
 ```{code}

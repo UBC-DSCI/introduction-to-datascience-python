@@ -1235,7 +1235,6 @@ training data, it is said to **overfit** the data.
 ```{code-cell} ipython3
 
 alt.data_transformers.disable_max_rows()
-alt.renderers.enable("mimetype")
 
 cancer_plot = (
     alt.Chart(

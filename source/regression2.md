@@ -739,9 +739,9 @@ sacr_preds = sacramento_test.assign(
 )
 
 lm_mult_test_RMSPE = mean_squared_error(
-               y_true=sacr_preds["price"], 
-               y_pred=sacr_preds["predicted"]
-        )**(1/2)
+    y_true=sacr_preds["price"], 
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 lm_mult_test_RMSPE
 ```
 

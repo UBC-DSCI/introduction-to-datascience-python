@@ -49,6 +49,15 @@ the same. We are currently working on producing new Python-based images and exam
 for this chapter.
 ```
 
+```{note}
+This book was originally written for the R programming language, and
+has been edited to focus instead on Python. This chapter on version control
+has not yet been fully updated to focus on Python; it has images and examples from 
+the R version of the book. But the concepts related to version control are generally
+the same. We are currently working on producing new Python-based images and examples 
+for this chapter.
+```
+
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
@@ -284,7 +293,6 @@ Committing the modified files in the staging area to the local repository histor
 ```
 
 
-
 ### Pushing changes to a remote repository
 
 ```{index} git;push
@@ -305,7 +313,6 @@ name: vc5-push
 ---
 Pushing the commit to send the changes to the remote repository on GitHub.
 ```
-
 
 ### Pulling changes from a remote repository
 
@@ -776,7 +783,7 @@ and click on the blue "Commit" button ({numref}`git-commit-01`).
 It is highly recommended to write useful and meaningful messages about what
 was changed. These commit messages, and the datetime stamp for a given
 commit, are the primary means to navigate through the project's history in the
- event that you need to view or retrieve a past version of a file, or
+event that you need to view or retrieve a past version of a file, or
 revert your project to an earlier state.
 When you click the "Commit" button for the first time, you will be prompted to
 enter your name and email. This only needs to be done once for each machine

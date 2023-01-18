@@ -569,9 +569,10 @@ The `crosstab` function
 takes two arguments: the true labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
-pd.crosstab(cancer_test_predictions["Class"],
-            cancer_test_predictions["predicted"]
-           )
+pd.crosstab(
+    cancer_test_predictions["Class"],
+    cancer_test_predictions["predicted"]
+)
 ```
 
 ```{code-cell} ipython3

@@ -18,18 +18,23 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import altair as alt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import StandardScaler
-import plotly.express as px
-import plotly.graph_objs as go
-from plotly.offline import plot
+
+# from sklearn.model_selection import GridSearchCV, train_test_split
+# from sklearn.compose import make_column_transformer
+# from sklearn.neighbors import KNeighborsRegressor
+# from sklearn.pipeline import Pipeline, make_pipeline
+# from sklearn.preprocessing import StandardScaler
+
+# import plotly.express as px
+# import plotly.graph_objs as go
+# from plotly.offline import plot
 from IPython.display import HTML
 
 from myst_nb import glue
@@ -46,8 +51,8 @@ to classification: for example, just as in the case of classification,
 we will split our data into training, validation, and test sets, we will
 use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
-Because of how similar these procedures are, make sure to read Chapters
-{ref}`classification` and {ref}`classification2` before reading
+Because of how similar these procedures are, make sure to read the
+{ref}`classification` and {ref}`classification2` chapters before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor,
@@ -141,29 +146,18 @@ Can we use the size of a house in the Sacramento, CA area to predict
 its sale price? A rigorous, quantitative answer to this question might help
 a realtor advise a client as to whether the price of a particular listing
 is fair, or perhaps how to set the price of a new listing.
-We begin the analysis by loading and examining the data.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In this chapter and the next, we will study
-# a data set \index{Sacramento real estate} of
-# [932 real estate transactions in Sacramento, California](https://support.spatialkey.com/spatialkey-sample-csv-data/)
-# originally reported in the *Sacramento Bee* newspaper.
-# We first need to formulate a precise question that
-# we want to answer. In this example, our question is again predictive:
-# \index{question!regression} Can we use the size of a house in the Sacramento, CA area to predict
-# its sale price? A rigorous, quantitative answer to this question might help
-# a realtor advise a client as to whether the price of a particular listing
-# is fair, or perhaps how to set the price of a new listing.
-# We begin the analysis by loading and examining the data, and setting the seed value.
-
-# \index{seed!set.seed}
-```
+We begin the analysis by loading and examining the data,
+as well as setting the seed value.
 
 ```{code-cell} ipython3
 import pandas as pd
 import altair as alt
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+np.random.seed(10)
 
 sacramento = pd.read_csv("data/sacramento.csv")
 sacramento
@@ -190,7 +184,7 @@ want to predict (sale price) on the y-axis.
 
 eda = (
     alt.Chart(sacramento)
-    .mark_circle(opacity=0.4, color='black')
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
@@ -202,7 +196,6 @@ eda
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 glue("fig:07-edaRegr", eda)
 ```
 
@@ -244,11 +237,11 @@ this chapter we will use all the data.
 ```
 
 To take a small random sample of size 30, we'll use the
-`sample` method of a `pandas.DataFrame` object, and input the number of rows
-to randomly select (`n`) and the random seed (`random_state`).
+`sample` method on the `sacramento` data frame, specifying
+that we want to select `n=30` rows.
 
 ```{code-cell} ipython3
-small_sacramento = sacramento.sample(n=30, random_state=10)
+small_sacramento = sacramento.sample(n=30)
 ```
 
 Next let's say we come across a  2,000 square-foot house in Sacramento we are
@@ -266,7 +259,7 @@ the sale price?
 
 small_plot = (
     alt.Chart(small_sacramento)
-    .mark_circle(color='black')
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
@@ -307,8 +300,7 @@ of a house that is 2,000 square feet.
 ```{code-cell} ipython3
 nearest_neighbors = (
     small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
-    .sort_values("diff")
-    .head(5)
+    .nsmallest(5, "diff")
 )
 
 nearest_neighbors
@@ -401,15 +393,14 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions
 about what the data must look like for it to work.
 
-+++ {"tags": []}
++++ 
 
 ## Training, evaluating, and tuning the model
 
 ```{index} training data, test data
 ```
 
-As usual,
-we must start by putting some test data away in a lock box
+As usual, we must start by putting some test data away in a lock box
 that we will come back to only after we choose our final model.
 Let's take care of that now.
 Note that for the remainder of the chapter
@@ -419,12 +410,14 @@ that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 
 +++
 
-> Note that we are not specifying the `stratify` argument here as we did in Chapter {ref}`classification2`,
-> since `sklearn.model_selection.train_test_split` cannot stratify based on a continuous variable. However, some functions inside other packages are able to do that.
+> Note that we are not specifying the `stratify` argument here like we did in
+> the {ref}`classification2` chapter, since
+> the `train_test_split` function cannot stratify based on a
+> quantitative variable.
 
 ```{code-cell} ipython3
 sacramento_train, sacramento_test = train_test_split(
-    sacramento, train_size=0.75, random_state=5
+    sacramento, train_size=0.75
 )
 ```
 
@@ -467,6 +460,8 @@ us the smallest RMSPE.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+from sklearn.neighbors import KNeighborsRegressor
+
 # (synthetic) new prediction points
 pts = pd.DataFrame({"sqft": [1250, 1850, 2250], "price": [250000, 200000, 500000]})
 finegrid = pd.DataFrame({"sqft": np.arange(900, 3901, 10)})
@@ -497,7 +492,7 @@ errors_plot = (
     small_plot
     + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
     + alt.Chart(sacr_new_preds_hid)
-    .mark_circle(color="black")
+    .mark_circle()
     .encode(x="sqft", y="price")
 )
 for i in pts["sqft"]:
@@ -542,71 +537,40 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 ```
 
 Now that we know how we can assess how well our model predicts a numerical
-value, let's use Python to perform cross-validation and to choose the optimal $K$.
-First, we will create a recipe for preprocessing our data.
-Note that we include standardization
-in our preprocessing to build good habits, but since we only have one
-predictor, it is technically not necessary; there is no risk of comparing two predictors
-of different scales.
-Next we create a model pipeline for K-nearest neighbors regression. Note
-that we use `KNeighborsRegressor`
-now in the model specification to denote a regression problem, as opposed to the classification
-problems from the previous chapters.
-The use of `KNeighborsRegressor` essentially
- tells `scikit-learn` that we need to use different metrics (instead of accuracy)
-for tuning and evaluation.
-Next we specify a dictionary of parameter grid containing the numbers of neighbors ranging from 1 to 200.
-Then we create a 5-fold `GridSearchCV` object, and pass in the pipeline and parameter grid. We also
-need to specify that `scoring="neg_root_mean_squared_error"` to get *negative* RMSPE from `scikit-learn`.
-The reason that `scikit-learn` negates the regular RMSPE is that the function always tries to maximize
-the scores, while RMSPE should be minimized. Hence, in order to see the actual RMSPE, we need to negate
-back the `mean_test_score`.
+value, let's use Python to perform cross-validation and to choose the optimal
+$K$.  First, we will create a transformer for preprocessing our data.  Note
+that we include standardization in our preprocessing to build good habits, but
+since we only have one predictor, it is technically not necessary; there is no
+risk of comparing two predictors of different scales.  Next we create a model
+pipeline for K-nearest neighbors regression. Note that we use the
+`KNeighborsRegressor` model object now to denote a regression problem, as
+opposed to the classification problems from the previous chapters.  The use of
+`KNeighborsRegressor` essentially tells `scikit-learn` that we need to use
+different metrics (instead of accuracy) for tuning and evaluation.  Next we
+specify a parameter grid containing numbers of neighbors
+ranging from 1 to 200.  Then we create a 5-fold `GridSearchCV` object, and
+pass in the pipeline and parameter grid. 
+There is one additional slight complication: unlike classification models in `scikit-learn`---which
+by default use accuracy for tuning, as desired---regression models in `scikit-learn`
+do not use the RMSPE for tuning by default. 
+So we need to specify that we want to use the RMSPE for tuning by setting the
+`scoring` argument to `"neg_root_mean_squared_error"`.
 
-+++
-
-In the output of the `sacr_results`
-results data frame, we see that the `param_kneighborsregressor__n_neighbors` variable contains the values of $K$,
-the `RMSPE` variable contains the value of the RMSPE estimated via cross-validation,
-which was obtained through negating the `mean_test_score` variable,
-and the standard error (`std_test_score`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
-is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
-error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
-fall outside this range). You may ignore the other columns in the metrics data frame,
-as they do not provide any additional insight.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we know how we can assess how well our model predicts a numerical
-# value, let's use R to perform cross-validation and to choose the optimal $K$.
-# First, we will create a recipe for preprocessing our data.
-# Note that we include standardization
-# in our preprocessing to build good habits, but since we only have one
-# predictor, it is technically not necessary; there is no risk of comparing two predictors
-# of different scales.
-# Next we create a model specification for K-nearest neighbors regression. Note
-# that we use `set_mode("regression")`
-# now in the model specification to denote a regression problem, as opposed to the classification
-# problems from the previous chapters.
-# The use of `set_mode("regression")` essentially
-#  tells `tidymodels` that we need to use different metrics (RMSPE, not accuracy)
-# for tuning and evaluation.
-# Then we create a 5-fold cross-validation object, and put the recipe and model specification together
-# in a workflow.
-# \index{tidymodels}\index{recipe}\index{workflow}
-```
+> **Note:** We obtained the identifier of the parameter representing the number
+> of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
+> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification`
+> chapter.
 
 ```{index} scikit-learn; GridSearchCV
 ```
 
 ```{code-cell} ipython3
+# import the KNN regression model
+from sklearn.neighbors import KNeighborsRegressor
+
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
-
-# create the predictor and target
-X = sacramento_train[["sqft"]]
-y = sacramento_train[["price"]]
 
 # create the 5-fold GridSearchCV object
 param_grid = {
@@ -615,51 +579,80 @@ param_grid = {
 sacr_gridsearch = GridSearchCV(
     estimator=sacr_pipeline,
     param_grid=param_grid,
-    n_jobs=-1,
     cv=5,
     scoring="neg_root_mean_squared_error",
 )
-
-# fit the GridSearchCV object
-sacr_gridsearch.fit(X, y)
-
-# retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
-# negate mean_test_score (negative RMSPE) to get the actual RMSPE
-sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
-
-sacr_results[
-    [
-        "param_kneighborsregressor__n_neighbors",
-        "RMSPE",
-        "mean_test_score",
-        "std_test_score",
-    ]
-]
 ```
+
+Next, we use the run cross validation by calling the `fit` method
+on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
+we will wrap the `cv_results_` output in a data frame, extract
+only the relevant columns, compute the standard error based on 5 folds, 
+and rename the parameter column to be more readable.
+
+```{code-cell} ipython3
+# fit the GridSearchCV object 
+sacr_fit = sacr_gridsearch.fit(
+                  sacramento_train[["sqft"]],
+                  sacramento_train[["price"]]
+              )
+# retrieve the CV scores
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
+    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
+]
+sacr_results = sacr_results.assign(
+    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
+).rename(
+    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
+).drop(
+    columns = ["std_test_score"]
+)
+sacr_results
+```
+
+In the `sacr_results` results data frame, we see that the
+`n_neighbors` variable contains the values of $K$,
+and `mean_test_score` variable contains the value of the RMSPE estimated via
+cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative? 
+Recall that when we specified the `scoring` argument in the `GridSearchCV` object,
+we used the value `"neg_root_mean_squared_error"`. See the `neg_` at the start?
+That stands for *negative*! As it turns out, `scikit-learn` always tries to *maximize* a score
+when it tunes a model. But we want to *minimize* the RMSPE when we tune a regression
+model. So `scikit-learn` gets around this by working with the *negative* RMSPE instead.
+It is a little convoluted, but we need to add one more step to convert the negative
+RMSPE back to the regular RMSPE.
+
+```{code-cell} ipython3
+sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
+sacr_results
+```
+
+Alright, now the `mean_test_score` variable actually has values of the RMSPE 
+for different numbers of neighbors. Finally, the `sem_test_score` variable
+contains the standard error of our cross-validation RMSPE estimate, which
+is a measure of how uncertain we are in the mean value. Roughly, if
+your estimated mean RMSPE is 100,000 and standard error is 1,000, you can expect the
+*true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it
+may fall outside this range).
+
+{numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
+We take the *minimum* RMSPE to find the best setting for the number of neighbors.
+The smallest RMSPE occurs when $K$ is {glue:}`best_k_sacr`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-# Next we run cross-validation for a grid of numbers of neighbors ranging from 1 to 200.
-# The following code tunes
-# the model and returns the RMSPE for each number of neighbors. In the output of the `sacr_results`
-# results data frame, we see that the `neighbors` variable contains the value of $K$,
-# the mean (`mean`) contains the value of the RMSPE estimated via cross-validation,
-# and the standard error (`std_err`) contains a value corresponding to a measure of how uncertain we are in the mean value. A detailed treatment of this
-# is beyond the scope of this chapter; but roughly, if your estimated mean is 100,000 and standard
-# error is 1,000, you can expect the *true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it may
-# fall outside this range). You may ignore the other columns in the metrics data frame,
-# as they do not provide any additional insight.
-# \index{cross-validation!collect\_metrics}
+best_k_sacr = sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()]
+best_cv_RMSPE = min(sacr_results["mean_test_score"])
+glue("best_k_sacr", best_k_sacr)
+glue("cv_RMSPE", "{0:,.0f}".format(int(best_cv_RMSPE)))
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 sacr_tunek_plot = alt.Chart(sacr_results).mark_line(point=True).encode(
-    x=alt.X("param_kneighborsregressor__n_neighbors", title="Neighbors"),
-    y=alt.Y("RMSPE", scale=alt.Scale(zero=False))
+    x=alt.X("n_neighbors", title="Neighbors"),
+    y=alt.Y("mean_test_score", scale=alt.Scale(zero=False), title="Cross-Validation RMSPE Estimate")
 )
 
 sacr_tunek_plot
@@ -679,32 +672,6 @@ Effect of the number of neighbors on the RMSPE.
 
 +++
 
-{numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
-We take the *minimum* RMSPE to find the best setting for the number of neighbors:
-
-```{code-cell} ipython3
-# show only the row of minimum RMSPE
-sacr_min = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
-sacr_min[
-    [
-        "param_kneighborsregressor__n_neighbors",
-        "RMSPE",
-        "mean_test_score",
-        "std_test_score",
-    ]
-]
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-glue("kmin", int(sacr_min['param_kneighborsregressor__n_neighbors']))
-```
-
-The smallest RMSPE occurs when $K =$ {glue:}`kmin`.
-
-+++
-
 ## Underfitting and overfitting
 Similar to the setting of classification, by setting the number of neighbors
 to be too small or too large, we cause the RMSPE to increase, as shown in
@@ -712,21 +679,10 @@ to be too small or too large, we cause the RMSPE to increase, as shown in
 
 {numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 regression model. Each plot shows the predicted values for house sale price from
-our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`kmin`, 41, 250, and 699 (i.e., the training data).
+our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`best_k_sacr`, 41, 250, and 699 (i.e., all of the training data).
 For each model, we predict prices for the range of possible home sizes we
 observed in the data set (here 500 to 5,000 square feet) and we plot the
-predicted prices as a blue line.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Figure \@ref(fig:07-howK) visualizes the effect of different settings of $K$ on the
-# regression model. Each plot shows the predicted values for house sale price from
-# our KNN regression model for 6 different values for $K$: 1, 3, `r kmin`, 41, 250, and 932 (i.e., the entire dataset).
-# For each model, we predict prices for the range of possible home sizes we
-# observed in the data set (here 500 to 5,000 square feet) and we plot the
-# predicted prices as a blue line.
-```
+predicted prices as a orange line.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -734,7 +690,7 @@ predicted prices as a blue line.
 gridvals = [
     1,
     3,
-    int(sacr_min["param_kneighborsregressor__n_neighbors"]),
+    best_k_sacr,
     41,
     250,
     len(sacramento_train),
@@ -748,7 +704,7 @@ y = sacramento_train[["price"]]
 
 base_plot = (
     alt.Chart(sacramento_train)
-    .mark_circle(opacity=0.4, color="black")
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
@@ -767,7 +723,7 @@ for i in range(len(gridvals)):
     plots.append(
         base_plot
         + alt.Chart(sacr_preds, title=f"K = {gridvals[i]}")
-        .mark_line(color="blue")
+        .mark_line(color="#ff7f0e")
         .encode(x="sqft", y="predicted")
     )
 ```
@@ -783,7 +739,7 @@ glue(
 :::{glue:figure} fig:07-howK
 :name: fig:07-howK
 
-Predicted values for house price (represented as a blue line) from KNN regression models for six different values for $K$.
+Predicted values for house price (represented as a orange line) from KNN regression models for six different values for $K$.
 :::
 
 +++
@@ -791,7 +747,7 @@ Predicted values for house price (represented as a blue line) from KNN regressio
 ```{index} overfitting; regression
 ```
 
-{numref}`fig:07-howK` shows that when $K$ = 1, the blue line runs perfectly
+{numref}`fig:07-howK` shows that when $K$ = 1, the orange line runs perfectly
 through (almost) all of our training observations.
 This happens because our
 predicted values for a given region (typically) depend on just a single observation.
@@ -813,14 +769,14 @@ in the context of regression.
 
 What about the plots in {numref}`fig:07-howK` where $K$ is quite large,
 say, $K$ = 250 or 699?
-In this case the blue line becomes extremely smooth, and actually becomes flat
+In this case the orange line becomes extremely smooth, and actually becomes flat
 once $K$ is equal to the number of datapoints in the entire data set.
 This happens because our predicted values for a given x value (here, home
 size), depend on many neighboring observations; in the case where $K$ is equal
 to the size of the dataset, the prediction is just the mean of the house prices
 in the dataset (completely ignoring the house size).
 In contrast to the $K=1$ example,
-the smooth, inflexible blue line does not follow the training observations very closely.
+the smooth, inflexible orange line does not follow the training observations very closely.
 In other words, the model is *not influenced enough* by the training data.
 Recall from the classification
 chapters that this behavior is called *underfitting*; we again use this same
@@ -831,71 +787,44 @@ we would like a model that (1) follows the overall "trend" in the training data,
 actually uses the training data to learn something useful, and (2) does not follow
 the noisy fluctuations, so that we can be confident that our model will transfer/generalize
 well to other new data. If we explore
-the other values for $K$, in particular $K$ = {glue:}`kmin` (as suggested by cross-validation),
+the other values for $K$, in particular $K$ = {glue:}`best_k_sacr` (as suggested by cross-validation),
 we can see it achieves this goal: it follows the increasing trend of house price
 versus house size, but is not influenced too much by the idiosyncratic variations
 in price. All of this is similar to how
 the choice of $K$ affects K-nearest neighbors classification, as discussed in the previous
 chapter.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Changed from ...
-
-# What about the plots in Figure \@ref(fig:07-howK) where $K$ is quite large,
-# say, $K$ = 250 or 932?
-```
-
 ## Evaluating on the test set
 
 To assess how well our model might do at predicting on unseen data, we will
-assess its RMSPE on the test data. To do this, we will first
-re-train our KNN regression model on the entire training data set,
-using $K =$ {glue:}`kmin` neighbors. Then we will
-use `predict` to make predictions on the test data, and use the `mean_squared_error`
-function to compute the mean squared prediction error (MSPE). Finally take the
-square root of MSPE to get RMSPE. The reason that we do not use `score` method (as we
-did in Classification chapter) is that the scoring metric `score` uses for `KNeighborsRegressor`
-is $R^2$ instead of RMSPE.
+assess its RMSPE on the test data. To do this, we first need to retrain the 
+KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
+neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
+does it for us. We just need to obtain the `best_estimator_` attribute of original
+fit `GridSearchCV` object.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# To assess how well our model might do at predicting on unseen data, we will
-# assess its RMSPE on the test data. To do this, we will first
-# re-train our KNN regression model on the entire training data set,
-# using $K =$ `r sacr_min |> pull(neighbors)` neighbors. Then we will
-# use `predict` to make predictions on the test data, and use the `metrics`
-# function again to compute the summary of regression quality. Because
-# we specify that we are performing regression in `set_mode`, the `metrics`
-# function knows to output a quality summary related to regression, and not, say, classification.
+sacr_fit.best_estimator_
 ```
 
+Given the `best_estimator_` tuned model, we can use the `predict` method 
+to make predictions on the test data. We then use the `mean_squared_error`
+function (with the `y_true` and `y_pred` arguments) 
+to compute the mean squared prediction error, and finally take the
+square root to get the RMSPE. The reason that we do not just use the `score` 
+method---as in the {ref}`classification2` chapter---is that the `KNeighborsRegressor` 
+model uses a different default scoring metric than the RMSPE. 
+
 ```{code-cell} ipython3
-kmin = int(sacr_min["param_kneighborsregressor__n_neighbors"])
-
-# re-make the pipeline
-sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor(n_neighbors=kmin))
-
-# create the predictor and target
-X = sacramento_train[["sqft"]]
-y = sacramento_train[["price"]]
-
-# fit the pipeline object
-sacr_pipeline.fit(X, y)
-
-# predict on test data
-sacr_preds = sacramento_test
-sacr_preds = sacr_preds.assign(predicted=sacr_pipeline.predict(sacramento_test))
-
-# calculate RMSPE
 from sklearn.metrics import mean_squared_error
 
-RMSPE = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
+sacr_preds = sacramento_test.assign(
+    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
 )
-
+RMSPE = mean_squared_error(
+    y_true = sacr_preds["price"], 
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 RMSPE
 ```
 
@@ -903,46 +832,45 @@ RMSPE
 :tags: [remove-cell]
 
 glue("test_RMSPE", "{0:,.0f}".format(int(RMSPE)))
-glue("cv_RMSPE", "{0:,.0f}".format(int(sacr_min['RMSPE'])))
 ```
 
 Our final model's test error as assessed by RMSPE
-is \$ {glue:text}`test_RMSPE`.
+is \${glue:text}`test_RMSPE`.
 Note that RMSPE is measured in the same units as the response variable.
 In other words, on new observations, we expect the error in our prediction to be
-*roughly* \$ {glue:text}`test_RMSPE`.
+*roughly* \${glue:text}`test_RMSPE`.
 From one perspective, this is good news: this is about the same as the cross-validation
 RMSPE estimate of our tuned model
-(which was \$ {glue:text}`cv_RMSPE`,
+(which was \${glue:text}`cv_RMSPE`,
 so we can say that the model appears to generalize well
 to new data that it has never seen before.
 However, much like in the case of KNN classification, whether this value for RMSPE is *good*&mdash;i.e.,
-whether an error of around \$ {glue:text}`test_RMSPE`
+whether an error of around \${glue:text}`test_RMSPE`
 is acceptable&mdash;depends entirely on the application.
 In this application, this error
 is not prohibitively large, but it is not negligible either;
-\$ {glue:text}`test_RMSPE`
+\${glue:text}`test_RMSPE`
 might represent a substantial fraction of a home buyer's budget, and
 could make or break whether or not they could afford put an offer on a house.
 
-Finally, {numref}`fig:07-predict-all` shows the predictions that our final model makes across
-the range of house sizes we might encounter in the Sacramento area&mdash;from 500 to 5000 square feet.
-You have already seen a few plots like this in this chapter, but here we also provide the code that generated it
-as a learning challenge.
+Finally, {numref}`fig:07-predict-all` shows the predictions that our final
+model makes across the range of house sizes we might encounter in the
+Sacramento area&mdash;from 500 to 5000 square feet.  You have already seen a
+few plots like this in this chapter, but here we also provide the code that
+generated it as a learning challenge.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
 sacr_preds = pd.DataFrame({"sqft": np.arange(500, 5001, 10)})
-sacr_preds = pd.concat(
-    (sacr_preds, pd.DataFrame(sacr_pipeline.predict(sacr_preds), columns=["predicted"])),
-    axis=1,
+sacr_preds = sacr_preds.assign(
+                   predicted = sacr_fit.predict(sacr_preds)
 )
 
 # the base plot: the training data scatter plot
 base_plot = (
     alt.Chart(sacramento_train)
-    .mark_circle(opacity=0.4, color="black")
+    .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
@@ -950,23 +878,23 @@ base_plot = (
 )
 
 # add the prediction layer
-plot_final = base_plot + alt.Chart(sacr_preds, title=f"K = {kmin}").mark_line(
-    color="blue"
+sacr_preds_plot = base_plot + alt.Chart(sacr_preds, title=f"K = {best_k_sacr}").mark_line(
+    color="#ff7f0e"
 ).encode(x="sqft", y="predicted")
 
-plot_final
+sacr_preds_plot
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:07-predict-all", plot_final)
+glue("fig:07-predict-all", sacr_preds_plot)
 ```
 
 :::{glue:figure} fig:07-predict-all
 :name: fig:07-predict-all
 
-Predicted values of house price (blue line) for the final KNN regression model.
+Predicted values of house price (orange line) for the final KNN regression model.
 :::
 
 +++
@@ -980,18 +908,6 @@ observations that are nearest to the new point we want to predict; any
 variables that are on a large scale will have a much larger effect than
 variables on a small scale. Hence, we should re-define the preprocessor in the
 pipeline to incorporate all predictor variables.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# As in KNN classification, we can use multiple predictors in KNN regression.
-# In this setting, we have the same concerns regarding the scale of the predictors. Once again,
-#  predictions are made by identifying the $K$
-# observations that are nearest to the new point we want to predict; any
-# variables that are on a large scale will have a much larger effect than
-# variables on a small scale. But since the `recipe` we built above scales and centers
-# all predictor variables, this is handled for us.
-```
 
 Note that we also have the same concern regarding the selection of predictors
 in KNN regression as in KNN classification: having more predictors is **not** always
@@ -1018,7 +934,7 @@ to help predict the sale price of a house.
 
 plot_beds = (
     alt.Chart(sacramento)
-    .mark_circle(opacity=0.4, color="black")
+    .mark_circle()
     .encode(
         x=alt.X("beds", title="Number of Bedrooms"),
         y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
@@ -1051,66 +967,64 @@ model using house size and number of bedrooms, and then we can compare it to
 the model we previously came up with that only used house
 size. Let's do that now!
 
-First we'll build a new model specification and preprocessor for the analysis. Note that
-we pass in `["sqft", "beds"]` to denote that we have two predictors in `make_column_transformer`.
-Moreover, we do not specify `n_neighbors` in `KNeighborsRegressor` inside the pipeline, and pass this pipeline to the `GridSearchCV` to tell `scikit-learn` to tune the number of neighbors for us.
+First we'll build a new model specification and preprocessor for the analysis.
+Note that we pass the list `["sqft", "beds"]` into the `make_column_transformer`
+function to denote that we have two predictors.  Moreover, we do not specify `n_neighbors` in
+`KNeighborsRegressor`, indicating that we want this parameter to be tuned by `GridSearchCV`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# First we'll build a new model specification and recipe for the analysis. Note that
-# we use the formula `price ~ sqft + beds` to denote that we have two predictors,
-# and set `neighbors = tune()` to tell `tidymodels` to tune the number of neighbors for us.
-```
-
-```{code-cell} ipython3
-# preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft", "beds"]))
 sacr_pipeline = make_pipeline(sacr_preprocessor, KNeighborsRegressor())
-
-# create the predictor and target
-X = sacramento_train[["sqft", "beds"]]
-y = sacramento_train[["price"]]
 ```
 
-Next, we'll use 5-fold cross-validation through `GridSearchCV` to choose the number of neighbors via the minimum RMSPE:
+Next, we'll use 5-fold cross-validation with a `GridSearchCV` object
+to choose the number of neighbors via the minimum RMSPE:
 
 ```{code-cell} ipython3
 # create the 5-fold GridSearchCV object
 param_grid = {
-    "kneighborsregressor__n_neighbors": range(1, 201),
+    "kneighborsregressor__n_neighbors": range(1, 50),
 }
-sacr_gridsearch = GridSearchCV(
+
+sacr_fit = GridSearchCV(
     estimator=sacr_pipeline,
     param_grid=param_grid,
-    n_jobs=-1,
     cv=5,
-    scoring="neg_root_mean_squared_error",
-)
-
-# fit the GridSearchCV object
-sacr_gridsearch.fit(X, y)
+    scoring="neg_root_mean_squared_error"
+    ).fit(
+      sacramento_train[["sqft", "beds"]],
+      sacramento_train[["price"]]
+    )
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
-# negate mean_test_score (negative RMSPE) to get the actual RMSPE
-sacr_results["RMSPE"] = -sacr_results["mean_test_score"]
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
+    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
+]
+sacr_results = sacr_results.assign(
+    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
+).rename(
+    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
+).drop(
+    columns = ["std_test_score"]
+)
+sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
-sacr_multi = sacr_results[sacr_results["RMSPE"] == min(sacr_results["RMSPE"])]
-sacr_k = int(sacr_multi["param_kneighborsregressor__n_neighbors"])
-
-sacr_multi
+sacr_results[
+   sacr_results["mean_test_score"] == min(sacr_results["mean_test_score"])
+]
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sacr_k", sacr_k)
-glue("cv_RMSPE_2pred", "{0:,.0f}".format(int(sacr_multi["RMSPE"])))
+best_k_sacr_multi = sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()]
+min_rmspe_sacr_multi = min(sacr_results["mean_test_score"])
+glue("best_k_sacr_multi", best_k_sacr_multi)
+glue("cv_RMSPE_2pred", "{0:,.0f}".format(int(min_rmspe_sacr_multi)))
 ```
 
-Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:}`sacr_k`.
+Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:}`best_k_sacr_multi`.
 If we want to compare this multivariable KNN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
@@ -1123,31 +1037,19 @@ Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
 Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
-and evaluate its performance on test data. We first need to re-train the model on the entire
-training data set with $K =$ {glue:}`sacr_k`, and then use that model to make predictions
-on the test data.
-
+and evaluate its performance on test data. We will extract the `best_estimator_` model,
+use the `predict` method on the test data, and finally use the `mean_squared_error` function
+to compute the RMSPE.
 ```{code-cell} ipython3
-# re-make the pipeline
-sacr_pipeline_mult = make_pipeline(
-    sacr_preprocessor, KNeighborsRegressor(n_neighbors=sacr_k)
+sacr_preds = sacramento_test.assign(
+    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
 )
-
-# fit the pipeline object
-sacr_pipeline_mult.fit(X, y)
-
-# predict on test data
-sacr_preds = sacramento_test
-sacr_preds = sacr_preds.assign(predicted=sacr_pipeline_mult.predict(sacramento_test))
-
-# calculate RMSPE
-from sklearn.metrics import mean_squared_error
-
-RMSPE_mult = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
-)
-
+RMSPE_mult = mean_squared_error(
+    y_true = sacr_preds["price"], 
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 RMSPE_mult
+
 ```
 
 ```{code-cell} ipython3
@@ -1259,13 +1161,13 @@ regression has both strengths and weaknesses. Some are listed here:
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Regression I: K-nearest neighbors" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

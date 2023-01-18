@@ -323,10 +323,9 @@ cancer = pd.read_csv("data/unscaled_wdbc.csv")
 # re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign',
 # and change the Class variable to have a category type
 cancer['Class'] = cancer['Class'].replace({
-				'M' : 'Malignant',
-				'B' : 'Benign'
-				})
-cancer['Class'] = cancer['Class'].astype('category')
+    'M' : 'Malignant',
+    'B' : 'Benign'
+}).astype('category')
 
 # create scatter plot of tumor cell concavity versus smoothness,
 # labeling the points be diagnosis class

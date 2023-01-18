@@ -18,29 +18,15 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import altair as alt
 import numpy as np
 import pandas as pd
-import sklearn
-from sklearn.compose import make_column_transformer
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix
-from sklearn.metrics.pairwise import euclidean_distances
-from sklearn.model_selection import (
-    GridSearchCV,
-    RandomizedSearchCV,
-    cross_validate,
-    train_test_split,
-)
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
-alt.data_transformers.disable_max_rows()
-# alt.renderers.enable("mimetype")
-
+ 
 from myst_nb import glue
-
-pd.options.display.max_colwidth = 100
 ```
 
 ## Overview 
@@ -56,7 +42,7 @@ By the end of the chapter, readers will be able to do the following:
 - Describe what training, validation, and test data sets are and how they are used in classification.
 - Split data into training, validation, and test data sets.
 - Describe what a random seed is and its importance in reproducible data analysis.
-- Set the random seed in Python using the `numpy.random.seed` function or `random_state` argument in some of the `scikit-learn` functions.
+- Set the random seed in Python using the `numpy.random.seed` function. 
 - Evaluate classification accuracy in Python using a validation data set and appropriate metrics.
 - Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
 - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
@@ -105,7 +91,6 @@ labels for new observations without known class labels.
 
 ```{figure} img/training_test.jpeg
 :name: fig:06-training-test
-:figclass: caption-hack
 
 Splitting the data into training and testing sets.
 ```
@@ -138,7 +123,6 @@ books on this topic.
 
 ```{figure} img/ML-paradigm-test.png
 :name: fig:06-ML-paradigm-test
-:figclass: caption-hack
 
 Process for splitting the data and finding the prediction accuracy.
 ```
@@ -180,115 +164,134 @@ The trick is that in Python&mdash;and other programming languages&mdash;randomne
 is not actually random! Instead, Python uses a *random number generator* that
 produces a sequence of numbers that
 are completely determined by a 
- *seed value*. Once you set the seed value 
-using the `np.random.seed` function or the `random_state` argument, everything after that point may *look* random,
+ *seed value*. Once you set the seed value, everything after that point may *look* random,
 but is actually totally reproducible. As long as you pick the same seed
 value, you get the same result!
 
 ```{index} sample; numpy.random.choice
 ```
 
-Let's use an example to investigate how seeds work in Python. Say we want 
-to randomly pick 10 numbers from 0 to 9 in Python using the `np.random.choice` function,
-but we want it to be reproducible. Before using the sample function,
-we call `np.random.seed`, and pass it any integer as an argument. 
-Here, we pass in the number `1`.
+Let's use an example to investigate how randomness works in Python. Say we 
+have a series object containing the integers from 0 to 9. We want
+to randomly pick 10 numbers from that list, but we want it to be reproducible.
+Before randomly picking the 10 numbers,
+we call the `seed` function from the `numpy` package, and pass it any integer as the argument. 
+Below we use the seed number `1`. At 
+that point, Python will keep track of the randomness that occurs throughout the code.
+For example, we can call the `sample` method
+on the series of numbers, passing the argument `n = 10` to indicate that we want 10 samples.
 
 ```{code-cell} ipython3
 import numpy as np
 
 np.random.seed(1)
-random_numbers = np.random.choice(range(10), size=10, replace=True)
-random_numbers
-```
 
-You can see that `random_numbers` is a list of 10 numbers
+nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+random_numbers1 = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers1
+```
+You can see that `random_numbers1` is a list of 10 numbers
 from 0 to 9 that, from all appearances, looks random. If 
-we run the `np.random.choice` function again, we will 
-get a fresh batch of 10 numbers that also look random.
+we run the `sample` method again, 
+we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
-random_numbers = np.random.choice(range(10), size=10, replace=True)
-random_numbers
+random_numbers2 = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers2
 ```
 
 If we want to force Python to produce the same sequences of random numbers,
-we can simply call the `np.random.seed` function again with the same argument
-value.
+we can simply call the `np.random.seed` function with the seed value `1`---the same
+as before---and then call the `sample` method again.
 
 ```{code-cell} ipython3
 np.random.seed(1)
-random_numbers = np.random.choice(range(10), size=10, replace=True)
-random_numbers
+random_numbers1_again = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers1_again
 ```
 
 ```{code-cell} ipython3
-random_numbers = np.random.choice(range(10), size=10, replace=True)
-random_numbers
+random_numbers2_again = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers2_again
 ```
 
-And if we choose 
-a different value for the seed&mdash;say, 4235&mdash;we
+Notice that after calling `np.random.seed`, we get the same
+two sequences of numbers in the same order. `random_numbers1` and `random_numbers1_again`
+produce the same sequence of numbers, and the same can be said about `random_numbers2` and
+`random_numbers2_again`. And if we choose a different value for the seed---say, 4235---we
 obtain a different sequence of random numbers.
 
 ```{code-cell} ipython3
 np.random.seed(4235)
-random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers
 ```
 
 ```{code-cell} ipython3
-random_numbers = np.random.choice(range(10), size=10, replace=True)
+random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers
 ```
 
 In other words, even though the sequences of numbers that Python is generating *look*
 random, they are totally determined when we set a seed value! 
 
-So what does this mean for data analysis? Well, `np.random.choice` is certainly
-not the only function that uses randomness in R. Many of the functions 
-that we use in `scikit-learn`, `numpy`, and beyond use randomness&mdash;many of them
-without even telling you about it. 
-Also note that when Python starts up, it creates its own seed to use. So if you do not
-explicitly call the `np.random.seed` function in your code or specify the `random_state` 
-argument in `scikit-learn` functions (where it is available), your results will 
-likely not be reproducible.
-And finally, be careful to set the seed *only once* at the beginning of a data
-analysis. Each time you set the seed, you are inserting your own human input,
-thereby influencing the analysis. If you use `np.random.choice` many times
-throughout your analysis, the randomness that Python uses will not look 
-as random as it should.
+So what does this mean for data analysis? Well, `sample` is certainly not the
+only data frame method that uses randomness in Python. Many of the functions
+that we use in `scikit-learn`, `pandas`, and beyond use randomness&mdash;many
+of them without even telling you about it.  Also note that when Python starts
+up, it creates its own seed to use. So if you do not explicitly 
+call the `np.random.seed` function, your results 
+will likely not be reproducible. Finally, be careful to set the seed *only once* at
+the beginning of a data analysis. Each time you set the seed, you are inserting
+your own human input, thereby influencing the analysis. For example, if you use
+the `sample` many times throughout your analysis but set the seed each time, the 
+randomness that Python uses will not look as random as it should.
 
-Different argument values in `np.random.seed` lead to different patterns of randomness, but as long as 
-you pick the same argument value your result will be the same.
+In summary: if you want your analysis to be reproducible, i.e., produce *the same result*
+each time you run it, make sure to use `np.random.seed` exactly once
+at the beginning of the analysis. Different argument values
+in `np.random.seed` will lead to different patterns of randomness, but as long as you pick the same
+value your analysis results will be the same. In the remainder of the textbook,
+we will set the seed once at the beginning of each chapter.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
+````{note}
+When you use `np.random.seed`, you are really setting the seed for the `numpy`
+package's *default random number generator*. Using the global default random
+number generator is easier than other methods, but has some potential drawbacks. For example,
+other code that you may not notice (e.g., code buried inside some
+other package) could potentially *also* call `np.random.seed`, thus modifying
+your analysis in an undesirable way. Furthermore, not *all* functions use 
+`numpy`'s random number generator; some may use another one entirely.
+In that case, setting `np.random.seed` may not actually make your whole analysis 
+reproducible.
 
-# In other words, even though the sequences of numbers that R is generating *look*
-# random, they are totally determined when we set a seed value! 
-
-# So what does this mean for data analysis? Well, `sample` is certainly
-# not the only function that uses randomness in R. Many of the functions 
-# that we use in `tidymodels`, `tidyverse`, and beyond use randomness&mdash;many of them
-# without even telling you about it. So at the beginning of every data analysis you
-# do, right after loading packages, you should call the `set.seed` function and
-# pass it an integer that you pick.
-# Also note that when R starts up, it creates its own seed to use. So if you do not
-# explicitly call the `set.seed` function in your code, your results will 
-# likely not be reproducible.
-# And finally, be careful to set the seed *only once* at the beginning of a data
-# analysis. Each time you set the seed, you are inserting your own human input,
-# thereby influencing the analysis. If you use `set.seed` many times
-# throughout your analysis, the randomness that R uses will not look 
-# as random as it should.
-
-# In summary: if you want your analysis to be reproducible, i.e., produce *the same result* each time you
-# run it, make sure to use `set.seed` exactly once at the beginning of the analysis.
-# Different argument values in `set.seed` lead to different patterns of randomness, but as long as 
-# you pick the same argument value your result will be the same. 
-# In the remainder of the textbook, we will set the seed once at the beginning of each chapter.
+In this book, we will generally only use packages that play nicely with `numpy`'s
+default random number generator, so we will stick with `np.random.seed`. 
+You can achieve more careful control over randomness in your analysis 
+by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html) 
+once at the beginning of your analysis, and passing it to 
+the `random_state` argument that is available in many `pandas` and `scikit-learn`
+functions. Those functions will then use your `RandomState` to generate random numbers instead of 
+`numpy`'s default generator. For example, we can reproduce our earlier example by using a `RandomState`
+object with the `seed` value set to 1; we get the same lists of numbers once again.
+```{code}
+rnd = np.random.RandomState(seed = 1)
+random_numbers1_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
+random_numbers1_third
+``` 
+```{code}
+array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
+```{code}
+random_numbers2_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
+random_numbers2_third
+``` 
+```{code}
+array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
+```
+
+````
 
 ## Evaluating accuracy with `scikit-learn`
 
@@ -304,8 +307,8 @@ We begin the analysis by loading the packages we require,
 reading in the breast cancer data,
 and then making a quick scatter plot visualization of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
-You will also notice that we set the random seed using either the `np.random.seed` function
-or `random_state` argument, as described in Section {ref}`randomseeds`.
+You will also notice that we set the random seed using the `np.random.seed` function, 
+as described in the {ref}`randomseeds` section.
 
 ```{code-cell} ipython3
 # load packages
@@ -317,23 +320,23 @@ np.random.seed(1)
 
 # load data
 cancer = pd.read_csv("data/unscaled_wdbc.csv")
-## re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign'
-cancer["Class"] = cancer["Class"].apply(
-    lambda x: "Malignant" if (x == "M") else "Benign"
-)
+# re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign',
+# and change the Class variable to have a category type
+cancer['Class'] = cancer['Class'].replace({
+    'M' : 'Malignant',
+    'B' : 'Benign'
+}).astype('category')
 
 # create scatter plot of tumor cell concavity versus smoothness,
 # labeling the points be diagnosis class
-## create a list of colors that will be used to customize the color of points
-colors = ["#86bfef", "#efb13f"]
 
 perim_concav = (
     alt.Chart(cancer)
-    .mark_point(opacity=0.6, filled=True, size=40)
+    .mark_circle()
     .encode(
         x="Smoothness",
         y="Concavity",
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -342,7 +345,6 @@ perim_concav
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 :name: fig:06-precode
-:figclass: caption-hack
 
 Scatter plot of tumor cell concavity versus smoothness colored by diagnosis label.
 ```
@@ -367,7 +369,9 @@ and 25% for testing.
 
 The `train_test_split` function from `scikit-learn` handles the procedure of splitting
 the data for us. We can specify two very important parameters when using `train_test_split` to ensure
-that the accuracy estimates from the test data are reasonable. First, `shuffle=True` (default) means the data will be shuffled before splitting, which ensures that any ordering present
+that the accuracy estimates from the test data are reasonable. First,
+setting `shuffle=True` (which is the default) means the data will be shuffled before splitting,
+which ensures that any ordering present
 in the data does not influence the data that ends up in the training and testing sets.
 Second, by specifying the `stratify` parameter to be the target column of the training set,
 it **stratifies** the data by the class label, to ensure that roughly
@@ -379,43 +383,23 @@ so specifying `stratify` as the class column ensures that roughly 63% of the tra
 and the same proportions exist in the testing data.
 
 Let's use the `train_test_split` function to create the training and testing sets.
-We will specify that `train_size=0.75` so that 75% of our original data set ends up
+We first need to import the function from the `sklearn` package. Then
+we will specify that `train_size=0.75` so that 75% of our original data set ends up
 in the training set. We will also set the `stratify` argument to the categorical label variable
 (here, `cancer['Class']`) to ensure that the training and testing subsets contain the
 right proportions of each category of observation.
-Note that the `train_test_split` function uses randomness, so we shall set `random_state` to make
-the split reproducible.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-# The `initial_split` function \index{tidymodels!initial\_split} from `tidymodels` handles the procedure of splitting
-# the data for us. It also applies two very important steps when splitting to ensure
-# that the accuracy estimates from the test data are reasonable. First, it
-# **shuffles** the \index{shuffling} data before splitting, which ensures that any ordering present
-# in the data does not influence the data that ends up in the training and testing sets.
-# Second, it **stratifies** the \index{stratification} data by the class label, to ensure that roughly
-# the same proportion of each class ends up in both the training and testing sets. For example,
-# in our data set, roughly 63% of the
-# observations are from the benign class (`B`), and 37% are from the malignant class (`M`),
-# so `initial_split` ensures that roughly 63% of the training data are benign, 
-# 37% of the training data are malignant,
-# and the same proportions exist in the testing data.
-
-# Let's use the `initial_split` function to create the training and testing sets.
-# We will specify that `prop = 0.75` so that 75% of our original data set ends up
-# in the training set. We will also set the `strata` argument to the categorical label variable
-# (here, `Class`) to ensure that the training and testing subsets contain the
-# right proportions of each category of observation.
-# The `training` and `testing` functions then extract the training and testing
-# data sets into two separate data frames.
-# Note that the `initial_split` function uses randomness, but since we set the 
-# seed earlier in the chapter, the split will be reproducible.
+# seed hacking to get a split that makes 10-fold have a lower std error than 5-fold
+np.random.seed(5)
 ```
 
 ```{code-cell} ipython3
+from sklearn.model_selection import train_test_split
+
 cancer_train, cancer_test = train_test_split(
-    cancer, train_size=0.75, stratify=cancer["Class"], random_state=1
+    cancer, train_size=0.75, stratify=cancer["Class"]
 )
 cancer_train.info()
 ```
@@ -434,42 +418,30 @@ glue("cancer_test_nrow", len(cancer_test))
 ```{index} info
 ```
 
-We can see from `.info()` in the code above that the training set contains {glue:}`cancer_train_nrow` observations, 
+We can see from the `info` method above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
-a train / test split of 75% / 25%, as desired. Recall from Chapter {ref}`classification`
-that we use the `.info()` method to view data with a large number of columns,
-as it prints the data such that the columns go down the page (instead of across).
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We can see from `glimpse` in \index{glimpse} the code above that the training set contains `r nrow(cancer_train)`
-# observations, while the test set contains `r nrow(cancer_test)` observations. This corresponds to
-# a train / test split of 75% / 25%, as desired. Recall from Chapter \@ref(classification)
-# that we use the `glimpse` function to view data with a large number of columns,
-# as it prints the data such that the columns go down the page (instead of across).
-```
+a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification` chapter
+that we use the `info` method to preview the number of rows, the variable names, their data types, and 
+missing entries of a data frame.
 
 ```{index} groupby, count
 ```
 
-We can use `.groupby()` and `.count()` to find the percentage of malignant and benign classes 
-in `cancer_train` and we see about {glue:}`cancer_train_b_prop`% of the training
+We can use the `value_counts` method with the `normalize` argument set to `True` 
+to find the percentage of malignant and benign classes 
+in `cancer_train`. We see about {glue:}`cancer_train_b_prop`% of the training
 data are benign and {glue:}`cancer_train_m_prop`% 
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
 
 ```{code-cell} ipython3
-cancer_proportions = pd.DataFrame()
-cancer_proportions['n'] = cancer_train.groupby('Class')['ID'].count()
-cancer_proportions['percent'] = 100 * cancer_proportions['n'] / len(cancer_train)
-cancer_proportions
+cancer_train["Class"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_train_b_prop", round(cancer_proportions.iloc[0, 1]))
-glue("cancer_train_m_prop", round(cancer_proportions.iloc[1, 1]))
+glue("cancer_train_b_prop", round(cancer_train["Class"].value_counts(normalize = True)["Benign"]*100))
+glue("cancer_train_m_prop", round(cancer_train["Class"].value_counts(normalize = True)["Malignant"]*100))
 ```
 
 ### Preprocess the data
@@ -487,17 +459,15 @@ training and test data sets.
 ```{index} pipeline, pipeline; make_column_transformer, pipeline; StandardScaler
 ```
 
-Fortunately, the `Pipeline` framework (together with column transformer) from `scikit-learn` helps us handle this properly. Below we construct and prepare the preprocessor using `make_column_transformer`. Later after we construct a full `Pipeline`, we will only fit it with the training data.
+Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our 
+analysis steps in a `Pipeline`, as in the {ref}`classification1` chapter.
+So below we construct and prepare
+the preprocessor using `make_column_transformer` just as before.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import make_column_transformer
 
-# Fortunately, the `recipe` framework from `tidymodels` helps us handle \index{recipe}\index{recipe!step\_scale}\index{recipe!step\_center}
-# this properly. Below we construct and prepare the recipe using only the training
-# data (due to `data = cancer_train` in the first line).
-```
-
-```{code-cell} ipython3
 cancer_preprocessor = make_column_transformer(
     (StandardScaler(), ["Smoothness", "Concavity"]),
 )
@@ -508,34 +478,23 @@ cancer_preprocessor = make_column_transformer(
 Now that we have split our original data set into training and test sets, we
 can create our $K$-nearest neighbors classifier with only the training set using
 the technique we learned in the previous chapter. For now, we will just choose
-the number $K$ of neighbors to be 3. To fit the model with only concavity and smoothness as the
-predictors, we need to explicitly create `X` (predictors) and `y` (target) based on `cancer_train`.
-As before we need to create a model specification, combine
-the model specification and preprocessor into a workflow, and then finally
-use `fit` with `X` and `y` to build the classifier.
+the number $K$ of neighbors to be 3, and use only the concavity and smoothness predictors by
+selecting them from the `cancer_train` data frame. 
+We will first import the `KNeighborsClassifier` model and `make_pipeline` from `sklearn`. 
+Then as before we will create a model object, combine
+the model object and preprocessor into a `Pipeline` using the `make_pipeline` function, and then finally
+use the `fit` method to build the classifier.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import make_pipeline
 
-# Now that we have split our original data set into training and test sets, we
-# can create our $K$-nearest neighbors classifier with only the training set using
-# the technique we learned in the previous chapter. For now, we will just choose
-# the number $K$ of neighbors to be 3, and use concavity and smoothness as the
-# predictors. As before we need to create a model specification, combine
-# the model specification and recipe into a workflow, and then finally
-# use `fit` with the training data `cancer_train` to build the classifier.
-```
-
-```{code-cell} ipython3
-# hidden seed
-# np.random.seed(1)
-
-knn_spec = KNeighborsClassifier(n_neighbors=3)  ## weights="uniform"
+knn = KNeighborsClassifier(n_neighbors=3) 
 
 X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 
-knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
 knn_fit
 ```
@@ -546,53 +505,18 @@ knn_fit
 ```
 
 Now that we have a $K$-nearest neighbors classifier object, we can use it to
-predict the class labels for our test set.  We use the `pandas.concat()` to add the
-column of predictions to the original test data, creating the
+predict the class labels for our test set.  We will use the `assign` method to 
+augment the original test data with a column of predictions, creating the
 `cancer_test_predictions` data frame. The `Class` variable contains the true
 diagnoses, while the `predicted` contains the predicted diagnoses from the
-classifier.
+classifier. Note that below we print out just the `ID`, `Class`, and `predicted`
+variables in the output data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we have a $K$-nearest neighbors classifier object, we can use it to
-# predict the class labels for our test set.  We use the `bind_cols` \index{bind\_cols} to add the
-# column of predictions to the original test data, creating the
-# `cancer_test_predictions` data frame.  The `Class` variable contains the true
-# diagnoses, while the `.pred_class` contains the predicted diagnoses from the
-# classifier.
-```
-
-```{code-cell} ipython3
-cancer_test_predictions = knn_fit.predict(
-    cancer_test.loc[:, ["Smoothness", "Concavity"]]
+cancer_test_predictions = cancer_test.assign(
+    predicted = knn_fit.predict(cancer_test.loc[:, ["Smoothness", "Concavity"]])
 )
-
-cancer_test_predictions = pd.concat(
-    [
-        pd.DataFrame(cancer_test_predictions, columns=["predicted"]),
-        cancer_test.reset_index(drop=True),
-    ],
-    axis=1,
-)  # add the predictions column to the original test data
-
-cancer_test_predictions
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## alternative way to add a column
-
-# # add the predictions column to the original test data
-# cancer_test_predictions = cancer_test.reset_index(drop=True).assign(
-#     predicted=cancer_test_predictions
-# )
-
-# # move the `predicted` column to the first column for easy visualization
-# col_order = cancer_test_predictions.columns.tolist()
-# col_order = col_order[-1:] + col_order[:-1]
-# cancer_test_predictions[col_order]
+cancer_test_predictions[['ID', 'Class', 'predicted']]
 ```
 
 ### Compute the accuracy
@@ -600,26 +524,30 @@ cancer_test_predictions
 ```{index} scikit-learn; score
 ```
 
-Finally, we can assess our classifier's accuracy. To do this we use the `score` method 
-from `scikit-learn` to get the statistics about the quality of our model, specifying
-the `X` and `y` arguments based on `cancer_test`.
-
+Finally, we can assess our classifier's accuracy. We could compute the accuracy manually
+by using our earlier formula: the number of correct predictions divided by the total
+number of predictions. First we filter the rows to find the number of correct predictions,
+and then divide the number of rows with correct predictions by the total number of rows
+using the `len` function.
 ```{code-cell} ipython3
-:tags: [remove-cell]
+correct_preds = cancer_test_predictions[
+    cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
+]
 
-# Finally, we can assess our classifier's accuracy. To do this we use the `metrics` function \index{tidymodels!metrics}
-# from `tidymodels` to get the statistics about the quality of our model, specifying
-# the `truth` and `estimate` arguments:
+correct_preds.shape[0] / cancer_test_predictions.shape[0]
 ```
 
+The `scitkit-learn` package also provides a more convenient way to do this using
+the `score` method. To use the `score` method, we need to specify two arguments:
+predictors and true labels. We pass the same test data
+for the predictors that we originally passed into `predict` when making predictions,
+and we provide the true labels via the `cancer_test["Class"]` series.
+
 ```{code-cell} ipython3
-# np.random.seed(1)
-
-X_test = cancer_test.loc[:, ["Smoothness", "Concavity"]]
-y_test = cancer_test["Class"]
-
-cancer_acc_1 = knn_fit.score(X_test, y_test)
-
+cancer_acc_1 = knn_fit.score(
+    cancer_test.loc[:, ["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
 cancer_acc_1
 ```
 
@@ -629,56 +557,36 @@ cancer_acc_1
 glue("cancer_acc_1", round(100*cancer_acc_1))
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In the metrics data frame, we filtered the `.metric` column since we are 
-# interested in the `accuracy` row. Other entries involve more advanced metrics that
-# are beyond the scope of this book. Looking at the value of the `.estimate` variable
-#  shows that the estimated accuracy of the classifier on the test data 
-# was `r round(100*cancer_acc_1$.estimate, 0)`%.
-```
++++
 
 The output shows that the estimated accuracy of the classifier on the test data 
 was {glue:}`cancer_acc_1`%.
-
-+++
-
-We can also look at the *confusion matrix* for the classifier as a `numpy` array using the `confusion_matrix` function:
+We can also look at the *confusion matrix* for the classifier 
+using the `crosstab` function from `pandas`. A confusion matrix shows how many 
+observations of each (true) label were classified as each (predicted) label.
+The `crosstab` function
+takes two arguments: the true labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
-# np.random.seed(1)
-
-confusion = confusion_matrix(
+pd.crosstab(
     cancer_test_predictions["Class"],
-    cancer_test_predictions["predicted"],
-    labels=knn_fit.classes_,
+    cancer_test_predictions["predicted"]
 )
-
-confusion
-```
-
-It is hard for us to interpret the confusion matrix as shown above. We could use the `ConfusionMatrixDisplay` function of the `scikit-learn` package to plot the confusion matrix.
-
-```{code-cell} ipython3
-from sklearn.metrics import ConfusionMatrixDisplay
-
-confusion_display = ConfusionMatrixDisplay(
-    confusion_matrix=confusion, display_labels=knn_fit.classes_
-)
-confusion_display.plot();
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+_ctab = pd.crosstab(cancer_test_predictions["Class"],
+            cancer_test_predictions["predicted"]
+           )
 
-glue("confu11", confusion[1, 1])
-glue("confu00", confusion[0, 0])
-glue("confu10", confusion[1, 0])
-glue("confu01", confusion[0, 1])
-glue("confu11_00", confusion[1, 1] + confusion[0, 0])
-glue("confu10_11", confusion[1, 0] + confusion[1, 1])
-glue("confu_fal_neg", round(100 * confusion[1, 0] / (confusion[1, 0] + confusion[1, 1])))
+glue("confu11", _ctab["Malignant"]["Malignant"])
+glue("confu00", _ctab["Benign"]["Benign"])
+glue("confu10", _ctab["Benign"]["Malignant"])
+glue("confu01", _ctab["Malignant"]["Benign"])
+glue("confu11_00", _ctab["Malignant"]["Malignant"] + _ctab["Benign"]["Benign"])
+glue("confu10_11", _ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])
+glue("confu_fal_neg", round(100 * _ctab["Benign"]["Malignant"] / (_ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])))
 ```
 
 The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
@@ -732,7 +640,7 @@ As an example, in the breast cancer data, recall the proportions of benign and m
 observations in the training data are as follows:
 
 ```{code-cell} ipython3
-cancer_proportions
+cancer_train["Class"].value_counts(normalize=True)
 ```
 
 Since the benign class represents the majority of the training data,
@@ -748,7 +656,8 @@ the $K$-nearest neighbors classifier improved quite a bit on the basic
 majority classifier. Hooray! But we still need to be cautious; in 
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
-that the classifier does, indeed, misdiagnose a significant number of malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
+that the classifier does, indeed, misdiagnose a significant number of 
+malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
 Therefore, even though the accuracy improved upon the majority classifier,
 our critical analysis suggests that this classifier may not have appropriate performance
 for the application.
@@ -818,92 +727,67 @@ models, and evaluate their accuracy. We will start with just a single
 split.
 
 ```{code-cell} ipython3
-# create the 25/75 split of the training data into training and validation
+# create the 25/75 split of the *training data* into sub-training and validation
 cancer_subtrain, cancer_validation = train_test_split(
-    cancer_train, test_size=0.25, random_state=1
+    cancer_train, test_size=0.25
 )
 
-# could reuse the standardization preprocessor from before
-# (but now we want to fit with the cancer_subtrain)
+# fit the model on the sub-training data
+knn = KNeighborsClassifier(n_neighbors=3) 
 X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
 y = cancer_subtrain["Class"]
-knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
-# get predictions on the validation data
-validation_predicted = knn_fit.predict(
-    cancer_validation.loc[:, ["Smoothness", "Concavity"]]
+# compute the score on validation data
+acc = knn_fit.score(
+    cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+    cancer_validation["Class"]
 )
-validation_predicted = pd.concat(
-    [
-        pd.DataFrame(validation_predicted, columns=["predicted"]),
-        cancer_validation.reset_index(drop=True),
-    ],
-    axis=1,
-)  # to add the predictions column to the original test data
-
-# compute the accuracy
-X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-y_valid = cancer_validation["Class"]
-acc = knn_fit.score(X_valid, y_valid)
-
 acc
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue(f"acc_seed1", round(100 * acc, 1))
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-accuracies = []
-for i in range(1, 6):
+accuracies = [acc]
+for i in range(1, 5):
     # create the 25/75 split of the training data into training and validation
     cancer_subtrain, cancer_validation = train_test_split(
-        cancer_train, test_size=0.25, random_state=i
+        cancer_train, test_size=0.25
     )
 
-    # could reuse the standardization preprocessor from before
-    # (but now we want to fit with the cancer_subtrain)
+    # fit the model on the sub-training data
+    knn = KNeighborsClassifier(n_neighbors=3) 
     X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
-    knn_fit = make_pipeline(cancer_preprocessor, knn_spec).fit(X, y)
+    knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
-    # get predictions on the validation data
-    validation_predicted = knn_fit.predict(
-        cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-    )
-    validation_predicted = pd.concat(
-        [
-            pd.DataFrame(validation_predicted, columns=["predicted"]),
-            cancer_validation.reset_index(drop=True),
-        ],
-        axis=1,
-    )  # to add the predictions column to the original test data
-
-    # compute the accuracy
-    X_valid = cancer_validation.loc[:, ["Smoothness", "Concavity"]]
-    y_valid = cancer_validation["Class"]
-    acc_ = knn_fit.score(X_valid, y_valid)
-    accuracies.append(acc_)
-accuracies
+    # compute the score on validation data
+    accuracies.append(knn_fit.score(
+        cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+        cancer_validation["Class"]
+       ))
+avg_accuracy = np.round(np.array(accuracies).mean()*100,1)
+accuracies = list(np.round(np.array(accuracies)*100, 1))
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-for i in range(1, 6):
-    glue(f"acc_split{i}", round(100 * accuracies[i-1], 1))
-glue("avg_5_splits", round(100 * sum(accuracies) / len(accuracies)))
+glue(f"acc_seed1", np.round(100 * acc,1))
+glue("avg_5_splits", avg_accuracy)
+glue("accuracies", accuracies)
 ```
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+```
+
+
 
 The accuracy estimate using this split is {glue:}`acc_seed1`%.
 Now we repeat the above code 4 more times, which generates 4 more splits.
 Therefore we get five different shuffles of the data, and therefore five different values for
-accuracy: {glue:}`acc_split1`%, {glue:}`acc_split2`%, {glue:}`acc_split3`%, 
-{glue:}`acc_split4`%, {glue:}`acc_split5`%. None of these values are
+accuracy: {glue:}`accuracies` (each a percentage). None of these values are
 necessarily "more correct" than any other; they're
 just five estimates of the true, underlying accuracy of our classifier built
 using our overall training data. We can combine the estimates by taking their
@@ -930,93 +814,58 @@ resulting in 5 different choices for the **validation set**; we call this
 
 ```{figure} img/cv.png
 :name: fig:06-cv-image
-:figclass: caption-hack
 
 5-fold cross-validation.
 ```
 
-+++
-
-To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
-function: `cross_validate`. This function splits our training data into `cv` folds
-automatically. 
-According to its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html), the parameter `cv`:
-
-> For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, [`StratifiedKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold) is used.
-
-This means `cross_validate` will ensure that the training and validation subsets contain the
-right proportions of each category of observation.
 
 +++
 
 ```{index} cross-validation; cross_validate, scikit-learn; cross_validate
 ```
 
-When we run the `cross_validate` function, cross-validation is carried out on each
-train/validation split. We can set `return_train_score=True` to obtain the training scores as well as the validation scores. The `cross_validate` function outputs a dictionary, and we use `pd.DataFrame` to convert it to a `pandas` dataframe for better visualization. (Noteworthy, the `test_score` column is actually the validation scores that we are interested in.)
+To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
+function: `cross_validate`. This function requires that we specify 
+a modelling `Pipeline` as the `estimator` argument,
+the number of folds as the `cv` argument,
+and the training data predictors and labels as the `X` and `y` arguments.
+Since the `cross_validate` function outputs a dictionary, we use `pd.DataFrame` to convert it to a `pandas`
+dataframe for better visualization. 
+Note that the `cross_validate` function handles stratifying the classes in
+each train and validate fold automatically. 
+We begin by importing the `cross_validate` function from `sklearn`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.model_selection import cross_validate
 
-# To perform 5-fold cross-validation in R with `tidymodels`, we use another
-# function: `vfold_cv`. \index{tidymodels!vfold\_cv}\index{cross-validation!vfold\_cv} This function splits our training data into `v` folds
-# automatically. We set the `strata` argument to the categorical label variable
-# (here, `Class`) to ensure that the training and validation subsets contain the
-# right proportions of each category of observation.
-```
-
-```{code-cell} ipython3
-cancer_pipe = make_pipeline(cancer_preprocessor, knn_spec)
-X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
-y = cancer_subtrain["Class"]
-cv_5 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=5,
-    return_train_score=True,
+knn = KNeighborsClassifier(n_neighbors=3) 
+cancer_pipe = make_pipeline(cancer_preprocessor, knn)
+X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+y = cancer_train["Class"]
+cv_5_df = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=5,
+        X=X,
+        y=y
+    )
 )
 
-cv_5_df = pd.DataFrame(cv_5)
 cv_5_df
 ```
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Then, when we create our data analysis workflow, we use the `fit_resamples` function \index{cross-validation!fit\_resamples}\index{tidymodels!fit\_resamples}
-# instead of the `fit` function for training. This runs cross-validation on each
-# train/validation split. 
-```
-
+The validation scores we are interested in are contained in the `test_score` column.
 We can then aggregate the *mean* and *standard error*
 of the classifier's validation accuracy across the folds. 
 You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
-error (`std`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
+error (`sem`) is a measure of how uncertain we are in that mean value. A detailed treatment of this
 is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:}`cv_5_mean` and standard
 error is {glue:}`cv_5_std`, you can expect the *true* average accuracy of the 
 classifier to be somewhere roughly between {glue:}`cv_5_lower`% and {glue:}`cv_5_upper`% (although it may
 fall outside this range). You may ignore the other columns in the metrics data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The `collect_metrics` \index{tidymodels!collect\_metrics}\index{cross-validation!collect\_metrics} function is used to aggregate the *mean* and *standard error*
-# of the classifier's validation accuracy across the folds. You will find results
-# related to the accuracy in the row with `accuracy` listed under the `.metric` column. 
-# You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
-# error (`std_err`) is a measure of how uncertain we are in the mean value. A detailed treatment of this
-# is beyond the scope of this chapter; but roughly, if your estimated mean is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2)` and standard
-# error is `r round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2)`, you can expect the *true* average accuracy of the 
-# classifier to be somewhere roughly between `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) - round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% and `r (round(filter(collect_metrics(knn_fit), .metric == "accuracy")$mean,2) + round(filter(collect_metrics(knn_fit), .metric == "accuracy")$std_err,2))*100`% (although it may
-# fall outside this range). You may ignore the other columns in the metrics data frame,
-# as they do not provide any additional insight.
-# You can also ignore the entire second row with `roc_auc` in the `.metric` column,
-# as it is beyond the scope of this book.
-```
-
-```{code-cell} ipython3
-cv_5_metrics = cv_5_df.aggregate(func=['mean', 'std'])
+cv_5_metrics = cv_5_df.agg(['mean', 'sem'])
 cv_5_metrics
 ```
 
@@ -1024,14 +873,14 @@ cv_5_metrics
 :tags: [remove-cell]
 
 glue("cv_5_mean", round(cv_5_metrics.loc["mean", "test_score"], 2))
-glue("cv_5_std", round(cv_5_metrics.loc["std", "test_score"], 2))
+glue("cv_5_std", round(cv_5_metrics.loc["sem", "test_score"], 2))
 glue(
     "cv_5_upper",
     round(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
-            + round(cv_5_metrics.loc["std", "test_score"], 2)
+            + round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
     ),
 )
@@ -1041,7 +890,7 @@ glue(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
-            - round(cv_5_metrics.loc["std", "test_score"], 2)
+            - round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
     ),
 )
@@ -1055,52 +904,41 @@ it takes to run the analysis. So when you do cross-validation, you need to
 consider the size of the data, the speed of the algorithm (e.g., $K$-nearest
 neighbors), and the speed of your computer. In practice, this is a 
 trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
-we will try 10-fold cross-validation to see if we get a lower standard error:
+we will try 10-fold cross-validation to see if we get a lower standard error.
 
 ```{code-cell} ipython3
-cv_10 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=10,
-    return_train_score=True,
+cv_10 = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=10,
+        X=X,
+        y=y
+    )
 )
 
 cv_10_df = pd.DataFrame(cv_10)
-cv_10_metrics = cv_10_df.aggregate(func=['mean', 'std'])
+cv_10_metrics = cv_10_df.agg(['mean', 'sem'])
 cv_10_metrics
 ```
 
-In this case, using 10-fold instead of 5-fold cross validation did increase the standard error. In fact, due to the randomness in how the data are split, sometimes
-you might even end up with a *lower* standard error when increasing the number of folds!
-The increase in standard error can become more dramatic by increasing the number of folds 
+In this case, using 10-fold instead of 5-fold cross validation did 
+reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
+you might even end up with a *higher* standard error when increasing the number of folds!
+We can make the reduction in standard error more dramatic by increasing the number of folds 
 by a large amount. In the following code we show the result when $C = 50$; 
-picking such a large number of folds often takes a long time to run in practice, 
+picking such a large number of folds can take a long time to run in practice, 
 so we usually stick to 5 or 10.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In this case, using 10-fold instead of 5-fold cross validation did reduce the standard error, although
-# by only an insignificant amount. In fact, due to the randomness in how the data are split, sometimes
-# you might even end up with a *higher* standard error when increasing the number of folds!
-# We can make the reduction in standard error more dramatic by increasing the number of folds 
-# by a large amount. In the following code we show the result when $C = 50$; 
-# picking such a large number of folds often takes a long time to run in practice, 
-# so we usually stick to 5 or 10.
-```
-
-```{code-cell} ipython3
-cv_50 = cross_validate(
-    estimator=cancer_pipe,
-    X=X,
-    y=y,
-    cv=50,
-    return_train_score=True,
+cv_50_df = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=50,
+        X=X,
+        y=y
+    )
 )
-
-cv_50_df = pd.DataFrame(cv_50)
-cv_50_metrics = cv_50_df.aggregate(func=['mean', 'std'])
+cv_50_metrics = cv_50_df.agg(['mean', 'sem'])
 cv_50_metrics
 ```
 
@@ -1125,110 +963,116 @@ In order to improve our classifier, we have one choice of parameter: the number 
 neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
 classifier, we can use cross-validation to calculate an accuracy for each value
 of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-best accuracy. The `scikit-learn` package collection provides 2 build-in methods for tuning parameters. Each parameter in the model can be adjusted rather than given a specific value. We can define a set of values for each hyperparameters and find the best parameters in this set.
+best accuracy. The `scikit-learn` package collection provides built-in 
+functionality, named `GridSearchCV`, to automatically handle the details for us.
+Before we use `GridSearchCV`, we need to create a new pipeline
+with a `KNeighborsClassifier` that has the number of neighbors left unspecified.
 
-- Exhaustive grid search
-    - [`sklearn.model_selection.GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
-    - A user specifies a set of values for each hyperparameter.
-    - The method considers product of the sets and then evaluates each combination one by one.
-    
-- Randomized hyperparameter optimization
-    - [`sklearn.model_selection.RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
-    - Samples configurations at random until certain budget (e.g., time) is exhausted
+```{code-cell} ipython3
+knn = KNeighborsClassifier()
+cancer_tune_pipe = make_pipeline(cancer_preprocessor, knn)
+```
 
 +++
 
-Let us walk through how to use `GridSearchCV` to tune the model. `RandomizedSearchCV` follows a similar workflow, and you will get to practice both of them in the worksheet.
-
+Next we specify the grid of parameter values that we want to try for 
+each tunable parameter. We do this in a Python dictionary: the key is 
+the identifier of the parameter to tune, and the value is a list of parameter values
+to try when tuning. We can find the "identifier" of a parameter by using
+the `get_params` method on the pipeline.
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# In order to improve our classifier, we have one choice of parameter: the number of
-# neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
-# classifier, we can use cross-validation to calculate an accuracy for each value
-# of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-# best accuracy. The `tidymodels` package collection provides a very simple
-# syntax for tuning models: each parameter in the model to be tuned should be specified
-# as `tune()` in the model specification rather than given a particular value.
+cancer_tune_pipe.get_params()
 ```
-
-Before we use `GridSearchCV` (or `RandomizedSearchCV`), we should define the parameter grid by passing the set of values for each parameters that you would like to tune in a Python dictionary; below we create the `param_grid` dictionary with `kneighborsclassifier__n_neighbors` as the key and pair it with the values we would like to tune from 1 to 100 (stepping by 5) using the `range` function.  We would also need to redefine the pipeline to use default values for parameters.
-
+Wow, there's quite a bit of *stuff* there! If you sift through the muck
+a little bit, you will see one parameter identifier that stands out:
+`"kneighborsclassifier__n_neighbors"`. This identifier combines the name
+of the K nearest neighbors classification step in our pipeline, `kneighborsclassifier`,
+with the name of the parameter, `n_neighbors`.
+We now construct the `parameter_grid` dictionary that will tell `GridSearchCV`
+what parameter values to try.
+Note that you can specify multiple tunable parameters
+by creating a dictionary with multiple key-value pairs, but
+here we just have to tune the number of neighbors.
 ```{code-cell} ipython3
-param_grid = {
+parameter_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 100, 5),
 }
-cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+```
+The `range` function in Python that we used above allows us to specify a sequence of values.
+The first argument is the starting number (here, `1`), 
+the second argument is *one greater than* the final number (here, `100`),
+and the third argument is the number to values to skip between steps in the sequence (here, `5`).
+So in this case we generate the sequence 1, 6, 11, 16, ..., 96.
+If we instead specified `range(0, 100, 5)`, we would get the sequence 0, 5, 10, 15, ..., 90, 95.
+The number 100 is not included because the third argument is *one greater than* the final possible
+number in the sequence. There are two additional useful ways to employ `range`.
+If we call `range` with just one argument, Python counts
+up to that number starting at 0. So `range(4)` is the same as `range(0, 4, 1)` and generates the sequence 0, 1, 2, 3.
+If we call `range` with two arguments, Python counts starting at the first number up to the second number.
+So `range(1, 4)` is the same as `range(1, 4, 1)` and generates the sequence `1, 2, 3`.
+
+```{index} cross-validation; GridSearchCV, scikit-learn; GridSearchCV, scikit-learn; RandomizedSearchCV
 ```
 
-```{index} cross-validation; GridSearchCV, cross-validation; RandomizedSearchCV, scikit-learn; GridSearchCV, scikit-learn; RandomizedSearchCV
-```
+Okay! We are finally ready to create the `GridSearchCV` object.
+First we import it from the `sklearn` package.
+Then we pass it the `cancer_tune_pipe` pipeline in the `estimator` argument,
+the `parameter_grid` in the `param_grid` argument,
+and specify `cv=10` folds. Note that this does not actually run
+the tuning yet; just as before, we will have to use the `fit` method.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.model_selection import GridSearchCV
 
-# Then instead of using `fit` or `fit_resamples`, we will use the `tune_grid` function \index{cross-validation!tune\_grid}\index{tidymodels!tune\_grid}
-# to fit the model for each value in a range of parameter values. 
-# In particular, we first create a data frame with a `neighbors`
-# variable that contains the sequence of values of $K$ to try; below we create the `k_vals`
-# data frame with the `neighbors` variable containing values from 1 to 100 (stepping by 5) using 
-# the `seq` function.
-# Then we pass that data frame to the `grid` argument of `tune_grid`.
-```
-
-Now, let us create the `GridSearchCV` object and the `RandomizedSearchCV` object by passing the new pipeline `cancer_tune_pipe` and the `param_grid` dictionary to the respective functions. `n_jobs=-1` means using all the available processors.
-
-```{code-cell} ipython3
 cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
-    param_grid=param_grid,
-    cv=10,
-    n_jobs=-1,
-    return_train_score=True,
+    param_grid=parameter_grid,
+    cv=10
 )
 ```
 
-Now, let us fit the model to the training data. The attribute `cv_results_` of the fitted model is a dictionary of `numpy` arrays containing all cross-validation results from different choices of parameters. We can visualize them more clearly through a dataframe.
+Now we use the `fit` method on the `GridSearchCV` object to begin the tuning process.
+We pass the training data predictors and labels as the two arguments to `fit` as usual.
+The `cv_results_` attribute of the output contains the resulting cross-validation
+accuracy estimate for each choice of `n_neighbors`, but it isn't in an easily used
+format. We will wrap it in a `pd.DataFrame` to make it easier to understand,
+and print the `info` of the result.
 
 ```{code-cell} ipython3
-X_tune = cancer_train.loc[:, ["Smoothness", "Concavity"]]
-y_tune = cancer_train["Class"]
-
-cancer_model_grid = cancer_tune_grid.fit(X_tune, y_tune)
-
-accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
+accuracies_grid = pd.DataFrame(
+             cancer_tune_grid
+             .fit(cancer_train.loc[:, ["Smoothness", "Concavity"]],
+                  cancer_train["Class"]
+            ).cv_results_)
 ```
 
 ```{code-cell} ipython3
 accuracies_grid.info()
 ```
+There is a lot of information to look at here, but we are most interested
+in three quantities: the number of neighbors (`param_kneighbors_classifier__n_neighbors`),
+the cross-validation accuracy estimate (`mean_test_score`), 
+and the standard error of the accuracy estimate. Unfortunately `GridSearchCV` does
+not directly output the standard error for each cross-validation accuracy; but
+it *does* output the standard *deviation* (`std_test_score`). We can compute
+the standard error from the standard deviation by dividing it by the square
+root of the number of folds, i.e., 
+  
+$$\text{Standard Error} = \frac{1}{\sqrt{\text{# Folds}}}\text{Standard Deviation}.$$
 
-`cv_results_` gives abundant information, but for our purpose, we only focus on `param_kneighborsclassifier__n_neighbors` (the $K$, number of neighbors), `mean_test_score` (the mean validation score across all folds), and `std_test_score` (the standard deviation of the validation scores).
+We will also rename the parameter name column to be a bit more readable,
+and drop the now unused `std_test_score` column.
 
 ```{code-cell} ipython3
-accuracies_grid[
-    ["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
-]
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-sorted_accuracies = accuracies_grid.sort_values(by='mean_test_score', ascending=False)
-best_k_list = sorted_accuracies[
-    sorted_accuracies["mean_test_score"]
-    == sorted_accuracies.iloc[0, :]["mean_test_score"]
-]["param_kneighborsclassifier__n_neighbors"].tolist()
-
-# If there are more than 1 hyperparameter yielding the highest validation score
-if len(best_k_list) > 1:
-    i = 1
-    for k in best_k_list:
-        glue(f"best_k_{i}", k)
-        i += 1
-else:
-    glue("best_k_unique", best_k_list[0])
-glue("best_acc", round(sorted_accuracies.iloc[0]["mean_test_score"] * 100, 2))
+accuracies_grid = accuracies_grid[["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
+              ].assign(
+                  sem_test_score = accuracies_grid["std_test_score"] / 10**(1/2)
+              ).rename(
+                  columns = {"param_kneighborsclassifier__n_neighbors" : "n_neighbors"}
+              ).drop(
+                  columns = ["std_test_score"]
+              )
+accuracies_grid
 ```
 
 We can decide which number of neighbors is best by plotting the accuracy versus $K$,
@@ -1242,7 +1086,7 @@ accuracy_vs_k = (
     .mark_line(point=True)
     .encode(
         x=alt.X(
-            "param_kneighborsclassifier__n_neighbors",
+            "n_neighbors",
             title="Neighbors",
         ),
         y=alt.Y(
@@ -1260,6 +1104,8 @@ accuracy_vs_k
 :tags: [remove-cell]
 
 glue("fig:06-find-k", accuracy_vs_k)
+glue("best_k_unique", accuracies_grid["n_neighbors"][accuracies_grid["mean_test_score"].idxmax()])
+glue("best_acc", np.round(accuracies_grid["mean_test_score"].max()*100,1))
 ```
 
 :::{glue:figure} fig:06-find-k
@@ -1273,7 +1119,7 @@ Plot of estimated accuracy versus the number of neighbors.
 Setting the number of 
 neighbors to $K =$ {glue:}`best_k_unique`
 provides the highest accuracy ({glue:}`best_acc`%). But there is no exact or perfect answer here;
-any selection from $K = 20$ and $55$ would be reasonably justified, as all
+any selection from $K = 30$ to $80$ or so would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
 classifier. Although the 
@@ -1299,7 +1145,7 @@ $K =$ {glue:}`best_k_unique` for the classifier.
 ### Under/Overfitting
 
 To build a bit more intuition, what happens if we keep increasing the number of
-neighbors $K$? In fact, the accuracy actually starts to decrease! 
+neighbors $K$? In fact, the cross-validation accuracy estimate actually starts to decrease! 
 Let's specify a much larger range of values of $K$ to try in the `param_grid` 
 argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as 
 we vary $K$ from 1 to almost the number of observations in the data set.
@@ -1307,23 +1153,25 @@ we vary $K$ from 1 to almost the number of observations in the data set.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-param_grid_lots = {
+large_param_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 385, 10),
 }
 
-cancer_tune_grid_lots = GridSearchCV(
+large_cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
-    param_grid=param_grid_lots,
-    cv=10,
-    n_jobs=-1,
-    return_train_score=True,
+    param_grid=large_param_grid,
+    cv=10
 )
 
-cancer_model_grid_lots = cancer_tune_grid_lots.fit(X_tune, y_tune)
-accuracies_grid_lots = pd.DataFrame(cancer_model_grid_lots.cv_results_)
+large_accuracies_grid = pd.DataFrame(
+                    large_cancer_tune_grid.fit(
+                          cancer_train.loc[:, ["Smoothness", "Concavity"]],
+                          cancer_train["Class"]
+                    ).cv_results_
+                  )
 
-accuracy_vs_k_lots = (
-    alt.Chart(accuracies_grid_lots)
+large_accuracy_vs_k = (
+    alt.Chart(large_accuracies_grid)
     .mark_line(point=True)
     .encode(
         x=alt.X(
@@ -1338,13 +1186,13 @@ accuracy_vs_k_lots = (
     )
 )
 
-accuracy_vs_k_lots
+large_accuracy_vs_k
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:06-lots-of-ks", accuracy_vs_k_lots)
+glue("fig:06-lots-of-ks", large_accuracy_vs_k)
 ```
 
 :::{glue:figure} fig:06-lots-of-ks
@@ -1386,9 +1234,7 @@ training data, it is said to **overfit** the data.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-# create the scatter plot
-colors = ["#86bfef", "#efb13f"]
+alt.data_transformers.disable_max_rows()
 
 cancer_plot = (
     alt.Chart(
@@ -1414,7 +1260,7 @@ cancer_plot = (
                 )
             ),
         ),
-        color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+        color=alt.Color("Class", title="Diagnosis"),
     )
 )
 
@@ -1450,12 +1296,10 @@ for k in [1, 7, 20, 300]:
         .encode(
             x=alt.X("Smoothness"),
             y=alt.Y("Concavity"),
-            color=alt.Color("Class", scale=alt.Scale(range=colors), title="Diagnosis"),
+            color=alt.Color("Class", title="Diagnosis"),
         )
     )
     plot_list.append(cancer_plot + prediction_plot)
-    
-# (plot_list[0] | plot_list[1]) & (plot_list[2] | plot_list[3])
 ```
 
 ```{code-cell} ipython3
@@ -1478,31 +1322,32 @@ Effect of K in overfitting and underfitting.
 
 +++
 
-Both overfitting and underfitting are problematic and will lead to a model 
-that does not generalize well to new data. When fitting a model, we need to strike
-a balance between the two. You can see these two effects in {numref}`fig:06-decision-grid-K`, which shows how the classifier changes as 
-we set the number of neighbors $K$ to 1, 7, 20, and 300.
+Both overfitting and underfitting are problematic and will lead to a model that
+does not generalize well to new data. When fitting a model, we need to strike a
+balance between the two. You can see these two effects in
+{numref}`fig:06-decision-grid-K`, which shows how the classifier changes as we
+set the number of neighbors $K$ to 1, 7, 20, and 300.
 
 +++
 
 ## Summary
 
 Classification algorithms use one or more quantitative variables to predict the
-value of another categorical variable. In particular, the $K$-nearest neighbors algorithm 
-does this by first finding the $K$ points in the training data nearest
-to the new observation, and then returning the majority class vote from those
-training observations. We can evaluate a classifier by splitting the data
-randomly into a training and test data set, using the training set to build the
-classifier, and using the test set to estimate its accuracy. Finally, we
-can tune the classifier (e.g., select the number of neighbors $K$ in $K$-NN)
-by maximizing estimated accuracy via cross-validation. The overall 
-process is summarized in {numref}`fig:06-overview`.
+value of another categorical variable. In particular, the $K$-nearest neighbors
+algorithm does this by first finding the $K$ points in the training data
+nearest to the new observation, and then returning the majority class vote from
+those training observations. We can tune and evaluate a classifier by splitting
+the data randomly into a training and test data set. The training set is used
+to build the classifier and we can tune the classifier (e.g., select the number
+of neighbors in $K$-nearest neighbors) by maximizing estimated accuracy via
+cross-validation. After we have tuned the model we can use the test set to
+estimate its accuracy.  The overall process is summarized in
+{numref}`fig:06-overview`.
 
 +++
 
 ```{figure} img/train-test-overview.jpeg
 :name: fig:06-overview
-:figclass: caption-hack
 
 Overview of KNN classification.
 ```
@@ -1515,29 +1360,13 @@ Overview of KNN classification.
 The overall workflow for performing $K$-nearest neighbors classification using `scikit-learn` is as follows:
 
 1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
-2. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
-3. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
-4. Use the `GridSearchCV` function (or `RandomizedSearchCV`) to estimate the classifier accuracy for a range of $K$ values. Pass the parameter grid and the pipeline defined in step 2 and step 3 as the `param_grid` argument and the `estimator` argument, respectively.
-5. Call `fit` on the `GridSearchCV` instance created in step 4, passing the training data.
-6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
+2. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
+3. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
+4. Use `GridSearchCV` to estimate the classifier accuracy for a range of $K$ values. Pass the pipeline and parameter grid defined in steps 2. and 3. as the `param_grid` argument and the `estimator` argument, respectively.
+5. Execute the grid search by passing the training data to the `fit` method on the `GridSearchCV` instance created in step 4.
+6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The overall workflow for performing $K$-nearest neighbors classification using `tidymodels` is as follows:
-# \index{tidymodels}\index{recipe}\index{cross-validation}\index{K-nearest neighbors!classification}\index{classification}
-
-# 1. Use the `initial_split` function to split the data into a training and test set. Set the `strata` argument to the class label variable. Put the test set aside for now.
-# 2. Use the `vfold_cv` function to split up the training data for cross-validation.
-# 3. Create a `recipe` that specifies the class label and predictors, as well as preprocessing steps for all variables. Pass the training data as the `data` argument of the recipe.
-# 4. Create a `nearest_neighbors` model specification, with `neighbors = tune()`.
-# 5. Add the recipe and model specification to a `workflow()`, and use the `tune_grid` function on the train/validation splits to estimate the classifier accuracy for a range of $K$ values.
-# 6. Pick a value of $K$ that yields a high accuracy estimate that doesn't change much if you change $K$ to a nearby value.
-# 7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier using the `fit` function.
-# 8. Evaluate the estimated accuracy of the classifier on the test set using the `predict` function.
-```
 
 In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 
 but there are many other methods we could have used to predict a categorical label. 
@@ -1558,6 +1387,7 @@ the $K$-NN here.
 
 +++
 
+<!--
 ## Predictor variable selection
 
 > **Note:** This section is not required reading for the remainder of the textbook. It is included for those readers 
@@ -1681,7 +1511,7 @@ for i in range(len(ks)):
     )
 
     cv_5 = cross_validate(estimator=cancer_fixed_pipe, X=X, y=y, cv=5)
-    cv_5_metrics = pd.DataFrame(cv_5).aggregate(func=["mean", "std"])
+    cv_5_metrics = pd.DataFrame(cv_5).agg(["mean", "sem"])
     fixedaccs.append(cv_5_metrics.loc["mean", "test_score"])
 ```
 
@@ -1870,7 +1700,7 @@ training over 1000 candidate models with $m=10$ predictors, forward selection re
 
 +++
 
-### Forward selection in Python
+### Forward selection in `scikit-learn`
  
 We now turn to implementing forward selection in Python.
 The function [`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 
@@ -1958,7 +1788,10 @@ This means that {glue:}`sequentialfeatureselector_n_features` features were sele
 
 +++
 
-Now, let's code the actual algorithm by ourselves. The key idea of the forward selection code is to properly extract each subset of predictors for which we want to build a model, pass them to the preprocessor and fit the pipeline with them.
+Now, let's code the actual algorithm by ourselves. The key idea of the forward
+selection code is to properly extract each subset of predictors for which we
+want to build a model, pass them to the preprocessor and fit the pipeline with
+them.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -2115,17 +1948,19 @@ Estimated accuracy versus the number of predictors for the sequence of models bu
 > part of tuning your classifier, you *cannot use your test data* for this
 > process! 
 
+-->
+
 ## Exercises
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
 in the "Classification II: evaluation and tuning" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
@@ -2155,32 +1990,7 @@ and guidance that the worksheets provide will function as intended.
   variables. Note that while this book is still a very accessible introductory
   text, it requires a bit more mathematical background than we require.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# - The [`tidymodels` website](https://tidymodels.org/packages) is an excellent
-#   reference for more details on, and advanced usage of, the functions and
-#   packages in the past two chapters. Aside from that, it also has a [nice
-#   beginner's tutorial](https://www.tidymodels.org/start/) and [an extensive list
-#   of more advanced examples](https://www.tidymodels.org/learn/) that you can use
-#   to continue learning beyond the scope of this book. It's worth noting that the
-#   `tidymodels` package does a lot more than just classification, and so the
-#   examples on the website similarly go beyond classification as well. In the next
-#   two chapters, you'll learn about another kind of predictive modeling setting,
-#   so it might be worth visiting the website only after reading through those
-#   chapters.
-# - *An Introduction to Statistical Learning* [@james2013introduction] provides 
-#   a great next stop in the process of
-#   learning about classification. Chapter 4 discusses additional basic techniques
-#   for classification that we do not cover, such as logistic regression, linear
-#   discriminant analysis, and naive Bayes. Chapter 5 goes into much more detail
-#   about cross-validation. Chapters 8 and 9 cover decision trees and support
-#   vector machines, two very popular but more advanced classification methods.
-#   Finally, Chapter 6 covers a number of methods for selecting predictor
-#   variables. Note that while this book is still a very accessible introductory
-#   text, it requires a bit more mathematical background than we require.
-```
-
+ 
 ## References
 
 +++

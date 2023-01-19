@@ -49,15 +49,6 @@ the same. We are currently working on producing new Python-based images and exam
 for this chapter.
 ```
 
-```{note}
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on version control
-has not yet been fully updated to focus on Python; it has images and examples from 
-the R version of the book. But the concepts related to version control are generally
-the same. We are currently working on producing new Python-based images and examples 
-for this chapter.
-```
-
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:

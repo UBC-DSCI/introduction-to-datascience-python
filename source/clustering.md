@@ -32,6 +32,7 @@ using the K-means algorithm,
 including techniques to choose the number of clusters.
 
 ## Chapter learning objectives
+
 By the end of the chapter, readers will be able to do the following:
 
 * Describe a case where clustering is appropriate,
@@ -155,8 +156,9 @@ because the K-means clustering algorithm uses random numbers.
 ```
 
 ```{code-cell} ipython3
+import numpy as np
 
-np.random.seed(1)
+np.random.seed(149)
 ```
 
 ```{index} read function; read_csv

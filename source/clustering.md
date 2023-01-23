@@ -586,25 +586,14 @@ standardized_data
 ```
 
 To perform K-means clustering in Python, we use the `KMeans` function. It takes at
-least one argument: K, the number of clusters (here we choose K = 3). Note that since the K-means
-algorithm uses a random initialization of assignments, but since we set the random seed, the clustering will be reproducible.
-
-```{code-cell} ipython3
-np.random.seed(1234)
-```
+least one argument: K, the number of clusters (here we choose K = 3). Note that the K-means
+algorithm uses a random initialization of assignments, but since we set the random seed in the beginning of this chapter, the clustering will be reproducible.
 
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
+
 penguin_clust = KMeans(n_clusters=3).fit(standardized_data)
 penguin_clust
-
-```
-
-```{code-cell} ipython3
-print(f"Inertia/WSSD : {penguin_clust.inertia_}")
-print(f"Cluster centres : {penguin_clust.cluster_centers_}")
-print(f"No. of iterations : {penguin_clust.n_iter_}")
-print(f"Cluster labels : {penguin_clust.labels_}")
 ```
 
 ```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict

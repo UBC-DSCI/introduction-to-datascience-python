@@ -15,27 +15,14 @@ kernelspec:
 (clustering)=
 # Clustering
 
-
-```{code-cell} ipython3
-
-import pandas as pd
-import numpy as np
-import random
-from sklearn.preprocessing import StandardScaler
-from sklearn.compose import make_column_transformer
-
-import altair as alt
-
-```
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 ```
 
-
 ## Overview
+
 As part of exploratory data analysis, it is often helpful to see if there are
 meaningful subgroups (or *clusters*) in the data.
 This grouping can be used for many purposes,

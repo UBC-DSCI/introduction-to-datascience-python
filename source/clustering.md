@@ -542,7 +542,7 @@ Variables with a large scale will have a much larger
 effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
-The `StandardScaler()` function in Python can be used to do this.
+The `StandardScaler()` function in scikit-learn can be used to do this.
 We show an example of how to use this function
 below using an unscaled and unstandardized version of the data set in this chapter.
 
@@ -569,9 +569,13 @@ using `fit_transform()`
 
 
 ```{code-cell} ipython3
+from sklearn.preprocessing import StandardScaler
+
 scaler = StandardScaler()
 standardized_data = pd.DataFrame(
-    scaler.fit_transform(not_standardized_data), columns = ['bill_length_mm', 'flipper_length_mm'])
+    scaler.fit_transform(not_standardized_data),
+    columns = ['bill_length_mm', 'flipper_length_mm']
+)
 
 standardized_data
 ```

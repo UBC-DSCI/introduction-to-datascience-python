@@ -31,8 +31,7 @@ import altair as alt
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import warnings
-warnings.filterwarnings("ignore")
-
+warnings.filterwarnings("ignore", category=FutureWarning)
 ```
 
 

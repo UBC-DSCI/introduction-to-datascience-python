@@ -726,61 +726,27 @@ A plot showing the total WSSD versus the number of clusters.
 ```{index} K-means; init argument
 ```
 
-It looks like 3 clusters is the right choice for this data.
-But why is there a "bump" in the total WSSD plot here?
-Shouldn't total WSSD always decrease as we add more clusters?
-Technically yes, but remember:  K-means can get "stuck" in a bad solution.
-Unfortunately, for K = 7 we had an unlucky initialization
-and found a bad clustering!
-We can help prevent finding a bad clustering
-by removing the `init='random'` as the argument in `KMeans`.
-The default value for `init` argument is `k-means++`, which selects
-initial cluster centers for k-mean clustering in a smart way to speed up convergence
+It looks like three clusters is the right choice for this data,
+since that is where the "elbow" of the line is the most distinct.
+In the plot,
+you can also see that the WSSD is always decreasing,
+as we would expect when we add more clusters.
+However,
+it is possible to have an elbow plot
+where the WSSD increases at one of the steps,
+causing a small bump in the line.
+This is because K-means can get "stuck" in a bad solution
+as we mentioned earlier in the chapter.
 
-The more times we perform K-means clustering,
-the more likely we are to find a good clustering (if one exists).
-
-Below, we try `KMeans` without the `init` argument and notice that the clustering doesn't get stuck.
-
-```{code-cell} ipython3
-penguin_clust_ks = penguin_clust_ks.assign(
-    penguin_clusts=penguin_clust_ks['k'].apply(
-        lambda x: KMeans(n_clusters=x, n_init=3).fit(standardized_data)
-    )
-)
-
-penguin_clust_ks = penguin_clust_ks.assign(
-    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_)
-).drop(columns = 'penguin_clusts')
-
-
-
-elbow_plot=(
-    alt.Chart(penguin_clust_ks)
-    .mark_line(point=True)
-    .encode(
-        x=alt.X("k", title="K"),
-        y=alt.Y("inertia", title="Total within-cluster sum of squares"),
-    )
-    .properties(width=400, height=400)
-    .configure_axis(labelFontSize=15, titleFontSize=20)
-)
-
-
-```
-
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue('elbow_plot2', elbow_plot, display=True)
-```
-
-:::{glue:figure} elbow_plot2
-:figwidth: 700px
-:name: elbow_plot2
-
-A plot showing the total WSSD versus the number of clusters when K-means is run without `init` argument
-:::
+> **Note:** It is rare that the KMeans function from scikit-learn
+> gets stuck in a bad solution,
+> because the selection of the centroid starting points
+> is optimized to prevent this from happening.
+> If you still find yourself in a situation where you have a bump in the elbow plot,
+> you can increase the `n_init` parameter above the default value of 10
+> to try more different starting points for the centroids.
+> The larger the value the better from an analysis perspective,
+> but there is a trade-off that doing many clusterings could take a long time.
 
 ## Exercises
 

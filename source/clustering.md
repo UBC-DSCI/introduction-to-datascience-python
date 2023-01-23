@@ -169,8 +169,14 @@ Now we can load and preview the data.
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 from myst_nb import glue
-data = pd.read_csv('data/toy_penguins.csv')
-data
+import pandas as pd
+
+data = pd.read_csv(
+    'data/toy_penguins.csv'
+).replace(
+    [2, 3],
+    [0, 2]
+)
 ```
 
 ```{code-cell} ipython3

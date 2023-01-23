@@ -599,14 +599,18 @@ penguin_clust
 ```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
 ```
 
-As you can see above, the clustering object is returned by `KMeans`
-has a lot of information that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
-To obtain the information in the clustering object, we will call the `predict` function. (We can also call the `labels_` attribute)
+The clustering object returned by `KMeans`
+has a lot of information that can be used to visualize the clusters,
+pick K, and evaluate the total WSSD.
+Here,
+we will start by finding out which cluster each data point has been grouped into.
+In machine learning terms,
+we usually say that we "label" each data points
+as belonging to one of these clusters,
+and these labels are contained in the `labels_` attribute of the clustering object.
 
 ```{code-cell} ipython3
-predictions = penguin_clust.predict(standardized_data)
-predictions
-
+labels = penguin_clust.labels_
 ```
 
 Let's start by visualizing the clustering
@@ -616,7 +620,7 @@ data frame will contain the data and the cluster assignments for
 each point:
 
 ```{code-cell} ipython3
-clustered_data = standardized_data.assign(clusters = predictions)
+clustered_data = standardized_data.assign(cluster=labels)
 clustered_data
 ```
 

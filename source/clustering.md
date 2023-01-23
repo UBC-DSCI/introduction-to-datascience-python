@@ -274,9 +274,9 @@ where we can easily visualize the clusters on a scatter plot, we can give
 human-made labels to the groups using their positions on
 the plot:
 
-- small flipper length and small bill length (<font color="#D55E00">orange cluster</font>),
-- small flipper length and large bill length (<font color="#0072B2">blue cluster</font>).
-- and large flipper length and large bill  length (<font color="#F0E442">yellow cluster</font>).
+- small flipper length and small bill length (<font color="#4c78a8">blue cluster</font>),
+- small flipper length and large bill length (<font color="#f59518">orange cluster</font>).
+- and large flipper length and large bill  length (<font color="#e45756">red cluster</font>).
 
 Once we have made these determinations, we can use them to inform our species
 classifications or ask further questions about our data. For example, we might

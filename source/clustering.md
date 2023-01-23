@@ -180,6 +180,8 @@ data = pd.read_csv(
 ```
 
 ```{code-cell} ipython3
+import pandas as pd
+
 penguin_data = pd.read_csv("data/penguins_standardized.csv")
 penguin_data
 
@@ -189,14 +191,11 @@ Next, we can create a scatter plot using this data set
 to see if we can detect subtypes or groups in our data set.
 
 ```{code-cell} ipython3
-scatter_plot = (
-    alt.Chart(penguin_data)
-        .mark_circle(color='black').encode(
-            x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
-            y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"))
-        .configure_axis(
-        labelFontSize=12,
-        titleFontSize=12)
+import altair as alt
+
+scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
+    x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
+    y=alt.Y("bill_length_standardized", title="Bill Length (standardized)")
 )
 
 ```
@@ -251,22 +250,13 @@ denoted by colored scatter points.
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-colors = ["orange", "blue", "brown"]
-
-colored_scatter_plot = (
-    alt.Chart(data)
-    .mark_circle().encode(
-        x = alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
-        y = alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
-    color = alt.Color('cluster:N', scale=alt.Scale(range=colors))).configure_axis(
-    labelFontSize=12,
-    titleFontSize=12
+colored_scatter_plot = alt.Chart(data).mark_circle().encode(
+    x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
+    y=alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
+    color=alt.Color('cluster:N')
 )
-)
-
 
 glue('colored_scatter_plot', colored_scatter_plot, display=True)
-
 ```
 
 :::{glue:figure} colored_scatter_plot
@@ -642,15 +632,10 @@ of the cluster assignments for each point, as shown in {numref}`cluster_plot`.
 
 
 ```{code-cell} ipython3
-cluster_plot = (
-    alt.Chart(clustered_data)
-    .mark_circle()
-    .encode(
-         x = alt.X("flipper_length_mm", title="Flipper Length (standardized)"),
-         y = alt.Y("bill_length_mm", title="Bill Length (standardized)"),
-    color=alt.Color("clusters:O", title="Cluster", scale=alt.Scale(scheme="dark2")),
-    ).properties(width=400, height=400)
-    .configure_axis(labelFontSize=20, titleFontSize=20)
+cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
+    x=alt.X("flipper_length_mm", title="Flipper Length (standardized)"),
+    y=alt.Y("bill_length_mm", title="Bill Length (standardized)"),
+    color=alt.Color("cluster:N", title="Cluster"),
 )
 ```
 
@@ -672,95 +657,60 @@ The data colored by the cluster assignments returned by K-means.
 ```{index} see: WSSD; K-means inertia
 ```
 
-As mentioned above, we also need to select K by finding
-where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
-We can obtain the total WSSD (inertia) from our
-clustering using `.inertia_` function. For example:
+As mentioned above,
+instead of arbitrarily setting K to a number as we did above,
+we can find the best value for K
+by finding where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
+The total WSSD is stored in the `.inertia_` attribute
+of the clustering object ("inertia" is another term for WSSD).
 
 ```{code-cell} ipython3
 penguin_clust.inertia_
 ```
 
 To calculate the total WSSD for a variety of Ks, we will
-create a data frame with a column named `k` with rows containing
-each value of K we want to run K-means with (here, 1 to 9).
+create a data frame that contains different values of `k`
+and the WSSD of running KMeans with each values of k.
+To create this dataframe,
+we will use what is called a "for loop"
+where we repeat an operation a number of times.
+Here is an examples of a for loop that simply prints each number from 1-9:
 
 ```{code-cell} ipython3
-import numpy as np
-penguin_clust_ks = pd.DataFrame({"k": np.array(range(1, 10)).transpose()})
+numbers = range(1, 10)
+for number in numbers:
+    print(number)
 ```
 
-```{index} pandas.DataFrame; assign
-```
-
-Then we use `assign()` to create a new column and `lambda` operator to apply the `KMeans` function
-within each row to each K.
+Next,
+we will use this approach to compute the WSSD/inertia for the K-values 1 through 9,
+and temporarily store these values in a list
+that we will use to create a dataframe of both the K-values and their corresponding WSSDs/inertias.
 
 ```{code-cell} ipython3
-np.random.seed(12)
-penguin_clust_ks = penguin_clust_ks.assign(
-    penguin_clusts=penguin_clust_ks['k'].apply(
-        lambda x: KMeans(n_clusters=x, n_init=3, init="random").fit(standardized_data)
-    )
-)
-```
+# Create an empty list
+inertias = []
 
-If we take a look at our data frame `penguin_clust_ks` now,
-we see that it has two columns: one with the value for K,
-and the other holding the clustering model objects.
+ks = range(1, 10)
+for k in ks:
+    # Save the computed inertia for each k
+    inertias.append(KMeans(n_clusters=k).fit(standardized_data).inertia_)
 
-```{code-cell} ipython3
-penguin_clust_ks
-```
-
-```{index} pandas.DataFrame; iloc[]
-```
-
-If we wanted to get one of the clusterings out of the column in the data frame, we could use a familiar friend: `.iloc` property. And then to extract the `inertia` or any other attribute of the cluster object, we can simply access it using the dot `.` operator. Below, we will extract the details of the cluster object, where `k=2`
-
-```{code-cell} ipython3
-penguin_clust_ks.iloc[1]['penguin_clusts']
-
-```
-
-```{code-cell} ipython3
-penguin_clust_ks.iloc[1]['penguin_clusts'].inertia_
-```
-
-Next, we use `assign` again to add 2 new columns `inertia` and `n_iter`
-to each of the K-means clustering objects to get the clustering statistics
-
-This results in a data frame with 4 columns, one for K, one for the
-K-means clustering objects, and 2 for the clustering statistics:
-
-```{code-cell} ipython3
-penguin_clust_ks = penguin_clust_ks.assign(
-    inertia=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.inertia_),
-    n_iter=penguin_clust_ks["penguin_clusts"].apply(lambda x: x.n_iter_)
-
-)
+penguin_clust_ks = pd.DataFrame({
+    'k': ks,
+    'inertia': inertias,
+})
 
 penguin_clust_ks
 ```
 
 Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot
-({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use. We will drop the column `penguin_clusts` to make the plotting in altair feasible
+({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use.
 
 ```{code-cell} ipython3
-
-penguin_clust_ks = penguin_clust_ks.drop(columns = 'penguin_clusts')
-```
-
-```{code-cell} ipython3
-elbow_plot=(
-    alt.Chart(penguin_clust_ks)
-    .mark_line(point=True)
-    .encode(
-        x=alt.X("k", title="K"),
-        y=alt.Y("inertia", title="Total within-cluster sum of squares"),
-    )
-    .properties(width=400, height=400)
-    .configure_axis(labelFontSize=15, titleFontSize=20)
+elbow_plot = alt.Chart(penguin_clust_ks).mark_line().encode(
+    x=alt.X("k", title="K"),
+    y=alt.Y("inertia", title="Total within-cluster sum of squares"),
 )
 ```
 

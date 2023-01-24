@@ -646,178 +646,57 @@ sampling distribution of the sample mean. We indicate the mean of the sampling
 distribution with a red vertical line.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Initially thought of using a loop, but Jupyter book failed to build because "cell execution
-# timed out..."
-# ## Sampling n = 20, 50, 100, 500
-# np.random.seed(2)
-# sample_dict = {}
-# for sample_n in [20, 50, 100, 500]:
-#     samples = []
-#     for rep in range(20000):
-#         sample = airbnb.sample(sample_n)
-#         sample = sample.assign(replicate=rep)
-#         samples.append(sample)
-#     samples = pd.concat([samples[i] for i in range(len(samples))])
-
-#     sample_dict[f"sample_estimates_{sample_n}"] = (
-#         samples.groupby("replicate")["price"]
-#         .mean()
-#         .reset_index()
-#         .rename(columns={"price": "sample_mean"})
-#     )
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-sample_dict = {}
-
-# Sampling n = 20
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(20)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_20"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 50
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(50)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_50"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 100
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(100)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_100"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 500
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(500)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_500"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## Plot sampling distribution n = 20, 50, 100, 500
-sample_plot = {}
-plot_min_x = sample_dict["sample_estimates_20"]["sample_mean"].min()
-plot_max_x = sample_dict["sample_estimates_20"]["sample_mean"].max()
-
-
-# def max_bins(distribution):
-#     if int(distribution.split("_")[-1]) >= 100:
-#         return 10
-#     else:
-#         return 30
-
-
-def text_y(distribution):
-    sample_n = int(distribution.split("_")[-1])
-    if sample_n == 20:
-        return 2000
-    elif sample_n == 50:
-        return 3000
-    elif sample_n == 100:
-        return 4500
-    else:
-        return 10000
-
-
-for sample_n, df in sample_dict.items():
-    sample_plot[sample_n] = (
-        alt.Chart(df, title=f"n = {sample_n.split('_')[-1]}")
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "sample_mean",
-                title="Sample mean price per night (Canadian dollars)",
-                bin=alt.Bin(extent=[80, 300], step=50/7), # maxbins=max_bins(sample_n)
-                scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
-                axis=alt.Axis(values=list(range(80, 301, 20)))
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-    )
-
-    sample_mean = sample_dict[sample_n]["sample_mean"].mean()
-    sample_plot[sample_n] = (
-        sample_plot[sample_n]
-        + alt.Chart(pd.DataFrame({"x": [sample_mean]}))
-        .mark_rule(color="red", size=2)
-        .encode(x="x")
-        + (
-            alt.Chart(
-                pd.DataFrame(
-                    {
-                        "x": [plot_max_x - 20],
-                        "y": [text_y(sample_n)],
-                        "text": [f"mean = {round(sample_mean, 1)}"],
-                    }
-                )
-            )
-            .mark_text(dy=-5, size=15)
-            .encode(x="x", y="y", text="text")
-        )
-    ).properties(width=350, height=250)
-```
-
-```{code-cell} ipython3
 :tags: [remove-input]
 
-(sample_plot["sample_estimates_20"] | sample_plot["sample_estimates_50"]) & (
-    sample_plot["sample_estimates_100"] | sample_plot["sample_estimates_500"]
+# Plot sampling distributions for multiple sample sizes
+base = alt.Chart(
+    pd.concat([
+        pd.concat([
+            airbnb.sample(sample_size).assign(sample_size=sample_size, replicate=replicate)
+            for sample_size in [20, 50, 100, 500]
+        ])
+        for replicate in range(20_000)
+    ]).groupby(
+        ["sample_size", 'replicate'],
+        as_index=False
+    )["price"].mean(),
+    height=150
+)
+
+glue(
+    "fig:11-example-means7",
+    alt.layer(
+        base.mark_bar().encode(
+            alt.X('price', bin=alt.Bin(maxbins=30)),
+            alt.Y('count()')
+        ),
+        base.mark_rule(color='coral', size=3).encode(
+            x='mean(price)'
+        ),
+        base.mark_text(align='left', color='coral', size=12, fontWeight='bold', dx=10).transform_aggregate(
+            mean_price = 'mean(price)',
+        ).transform_calculate(
+            label = "'Mean = ' + round(datum.mean_price * 10) / 10"
+        ).encode(
+            x=alt.X('mean_price:Q', title="Sample mean price per night (Canadian dollars)"),
+            y=alt.value(10),
+            text='label:N'
+        )
+    ).facet(
+        alt.Facet(
+            'sample_size',
+            header=alt.Header(
+                title='',
+                labelFontWeight='bold',
+                labelFontSize=12,
+                labelPadding=3,
+                labelExpr='"Sample size = " + datum.value'
+            )
+        ),
+        columns=1,
+    ).resolve_scale(
+        y='independent'
+    )
 )
 ```
 

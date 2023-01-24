@@ -929,15 +929,17 @@ this sample and estimate are the only data we can work with.
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
 sample in Python and calculate a point estimate from that bootstrap sample. We will
-use the `resample` function from the `scikit-learn` package. Critically, note that we now
-pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
-And since we need to sample with replacement,
-we keep the argument for `replace` to its default value of `True`.
+continue using the `sample` function of our dataframe,
+Critically, note that we now
+set `frac=1` ("fraction") to indicate that we want to draw as many samples as there are rows in the dataframe
+(we could also have set `n=40` but then we would need to manually keep track of how many rows there are).
+Since we need to sample with replacement when bootstrapping,
+we change the `replace` parameter to `True`.
 
 ```{code-cell} ipython3
 :tags: []
 
-boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
+boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
     x=alt.X(
         "price",
@@ -972,21 +974,13 @@ mimic drawing another sample from the population by drawing one from our origina
 sample.
 
 Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)
-using `resample`, and calculate the means for
+and calculate the means for
 each of those replicates. Recall that this assumes that `one_sample` *looks like*
 our original population; but since we do not have access to the population itself,
 this is often the best we can do.
 
 ```{code-cell} ipython3
-np.random.seed(2)
-
-boot20000 = []
-for rep in range(20000):
-    sample = resample(one_sample, replace=True, n_samples=40)
-    sample = sample.assign(replicate=rep)
-    boot20000.append(sample)
-boot20000 = pd.concat([boot20000[i] for i in range(len(boot20000))])
-
+boot20000 = pd.concat([one_sample.sample(frac=1, replace=True).assign(replicate=n) for n in range(1_000)])
 boot20000
 ```
 
@@ -1040,7 +1034,7 @@ our point estimate to behave if we took another sample.
 
 ```{code-cell} ipython3
 boot20000_means = boot20000.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "mean"}
+    columns={"price": "sample_mean"}
 )
 
 boot20000_means
@@ -1051,8 +1045,8 @@ boot20000_means
 
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
     x=alt.X(
-        "mean",
-        bin=alt.Bin(extent=[95, 245], step=5),
+        "sample_mean",
+        bin=alt.Bin(maxbins=20),
         title="Sample mean price per night (Canadian dollars)",
     ),
     y=alt.Y("count()", title="Count"),

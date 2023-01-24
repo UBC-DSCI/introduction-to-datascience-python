@@ -527,29 +527,28 @@ sample_estimates = (
 sample_estimates
 ```
 
+Now we can calculate the sample mean for each replicate and plot the sampling
+distribution of sample means for samples of size 40.
+
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-sampling_distribution_40 = (
-    alt.Chart(sample_estimates)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "sample_mean",
-            bin=alt.Bin(maxbins=30),
-            title="Sample mean price per night (Canadian dollars)",
-        ),
-        y=alt.Y("count()", title="Count"),
-    )
+sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
+    x=alt.X(
+        "sample_mean",
+        bin=alt.Bin(maxbins=30),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
 )
 
-sampling_distribution_40
+sampling_distribution
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:11-example-means4", sampling_distribution_40)
+glue("fig:11-example-means4", sampling_distribution)
 ```
 
 :::{glue:figure} fig:11-example-means4
@@ -561,8 +560,8 @@ Sampling distribution of the sample means for sample size of 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), -1))
-glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), -1))
+glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), - 1))
+glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), - 1))
 ```
 
 ```{index} sampling distribution; shape
@@ -603,54 +602,28 @@ was \$`r round(mean(airbnb$price),2)`.
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-(
-    (
-        alt.Chart(airbnb, title="Population")
-        .mark_bar(clip=True)
-        .encode(
+glue(
+    "fig:11-example-means5",
+    alt.vconcat(
+        population_distribution.mark_bar(clip=True).encode(
             x=alt.X(
                 "price",
                 bin=alt.Bin(maxbins=30),
                 title="Price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
-    )
-    & (
-        alt.Chart(one_sample, title="Sample (n = 40)")
-        .mark_bar(clip=True)
-        .encode(
-            x=alt.X(
-                "price",
-                bin=alt.Bin(maxbins=30),
-                title="Price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
-    )
-    & (
-        alt.Chart(
-            sample_estimates,
-            title="Sampling distribution of the mean for samples of size 40",
-        )
-        .mark_bar(clip=True)
-        .encode(
-            x=alt.X(
-                "sample_mean",
-                bin=True,
-                title="Sample mean price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
+                scale=alt.Scale(domainMax=700)
+            )
+        ).properties(
+            title='Population', height=150
+        ),
+        sample_distribution.properties(title="Sample (n = 40)").properties(height=150),
+        sampling_distribution.properties(
+            title=alt.TitleParams(
+                "Sampling distribution of the mean",
+                subtitle="For 20,000 samples of size 40"
+            )
+        ).properties(height=150)
+    ).resolve_scale(
+        x='shared'
     )
 )
 ```

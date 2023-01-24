@@ -284,19 +284,13 @@ below to show that we end up with 20,000 point estimates, one for each of the 20
 
 ```{code-cell} ipython3
 sample_estimates = (
-    samples.query("room_type == 'Entire home/apt'")
-    .groupby("replicate")["room_type"]
-    .count()
-    .reset_index()
-    .rename(columns={"room_type": "counts"})
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+    .reset_index(name='sample_proportion')
+    .query('room_type=="Entire home/apt"')
 )
-
-# calculate the proportion
-sample_estimates["sample_proportion"] = sample_estimates["counts"] / 40
-
-# drop the count column
-sample_estimates = sample_estimates.drop(columns=["counts"])
-
 sample_estimates
 ```
 
@@ -312,7 +306,7 @@ sampling distribution directly for learning purposes.
 :tags: [remove-output]
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X("sample_proportion", bin=alt.Bin(maxbins=12), title="Sample proportions"),
+    x=alt.X("sample_proportion", title="Sample proportions", bin=alt.Bin(maxbins=20)),
     y=alt.Y("count()", title="Count"),
 )
 

@@ -893,12 +893,6 @@ Recall our point estimate was \${glue:}`estimate_mean`. The
 histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-pd.set_option('display.max_rows', 20)
-```
-
-```{code-cell} ipython3
 one_sample
 ```
 

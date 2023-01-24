@@ -511,26 +511,19 @@ get a sense for this variation. In this case, we'll use 20,000 samples of size
 40.
 
 ```{code-cell} ipython3
-np.random.seed(2)
-
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
 samples
 ```
 
-Now we can calculate the sample mean for each replicate and plot the sampling
-distribution of sample means for samples of size 40.
-
 ```{code-cell} ipython3
-sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "sample_mean"}
+sample_estimates = (
+    samples
+    .query('room_type == "Entire home/apt"')
+    .groupby('replicate')
+    ['price']
+    .mean()
+    .reset_index()
+    .rename(columns={'price': 'sample_mean'})
 )
-
 sample_estimates
 ```
 

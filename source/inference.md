@@ -418,15 +418,13 @@ Along with visualizing the population, we can calculate the population mean,
 the average price per night for all the Airbnb listings.
 
 ```{code-cell} ipython3
-population_parameters = airbnb["price"].mean()
-
-population_parameters
+airbnb["price"].mean()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_mean", round(population_parameters, 2))
+glue("population_mean", airbnb["price"].mean().round(2))
 ```
 
 ```{index} population; parameter
@@ -448,7 +446,7 @@ access to the population data and simulate taking one random sample of 40
 listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
-one_sample = airbnb.sample(40, random_state=1)
+one_sample = airbnb.sample(40)
 ```
 
 We can create a histogram to visualize the distribution of observations in the
@@ -479,19 +477,14 @@ Distribution of price per night (Canadian dollars) for sample of 40 Airbnb listi
 :::
 
 ```{code-cell} ipython3
-estimates = one_sample["price"].mean()
-
-estimates
+one_sample["price"].mean()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("estimate_mean", round(estimates, 2))
-glue(
-    "diff_perc",
-    round(100 * abs(estimates - population_parameters) / population_parameters, 1),
-)
+glue("estimate_mean", one_sample["price"].mean().round(2))
+glue("diff_perc", round(100 * abs(1 - (one_sample['price'].mean() / airbnb['price'].mean())), 1))
 ```
 
 The average value of the sample of size 40

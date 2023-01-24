@@ -1177,8 +1177,8 @@ ci_bounds
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", round(ci_bounds[0.025], 2))
-glue("ci_upper", round(ci_bounds[0.975], 2))
+glue("ci_lower", round(ci_bounds[0.025], 1))
+glue("ci_upper", round(ci_bounds[0.975], 1))
 ```
 
 Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
@@ -1192,14 +1192,15 @@ alt.layer(
     alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
         x=alt.datum(ci_bounds[0.025]),
         y=alt.value(-10),
-        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(2)})')
+        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
     ),
     alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
     alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
         x=alt.datum(ci_bounds[0.975]),
         y=alt.value(-10),
-        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(2)})')
-    )
+        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+    ),
+    width=500
 )
 ```
 

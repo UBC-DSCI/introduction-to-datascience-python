@@ -166,27 +166,25 @@ Suppose the city of Vancouver wants information about Airbnb rentals to help
 plan city bylaws, and they want to know how many Airbnb places are listed as
 entire homes and apartments (rather than as private or shared rooms). Therefore
 they may want to estimate the true proportion of all Airbnb listings where the
-"type of place" is listed as "entire home or apartment." Of course, we usually
+room type is listed as "entire home or apartment." Of course, we usually
 do not have access to the true population, but here let's imagine (for learning
 purposes) that our data set represents the population of all Airbnb rental
-listings in Vancouver, Canada. We can find the proportion of listings where
-`room_type == "Entire home/apt"`.
+listings in Vancouver, Canada.
+We can find the proportion of listings for each room type
+by using the `value_counts` function with the `normalize` parameter
+as we did in previous chapters.
 
 ```{index} pandas.DataFrame; df[], count, len
 ```
 
 ```{code-cell} ipython3
-population_summary = pd.DataFrame()
-population_summary["n"] = [airbnb.query("room_type == 'Entire home/apt'")["id"].count()]
-population_summary["proportion"] = population_summary["n"] / len(airbnb)
-
-population_summary
+airbnb['room_type'].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_proportion", round(population_summary["proportion"][0], 3))
+glue("population_proportion", airbnb['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
 ```
 
 We can see that the proportion of `Entire home/apt` listings in
@@ -202,25 +200,23 @@ Instead, perhaps we can approximate it with a small subset of data!
 To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
 size 40 from our population), and computing the proportion for that sample.
 We will use the `sample` method of the `pandas.DataFrame`
-object to take the sample. The argument `n` of `sample` is the size of the sample to take.
+object to take the sample. The argument `n` of `sample` is the size of the sample to take
+and since we are starting to use randomness here,
+we are also setting the random seed via numpy to make the results reproducible.
 
 ```{code-cell} ipython3
 import numpy as np
 
-```{code-cell} ipython3
-sample_1 = airbnb.sample(n=40, random_state=12)
 
-airbnb_sample_1 = pd.DataFrame()
-airbnb_sample_1["n"] = [sample_1.query("room_type == 'Entire home/apt'")["id"].count()]
-airbnb_sample_1["proportion"] = airbnb_sample_1["n"] / len(sample_1)
+np.random.seed(155)
 
-airbnb_sample_1
+airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_1_proportion", round(airbnb_sample_1["proportion"][0], 2))
+glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
@@ -234,13 +230,7 @@ if we were to take *another* random sample of size 40 and compute the proportion
 we would not get the same answer:
 
 ```{code-cell} ipython3
-sample_2 = airbnb.sample(n=40, random_state=1234)
-
-airbnb_sample_2 = pd.DataFrame()
-airbnb_sample_2["n"] = [sample_2.query("room_type == 'Entire home/apt'")["id"].count()]
-airbnb_sample_2["proportion"] = airbnb_sample_2["n"] / len(sample_2)
-
-airbnb_sample_2
+airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
 ```
 
 Confirmed! We get a different value for our estimate this time.

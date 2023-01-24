@@ -973,7 +973,7 @@ our original population; but since we do not have access to the population itsel
 this is often the best we can do.
 
 ```{code-cell} ipython3
-boot20000 = pd.concat([one_sample.sample(frac=1, replace=True).assign(replicate=n) for n in range(1_000)])
+boot20000 = pd.concat([one_sample.sample(frac=1, replace=True).assign(replicate=n) for n in range(20_000)])
 boot20000
 ```
 

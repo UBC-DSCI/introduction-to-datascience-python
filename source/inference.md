@@ -517,7 +517,6 @@ samples
 ```{code-cell} ipython3
 sample_estimates = (
     samples
-    .query('room_type == "Entire home/apt"')
     .groupby('replicate')
     ['price']
     .mean()

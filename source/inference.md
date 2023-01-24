@@ -791,13 +791,10 @@ large enough sample.
 
 # plot sample distributions for n = 10, 20, 50, 100, 200 and population distribution
 sample_distribution_dict = {}
-np.random.seed(12)
 for sample_n in [10, 20, 50, 100, 200]:
     sample = airbnb.sample(sample_n)
     sample_distribution_dict[f"sample_distribution_{sample_n}"] = (
-        alt.Chart(sample, title=f"n = {sample_n}")
-        .mark_bar()
-        .encode(
+        alt.Chart(sample, title=f"n = {sample_n}").mark_bar().encode(
             x=alt.X(
                 "price",
                 bin=alt.Bin(extent=[0, 600], step=20),
@@ -805,7 +802,7 @@ for sample_n in [10, 20, 50, 100, 200]:
             ),
             y=alt.Y("count()", title="Count"),
         )
-    ).properties(width=350, height=150)
+    ).properties(height=150)
 # add title and standardize the x axis ticks for population histogram
 population_distribution.title = "Population distribution"
 population_distribution.encoding["x"]["bin"] = alt.Bin(extent=[0, 600], step=20)
@@ -986,19 +983,16 @@ Let's take a look at histograms of the first six replicates of our bootstrap sam
 :tags: []
 
 six_bootstrap_samples = boot20000.query("replicate < 6")
-
-(
-    alt.Chart(six_bootstrap_samples)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "price",
-            bin=alt.Bin(maxbins=20),
-            title="Price per night (Canadian dollars)",
-        ),
-        y=alt.Y("count()", title="Count"),
-    ).properties(width=250, height=200)
-    .facet("replicate", columns=3)
+alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=20),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count")
+).facet(
+    "replicate",
+    columns=2
 )
 ```
 

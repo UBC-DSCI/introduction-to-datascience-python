@@ -328,9 +328,9 @@ Sampling distribution of the sample proportion for sample size 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_propotion_center", round(sample_estimates["sample_proportion"].mean(), 1))
-glue("sample_propotion_min", round(sample_estimates["sample_proportion"].min(), 1))
-glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 1))
+glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 1))
+glue("sample_proportion_min", round(sample_estimates["sample_proportion"].min(), 1))
+glue("sample_proportion_max", round(sample_estimates["sample_proportion"].max(), 1))
 ```
 
 ```{index} sampling distribution; shape
@@ -338,9 +338,9 @@ glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 
 
 The sampling distribution in {numref}`fig:11-example-proportions7` appears
 to be bell-shaped, is roughly symmetric, and has one peak. It is centered
-around {glue:}`sample_propotion_center` and the sample proportions
-range from about {glue:}`sample_propotion_min` to about
-{glue:}`sample_propotion_max`. In fact, we can
+around {glue:}`sample_proportion_center` and the sample proportions
+range from about {glue:}`sample_proportion_min` to about
+{glue:}`sample_proportion_max`. In fact, we can
 calculate the mean of the sample proportions.
 
 ```{code-cell} ipython3

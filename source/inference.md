@@ -381,15 +381,13 @@ We can visualize the population distribution of the price per night with a histo
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-population_distribution = (
-    alt.Chart(airbnb)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"
-        ),
-        y=alt.Y("count()", title="Count"),
-    )
+population_distribution = alt.Chart(airbnb).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)"
+    ),
+    y=alt.Y("count()", title="Count"),
 )
 
 population_distribution

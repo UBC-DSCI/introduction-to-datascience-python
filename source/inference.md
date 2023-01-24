@@ -1115,7 +1115,7 @@ There are two essential points that we can take away from
 distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
 second important point is that the means of these two distributions are
-different. The sampling distribution is centered at
+slightly different. The sampling distribution is centered at
 \${glue:}`population_mean`, the population mean value. However, the bootstrap
 distribution is centered at the original sample's mean price per night,
 \${glue:}`one_sample_mean`. Because we are resampling from the
@@ -1169,8 +1169,6 @@ wrong are deadly, we may want to be very confident and choose a higher
 confidence level.
 
 To calculate a 95\% percentile bootstrap confidence interval, we will do the following:
-
-+++
 
 1. Arrange the observations in the bootstrap distribution in ascending order.
 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.

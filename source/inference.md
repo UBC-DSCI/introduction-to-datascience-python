@@ -39,6 +39,7 @@ populations and then introduce two common techniques in statistical inference:
 *point estimation* and *interval estimation*.
 
 ## Chapter learning objectives
+
 By the end of the chapter, readers will be able to do the following:
 
 * Describe real-world examples of questions that can be answered with statistical inference.
@@ -55,6 +56,7 @@ By the end of the chapter, readers will be able to do the following:
 +++
 
 ## Why do we need sampling?
+
 We often need to understand how quantities we observe in a subset
 of data relate to the same quantities in the broader population. For example, suppose a
 retailer is considering selling iPhone accessories, and they want to estimate
@@ -153,17 +155,7 @@ includes an ID number, neighborhood, type of room, the number of people the
 rental accommodates, number of bathrooms, bedrooms, beds, and the price per
 night.
 
-<!--
-airbnb <- read_csv("data/listings.csv") |>
-  select(id, neighborhood = neighborhood_cleansed, room_type, accommodates, bathrooms = bathrooms_text, bedrooms, beds, price) |>
-  mutate(price = as.numeric(str_remove(price, "[$]"))) |>
-  na.omit()
-airbnb <- airbnb |>
-  mutate(id = 1:nrow(airbnb))
--->
-
 ```{code-cell} ipython3
-import altair as alt
 import pandas as pd
 
 airbnb = pd.read_csv("data/listings.csv")
@@ -213,15 +205,7 @@ We will use the `sample` method of the `pandas.DataFrame`
 object to take the sample. The argument `n` of `sample` is the size of the sample to take.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Instead, perhaps we can approximate it with a small subset of data!
-# To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
-# size 40 from our population), and computing the proportion for that sample.
-# We will use the `rep_sample_n` function \index{rep\_sample\_n} from the `infer`
-# package \index{infer} to take the sample. The arguments of `rep_sample_n` are (1) the data frame to
-# sample from, and (2) the size of the sample to take.
-```
+import numpy as np
 
 ```{code-cell} ipython3
 sample_1 = airbnb.sample(n=40, random_state=12)
@@ -311,15 +295,7 @@ each listing belongs. Above, `pandas.DataFrame` by default shows the first and l
 rows, so we can verify that
 we indeed created 20,000 samples (or replicates).
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Notice that the column `replicate` indicates the replicate, or sample, to which
-# each listing belongs. Above, since by default R only prints the first few rows,
-# it looks like all of the listings have `replicate` set to 1. But you can
-# check the last few entries using the `tail()` function to verify that
-# we indeed created 20,000 samples (or replicates).
-```
++++
 
 Now that we have obtained the samples, we need to compute the
 proportion of entire home/apartment listings in each sample.
@@ -331,19 +307,6 @@ Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we have obtained the samples, we need to compute the
-# proportion of entire home/apartment listings in each sample.
-# We first group the data by the `replicate` variable&mdash;to group the
-# set of listings in each sample together&mdash;and then use `summarize`
-# to compute the proportion in each sample.
-# We print both the first and last few entries of the resulting data frame
-# below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
-```
-
-```{code-cell} ipython3
-# calculate the the number of observations in each sample with room_type == 'Entire home/apt'
 sample_estimates = (
     samples.query("room_type == 'Entire home/apt'")
     .groupby("replicate")["room_type"]

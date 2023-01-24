@@ -506,13 +506,12 @@ took another random sample from the population, our estimate's value might
 change. So then, did we just get lucky with our point estimate above?  How much
 does our estimate vary across different samples of size 40 in this example?
 Again, since we have access to the population, we can take many samples and
-plot the sampling distribution of sample means for samples of size 40 to
-get a sense for this variation. In this case, we'll use 20,000 samples of size
-40.
-
-```{code-cell} ipython3
-samples
-```
+plot the sampling distribution of sample means to get a sense for this variation.
+In this case, we'll use the 20,000 samples of size
+40 that we already stored in the `samples` variable.
+First we will calculate the sample mean for each replicate
+and then plot the sampling
+distribution of sample means for samples of size 40.
 
 ```{code-cell} ipython3
 sample_estimates = (
@@ -525,9 +524,6 @@ sample_estimates = (
 )
 sample_estimates
 ```
-
-Now we can calculate the sample mean for each replicate and plot the sampling
-distribution of sample means for samples of size 40.
 
 ```{code-cell} ipython3
 :tags: [remove-output]

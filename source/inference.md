@@ -809,7 +809,7 @@ for sample_n in [10, 20, 50, 100, 200]:
             ),
             y=alt.Y("count()", title="Count"),
         )
-    ).properties(width=350, height=250)
+    ).properties(width=350, height=150)
 # add title and standardize the x axis ticks for population histogram
 population_distribution.title = "Population distribution"
 population_distribution.encoding["x"]["bin"] = alt.Bin(extent=[0, 600], step=20)
@@ -827,7 +827,7 @@ glue(
         )
         & (
             sample_distribution_dict["sample_distribution_200"]
-            | population_distribution.properties(width=350, height=250)
+            | population_distribution.properties(width=350, height=150)
         )
     ),
 )

@@ -1070,72 +1070,28 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "sample_mean"}
-)
-
-plot_min_x = sample_estimates["sample_mean"].min()
-plot_max_x = sample_estimates["sample_mean"].max()
-sampling_mean = sample_estimates["sample_mean"].mean()
-boot_sampling_mean = boot20000_means["mean"].mean()
-
-sampling_dist = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X(
-        "sample_mean",
-        bin=alt.Bin(extent=[95, 245], step=5),
-        # scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
-        title="Sample mean price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count"),
-)
-
-annotated_sampling_dist = (
-    sampling_dist
-    + alt.Chart(pd.DataFrame({"x": [sampling_mean]}), title="Sampling distribution")
-    .mark_rule(color="red", size=2)
-    .encode(x="x")
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [plot_max_x - 20],
-                    "y": [2000],
-                    "text": [f"mean = {round(sampling_mean, 1)}"],
-                }
-            )
+alt.vconcat(
+    alt.layer(
+        sampling_distribution,
+        sampling_distribution.mark_rule(color='coral', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        sampling_distribution.mark_text(color='coral', size=12, align='left', dx=16, fontWeight='bold').encode(
+            x='mean(sample_mean)',
+            y=alt.value(7),
+            text=alt.value(f"Mean = {sampling_distribution['data']['sample_mean'].mean().round(1)}")
         )
-        .mark_text(dy=-5, size=15)
-        .encode(x="x", y="y", text="text")
-    )
-)
-
-annotated_boot_est_dist = boot_est_dist + (
-    alt.Chart(pd.DataFrame({"x": [boot_sampling_mean]}), title="Bootstrap distribution")
-    .mark_rule(color="red", size=2)
-    .encode(x="x")
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [plot_max_x - 20],
-                    "y": [1500],
-                    "text": [f"mean = {round(boot_sampling_mean, 1)}"],
-                }
-            )
+    ).properties(title='Sampling distribution', height=150),
+    alt.layer(
+        boot_est_dist,
+        boot_est_dist.mark_rule(color='coral', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        boot_est_dist.mark_text(color='coral', size=12, align='left', dx=18, fontWeight='bold').encode(
+            x='mean(sample_mean)',
+            y=alt.value(6),
+            text=alt.value(f"Mean = {boot_est_dist['data']['sample_mean'].mean().round(1)}")
         )
-        .mark_text(dy=-5, size=15)
-        .encode(x="x", y="y", text="text")
-    )
+    ).properties(title='Bootstrap distribution', height=150)
+).resolve_scale(
+    x='shared'
 )
-
-annotated_sampling_dist | annotated_boot_est_dist
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -1226,17 +1182,15 @@ To do this in Python, we can use the `percentile()` function from the `numpy` pa
 ```
 
 ```{code-cell} ipython3
-import numpy as np
-bounds = np.percentile(boot20000_means["mean"], [2.5, 97.5])
-
-bounds
+ci_bounds = boot20000_means["sample_mean"].quantile([0.025, 0.975])
+ci_bounds
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", round(bounds[0], 2))
-glue("ci_upper", round(bounds[1], 2))
+glue("ci_lower", round(ci_bounds[0.025], 2))
+glue("ci_upper", round(ci_bounds[0.975], 2))
 ```
 
 Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
@@ -1244,45 +1198,19 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
-boot_est_dist + (
-    (
-        alt.Chart(pd.DataFrame({"x": [bounds[0]]}))
-        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
-        .encode(x="x")
-    )
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [bounds[0] - 10],
-                    "y": [1600],
-                    "text": [f"2.5th percentile = {round(bounds[0], 2)}"],
-                }
-            )
-        )
-        .mark_text(dy=-5, size=12)
-        .encode(x="x", y="y", text="text")
-    )
-) + (
-    (
-        alt.Chart(pd.DataFrame({"x": [bounds[1]]}))
-        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
-        .encode(x="x")
-    )
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [bounds[1]],
-                    "y": [1600],
-                    "text": [f"97.5th percentile = {round(bounds[1], 2)}"],
-                }
-            )
-        )
-        .mark_text(dy=-5, size=12)
-        .encode(x="x", y="y", text="text")
+alt.layer(
+    boot_est_dist,
+    alt.Chart().mark_rule(color='coral', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
+    alt.Chart().mark_text(color='coral', size=12, fontWeight='bold').encode(
+        x=alt.datum(ci_bounds[0.025]),
+        y=alt.value(-10),
+        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(2)})')
+    ),
+    alt.Chart().mark_rule(color='coral', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
+    alt.Chart().mark_text(color='coral', size=12, fontWeight='bold').encode(
+        x=alt.datum(ci_bounds[0.975]),
+        y=alt.value(-10),
+        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(2)})')
     )
 )
 ```

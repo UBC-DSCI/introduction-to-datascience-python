@@ -255,35 +255,21 @@ expect our sample proportions from this population to vary for samples of size 4
 ```
 
 We again use the `sample` to take samples of size 40 from our
-population of Airbnb listings. But this time we use a for loop
-to take 20,000 samples of size 40.
+population of Airbnb listings. But this time we use a list comprehension
+to repeat an operation multiple time (as in the previous chapter).
+In this case we are taking 20,000 samples of size 40
+and to make it clear which rows in the data frame come
+which of the 20,000 samples,
+we also add a column called `replicate` with this information.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We again use the `rep_sample_n` to take samples of size 40 from our
-# population of Airbnb listings. But this time we set the `reps` argument to 20,000 to specify
-# that we want to take 20,000 samples of size 40. \index{rep\_sample\_n!reps argument}
-# \index{rep\_sample\_n!size argument}
-```
-
-```{code-cell} ipython3
-np.random.seed(1)
-
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
+samples = pd.concat([airbnb.sample(40).assign(replicate=n) for n in range(20_000)])
 samples
 ```
 
-Notice that the column `replicate` indicates the replicate, or sample, to which
-each listing belongs. Above, `pandas.DataFrame` by default shows the first and last few
-rows, so we can verify that
-we indeed created 20,000 samples (or replicates).
+Since the column `replicate` indicates the replicate/sample number,
+we can verify that we indeed seem to have 20,0000 samples
+starting at sample 0 and ending at sample 19,999.
 
 +++
 

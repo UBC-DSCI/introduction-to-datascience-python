@@ -638,7 +638,7 @@ reliable&mdash;is there any way to improve the estimate?  One way to improve a
 point estimate is to take a *larger* sample. To illustrate what effect this
 has, we will take many samples of size 20, 50, 100, and 500, and plot the
 sampling distribution of the sample mean. We indicate the mean of the sampling
-distribution with a red vertical line.
+distribution with a orange vertical line.
 
 ```{code-cell} ipython3
 :tags: [remove-input]
@@ -665,10 +665,10 @@ glue(
             alt.X('price', bin=alt.Bin(maxbins=30)),
             alt.Y('count()')
         ),
-        base.mark_rule(color='coral', size=3).encode(
+        base.mark_rule(color='#f58518', size=3).encode(
             x='mean(price)'
         ),
-        base.mark_text(align='left', color='coral', size=12, fontWeight='bold', dx=10).transform_aggregate(
+        base.mark_text(align='left', color='#f58518', size=12, fontWeight='bold', dx=10).transform_aggregate(
             mean_price = 'mean(price)',
         ).transform_calculate(
             label = "'Mean = ' + round(datum.mean_price * 10) / 10"
@@ -699,7 +699,7 @@ glue(
 :name: fig:11-example-means7
 :figclass: caption-hack
 
-Comparison of sampling distributions, with mean highlighted as a vertical red line.
+Comparison of sampling distributions, with mean highlighted as a vertical orange line.
 ```
 
 +++
@@ -1069,8 +1069,8 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        sampling_distribution.mark_rule(color='coral', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
-        sampling_distribution.mark_text(color='coral', size=12, align='left', dx=16, fontWeight='bold').encode(
+        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        sampling_distribution.mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
             x='mean(sample_mean)',
             y=alt.value(7),
             text=alt.value(f"Mean = {sampling_distribution['data']['sample_mean'].mean().round(1)}")
@@ -1078,8 +1078,8 @@ alt.vconcat(
     ).properties(title='Sampling distribution', height=150),
     alt.layer(
         boot_est_dist,
-        boot_est_dist.mark_rule(color='coral', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
-        boot_est_dist.mark_text(color='coral', size=12, align='left', dx=18, fontWeight='bold').encode(
+        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        boot_est_dist.mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
             x='mean(sample_mean)',
             y=alt.value(6),
             text=alt.value(f"Mean = {boot_est_dist['data']['sample_mean'].mean().round(1)}")
@@ -1194,14 +1194,14 @@ visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 ```{code-cell} ipython3
 alt.layer(
     boot_est_dist,
-    alt.Chart().mark_rule(color='coral', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
-    alt.Chart().mark_text(color='coral', size=12, fontWeight='bold').encode(
+    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
+    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
         x=alt.datum(ci_bounds[0.025]),
         y=alt.value(-10),
         text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(2)})')
     ),
-    alt.Chart().mark_rule(color='coral', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
-    alt.Chart().mark_text(color='coral', size=12, fontWeight='bold').encode(
+    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
+    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
         x=alt.datum(ci_bounds[0.975]),
         y=alt.value(-10),
         text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(2)})')

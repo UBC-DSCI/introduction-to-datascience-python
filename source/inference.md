@@ -713,13 +713,16 @@ Comparison of sampling distributions, with mean highlighted as a vertical red li
 ```
 
 Based on the visualization in {numref}`fig:11-example-means7`, three points
-about the sample mean become clear.  First, the mean of the sample mean (across
-samples) is equal to the population mean. In other words, the sampling
-distribution is centered at the population mean.  Second, increasing the size of
-the sample decreases the spread (i.e., the variability) of the sampling
-distribution. Therefore, a larger sample size results in a more reliable point
-estimate of the population parameter. And third, the distribution of the sample
-mean is roughly bell-shaped.
+about the sample mean become clear:
+
+1. The mean of the sample mean (across
+   samples) is equal to the population mean. In other words, the sampling
+   distribution is centered at the population mean.
+2. Increasing the size of
+   the sample decreases the spread (i.e., the variability) of the sampling
+   distribution. Therefore, a larger sample size results in a more reliable point
+   estimate of the population parameter.
+3. The distribution of the sample mean is roughly bell-shaped.
 
 > **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
 > the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
@@ -736,6 +739,7 @@ mean is roughly bell-shaped.
 +++
 
 ### Summary
+
 1. A point estimate is a single value computed using a sample from a population (e.g., a mean or proportion).
 2. The sampling distribution of an estimate is the distribution of the estimate for all possible samples of a fixed size from the same population.
 3. The shape of the sampling distribution is usually bell-shaped with one peak and centered at the population mean or proportion.

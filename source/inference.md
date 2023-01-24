@@ -19,18 +19,16 @@ kernelspec:
 :tags: [remove-cell]
 
 import altair as alt
-import numpy as np
-import pandas as pd
-from sklearn.utils import resample
-alt.data_transformers.disable_max_rows()
-
-# alt.data_transformers.enable('data_server')
-# alt.renderers.enable('mimetype')
-
 from myst_nb import glue
+import warnings
+
+
+warnings.filterwarnings("ignore", category=FutureWarning)
+alt.data_transformers.disable_max_rows()
 ```
 
 ## Overview
+
 A typical data analysis task in practice is to draw conclusions about some
 unknown aspect of a population of interest based on observed data sampled from
 that population; we typically do not get data on the *entire* population.  Data

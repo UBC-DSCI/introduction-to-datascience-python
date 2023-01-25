@@ -328,9 +328,9 @@ Sampling distribution of the sample proportion for sample size 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 1))
-glue("sample_proportion_min", round(sample_estimates["sample_proportion"].min(), 1))
-glue("sample_proportion_max", round(sample_estimates["sample_proportion"].max(), 1))
+glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 2))
+glue("sample_proportion_min", round(sample_estimates["sample_proportion"].quantile(0.004), 2))
+glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quantile(0.9997), 2))
 ```
 
 ```{index} sampling distribution; shape

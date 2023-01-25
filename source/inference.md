@@ -1265,7 +1265,7 @@ statistical techniques you may learn about in the future!
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets)
 in the two "Statistical inference" rows.
 You can launch an interactive version of each worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of each worksheet by clicking "view worksheet."

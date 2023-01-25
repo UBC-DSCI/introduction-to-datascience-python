@@ -971,9 +971,14 @@ and calculate the means for
 each of those replicates. Recall that this assumes that `one_sample` *looks like*
 our original population; but since we do not have access to the population itself,
 this is often the best we can do.
+Note that here we break the list comprehension over multiple lines
+so that it is easier to read.
 
 ```{code-cell} ipython3
-boot20000 = pd.concat([one_sample.sample(frac=1, replace=True).assign(replicate=n) for n in range(20_000)])
+boot20000 = pd.concat([
+    one_sample.sample(frac=1, replace=True).assign(replicate=n)
+    for n in range(20_000)
+])
 boot20000
 ```
 
@@ -1005,26 +1010,44 @@ Histograms of first six replicates of bootstrap samples.
 
 +++
 
-We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the
-bootstrap samples differ. We can also calculate the sample mean for each of
-these six replicates.
+We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the distributions of the
+bootstrap samples differ. If we calculate the sample mean for each of
+these six samples, we can see that these are also different between samples.
+To compute the mean for each sample,
+we first group by the "replicate" which is the column containing the sample/replicate number.
+Then we compute the mean of the `price` column and rename it to `sample_mean`
+for it to be more descriptive.
+Finally we use `reset_index` to get the `replicate` values back as a column in the dataframe.
 
 ```{code-cell} ipython3
-six_bootstrap_samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "mean"}
+(
+    six_bootstrap_samples
+    .groupby("replicate")
+    ["price"]
+    .mean()
+    .rename(columns={"price": "sample_mean"})
+    .reset_index()
 )
 ```
 
-We can see that the bootstrap sample distributions and the sample means are
-different. They are different because we are sampling *with replacement*. We
-will now calculate point estimates for our 20,000 bootstrap samples and
-generate a bootstrap distribution of our point estimates. The bootstrap
+The distributions and the means differ between the bootstrapped samples
+because we are sampling *with replacement*.
+If we instead would have sampled *without replacement*,
+we would end up with the exact same values in the sample each time.
+
+We will now calculate point estimates of the mean for our 20,000 bootstrap samples and
+generate a bootstrap distribution of these point estimates. The bootstrap
 distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
-our point estimate to behave if we took another sample.
+our point estimate to behave if we take multiple samples.
 
 ```{code-cell} ipython3
-boot20000_means = boot20000.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "sample_mean"}
+boot20000_means = (
+    boot20000
+    .groupby("replicate")
+    ["price"]
+    .mean()
+    .rename(columns={"price": "sample_mean"})
+    .reset_index()
 )
 
 boot20000_means

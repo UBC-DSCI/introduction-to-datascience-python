@@ -1187,7 +1187,10 @@ To calculate a 95\% percentile bootstrap confidence interval, we will do the fol
 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
 
-To do this in Python, we can use the `percentile()` function from the `numpy` package:
+To do this in Python, we can use the `quantile` function of our DataFrame.
+Quantiles are expressed in proportions rather than percentages,
+so the 2.5th and 97.5th percentiles
+would be quantiles 0.025 and 0.975, respectively.
 
 ```{index} numpy; percentile, pandas.DataFrame; df[]
 ```

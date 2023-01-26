@@ -283,14 +283,54 @@ Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
 
 ```{code-cell} ipython3
+(
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+)
+```
+
+The returned object is a series,
+and as we have previously learned
+we can use `reset_index` to change it to a data frame.
+However,
+there is one caveat here:
+when we use the `value_counts` function
+on a grouped series and try to `reset_index`
+we will end up with two columns with the same name
+and therefor get an error
+(in this case, `room_type` will occur twice).
+Fortunately,
+there is a simple solution:
+when we call `reset_index`,
+we can specify the name of the new column
+with the `name` parameter:
+
+```{code-cell} ipython3
+(
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+    .reset_index(name='sample_proportion')
+)
+```
+
+Below we put everything together
+and also filter the data frame to keep only the room types 
+that we are interested in.
+
+```{code-cell} ipython3
 sample_estimates = (
     samples
     .groupby('replicate')
     ['room_type']
     .value_counts(normalize=True)
     .reset_index(name='sample_proportion')
-    .query('room_type=="Entire home/apt"')
 )
+
+sample_estimates = sample_estimates[sample_estimates['room_type'] == 'Entire home/apt']
 sample_estimates
 ```
 

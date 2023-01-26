@@ -611,6 +611,7 @@ and these labels are contained in the `labels_` attribute of the clustering obje
 
 ```{code-cell} ipython3
 labels = penguin_clust.labels_
+labels
 ```
 
 Let's start by visualizing the clustering

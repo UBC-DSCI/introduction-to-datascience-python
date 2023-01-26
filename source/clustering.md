@@ -749,6 +749,7 @@ it is possible to have an elbow plot
 where the WSSD increases at one of the steps,
 causing a small bump in the line.
 This is because K-means can get "stuck" in a bad solution
+due to an unlucky initialization of the initial centroid positions
 as we mentioned earlier in the chapter.
 
 > **Note:** It is rare that the KMeans function from scikit-learn
@@ -756,7 +757,7 @@ as we mentioned earlier in the chapter.
 > because the selection of the centroid starting points
 > is optimized to prevent this from happening.
 > If you still find yourself in a situation where you have a bump in the elbow plot,
-> you can increase the `n_init` parameter above the default value of 10
+> you can increase the `n_init` parameter
 > to try more different starting points for the centroids.
 > The larger the value the better from an analysis perspective,
 > but there is a trade-off that doing many clusterings could take a long time.

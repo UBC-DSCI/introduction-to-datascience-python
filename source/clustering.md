@@ -186,7 +186,6 @@ import pandas as pd
 
 penguin_data = pd.read_csv("data/penguins_standardized.csv")
 penguin_data
-
 ```
 
 Next, we can create a scatter plot using this data set
@@ -563,17 +562,21 @@ not_standardized_data
 And then we apply the `StandardScaler()` function to both the columns in the data frame
 using `fit_transform()`
 
-
-
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
+from sklearn.compose import make_column_transformer
+from sklearn import set_config
 
-scaler = StandardScaler()
-standardized_data = pd.DataFrame(
-    scaler.fit_transform(not_standardized_data),
-    columns = ['bill_length_mm', 'flipper_length_mm']
+
+set_config(transform_output="pandas")
+
+
+preprocessor = make_column_transformer(
+    (StandardScaler(), ['bill_length_mm', 'flipper_length_mm']),
+    verbose_feature_names_out=False,
 )
 
+standardized_data = preprocessor.fit_transform(not_standardized_data)
 standardized_data
 ```
 

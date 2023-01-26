@@ -299,7 +299,7 @@ there is one caveat here:
 when we use the `value_counts` function
 on a grouped series and try to `reset_index`
 we will end up with two columns with the same name
-and therefor get an error
+and therefore get an error
 (in this case, `room_type` will occur twice).
 Fortunately,
 there is a simple solution:

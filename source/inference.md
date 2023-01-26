@@ -261,6 +261,8 @@ In this case we are taking 20,000 samples of size 40
 and to make it clear which rows in the data frame come
 which of the 20,000 samples,
 we also add a column called `replicate` with this information.
+The call to `concat` concatenates all the 20,000 data frames
+returned from the list comprehension into a single big data frame.
 
 ```{code-cell} ipython3
 samples = pd.concat([airbnb.sample(40).assign(replicate=n) for n in range(20_000)])

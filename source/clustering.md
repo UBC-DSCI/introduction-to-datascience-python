@@ -670,29 +670,40 @@ To calculate the total WSSD for a variety of Ks, we will
 create a data frame that contains different values of `k`
 and the WSSD of running KMeans with each values of k.
 To create this dataframe,
-we will use what is called a "for loop"
-where we repeat an operation a number of times.
-Here is an examples of a for loop that simply prints each number from 1-9:
+we will use what is called a "list comprehension" in Python,
+where we repeat an operation multiple times
+and return a list with the result.
+Here is an examples of a list comprehension that stores the numbers 0-2 in a list:
 
 ```{code-cell} ipython3
-numbers = range(1, 10)
-for number in numbers:
-    print(number)
+[n for n in range(3)]
+```
+
+We can change the variable `n` to be called whatever we prefer
+and we can also perform any operation we want as part of the list comprehension.
+For example,
+we could square all the numbers from 0-4 and store them in a list:
+
+```{code-cell} ipython3
+[number ** 2 for number in range(5)]
 ```
 
 Next,
 we will use this approach to compute the WSSD/inertia for the K-values 1 through 9,
-and temporarily store these values in a list
+and store these values in a list
 that we will use to create a dataframe of both the K-values and their corresponding WSSDs/inertias.
 
-```{code-cell} ipython3
-# Create an empty list
-inertias = []
+> **Note:** We are creating the variable `ks` to store the range of possible k-values,
+> so that we only need to change this range in one place
+> if we decide to change which values of k we want to explore.
+> Otherwise it would be easy to forget to update it
+> in either the list comprehension or in the data frame assignment.
+> If you are using a value multiple times,
+> it is always the safest to assign it to a variable name for reuse.
 
+```{code-cell} ipython3
 ks = range(1, 10)
-for k in ks:
-    # Save the computed inertia for each k
-    inertias.append(KMeans(n_clusters=k).fit(standardized_data).inertia_)
+inertias = [KMeans(n_clusters=k).fit(standardized_data).inertia_ for k in ks]
 
 penguin_clust_ks = pd.DataFrame({
     'k': ks,

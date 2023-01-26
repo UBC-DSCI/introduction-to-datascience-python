@@ -660,7 +660,7 @@ instead of arbitrarily setting K to a number as we did above,
 we can find the best value for K
 by finding where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
 The total WSSD is stored in the `.inertia_` attribute
-of the clustering object ("inertia" is another term for WSSD).
+of the clustering object ("inertia" is the term scikit-learn uses to denote WSSD).
 
 ```{code-cell} ipython3
 penguin_clust.inertia_

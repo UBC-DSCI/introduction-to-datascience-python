@@ -16,7 +16,8 @@ kernelspec:
 # Clustering
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 ```
@@ -167,7 +168,8 @@ np.random.seed(149)
 Now we can load and preview the data.
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 from myst_nb import glue
 import pandas as pd
 
@@ -197,11 +199,11 @@ scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized", title="Bill Length (standardized)")
 )
-
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('scatter_plot', scatter_plot, display=True)
 ```
 
@@ -244,11 +246,8 @@ This procedure will separate the data into groups;
 {numref}`colored_scatter_plot` shows these groups
 denoted by colored scatter points.
 
-
-
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 colored_scatter_plot = alt.Chart(data).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
@@ -289,7 +288,8 @@ have.
 ### Measuring cluster quality
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 clus = data[data["cluster"] == 2].loc[:,["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
@@ -316,7 +316,7 @@ Then we would compute the coordinates, $\mu_x$ and $\mu_y$, of the cluster cente
 $\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)$
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 clus_rows = clus.shape[0]
 
@@ -327,7 +327,6 @@ glue("clus_rows_glue", clus_rows)
 glue("mean_flipper_len_std_glue",mean_flipper_len_std)
 glue("mean_bill_len_std_glue", mean_bill_len_std)
 ```
-
 
 In the first cluster from the example, there are {glue:}`clus_rows_glue` data points. These are shown with their cluster center
 (flipper_length_standardized = {glue:}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:}`mean_bill_len_std_glue`) highlighted
@@ -546,17 +545,15 @@ The `StandardScaler()` function in scikit-learn can be used to do this.
 We show an example of how to use this function
 below using an unscaled and unstandardized version of the data set in this chapter.
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 unstandardized_data = pd.read_csv("data/toy_penguins.csv", usecols=["bill_length_mm", "flipper_length_mm"])
 unstandardized_data.to_csv("data/penguins_not_standardized.csv", index=False)
 unstandardized_data
 ```
 
 First, here is what the raw (i.e., not standardized) data looks like:
-
-
 
 ```{code-cell} ipython3
 not_standardized_data = pd.read_csv("data/penguins_not_standardized.csv")
@@ -627,7 +624,6 @@ clustered_data
 Now that we have this information in a data frame, we can make a visualization
 of the cluster assignments for each point, as shown in {numref}`cluster_plot`.
 
-
 ```{code-cell} ipython3
 cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
     x=alt.X("flipper_length_mm", title="Flipper Length (standardized)"),
@@ -637,7 +633,8 @@ cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('cluster_plot', cluster_plot, display=True)
 ```
 
@@ -712,7 +709,8 @@ elbow_plot = alt.Chart(penguin_clust_ks).mark_line().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('elbow_plot', elbow_plot, display=True)
 ```
 

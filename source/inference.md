@@ -1067,8 +1067,8 @@ Finally we use `reset_index` to get the `replicate` values back as a column in t
     .groupby("replicate")
     ["price"]
     .mean()
-    .rename(columns={"price": "sample_mean"})
     .reset_index()
+    .rename(columns={"price": "sample_mean"})
 )
 ```
 
@@ -1088,8 +1088,8 @@ boot20000_means = (
     .groupby("replicate")
     ["price"]
     .mean()
-    .rename(columns={"price": "sample_mean"})
     .reset_index()
+    .rename(columns={"price": "sample_mean"})
 )
 
 boot20000_means

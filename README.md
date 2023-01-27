@@ -41,6 +41,4 @@ push it to DockerHub, and update the `build_html.sh` script and book deploy GitH
 You can update the live, publicly viewable HTML book by making changes to the `source/` folder in the `production` branch.
 If you push any changes to the `source/` folder on the `production` branch, GitHub will trigger a rebuild of the public HTML site.
 
-**Avoid squashing commits when merging from `main` into `production` -- we keep developing on `main`, which confuses git**
-
  

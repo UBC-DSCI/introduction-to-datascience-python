@@ -19,18 +19,16 @@ kernelspec:
 :tags: [remove-cell]
 
 import altair as alt
-import numpy as np
-import pandas as pd
-from sklearn.utils import resample
-alt.data_transformers.disable_max_rows()
-
-# alt.data_transformers.enable('data_server')
-# alt.renderers.enable('mimetype')
-
 from myst_nb import glue
+import warnings
+
+
+warnings.filterwarnings("ignore", category=FutureWarning)
+alt.data_transformers.disable_max_rows()
 ```
 
 ## Overview
+
 A typical data analysis task in practice is to draw conclusions about some
 unknown aspect of a population of interest based on observed data sampled from
 that population; we typically do not get data on the *entire* population.  Data
@@ -41,6 +39,7 @@ populations and then introduce two common techniques in statistical inference:
 *point estimation* and *interval estimation*.
 
 ## Chapter learning objectives
+
 By the end of the chapter, readers will be able to do the following:
 
 * Describe real-world examples of questions that can be answered with statistical inference.
@@ -57,6 +56,7 @@ By the end of the chapter, readers will be able to do the following:
 +++
 
 ## Why do we need sampling?
+
 We often need to understand how quantities we observe in a subset
 of data relate to the same quantities in the broader population. For example, suppose a
 retailer is considering selling iPhone accessories, and they want to estimate
@@ -155,17 +155,7 @@ includes an ID number, neighborhood, type of room, the number of people the
 rental accommodates, number of bathrooms, bedrooms, beds, and the price per
 night.
 
-<!--
-airbnb <- read_csv("data/listings.csv") |>
-  select(id, neighborhood = neighborhood_cleansed, room_type, accommodates, bathrooms = bathrooms_text, bedrooms, beds, price) |>
-  mutate(price = as.numeric(str_remove(price, "[$]"))) |>
-  na.omit()
-airbnb <- airbnb |>
-  mutate(id = 1:nrow(airbnb))
--->
-
 ```{code-cell} ipython3
-import altair as alt
 import pandas as pd
 
 airbnb = pd.read_csv("data/listings.csv")
@@ -176,27 +166,25 @@ Suppose the city of Vancouver wants information about Airbnb rentals to help
 plan city bylaws, and they want to know how many Airbnb places are listed as
 entire homes and apartments (rather than as private or shared rooms). Therefore
 they may want to estimate the true proportion of all Airbnb listings where the
-"type of place" is listed as "entire home or apartment." Of course, we usually
+room type is listed as "entire home or apartment." Of course, we usually
 do not have access to the true population, but here let's imagine (for learning
 purposes) that our data set represents the population of all Airbnb rental
-listings in Vancouver, Canada. We can find the proportion of listings where
-`room_type == "Entire home/apt"`.
+listings in Vancouver, Canada.
+We can find the proportion of listings for each room type
+by using the `value_counts` function with the `normalize` parameter
+as we did in previous chapters.
 
 ```{index} pandas.DataFrame; df[], count, len
 ```
 
 ```{code-cell} ipython3
-population_summary = pd.DataFrame()
-population_summary["n"] = [airbnb.query("room_type == 'Entire home/apt'")["id"].count()]
-population_summary["proportion"] = population_summary["n"] / len(airbnb)
-
-population_summary
+airbnb['room_type'].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_proportion", round(population_summary["proportion"][0], 3))
+glue("population_proportion", airbnb['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
 ```
 
 We can see that the proportion of `Entire home/apt` listings in
@@ -212,33 +200,23 @@ Instead, perhaps we can approximate it with a small subset of data!
 To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
 size 40 from our population), and computing the proportion for that sample.
 We will use the `sample` method of the `pandas.DataFrame`
-object to take the sample. The argument `n` of `sample` is the size of the sample to take.
+object to take the sample. The argument `n` of `sample` is the size of the sample to take
+and since we are starting to use randomness here,
+we are also setting the random seed via numpy to make the results reproducible.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+import numpy as np
 
-# Instead, perhaps we can approximate it with a small subset of data!
-# To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
-# size 40 from our population), and computing the proportion for that sample.
-# We will use the `rep_sample_n` function \index{rep\_sample\_n} from the `infer`
-# package \index{infer} to take the sample. The arguments of `rep_sample_n` are (1) the data frame to
-# sample from, and (2) the size of the sample to take.
-```
 
-```{code-cell} ipython3
-sample_1 = airbnb.sample(n=40, random_state=12)
+np.random.seed(155)
 
-airbnb_sample_1 = pd.DataFrame()
-airbnb_sample_1["n"] = [sample_1.query("room_type == 'Entire home/apt'")["id"].count()]
-airbnb_sample_1["proportion"] = airbnb_sample_1["n"] / len(sample_1)
-
-airbnb_sample_1
+airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_1_proportion", round(airbnb_sample_1["proportion"][0], 2))
+glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
@@ -252,13 +230,7 @@ if we were to take *another* random sample of size 40 and compute the proportion
 we would not get the same answer:
 
 ```{code-cell} ipython3
-sample_2 = airbnb.sample(n=40, random_state=1234)
-
-airbnb_sample_2 = pd.DataFrame()
-airbnb_sample_2["n"] = [sample_2.query("room_type == 'Entire home/apt'")["id"].count()]
-airbnb_sample_2["proportion"] = airbnb_sample_2["n"] / len(sample_2)
-
-airbnb_sample_2
+airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
 ```
 
 Confirmed! We get a different value for our estimate this time.
@@ -283,45 +255,25 @@ expect our sample proportions from this population to vary for samples of size 4
 ```
 
 We again use the `sample` to take samples of size 40 from our
-population of Airbnb listings. But this time we use a for loop
-to take 20,000 samples of size 40.
+population of Airbnb listings. But this time we use a list comprehension
+to repeat an operation multiple time (as in the previous chapter).
+In this case we are taking 20,000 samples of size 40
+and to make it clear which rows in the data frame come
+which of the 20,000 samples,
+we also add a column called `replicate` with this information.
+The call to `concat` concatenates all the 20,000 data frames
+returned from the list comprehension into a single big data frame.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We again use the `rep_sample_n` to take samples of size 40 from our
-# population of Airbnb listings. But this time we set the `reps` argument to 20,000 to specify
-# that we want to take 20,000 samples of size 40. \index{rep\_sample\_n!reps argument}
-# \index{rep\_sample\_n!size argument}
-```
-
-```{code-cell} ipython3
-np.random.seed(1)
-
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
+samples = pd.concat([airbnb.sample(40).assign(replicate=n) for n in range(20_000)])
 samples
 ```
 
-Notice that the column `replicate` indicates the replicate, or sample, to which
-each listing belongs. Above, `pandas.DataFrame` by default shows the first and last few
-rows, so we can verify that
-we indeed created 20,000 samples (or replicates).
+Since the column `replicate` indicates the replicate/sample number,
+we can verify that we indeed seem to have 20,0000 samples
+starting at sample 0 and ending at sample 19,999.
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Notice that the column `replicate` indicates the replicate, or sample, to which
-# each listing belongs. Above, since by default R only prints the first few rows,
-# it looks like all of the listings have `replicate` set to 1. But you can
-# check the last few entries using the `tail()` function to verify that
-# we indeed created 20,000 samples (or replicates).
-```
++++
 
 Now that we have obtained the samples, we need to compute the
 proportion of entire home/apartment listings in each sample.
@@ -333,33 +285,54 @@ Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Now that we have obtained the samples, we need to compute the
-# proportion of entire home/apartment listings in each sample.
-# We first group the data by the `replicate` variable&mdash;to group the
-# set of listings in each sample together&mdash;and then use `summarize`
-# to compute the proportion in each sample.
-# We print both the first and last few entries of the resulting data frame
-# below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
+(
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+)
 ```
 
+The returned object is a series,
+and as we have previously learned
+we can use `reset_index` to change it to a data frame.
+However,
+there is one caveat here:
+when we use the `value_counts` function
+on a grouped series and try to `reset_index`
+we will end up with two columns with the same name
+and therefore get an error
+(in this case, `room_type` will occur twice).
+Fortunately,
+there is a simple solution:
+when we call `reset_index`,
+we can specify the name of the new column
+with the `name` parameter:
+
 ```{code-cell} ipython3
-# calculate the the number of observations in each sample with room_type == 'Entire home/apt'
+(
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+    .reset_index(name='sample_proportion')
+)
+```
+
+Below we put everything together
+and also filter the data frame to keep only the room types 
+that we are interested in.
+
+```{code-cell} ipython3
 sample_estimates = (
-    samples.query("room_type == 'Entire home/apt'")
-    .groupby("replicate")["room_type"]
-    .count()
-    .reset_index()
-    .rename(columns={"room_type": "counts"})
+    samples
+    .groupby('replicate')
+    ['room_type']
+    .value_counts(normalize=True)
+    .reset_index(name='sample_proportion')
 )
 
-# calculate the proportion
-sample_estimates["sample_proportion"] = sample_estimates["counts"] / 40
-
-# drop the count column
-sample_estimates = sample_estimates.drop(columns=["counts"])
-
+sample_estimates = sample_estimates[sample_estimates['room_type'] == 'Entire home/apt']
 sample_estimates
 ```
 
@@ -375,7 +348,7 @@ sampling distribution directly for learning purposes.
 :tags: [remove-output]
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X("sample_proportion", bin=alt.Bin(maxbins=12), title="Sample proportions"),
+    x=alt.X("sample_proportion", title="Sample proportions", bin=alt.Bin(maxbins=20)),
     y=alt.Y("count()", title="Count"),
 )
 
@@ -397,9 +370,9 @@ Sampling distribution of the sample proportion for sample size 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_propotion_center", round(sample_estimates["sample_proportion"].mean(), 1))
-glue("sample_propotion_min", round(sample_estimates["sample_proportion"].min(), 1))
-glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 1))
+glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 2))
+glue("sample_proportion_min", round(sample_estimates["sample_proportion"].quantile(0.004), 2))
+glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quantile(0.9997), 2))
 ```
 
 ```{index} sampling distribution; shape
@@ -407,9 +380,9 @@ glue("sample_propotion_max", round(sample_estimates["sample_proportion"].max(), 
 
 The sampling distribution in {numref}`fig:11-example-proportions7` appears
 to be bell-shaped, is roughly symmetric, and has one peak. It is centered
-around {glue:}`sample_propotion_center` and the sample proportions
-range from about {glue:}`sample_propotion_min` to about
-{glue:}`sample_propotion_max`. In fact, we can
+around {glue:}`sample_proportion_center` and the sample proportions
+range from about {glue:}`sample_proportion_min` to about
+{glue:}`sample_proportion_max`. In fact, we can
 calculate the mean of the sample proportions.
 
 ```{code-cell} ipython3
@@ -450,15 +423,13 @@ We can visualize the population distribution of the price per night with a histo
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-population_distribution = (
-    alt.Chart(airbnb)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"
-        ),
-        y=alt.Y("count()", title="Count"),
-    )
+population_distribution = alt.Chart(airbnb).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=30),
+        title="Price per night (Canadian dollars)"
+    ),
+    y=alt.Y("count()", title="Count"),
 )
 
 population_distribution
@@ -489,15 +460,13 @@ Along with visualizing the population, we can calculate the population mean,
 the average price per night for all the Airbnb listings.
 
 ```{code-cell} ipython3
-population_parameters = airbnb["price"].mean()
-
-population_parameters
+airbnb["price"].mean()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_mean", round(population_parameters, 2))
+glue("population_mean", airbnb["price"].mean().round(2))
 ```
 
 ```{index} population; parameter
@@ -519,7 +488,7 @@ access to the population data and simulate taking one random sample of 40
 listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
-one_sample = airbnb.sample(40, random_state=1)
+one_sample = airbnb.sample(40)
 ```
 
 We can create a histogram to visualize the distribution of observations in the
@@ -550,19 +519,14 @@ Distribution of price per night (Canadian dollars) for sample of 40 Airbnb listi
 :::
 
 ```{code-cell} ipython3
-estimates = one_sample["price"].mean()
-
-estimates
+one_sample["price"].mean()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("estimate_mean", round(estimates, 2))
-glue(
-    "diff_perc",
-    round(100 * abs(estimates - population_parameters) / population_parameters, 1),
-)
+glue("estimate_mean", one_sample["price"].mean().round(2))
+glue("diff_perc", round(100 * abs(1 - (one_sample['price'].mean() / airbnb['price'].mean())), 1))
 ```
 
 The average value of the sample of size 40
@@ -584,57 +548,44 @@ took another random sample from the population, our estimate's value might
 change. So then, did we just get lucky with our point estimate above?  How much
 does our estimate vary across different samples of size 40 in this example?
 Again, since we have access to the population, we can take many samples and
-plot the sampling distribution of sample means for samples of size 40 to
-get a sense for this variation. In this case, we'll use 20,000 samples of size
-40.
-
-```{code-cell} ipython3
-np.random.seed(2)
-
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-samples
-```
-
-Now we can calculate the sample mean for each replicate and plot the sampling
+plot the sampling distribution of sample means to get a sense for this variation.
+In this case, we'll use the 20,000 samples of size
+40 that we already stored in the `samples` variable.
+First we will calculate the sample mean for each replicate
+and then plot the sampling
 distribution of sample means for samples of size 40.
 
 ```{code-cell} ipython3
-sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "sample_mean"}
+sample_estimates = (
+    samples
+    .groupby('replicate')
+    ['price']
+    .mean()
+    .reset_index()
+    .rename(columns={'price': 'sample_mean'})
 )
-
 sample_estimates
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-sampling_distribution_40 = (
-    alt.Chart(sample_estimates)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "sample_mean",
-            bin=alt.Bin(maxbins=30),
-            title="Sample mean price per night (Canadian dollars)",
-        ),
-        y=alt.Y("count()", title="Count"),
-    )
+sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
+    x=alt.X(
+        "sample_mean",
+        bin=alt.Bin(maxbins=30),
+        title="Sample mean price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count"),
 )
 
-sampling_distribution_40
+sampling_distribution
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:11-example-means4", sampling_distribution_40)
+glue("fig:11-example-means4", sampling_distribution)
 ```
 
 :::{glue:figure} fig:11-example-means4
@@ -646,8 +597,8 @@ Sampling distribution of the sample means for sample size of 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), -1))
-glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), -1))
+glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), - 1))
+glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), - 1))
 ```
 
 ```{index} sampling distribution; shape
@@ -688,54 +639,28 @@ was \$`r round(mean(airbnb$price),2)`.
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-(
-    (
-        alt.Chart(airbnb, title="Population")
-        .mark_bar(clip=True)
-        .encode(
+glue(
+    "fig:11-example-means5",
+    alt.vconcat(
+        population_distribution.mark_bar(clip=True).encode(
             x=alt.X(
                 "price",
                 bin=alt.Bin(maxbins=30),
                 title="Price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
-    )
-    & (
-        alt.Chart(one_sample, title="Sample (n = 40)")
-        .mark_bar(clip=True)
-        .encode(
-            x=alt.X(
-                "price",
-                bin=alt.Bin(maxbins=30),
-                title="Price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
-    )
-    & (
-        alt.Chart(
-            sample_estimates,
-            title="Sampling distribution of the mean for samples of size 40",
-        )
-        .mark_bar(clip=True)
-        .encode(
-            x=alt.X(
-                "sample_mean",
-                bin=True,
-                title="Sample mean price per night (Canadian dollars)",
-                axis=alt.Axis(values=list(range(50, 601, 50))),
-                scale=alt.Scale(domain=(min(airbnb["price"]), 600)),
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=400, height=150)
+                scale=alt.Scale(domainMax=700)
+            )
+        ).properties(
+            title='Population', height=150
+        ),
+        sample_distribution.properties(title="Sample (n = 40)").properties(height=150),
+        sampling_distribution.properties(
+            title=alt.TitleParams(
+                "Sampling distribution of the mean",
+                subtitle="For 20,000 samples of size 40"
+            )
+        ).properties(height=150)
+    ).resolve_scale(
+        x='shared'
     )
 )
 ```
@@ -755,181 +680,60 @@ reliable&mdash;is there any way to improve the estimate?  One way to improve a
 point estimate is to take a *larger* sample. To illustrate what effect this
 has, we will take many samples of size 20, 50, 100, and 500, and plot the
 sampling distribution of the sample mean. We indicate the mean of the sampling
-distribution with a red vertical line.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Initially thought of using a loop, but Jupyter book failed to build because "cell execution
-# timed out..."
-# ## Sampling n = 20, 50, 100, 500
-# np.random.seed(2)
-# sample_dict = {}
-# for sample_n in [20, 50, 100, 500]:
-#     samples = []
-#     for rep in range(20000):
-#         sample = airbnb.sample(sample_n)
-#         sample = sample.assign(replicate=rep)
-#         samples.append(sample)
-#     samples = pd.concat([samples[i] for i in range(len(samples))])
-
-#     sample_dict[f"sample_estimates_{sample_n}"] = (
-#         samples.groupby("replicate")["price"]
-#         .mean()
-#         .reset_index()
-#         .rename(columns={"price": "sample_mean"})
-#     )
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-sample_dict = {}
-
-# Sampling n = 20
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(20)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_20"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 50
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(50)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_50"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 100
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(100)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_100"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# Sampling n = 500
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(500)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_dict[f"sample_estimates_500"] = (
-    samples.groupby("replicate")["price"]
-    .mean()
-    .reset_index()
-    .rename(columns={"price": "sample_mean"})
-)
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-## Plot sampling distribution n = 20, 50, 100, 500
-sample_plot = {}
-plot_min_x = sample_dict["sample_estimates_20"]["sample_mean"].min()
-plot_max_x = sample_dict["sample_estimates_20"]["sample_mean"].max()
-
-
-# def max_bins(distribution):
-#     if int(distribution.split("_")[-1]) >= 100:
-#         return 10
-#     else:
-#         return 30
-
-
-def text_y(distribution):
-    sample_n = int(distribution.split("_")[-1])
-    if sample_n == 20:
-        return 2000
-    elif sample_n == 50:
-        return 3000
-    elif sample_n == 100:
-        return 4500
-    else:
-        return 10000
-
-
-for sample_n, df in sample_dict.items():
-    sample_plot[sample_n] = (
-        alt.Chart(df, title=f"n = {sample_n.split('_')[-1]}")
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "sample_mean",
-                title="Sample mean price per night (Canadian dollars)",
-                bin=alt.Bin(extent=[80, 300], step=50/7), # maxbins=max_bins(sample_n)
-                scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
-                axis=alt.Axis(values=list(range(80, 301, 20)))
-            ),
-            y=alt.Y("count()", title="Count"),
-        )
-    )
-
-    sample_mean = sample_dict[sample_n]["sample_mean"].mean()
-    sample_plot[sample_n] = (
-        sample_plot[sample_n]
-        + alt.Chart(pd.DataFrame({"x": [sample_mean]}))
-        .mark_rule(color="red", size=2)
-        .encode(x="x")
-        + (
-            alt.Chart(
-                pd.DataFrame(
-                    {
-                        "x": [plot_max_x - 20],
-                        "y": [text_y(sample_n)],
-                        "text": [f"mean = {round(sample_mean, 1)}"],
-                    }
-                )
-            )
-            .mark_text(dy=-5, size=15)
-            .encode(x="x", y="y", text="text")
-        )
-    ).properties(width=350, height=250)
-```
+distribution with a orange vertical line.
 
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-(sample_plot["sample_estimates_20"] | sample_plot["sample_estimates_50"]) & (
-    sample_plot["sample_estimates_100"] | sample_plot["sample_estimates_500"]
+# Plot sampling distributions for multiple sample sizes
+base = alt.Chart(
+    pd.concat([
+        pd.concat([
+            airbnb.sample(sample_size).assign(sample_size=sample_size, replicate=replicate)
+            for sample_size in [20, 50, 100, 500]
+        ])
+        for replicate in range(20_000)
+    ]).groupby(
+        ["sample_size", 'replicate'],
+        as_index=False
+    )["price"].mean(),
+    height=150
+)
+
+glue(
+    "fig:11-example-means7",
+    alt.layer(
+        base.mark_bar().encode(
+            alt.X('price', bin=alt.Bin(maxbins=30)),
+            alt.Y('count()')
+        ),
+        base.mark_rule(color='#f58518', size=3).encode(
+            x='mean(price)'
+        ),
+        base.mark_text(align='left', color='#f58518', size=12, fontWeight='bold', dx=10).transform_aggregate(
+            mean_price = 'mean(price)',
+        ).transform_calculate(
+            label = "'Mean = ' + round(datum.mean_price * 10) / 10"
+        ).encode(
+            x=alt.X('mean_price:Q', title="Sample mean price per night (Canadian dollars)"),
+            y=alt.value(10),
+            text='label:N'
+        )
+    ).facet(
+        alt.Facet(
+            'sample_size',
+            header=alt.Header(
+                title='',
+                labelFontWeight='bold',
+                labelFontSize=12,
+                labelPadding=3,
+                labelExpr='"Sample size = " + datum.value'
+            )
+        ),
+        columns=1,
+    ).resolve_scale(
+        y='independent'
+    )
 )
 ```
 
@@ -937,7 +741,7 @@ for sample_n, df in sample_dict.items():
 :name: fig:11-example-means7
 :figclass: caption-hack
 
-Comparison of sampling distributions, with mean highlighted as a vertical red line.
+Comparison of sampling distributions, with mean highlighted as a vertical orange line.
 ```
 
 +++
@@ -946,13 +750,16 @@ Comparison of sampling distributions, with mean highlighted as a vertical red li
 ```
 
 Based on the visualization in {numref}`fig:11-example-means7`, three points
-about the sample mean become clear.  First, the mean of the sample mean (across
-samples) is equal to the population mean. In other words, the sampling
-distribution is centered at the population mean.  Second, increasing the size of
-the sample decreases the spread (i.e., the variability) of the sampling
-distribution. Therefore, a larger sample size results in a more reliable point
-estimate of the population parameter. And third, the distribution of the sample
-mean is roughly bell-shaped.
+about the sample mean become clear:
+
+1. The mean of the sample mean (across
+   samples) is equal to the population mean. In other words, the sampling
+   distribution is centered at the population mean.
+2. Increasing the size of
+   the sample decreases the spread (i.e., the variability) of the sampling
+   distribution. Therefore, a larger sample size results in a more reliable point
+   estimate of the population parameter.
+3. The distribution of the sample mean is roughly bell-shaped.
 
 > **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
 > the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
@@ -969,6 +776,7 @@ mean is roughly bell-shaped.
 +++
 
 ### Summary
+
 1. A point estimate is a single value computed using a sample from a population (e.g., a mean or proportion).
 2. The sampling distribution of an estimate is the distribution of the estimate for all possible samples of a fixed size from the same population.
 3. The shape of the sampling distribution is usually bell-shaped with one peak and centered at the population mean or proportion.
@@ -1025,13 +833,10 @@ large enough sample.
 
 # plot sample distributions for n = 10, 20, 50, 100, 200 and population distribution
 sample_distribution_dict = {}
-np.random.seed(12)
 for sample_n in [10, 20, 50, 100, 200]:
     sample = airbnb.sample(sample_n)
     sample_distribution_dict[f"sample_distribution_{sample_n}"] = (
-        alt.Chart(sample, title=f"n = {sample_n}")
-        .mark_bar()
-        .encode(
+        alt.Chart(sample, title=f"n = {sample_n}").mark_bar().encode(
             x=alt.X(
                 "price",
                 bin=alt.Bin(extent=[0, 600], step=20),
@@ -1039,7 +844,7 @@ for sample_n in [10, 20, 50, 100, 200]:
             ),
             y=alt.Y("count()", title="Count"),
         )
-    ).properties(width=350, height=250)
+    ).properties(height=150)
 # add title and standardize the x axis ticks for population histogram
 population_distribution.title = "Population distribution"
 population_distribution.encoding["x"]["bin"] = alt.Bin(extent=[0, 600], step=20)
@@ -1057,7 +862,7 @@ glue(
         )
         & (
             sample_distribution_dict["sample_distribution_200"]
-            | population_distribution.properties(width=350, height=250)
+            | population_distribution.properties(width=350, height=150)
         )
     ),
 )
@@ -1122,12 +927,6 @@ Recall our point estimate was \${glue:}`estimate_mean`. The
 histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-pd.set_option('display.max_rows', 20)
-```
-
-```{code-cell} ipython3
 one_sample
 ```
 
@@ -1165,15 +964,17 @@ this sample and estimate are the only data we can work with.
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
 sample in Python and calculate a point estimate from that bootstrap sample. We will
-use the `resample` function from the `scikit-learn` package. Critically, note that we now
-pass `one_sample`&mdash;our single sample of size 40&mdash;as the first argument.
-And since we need to sample with replacement,
-we keep the argument for `replace` to its default value of `True`.
+continue using the `sample` function of our dataframe,
+Critically, note that we now
+set `frac=1` ("fraction") to indicate that we want to draw as many samples as there are rows in the dataframe
+(we could also have set `n=40` but then we would need to manually keep track of how many rows there are).
+Since we need to sample with replacement when bootstrapping,
+we change the `replace` parameter to `True`.
 
 ```{code-cell} ipython3
 :tags: []
 
-boot1 = resample(one_sample, replace=True, n_samples=40, random_state=2)
+boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
     x=alt.X(
         "price",
@@ -1208,21 +1009,18 @@ mimic drawing another sample from the population by drawing one from our origina
 sample.
 
 Let's now take 20,000 bootstrap samples from the original sample (`one_sample`)
-using `resample`, and calculate the means for
+and calculate the means for
 each of those replicates. Recall that this assumes that `one_sample` *looks like*
 our original population; but since we do not have access to the population itself,
 this is often the best we can do.
+Note that here we break the list comprehension over multiple lines
+so that it is easier to read.
 
 ```{code-cell} ipython3
-np.random.seed(2)
-
-boot20000 = []
-for rep in range(20000):
-    sample = resample(one_sample, replace=True, n_samples=40)
-    sample = sample.assign(replicate=rep)
-    boot20000.append(sample)
-boot20000 = pd.concat([boot20000[i] for i in range(len(boot20000))])
-
+boot20000 = pd.concat([
+    one_sample.sample(frac=1, replace=True).assign(replicate=n)
+    for n in range(20_000)
+])
 boot20000
 ```
 
@@ -1232,19 +1030,16 @@ Let's take a look at histograms of the first six replicates of our bootstrap sam
 :tags: []
 
 six_bootstrap_samples = boot20000.query("replicate < 6")
-
-(
-    alt.Chart(six_bootstrap_samples)
-    .mark_bar()
-    .encode(
-        x=alt.X(
-            "price",
-            bin=alt.Bin(maxbins=20),
-            title="Price per night (Canadian dollars)",
-        ),
-        y=alt.Y("count()", title="Count"),
-    ).properties(width=250, height=200)
-    .facet("replicate", columns=3)
+alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
+    x=alt.X(
+        "price",
+        bin=alt.Bin(maxbins=20),
+        title="Price per night (Canadian dollars)",
+    ),
+    y=alt.Y("count()", title="Count")
+).facet(
+    "replicate",
+    columns=2
 )
 ```
 
@@ -1257,26 +1052,44 @@ Histograms of first six replicates of bootstrap samples.
 
 +++
 
-We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the
-bootstrap samples differ. We can also calculate the sample mean for each of
-these six replicates.
+We see in {numref}`fig:11-bootstrapping-six-bootstrap-samples` how the distributions of the
+bootstrap samples differ. If we calculate the sample mean for each of
+these six samples, we can see that these are also different between samples.
+To compute the mean for each sample,
+we first group by the "replicate" which is the column containing the sample/replicate number.
+Then we compute the mean of the `price` column and rename it to `sample_mean`
+for it to be more descriptive.
+Finally we use `reset_index` to get the `replicate` values back as a column in the dataframe.
 
 ```{code-cell} ipython3
-six_bootstrap_samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "mean"}
+(
+    six_bootstrap_samples
+    .groupby("replicate")
+    ["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
 )
 ```
 
-We can see that the bootstrap sample distributions and the sample means are
-different. They are different because we are sampling *with replacement*. We
-will now calculate point estimates for our 20,000 bootstrap samples and
-generate a bootstrap distribution of our point estimates. The bootstrap
+The distributions and the means differ between the bootstrapped samples
+because we are sampling *with replacement*.
+If we instead would have sampled *without replacement*,
+we would end up with the exact same values in the sample each time.
+
+We will now calculate point estimates of the mean for our 20,000 bootstrap samples and
+generate a bootstrap distribution of these point estimates. The bootstrap
 distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
-our point estimate to behave if we took another sample.
+our point estimate to behave if we take multiple samples.
 
 ```{code-cell} ipython3
-boot20000_means = boot20000.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "mean"}
+boot20000_means = (
+    boot20000
+    .groupby("replicate")
+    ["price"]
+    .mean()
+    .reset_index()
+    .rename(columns={"price": "sample_mean"})
 )
 
 boot20000_means
@@ -1287,8 +1100,8 @@ boot20000_means
 
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
     x=alt.X(
-        "mean",
-        bin=alt.Bin(extent=[95, 245], step=5),
+        "sample_mean",
+        bin=alt.Bin(maxbins=20),
         title="Sample mean price per night (Canadian dollars)",
     ),
     y=alt.Y("count()", title="Count"),
@@ -1312,72 +1125,28 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-samples = []
-for rep in range(20000):
-    sample = airbnb.sample(40)
-    sample = sample.assign(replicate=rep)
-    samples.append(sample)
-samples = pd.concat([samples[i] for i in range(len(samples))])
-
-sample_estimates = samples.groupby("replicate")["price"].mean().reset_index().rename(
-    columns={"price": "sample_mean"}
-)
-
-plot_min_x = sample_estimates["sample_mean"].min()
-plot_max_x = sample_estimates["sample_mean"].max()
-sampling_mean = sample_estimates["sample_mean"].mean()
-boot_sampling_mean = boot20000_means["mean"].mean()
-
-sampling_dist = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X(
-        "sample_mean",
-        bin=alt.Bin(extent=[95, 245], step=5),
-        # scale=alt.Scale(domain=(plot_min_x, plot_max_x)),
-        title="Sample mean price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count"),
-)
-
-annotated_sampling_dist = (
-    sampling_dist
-    + alt.Chart(pd.DataFrame({"x": [sampling_mean]}), title="Sampling distribution")
-    .mark_rule(color="red", size=2)
-    .encode(x="x")
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [plot_max_x - 20],
-                    "y": [2000],
-                    "text": [f"mean = {round(sampling_mean, 1)}"],
-                }
-            )
+alt.vconcat(
+    alt.layer(
+        sampling_distribution,
+        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        sampling_distribution.mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
+            x='mean(sample_mean)',
+            y=alt.value(7),
+            text=alt.value(f"Mean = {sampling_distribution['data']['sample_mean'].mean().round(1)}")
         )
-        .mark_text(dy=-5, size=15)
-        .encode(x="x", y="y", text="text")
-    )
-)
-
-annotated_boot_est_dist = boot_est_dist + (
-    alt.Chart(pd.DataFrame({"x": [boot_sampling_mean]}), title="Bootstrap distribution")
-    .mark_rule(color="red", size=2)
-    .encode(x="x")
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [plot_max_x - 20],
-                    "y": [1500],
-                    "text": [f"mean = {round(boot_sampling_mean, 1)}"],
-                }
-            )
+    ).properties(title='Sampling distribution', height=150),
+    alt.layer(
+        boot_est_dist,
+        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        boot_est_dist.mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
+            x='mean(sample_mean)',
+            y=alt.value(6),
+            text=alt.value(f"Mean = {boot_est_dist['data']['sample_mean'].mean().round(1)}")
         )
-        .mark_text(dy=-5, size=15)
-        .encode(x="x", y="y", text="text")
-    )
+    ).properties(title='Bootstrap distribution', height=150)
+).resolve_scale(
+    x='shared'
 )
-
-annotated_sampling_dist | annotated_boot_est_dist
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -1401,7 +1170,7 @@ There are two essential points that we can take away from
 distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
 second important point is that the means of these two distributions are
-different. The sampling distribution is centered at
+slightly different. The sampling distribution is centered at
 \${glue:}`population_mean`, the population mean value. However, the bootstrap
 distribution is centered at the original sample's mean price per night,
 \${glue:}`one_sample_mean`. Because we are resampling from the
@@ -1456,29 +1225,28 @@ confidence level.
 
 To calculate a 95\% percentile bootstrap confidence interval, we will do the following:
 
-+++
-
 1. Arrange the observations in the bootstrap distribution in ascending order.
 2. Find the value such that 2.5\% of observations fall below it (the 2.5\% percentile). Use that value as the lower bound of the interval.
 3. Find the value such that 97.5\% of observations fall below it (the 97.5\% percentile). Use that value as the upper bound of the interval.
 
-To do this in Python, we can use the `percentile()` function from the `numpy` package:
+To do this in Python, we can use the `quantile` function of our DataFrame.
+Quantiles are expressed in proportions rather than percentages,
+so the 2.5th and 97.5th percentiles
+would be quantiles 0.025 and 0.975, respectively.
 
 ```{index} numpy; percentile, pandas.DataFrame; df[]
 ```
 
 ```{code-cell} ipython3
-import numpy as np
-bounds = np.percentile(boot20000_means["mean"], [2.5, 97.5])
-
-bounds
+ci_bounds = boot20000_means["sample_mean"].quantile([0.025, 0.975])
+ci_bounds
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", round(bounds[0], 2))
-glue("ci_upper", round(bounds[1], 2))
+glue("ci_lower", round(ci_bounds[0.025], 1))
+glue("ci_upper", round(ci_bounds[0.975], 1))
 ```
 
 Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
@@ -1486,46 +1254,21 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
-:tags: [remove-input]
-
-boot_est_dist + (
-    (
-        alt.Chart(pd.DataFrame({"x": [bounds[0]]}))
-        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
-        .encode(x="x")
-    )
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [bounds[0] - 10],
-                    "y": [1600],
-                    "text": [f"2.5th percentile = {round(bounds[0], 2)}"],
-                }
-            )
-        )
-        .mark_text(dy=-5, size=12)
-        .encode(x="x", y="y", text="text")
-    )
-) + (
-    (
-        alt.Chart(pd.DataFrame({"x": [bounds[1]]}))
-        .mark_rule(color="#E69F00", size=3, strokeDash=[8, 8])
-        .encode(x="x")
-    )
-    + (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [bounds[1]],
-                    "y": [1600],
-                    "text": [f"97.5th percentile = {round(bounds[1], 2)}"],
-                }
-            )
-        )
-        .mark_text(dy=-5, size=12)
-        .encode(x="x", y="y", text="text")
-    )
+alt.layer(
+    boot_est_dist,
+    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
+    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
+        x=alt.datum(ci_bounds[0.025]),
+        y=alt.value(-10),
+        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
+    ),
+    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
+    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
+        x=alt.datum(ci_bounds[0.975]),
+        y=alt.value(-10),
+        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+    ),
+    width=500
 )
 ```
 
@@ -1564,7 +1307,7 @@ statistical techniques you may learn about in the future!
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-worksheets#readme)
+[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets)
 in the two "Statistical inference" rows.
 You can launch an interactive version of each worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of each worksheet by clicking "view worksheet."

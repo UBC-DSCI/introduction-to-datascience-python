@@ -806,7 +806,7 @@ import altair as alt
 
 The fundamental object in `altair` is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized.
-We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute
+We first indicate what kind of graphical *mark* we want to use to represent the data. Here we set the mark attribute
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
 Next, we need to encode the variables of the data frame using
 the `x` (represents the x-axis position of the points) and

@@ -47,12 +47,12 @@ By the end of the chapter, readers will be able to do the following:
 - Given a visualization and a question, evaluate the effectiveness of the visualization and suggest improvements to better answer the question.
 - Referring to the visualization, communicate the conclusions in non-technical terms.
 - Identify rules of thumb for creating effective visualizations.
-- Define the two key aspects of altair objects:
-    - mark objects
-    - encodings
+- Define the two key aspects of altair charts:
+    - graphical marks
+    - encoding channels
 - Use the altair library in Python to create and refine the above visualizations using:
-    - mark objects: `mark_point`, `mark_line`, `mark_bar`
-    - encodings : `x`, `y`, `fill`, `color`, `shape`
+    - graphical marks: `mark_point`, `mark_line`, `mark_bar`
+    - encoding channels: `x`, `y`, `fill`, `color`, `shape`
     - subplots: `facet`
 - Describe the difference in raster and vector output formats.
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
@@ -85,7 +85,7 @@ As with most coding tasks, it is totally fine (and quite common) to make
 mistakes and iterate a few times before you find the right visualization for
 your data and question. There are many different kinds of plotting
 graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* {cite:p}`wilkeviz` for a directory).
-The types of plot that we introduce in this book are shown in {numref}`plot_sketches`;
+The types of plots that we introduce in this book are shown in {numref}`plot_sketches`;
 which one you should select depends on your data
 and the question you want to answer.
 In general, the guiding principles of when to use each type of plot
@@ -255,20 +255,20 @@ Scatter plots show the data as individual points with `x` (horizontal axis)
 and `y` (vertical axis) coordinates.
 Here, we will use the measurement date as the `x` coordinate
 and the CO$_{\text{2}}$ concentration as the `y` coordinate.
-We create a plot object with the `alt.Chart()` function.
+We create a chart with the `alt.Chart()` function.
 There are a few basic aspects of a plot that we need to specify:
 
-```{index} altair; geometric object, altair; geometric encoding, geometric object, geometric encoding
+```{index} altair; graphical mark, altair; encoding channel
 ```
 
-- The name of the **data frame** object to visualize.
+- The name of the **data frame** to visualize.
     - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
-- The **geometric object**, which specifies how the mapped data should be displayed.
-	- To create a geometric object, we use `Chart.mark_*` methods (see the
+- The **graphical mark**, which specifies how the mapped data should be displayed.
+	- To create a graphical mark, we use `Chart.mark_*` methods (see the
 	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-	  for a list of geometric objects).
+	  for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
-- The **geometric encoding**, which tells `altair` how the columns in the data frame map to properties of the visualization.
+- The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
     - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
 	- Here, we set the `x` axis of the plot to the `date_measured` variable,
@@ -466,7 +466,7 @@ In our data visualization,
 this would be when we map data to the axes in the `encode` function.
 Then we add our key visual subjects to the painting.
 In our data visualization,
-this would be the geometric objects (e.g., `mark_point`, `mark_line`, etc.).
+this would be the graphical marks (e.g., `mark_point`, `mark_line`, etc.).
 And finally, we work on adding details and refinements to the painting.
 In our data visualization this would be when we fine tune axis labels,
 change the font, adjust the point size, and do other related things.
@@ -504,7 +504,7 @@ neither of the variables here have a natural order to them.
 So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
-variable on the vertical axis, and the `mark_point` geometric object.
+variable on the vertical axis, and `mark_point` as the graphical mark.
 By default, `altair` draws only the outline of each point. If we would
 like to fill them in, we pass the argument `filled=True` to `mark_point`. In
 place of `mark_point(filled=True)`, we can also use `mark_circle`.
@@ -996,7 +996,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 
 In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
-we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
+we add the `scheme` argument in the `scale` of the `color` encoding to indicate the palette we want to use.
 
 ```{index} color palette; color blindness simulator
 ```
@@ -1298,8 +1298,8 @@ helps us visualize how a particular variable is distributed in a data set
 by separating the data into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
-To create a histogram in `altair` we will use the `mark_bar` geometric
-object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
+To create a histogram in `altair` we will use the `mark_bar` graphical
+mark, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
 There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
 that we want to count the number of values in the `Speed` column in each bin.
 As usual,
@@ -1324,7 +1324,7 @@ glue("morley_hist", morley_hist, display=False)
 Histogram of Michelson's speed of light data.
 :::
 
-#### Adding layers to an `altair` plot object
+#### Adding layers to an `altair` chart
 
 ```{index} altair; +; mark_rule
 ```
@@ -1356,8 +1356,8 @@ To add the dashed line on top of the histogram, we
 using the `+` operator.
 Adding features to a plot using the `+` operator is known as *layering* in `altair`.
 This is a very powerful feature of `altair`; you
-can continue to iterate on a single plot object, adding and refining
-one layer at a time. If you stored your plot as a named object
+can continue to iterate on a single chart, adding and refining
+one layer at a time. If you stored your chart as a variable
 using the assignment symbol (`=`), you can add to it using the `+` operator.
 Below we add a vertical line created using `mark_rule`
 to the last plot we created, `morley_hist`, using the `+` operator.
@@ -1614,7 +1614,7 @@ experiments did quite an admirable job given the technology available at the tim
 When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
-the `maxbins` argument in the `mark_bar` geometric object.
+the `maxbins` argument in the `mark_bar` graphical object.
 But what number of bins is the right one to use?
 
 Unfortunately there is no hard rule for what the right bin number

@@ -350,8 +350,8 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 
 We can perform simple linear regression in Python using `scikit-learn` in a
 very similar manner to how we performed KNN regression.
-To do this, instead of creating a `KNeighborsRegressor` model specification,
-we use a `LinearRegression` model specification;
+To do this, instead of creating a `KNeighborsRegressor` model object,
+we use a `LinearRegression` model object;
 and as usual, we first have to import it from `sklearn`.
 Another difference is that we do not need to choose $K$ in the
 context of linear regression, and so we do not need to perform cross-validation.

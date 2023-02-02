@@ -265,9 +265,9 @@ There are a few basic aspects of a plot that we need to specify:
 - The name of the **data frame** to visualize.
     - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
 - The **graphical mark**, which specifies how the mapped data should be displayed.
-	- To create a graphical mark, we use `Chart.mark_*` methods (see the
-	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-	  for a list of graphical mark).
+    - To create a graphical mark, we use `Chart.mark_*` methods (see the
+      [altair reference](https://altair-viz.github.io/user_guide/marks.html)
+      for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
@@ -1372,7 +1372,7 @@ let's use the default arguments just to see how things look.
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed", bin=True),
+    x="Speed",
     y="count()"
 )
 ```
@@ -1467,8 +1467,8 @@ We can create a histogram colored by the `Expt` variable
 by adding it to the `color` argument.
 
 ```{code-cell} ipython3
-morley_hist_colored = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed", bin=True),
+morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
+    x="Speed",
     y="count()",
     color="Expt"
 )

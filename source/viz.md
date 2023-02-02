@@ -267,7 +267,7 @@ There are a few basic aspects of a plot that we need to specify:
 - The **graphical mark**, which specifies how the mapped data should be displayed.
     - To create a graphical mark, we use `Chart.mark_*` methods (see the
       [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-      for a list of graphical mark).
+      for a list of graphical marks).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
@@ -1676,7 +1676,7 @@ experiments did quite an admirable job given the technology available at the tim
 When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
-the `maxbins` argument inside `alt.Bin`.
+the `maxbins` argument in the `mark_bar` graphical object.
 But what number of bins is the right one to use?
 
 ```{code-cell} ipython3

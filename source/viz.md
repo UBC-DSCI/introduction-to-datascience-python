@@ -412,26 +412,21 @@ visualization slightly. Note that it is totally fine to use a small number of
 visualizations to answer different aspects of the question you are trying to
 answer. We will accomplish this by using *scale*,
 another important feature of `altair` that easily transforms the different
-variables and set limits.  We scale the horizontal axis using the `alt.Scale(domain=['1990', '1993'])` by restricting the x-axis values between 1990 and 1994,
-and the vertical axis with the `alt.Scale(zero=False)` function, to not start the y-axis with zero.
+variables and set limits.
 In particular, here, we will use the `alt.Scale` function to zoom in
-on just five years of data (say, 1990-1994). The
+on just a few years of data (say, 1990-1995). The
 `domain` argument takes a list of length two
 to specify the upper and lower bounds to limit the axis.
 We also added the argument `clip=True` to `mark_line`. This tells `altair`
-to "clip" the data outside of the domain that we set so that it doesn't
+to "clip" (remove) the data outside of the specified domain that we set so that it doesn't
 extend past the plot area.
-Finally, we will use `axis=alt.Axis(tickCount=4)` to add the lines corresponding to each
-year in the background to create the final visualization. This helps us to
-better visualise the change with each year.
 
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
     x=alt.X(
         "date_measured",
-        title="Measurement Date",
-        axis=alt.Axis(tickCount=4),
-        scale=alt.Scale(domain=['1990', '1994'])
+        scale=alt.Scale(domain=['1990', '1995']),
+        title="Measurement Date"
     ),
     y=alt.Y(
         "ppm",
@@ -450,7 +445,7 @@ glue('co2_line_scale', co2_line_scale, display=False)
 :figwidth: 700px
 :name: co2_line_scale
 
-Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1994.
+Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1995.
 :::
 
 Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases

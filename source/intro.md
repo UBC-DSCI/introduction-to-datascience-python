@@ -881,9 +881,12 @@ words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
-barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('language', title='Language'),
-    y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
+barplot_mother_tongue = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('language', title='Language'),
+        y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
+    )
 )
 ```
 
@@ -913,9 +916,12 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 
 ```{code-cell} ipython3
-barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language', title='Language')
+barplot_mother_tongue_axis = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', title='Language')
+    )
 )
 ```
 
@@ -946,9 +952,12 @@ the `sort` argument, which orders a variable (here `language`) based on the
 values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
-ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language', sort='x', title='Language')
+ordered_barplot_mother_tongue = (
+    alt.Chart(ten_lang)
+    .mark_bar().encode(
+        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+        y=alt.Y('language', sort='x', title='Language')
+    )
 )
 ```
 

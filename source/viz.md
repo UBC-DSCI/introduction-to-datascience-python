@@ -265,9 +265,9 @@ There are a few basic aspects of a plot that we need to specify:
 - The name of the **data frame** to visualize.
     - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
 - The **graphical mark**, which specifies how the mapped data should be displayed.
-    - To create a graphical mark, we use `Chart.mark_*` methods (see the
-      [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-      for a list of graphical mark).
+	- To create a graphical mark, we use `Chart.mark_*` methods (see the
+	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
+	  for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
@@ -505,6 +505,9 @@ So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and `mark_point` as the graphical mark.
+By default, `altair` draws only the outline of each point. If we would
+like to fill them in, we pass the argument `filled=True` to `mark_point`. In
+place of `mark_point(filled=True)`, we can also use `mark_circle`.
 The result is shown in {numref}`faithful_scatter`.
 
 ```{code-cell} ipython3
@@ -1035,11 +1038,8 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
-In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
-If you are unsure about a certain color combination, you can use
-this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
-if your visualizations are color-blind friendly.
+the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
+we add the `scheme` argument in the `scale` of the `color` encoding to indicate the palette we want to use.
 
 ```{index} color palette; color blindness simulator
 ```
@@ -1363,47 +1363,12 @@ helps us visualize how a particular variable is distributed in a data set
 by grouping the values into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
-To understand how to create a histogram in `altair`,
-let's start by creating a bar chart
-just like we did in the previous section.
-Note that this time,
-we are setting the `y` encoding to `"count()"`.
-There is no `"count()"` column-name in `morley_df`;
-we use `"count()"` to tell `altair`
-that we want to count the number of occurrences of each value in along the x-axis 
-(which we encoded as the `Speed` column).
-
-```{code-cell} ipython3
-morley_bars = alt.Chart(morley_df).mark_bar().encode(
-    x="Speed",
-    y="count()"
-)
-```
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue("morley_bars", morley_bars, display=False)
-```
-
-:::{glue:figure} morley_bars
-:figwidth: 700px
-:name: morley_bars
-
-A bar chart of Michelson's speed of light data.
-:::
-
-The bar chart above gives us an indication of
-which values are more common than others,
-but because the bars are so thin it's hard to get a sense for the
-overall distribution of the data.
-We don't really care about how many occurrences there are of each exact `Speed` value,
-but rather where most of the `Speed` values fall in general.
-To more effectively communicate this information
-we can group the x-axis into bins (or "buckets")
-and then count how many `Speed` values fall within each bin.
-A bar chart that represent the count of values
-for a binned quantitative variable is called a histogram.
-
+To create a histogram in `altair` we will use the `mark_bar` graphical
+mark, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
+There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
+that we want to count the number of values in the `Speed` column in each bin.
+As usual,
+let's use the default arguments just to see how things look.
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
@@ -1455,7 +1420,7 @@ To add the dashed line on top of the histogram, we
 **add** the `mark_rule` chart to the `morley_hist`
 using the `+` operator.
 Adding features to a plot using the `+` operator is known as *layering* in `altair`.
-This is a very powerful feature; you
+This is a very powerful feature of `altair`; you
 can continue to iterate on a single chart, adding and refining
 one layer at a time. If you stored your chart as a variable
 using the assignment symbol (`=`), you can add to it using the `+` operator.
@@ -1708,9 +1673,11 @@ experiments did quite an admirable job given the technology available at the tim
 
 #### Choosing a binwidth for histograms
 
-When you create a histogram in `altair`, it tries to choose a reasonable  number of bins.
-We can change the number of bins by using the `maxbins` parameter
-inside `alt.Bin`.
+When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
+Naturally, this is not always the right number to use.
+You can set the number of bins yourself by using
+the `maxbins` argument in the `mark_bar` graphical object.
+But what number of bins is the right one to use?
 
 ```{code-cell} ipython3
 morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(

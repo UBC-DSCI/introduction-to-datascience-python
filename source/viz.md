@@ -267,7 +267,7 @@ There are a few basic aspects of a plot that we need to specify:
 - The **graphical mark**, which specifies how the mapped data should be displayed.
     - To create a graphical mark, we use `Chart.mark_*` methods (see the
       [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-      for a list of graphical marks).
+      for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.

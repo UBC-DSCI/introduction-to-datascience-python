@@ -1857,8 +1857,8 @@ prediction_plot = (
     alt.Chart(prediction_table)
     .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
-        x=alt.X("Area"),
-        y=alt.Y("Smoothness"),
+        x="Area",
+        y="Smoothness",
         color=alt.Color("Class", title="Diagnosis"),
     )
 )

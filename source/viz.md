@@ -265,23 +265,29 @@ There are a few basic aspects of a plot that we need to specify:
 - The name of the **data frame** to visualize.
     - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
 - The **graphical mark**, which specifies how the mapped data should be displayed.
-	- To create a graphical mark, we use `Chart.mark_*` methods (see the
-	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-	  for a list of graphical mark).
+    - To create a graphical mark, we use `Chart.mark_*` methods (see the
+      [altair reference](https://altair-viz.github.io/user_guide/marks.html)
+      for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
     - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
-	- Here, we set the `x` axis of the plot to the `date_measured` variable,
-	  and on the `y` axis, we plot the `ppm` variable. We use `alt.X` and
-	  `alt.Y` which allow you to control properties of the `x` and `y` axes.
-	- For the y-axis, we also provided the argument
-	  `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
-	  based on the data and will keep `y=0` in view. That would make it
-	  difficult to see any trends in our data since the smallest value is >300
-	  ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
-	  choose a reasonable lower bound based on our data, and that lower bound
-	  doesn't have to be zero.
+    - Here, we set the `x` axis of the plot to the `date_measured` variable,
+      and on the `y` axis, we plot the `ppm` variable.
+    - For the y-axis, we also provided the argument
+      `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
+      based on the data and will keep `y=0` in view.
+      This is often a helpful default, but here it makes it
+      difficult to see any trends in our data since the smallest value is >300
+      ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
+      choose a reasonable lower bound based on our data, and that lower bound
+      doesn't have to be zero.
+    - To change the properties of the encoding channels,
+      we need to leverage the helper functions `alt.Y` and `alt.X`.
+      These helpers have the role of customizing things like order, titles, and scales.
+      Here, we use `alt.Y` to change the domain of the y-axis,
+      so that it starts from the lowest value in the `date_measured` column
+      rather than from zero.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -290,7 +296,7 @@ from myst_nb import glue
 
 ```{code-cell} ipython3
 co2_scatter = alt.Chart(co2_df).mark_point().encode(
-    x=alt.X("date_measured"),
+    x="date_measured",
     y=alt.Y("ppm", scale=alt.Scale(zero=False))
 )
 ```
@@ -335,7 +341,7 @@ with just the default arguments:
 
 ```{code-cell} ipython3
 co2_line = alt.Chart(co2_df).mark_line().encode(
-    x=alt.X("date_measured"),
+    x="date_measured",
     y=alt.Y("ppm", scale=alt.Scale(zero=False))
 )
 ```
@@ -1310,8 +1316,8 @@ let's use the default arguments just to see how things look.
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed"),
-    y=alt.Y("count()")
+    x="Speed",
+    y="count()"
 )
 ```
 
@@ -1405,9 +1411,9 @@ to make the bars slightly translucent.
 
 ```{code-cell} ipython3
 morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed"),
-    y=alt.Y("count()"),
-    color=alt.Color("Expt")
+    x="Speed",
+    y="count()",
+    color="Expt"
 )
 
 morley_hist_colored = morley_hist_colored + v_line

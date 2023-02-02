@@ -274,7 +274,7 @@ for i in range(len(slope_l)):
             )
         )
         .mark_line(color=line_color_l[i])
-        .encode(x=alt.X("x"), y=alt.Y("y"))
+        .encode(x="x", y="y")
     )
 
 several_lines_plot

@@ -169,7 +169,7 @@ understand and remember your message quickly.
 ```
 
 This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer,
-and then how to create the visualization in Python using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` to use for reading in the data.
+and then how to create the visualization in Python using `altair`.  To use the `altair` package, we need to first import it. We will also import `pandas` to use for reading in the data.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -217,7 +217,8 @@ To get started, we will read and inspect the data:
 ```{code-cell} ipython3
 # mauna loa carbon dioxide data
 co2_df = pd.read_csv(
-    "data/mauna_loa_data.csv", parse_dates=['date_measured']
+    "data/mauna_loa_data.csv",
+    parse_dates=['date_measured']
 )
 co2_df
 ```
@@ -1117,7 +1118,8 @@ The result is shown in {numref}`islands_bar`.
 
 ```{code-cell} ipython3
 islands_bar = alt.Chart(islands_df).mark_bar().encode(
-    x="landmass", y="size"
+    x="landmass",
+    y="size"
 )
 ```
 
@@ -1152,7 +1154,8 @@ swapping the `x` and `y` variables.
 islands_top12 = islands_df.nlargest(12, "size")
 
 islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
-    x="size", y="landmass"
+    x="size",
+    y="landmass"
 )
 ```
 

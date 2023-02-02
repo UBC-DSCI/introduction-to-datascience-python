@@ -884,8 +884,8 @@ barplot_mother_tongue = (
     .mark_bar().encode(
         x=alt.X('language', title='Language'),
         y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
-    ))
-
+    )
+)
 ```
 
 
@@ -919,8 +919,8 @@ barplot_mother_tongue_axis = (
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', title='Language')
-    ))
-
+    )
+)
 ```
 
 ```{code-cell} ipython3
@@ -955,8 +955,8 @@ ordered_barplot_mother_tongue = (
     .mark_bar().encode(
         x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
         y=alt.Y('language', sort='x', title='Language')
-    ))
-
+    )
+)
 ```
 
 +++

@@ -262,10 +262,7 @@ We have
 tumor observations.
 
 ```{code-cell} ipython3
-explore_cancer = pd.DataFrame()
-explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
-explore_cancer['percentage'] = 100 * explore_cancer['count'] / cancer.shape[0]
-explore_cancer
+100 * cancer.groupby('Class').size() / cancer.shape[0]
 ```
 
 ```{index} value_counts

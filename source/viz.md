@@ -1614,7 +1614,7 @@ experiments did quite an admirable job given the technology available at the tim
 When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
-the `maxbins` argument in the `mark_bar` graphical object.
+the `maxbins` argument inside `alt.Bin`.
 But what number of bins is the right one to use?
 
 Unfortunately there is no hard rule for what the right bin number

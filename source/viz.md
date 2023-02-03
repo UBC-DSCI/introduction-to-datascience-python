@@ -648,10 +648,12 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 To make an initial improvement in the interpretability
 of {numref}`can_lang_plot`, we should
 replace the default axis
-names with more informative labels. We can add a line break in
-the axis names so that some of the words are printed on a new line. This will
-make the axes labels on the plots more readable. To do this, we pass the title as a list. Each element of the list will be on a new line.
-We should also increase the font size to further
+names with more informative labels.
+To make the axes labels on the plots more readable,
+we can print long labels over multiple lines.
+To achieve this, we specify the title as a list of strings
+where each string in the list will correspond to a new line of text.
+We can also increase the font size to further
 improve readability.
 
 ```{code-cell} ipython3

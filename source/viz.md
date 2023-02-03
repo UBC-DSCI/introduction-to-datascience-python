@@ -455,8 +455,6 @@ there are two seasons: summer from May through October, and winter from
 November through April.  Therefore, the oscillating pattern in CO$_{\text{2}}$
 matches up fairly closely with the two seasons.
 
-
-
 A useful analogy to constructing a data visualization is painting a picture.
 We start with a blank canvas,
 and the first thing we do is prepare the surface
@@ -507,13 +505,10 @@ So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and `mark_point` as the graphical mark.
-By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`. In
-place of `mark_point(filled=True)`, we can also use `mark_circle`.
 The result is shown in {numref}`faithful_scatter`.
 
 ```{code-cell} ipython3
-faithful_scatter = alt.Chart(faithful).mark_point(filled=True).encode(
+faithful_scatter = alt.Chart(faithful).mark_point().encode(
     x="waiting",
     y="eruptions"
 )
@@ -540,7 +535,7 @@ In order to refine the visualization, we need only to add axis
 labels and make the font more readable.
 
 ```{code-cell} ipython3
-faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
+faithful_scatter_labels = alt.Chart(faithful).mark_point().encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -562,7 +557,7 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
 
 ```{code-cell} ipython3
-faithful_scatter_labels_black = alt.Chart(faithful).mark_circle(size=10, color="black").encode(
+faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="black").encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -611,14 +606,22 @@ can_lang
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-can_lang = can_lang[(can_lang['most_at_home']>0) & (can_lang['mother_tongue']>0)]
+can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] > 0)]
 ```
 
 ```{index} altair; mark_circle
 ```
 
 We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
-The resulting plot is shown in {numref}`can_lang_plot`
+As you have seen in the scatter plots in the previous section
+the default behavior of `mark_point` is to draw the outline of each point.
+If we would like to fill them in,
+we can pass the argument `filled=True` to `mark_point`
+or use the shortcut `mark_circle`.
+Whether to fill points or not is mostly a matter of personal preferences,
+although hollow points can make it easier to see individual points
+when there are many overlapping points in a chart.
+The resulting plot is shown in {numref}`can_lang_plot`.
 
 ```{code-cell} ipython3
 can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
@@ -626,7 +629,6 @@ can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
     y="mother_tongue"
 )
 ```
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -1009,12 +1011,14 @@ We also set the `shape` aesthetic mapping to the `category` variable as well;
 this makes the scatter point shapes different for each category. This kind of
 visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
 further improve the clarity and accessibility of your visualization.
+Note that we are switching back to the use of `mark_point` here
+since `mark_circle` does not support the `shape` encoding
+and will always show up as a filled circle.
+
 You can use
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
 if your visualizations are color-blind friendly.
 The default color palattes in `altair` are color-blind friendly (one more reason to stick with the defaults!).
-Note that we are switching back to the use of `mark_point` so that
-we can specify the `shape` attribute. This cannot be done with `mark_circle`.
 
 
 ```{code-cell} ipython3

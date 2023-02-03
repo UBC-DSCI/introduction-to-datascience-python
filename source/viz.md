@@ -719,8 +719,8 @@ to Canada's two official languages by filtering the data:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 can_lang.loc[
-    (can_lang['language']=='English') |
-    (can_lang['language']=='French')
+    (can_lang['language']=='English')
+    | (can_lang['language']=='French')
 ]
 ```
 

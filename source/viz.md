@@ -854,18 +854,17 @@ can_lang = can_lang.assign(
     most_at_home_percent=(can_lang['most_at_home'] / canadian_population) * 100
 )
 can_lang[['mother_tongue_percent', 'most_at_home_percent']]
-
 ```
 
-Finally, we will edit the visualization to use the percentages we just computed
+Next, we will edit the visualization to use the percentages we just computed
 (and change our axis labels to reflect this change in
 units). {numref}`can_lang_plot_percent` displays
 the final result.
-
-
+Here all the tick labels fit by default so we are not changing the labels to include suffixes
+(note that suffixes can also be harder to understand for small quantities,
+so they are best to avoid for small numbers unless you are communicating to a technical audience).
 
 ```{code-cell} ipython3
-
 can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home_percent",
@@ -884,7 +883,8 @@ can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_percent', can_lang_plot_percent, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_percent', can_lang_plot_percent.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_percent
@@ -976,7 +976,8 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_category', can_lang_plot_category, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_category', can_lang_plot_category.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_category
@@ -1028,7 +1029,8 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_legend', can_lang_plot_legend, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_legend', can_lang_plot_legend.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_legend
@@ -1091,7 +1093,8 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_theme', can_lang_plot_theme, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_theme

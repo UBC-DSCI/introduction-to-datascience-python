@@ -1030,27 +1030,29 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
-we add the `scheme` argument in the `scale` of the `color` encoding to indicate the palette we want to use.
+the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
+In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
+If you are unsure about a certain color combination, you can use
+this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
+if your visualizations are color-blind friendly.
 
 ```{index} color palette; color blindness simulator
 ```
 
+All the available color schemes and information on how to create your own, can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
+To change the color scheme of our chart,
+we can add the `scheme` argument in the `scale` of the `color` encoding.
 Below we pick the `"dark2"` theme, with the result shown
 in {numref}`can_lang_plot_theme`
 We also set the `shape` aesthetic mapping to the `category` variable as well;
-this makes the scatter point shapes different for each category. This kind of
+this makes the scatter point shapes different for each language category. This kind of
 visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
-further improve the clarity and accessibility of your visualization.
+further improve the clarity and accessibility of your visualization,
+but can add visual noise if there are many different shapes and colors,
+so it should be used with care.
 Note that we are switching back to the use of `mark_point` here
 since `mark_circle` does not support the `shape` encoding
 and will always show up as a filled circle.
-
-You can use
-this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
-if your visualizations are color-blind friendly.
-The default color palattes in `altair` are color-blind friendly (one more reason to stick with the defaults!).
-
 
 ```{code-cell} ipython3
 can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(

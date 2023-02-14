@@ -951,9 +951,8 @@ which they belong.  We can add the argument `color` to the `encode` function, sp
 that the `category` column should color the points. Adding this argument will
 color the points according to their group and add a legend at the side of the
 plot.
-
-
-
+Since the labels of the language category as descriptive of their own,
+we can remove the title of the legend to reduce visual clutter without reducing the effectiveness of the chart.
 
 ```{code-cell} ipython3
 can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
@@ -969,7 +968,7 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
-    color="category"
+    color=alt.Color("category", title='')
 ).configure_axis(titleFontSize=12)
 
 ```
@@ -991,15 +990,9 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 Another thing we can adjust is the location of the legend.
 This is a matter of preference and not critical for the visualization.
 We move the legend title using the `alt.Legend` function
-with the arguments `legendX`, `legendY` and `direction`
-arguments of the `theme` function.
-Here we set the `direction` to `"vertical"` so that the legend items remain
-vertically stacked on top of each other. The default `direction` is horizontal, which works well for many cases, but
-for this particular visualization
-because the legend labels are quite long, it is a bit cleaner if we move the
-legend above the plot instead.
-
-
+and specify that we want it on the top of the chart.
+This automatically changes the legend items to be laid out horizontally instead of vertically,
+but we could also keep the vertical layout by specifying `direction='vertical'` inside `alt.Legend`.
 
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
@@ -1017,12 +1010,8 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
     ),
     color=alt.Color(
         "category",
-        legend=alt.Legend(
-            orient='none',
-            legendX=0,
-            legendY=-90,
-            direction='vertical'
-        )
+        title='',
+        legend=alt.Legend(orient='top')
     )
 ).configure_axis(titleFontSize=12)
 ```
@@ -1073,18 +1062,14 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     ),
     y=alt.Y(
         "mother_tongue_percent",
-        title="Mother tongue(percentage of Canadian residents)",
+        title=["Mother tongue", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     color=alt.Color(
         "category",
-        legend=alt.Legend(
-            orient='none',
-            legendX=0,
-            legendY=-90,
-            direction='vertical'
-        ),
+        title='',
+        legend=alt.Legend(orient='top'),
         scale=alt.Scale(scheme='dark2')
     ),
     shape="category"

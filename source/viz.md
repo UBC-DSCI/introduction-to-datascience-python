@@ -848,9 +848,10 @@ you can clearly see the mutated output from the table.
 ```
 
 ```{code-cell} ipython3
+canadian_population = 35_151_728
 can_lang = can_lang.assign(
-    mother_tongue_percent=(can_lang['mother_tongue']/35151728) * 100,
-    most_at_home_percent=(can_lang['most_at_home']/35151728) * 100
+    mother_tongue_percent=(can_lang['mother_tongue'] / canadian_population) * 100,
+    most_at_home_percent=(can_lang['most_at_home'] / canadian_population) * 100
 )
 can_lang[['mother_tongue_percent', 'most_at_home_percent']]
 

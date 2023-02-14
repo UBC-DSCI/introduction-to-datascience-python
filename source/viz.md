@@ -753,13 +753,11 @@ can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
         "most_at_home",
         title=["Language spoken most at home", "(number of Canadian residents)"],
         scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
         "mother_tongue",
         title=["Mother tongue", "(number of Canadian residents)"],
         scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
     )
 ).configure_axis(titleFontSize=12)
 ```
@@ -776,6 +774,45 @@ glue('can_lang_plot_log', can_lang_plot_log, display=False)
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes.
 :::
 
+You will notice two things in the chart above,
+changing the axis to log creates many axis ticks and gridlines,
+which makes the appearance of the chart rather noisy
+and it is hard to focus on the data.
+You can also see that the second last tick label is missing on the x-axis;
+Altair dropped it because there wasn't space to fit in all the large numbers next to each other.
+It is also hard to see if the label for 100,000,000 is for the last or second last tick.
+To fix these issue,
+we can limit the number of ticks and gridlines to only include the seven major ones,
+and change the number formatting to include a suffix which makes the labels shorter.
+
+```{code-cell} ipython3
+can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
+    x=alt.X(
+        "most_at_home",
+        title=["Language spoken most at home", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7, format='s')
+    ),
+    y=alt.Y(
+        "mother_tongue",
+        title=["Mother tongue", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7, format='s')
+    )
+).configure_axis(titleFontSize=12)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
+```
+
+:::{glue:figure} can_lang_plot_log_revised
+:figwidth: 700px
+:name: can_lang_plot_log_revised
+
+Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes. Only the major gridlines are shown and the suffix "k" indicate 1,000 ("kilo"), while the suffix "M" indicates 1,000,000 ("million").
+:::
 
 
 ```{code-cell} ipython3

@@ -1091,14 +1091,63 @@ glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors.
 :::
 
-From the visualization in {numref}`can_lang_plot_theme`,
+The chart above gives a good indication of how the different language categories differ,
+and this information is sufficient to answer our research question.
+But what if we want to know exactly which language correspond to which point in the chart?
+With a regular visualization library this would not be possible,
+as adding text labels for each individual language
+would add a lot of visual noise and make the chart difficult to interpret.
+However, since Altair is an interactive visualization library we can add information on demand
+via the `Tooltip` encoding channel,
+so that text labels for each point show up once we hover over it with the mouse pointer.
+Here we also add the exact values of the variables on the x and y-axis to the tooltip.
+
+```{code-cell} ipython3
+can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True, size=50).encode(
+    x=alt.X(
+        "most_at_home_percent",
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    ),
+    y=alt.Y(
+        "mother_tongue_percent",
+        title=["Mother tongue", "(percentage of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    ),
+    color=alt.Color(
+        "category",
+        title='',
+        legend=alt.Legend(orient='top'),
+        scale=alt.Scale(scheme='dark2')
+    ),
+    shape="category",
+    tooltip=alt.Tooltip(['language', 'mother_tongue', 'most_at_home'])
+).configure_axis(titleFontSize=12)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_tooltip', can_lang_plot_tooltip.properties(height=320, width=420), display=False)
+```
+
+:::{glue:figure} can_lang_plot_tooltip
+:figwidth: 700px
+:name: can_lang_plot_tooltip
+
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors. Hover over the data points with the mouse pointer to see additional information.
+:::
+
+From the visualization in {numref}`can_lang_plot_tooltip`,
 we can now clearly see that the vast majority of Canadians reported one of the official languages
 as their mother tongue and as the language they speak most often at home.
 What do we see when considering the second part of our exploratory question?
 Do we see a difference in the relationship
 between languages spoken as a mother tongue and as a primary language
 at home across the higher-level language categories?
-Based on {numref}`can_lang_plot_theme`, there does not
+Based on {numref}`can_lang_plot_tooltip`, there does not
 appear to be much of a difference.
 For each higher-level language category,
 there appears to be a strong, positive, and linear relationship between

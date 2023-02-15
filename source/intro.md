@@ -864,7 +864,9 @@ example above, Python uses the column name `mother_tongue` as the label for the
 y axis, but most people will not know what that is. And even if they did, they
 will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
-Canadian Residents)" would be much more informative.
+Canadian Residents)" would be much more informative. To make the code easier to
+read, we're spreading it out over multiple lines just as we did in the previous
+section with pandas.
 
 ```{index} plot; labels, plot; axis labels
 ```

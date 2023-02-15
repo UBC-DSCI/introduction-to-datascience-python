@@ -1637,6 +1637,8 @@ us to compare the location of the histograms along the `x`-axis
 in the different subplots.
 We also reduce the height of each chart
 so that they all fit in the same view.
+Note that we are re-using the chart we created just above,
+instead of re-creating the same chart from scratch.
 
 ```{code-cell} ipython3
 

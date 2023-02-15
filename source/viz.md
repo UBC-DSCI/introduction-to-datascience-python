@@ -1502,33 +1502,33 @@ In order to visualize the true speed of light,
 we will add a vertical line with the `mark_rule` function.
 To draw a vertical line with `mark_rule`,
 we need to specify where on the x-axis the line should be drawn.
-We can do this by providing `x=alt.datum(792.458)`. The value `792.458`
-is the true value of light speed
-minus 299,000. Using `alt.datum` tells altair that we have a single datum
-(number) that we would like plotted.
-We would also like to fine tune this vertical line,
-styling it so that it is dashed,
-we do this by setting `strokeDash=[3]`. Note that you could also
-change the thickness of the line by providing `size=2` if you wanted to.
+We can do this by providing `x=alt.datum(792.458)`,
+where the value `792.458` is the true speed of light minus 299,000
+and `alt.datum` tells altair that we have a single datum
+(number) that we would like plotted (rather than a column in the data frame).
 Similarly, a horizontal line can be plotted using the `y` axis encoding and
 the dataframe with one value, which would act as the be the y-intercept.
 Note that
 *vertical lines* are used to denote quantities on the *horizontal axis*,
 while *horizontal lines* are used to denote quantities on the *vertical axis*.
 
+To fine tune the appearance of this vertical line,
+we can change it from a solid to a dashed line with `strokeDash=[5]`,
+where `5` indicates the length of each dash. We also
+change the thickness of the line by specifying `size=2`.
 To add the dashed line on top of the histogram, we
 **add** the `mark_rule` chart to the `morley_hist`
 using the `+` operator.
 Adding features to a plot using the `+` operator is known as *layering* in `altair`.
-This is a very powerful feature of `altair`; you
+This is a very powerful feature; you
 can continue to iterate on a single chart, adding and refining
 one layer at a time. If you stored your chart as a variable
 using the assignment symbol (`=`), you can add to it using the `+` operator.
 Below we add a vertical line created using `mark_rule`
-to the last plot we created, `morley_hist`, using the `+` operator.
+to the `morley_hist` we created previously.
 
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(strokeDash=[3]).encode(
+v_line = alt.Chart().mark_rule(strokeDash=[5], size=2).encode(
     x=alt.datum(792.458)
 )
 
@@ -1545,7 +1545,7 @@ glue("morley_hist_line", morley_hist_line, display=False)
 :figwidth: 700px
 :name: morley_hist_line
 
-Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
+Histogram of Michelson's speed of light data with vertical line indicating the true speed of light.
 :::
 
 In {numref}`morley_hist_line`,

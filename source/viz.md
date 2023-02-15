@@ -1461,34 +1461,6 @@ glue("morley_hist", morley_hist, display=False)
 Histogram of Michelson's speed of light data.
 :::
 
-We can change the number of bins by using the `maxbins` parameter.
-In `altair`,
-the default number of bins
-or slightly more than the default
-are usually good choices.
-But since the number of bins impacts what your data distribution looks like
-it is a good idea to try out a few different values,
-when exploring your data.
-
-```{code-cell} ipython3
-morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=30)),
-    y="count()"
-)
-```
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue("morley_hist_maxbins", morley_hist_maxbins, display=False)
-```
-
-:::{glue:figure} morley_hist_maxbins
-:figwidth: 700px
-:name: morley_hist_maxbins
-
-Histogram of Michelson's speed of light data.
-:::
-
 #### Adding layers to an `altair` chart
 
 ```{index} altair; +; mark_rule
@@ -1773,12 +1745,31 @@ experiments did quite an admirable job given the technology available at the tim
 
 #### Choosing a binwidth for histograms
 
-When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
-Naturally, this is not always the right number to use.
-You can set the number of bins yourself by using
-the `maxbins` argument inside `alt.Bin`.
-But what number of bins is the right one to use?
+When you create a histogram in `altair`, it tries to choose a reasonable  number of bins.
+We can change the number of bins by using the `maxbins` parameter
+inside `alt.Bin`.
 
+```{code-cell} ipython3
+morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=alt.Bin(maxbins=30)),
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_hist_maxbins", morley_hist_maxbins, display=False)
+```
+
+:::{glue:figure} morley_hist_maxbins
+:figwidth: 700px
+:name: morley_hist_maxbins
+
+Histogram of Michelson's speed of light data.
+:::
+
+
+But what number of bins is the right one to use?
 Unfortunately there is no hard rule for what the right bin number
 or width is. It depends entirely on your problem; the *right* number of bins
 or bin width is
@@ -1871,10 +1862,10 @@ morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
 ).properties(height=100, width=200)
 
 morley_hist_max_bins = ((
-    (morley_hist_default + v_line).facet(row="Expt:N", data=morley_rel, title="default maxbins") |
-    (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=200")) &
-    ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=70") |
-    (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=5")
+    (morley_hist_default + v_line).facet(row="Expt:N", data=morley_df, title="default maxbins") |
+    (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=200")) &
+    ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=70") |
+    (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=5")
 ))
 ```
 

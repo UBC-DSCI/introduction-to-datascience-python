@@ -1256,10 +1256,10 @@ y = cancer_train["Class"]
 
 # create a prediction pt grid
 smo_grid = np.linspace(
-    cancer_train["Smoothness"].min(), cancer_train["Smoothness"].max(), 100
+    cancer_train["Smoothness"].min() * 0.95, cancer_train["Smoothness"].max() * 1.05, 100
 )
 con_grid = np.linspace(
-    cancer_train["Concavity"].min(), cancer_train["Concavity"].max(), 100
+    cancer_train["Concavity"].min() - 0.025, cancer_train["Concavity"].max() * 1.05, 100
 )
 scgrid = np.array(np.meshgrid(smo_grid, con_grid)).reshape(2, -1).T
 scgrid = pd.DataFrame(scgrid, columns=["Smoothness", "Concavity"])
@@ -1281,8 +1281,26 @@ for k in [1, 7, 20, 300]:
         )
         .mark_point(opacity=0.2, filled=True, size=20)
         .encode(
-            x=alt.X("Smoothness"),
-            y=alt.Y("Concavity"),
+            x=alt.X(
+                "Smoothness",
+                scale=alt.Scale(
+                    domain=(
+                        cancer_train["Smoothness"].min() * 0.95,
+                        cancer_train["Smoothness"].max() * 1.05
+                    ),
+                    nice=False
+                )
+            ),
+            y=alt.Y(
+                "Concavity",
+                scale=alt.Scale(
+                    domain=(
+                        cancer_train["Concavity"].min() -0.025,
+                        cancer_train["Concavity"].max() * 1.05
+                    ),
+                    nice=False
+                )
+            ),
             color=alt.Color("Class", title="Diagnosis"),
         )
     )

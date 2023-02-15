@@ -1681,8 +1681,8 @@ subtly, even though it is easy to compare the experiments on this plot to one
 another, it is hard to get a sense of just how accurate all the experiments
 were overall. For example, how accurate is the value 800 on the plot, relative
 to the true speed of light?  To answer this question, we'll use the `assign`
-function to transform our data into a relative measure of accuracy rather than
-absolute measurements.
+function to transform our data into a relative measure of error rather than
+an absolute measurement.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458
@@ -1697,7 +1697,7 @@ morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
         "relative_error",
         bin=True,
-        title="Relative Accuracy (%)"
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
@@ -1719,7 +1719,7 @@ morley_hist_relative = (morley_hist_rel + v_line).properties(
 ).facet(
     "Expt",
     columns=1,
-    title="Histogram of relative accuracy of Michelson’s speed of light data"
+    title="Histogram of relative error of Michelson’s speed of light data"
 )
 
 ```
@@ -1733,7 +1733,7 @@ glue("morley_hist_relative", morley_hist_relative, display=True)
 :figwidth: 700px
 :name: morley_hist_relative
 
-Histogram of relative accuracy split vertically by experiment with clearer axes and labels
+Histogram of relative error split vertically by experiment with clearer axes and labels
 :::
 
 Wow, impressive! These measurements of the speed of light from 1879 had errors
@@ -1787,16 +1787,18 @@ In this case, we can see that both the default number of bins
 and the `maxbins=70` of  are effective for helping to answer our question.
 On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, respectively.
 
-
-
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
+# Weirdly things fail if v_line is not included or if v_line is defined with data
+v_line = alt.Chart().mark_rule(
+    strokeDash=[3]).encode(
+    x=alt.datum(0)
+)
 
 morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_accuracy",
-        title="Relative Accuracy (%)"
+        "relative_error",
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
@@ -1811,9 +1813,9 @@ morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_accuracy",
+        "relative_error",
         bin=alt.Bin(maxbins=200),
-        title="Relative Accuracy (%)"
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
@@ -1827,9 +1829,9 @@ morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_accuracy",
+        "relative_error",
         bin=alt.Bin(maxbins=70),
-        title="Relative Accuracy (%)"
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
@@ -1844,9 +1846,9 @@ morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_accuracy",
+        "relative_error",
         bin=alt.Bin(maxbins=5),
-        title="Relative Accuracy (%)"
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
@@ -1943,8 +1945,8 @@ roughly 299,792.458 kilometers per second. (2) But how accurately were we first
 able to measure this fundamental physical constant, and did certain experiments
 produce more accurate results than others?  (3) To better understand this, we
 plotted data from 5 experiments by Michelson in 1879, each with 20 trials, as
-histograms stacked on top of one another.  The horizontal axis shows the
-accuracy of the measurements relative to the true speed of light as we know it
+histograms stacked on top of one another. The horizontal axis shows the
+error of the measurements relative to the true speed of light as we know it
 today, expressed as a percentage.  From this visualization, you can see that
 most results had relative errors of at most 0.05%. You can also see that
 experiments 1 and 3 had measurements that were the farthest from the true

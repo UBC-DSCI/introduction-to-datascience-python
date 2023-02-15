@@ -1789,84 +1789,69 @@ On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, 
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-# Weirdly things fail if v_line is not included or if v_line is defined with data
-v_line = alt.Chart().mark_rule(
-    strokeDash=[3]).encode(
-    x=alt.datum(0)
+morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X(
+        "RelativeError",
+        title="Relative error (%)",
+        bin=True
+    ),
+    y=alt.Y(
+        "count()",
+        stack=False,
+        title="# Measurements"
+    ),
+    color=alt.Color(
+        "Expt:N",
+        title="Experiment ID",
+        legend=None
+    )
+).properties(height=100, width=250)
+
+morley_hist_max_bins = alt.vconcat(
+    alt.hconcat(
+        (morley_hist_default + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('Default (bin=True)', fontSize=16, anchor='middle', dx=15)
+        ),
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=5),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=5', fontSize=16, anchor='middle', dx=15)
+        ),
+    ),
+    alt.hconcat(
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=70),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=70', fontSize=16, anchor='middle', dx=15)
+        ),
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=200),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=200', fontSize=16, anchor='middle', dx=15)
+        )
+    ),
+    spacing=50
 )
-
-morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "RelativeError",
-        title="Relative error (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "RelativeError",
-        bin=alt.Bin(maxbins=200),
-        title="Relative error (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",  title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "RelativeError",
-        bin=alt.Bin(maxbins=70),
-        title="Relative error (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "RelativeError",
-        bin=alt.Bin(maxbins=5),
-        title="Relative error (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_max_bins = ((
-    (morley_hist_default + v_line).facet(row="Expt:N", data=morley_df, title="default maxbins") |
-    (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=200")) &
-    ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=70") |
-    (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_df, title="maxBins=5")
-))
 ```
 
 ```{code-cell} ipython3

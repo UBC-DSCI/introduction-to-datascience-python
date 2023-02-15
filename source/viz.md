@@ -1233,9 +1233,9 @@ question we asked was only about the largest landmasses; let's make the plot a
 little bit clearer by keeping only the largest 12 landmasses. We do this using
 the `nlargest` function; the first argument is the number of rows we want and
 the second is the name of the column we want to use for comparing who is
-largest.  Then to help us make sure the labels have enough
-space, we'll use horizontal bars instead of vertical ones. We do this by
-swapping the `x` and `y` variables.
+largest. Then to help make the landmass labels easier to read
+we'll swap the `x` and `y` variables,
+so that the landmass labels are on the y-axis and we don't have to tilt our head to read them.
 
 ```{index} pandas.DataFrame; nlargest
 ```
@@ -1262,41 +1262,36 @@ Bar plot of size for Earth's largest 12 landmasses.
 :::
 
 
-The plot in {numref}`islands_bar_top` is definitely clearer now,
-and allows us to answer our question
-("Which are the top 7 largest landmasses continents?") in the affirmative.
-But the question could be made clearer from the plot
-by organizing the bars not by alphabetical order
-but by size, and to color them based on whether they are a continent.
-The data for this is stored in the `landmass_type` column.
-To use this to color the bars,
-we use the `color` argument to color the bars according to the `landmass_type`
+The plot in {numref}`islands_bar_top` is clearer now,
+and allows us to answer our question:
+"Which are the top 7 largest landmasses continents?".
+However, we could still improve this visualization
+by organizing the bars by landmass size rather than by alphabetical order.
+We could also color the bars based on whether they are a continent or not
+to add additional information to the chart.
 
 To organize the landmasses by their `size` variable,
-we will use the `altair` `sort` function
-in encoding for `y` axis to organize the landmasses by their `size` variable, which is encoded on the x-axis.
-To sort the landmasses by their size(denoted on `x` axis), we use `sort='x'`. This plots the values on `y` axis
+we will use the altair `sort` function
+in the y-encoding of the chart.
+Since the `size` variable is encoded in the x channel of the chart,
+we specify `sort='x'` inside `alt.Y`.
+This plots the values on `y` axis
 in the ascending order of `x` axis values.
-We do this here so that the largest bar will be closest to the axis line,
-which is more visually appealing. If instead, we want to sort the values on `y-axis` in descending order of `x-axis`, we need to specify `sort='-x'`.
+This creates a chart where the largest bar is the closest to the axis line,
+which is generally the most visually appealing when sorting bars.
+If instead,
+we want to sort the values on `y-axis` in descending order of `x-axis`,
+we can add a minus sign to reverse the order and specify `sort='-x'`.
 
 ```{index} altair; sort
 ```
 
-To label the x and y axes, we will use the `alt.X` and `alt.Y` function
-The default label is the name of the column being mapped to `color`. Here that
-would be `landmass_type`;
-however `landmass_type` is not proper English (and so is less readable).
-Thus we use the `title` argument inside `alt.Color` to change that to `"Type"`.
-Finally, we again use the `configure_axis` function
-to change the font size.
-
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x=alt.X("size",title="Size (1000 square mi)"),
-    y=alt.Y("landmass", title="Landmass", sort="x"),
-    color=alt.Color("landmass_type", title="Type")
-).configure_axis(titleFontSize=12)
+    x="size",
+    y=alt.Y("landmass", sort="x"),
+    color=alt.Color("landmass_type")
+)
 ```
 
 ```{code-cell} ipython3

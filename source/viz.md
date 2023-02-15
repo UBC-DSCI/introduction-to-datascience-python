@@ -1461,6 +1461,34 @@ glue("morley_hist", morley_hist, display=False)
 Histogram of Michelson's speed of light data.
 :::
 
+We can change the number of bins by using the `maxbins` parameter.
+In `altair`,
+the default number of bins
+or slightly more than the default
+are usually good choices.
+But since the number of bins impacts what your data distribution looks like
+it is a good idea to try out a few different values,
+when exploring your data.
+
+```{code-cell} ipython3
+morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=alt.Bin(maxbins=30)),
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_hist_maxbins", morley_hist_maxbins, display=False)
+```
+
+:::{glue:figure} morley_hist_maxbins
+:figwidth: 700px
+:name: morley_hist_maxbins
+
+Histogram of Michelson's speed of light data.
+:::
+
 #### Adding layers to an `altair` chart
 
 ```{index} altair; +; mark_rule

@@ -182,13 +182,9 @@ want to predict (sale price) on the y-axis.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-eda = (
-    alt.Chart(sacramento)
-    .mark_circle()
-    .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
-    )
+eda = alt.Chart(sacramento).mark_circle().encode(
+    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
 )
 
 eda
@@ -257,13 +253,9 @@ the sale price?
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-small_plot = (
-    alt.Chart(small_sacramento)
-    .mark_circle()
-    .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
-    )
+small_plot = alt.Chart(small_sacramento).mark_circle().encode(
+    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
 )
 
 # add an overlay to the base plot
@@ -868,13 +860,9 @@ sacr_preds = sacr_preds.assign(
 )
 
 # the base plot: the training data scatter plot
-base_plot = (
-    alt.Chart(sacramento_train)
-    .mark_circle()
-    .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
-    )
+base_plot = alt.Chart(sacramento_train).mark_circle().encode(
+    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
 )
 
 # add the prediction layer
@@ -932,13 +920,9 @@ to help predict the sale price of a house.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-plot_beds = (
-    alt.Chart(sacramento)
-    .mark_circle()
-    .encode(
-        x=alt.X("beds", title="Number of Bedrooms"),
-        y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
-    )
+plot_beds = alt.Chart(sacramento).mark_circle().encode(
+    x=alt.X("beds", title="Number of Bedrooms"),
+    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
 )
 
 plot_beds

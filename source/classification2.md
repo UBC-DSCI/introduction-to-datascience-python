@@ -330,16 +330,11 @@ cancer['Class'] = cancer['Class'].replace({
 # create scatter plot of tumor cell concavity versus smoothness,
 # labeling the points be diagnosis class
 
-perim_concav = (
-    alt.Chart(cancer)
-    .mark_circle()
-    .encode(
-        x="Smoothness",
-        y="Concavity",
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+perim_concav = alt.Chart(cancer).mark_circle().encode(
+    x="Smoothness",
+    y="Concavity",
+    color=alt.Color("Class", title="Diagnosis"),
 )
-
 perim_concav
 ```
 
@@ -1081,19 +1076,15 @@ as shown in {numref}`fig:06-find-k`.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-accuracy_vs_k = (
-    alt.Chart(accuracies_grid)
-    .mark_line(point=True)
-    .encode(
-        x=alt.X(
-            "n_neighbors",
-            title="Neighbors",
-        ),
-        y=alt.Y(
-            "mean_test_score",
-            title="Accuracy estimate",
-            scale=alt.Scale(domain=(0.85, 0.90)),
-        ),
+accuracy_vs_k = alt.Chart(accuracies_grid).mark_line(point=True).encode(
+    x=alt.X(
+        "n_neighbors",
+        title="Neighbors",
+    ),
+    y=alt.Y(
+        "mean_test_score",
+        title="Accuracy estimate",
+        scale=alt.Scale(domain=(0.85, 0.90)),
     )
 )
 
@@ -1170,19 +1161,15 @@ large_accuracies_grid = pd.DataFrame(
                     ).cv_results_
                   )
 
-large_accuracy_vs_k = (
-    alt.Chart(large_accuracies_grid)
-    .mark_line(point=True)
-    .encode(
-        x=alt.X(
-            "param_kneighborsclassifier__n_neighbors",
-            title="Neighbors",
-        ),
-        y=alt.Y(
-            "mean_test_score",
-            title="Accuracy estimate",
-            scale=alt.Scale(domain=(0.60, 0.90)),
-        ),
+large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
+    x=alt.X(
+        "param_kneighborsclassifier__n_neighbors",
+        title="Neighbors",
+    ),
+    y=alt.Y(
+        "mean_test_score",
+        title="Accuracy estimate",
+        scale=alt.Scale(domain=(0.60, 0.90)),
     )
 )
 

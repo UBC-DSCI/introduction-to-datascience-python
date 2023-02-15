@@ -480,17 +480,13 @@ linear regression predicted line of best fit.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-lm_plot_final = (
-    alt.Chart(sacramento_train)
-    .mark_circle()
-    .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y(
-            "price",
-            title="Price (USD)",
-            axis=alt.Axis(format="$,.0f"),
-            scale=alt.Scale(zero=False),
-        ),
+lm_plot_final = alt.Chart(sacramento_train).mark_circle().encode(
+    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
+    y=alt.Y(
+        "price",
+        title="Price (USD)",
+        axis=alt.Axis(format="$,.0f"),
+        scale=alt.Scale(zero=False),
     )
 )
 

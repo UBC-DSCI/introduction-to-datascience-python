@@ -1749,7 +1749,7 @@ inside `alt.Bin`.
 
 ```{code-cell} ipython3
 morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=30)),
+    x=alt.X("RelativeError", bin=alt.Bin(maxbins=30)),
     y="count()"
 )
 ```

@@ -1686,10 +1686,8 @@ absolute measurements.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458
-morley_df = morley_df.assign(
-    relative_error=(
-        100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
-    )
+morley_df['relative_error'] = (
+    100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
 )
 morley_df
 ```

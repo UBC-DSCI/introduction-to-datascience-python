@@ -1397,19 +1397,54 @@ we need to visualize the distribution of the measurements
 We can do this using a *histogram*.
 A histogram
 helps us visualize how a particular variable is distributed in a data set
-by separating the data into bins,
+by grouping the values into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
-To create a histogram in `altair` we will use the `mark_bar` graphical
-mark, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
-There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
-that we want to count the number of values in the `Speed` column in each bin.
-As usual,
-let's use the default arguments just to see how things look.
+To understand how to create a histogram in `altair`,
+let's start by creating a bar chart
+just like we did in the previous section.
+Note that this time,
+we are setting the `y` encoding to `"count()"`.
+There is no `"count()"` column-name in `morley_df`;
+we use `"count()"` to tell `altair`
+that we want to count the number of occurrences of each value in along the x-axis 
+(which we encoded as the `Speed` column).
+
+```{code-cell} ipython3
+morley_bars = alt.Chart(morley_df).mark_bar().encode(
+    x="Speed",
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_bars", morley_bars, display=False)
+```
+
+:::{glue:figure} morley_bars
+:figwidth: 700px
+:name: morley_bars
+
+A bar chart of Michelson's speed of light data.
+:::
+
+The bar chart above gives us an indication of
+which values are more common than others,
+but because the bars are so thin it's hard to get a sense for the
+overall distribution of the data.
+We don't really care about how many occurrences there are of each exact `Speed` value,
+but rather where most of the `Speed` values fall in general.
+To more effectively communicate this information
+we can group the x-axis into bins (or "buckets")
+and then count how many `Speed` values fall within each bin.
+A bar chart that represent the count of values
+for a binned quantitative variable is called a histogram.
+
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
-    x="Speed",
+    x=alt.X("Speed", bin=True),
     y="count()"
 )
 ```

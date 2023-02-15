@@ -1686,7 +1686,7 @@ an absolute measurement.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458
-morley_df['relative_error'] = (
+morley_df['RelativeError'] = (
     100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
 )
 morley_df
@@ -1695,7 +1695,7 @@ morley_df
 ```{code-cell} ipython3
 morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
-        "relative_error",
+        "RelativeError",
         bin=True,
         title="Relative error (%)"
     ),
@@ -1797,7 +1797,7 @@ v_line = alt.Chart().mark_rule(
 
 morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_error",
+        "RelativeError",
         title="Relative error (%)"
     ),
     y=alt.Y(
@@ -1813,7 +1813,7 @@ morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_error",
+        "RelativeError",
         bin=alt.Bin(maxbins=200),
         title="Relative error (%)"
     ),
@@ -1829,7 +1829,7 @@ morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_error",
+        "RelativeError",
         bin=alt.Bin(maxbins=70),
         title="Relative error (%)"
     ),
@@ -1846,7 +1846,7 @@ morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
 
 morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
     x=alt.X(
-        "relative_error",
+        "RelativeError",
         bin=alt.Bin(maxbins=5),
         title="Relative error (%)"
     ),

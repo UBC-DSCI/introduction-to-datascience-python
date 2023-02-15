@@ -1527,8 +1527,14 @@ using the assignment symbol (`=`), you can add to it using the `+` operator.
 Below we add a vertical line created using `mark_rule`
 to the `morley_hist` we created previously.
 
+> **Note:** Technically we could have left out the data argument
+> when creating the rule chart
+> since we're not using any values from the `morley_df` data frame,
+> but we will need it later when we facet this layered chart,
+> so we are including it here already.
+
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(strokeDash=[5], size=2).encode(
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
     x=alt.datum(792.458)
 )
 
@@ -1559,15 +1565,10 @@ where counts from different experiments are stacked on top of each other
 in different colors.
 We can create a histogram colored by the `Expt` variable
 by adding it to the `color` argument.
-We make sure the different colors can be seen
-(despite them all sitting on top of each other)
-by setting the `opacity` argument in `mark_bar` to `0.5`
-to make the bars slightly translucent.
-
 
 ```{code-cell} ipython3
-morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x="Speed",
+morley_hist_colored = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=True),
     y="count()",
     color="Expt"
 )
@@ -1591,8 +1592,8 @@ Histogram of Michelson's speed of light data colored by experiment.
 ```{index} integer
 ```
 
-Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to distinguish
-between different Experiments in the histogram! What is going on here? Well, if you
+Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to easily distinguish
+between the colors of the different Experiments in the histogram! What is going on here? Well, if you
 recall from the {ref}`wrangling` chapter, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
@@ -1609,13 +1610,19 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 (i.e., categorical) type variable by adding a suffix `:N`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
-hence use a discrete color map in visualizations.
+hence use a discrete color map in visualizations
+([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
 We also specify the `stack=False` argument in the `y` encoding so
-that the bars are not stacked on top of each other.
+that the bars are not stacked on top of each other,
+but instead share the same baseline.
+We make sure the different colors can be seen
+despite them sitting in front of each other
+by setting the `opacity` argument in `mark_bar` to `0.5`
+to make the bars slightly translucent.
 
 ```{code-cell} ipython3
-morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
+morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=True),
     y=alt.Y("count()", stack=False),
     color=alt.Color("Expt:N")
 )
@@ -1647,32 +1654,24 @@ grid of separate histogram plots.
 ```{index} altair; facet
 ```
 
-We use the `facet` function to create a plot
+We can use the `facet` function to create a chart
 that has multiple subplots arranged in a grid.
 The argument to `facet` specifies the variable(s) used to split the plot
-into subplots (`Expt`), the data frame we are working with `morley_df`, and
-how to split them (i.e., into rows or columns). In this example, we choose to
-have our plots in a single column (`columns=1`). This makes it easier for
-us to compare along the `x`-axis as our vertical-line is in the same
-horizontal position. If instead you wanted to use a single row, you could
-specify `rows=1`.
-
-There is another important change we have to make. When
-we define `morley_hist`, we no longer supply `morley_df` as an
-argument to `alt.Chart`. This is because `facet` takes care of separating
-the data by `Expt` and providing it to each of the facet sub-plots.
+into subplots (`Expt` in the code below),
+and how many columns there should be in the grid.
+In this example, we chose to
+arrange our plots in a single column (`columns=1`) since this makes it easier for
+us to compare the location of the histograms along the `x`-axis
+in the different subplots.
+We also reduce the height of each chart
+so that they all fit in the same view.
 
 ```{code-cell} ipython3
 
-morley_hist = alt.Chart().mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
-    y=alt.Y("count()", stack=False),
-    color=alt.Color("Expt:N")
-).properties(height=100, width=400)
-
-morley_hist_facet = (morley_hist + v_line).facet(
+morley_hist_facet = morley_hist_categorical.properties(
+    height=100
+).facet(
     "Expt",
-    data=morley_df,
     columns=1
 )
 ```
@@ -1690,13 +1689,13 @@ Histogram of Michelson's speed of light data split vertically by experiment.
 :::
 
 The visualization in {numref}`morley_hist_facet`
-now makes it quite clear how accurate the different experiments were
+makes it clear how accurate the different experiments were
 with respect to one another.
-The most variable measurements came from Experiment 1.
-There the measurements ranged from about 650&ndash;1050 km/sec.
-The least variable measurements came from Experiment 2.
-There, the measurements ranged from about 750&ndash;950 km/sec.
-The most different experiments still obtained quite similar results!
+The most variable measurements came from Experiment 1,
+where the measurements ranged from about 650&ndash;1050 km/sec.
+The least variable measurements came from Experiment 2,
+where the measurements ranged from about 750&ndash;950 km/sec.
+The most different experiments still obtained quite similar overall results!
 
 ```{index} altair; alt.X, altair; alt.Y, altair; configure_axis
 ```
@@ -1714,43 +1713,41 @@ function to transform our data into a relative measure of accuracy rather than
 absolute measurements.
 
 ```{code-cell} ipython3
-
-morley_rel = morley_df
-morley_rel = morley_rel.assign(
-    relative_accuracy=(
-        100 *((299000 + morley_df["Speed"]) - 299792.458) / (299792.458)
+speed_of_light = 299792.458
+morley_df = morley_df.assign(
+    relative_error=(
+        100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
     )
 )
-
-morley_rel
+morley_df
 ```
 
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(
-    strokeDash=[3]).encode(
-    x=alt.datum(0)
-)
-
-morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
+morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
-        "relative_accuracy",
-        bin=alt.Bin(maxbins=120),
+        "relative_error",
+        bin=True,
         title="Relative Accuracy (%)"
     ),
     y=alt.Y(
         "count()",
-        stack=False,
         title="# Measurements"
     ),
     color=alt.Color(
         "Expt:N",
         title="Experiment ID"
     )
-).properties(height=100, width=400)
+)
 
-morley_hist_relative = (morley_hist + v_line).facet(
+# Recreating v_line to indicate that the speed of light is at 0% relative error
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
+    x=alt.datum(0)
+)
+
+morley_hist_relative = (morley_hist_rel + v_line).properties(
+    height=100
+).facet(
     "Expt",
-    data=morley_rel,
     columns=1,
     title="Histogram of relative accuracy of Michelson’s speed of light data"
 )

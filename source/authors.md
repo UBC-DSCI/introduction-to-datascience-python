@@ -15,7 +15,7 @@ kernelspec:
 
 # About the authors
 
-The original version of this textbook was developed by Tiffany Timbers, Trevor Campbell, and Melissa Lee using the R programming language. The content of R textbook was adapted to Python by Trevor Campbell, Lindsay Heagy, and Joel Ostblom.
+The original version of this textbook was developed by Tiffany Timbers, Trevor Campbell, and Melissa Lee using the R programming language. The content of R textbook was adapted to Python by Trevor Campbell, Lindsey Heagy, and Joel Ostblom.
 
 **[Trevor Campbell](https://trevorcampbell.me/)** is an Assistant Professor in the Department of Statistics at
 the University of British Columbia. His research focuses on automated, scalable

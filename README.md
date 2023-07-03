@@ -2,7 +2,7 @@
 This is the source for the python edition of the *Data Science: A First Introduction* textbook.
 
 For the R version of the textbook, please visit https://datasciencebook.ca or the github repository
-at https://github.com/ubc-dsci/introduction-to-datascience .
+at https://github.com/ubc-dsci/introduction-to-datascience.
 
 ## License Information
 

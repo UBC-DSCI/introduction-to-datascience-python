@@ -15,9 +15,12 @@ kernelspec:
 
 # About the authors
 
-The original version of this textbook was developed by Tiffany Timbers, Trevor Campbell, and Melissa Lee using the R programming language. The content of R textbook was adapted to Python by Trevor Campbell, Joel Ostblom, and Lindsey Heagy.
+The original version of this textbook was developed by Tiffany Timbers, Trevor
+Campbell, and Melissa Lee for the R programming language. The content of the R
+textbook was adapted to Python by Trevor Campbell, Joel Ostblom, and Lindsey
+Heagy.
 
-**[Trevor Campbell](https://trevorcampbell.me/)** is an Assistant Professor in the Department of Statistics at
+**[Trevor Campbell](https://trevorcampbell.me/)** is an Associate Professor in the Department of Statistics at
 the University of British Columbia. His research focuses on automated, scalable
 Bayesian inference algorithms, Bayesian nonparametrics, streaming data, and
 Bayesian theory. He was previously a postdoctoral associate advised by Tamara
@@ -29,7 +32,7 @@ program at the University of Toronto.
 
 +++
 
-**[Tiffany Timbers](https://www.tiffanytimbers.com/)** is an Assistant Professor of Teaching in the Department of
+**[Tiffany Timbers](https://www.tiffanytimbers.com/)** is an Associate Professor of Teaching in the Department of
 Statistics and Co-Director for the Master of Data Science program (Vancouver
 Option) at the University of British Columbia. In these roles she teaches and
 develops curriculum around the responsible application of Data Science to solve

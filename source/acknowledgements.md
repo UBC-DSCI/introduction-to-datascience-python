@@ -49,10 +49,9 @@ is reflected in the content of this book.
 
 We'd like to thank everyone that has contributed to the development of
 [*Data Science: A First Introduction (Python Edition)*](https://ubc-dsci.github.io/introduction-to-datascience-python/).
-This is an open source Python translation of the original [*Data Science: A First Introduction*](https://datasciencebook.ca);
-the original focused on the R programming language. Both of these books are
-used to teach DSCI 100, a new introductory data science course
-at the University of British Columbia (UBC).
-We extend a special thank you to Navya Dahiya and Gloria Ye
-who completed the first round of translations of the R material to Python,
-and to Philip Austin who lead these efforts. 
+This is an open source Python translation of the original [*Data Science: A First Introduction*](https://datasciencebook.ca)
+book, which focused on the R programming language. Both of these books are
+used to teach DSCI 100 at the University of British Columbia (UBC).
+We would like to give special thanks to Navya Dahiya and Gloria Ye
+for completing the first round of translation of the R material to Python,
+and to Philip Austin for his leadership and guidance throughout the translation process.

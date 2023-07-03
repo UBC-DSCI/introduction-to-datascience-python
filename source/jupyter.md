@@ -189,7 +189,7 @@ The kernel is a program that executes the code inside your notebook and
 outputs the results. Kernels for many different programming languages have
 been created for Jupyter, which means that Jupyter can interpret and execute
 the code of many different programming languages. To run Python code, your notebook
-will need an Python kernel. In the top right of your window, you can see a circle
+will need a Python kernel. In the top right of your window, you can see a circle
 that indicates the status of your kernel. If the circle is empty
 (&#x25EF;), the kernel is idle and ready to execute code. If the circle is filled in
 (&#x2B24;), the kernel is busy running some code.
@@ -304,7 +304,7 @@ from top to bottom of the notebook.
 
 The most common way to inadvertently create a nonlinear notebook is to rely solely
 on using the (&blacktriangleright;) button to execute cells. For example,
-suppose you write some Python code that creates an Python object, say a variable named
+suppose you write some Python code that creates a Python object, say a variable named
 `y`. When you execute that cell and create `y`, it will continue
 to exist until it is deliberately deleted with Python code, or when the Jupyter
 notebook Python session (*i.e.*, kernel) is stopped or restarted. It can also be
@@ -492,7 +492,7 @@ file explorer ({numref}`launcher`).
 ---
 name: launcher
 ---
-Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with an Python kernel.
+Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with a Python kernel.
 ```
 
 +++

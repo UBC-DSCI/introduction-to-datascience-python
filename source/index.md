@@ -28,6 +28,10 @@ on [Amazon](https://www.amazon.com/Data-Science-First-Introduction-Chapman/dp/03
 
 <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
 
-This work by [Tiffany Timbers](https://www.tiffanytimbers.com/), [Trevor Campbell](https://trevorcampbell.me/),
-and [Melissa Lee](https://www.stat.ubc.ca/users/melissa-lee) is licensed under
+This work by [Tiffany Timbers](https://www.tiffanytimbers.com/),
+[Trevor Campbell](https://trevorcampbell.me/),
+[Melissa Lee](https://www.stat.ubc.ca/users/melissa-lee),
+[Lindsay Heagy](https://lindseyjh.ca/),
+and [Joel Ostblom](https://joelostblom.com/)
+is licensed under
 a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).

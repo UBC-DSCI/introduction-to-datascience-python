@@ -339,9 +339,9 @@ canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
 
-Let's compare the data frame here to the resulting data frame in Section
-{ref}`readcsv` after using `read_csv`. Notice anything? They look the same; they have
-the same number of columns and rows, and have the same column names!
+If you compare the data frame here to the data frame we obtained in Section
+{ref}`readcsv` using `read_csv`, you'll notice that they look identical: they have
+the same number of columns and rows, the same column names, and the same entries!
 So even though we needed to use different
 arguments depending on the file format, our resulting data frame
 (`canlang_data`) in both cases was the same.

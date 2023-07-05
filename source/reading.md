@@ -54,12 +54,13 @@ By the end of the chapter, readers will be able to do the following:
     - `names`
     - `skiprows`
 - Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
+- Use the `rename` function to rename columns in a data frame.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Connect to a database using the `ibis` library's `connect` function.
-- List the tables in a database using the `ibis` library's `list_tables` function
-- Create a reference to a database table using the `ibis` library's `table` function
-- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function
-- Use `to_csv` to save a data frame to a `.csv` file
+- List the tables in a database using the `ibis` library's `list_tables` function.
+- Create a reference to a database table using the `ibis` library's `table` function.
+- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function.
+- Use `to_csv` to save a data frame to a `.csv` file.
 % - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
 %     - Read/scrape data from an internet URL using the `BeautifulSoup` package
 %     - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
@@ -447,8 +448,8 @@ canlang_data
 ```
 
 We can also use `read_csv` to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
-contains tabular data. Here, we provide the URL to a remote file
-as the path in `read_csv`, instead of a path to a local file on our
+contains tabular data. Here, we provide the URL of a remote file
+to `read_csv`, instead of a path to a local file on our
 computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
@@ -468,7 +469,7 @@ In many of the examples above, we gave you previews of the data file before we r
 it into Python. Previewing data is essential to see whether or not there are column
 names, what the separators are, and if there are rows you need to skip. You
 should do this yourself when trying to read in data files: open the file in whichever
-text editor your prefer to inspect its contents prior to reading it into Python.
+text editor you prefer to inspect its contents prior to reading it into Python.
 
 ## Reading tabular data from a Microsoft Excel file
 
@@ -594,8 +595,8 @@ using Python with SQLite and PostgreSQL databases.
 ```
 
 SQLite is probably the simplest relational database system
-that one can use in combination with Python. SQLite databases are self-contained and
-usually stored and accessed locally on one computer. Data is usually stored in
+that one can use in combination with Python. SQLite databases are self-contained, and are
+usually stored and accessed locally on one computer from
 a file with a `.db` extension (or sometimes a `.sqlite` extension).
 Similar to Excel files, these are not plain text files and cannot be read in a plain text editor.
 

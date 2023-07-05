@@ -1338,9 +1338,9 @@ algorithm does this by first finding the $K$ points in the training data
 nearest to the new observation, and then returning the majority class vote from
 those training observations. We can tune and evaluate a classifier by splitting
 the data randomly into a training and test data set. The training set is used
-to build the classifier and we can tune the classifier (e.g., select the number
+to build the classifier, and we can tune the classifier (e.g., select the number
 of neighbors in $K$-nearest neighbors) by maximizing estimated accuracy via
-cross-validation. After we have tuned the model we can use the test set to
+cross-validation. After we have tuned the model, we can use the test set to
 estimate its accuracy.  The overall process is summarized in
 {numref}`fig:06-overview`.
 

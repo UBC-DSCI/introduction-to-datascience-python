@@ -383,15 +383,15 @@ my_number + 2
 
 Object names can consist of letters, numbers, and underscores (`_`).
 Other symbols won't work since they have their own meanings in Python. For example,
-`+` is the addition symbol; if we try to assign a name with
-the `+` symbol, Python will complain and we will get an error!
+`-` is the subtraction symbol; if we try to assign a name with
+the `-` symbol, Python will complain and we will get an error!
 
 ```
-na+me = 1
+my-number = 1
 ```
 
 ```
-SyntaxError: cannot assign to operator
+SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
 ```
 
 ```{index} object; naming convention

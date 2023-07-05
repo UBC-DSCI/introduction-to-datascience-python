@@ -478,7 +478,7 @@ You will learn about many other kinds of logical
 statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
-and not one of the special words that makes up the Python programming language,
+and not one of the special words that make up the Python programming language,
 or one of the names we have given to objects in the code we have already written.
 
 > **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally

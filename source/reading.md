@@ -368,9 +368,9 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 
 ```
 
-Data frames in Python need to have column names.  Thus if you read in data that
-don't have column names, Python will assign names automatically. In this example,
-Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
+Data frames in Python need to have column names.  Thus if you read in data 
+without column names, Python will assign names automatically. In this example,
+Python assigns the column names `0, 1, 2, 3, 4, 5`.
 To read this data into Python, we specify the first
 argument as the path to the file (as done with `read_csv`), and then provide
 values to the `sep` argument (here a tab, which we represent by `"\t"`),

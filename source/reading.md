@@ -1548,7 +1548,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Reading in data locally and from the web" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

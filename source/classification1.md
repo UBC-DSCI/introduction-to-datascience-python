@@ -252,16 +252,17 @@ the `groupby` and `count` methods to find the number and percentage
 of benign and malignant tumor observations in our data set. When paired with
 `groupby`, `count` counts the number of observations for each value of the `Class`
 variable. Then we calculate the percentage in each group by dividing by the total
-number of observations and multiplying by 100. We have 
+number of observations and multiplying by 100.
+The total number of observations equals the number of rows in the data frame,
+which we can access via the `shape` attribute of the data frame
+(`shape[0]` is the number of rows and `shape[1]` is the number of columns).
+We have 
 {glue:}`benign_count` ({glue:}`benign_pct`\%) benign and
 {glue:}`malignant_count` ({glue:}`malignant_pct`\%) malignant 
 tumor observations.
 
 ```{code-cell} ipython3
-explore_cancer = pd.DataFrame()
-explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
-explore_cancer['percentage'] = 100 * explore_cancer['count']/len(cancer)
-explore_cancer
+100 * cancer.groupby('Class').size() / cancer.shape[0]
 ```
 
 ```{index} value_counts
@@ -1649,7 +1650,7 @@ from sklearn.utils import resample
 malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
 benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
 malignant_cancer_upsample = resample(
-    malignant_cancer, n_samples=len(benign_cancer)
+    malignant_cancer, n_samples=benign_cancer.shape[0]
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer['Class'].value_counts()

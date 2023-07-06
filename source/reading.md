@@ -351,7 +351,7 @@ arguments depending on the file format, our resulting data frame
 ```{index} read function; header, reading; separator
 ```
 
-The `can_lang_no_cols.tsv` file contains a slightly different version
+The `can_lang_no_names.tsv` file contains a slightly different version
 of this data set, except with no column names, and tabs for separators.
 Here is how the file looks in a text editor:
 
@@ -380,7 +380,7 @@ contain its own column names.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data =  pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep = "\t",
     header = None
 )
@@ -427,7 +427,7 @@ list of column names to the `names` argument in `read_csv`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data = pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep="\t",
     header=None,
     names=[

@@ -967,7 +967,7 @@ model using house size and number of bedrooms, and then we can compare it to
 the model we previously came up with that only used house
 size. Let's do that now!
 
-First we'll build a new model specification and preprocessor for the analysis.
+First we'll build a new model object and preprocessor for the analysis.
 Note that we pass the list `["sqft", "beds"]` into the `make_column_transformer`
 function to denote that we have two predictors.  Moreover, we do not specify `n_neighbors` in
 `KNeighborsRegressor`, indicating that we want this parameter to be tuned by `GridSearchCV`.

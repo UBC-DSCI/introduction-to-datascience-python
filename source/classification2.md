@@ -1365,7 +1365,7 @@ The overall workflow for performing $K$-nearest neighbors classification using `
 4. Use `GridSearchCV` to estimate the classifier accuracy for a range of $K$ values. Pass the pipeline and parameter grid defined in steps 2. and 3. as the `param_grid` argument and the `estimator` argument, respectively.
 5. Execute the grid search by passing the training data to the `fit` method on the `GridSearchCV` instance created in step 4.
 6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
-7. Make a new model specification for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
+7. Create a new model object for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
 
 In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 

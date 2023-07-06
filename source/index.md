@@ -15,7 +15,7 @@ kernelspec:
 
 # Welcome!
 
-This is the [website](https://ubc-dsci.github.io/introduction-to-datascience-python/) for *Data Science: A First Introduction (Python Edition)*.
+This is the [website](https://python.datasciencebook.ca) for *Data Science: A First Introduction (Python Edition)*.
 You can read the web version of the book on this site. Click a section in the table of contents
 on the left side of the page to navigate to it. If you are on a mobile device,
 you may need to open the table of contents first by clicking the menu button on

@@ -383,15 +383,15 @@ my_number + 2
 
 Object names can consist of letters, numbers, and underscores (`_`).
 Other symbols won't work since they have their own meanings in Python. For example,
-`+` is the addition symbol; if we try to assign a name with
-the `+` symbol, Python will complain and we will get an error!
+`-` is the subtraction symbol; if we try to assign a name with
+the `-` symbol, Python will complain and we will get an error!
 
 ```
-na+me = 1
+my-number = 1
 ```
 
 ```
-SyntaxError: cannot assign to operator
+SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
 ```
 
 ```{index} object; naming convention
@@ -478,7 +478,7 @@ You will learn about many other kinds of logical
 statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
-and not one of the special words that makes up the Python programming language,
+and not one of the special words that make up the Python programming language,
 or one of the names we have given to objects in the code we have already written.
 
 > **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
@@ -1154,7 +1154,7 @@ and then selecting `Show Contextual Help`.
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Python and Pandas" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

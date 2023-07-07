@@ -69,7 +69,7 @@ to help you practice the concepts you will learn. We strongly recommend that you
 work through the worksheet when you finish reading each chapter
 before moving on to the next chapter. All of the worksheets
 are available at
-[https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme);
+[https://worksheets.python.datasciencebook.ca](https://worksheets.python.datasciencebook.ca);
 the "Exercises" section at the end of each chapter points you to the right worksheet for that chapter.
 For each worksheet, you can either launch an interactive version of the worksheet in your browser by clicking the "launch binder" button,
 or preview a non-interactive version of the worksheet by clicking "view worksheet."

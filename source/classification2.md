@@ -1338,9 +1338,9 @@ algorithm does this by first finding the $K$ points in the training data
 nearest to the new observation, and then returning the majority class vote from
 those training observations. We can tune and evaluate a classifier by splitting
 the data randomly into a training and test data set. The training set is used
-to build the classifier and we can tune the classifier (e.g., select the number
+to build the classifier, and we can tune the classifier (e.g., select the number
 of neighbors in $K$-nearest neighbors) by maximizing estimated accuracy via
-cross-validation. After we have tuned the model we can use the test set to
+cross-validation. After we have tuned the model, we can use the test set to
 estimate its accuracy.  The overall process is summarized in
 {numref}`fig:06-overview`.
 
@@ -1954,7 +1954,7 @@ Estimated accuracy versus the number of predictors for the sequence of models bu
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Classification II: evaluation and tuning" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

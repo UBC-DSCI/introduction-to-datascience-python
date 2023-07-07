@@ -54,12 +54,13 @@ By the end of the chapter, readers will be able to do the following:
     - `names`
     - `skiprows`
 - Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
+- Use the `rename` function to rename columns in a data frame.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Connect to a database using the `ibis` library's `connect` function.
-- List the tables in a database using the `ibis` library's `list_tables` function
-- Create a reference to a database table using the `ibis` library's `table` function
-- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function
-- Use `to_csv` to save a data frame to a `.csv` file
+- List the tables in a database using the `ibis` library's `list_tables` function.
+- Create a reference to a database table using the `ibis` library's `table` function.
+- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function.
+- Use `to_csv` to save a data frame to a `.csv` file.
 % - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
 %     - Read/scrape data from an internet URL using the `BeautifulSoup` package
 %     - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
@@ -338,9 +339,9 @@ canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
 
-Let's compare the data frame here to the resulting data frame in Section
-{ref}`readcsv` after using `read_csv`. Notice anything? They look the same; they have
-the same number of columns and rows, and have the same column names!
+If you compare the data frame here to the data frame we obtained in Section
+{ref}`readcsv` using `read_csv`, you'll notice that they look identical: they have
+the same number of columns and rows, the same column names, and the same entries!
 So even though we needed to use different
 arguments depending on the file format, our resulting data frame
 (`canlang_data`) in both cases was the same.
@@ -350,7 +351,7 @@ arguments depending on the file format, our resulting data frame
 ```{index} read function; header, reading; separator
 ```
 
-The `can_lang_no_cols.tsv` file contains a slightly different version
+The `can_lang_no_names.tsv` file contains a slightly different version
 of this data set, except with no column names, and tabs for separators.
 Here is how the file looks in a text editor:
 
@@ -367,9 +368,9 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 
 ```
 
-Data frames in Python need to have column names.  Thus if you read in data that
-don't have column names, Python will assign names automatically. In this example,
-Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
+Data frames in Python need to have column names.  Thus if you read in data 
+without column names, Python will assign names automatically. In this example,
+Python assigns the column names `0, 1, 2, 3, 4, 5`.
 To read this data into Python, we specify the first
 argument as the path to the file (as done with `read_csv`), and then provide
 values to the `sep` argument (here a tab, which we represent by `"\t"`),
@@ -379,7 +380,7 @@ contain its own column names.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data =  pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep = "\t",
     header = None
 )
@@ -426,7 +427,7 @@ list of column names to the `names` argument in `read_csv`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data = pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep="\t",
     header=None,
     names=[
@@ -447,8 +448,8 @@ canlang_data
 ```
 
 We can also use `read_csv` to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
-contains tabular data. Here, we provide the URL to a remote file
-as the path in `read_csv`, instead of a path to a local file on our
+contains tabular data. Here, we provide the URL of a remote file
+to `read_csv`, instead of a path to a local file on our
 computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
@@ -468,7 +469,7 @@ In many of the examples above, we gave you previews of the data file before we r
 it into Python. Previewing data is essential to see whether or not there are column
 names, what the separators are, and if there are rows you need to skip. You
 should do this yourself when trying to read in data files: open the file in whichever
-text editor your prefer to inspect its contents prior to reading it into Python.
+text editor you prefer to inspect its contents prior to reading it into Python.
 
 ## Reading tabular data from a Microsoft Excel file
 
@@ -594,8 +595,8 @@ using Python with SQLite and PostgreSQL databases.
 ```
 
 SQLite is probably the simplest relational database system
-that one can use in combination with Python. SQLite databases are self-contained and
-usually stored and accessed locally on one computer. Data is usually stored in
+that one can use in combination with Python. SQLite databases are self-contained, and are
+usually stored and accessed locally on one computer from
 a file with a `.db` extension (or sometimes a `.sqlite` extension).
 Similar to Excel files, these are not plain text files and cannot be read in a plain text editor.
 
@@ -1547,7 +1548,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Reading in data locally and from the web" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

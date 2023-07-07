@@ -23,7 +23,6 @@ parts:
     - file: inference.md
     - file: jupyter.md
     - file: version-control.md
-- caption: Appendix
-  chapters:
-    - file: appendixA.md
-    #- file: references.md
+#- caption: Appendix
+#  chapters:
+#    - file: references.md

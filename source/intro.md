@@ -874,7 +874,7 @@ section with pandas.
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
 in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make
-the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the visualization chapter).
+the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications

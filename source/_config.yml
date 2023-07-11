@@ -1,6 +1,6 @@
 # Book settings
 title: "Data Science: A First Introduction (Python Edition)"
-author: UBC
+author: "The DSCI100 Development Team"
 copyright: "2022" # Copyright year to be placed in the footer
 logo: "" # A path to the book logo
 # Patterns to skip when building the book. Can be glob-style (e.g. "*skip.ipynb")
@@ -81,4 +81,4 @@ sphinx:
 
 #######################################################################################
 bibtex_bibfiles:
-    - ../references.bib
+    - references.bib

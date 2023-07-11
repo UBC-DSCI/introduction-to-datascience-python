@@ -24,11 +24,17 @@ The `production` branch contains the source material for the live, publicly view
 
 ### Build locally
 
-You can build the book on your own machine by running
+You can build the HTML version of the book on your own machine by running
 ```
 ./build_html.sh
 ```
 in the root directory of this repository. The book can be viewed in your browser by opening the `source/_build/html/index.html` file.
+
+You can build the PDF version of the book on your own machine by running
+```
+./build_pdf.sh
+```
+in the root directory of this repository. The book can be viewed in a PDF reader by opening `source/_build/latex/python.pdf`.
 
 ### Update build environment
 

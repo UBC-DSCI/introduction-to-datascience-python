@@ -3,8 +3,8 @@ FROM jupyter/scipy-notebook
 
 USER root
 
-# install vim and a few tex packages for PDF builds
-RUN apt-get update && apt-get install -y vim texlive-latex-extra texlive-fonts-extra texlive-xetex latexmk xindy
+# install vim and a few packages for PDF builds
+RUN apt-get update && apt-get install -y vim texlive-latex-extra texlive-fonts-extra texlive-xetex latexmk xindy imagemagick
 
 USER ${NB_UID}
 

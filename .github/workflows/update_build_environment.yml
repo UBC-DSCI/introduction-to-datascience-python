@@ -34,6 +34,15 @@ jobs:
         chmod u+x build_html.sh
         git add build_html.sh
         git commit -m "update build_html.sh script with new docker image"
+    - name: Update build_pdf.sh script
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git pull origin main
+        sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.outputs.snapshot-tag }}/g' build_pdf.sh > build_pdf.tmp && mv build_pdf.tmp build_pdf.sh
+        chmod u+x build_pdf.sh
+        git add build_pdf.sh
+        git commit -m "update build_pdf.sh script with new docker image"
     - name: Push changes to build scripts
       uses: ad-m/github-push-action@master
       with:

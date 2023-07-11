@@ -4,7 +4,7 @@ FROM jupyter/scipy-notebook
 USER root
 
 # install vim
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim texlive-latex-extra texlive-fonts-extra texlive-xetex latexmk
 
 USER ${NB_UID}
 

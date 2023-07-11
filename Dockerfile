@@ -3,7 +3,7 @@ FROM jupyter/scipy-notebook
 
 USER root
 
-# install vim
+# install vim and a few tex packages for PDF builds
 RUN apt-get update && apt-get install -y vim texlive-latex-extra texlive-fonts-extra texlive-xetex latexmk
 
 USER ${NB_UID}
@@ -13,7 +13,7 @@ WORKDIR "${HOME}"
 # remove the "work/" directory added in an earlier layer...
 RUN rm -rf work
 
-# Install R packages
+# Install various python packages
 RUN mamba install --quiet --yes \
         'numpy' \
         'jinja2' \

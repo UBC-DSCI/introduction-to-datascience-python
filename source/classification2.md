@@ -1058,7 +1058,7 @@ it *does* output the standard *deviation* (`std_test_score`). We can compute
 the standard error from the standard deviation by dividing it by the square
 root of the number of folds, i.e., 
   
-$$\text{Standard Error} = \frac{1}{\sqrt{\text{# Folds}}}\text{Standard Deviation}.$$
+$$\text{Standard Error} = \frac{\text{Standard Deviation}}{\sqrt{\text{Number of Folds}}}.$$
 
 We will also rename the parameter name column to be a bit more readable,
 and drop the now unused `std_test_score` column.

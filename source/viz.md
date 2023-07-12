@@ -613,7 +613,7 @@ can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] 
 ```
 
 We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
-As you have seen in the scatter plots in the previous section
+As we have seen in the scatter plots in the previous section,
 the default behavior of `mark_point` is to draw the outline of each point.
 If we would like to fill them in,
 we can pass the argument `filled=True` to `mark_point`
@@ -771,7 +771,7 @@ glue('can_lang_plot_log', can_lang_plot_log, display=False)
 :figwidth: 700px
 :name: can_lang_plot_log
 
-Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes.
+Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log-adjusted x and y axes.
 :::
 
 You will notice two things in the chart above,
@@ -811,7 +811,7 @@ glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
 :figwidth: 700px
 :name: can_lang_plot_log_revised
 
-Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes. Only the major gridlines are shown and the suffix "k" indicate 1,000 ("kilo"), while the suffix "M" indicates 1,000,000 ("million").
+Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log-adjusted x and y axes. Only the major gridlines are shown. The suffix "k" indicates 1,000 ("kilo"), while the suffix "M" indicates 1,000,000 ("million").
 :::
 
 

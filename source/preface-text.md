@@ -31,8 +31,8 @@ analyses allows both you and others to easily double-check and validate your wor
 
 At a high level, in this book, you will learn how to
 
-(1) identify common problems in data science, and
-(2) solve those problems with reproducible and auditable workflows.
+1. identify common problems in data science, and
+2. solve those problems with reproducible and auditable workflows.
 
 {numref}`preface-overview-fig` summarizes what you will learn in each chapter
 of this book. Throughout, you will learn how to use the [Python programming language](https://www.python.org/) to perform

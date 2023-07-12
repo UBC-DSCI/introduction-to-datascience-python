@@ -373,7 +373,7 @@ that the accuracy estimates from the test data are reasonable. First,
 setting `shuffle=True` (which is the default) means the data will be shuffled before splitting,
 which ensures that any ordering present
 in the data does not influence the data that ends up in the training and testing sets.
-Second, by specifying the `stratify` parameter to be the target column of the training set,
+Second, by specifying the `stratify` parameter to be the response variable in the training set,
 it **stratifies** the data by the class label, to ensure that roughly
 the same proportion of each class ends up in both the training and testing sets. For example,
 in our data set, roughly 63% of the

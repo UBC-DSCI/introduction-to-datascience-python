@@ -170,7 +170,7 @@ The scientific question guides our initial exploration: the columns in the
 data that we are interested in are `sqft` (house size, in livable square feet)
 and `price` (house sale price, in US dollars (USD)).  The first step is to visualize
 the data as a scatter plot where we place the predictor variable
-(house size) on the x-axis, and we place the target/response variable that we
+(house size) on the x-axis, and we place the response variable that we
 want to predict (sale price) on the y-axis.
 
 > **Note:** Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`,
@@ -922,7 +922,7 @@ As the algorithm is the same, we will not cover it again in this chapter.
 We will now demonstrate a multivariable KNN regression analysis of the
 Sacramento real estate data using `scikit-learn`. This time we will use
 house size (measured in square feet) as well as number of bedrooms as our
-predictors, and continue to use house sale price as our outcome/target variable
+predictors, and continue to use house sale price as our response variable
 that we are trying to predict.
 It is always a good practice to do exploratory data analysis, such as
 visualizing the data, before we start modeling the data. {numref}`fig:07-bedscatter`

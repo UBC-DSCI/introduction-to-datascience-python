@@ -955,7 +955,7 @@ In order to fit the model on the breast cancer data, we need to call `fit` on
 the model object. The `X` argument is used to specify the data for the predictor
 variables, while the `y` argument is used to specify the data for the response variable.
 So below, we set `X=cancer_train[["Perimeter", "Concavity"]]` and
-`y=cancer_train['Class']` to specify that `Class` is the target
+`y=cancer_train['Class']` to specify that `Class` is the response
 variable (the one we want to predict), and both `Perimeter` and `Concavity` are
 to be used as the predictors. Note that the `fit` function might look like it does not
 do much from the outside, but it is actually doing all the heavy lifting to train

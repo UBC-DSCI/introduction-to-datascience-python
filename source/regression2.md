@@ -464,7 +464,7 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 
 Our final model's test error as assessed by RMSPE
 is {glue:text}`sacr_RMSPE`.
-Remember that this is in units of the target/response variable, and here that
+Remember that this is in units of the response variable, and here that
 is US Dollars (USD). Does this mean our model is "good" at predicting house
 sale price based off of the predictor of home size? Again, answering this is
 tricky and requires knowledge of how you intend to use the prediction.
@@ -645,7 +645,7 @@ flexible and can be quite wiggly. But there is a major interpretability advantag
 model to a straight line. A
 straight line can be defined by two numbers, the
 vertical intercept and the slope. The intercept tells us what the prediction is when
-all of the predictors are equal to 0; and the slope tells us what unit increase in the target/response
+all of the predictors are equal to 0; and the slope tells us what unit increase in the response
 variable we predict given a unit increase in the predictor
 variable. KNN regression, as simple as it is to implement and understand, has no such
 interpretability from its wiggly line.
@@ -654,7 +654,7 @@ interpretability from its wiggly line.
 ```
 
 There can, however, also be a disadvantage to using a simple linear regression
-model in some cases, particularly when the relationship between the target and
+model in some cases, particularly when the relationship between the response variable and
 the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
 these cases the prediction model from a simple linear regression
 will underfit (have high bias), meaning that model/predicted values do not
@@ -1324,7 +1324,7 @@ predictive performance.
 
 So far in this textbook we have used regression only in the context of
 prediction. However, regression can also be seen as a method to understand and
-quantify the effects of individual variables on a response / outcome of interest.
+quantify the effects of individual variables on a response variable of interest.
 In the housing example from this chapter, beyond just using past data
 to predict future sale prices,
 we might also be interested in describing the

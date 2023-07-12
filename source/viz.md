@@ -864,9 +864,10 @@ Next, we will edit the visualization to use the percentages we just computed
 (and change our axis labels to reflect this change in
 units). {numref}`can_lang_plot_percent` displays
 the final result.
-Here all the tick labels fit by default so we are not changing the labels to include suffixes
-(note that suffixes can also be harder to understand for small quantities,
-so they are best to avoid for small numbers unless you are communicating to a technical audience).
+Here all the tick labels fit by default so we are not changing the labels to include suffixes.
+Note that suffixes can also be harder to understand,
+so it is often advisable to avoid them (particularly for small quantities)
+unless you are communicating to a technical audience.
 
 ```{code-cell} ipython3
 can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
@@ -1043,11 +1044,11 @@ if your visualizations are color-blind friendly.
 ```{index} color palette; color blindness simulator
 ```
 
-All the available color schemes and information on how to create your own, can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
+All the available color schemes and information on how to create your own can be viewed [in the Altair documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
 To change the color scheme of our chart,
 we can add the `scheme` argument in the `scale` of the `color` encoding.
 Below we pick the `"dark2"` theme, with the result shown
-in {numref}`can_lang_plot_theme`
+in {numref}`can_lang_plot_theme`.
 We also set the `shape` aesthetic mapping to the `category` variable as well;
 this makes the scatter point shapes different for each language category. This kind of
 visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
@@ -1193,7 +1194,7 @@ Here, we have a data frame of Earth's landmasses,
 and are trying to compare their sizes.
 The right type of visualization to answer this question is a bar plot.
 In a bar plot, the height of the bar represents the value of a summary statistic
-(usually a size, count, sum, proportion or percentage).
+(usually a size, count, sum, proportion, or percentage).
 They are particularly useful for comparing summary statistics between different
 groups of a categorical variable.
 
@@ -1239,7 +1240,7 @@ the `nlargest` function; the first argument is the number of rows we want and
 the second is the name of the column we want to use for comparing who is
 largest. Then to help make the landmass labels easier to read
 we'll swap the `x` and `y` variables,
-so that the landmass labels are on the y-axis and we don't have to tilt our head to read them.
+so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
 ```{index} pandas.DataFrame; nlargest
 ```
@@ -1266,13 +1267,15 @@ Bar plot of size for Earth's largest 12 landmasses.
 :::
 
 
-The plot in {numref}`islands_bar_top` is clearer now,
+The plot in {numref}`islands_bar_top` is definitely clearer now,
 and allows us to answer our question:
-"Which are the top 7 largest landmasses continents?".
+"Which of the top 7 largest landmasses are continents?".
 However, we could still improve this visualization
-by organizing the bars by landmass size rather than by alphabetical order.
-We could also color the bars based on whether they are a continent or not
-to add additional information to the chart.
+by organizing the bars by landmass size rather than by alphabetical order
+and by coloring the bars based on whether they correspond to a continent.
+The data for this is stored in the `landmass_type` column.
+TO use this to color the bars,
+we set `color` encoding to `landmass_type`.
 
 To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
@@ -1283,7 +1286,7 @@ This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
 which is generally the most visually appealing when sorting bars.
-If instead,
+If instead
 we want to sort the values on `y-axis` in descending order of `x-axis`,
 we can add a minus sign to reverse the order and specify `sort='-x'`.
 

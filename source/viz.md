@@ -843,6 +843,10 @@ language as their mother tongue and primary language at home for all the
 languages in the `can_lang` data set. Since the new columns are appended to the
 end of the data table, we selected the new columns after the transformation so
 you can clearly see the mutated output from the table.
+Note that we formatted the number for the Canadian population
+using `_` so that it is easier to read;
+this does not affect how Python interprets the number
+and is just added for readability.
 
 ```{index} pandas.DataFrame; assign, pandas.DataFrame; [[]]
 ```

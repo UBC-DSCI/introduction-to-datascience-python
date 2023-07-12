@@ -55,7 +55,7 @@ By the end of the chapter, readers will be able to do the following:
       - `str.split`
   - Recall and use the following operators for their
     intended data wrangling tasks:
-      - `==`
+      - `==`, `!=`, `<`, `>`, `<=`, `>=`
       - `in`
       - `and`
       - `or`

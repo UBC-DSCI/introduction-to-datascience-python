@@ -1299,7 +1299,7 @@ Lets say that we want to know
 the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
 We use `[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
 ```{code-cell} ipython3
-region_lang["mother_tongue":"lang_known"].agg(["mean", "std"])
+region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
 
 ## Performing operations on groups of rows using `groupby`

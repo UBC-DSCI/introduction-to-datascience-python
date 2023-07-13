@@ -1074,11 +1074,14 @@ rather than just selecting a range. For example, let's say we wanted only to sel
 columns `most_at_home` and `most_at_work`. There are other functions that allow
 us to select variables based on their names. In particular, we can use the `.str.startswith` method
 to choose only the columns that start with the word "most".
-Since the `str.starswith` expression returns a list of column names
-we can use either `[]` or `loc[]` here.
+The `str.startswith` expression returns a boolean list
+corresponding to the column names
+which means that we have to use `.loc[]`
+since passing this list to `[]`
+would attempt to filter the rows instead of the columns.
 
 ```{code-cell} ipython3
-tidy_lang[tidy_lang.columns.str.startswith('most')]
+tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
 ```
 
 ```{index} pandas.Series; str.contains
@@ -1089,7 +1092,7 @@ We could also have chosen the columns containing an underscore `_` by using the
 the columns we want contain underscores and the others don't.
 
 ```{code-cell} ipython3
-tidy_lang[tidy_lang.columns.str.contains('_')]
+tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 ```
 
 ## Using `iloc[]` to extract rows and columns by position

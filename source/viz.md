@@ -1268,8 +1268,9 @@ Bar plot of size for Earth's largest 12 landmasses.
 
 
 The plot in {numref}`islands_bar_top` is definitely clearer now,
-and allows us to answer our question:
-"Which of the top 7 largest landmasses are continents?".
+and allows us to answer our initial questions:
+"Are the seven continents Earth's largest landmasses?"
+and "Which are the next few largest landmasses?".
 However, we could still improve this visualization
 by organizing the bars by landmass size rather than by alphabetical order
 and by coloring the bars based on whether they correspond to a continent.

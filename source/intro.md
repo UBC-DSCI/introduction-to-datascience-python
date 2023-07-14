@@ -804,13 +804,12 @@ import altair as alt
 
 +++
 
-The fundamental object in `altair` is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
+The fundamental object in `altair` is the `Chart`, which takes a data frame as an argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized.
-We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute
+We first indicate what kind of graphical *mark* we want to use to represent the data. Here we set the mark attribute
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
-Next, we need to encode the variables of the data frame using
-the `x` (represents the x-axis position of the points) and
-`y` (represents the y-axis position of the points) *channels*. We use the `encode()`
+Next, we need to *encode* the variables of the data frame using
+the `x` and `y` *channels* (which represent the x-axis and y-axis position of the points). We use the `encode()`
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 
@@ -853,7 +852,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 ```{index} see: .; chaining methods
 ```
 
-### Formatting `altair` objects
+### Formatting `altair` charts
 
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
@@ -865,7 +864,9 @@ example above, Python uses the column name `mother_tongue` as the label for the
 y axis, but most people will not know what that is. And even if they did, they
 will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
-Canadian Residents)" would be much more informative.
+Canadian Residents)" would be much more informative. To make the code easier to
+read, we're spreading it out over multiple lines just as we did in the previous
+section with pandas.
 
 ```{index} plot; labels, plot; axis labels
 ```
@@ -873,20 +874,17 @@ Canadian Residents)" would be much more informative.
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
 in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make
-the axes titles more informative.
+the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 `alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
 to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
-barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('language', title='Language'),
-        y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
-    ))
-
+barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('language', title='Language'),
+    y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
+)
 ```
 
 
@@ -915,13 +913,10 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 
 ```{code-cell} ipython3
-barplot_mother_tongue_axis = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', title='Language')
-    ))
-
+barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language', title='Language')
+)
 ```
 
 ```{code-cell} ipython3
@@ -951,13 +946,10 @@ the `sort` argument, which orders a variable (here `language`) based on the
 values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
-ordered_barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', sort='x', title='Language')
-    ))
-
+ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language', sort='x', title='Language')
+)
 ```
 
 +++
@@ -1028,17 +1020,13 @@ ten_lang = (
     can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
     .sort_values(by="mother_tongue", ascending=False)
     .head(10)
-    )
+)
 
 # create the visualization
-ten_lang_plot = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', sort='x', title='Language')
-    ))
-
-
+ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language', sort='x', title='Language')
+)
 ```
 
 ```{code-cell} ipython3

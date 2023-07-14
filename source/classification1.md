@@ -290,14 +290,10 @@ perimeter and concavity variables. Recall that `altair's` default palette
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
-perim_concav = (
-    alt.Chart(cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+perim_concav = alt.Chart(cancer).mark_circle().encode(
+    x=alt.X("Perimeter", title="Perimeter (standardized)"),
+    y=alt.Y("Concavity", title="Concavity (standardized)"),
+    color=alt.Color("Class", title="Diagnosis"),
 )
 perim_concav
 ```
@@ -1441,14 +1437,10 @@ rare_cancer = pd.concat((
     cancer[cancer["Class"] == 'Malignant'].head(3)
 ))
 
-rare_plot = (
-    alt.Chart(rare_cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
+    x=alt.X("Perimeter", title="Perimeter (standardized)"),
+    y=alt.Y("Concavity", title="Concavity (standardized)"),
+    color=alt.Color("Class", title="Diagnosis"),
 )
 rare_plot
 ```
@@ -1555,10 +1547,10 @@ knn.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"]
 
 # create a prediction pt grid
 per_grid = np.linspace(
-    rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max(), 50
+    rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05, 50
 )
 con_grid = np.linspace(
-    rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max(), 50
+    rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05, 50
 )
 pcgrid = np.array(np.meshgrid(per_grid, con_grid)).reshape(2, -1).T
 pcgrid = pd.DataFrame(pcgrid, columns=["Perimeter", "Concavity"])
@@ -1594,14 +1586,16 @@ prediction_plot = (
             "Perimeter",
             title="Perimeter (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+                domain=(rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05),
+                nice=False
             ),
         ),
         y=alt.Y(
             "Concavity",
             title="Concavity (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+                domain=(rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05),
+                nice=False
             ),
         ),
         color=alt.Color("Class", title="Diagnosis"),
@@ -1685,14 +1679,16 @@ rare_plot = (
             "Perimeter",
             title="Perimeter (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+                domain=(rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05),
+                nice=False
             ),
         ),
         y=alt.Y(
             "Concavity",
             title="Concavity (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+                domain=(rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05),
+                nice=False
             ),
         ),
         color=alt.Color("Class", title="Diagnosis"),
@@ -1809,10 +1805,10 @@ import numpy as np
 
 # create the grid of area/smoothness vals, and arrange in a data frame
 are_grid = np.linspace(
-    unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 50
+    unscaled_cancer["Area"].min() * 0.95, unscaled_cancer["Area"].max() * 1.05, 50
 )
 smo_grid = np.linspace(
-    unscaled_cancer["Smoothness"].min(), unscaled_cancer["Smoothness"].max(), 50
+    unscaled_cancer["Smoothness"].min() * 0.95, unscaled_cancer["Smoothness"].max() * 1.05, 50
 )
 asgrid = np.array(np.meshgrid(are_grid, smo_grid)).reshape(2, -1).T
 asgrid = pd.DataFrame(asgrid, columns=["Area", "Smoothness"])
@@ -1836,17 +1832,19 @@ unscaled_plot = (
             "Area",
             title="Area",
             scale=alt.Scale(
-                domain=(unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max())
-            ),
+                domain=(unscaled_cancer["Area"].min() * 0.95, unscaled_cancer["Area"].max() * 1.05),
+            nice=False
+            )
         ),
         y=alt.Y(
             "Smoothness",
             title="Smoothness",
             scale=alt.Scale(
                 domain=(
-                    unscaled_cancer["Smoothness"].min(),
-                    unscaled_cancer["Smoothness"].max(),
-                )
+                    unscaled_cancer["Smoothness"].min() * 0.95,
+                    unscaled_cancer["Smoothness"].max() * 1.05,
+                ),
+                nice=False
             ),
         ),
         color=alt.Color("Class", title="Diagnosis"),
@@ -1858,8 +1856,8 @@ prediction_plot = (
     alt.Chart(prediction_table)
     .mark_point(opacity=0.05, filled=True, size=300)
     .encode(
-        x=alt.X("Area"),
-        y=alt.Y("Smoothness"),
+        x="Area",
+        y="Smoothness",
         color=alt.Color("Class", title="Diagnosis"),
     )
 )

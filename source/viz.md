@@ -47,12 +47,12 @@ By the end of the chapter, readers will be able to do the following:
 - Given a visualization and a question, evaluate the effectiveness of the visualization and suggest improvements to better answer the question.
 - Referring to the visualization, communicate the conclusions in non-technical terms.
 - Identify rules of thumb for creating effective visualizations.
-- Define the two key aspects of altair objects:
-    - mark objects
-    - encodings
+- Define the two key aspects of altair charts:
+    - graphical marks
+    - encoding channels
 - Use the altair library in Python to create and refine the above visualizations using:
-    - mark objects: `mark_point`, `mark_line`, `mark_bar`
-    - encodings : `x`, `y`, `fill`, `color`, `shape`
+    - graphical marks: `mark_point`, `mark_line`, `mark_bar`
+    - encoding channels: `x`, `y`, `fill`, `color`, `shape`
     - subplots: `facet`
 - Describe the difference in raster and vector output formats.
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
@@ -85,7 +85,7 @@ As with most coding tasks, it is totally fine (and quite common) to make
 mistakes and iterate a few times before you find the right visualization for
 your data and question. There are many different kinds of plotting
 graphics available to use (see Chapter 5 of *Fundamentals of Data Visualization* {cite:p}`wilkeviz` for a directory).
-The types of plot that we introduce in this book are shown in {numref}`plot_sketches`;
+The types of plots that we introduce in this book are shown in {numref}`plot_sketches`;
 which one you should select depends on your data
 and the question you want to answer.
 In general, the guiding principles of when to use each type of plot
@@ -169,7 +169,7 @@ understand and remember your message quickly.
 ```
 
 This section will cover examples of how to choose and refine a visualization given a data set and a question that you want to answer,
-and then how to create the visualization in Python using `altair`.  To use the `altair` package, we need to import the `altair` package. We will also import `pandas` to use for reading in the data.
+and then how to create the visualization in Python using `altair`.  To use the `altair` package, we need to first import it. We will also import `pandas` to use for reading in the data.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -217,7 +217,8 @@ To get started, we will read and inspect the data:
 ```{code-cell} ipython3
 # mauna loa carbon dioxide data
 co2_df = pd.read_csv(
-    "data/mauna_loa_data.csv", parse_dates=['date_measured']
+    "data/mauna_loa_data.csv",
+    parse_dates=['date_measured']
 )
 co2_df
 ```
@@ -255,32 +256,38 @@ Scatter plots show the data as individual points with `x` (horizontal axis)
 and `y` (vertical axis) coordinates.
 Here, we will use the measurement date as the `x` coordinate
 and the CO$_{\text{2}}$ concentration as the `y` coordinate.
-We create a plot object with the `alt.Chart()` function.
+We create a chart with the `alt.Chart()` function.
 There are a few basic aspects of a plot that we need to specify:
 
-```{index} altair; geometric object, altair; geometric encoding, geometric object, geometric encoding
+```{index} altair; graphical mark, altair; encoding channel
 ```
 
-- The name of the **data frame** object to visualize.
+- The name of the **data frame** to visualize.
     - Here, we specify the `co2_df` data frame as an argument to `alt.Chart`
-- The **geometric object**, which specifies how the mapped data should be displayed.
-	- To create a geometric object, we use `Chart.mark_*` methods (see the
-	  [altair reference](https://altair-viz.github.io/user_guide/marks.html)
-	  for a list of geometric objects).
+- The **graphical mark**, which specifies how the mapped data should be displayed.
+    - To create a graphical mark, we use `Chart.mark_*` methods (see the
+      [altair reference](https://altair-viz.github.io/user_guide/marks.html)
+      for a list of graphical mark).
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
-- The **geometric encoding**, which tells `altair` how the columns in the data frame map to properties of the visualization.
+- The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
     - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
-	- Here, we set the `x` axis of the plot to the `date_measured` variable,
-	  and on the `y` axis, we plot the `ppm` variable. We use `alt.X` and
-	  `alt.Y` which allow you to control properties of the `x` and `y` axes.
-	- For the y-axis, we also provided the argument
-	  `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
-	  based on the data and will keep `y=0` in view. That would make it
-	  difficult to see any trends in our data since the smallest value is >300
-	  ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
-	  choose a reasonable lower bound based on our data, and that lower bound
-	  doesn't have to be zero.
+    - Here, we set the `x` axis of the plot to the `date_measured` variable,
+      and on the `y` axis, we plot the `ppm` variable.
+    - For the y-axis, we also provided the argument
+      `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
+      based on the data and will keep `y=0` in view.
+      This is often a helpful default, but here it makes it
+      difficult to see any trends in our data since the smallest value is >300
+      ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
+      choose a reasonable lower bound based on our data, and that lower bound
+      doesn't have to be zero.
+    - To change the properties of the encoding channels,
+      we need to leverage the helper functions `alt.Y` and `alt.X`.
+      These helpers have the role of customizing things like order, titles, and scales.
+      Here, we use `alt.Y` to change the domain of the y-axis,
+      so that it starts from the lowest value in the `date_measured` column
+      rather than from zero.
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -289,7 +296,7 @@ from myst_nb import glue
 
 ```{code-cell} ipython3
 co2_scatter = alt.Chart(co2_df).mark_point().encode(
-    x=alt.X("date_measured"),
+    x="date_measured",
     y=alt.Y("ppm", scale=alt.Scale(zero=False))
 )
 ```
@@ -334,7 +341,7 @@ with just the default arguments:
 
 ```{code-cell} ipython3
 co2_line = alt.Chart(co2_df).mark_line().encode(
-    x=alt.X("date_measured"),
+    x="date_measured",
     y=alt.Y("ppm", scale=alt.Scale(zero=False))
 )
 ```
@@ -405,26 +412,21 @@ visualization slightly. Note that it is totally fine to use a small number of
 visualizations to answer different aspects of the question you are trying to
 answer. We will accomplish this by using *scale*,
 another important feature of `altair` that easily transforms the different
-variables and set limits.  We scale the horizontal axis using the `alt.Scale(domain=['1990', '1993'])` by restricting the x-axis values between 1990 and 1994,
-and the vertical axis with the `alt.Scale(zero=False)` function, to not start the y-axis with zero.
+variables and set limits.
 In particular, here, we will use the `alt.Scale` function to zoom in
-on just five years of data (say, 1990-1994). The
+on just a few years of data (say, 1990-1995). The
 `domain` argument takes a list of length two
 to specify the upper and lower bounds to limit the axis.
 We also added the argument `clip=True` to `mark_line`. This tells `altair`
-to "clip" the data outside of the domain that we set so that it doesn't
+to "clip" (remove) the data outside of the specified domain that we set so that it doesn't
 extend past the plot area.
-Finally, we will use `axis=alt.Axis(tickCount=4)` to add the lines corresponding to each
-year in the background to create the final visualization. This helps us to
-better visualise the change with each year.
 
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
     x=alt.X(
         "date_measured",
-        title="Measurement Date",
-        axis=alt.Axis(tickCount=4),
-        scale=alt.Scale(domain=['1990', '1994'])
+        scale=alt.Scale(domain=['1990', '1995']),
+        title="Measurement Date"
     ),
     y=alt.Y(
         "ppm",
@@ -443,7 +445,7 @@ glue('co2_line_scale', co2_line_scale, display=False)
 :figwidth: 700px
 :name: co2_line_scale
 
-Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1994.
+Line plot of atmospheric concentration of CO$_{2}$ from 1990 to 1995.
 :::
 
 Interesting! It seems that each year, the atmospheric CO$_{\text{2}}$ increases
@@ -452,8 +454,6 @@ September, and finally increases again until the end of the year. In Hawaii,
 there are two seasons: summer from May through October, and winter from
 November through April.  Therefore, the oscillating pattern in CO$_{\text{2}}$
 matches up fairly closely with the two seasons.
-
-
 
 A useful analogy to constructing a data visualization is painting a picture.
 We start with a blank canvas,
@@ -466,7 +466,7 @@ In our data visualization,
 this would be when we map data to the axes in the `encode` function.
 Then we add our key visual subjects to the painting.
 In our data visualization,
-this would be the geometric objects (e.g., `mark_point`, `mark_line`, etc.).
+this would be the graphical marks (e.g., `mark_point`, `mark_line`, etc.).
 And finally, we work on adding details and refinements to the painting.
 In our data visualization this would be when we fine tune axis labels,
 change the font, adjust the point size, and do other related things.
@@ -504,14 +504,11 @@ neither of the variables here have a natural order to them.
 So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
-variable on the vertical axis, and the `mark_point` geometric object.
-By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`. In
-place of `mark_point(filled=True)`, we can also use `mark_circle`.
+variable on the vertical axis, and `mark_point` as the graphical mark.
 The result is shown in {numref}`faithful_scatter`.
 
 ```{code-cell} ipython3
-faithful_scatter = alt.Chart(faithful).mark_point(filled=True).encode(
+faithful_scatter = alt.Chart(faithful).mark_point().encode(
     x="waiting",
     y="eruptions"
 )
@@ -538,7 +535,7 @@ In order to refine the visualization, we need only to add axis
 labels and make the font more readable.
 
 ```{code-cell} ipython3
-faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
+faithful_scatter_labels = alt.Chart(faithful).mark_point().encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -560,7 +557,7 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
 
 ```{code-cell} ipython3
-faithful_scatter_labels_black = alt.Chart(faithful).mark_circle(size=10, color="black").encode(
+faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="black").encode(
     x=alt.X("waiting", title="Waiting Time (mins)"),
     y=alt.Y("eruptions", title="Eruption Duration (mins)")
 )
@@ -609,14 +606,22 @@ can_lang
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-can_lang = can_lang[(can_lang['most_at_home']>0) & (can_lang['mother_tongue']>0)]
+can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] > 0)]
 ```
 
 ```{index} altair; mark_circle
 ```
 
 We will begin with a scatter plot of the `mother_tongue` and `most_at_home` columns from our data frame.
-The resulting plot is shown in {numref}`can_lang_plot`
+As we have seen in the scatter plots in the previous section,
+the default behavior of `mark_point` is to draw the outline of each point.
+If we would like to fill them in,
+we can pass the argument `filled=True` to `mark_point`
+or use the shortcut `mark_circle`.
+Whether to fill points or not is mostly a matter of personal preferences,
+although hollow points can make it easier to see individual points
+when there are many overlapping points in a chart.
+The resulting plot is shown in {numref}`can_lang_plot`.
 
 ```{code-cell} ipython3
 can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
@@ -624,7 +629,6 @@ can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
     y="mother_tongue"
 )
 ```
-
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
@@ -644,10 +648,12 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 To make an initial improvement in the interpretability
 of {numref}`can_lang_plot`, we should
 replace the default axis
-names with more informative labels. We can add a line break in
-the axis names so that some of the words are printed on a new line. This will
-make the axes labels on the plots more readable. To do this, we pass the title as a list. Each element of the list will be on a new line.
-We should also increase the font size to further
+names with more informative labels.
+To make the axes labels on the plots more readable,
+we can print long labels over multiple lines.
+To achieve this, we specify the title as a list of strings
+where each string in the list will correspond to a new line of text.
+We can also increase the font size to further
 improve readability.
 
 ```{code-cell} ipython3
@@ -713,8 +719,8 @@ to Canada's two official languages by filtering the data:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 can_lang.loc[
-    (can_lang['language']=='English') |
-    (can_lang['language']=='French')
+    (can_lang['language']=='English')
+    | (can_lang['language']=='French')
 ]
 ```
 
@@ -747,13 +753,11 @@ can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
         "most_at_home",
         title=["Language spoken most at home", "(number of Canadian residents)"],
         scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
     ),
     y=alt.Y(
         "mother_tongue",
         title=["Mother tongue", "(number of Canadian residents)"],
         scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
     )
 ).configure_axis(titleFontSize=12)
 ```
@@ -767,9 +771,48 @@ glue('can_lang_plot_log', can_lang_plot_log, display=False)
 :figwidth: 700px
 :name: can_lang_plot_log
 
-Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log adjusted x and y axes.
+Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log-adjusted x and y axes.
 :::
 
+You will notice two things in the chart above,
+changing the axis to log creates many axis ticks and gridlines,
+which makes the appearance of the chart rather noisy
+and it is hard to focus on the data.
+You can also see that the second last tick label is missing on the x-axis;
+Altair dropped it because there wasn't space to fit in all the large numbers next to each other.
+It is also hard to see if the label for 100,000,000 is for the last or second last tick.
+To fix these issue,
+we can limit the number of ticks and gridlines to only include the seven major ones,
+and change the number formatting to include a suffix which makes the labels shorter.
+
+```{code-cell} ipython3
+can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
+    x=alt.X(
+        "most_at_home",
+        title=["Language spoken most at home", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7, format='s')
+    ),
+    y=alt.Y(
+        "mother_tongue",
+        title=["Mother tongue", "(number of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7, format='s')
+    )
+).configure_axis(titleFontSize=12)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
+```
+
+:::{glue:figure} can_lang_plot_log_revised
+:figwidth: 700px
+:name: can_lang_plot_log_revised
+
+Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log-adjusted x and y axes. Only the major gridlines are shown. The suffix "k" indicates 1,000 ("kilo"), while the suffix "M" indicates 1,000,000 ("million").
+:::
 
 
 ```{code-cell} ipython3
@@ -800,28 +843,33 @@ language as their mother tongue and primary language at home for all the
 languages in the `can_lang` data set. Since the new columns are appended to the
 end of the data table, we selected the new columns after the transformation so
 you can clearly see the mutated output from the table.
+Note that we formatted the number for the Canadian population
+using `_` so that it is easier to read;
+this does not affect how Python interprets the number
+and is just added for readability.
 
 ```{index} pandas.DataFrame; assign, pandas.DataFrame; [[]]
 ```
 
 ```{code-cell} ipython3
+canadian_population = 35_151_728
 can_lang = can_lang.assign(
-    mother_tongue_percent=(can_lang['mother_tongue']/35151728) * 100,
-    most_at_home_percent=(can_lang['most_at_home']/35151728) * 100
+    mother_tongue_percent=(can_lang['mother_tongue'] / canadian_population) * 100,
+    most_at_home_percent=(can_lang['most_at_home'] / canadian_population) * 100
 )
 can_lang[['mother_tongue_percent', 'most_at_home_percent']]
-
 ```
 
-Finally, we will edit the visualization to use the percentages we just computed
+Next, we will edit the visualization to use the percentages we just computed
 (and change our axis labels to reflect this change in
 units). {numref}`can_lang_plot_percent` displays
 the final result.
-
-
+Here all the tick labels fit by default so we are not changing the labels to include suffixes.
+Note that suffixes can also be harder to understand,
+so it is often advisable to avoid them (particularly for small quantities)
+unless you are communicating to a technical audience.
 
 ```{code-cell} ipython3
-
 can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X(
         "most_at_home_percent",
@@ -840,7 +888,8 @@ can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_percent', can_lang_plot_percent, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_percent', can_lang_plot_percent.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_percent
@@ -907,9 +956,8 @@ which they belong.  We can add the argument `color` to the `encode` function, sp
 that the `category` column should color the points. Adding this argument will
 color the points according to their group and add a legend at the side of the
 plot.
-
-
-
+Since the labels of the language category as descriptive of their own,
+we can remove the title of the legend to reduce visual clutter without reducing the effectiveness of the chart.
 
 ```{code-cell} ipython3
 can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
@@ -925,14 +973,15 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
-    color="category"
+    color=alt.Color("category", title='')
 ).configure_axis(titleFontSize=12)
 
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_category', can_lang_plot_category, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_category', can_lang_plot_category.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_category
@@ -946,15 +995,9 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 Another thing we can adjust is the location of the legend.
 This is a matter of preference and not critical for the visualization.
 We move the legend title using the `alt.Legend` function
-with the arguments `legendX`, `legendY` and `direction`
-arguments of the `theme` function.
-Here we set the `direction` to `"vertical"` so that the legend items remain
-vertically stacked on top of each other. The default `direction` is horizontal, which works well for many cases, but
-for this particular visualization
-because the legend labels are quite long, it is a bit cleaner if we move the
-legend above the plot instead.
-
-
+and specify that we want it on the top of the chart.
+This automatically changes the legend items to be laid out horizontally instead of vertically,
+but we could also keep the vertical layout by specifying `direction='vertical'` inside `alt.Legend`.
 
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
@@ -972,19 +1015,16 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
     ),
     color=alt.Color(
         "category",
-        legend=alt.Legend(
-            orient='none',
-            legendX=0,
-            legendY=-90,
-            direction='vertical'
-        )
+        title='',
+        legend=alt.Legend(orient='top')
     )
 ).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_legend', can_lang_plot_legend, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_legend', can_lang_plot_legend.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_legend
@@ -995,25 +1035,29 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
-we add the `scheme` argument in the `scale` of the `color` argument in `altair` layer indicating the palette we want to use.
+the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
+In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
+If you are unsure about a certain color combination, you can use
+this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
+if your visualizations are color-blind friendly.
 
 ```{index} color palette; color blindness simulator
 ```
 
+All the available color schemes and information on how to create your own can be viewed [in the Altair documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
+To change the color scheme of our chart,
+we can add the `scheme` argument in the `scale` of the `color` encoding.
 Below we pick the `"dark2"` theme, with the result shown
-in {numref}`can_lang_plot_theme`
+in {numref}`can_lang_plot_theme`.
 We also set the `shape` aesthetic mapping to the `category` variable as well;
-this makes the scatter point shapes different for each category. This kind of
+this makes the scatter point shapes different for each language category. This kind of
 visual redundancy&mdash;i.e., conveying the same information with both scatter point color and shape&mdash;can
-further improve the clarity and accessibility of your visualization.
-You can use
-this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
-if your visualizations are color-blind friendly.
-The default color palattes in `altair` are color-blind friendly (one more reason to stick with the defaults!).
-Note that we are switching back to the use of `mark_point` so that
-we can specify the `shape` attribute. This cannot be done with `mark_circle`.
-
+further improve the clarity and accessibility of your visualization,
+but can add visual noise if there are many different shapes and colors,
+so it should be used with care.
+Note that we are switching back to the use of `mark_point` here
+since `mark_circle` does not support the `shape` encoding
+and will always show up as a filled circle.
 
 ```{code-cell} ipython3
 can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
@@ -1025,18 +1069,14 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     ),
     y=alt.Y(
         "mother_tongue_percent",
-        title="Mother tongue(percentage of Canadian residents)",
+        title=["Mother tongue", "(percentage of Canadian residents)"],
         scale=alt.Scale(type="log"),
         axis=alt.Axis(tickCount=7)
     ),
     color=alt.Color(
         "category",
-        legend=alt.Legend(
-            orient='none',
-            legendX=0,
-            legendY=-90,
-            direction='vertical'
-        ),
+        title='',
+        legend=alt.Legend(orient='top'),
         scale=alt.Scale(scheme='dark2')
     ),
     shape="category"
@@ -1045,7 +1085,8 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_theme', can_lang_plot_theme, display=False)
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_theme
@@ -1055,14 +1096,63 @@ glue('can_lang_plot_theme', can_lang_plot_theme, display=False)
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors.
 :::
 
-From the visualization in {numref}`can_lang_plot_theme`,
+The chart above gives a good indication of how the different language categories differ,
+and this information is sufficient to answer our research question.
+But what if we want to know exactly which language correspond to which point in the chart?
+With a regular visualization library this would not be possible,
+as adding text labels for each individual language
+would add a lot of visual noise and make the chart difficult to interpret.
+However, since Altair is an interactive visualization library we can add information on demand
+via the `Tooltip` encoding channel,
+so that text labels for each point show up once we hover over it with the mouse pointer.
+Here we also add the exact values of the variables on the x and y-axis to the tooltip.
+
+```{code-cell} ipython3
+can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True, size=50).encode(
+    x=alt.X(
+        "most_at_home_percent",
+        title=["Language spoken most at home", "(percentage of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    ),
+    y=alt.Y(
+        "mother_tongue_percent",
+        title=["Mother tongue", "(percentage of Canadian residents)"],
+        scale=alt.Scale(type="log"),
+        axis=alt.Axis(tickCount=7)
+    ),
+    color=alt.Color(
+        "category",
+        title='',
+        legend=alt.Legend(orient='top'),
+        scale=alt.Scale(scheme='dark2')
+    ),
+    shape="category",
+    tooltip=alt.Tooltip(['language', 'mother_tongue', 'most_at_home'])
+).configure_axis(titleFontSize=12)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+# Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
+glue('can_lang_plot_tooltip', can_lang_plot_tooltip.properties(height=320, width=420), display=False)
+```
+
+:::{glue:figure} can_lang_plot_tooltip
+:figwidth: 700px
+:name: can_lang_plot_tooltip
+
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors. Hover over the data points with the mouse pointer to see additional information.
+:::
+
+From the visualization in {numref}`can_lang_plot_tooltip`,
 we can now clearly see that the vast majority of Canadians reported one of the official languages
 as their mother tongue and as the language they speak most often at home.
 What do we see when considering the second part of our exploratory question?
 Do we see a difference in the relationship
 between languages spoken as a mother tongue and as a primary language
 at home across the higher-level language categories?
-Based on {numref}`can_lang_plot_theme`, there does not
+Based on {numref}`can_lang_plot_tooltip`, there does not
 appear to be much of a difference.
 For each higher-level language category,
 there appears to be a strong, positive, and linear relationship between
@@ -1104,7 +1194,7 @@ Here, we have a data frame of Earth's landmasses,
 and are trying to compare their sizes.
 The right type of visualization to answer this question is a bar plot.
 In a bar plot, the height of the bar represents the value of a summary statistic
-(usually a size, count, proportion or percentage).
+(usually a size, count, sum, proportion, or percentage).
 They are particularly useful for comparing summary statistics between different
 groups of a categorical variable.
 
@@ -1117,7 +1207,8 @@ The result is shown in {numref}`islands_bar`.
 
 ```{code-cell} ipython3
 islands_bar = alt.Chart(islands_df).mark_bar().encode(
-    x="landmass", y="size"
+    x="landmass",
+    y="size"
 )
 ```
 
@@ -1141,9 +1232,9 @@ question we asked was only about the largest landmasses; let's make the plot a
 little bit clearer by keeping only the largest 12 landmasses. We do this using
 the `nlargest` function; the first argument is the number of rows we want and
 the second is the name of the column we want to use for comparing who is
-largest.  Then to help us make sure the labels have enough
-space, we'll use horizontal bars instead of vertical ones. We do this by
-swapping the `x` and `y` variables.
+largest. Then to help make the landmass labels easier to read
+we'll swap the `x` and `y` variables,
+so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
 ```{index} pandas.DataFrame; nlargest
 ```
@@ -1152,7 +1243,8 @@ swapping the `x` and `y` variables.
 islands_top12 = islands_df.nlargest(12, "size")
 
 islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
-    x="size", y="landmass"
+    x="size",
+    y="landmass"
 )
 ```
 
@@ -1170,40 +1262,38 @@ Bar plot of size for Earth's largest 12 landmasses.
 
 
 The plot in {numref}`islands_bar_top` is definitely clearer now,
-and allows us to answer our question
-("Which are the top 7 largest landmasses continents?") in the affirmative.
-But the question could be made clearer from the plot
-by organizing the bars not by alphabetical order
-but by size, and to color them based on whether they are a continent.
+and allows us to answer our initial questions:
+"Are the seven continents Earth's largest landmasses?"
+and "Which are the next few largest landmasses?".
+However, we could still improve this visualization
+by organizing the bars by landmass size rather than by alphabetical order
+and by coloring the bars based on whether they correspond to a continent.
 The data for this is stored in the `landmass_type` column.
 To use this to color the bars,
-we use the `color` argument to color the bars according to the `landmass_type`
+we set the `color` encoding to `landmass_type`.
 
 To organize the landmasses by their `size` variable,
-we will use the `altair` `sort` function
-in encoding for `y` axis to organize the landmasses by their `size` variable, which is encoded on the x-axis.
-To sort the landmasses by their size(denoted on `x` axis), we use `sort='x'`. This plots the values on `y` axis
+we will use the altair `sort` function
+in the y-encoding of the chart.
+Since the `size` variable is encoded in the x channel of the chart,
+we specify `sort='x'` inside `alt.Y`.
+This plots the values on `y` axis
 in the ascending order of `x` axis values.
-We do this here so that the largest bar will be closest to the axis line,
-which is more visually appealing. If instead, we want to sort the values on `y-axis` in descending order of `x-axis`, we need to specify `sort='-x'`.
+This creates a chart where the largest bar is the closest to the axis line,
+which is generally the most visually appealing when sorting bars.
+If instead
+we want to sort the values on `y-axis` in descending order of `x-axis`,
+we can add a minus sign to reverse the order and specify `sort='-x'`.
 
 ```{index} altair; sort
 ```
 
-To label the x and y axes, we will use the `alt.X` and `alt.Y` function
-The default label is the name of the column being mapped to `color`. Here that
-would be `landmass_type`;
-however `landmass_type` is not proper English (and so is less readable).
-Thus we use the `title` argument inside `alt.Color` to change that to `"Type"`.
-Finally, we again use the `configure_axis` function
-to change the font size.
-
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x=alt.X("size",title="Size (1000 square mi)"),
-    y=alt.Y("landmass", title="Landmass", sort="x"),
-    color=alt.Color("landmass_type", title="Type")
-).configure_axis(titleFontSize=12)
+    x="size",
+    y=alt.Y("landmass", sort="x"),
+    color=alt.Color("landmass_type")
+)
 ```
 
 ```{code-cell} ipython3
@@ -1219,35 +1309,10 @@ Bar plot of size for Earth's largest 12 landmasses colored by whether its a cont
 :::
 
 
-The plot in {numref}`islands_plot_sorted` is now a very effective
+The plot in {numref}`islands_plot_sorted` is now an effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
-making it quite clear that continents are the largest seven landmasses.
-We can make one more finishing touch in {numref}`islands_plot_titled`: we will
-add a title to the chart by specifying `title` argument in the `alt.Chart` function.
-Note that plot titles are not always required; usually plots appear as part
-of other media (e.g., in a slide presentation, on a poster, in a paper) where
-the title may be redundant with the surrounding context.
-
-```{code-cell} ipython3
-islands_plot_titled = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
-    x=alt.X("size",title="Size (1000 square mi)"),
-    y=alt.Y("landmass", title="Landmass", sort="x"),
-    color=alt.Color("landmass_type", title="Type")
-).configure_axis(titleFontSize=12)
-```
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue('islands_plot_titled', islands_plot_titled, display=True)
-```
-
-:::{glue:figure} islands_plot_titled
-:figwidth: 700px
-:name: islands_plot_titled
-
-Bar plot of size for Earth's largest 12 landmasses with a title.
-:::
+making it quite clear that all the seven largest landmasses are continents.
 
 ### Histograms: the Michelson speed of light data set
 
@@ -1295,20 +1360,55 @@ we need to visualize the distribution of the measurements
 We can do this using a *histogram*.
 A histogram
 helps us visualize how a particular variable is distributed in a data set
-by separating the data into bins,
+by grouping the values into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
-To create a histogram in `altair` we will use the `mark_bar` geometric
-object, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
-There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
-that we want to count the number of values in the `Speed` column in each bin.
-As usual,
-let's use the default arguments just to see how things look.
+To understand how to create a histogram in `altair`,
+let's start by creating a bar chart
+just like we did in the previous section.
+Note that this time,
+we are setting the `y` encoding to `"count()"`.
+There is no `"count()"` column-name in `morley_df`;
+we use `"count()"` to tell `altair`
+that we want to count the number of occurrences of each value in along the x-axis 
+(which we encoded as the `Speed` column).
+
+```{code-cell} ipython3
+morley_bars = alt.Chart(morley_df).mark_bar().encode(
+    x="Speed",
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_bars", morley_bars, display=False)
+```
+
+:::{glue:figure} morley_bars
+:figwidth: 700px
+:name: morley_bars
+
+A bar chart of Michelson's speed of light data.
+:::
+
+The bar chart above gives us an indication of
+which values are more common than others,
+but because the bars are so thin it's hard to get a sense for the
+overall distribution of the data.
+We don't really care about how many occurrences there are of each exact `Speed` value,
+but rather where most of the `Speed` values fall in general.
+To more effectively communicate this information
+we can group the x-axis into bins (or "buckets")
+and then count how many `Speed` values fall within each bin.
+A bar chart that represent the count of values
+for a binned quantitative variable is called a histogram.
+
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed"),
-    y=alt.Y("count()")
+    x=alt.X("Speed", bin=True),
+    y="count()"
 )
 ```
 
@@ -1324,7 +1424,7 @@ glue("morley_hist", morley_hist, display=False)
 Histogram of Michelson's speed of light data.
 :::
 
-#### Adding layers to an `altair` plot object
+#### Adding layers to an `altair` chart
 
 ```{index} altair; +; mark_rule
 ```
@@ -1337,33 +1437,39 @@ In order to visualize the true speed of light,
 we will add a vertical line with the `mark_rule` function.
 To draw a vertical line with `mark_rule`,
 we need to specify where on the x-axis the line should be drawn.
-We can do this by providing `x=alt.datum(792.458)`. The value `792.458`
-is the true value of light speed
-minus 299,000. Using `alt.datum` tells altair that we have a single datum
-(number) that we would like plotted.
-We would also like to fine tune this vertical line,
-styling it so that it is dashed,
-we do this by setting `strokeDash=[3]`. Note that you could also
-change the thickness of the line by providing `size=2` if you wanted to.
+We can do this by providing `x=alt.datum(792.458)`,
+where the value `792.458` is the true speed of light minus 299,000
+and `alt.datum` tells altair that we have a single datum
+(number) that we would like plotted (rather than a column in the data frame).
 Similarly, a horizontal line can be plotted using the `y` axis encoding and
 the dataframe with one value, which would act as the be the y-intercept.
 Note that
 *vertical lines* are used to denote quantities on the *horizontal axis*,
 while *horizontal lines* are used to denote quantities on the *vertical axis*.
 
+To fine tune the appearance of this vertical line,
+we can change it from a solid to a dashed line with `strokeDash=[5]`,
+where `5` indicates the length of each dash. We also
+change the thickness of the line by specifying `size=2`.
 To add the dashed line on top of the histogram, we
 **add** the `mark_rule` chart to the `morley_hist`
 using the `+` operator.
 Adding features to a plot using the `+` operator is known as *layering* in `altair`.
-This is a very powerful feature of `altair`; you
-can continue to iterate on a single plot object, adding and refining
-one layer at a time. If you stored your plot as a named object
+This is a very powerful feature; you
+can continue to iterate on a single chart, adding and refining
+one layer at a time. If you stored your chart as a variable
 using the assignment symbol (`=`), you can add to it using the `+` operator.
 Below we add a vertical line created using `mark_rule`
-to the last plot we created, `morley_hist`, using the `+` operator.
+to the `morley_hist` we created previously.
+
+> **Note:** Technically we could have left out the data argument
+> when creating the rule chart
+> since we're not using any values from the `morley_df` data frame,
+> but we will need it later when we facet this layered chart,
+> so we are including it here already.
 
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(strokeDash=[3]).encode(
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
     x=alt.datum(792.458)
 )
 
@@ -1380,7 +1486,7 @@ glue("morley_hist_line", morley_hist_line, display=False)
 :figwidth: 700px
 :name: morley_hist_line
 
-Histogram of Michelson's speed of light data with vertical line indicating true speed of light.
+Histogram of Michelson's speed of light data with vertical line indicating the true speed of light.
 :::
 
 In {numref}`morley_hist_line`,
@@ -1394,17 +1500,12 @@ where counts from different experiments are stacked on top of each other
 in different colors.
 We can create a histogram colored by the `Expt` variable
 by adding it to the `color` argument.
-We make sure the different colors can be seen
-(despite them all sitting on top of each other)
-by setting the `opacity` argument in `mark_bar` to `0.5`
-to make the bars slightly translucent.
-
 
 ```{code-cell} ipython3
-morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed"),
-    y=alt.Y("count()"),
-    color=alt.Color("Expt")
+morley_hist_colored = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=True),
+    y="count()",
+    color="Expt"
 )
 
 morley_hist_colored = morley_hist_colored + v_line
@@ -1426,8 +1527,8 @@ Histogram of Michelson's speed of light data colored by experiment.
 ```{index} integer
 ```
 
-Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to distinguish
-between different Experiments in the histogram! What is going on here? Well, if you
+Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to easily distinguish
+between the colors of the different Experiments in the histogram! What is going on here? Well, if you
 recall from the {ref}`wrangling` chapter, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
@@ -1444,13 +1545,19 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 (i.e., categorical) type variable by adding a suffix `:N`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
-hence use a discrete color map in visualizations.
+hence use a discrete color map in visualizations
+([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
 We also specify the `stack=False` argument in the `y` encoding so
-that the bars are not stacked on top of each other.
+that the bars are not stacked on top of each other,
+but instead share the same baseline.
+We make sure the different colors can be seen
+despite them sitting in front of each other
+by setting the `opacity` argument in `mark_bar` to `0.5`
+to make the bars slightly translucent.
 
 ```{code-cell} ipython3
-morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
+morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed", bin=True),
     y=alt.Y("count()", stack=False),
     color=alt.Color("Expt:N")
 )
@@ -1482,32 +1589,26 @@ grid of separate histogram plots.
 ```{index} altair; facet
 ```
 
-We use the `facet` function to create a plot
+We can use the `facet` function to create a chart
 that has multiple subplots arranged in a grid.
 The argument to `facet` specifies the variable(s) used to split the plot
-into subplots (`Expt`), the data frame we are working with `morley_df`, and
-how to split them (i.e., into rows or columns). In this example, we choose to
-have our plots in a single column (`columns=1`). This makes it easier for
-us to compare along the `x`-axis as our vertical-line is in the same
-horizontal position. If instead you wanted to use a single row, you could
-specify `rows=1`.
-
-There is another important change we have to make. When
-we define `morley_hist`, we no longer supply `morley_df` as an
-argument to `alt.Chart`. This is because `facet` takes care of separating
-the data by `Expt` and providing it to each of the facet sub-plots.
+into subplots (`Expt` in the code below),
+and how many columns there should be in the grid.
+In this example, we chose to
+arrange our plots in a single column (`columns=1`) since this makes it easier for
+us to compare the location of the histograms along the `x`-axis
+in the different subplots.
+We also reduce the height of each chart
+so that they all fit in the same view.
+Note that we are re-using the chart we created just above,
+instead of re-creating the same chart from scratch.
 
 ```{code-cell} ipython3
 
-morley_hist = alt.Chart().mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed", bin=alt.Bin(maxbins=50)),
-    y=alt.Y("count()", stack=False),
-    color=alt.Color("Expt:N")
-).properties(height=100, width=400)
-
-morley_hist_facet = (morley_hist + v_line).facet(
+morley_hist_facet = morley_hist_categorical.properties(
+    height=100
+).facet(
     "Expt",
-    data=morley_df,
     columns=1
 )
 ```
@@ -1525,13 +1626,13 @@ Histogram of Michelson's speed of light data split vertically by experiment.
 :::
 
 The visualization in {numref}`morley_hist_facet`
-now makes it quite clear how accurate the different experiments were
+makes it clear how accurate the different experiments were
 with respect to one another.
-The most variable measurements came from Experiment 1.
-There the measurements ranged from about 650&ndash;1050 km/sec.
-The least variable measurements came from Experiment 2.
-There, the measurements ranged from about 750&ndash;950 km/sec.
-The most different experiments still obtained quite similar results!
+The most variable measurements came from Experiment 1,
+where the measurements ranged from about 650&ndash;1050 km/sec.
+The least variable measurements came from Experiment 2,
+where the measurements ranged from about 750&ndash;950 km/sec.
+The most different experiments still obtained quite similar overall results!
 
 ```{index} altair; alt.X, altair; alt.Y, altair; configure_axis
 ```
@@ -1545,49 +1646,45 @@ subtly, even though it is easy to compare the experiments on this plot to one
 another, it is hard to get a sense of just how accurate all the experiments
 were overall. For example, how accurate is the value 800 on the plot, relative
 to the true speed of light?  To answer this question, we'll use the `assign`
-function to transform our data into a relative measure of accuracy rather than
-absolute measurements.
+function to transform our data into a relative measure of error rather than
+an absolute measurement.
 
 ```{code-cell} ipython3
-
-morley_rel = morley_df
-morley_rel = morley_rel.assign(
-    relative_accuracy=(
-        100 *((299000 + morley_df["Speed"]) - 299792.458) / (299792.458)
-    )
+speed_of_light = 299792.458
+morley_df['RelativeError'] = (
+    100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
 )
-
-morley_rel
+morley_df
 ```
 
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(
-    strokeDash=[3]).encode(
-    x=alt.datum(0)
-)
-
-morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
+morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
-        "relative_accuracy",
-        bin=alt.Bin(maxbins=120),
-        title="Relative Accuracy (%)"
+        "RelativeError",
+        bin=True,
+        title="Relative error (%)"
     ),
     y=alt.Y(
         "count()",
-        stack=False,
         title="# Measurements"
     ),
     color=alt.Color(
         "Expt:N",
         title="Experiment ID"
     )
-).properties(height=100, width=400)
+)
 
-morley_hist_relative = (morley_hist + v_line).facet(
+# Recreating v_line to indicate that the speed of light is at 0% relative error
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
+    x=alt.datum(0)
+)
+
+morley_hist_relative = (morley_hist_rel + v_line).properties(
+    height=100
+).facet(
     "Expt",
-    data=morley_rel,
     columns=1,
-    title="Histogram of relative accuracy of Michelson’s speed of light data"
+    title="Histogram of relative error of Michelson’s speed of light data"
 )
 
 ```
@@ -1601,7 +1698,7 @@ glue("morley_hist_relative", morley_hist_relative, display=True)
 :figwidth: 700px
 :name: morley_hist_relative
 
-Histogram of relative accuracy split vertically by experiment with clearer axes and labels
+Histogram of relative error split vertically by experiment with clearer axes and labels
 :::
 
 Wow, impressive! These measurements of the speed of light from 1879 had errors
@@ -1611,12 +1708,31 @@ experiments did quite an admirable job given the technology available at the tim
 
 #### Choosing a binwidth for histograms
 
-When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
-Naturally, this is not always the right number to use.
-You can set the number of bins yourself by using
-the `maxbins` argument in the `mark_bar` geometric object.
-But what number of bins is the right one to use?
+When you create a histogram in `altair`, it tries to choose a reasonable  number of bins.
+We can change the number of bins by using the `maxbins` parameter
+inside `alt.Bin`.
 
+```{code-cell} ipython3
+morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("RelativeError", bin=alt.Bin(maxbins=30)),
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_hist_maxbins", morley_hist_maxbins, display=False)
+```
+
+:::{glue:figure} morley_hist_maxbins
+:figwidth: 700px
+:name: morley_hist_maxbins
+
+Histogram of Michelson's speed of light data.
+:::
+
+
+But what number of bins is the right one to use?
 Unfortunately there is no hard rule for what the right bin number
 or width is. It depends entirely on your problem; the *right* number of bins
 or bin width is
@@ -1636,16 +1752,13 @@ In this case, we can see that both the default number of bins
 and the `maxbins=70` of  are effective for helping to answer our question.
 On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, respectively.
 
-
-
-
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-
-morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
+morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
-        "relative_accuracy",
-        title="Relative Accuracy (%)"
+        "RelativeError",
+        title="Relative error (%)",
+        bin=True
     ),
     y=alt.Y(
         "count()",
@@ -1654,66 +1767,56 @@ morley_hist_default = alt.Chart().mark_bar(opacity=0.9).encode(
     ),
     color=alt.Color(
         "Expt:N",
-        title="Experiment ID"
+        title="Experiment ID",
+        legend=None
     )
-).properties(height=100, width=200)
+).properties(height=100, width=250)
 
-morley_hist_200 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "relative_accuracy",
-        bin=alt.Bin(maxbins=200),
-        title="Relative Accuracy (%)"
+morley_hist_max_bins = alt.vconcat(
+    alt.hconcat(
+        (morley_hist_default + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('Default (bin=True)', fontSize=16, anchor='middle', dx=15)
+        ),
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=5),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=5', fontSize=16, anchor='middle', dx=15)
+        ),
     ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
+    alt.hconcat(
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=70),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=70', fontSize=16, anchor='middle', dx=15)
+        ),
+        (morley_hist_default.encode(
+            x=alt.X(
+                "RelativeError",
+                bin=alt.Bin(maxbins=200),
+                title="Relative error (%)"
+            )
+        ) + v_line).facet(
+            'Expt',
+            columns=1,
+            title=alt.TitleParams('maxbins=200', fontSize=16, anchor='middle', dx=15)
+        )
     ),
-    color=alt.Color(
-        "Expt:N",  title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_70 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "relative_accuracy",
-        bin=alt.Bin(maxbins=70),
-        title="Relative Accuracy (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_5 = alt.Chart().mark_bar(opacity=0.9).encode(
-    x=alt.X(
-        "relative_accuracy",
-        bin=alt.Bin(maxbins=5),
-        title="Relative Accuracy (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        stack=False,
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
-).properties(height=100, width=200)
-
-morley_hist_max_bins = ((
-    (morley_hist_default + v_line).facet(row="Expt:N", data=morley_rel, title="default maxbins") |
-    (morley_hist_200 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=200")) &
-    ((morley_hist_70 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=70") |
-    (morley_hist_5 + v_line).facet(row="Expt:N", data=morley_rel, title="maxBins=5")
-))
+    spacing=50
+)
 ```
 
 ```{code-cell} ipython3
@@ -1792,8 +1895,8 @@ roughly 299,792.458 kilometers per second. (2) But how accurately were we first
 able to measure this fundamental physical constant, and did certain experiments
 produce more accurate results than others?  (3) To better understand this, we
 plotted data from 5 experiments by Michelson in 1879, each with 20 trials, as
-histograms stacked on top of one another.  The horizontal axis shows the
-accuracy of the measurements relative to the true speed of light as we know it
+histograms stacked on top of one another. The horizontal axis shows the
+error of the measurements relative to the true speed of light as we know it
 today, expressed as a percentage.  From this visualization, you can see that
 most results had relative errors of at most 0.05%. You can also see that
 experiments 1 and 3 had measurements that were the farthest from the true

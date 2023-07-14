@@ -1269,8 +1269,8 @@ However, we could still improve this visualization
 by organizing the bars by landmass size rather than by alphabetical order
 and by coloring the bars based on whether they correspond to a continent.
 The data for this is stored in the `landmass_type` column.
-TO use this to color the bars,
-we set `color` encoding to `landmass_type`.
+To use this to color the bars,
+we set the `color` encoding to `landmass_type`.
 
 To organize the landmasses by their `size` variable,
 we will use the altair `sort` function

@@ -1314,45 +1314,6 @@ visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that all the seven largest landmasses are continents.
 
-To add some finishing touches to the chart
-we will add a title to the chart by specifying `title` argument inside `alt.Chart`.
-A good plot title should usually contain the take home message that you want readers of the chart to focus on,
-e.g. "The Earth's seven largest landmasses are all continents",
-but it could sometimes be more general, e.g. "The twelve largest landmasses on Earth".
-Note that plot titles are not always required; e.g. if plots appear as part
-of other media (e.g., in a slide presentation, on a poster, in a paper) where
-the title may be redundant with the surrounding context.
-For categorical encodings,
-such as the color and y channels in our chart,
-it is often not necessary to include the axis title
-as the labels of the categories are enough by themselves.
-Particularly in this case where the title clearly states
-that we are landmasses,
-the titles are redundant and we can remove them.
-
-```{code-cell} ipython3
-islands_plot_titled = alt.Chart(
-    islands_top12,
-    title="The Earth's seven largest landmasses are all continents"
-).mark_bar().encode(
-    x=alt.X("size",title="Size (1000 square mi)"),
-    y=alt.Y("landmass", title="", sort="x"),
-    color=alt.Color("landmass_type", title="")
-)
-```
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue('islands_plot_titled', islands_plot_titled, display=True)
-```
-
-:::{glue:figure} islands_plot_titled
-:figwidth: 700px
-:name: islands_plot_titled
-
-Bar plot of size for Earth's largest 12 landmasses with a title.
-:::
-
 ### Histograms: the Michelson speed of light data set
 
 ```{index} Michelson speed of light

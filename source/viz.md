@@ -1198,12 +1198,6 @@ In a bar plot, the height of the bar represents the value of a summary statistic
 They are particularly useful for comparing summary statistics between different
 groups of a categorical variable.
 
-> **Note:** Although bar charts are often used to display mean and median values,
-> they are generally a poor choice for these types of visualizations and should be avoided.
-> The reason for this is that they hide all the variation in the data and only show a single value.
-> Instead it's better to show the distribution of all the individual data points
-> (potentially together with an additional visual mark for the mean or median).
-
 ```{index} altair; mark_bar
 ```
 

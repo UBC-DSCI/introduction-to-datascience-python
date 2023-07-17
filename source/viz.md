@@ -58,6 +58,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
 
 ## Choosing the visualization
+
 #### *Ask a question, and answer it*
 
 ```{index} question; visualization
@@ -121,6 +122,7 @@ alternative.
 +++
 
 ## Refining the visualization
+
 #### *Convey the message, minimize noise*
 
 Just being able to make a visualization in Python with `altair` (or any other tool
@@ -279,7 +281,7 @@ There are a few basic aspects of a plot that we need to specify:
       based on the data and will keep `y=0` in view.
       This is often a helpful default, but here it makes it
       difficult to see any trends in our data since the smallest value is >300
-      ppm. So by providing `scale=alt.Scale(zero=False)`, we tell altair to
+      ppm. So by providing `scale(zero=False)`, we tell altair to
       choose a reasonable lower bound based on our data, and that lower bound
       doesn't have to be zero.
     - To change the properties of the encoding channels,
@@ -297,7 +299,7 @@ from myst_nb import glue
 ```{code-cell} ipython3
 co2_scatter = alt.Chart(co2_df).mark_point().encode(
     x="date_measured",
-    y=alt.Y("ppm", scale=alt.Scale(zero=False))
+    y=alt.Y("ppm").scale(zero=False)
 )
 ```
 
@@ -342,7 +344,7 @@ with just the default arguments:
 ```{code-cell} ipython3
 co2_line = alt.Chart(co2_df).mark_line().encode(
     x="date_measured",
-    y=alt.Y("ppm", scale=alt.Scale(zero=False))
+    y=alt.Y("ppm").scale(zero=False)
 )
 ```
 
@@ -385,8 +387,8 @@ change the font size, we use the `configure_axis` function with the
 
 ```{code-cell} ipython3
 co2_line_labels = alt.Chart(co2_df).mark_line().encode(
-    x=alt.X("date_measured", title="Year"),
-    y=alt.Y("ppm", scale=alt.Scale(zero=False), title="Atmospheric CO2 (ppm)")
+    x=alt.X("date_measured").title("Year"),
+    y=alt.Y("ppm").scale(zero=False).title("Atmospheric CO2 (ppm)")
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -423,16 +425,12 @@ extend past the plot area.
 
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
-    x=alt.X(
-        "date_measured",
-        scale=alt.Scale(domain=['1990', '1995']),
-        title="Measurement Date"
-    ),
-    y=alt.Y(
-        "ppm",
-        scale=alt.Scale(zero=False),
-        title="Atmospheric CO2 (ppm)"
-    )
+    x=alt.X("date_measured")
+        .scale(domain=['1990', '1995'])
+        .title("Measurement Date"),
+    y=alt.Y("ppm")
+        .scale(zero=False)
+        .title("Atmospheric CO2 (ppm)")
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -538,9 +536,9 @@ In order to refine the visualization, we need only to add axis
 labels and make the font more readable.
 
 ```{code-cell} ipython3
-faithful_scatter_labels = alt.Chart(faithful).mark_point().encode(
-    x=alt.X("waiting", title="Waiting Time (mins)"),
-    y=alt.Y("eruptions", title="Eruption Duration (mins)")
+faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
+    x=alt.X("waiting").title("Waiting Time (mins)"),
+    y=alt.Y("eruptions").title("Eruption Duration (mins)")
 )
 ```
 
@@ -560,9 +558,9 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
 
 ```{code-cell} ipython3
-faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="black").encode(
-    x=alt.X("waiting", title="Waiting Time (mins)"),
-    y=alt.Y("eruptions", title="Eruption Duration (mins)")
+faithful_scatter_labels_black = alt.Chart(faithful).mark_circle(size=10, color="black").encode(
+    x=alt.X("waiting").title("Waiting Time (mins)"),
+    y=alt.Y("eruptions").title("Eruption Duration (mins)")
 )
 ```
 
@@ -661,14 +659,11 @@ improve readability.
 
 ```{code-cell} ipython3
 can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home",
-        title=["Language spoken most at home", "(number of Canadian residents)"]
+    x=alt.X("most_at_home").title(
+        ["Language spoken most at home", "(number of Canadian residents)"]
     ),
-    y=alt.Y(
-        "mother_tongue",
-        scale=alt.Scale(zero=False),
-        title=["Mother tongue", "(number of Canadian residents)"]
+    y=alt.Y("mother_tongue").scale(zero=False).title(
+        ["Mother tongue", "(number of Canadian residents)"]
     )
 ).configure_axis(titleFontSize=12)
 ```
@@ -752,16 +747,14 @@ using the argument `type="log"` in the scale method.
 
 ```{code-cell} ipython3
 can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-    ),
-    y=alt.Y(
-        "mother_tongue",
-        title=["Mother tongue", "(number of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-    )
+    x=alt.X("most_at_home")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(number of Canadian residents)"]),
+    y=alt.Y("mother_tongue")
+        .scale(type="log")
+        .axis(tickCount=6)
+        .title(["Mother tongue", "(number of Canadian residents)"])
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -874,18 +867,14 @@ unless you are communicating to a technical audience.
 
 ```{code-cell} ipython3
 can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home_percent",
-        title=["Language spoken most at home", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    y=alt.Y(
-        "mother_tongue_percent",
-        title=["Mother tongue", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    )
+    x=alt.X("most_at_home_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(percentage of Canadian residents)"]),
+    y=alt.Y("mother_tongue_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Mother tongue", "(percentage of Canadian residents)"]),
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -964,19 +953,15 @@ we can remove the title of the legend to reduce visual clutter without reducing 
 
 ```{code-cell} ipython3
 can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home_percent",
-        title=["Language spoken most at home", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    y=alt.Y(
-        "mother_tongue_percent",
-        title=["Mother tongue", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    color=alt.Color("category", title='')
+    x=alt.X("most_at_home_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(percentage of Canadian residents)"]),
+    y=alt.Y("mother_tongue_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Mother tongue", "(percentage of Canadian residents)"]),
+    color="category"
 ).configure_axis(titleFontSize=12)
 
 ```
@@ -1004,22 +989,19 @@ but we could also keep the vertical layout by specifying `direction='vertical'` 
 
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home_percent",
-        title=["Language spoken most at home", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    y=alt.Y(
-        "mother_tongue_percent",
-        title=["Mother tongue", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    color=alt.Color(
-        "category",
-        title='',
-        legend=alt.Legend(orient='top')
+    x=alt.X("most_at_home_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(percentage of Canadian residents)"]),
+    y=alt.Y("mother_tongue_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Mother tongue", "(percentage of Canadian residents)"]),
+    color=alt.Color("category").legend(
+        orient='none',
+        legendX=0,
+        legendY=-90,
+        direction='vertical'
     )
 ).configure_axis(titleFontSize=12)
 ```
@@ -1061,24 +1043,22 @@ and will always show up as a filled circle.
 
 ```{code-cell} ipython3
 can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
-    x=alt.X(
-        "most_at_home_percent",
-        title=["Language spoken most at home", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    y=alt.Y(
-        "mother_tongue_percent",
-        title=["Mother tongue", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    color=alt.Color(
-        "category",
-        title='',
-        legend=alt.Legend(orient='top'),
-        scale=alt.Scale(scheme='dark2')
-    ),
+    x=alt.X("most_at_home_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(percentage of Canadian residents)"]),
+    y=alt.Y("mother_tongue_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title("Mother tongue(percentage of Canadian residents)"),
+    color=alt.Color("category")
+        .scale(scheme='dark2')
+        .legend(
+            orient='none',
+            legendX=0,
+            legendY=-90,
+            direction='vertical'
+        ),
     shape="category"
 ).configure_axis(titleFontSize=12)
 ```
@@ -1288,8 +1268,6 @@ we can add a minus sign to reverse the order and specify `sort='-x'`.
 ```{index} altair; sort
 ```
 
-<<<<<<< HEAD
-=======
 To label the x and y axes, we will use the `alt.X` and `alt.Y` function
 The default label is the name of the column being mapped to `color`. Here that
 would be `landmass_type`;
@@ -1298,13 +1276,12 @@ Thus we use the `title` method inside `alt.Color` to change that to `"Type"`.
 Finally, we again use the `configure_axis` function
 to change the font size.
 
->>>>>>> 79cc738 (Correct "argument" with "method")
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x="size",
-    y=alt.Y("landmass", sort="x"),
-    color=alt.Color("landmass_type")
-)
+    x=alt.X("size").title("Size (1000 square mi)"),
+    y=alt.Y("landmass").sort("x").title("Landmass"),
+    color=alt.Color("landmass_type").title("Type")
+).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
@@ -1323,10 +1300,7 @@ Bar plot of size for Earth's largest 12 landmasses colored by whether its a cont
 The plot in {numref}`islands_plot_sorted` is now an effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
-<<<<<<< HEAD
 making it quite clear that all the seven largest landmasses are continents.
-=======
-making it quite clear that continents are the largest seven landmasses.
 We can make one more finishing touch in {numref}`islands_plot_titled`: we will
 add a title to the chart by specifying `title` method in the `alt.Chart` function.
 Note that plot titles are not always required; usually plots appear as part
@@ -1335,9 +1309,9 @@ the title may be redundant with the surrounding context.
 
 ```{code-cell} ipython3
 islands_plot_titled = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
-    x=alt.X("size",title="Size (1000 square mi)"),
-    y=alt.Y("landmass", title="Landmass", sort="x"),
-    color=alt.Color("landmass_type", title="Type")
+    x=alt.X("size").title("Size (1000 square mi)"),
+    y=alt.Y("landmass").sort("x").title("Landmass"),
+    color=alt.Color("landmass_type").title("Type")
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -1550,27 +1524,21 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 (i.e., categorical) type variable by adding a suffix `:N`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
-<<<<<<< HEAD
 hence use a discrete color map in visualizations
 ([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
-We also specify the `stack=False` argument in the `y` encoding so
+We also specify the `stack(False)` method in the `y` encoding so
 that the bars are not stacked on top of each other,
 but instead share the same baseline.
 We make sure the different colors can be seen
 despite them sitting in front of each other
 by setting the `opacity` argument in `mark_bar` to `0.5`
 to make the bars slightly translucent.
-=======
-hence use a discrete color map in visualizations.
-We also specify the `stack(False)` method to the `y` encoding so
-that the bars are not stacked on top of each other.
->>>>>>> 79cc738 (Correct "argument" with "method")
 
 ```{code-cell} ipython3
-morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("Speed", bin=True),
-    y=alt.Y("count()", stack=False),
-    color=alt.Color("Expt:N")
+morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
+    x=alt.X("Speed").bin(maxbins=50),
+    y=alt.Y("count()").stack(False),
+    color="Expt:N"
 )
 
 morley_hist_categorical = morley_hist_categorical + v_line
@@ -1616,9 +1584,13 @@ instead of re-creating the same chart from scratch.
 
 ```{code-cell} ipython3
 
-morley_hist_facet = morley_hist_categorical.properties(
-    height=100
-).facet(
+morley_hist = alt.Chart().mark_bar(opacity=0.5).encode(
+    x=alt.X("Speed").bin(maxbins=50),
+    y=alt.Y("count()").stack(False),
+    color="Expt:N"
+).properties(height=100, width=400)
+
+morley_hist_facet = (morley_hist + v_line).facet(
     "Expt",
     columns=1
 )
@@ -1669,21 +1641,21 @@ morley_df
 ```
 
 ```{code-cell} ipython3
-morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X(
-        "RelativeError",
-        bin=True,
-        title="Relative error (%)"
-    ),
-    y=alt.Y(
-        "count()",
-        title="# Measurements"
-    ),
-    color=alt.Color(
-        "Expt:N",
-        title="Experiment ID"
-    )
+v_line = alt.Chart().mark_rule(
+    strokeDash=[3]).encode(
+    x=alt.datum(0)
 )
+
+morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
+    x=alt.X("relative_accuracy")
+        .bin(maxbins=120)
+        .title("Relative Accuracy (%)"),
+    y=alt.Y("count()")
+        .stack(False)
+        .title("# Measurements"),
+    color=alt.Color("Expt:N")
+        .title("Experiment ID")
+).properties(height=100, width=400)
 
 # Recreating v_line to indicate that the speed of light is at 0% relative error
 v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(

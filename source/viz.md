@@ -274,8 +274,8 @@ There are a few basic aspects of a plot that we need to specify:
     - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
     - Here, we set the `x` axis of the plot to the `date_measured` variable,
       and on the `y` axis, we plot the `ppm` variable.
-    - For the y-axis, we also provided the argument
-      `scale=alt.Scale(zero=False)`. By default, `altair` chooses the y-limits
+    - For the y-axis, we also provided the method
+      `scale(zero=False)`. By default, `altair` chooses the y-limits
       based on the data and will keep `y=0` in view.
       This is often a helpful default, but here it makes it
       difficult to see any trends in our data since the smallest value is >300
@@ -379,7 +379,7 @@ Now that we have settled on the rough details of the visualization, it is time
 to refine things. This plot is fairly straightforward, and there is not much
 visual noise to remove. But there are a few things we must do to improve
 clarity, such as adding informative axis labels and making the font a more
-readable size.  To add axis labels, we use the `title` argument along with `alt.X` and `alt.Y` functions. To
+readable size.  To add axis labels, we use the `title` method along with `alt.X` and `alt.Y` functions. To
 change the font size, we use the `configure_axis` function with the
 `titleFontSize` argument.
 
@@ -748,7 +748,7 @@ be appropriate (since `log10(0) = -inf` in Python). There are other ways to tran
 the data in such a case, but these are beyond the scope of the book.
 
 We can accomplish logarithmic scaling in the `altair` visualization
-using the argument `type="log"` in the scale functions.
+using the argument `type="log"` in the scale method.
 
 ```{code-cell} ipython3
 can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
@@ -955,7 +955,7 @@ our previous
 scatter plot to represent each language's higher-level language category.
 
 Here we want to distinguish the values according to the `category` group with
-which they belong.  We can add the argument `color` to the `encode` function, specifying
+which they belong.  We can add the argument `color` to the `encode` method, specifying
 that the `category` column should color the points. Adding this argument will
 color the points according to their group and add a legend at the side of the
 plot.
@@ -997,7 +997,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 
 Another thing we can adjust is the location of the legend.
 This is a matter of preference and not critical for the visualization.
-We move the legend title using the `alt.Legend` function
+We move the legend title using the `alt.Legend` method
 and specify that we want it on the top of the chart.
 This automatically changes the legend items to be laid out horizontally instead of vertically,
 but we could also keep the vertical layout by specifying `direction='vertical'` inside `alt.Legend`.
@@ -1039,7 +1039,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 
 In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
-we add the `scheme` argument in the `scale` of the `color` encoding to indicate the palette we want to use.
+we add the `scheme` argument in the `scale` method of the `color` encoding to indicate the palette we want to use.
 
 ```{index} color palette; color blindness simulator
 ```
@@ -1288,6 +1288,17 @@ we can add a minus sign to reverse the order and specify `sort='-x'`.
 ```{index} altair; sort
 ```
 
+<<<<<<< HEAD
+=======
+To label the x and y axes, we will use the `alt.X` and `alt.Y` function
+The default label is the name of the column being mapped to `color`. Here that
+would be `landmass_type`;
+however `landmass_type` is not proper English (and so is less readable).
+Thus we use the `title` method inside `alt.Color` to change that to `"Type"`.
+Finally, we again use the `configure_axis` function
+to change the font size.
+
+>>>>>>> 79cc738 (Correct "argument" with "method")
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
     x="size",
@@ -1312,7 +1323,36 @@ Bar plot of size for Earth's largest 12 landmasses colored by whether its a cont
 The plot in {numref}`islands_plot_sorted` is now an effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
+<<<<<<< HEAD
 making it quite clear that all the seven largest landmasses are continents.
+=======
+making it quite clear that continents are the largest seven landmasses.
+We can make one more finishing touch in {numref}`islands_plot_titled`: we will
+add a title to the chart by specifying `title` method in the `alt.Chart` function.
+Note that plot titles are not always required; usually plots appear as part
+of other media (e.g., in a slide presentation, on a poster, in a paper) where
+the title may be redundant with the surrounding context.
+
+```{code-cell} ipython3
+islands_plot_titled = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
+    x=alt.X("size",title="Size (1000 square mi)"),
+    y=alt.Y("landmass", title="Landmass", sort="x"),
+    color=alt.Color("landmass_type", title="Type")
+).configure_axis(titleFontSize=12)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue('islands_plot_titled', islands_plot_titled, display=True)
+```
+
+:::{glue:figure} islands_plot_titled
+:figwidth: 700px
+:name: islands_plot_titled
+
+Bar plot of size for Earth's largest 12 landmasses with a title.
+:::
+>>>>>>> 79cc738 (Correct "argument" with "method")
 
 ### Histograms: the Michelson speed of light data set
 
@@ -1510,6 +1550,7 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 (i.e., categorical) type variable by adding a suffix `:N`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
+<<<<<<< HEAD
 hence use a discrete color map in visualizations
 ([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
 We also specify the `stack=False` argument in the `y` encoding so
@@ -1519,6 +1560,11 @@ We make sure the different colors can be seen
 despite them sitting in front of each other
 by setting the `opacity` argument in `mark_bar` to `0.5`
 to make the bars slightly translucent.
+=======
+hence use a discrete color map in visualizations.
+We also specify the `stack(False)` method to the `y` encoding so
+that the bars are not stacked on top of each other.
+>>>>>>> 79cc738 (Correct "argument" with "method")
 
 ```{code-cell} ipython3
 morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
@@ -1676,7 +1722,7 @@ experiments did quite an admirable job given the technology available at the tim
 When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
 Naturally, this is not always the right number to use.
 You can set the number of bins yourself by using
-the `maxbins` argument inside `alt.Bin`.
+the `maxbins` argument inside the `bin` method.
 But what number of bins is the right one to use?
 
 ```{code-cell} ipython3

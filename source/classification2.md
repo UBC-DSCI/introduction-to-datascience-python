@@ -1072,20 +1072,17 @@ accuracies_grid
 
 We can decide which number of neighbors is best by plotting the accuracy versus $K$,
 as shown in {numref}`fig:06-find-k`.
+Here we are using the shortcut `point=True`
+to layer a point and line chart.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
 accuracy_vs_k = alt.Chart(accuracies_grid).mark_line(point=True).encode(
-    x=alt.X(
-        "n_neighbors",
-        title="Neighbors",
-    ),
-    y=alt.Y(
-        "mean_test_score",
-        title="Accuracy estimate",
-        scale=alt.Scale(domain=(0.85, 0.90)),
-    )
+    x=alt.X("n_neighbors").title("Neighbors"),
+    y=alt.Y("mean_test_score")
+        .scale(domain=(0.85, 0.90))
+        .title("Accuracy estimate")
 )
 
 accuracy_vs_k
@@ -1155,22 +1152,17 @@ large_cancer_tune_grid = GridSearchCV(
 )
 
 large_accuracies_grid = pd.DataFrame(
-                    large_cancer_tune_grid.fit(
-                          cancer_train.loc[:, ["Smoothness", "Concavity"]],
-                          cancer_train["Class"]
-                    ).cv_results_
-                  )
+    large_cancer_tune_grid.fit(
+        cancer_train.loc[:, ["Smoothness", "Concavity"]],
+        cancer_train["Class"]
+    ).cv_results_
+)
 
 large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
-    x=alt.X(
-        "param_kneighborsclassifier__n_neighbors",
-        title="Neighbors",
-    ),
-    y=alt.Y(
-        "mean_test_score",
-        title="Accuracy estimate",
-        scale=alt.Scale(domain=(0.60, 0.90)),
-    )
+    x=alt.X("param_kneighborsclassifier__n_neighbors").title("Neighbors"),
+    y=alt.Y("mean_test_score")
+        .scale(domain=(0.60, 0.90)
+        .title("Accuracy estimate")
 )
 
 large_accuracy_vs_k

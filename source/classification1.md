@@ -290,14 +290,10 @@ perimeter and concavity variables. Recall that `altair's` default palette
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
-perim_concav = (
-    alt.Chart(cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter").title("Perimeter (standardized)"),
-        y=alt.Y("Concavity").title("Concavity (standardized)"),
-        color=alt.Color("Class").title("Diagnosis"),
-    )
+perim_concav = alt.Chart(cancer).mark_circle().encode(
+    x=alt.X("Perimeter").title("Perimeter (standardized)"),
+    y=alt.Y("Concavity").title("Concavity (standardized)"),
+    color=alt.Color("Class").title("Diagnosis")
 )
 perim_concav
 ```
@@ -1437,14 +1433,10 @@ rare_cancer = pd.concat((
     cancer[cancer["Class"] == 'Malignant'].head(3)
 ))
 
-rare_plot = (
-    alt.Chart(rare_cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter").title("Perimeter (standardized)"),
-        y=alt.Y("Concavity").title("Concavity (standardized)"),
-        color=alt.Color("Class").title("Diagnosis"),
-    )
+rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
+    x=alt.X("Perimeter").title("Perimeter (standardized)"),
+    y=alt.Y("Concavity").title("Concavity (standardized)"),
+    color=alt.Color("Class").title("Diagnosis")
 )
 rare_plot
 ```

@@ -645,15 +645,23 @@ glue(
         population_distribution.mark_bar(clip=True).encode(
             x=alt.X(
                 "price",
-                bin=alt.Bin(maxbins=30),
+                bin=alt.Bin(extent=[0, 660], maxbins=40),
                 title="Price per night (Canadian dollars)",
-                scale=alt.Scale(domainMax=700)
+                #scale=alt.Scale(domainMax=700)
             )
         ).properties(
             title='Population', height=150
         ),
-        sample_distribution.properties(title="Sample (n = 40)").properties(height=150),
-        sampling_distribution.properties(
+        sample_distribution.encode(
+            x=alt.X("price")
+                .bin(extent=[0, 660], maxbins=40)
+                .title("Price per night (Canadian dollars)")
+        ).properties(title="Sample (n = 40)").properties(height=150),
+        sampling_distribution.encode(
+            x=alt.X("sample_mean")
+                .bin(extent=[0, 660], maxbins=40)
+                .title("Price per night (Canadian dollars)")
+        ).properties(
             title=alt.TitleParams(
                 "Sampling distribution of the mean",
                 subtitle="For 20,000 samples of size 40"

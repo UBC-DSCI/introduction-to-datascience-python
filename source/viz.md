@@ -422,6 +422,8 @@ to specify the upper and lower bounds to limit the axis.
 We also added the argument `clip=True` to `mark_line`. This tells `altair`
 to "clip" (remove) the data outside of the specified domain that we set so that it doesn't
 extend past the plot area.
+Since we are using both the `scale` and `title` method on the encodings
+we stack them on separate lines to make the code easier to read.
 
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
@@ -659,9 +661,9 @@ can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home").title(
         ["Language spoken most at home", "(number of Canadian residents)"]
     ),
-    y=alt.Y("mother_tongue").scale(zero=False).title(
-        ["Mother tongue", "(number of Canadian residents)"]
-    )
+    y=alt.Y("mother_tongue")
+        .scale(zero=False)
+        .title(["Mother tongue", "(number of Canadian residents)"])
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -778,18 +780,14 @@ and change the number formatting to include a suffix which makes the labels shor
 
 ```{code-cell} ipython3
 can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X(
-        "most_at_home",
-        title=["Language spoken most at home", "(number of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7, format='s')
-    ),
-    y=alt.Y(
-        "mother_tongue",
-        title=["Mother tongue", "(number of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7, format='s')
-    )
+    x=alt.X("most_at_home")
+        .scale(type="log")
+        .title(["Language spoken most at home", "(number of Canadian residents)"])
+        .axis(tickCount=7, format='s'),
+    y=alt.Y("mother_tongue")
+        .scale(type="log")
+        .title(["Mother tongue", "(number of Canadian residents)"])
+        .axis(tickCount=7, format='s')
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -1079,25 +1077,19 @@ so that text labels for each point show up once we hover over it with the mouse 
 Here we also add the exact values of the variables on the x and y-axis to the tooltip.
 
 ```{code-cell} ipython3
-can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True, size=50).encode(
-    x=alt.X(
-        "most_at_home_percent",
-        title=["Language spoken most at home", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    y=alt.Y(
-        "mother_tongue_percent",
-        title=["Mother tongue", "(percentage of Canadian residents)"],
-        scale=alt.Scale(type="log"),
-        axis=alt.Axis(tickCount=7)
-    ),
-    color=alt.Color(
-        "category",
-        title='',
-        legend=alt.Legend(orient='top'),
-        scale=alt.Scale(scheme='dark2')
-    ),
+can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
+    x=alt.X("most_at_home_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title(["Language spoken most at home", "(percentage of Canadian residents)"]),
+    y=alt.Y("mother_tongue_percent")
+        .scale(type="log")
+        .axis(tickCount=7)
+        .title("Mother tongue(percentage of Canadian residents)"),
+    color=alt.Color("category")
+        .legend(orient='top')
+        .title('')
+        .scale(scheme='dark2'),
     shape="category",
     tooltip=alt.Tooltip(['language', 'mother_tongue', 'most_at_home'])
 ).configure_axis(titleFontSize=12)
@@ -1628,7 +1620,7 @@ morley_df
 ```
 
 ```{code-cell} ipython3
-morley_hist_rel = alt.Chart().mark_bar().encode(
+morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X("RelativeError")
         .bin()
         .title("Relative Error (%)"),
@@ -1676,7 +1668,7 @@ inside the `bin` method.
 
 ```{code-cell} ipython3
 morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
-    x=alt.X("RelativeError", bin=alt.Bin(maxbins=30)),
+    x=alt.X("RelativeError").bin(maxbins=30),
     y="count()"
 )
 ```

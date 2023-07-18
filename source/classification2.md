@@ -331,7 +331,7 @@ cancer['Class'] = cancer['Class'].replace({
 # labeling the points be diagnosis class
 
 perim_concav = alt.Chart(cancer).mark_circle().encode(
-    x="Smoothness",
+    x=alt.X("Smoothness").scale(zero=False),
     y="Concavity",
     color=alt.Color("Class").title("Diagnosis")
 )

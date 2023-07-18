@@ -290,10 +290,14 @@ perimeter and concavity variables. Recall that `altair's` default palette
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
-perim_concav = alt.Chart(cancer).mark_circle().encode(
-    x=alt.X("Perimeter", title="Perimeter (standardized)"),
-    y=alt.Y("Concavity", title="Concavity (standardized)"),
-    color=alt.Color("Class", title="Diagnosis"),
+perim_concav = (
+    alt.Chart(cancer)
+    .mark_circle()
+    .encode(
+        x=alt.X("Perimeter").title("Perimeter (standardized)"),
+        y=alt.Y("Concavity").title("Concavity (standardized)"),
+        color=alt.Color("Class").title("Diagnosis"),
+    )
 )
 perim_concav
 ```
@@ -371,17 +375,13 @@ depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 :tags: [remove-cell]
 
 perim_concav_with_new_point = (
-    alt.Chart(
-        perim_concav_with_new_point_df,
-    )
+    alt.Chart(perim_concav_with_new_point_df)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-        shape=alt.Shape(
-            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
-        ),
+        x=alt.X("Perimeter").title="Perimeter (standardized)"),
+        y=alt.Y("Concavity").title="Concavity (standardized)"),
+        color=alt.Color("Class").title("Diagnosis"),
+        shape=alt.Shape("Class").scale((range=["circle", "circle", "diamond"])),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
         stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
@@ -1437,10 +1437,14 @@ rare_cancer = pd.concat((
     cancer[cancer["Class"] == 'Malignant'].head(3)
 ))
 
-rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
-    x=alt.X("Perimeter", title="Perimeter (standardized)"),
-    y=alt.Y("Concavity", title="Concavity (standardized)"),
-    color=alt.Color("Class", title="Diagnosis"),
+rare_plot = (
+    alt.Chart(rare_cancer)
+    .mark_circle()
+    .encode(
+        x=alt.X("Perimeter").title("Perimeter (standardized)"),
+        y=alt.Y("Concavity").title("Concavity (standardized)"),
+        color=alt.Color("Class").title("Diagnosis"),
+    )
 )
 rare_plot
 ```
@@ -1822,44 +1826,39 @@ prediction_table["Class"] = knnPredGrid
 
 # plot:
 # 1. the colored scatter of the original data
-unscaled_plot = (
-    alt.Chart(
-        unscaled_cancer,
-    )
-    .mark_point(opacity=0.6, filled=True, size=40)
-    .encode(
-        x=alt.X(
-            "Area",
-            title="Area",
-            scale=alt.Scale(
-                domain=(unscaled_cancer["Area"].min() * 0.95, unscaled_cancer["Area"].max() * 1.05),
-            nice=False
+unscaled_plot = alt.Chart(unscaled_cancer).mark_point(
+    opacity=0.6,
+    filled=True,
+    size=40
+).encode(
+    x=alt.X("Area")
+        .scale(
+            nice=False,
+            domain=(
+                unscaled_cancer["Area"].min() * 0.95,
+                unscaled_cancer["Area"].max() * 1.05
             )
         ),
-        y=alt.Y(
-            "Smoothness",
-            title="Smoothness",
-            scale=alt.Scale(
-                domain=(
-                    unscaled_cancer["Smoothness"].min() * 0.95,
-                    unscaled_cancer["Smoothness"].max() * 1.05,
-                ),
-                nice=False
-            ),
+    y=alt.Y("Smoothness")
+        .scale(
+            nice=False,
+            domain=(
+                unscaled_cancer["Smoothness"].min() * 0.95,
+                unscaled_cancer["Smoothness"].max() * 1.05
+            )
         ),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+    color=alt.Color("Class").title("Diagnosis")
 )
 
 # 2. the faded colored scatter for the grid points
-prediction_plot = (
-    alt.Chart(prediction_table)
-    .mark_point(opacity=0.05, filled=True, size=300)
-    .encode(
-        x="Area",
-        y="Smoothness",
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+prediction_plot = alt.Chart(prediction_table).mark_point(
+    opacity=0.05,
+    filled=True,
+    size=300
+).encode(
+    x="Area",
+    y="Smoothness",
+    color=alt.Color("Class").title("Diagnosis")
 )
 unscaled_plot + prediction_plot
 ```

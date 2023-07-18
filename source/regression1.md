@@ -185,7 +185,7 @@ want to predict (sale price) on the y-axis.
 eda = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
-        .title("House size (square feet)")
+        .title("House size (square feet)"),
     y=alt.Y("price")
         .axis(format='$,.0f')
         .title("Price (USD)")
@@ -260,7 +260,7 @@ the sale price?
 small_plot = alt.Chart(small_sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
-        .title("House size (square feet)")
+        .title("House size (square feet)"),
     y=alt.Y("price")
         .axis(format='$,.0f')
         .title("Price (USD)")
@@ -871,7 +871,7 @@ sacr_preds = sacr_preds.assign(
 base_plot = alt.Chart(sacramento_train).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
-        .title("House size (square feet)")
+        .title("House size (square feet)"),
     y=alt.Y("price")
         .axis(format='$,.0f')
         .title("Price (USD)")

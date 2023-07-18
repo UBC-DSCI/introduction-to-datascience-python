@@ -485,9 +485,9 @@ lm_plot_final = alt.Chart(sacramento_train).mark_circle().encode(
         .scale(zero=False)
         .title("House size (square feet)"),
     y=alt.Y("price")
-        axis(format="$,.0f")
-        scale(zero=False)
-        title("Price (USD)")
+        .axis(format="$,.0f")
+        .scale(zero=False)
+        .title("Price (USD)")
 )
 
 lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(

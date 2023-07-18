@@ -195,8 +195,8 @@ to see if we can detect subtypes or groups in our data set.
 import altair as alt
 
 scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
-    x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
-    y=alt.Y("bill_length_standardized", title="Bill Length (standardized)")
+    x=alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    y=alt.Y("bill_length_standardized").title("Bill Length (standardized)")
 )
 ```
 
@@ -630,9 +630,9 @@ of the cluster assignments for each point, as shown in {numref}`cluster_plot`.
 
 ```{code-cell} ipython3
 cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
-    x=alt.X("flipper_length_mm", title="Flipper Length (standardized)"),
-    y=alt.Y("bill_length_mm", title="Bill Length (standardized)"),
-    color=alt.Color("cluster:N", title="Cluster"),
+    x=alt.X("flipper_length_mm").title("Flipper Length (standardized)"),
+    y=alt.Y("bill_length_mm").title("Bill Length (standardized)"),
+    color=alt.Color("cluster:N").title("Cluster"),
 )
 ```
 
@@ -718,8 +718,8 @@ Now that we have `inertia` and `k` as columns in a data frame, we can make a lin
 
 ```{code-cell} ipython3
 elbow_plot = alt.Chart(penguin_clust_ks).mark_line().encode(
-    x=alt.X("k", title="K"),
-    y=alt.Y("inertia", title="Total within-cluster sum of squares"),
+    x=alt.X("k").title("K"),
+    y=alt.Y("inertia").title("Total within-cluster sum of squares"),
 )
 ```
 

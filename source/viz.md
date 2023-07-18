@@ -182,8 +182,6 @@ import altair as alt
 from myst_nb import glue
 ```
 
-
-
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
 
 ```{index} Mauna Loa

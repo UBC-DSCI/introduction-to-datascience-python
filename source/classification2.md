@@ -330,12 +330,6 @@ cancer['Class'] = cancer['Class'].replace({
 # create scatter plot of tumor cell concavity versus smoothness,
 # labeling the points be diagnosis class
 
-<<<<<<< Updated upstream
-perim_concav = alt.Chart(cancer).mark_circle().encode(
-    x=alt.X("Smoothness", scale=alt.Scale(zero=False)),
-    y="Concavity",
-    color=alt.Color("Class", title="Diagnosis"),
-=======
 perim_concav = (
     alt.Chart(cancer)
     .mark_circle()
@@ -344,7 +338,6 @@ perim_concav = (
         y="Concavity",
         color=alt.Color("Class").title("Diagnosis"),
     )
->>>>>>> Stashed changes
 )
 perim_concav
 ```

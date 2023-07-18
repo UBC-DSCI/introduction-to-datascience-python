@@ -503,9 +503,6 @@ So a scatter plot is likely to be the most appropriate
 visualization. Let's create a scatter plot using the `altair`
 package with the `waiting` variable on the horizontal axis, the `eruptions`
 variable on the vertical axis, and `mark_point` as the graphical mark.
-By default, `altair` draws only the outline of each point. If we would
-like to fill them in, we pass the argument `filled=True` to `mark_point`. In
-place of `mark_point(filled=True)`, we can also use `mark_circle`.
 The result is shown in {numref}`faithful_scatter`.
 
 ```{code-cell} ipython3
@@ -536,7 +533,7 @@ In order to refine the visualization, we need only to add axis
 labels and make the font more readable.
 
 ```{code-cell} ipython3
-faithful_scatter_labels = alt.Chart(faithful).mark_circle().encode(
+faithful_scatter_labels = alt.Chart(faithful).mark_point().encode(
     x=alt.X("waiting").title("Waiting Time (mins)"),
     y=alt.Y("eruptions").title("Eruption Duration (mins)")
 )
@@ -555,10 +552,10 @@ Scatter plot of waiting time and eruption time with clearer axes and labels.
 :::
 
 
-We can change the size of the point and color of the plot by specifying `mark_circle(size=10, color="black")`.
+We can change the size of the point and color of the plot by specifying `mark_point(size=10, color="black")`.
 
 ```{code-cell} ipython3
-faithful_scatter_labels_black = alt.Chart(faithful).mark_circle(size=10, color="black").encode(
+faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="black").encode(
     x=alt.X("waiting").title("Waiting Time (mins)"),
     y=alt.Y("eruptions").title("Eruption Duration (mins)")
 )
@@ -749,11 +746,9 @@ using the argument `type="log"` in the scale method.
 can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home")
         .scale(type="log")
-        .axis(tickCount=7)
         .title(["Language spoken most at home", "(number of Canadian residents)"]),
     y=alt.Y("mother_tongue")
         .scale(type="log")
-        .axis(tickCount=6)
         .title(["Mother tongue", "(number of Canadian residents)"])
 ).configure_axis(titleFontSize=12)
 ```
@@ -997,12 +992,9 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
         .scale(type="log")
         .axis(tickCount=7)
         .title(["Mother tongue", "(percentage of Canadian residents)"]),
-    color=alt.Color("category").legend(
-        orient='none',
-        legendX=0,
-        legendY=-90,
-        direction='vertical'
-    )
+    color=alt.Color("category")
+        .legend(orient='top')
+        .title('')
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -1020,8 +1012,11 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color palette. This is an appropriate choice for most situations. In Altair, there are many themes available, which can be viewed [in the documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors). To change the color scheme,
-we add the `scheme` argument in the `scale` method of the `color` encoding to indicate the palette we want to use.
+the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
+In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
+If you are unsure about a certain color combination, you can use
+this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
+if your visualizations are color-blind friendly.
 
 ```{index} color palette; color blindness simulator
 ```
@@ -1052,13 +1047,9 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
         .axis(tickCount=7)
         .title("Mother tongue(percentage of Canadian residents)"),
     color=alt.Color("category")
-        .scale(scheme='dark2')
-        .legend(
-            orient='none',
-            legendX=0,
-            legendY=-90,
-            direction='vertical'
-        ),
+        .legend(orient='top')
+        .title('')
+        .scale(scheme='dark2'),
     shape="category"
 ).configure_axis(titleFontSize=12)
 ```
@@ -1256,7 +1247,7 @@ To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
 in the y-encoding of the chart.
 Since the `size` variable is encoded in the x channel of the chart,
-we specify `sort='x'` inside `alt.Y`.
+we specify `sort('x')` on `alt.Y`.
 This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
@@ -1268,20 +1259,12 @@ we can add a minus sign to reverse the order and specify `sort='-x'`.
 ```{index} altair; sort
 ```
 
-To label the x and y axes, we will use the `alt.X` and `alt.Y` function
-The default label is the name of the column being mapped to `color`. Here that
-would be `landmass_type`;
-however `landmass_type` is not proper English (and so is less readable).
-Thus we use the `title` method inside `alt.Color` to change that to `"Type"`.
-Finally, we again use the `configure_axis` function
-to change the font size.
-
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x=alt.X("size").title("Size (1000 square mi)"),
-    y=alt.Y("landmass").sort("x").title("Landmass"),
-    color=alt.Color("landmass_type").title("Type")
-).configure_axis(titleFontSize=12)
+    x="size",
+    y=alt.Y("landmass").sort("x"),
+    color=alt.Color("landmass_type")
+)
 ```
 
 ```{code-cell} ipython3
@@ -1301,32 +1284,6 @@ The plot in {numref}`islands_plot_sorted` is now an effective
 visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that all the seven largest landmasses are continents.
-We can make one more finishing touch in {numref}`islands_plot_titled`: we will
-add a title to the chart by specifying `title` method in the `alt.Chart` function.
-Note that plot titles are not always required; usually plots appear as part
-of other media (e.g., in a slide presentation, on a poster, in a paper) where
-the title may be redundant with the surrounding context.
-
-```{code-cell} ipython3
-islands_plot_titled = alt.Chart(islands_top12, title="Largest 12 landmasses on Earth").mark_bar().encode(
-    x=alt.X("size").title("Size (1000 square mi)"),
-    y=alt.Y("landmass").sort("x").title("Landmass"),
-    color=alt.Color("landmass_type").title("Type")
-).configure_axis(titleFontSize=12)
-```
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-glue('islands_plot_titled', islands_plot_titled, display=True)
-```
-
-:::{glue:figure} islands_plot_titled
-:figwidth: 700px
-:name: islands_plot_titled
-
-Bar plot of size for Earth's largest 12 landmasses with a title.
-:::
->>>>>>> 79cc738 (Correct "argument" with "method")
 
 ### Histograms: the Michelson speed of light data set
 
@@ -1377,16 +1334,50 @@ helps us visualize how a particular variable is distributed in a data set
 by grouping the values into bins,
 and then using vertical bars to show how many data points fell in each bin.
 
-To create a histogram in `altair` we will use the `mark_bar` graphical
-mark, setting the `x` axis to the `Speed` measurement variable and `y` axis to `"count()"`.
-There is no `"count()"` column-name in `morley_df`; we use `"count()"` to tell `altair`
-that we want to count the number of values in the `Speed` column in each bin.
-As usual,
-let's use the default arguments just to see how things look.
+To understand how to create a histogram in `altair`,
+let's start by creating a bar chart
+just like we did in the previous section.
+Note that this time,
+we are setting the `y` encoding to `"count()"`.
+There is no `"count()"` column-name in `morley_df`;
+we use `"count()"` to tell `altair`
+that we want to count the number of occurrences of each value in along the x-axis 
+(which we encoded as the `Speed` column).
+
+```{code-cell} ipython3
+morley_bars = alt.Chart(morley_df).mark_bar().encode(
+    x="Speed",
+    y="count()"
+)
+```
+
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("morley_bars", morley_bars, display=False)
+```
+
+:::{glue:figure} morley_bars
+:figwidth: 700px
+:name: morley_bars
+
+A bar chart of Michelson's speed of light data.
+:::
+
+The bar chart above gives us an indication of
+which values are more common than others,
+but because the bars are so thin it's hard to get a sense for the
+overall distribution of the data.
+We don't really care about how many occurrences there are of each exact `Speed` value,
+but rather where most of the `Speed` values fall in general.
+To more effectively communicate this information
+we can group the x-axis into bins (or "buckets") using the `bin` method
+and then count how many `Speed` values fall within each bin.
+A bar chart that represent the count of values
+for a binned quantitative variable is called a histogram.
 
 ```{code-cell} ipython3
 morley_hist = alt.Chart(morley_df).mark_bar().encode(
-    x="Speed",
+    x=alt.X("Speed").bin(),
     y="count()"
 )
 ```
@@ -1434,7 +1425,7 @@ To add the dashed line on top of the histogram, we
 **add** the `mark_rule` chart to the `morley_hist`
 using the `+` operator.
 Adding features to a plot using the `+` operator is known as *layering* in `altair`.
-This is a very powerful feature of `altair`; you
+This is a powerful feature of `altair`; you
 can continue to iterate on a single chart, adding and refining
 one layer at a time. If you stored your chart as a variable
 using the assignment symbol (`=`), you can add to it using the `+` operator.
@@ -1481,8 +1472,8 @@ We can create a histogram colored by the `Expt` variable
 by adding it to the `color` argument.
 
 ```{code-cell} ipython3
-morley_hist_colored = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x="Speed",
+morley_hist_colored = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed").bin(),
     y="count()",
     color="Expt"
 )
@@ -1526,17 +1517,17 @@ to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
 hence use a discrete color map in visualizations
 ([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
-We also specify the `stack(False)` method in the `y` encoding so
+We also add the `stack(False)` method on the `y` encoding so
 that the bars are not stacked on top of each other,
 but instead share the same baseline.
-We make sure the different colors can be seen
+We try to ensure that the different colors can be seen
 despite them sitting in front of each other
 by setting the `opacity` argument in `mark_bar` to `0.5`
 to make the bars slightly translucent.
 
 ```{code-cell} ipython3
-morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed").bin(maxbins=50),
+morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
+    x=alt.X("Speed").bin(),
     y=alt.Y("count()").stack(False),
     color="Expt:N"
 )
@@ -1584,13 +1575,9 @@ instead of re-creating the same chart from scratch.
 
 ```{code-cell} ipython3
 
-morley_hist = alt.Chart().mark_bar(opacity=0.5).encode(
-    x=alt.X("Speed").bin(maxbins=50),
-    y=alt.Y("count()").stack(False),
-    color="Expt:N"
-).properties(height=100, width=400)
-
-morley_hist_facet = (morley_hist + v_line).facet(
+morley_hist_facet = morley_hist_categorical.properties(
+    height=100
+).facet(
     "Expt",
     columns=1
 )
@@ -1641,21 +1628,13 @@ morley_df
 ```
 
 ```{code-cell} ipython3
-v_line = alt.Chart().mark_rule(
-    strokeDash=[3]).encode(
-    x=alt.datum(0)
+morley_hist_rel = alt.Chart().mark_bar().encode(
+    x=alt.X("RelativeError")
+        .bin()
+        .title("Relative Error (%)"),
+    y=alt.Y("count()").title("# Measurements"),
+    color=alt.Color("Expt:N").title("Experiment ID")
 )
-
-morley_hist = alt.Chart().mark_bar(opacity=0.6).encode(
-    x=alt.X("relative_accuracy")
-        .bin(maxbins=120)
-        .title("Relative Accuracy (%)"),
-    y=alt.Y("count()")
-        .stack(False)
-        .title("# Measurements"),
-    color=alt.Color("Expt:N")
-        .title("Experiment ID")
-).properties(height=100, width=400)
 
 # Recreating v_line to indicate that the speed of light is at 0% relative error
 v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
@@ -1691,11 +1670,9 @@ experiments did quite an admirable job given the technology available at the tim
 
 #### Choosing a binwidth for histograms
 
-When you create a histogram in `altair`, by default, it tries to choose a reasonable  number of bins.
-Naturally, this is not always the right number to use.
-You can set the number of bins yourself by using
-the `maxbins` argument inside the `bin` method.
-But what number of bins is the right one to use?
+When you create a histogram in `altair`, it tries to choose a reasonable number of bins.
+We can change the number of bins by using the `maxbins` parameter
+inside the `bin` method.
 
 ```{code-cell} ipython3
 morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(

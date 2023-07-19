@@ -427,7 +427,7 @@ We can visualize the population distribution of the price per night with a histo
 
 population_distribution = alt.Chart(airbnb).mark_bar().encode(
     x=alt.X("price")
-        .bin()
+        .bin(maxbins=30)
         .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()", title="Count"),
 )
@@ -500,7 +500,7 @@ of our sample.
 
 sample_distribution = alt.Chart(one_sample).mark_bar().encode(
     x=alt.X("price")
-        .bin()
+        .bin(maxbins=30)
         .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()").title("Count"),
 )
@@ -574,9 +574,9 @@ sample_estimates
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
     x=alt.X("sample_mean")
-        .bin()
+        .bin(maxbins=30)
         .title("Sample mean price per night (Canadian dollars)"),
-    y=alt.Y("count()").title("Count"),
+    y=alt.Y("count()").title("Count")
 )
 
 sampling_distribution
@@ -943,7 +943,7 @@ one_sample
 
 one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
     x=alt.X("price")
-        .bin()
+        .bin(maxbins=30)
         .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()").title("Count"),
 )
@@ -983,7 +983,7 @@ we change the `replace` parameter to `True`.
 boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
     x=alt.X("price")
-        .bin()
+        .bin(maxbins=30)
         .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()", title="Count"),
 )

@@ -1161,7 +1161,7 @@ large_accuracies_grid = pd.DataFrame(
 large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
     x=alt.X("param_kneighborsclassifier__n_neighbors").title("Neighbors"),
     y=alt.Y("mean_test_score")
-        .scale(domain=(0.60, 0.90)
+        .scale(domain=(0.60, 0.90))
         .title("Accuracy estimate")
 )
 

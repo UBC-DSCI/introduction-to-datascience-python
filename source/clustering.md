@@ -219,7 +219,7 @@ Scatter plot of standardized bill length versus standardized flipper length.
 Based on the visualization
 in {numref}`scatter_plot`,
 we might suspect there are a few subtypes of penguins within our data set.
-We can see roughly 3 groups of observations in {numref}`scatter`,
+We can see roughly 3 groups of observations in {numref}`scatter_plot`,
 including:
 
 1. a small flipper and bill length group,

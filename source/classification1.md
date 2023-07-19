@@ -374,10 +374,10 @@ perim_concav_with_new_point = (
     alt.Chart(perim_concav_with_new_point_df)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Perimeter").title="Perimeter (standardized)"),
-        y=alt.Y("Concavity").title="Concavity (standardized)"),
+        x=alt.X("Perimeter").title("Perimeter (standardized)"),
+        y=alt.Y("Concavity").title("Concavity (standardized)"),
         color=alt.Color("Class").title("Diagnosis"),
-        shape=alt.Shape("Class").scale((range=["circle", "circle", "diamond"])),
+        shape=alt.Shape("Class").scale(range=["circle", "circle", "diamond"]),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
         stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )

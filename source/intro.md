@@ -873,17 +873,17 @@ section with pandas.
 
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
-in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make
+in the `altair` objects using `alt.X` and `alt.Y` with the `title` method to make
 the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
-`alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
+the `title` method, we surround them with quotation marks. We can do many other modifications
 to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('language', title='Language'),
-    y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
+    x=alt.X('language').title('Language'),
+    y=alt.Y('mother_tongue').title('Mother Tongue (Number of Canadian Residents)')
 )
 ```
 
@@ -914,8 +914,8 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 ```{code-cell} ipython3
 barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language', title='Language')
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').title('Language')
 )
 ```
 
@@ -942,13 +942,13 @@ the visualization to make it even more well-suited to answering the question
 we asked earlier in this chapter. For example, the visualization could be made more transparent by
 organizing the bars according to the number of Canadian residents reporting
 each language, rather than in alphabetical order. We can reorder the bars using
-the `sort` argument, which orders a variable (here `language`) based on the
+the `sort` method, which orders a variable (here `language`) based on the
 values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
 ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language', sort='x', title='Language')
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').sort('x').title('Language')
 )
 ```
 
@@ -1024,8 +1024,8 @@ ten_lang = (
 
 # create the visualization
 ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language', sort='x', title='Language')
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').sort('x').title('Language')
 )
 ```
 

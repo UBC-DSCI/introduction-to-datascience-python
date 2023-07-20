@@ -183,8 +183,12 @@ want to predict (sale price) on the y-axis.
 :tags: [remove-output]
 
 eda = alt.Chart(sacramento).mark_circle().encode(
-    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format='$,.0f')
+        .title("Price (USD)")
 )
 
 eda
@@ -254,8 +258,12 @@ the sale price?
 :tags: [remove-output]
 
 small_plot = alt.Chart(small_sacramento).mark_circle().encode(
-    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format='$,.0f')),
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format='$,.0f')
+        .title("Price (USD)")
 )
 
 # add an overlay to the base plot
@@ -861,8 +869,12 @@ sacr_preds = sacr_preds.assign(
 
 # the base plot: the training data scatter plot
 base_plot = alt.Chart(sacramento_train).mark_circle().encode(
-    x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format='$,.0f')
+        .title("Price (USD)")
 )
 
 # add the prediction layer
@@ -921,8 +933,8 @@ to help predict the sale price of a house.
 :tags: [remove-output]
 
 plot_beds = alt.Chart(sacramento).mark_circle().encode(
-    x=alt.X("beds", title="Number of Bedrooms"),
-    y=alt.Y("price", title="Price (USD)", axis=alt.Axis(format="$,.0f")),
+    x=alt.X("beds").title("Number of Bedrooms"),
+    y=alt.Y("price").title("Price (USD)").axis(format="$,.0f"),
 )
 
 plot_beds

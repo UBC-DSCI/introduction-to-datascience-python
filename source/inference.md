@@ -348,8 +348,10 @@ sampling distribution directly for learning purposes.
 :tags: [remove-output]
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X("sample_proportion", title="Sample proportions", bin=alt.Bin(maxbins=20)),
-    y=alt.Y("count()", title="Count"),
+    x=alt.X("sample_proportion")
+        .bin(maxbins=20)
+        .title("Sample proportions"),
+    y=alt.Y("count()").title("Count"),
 )
 
 sampling_distribution
@@ -424,11 +426,9 @@ We can visualize the population distribution of the price per night with a histo
 :tags: [remove-output]
 
 population_distribution = alt.Chart(airbnb).mark_bar().encode(
-    x=alt.X(
-        "price",
-        bin=alt.Bin(maxbins=30),
-        title="Price per night (Canadian dollars)"
-    ),
+    x=alt.X("price")
+        .bin(maxbins=30)
+        .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()", title="Count"),
 )
 
@@ -499,8 +499,10 @@ of our sample.
 :tags: [remove-output]
 
 sample_distribution = alt.Chart(one_sample).mark_bar().encode(
-    x=alt.X("price", bin=alt.Bin(maxbins=30), title="Price per night (Canadian dollars)"),
-    y=alt.Y("count()", title="Count"),
+    x=alt.X("price")
+        .bin(maxbins=30)
+        .title("Price per night (Canadian dollars)"),
+    y=alt.Y("count()").title("Count"),
 )
 
 sample_distribution
@@ -571,12 +573,10 @@ sample_estimates
 :tags: [remove-output]
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X(
-        "sample_mean",
-        bin=alt.Bin(maxbins=30),
-        title="Sample mean price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count"),
+    x=alt.X("sample_mean")
+        .bin(maxbins=30)
+        .title("Sample mean price per night (Canadian dollars)"),
+    y=alt.Y("count()").title("Count")
 )
 
 sampling_distribution
@@ -645,15 +645,23 @@ glue(
         population_distribution.mark_bar(clip=True).encode(
             x=alt.X(
                 "price",
-                bin=alt.Bin(maxbins=30),
+                bin=alt.Bin(extent=[0, 660], maxbins=40),
                 title="Price per night (Canadian dollars)",
-                scale=alt.Scale(domainMax=700)
+                #scale=alt.Scale(domainMax=700)
             )
         ).properties(
             title='Population', height=150
         ),
-        sample_distribution.properties(title="Sample (n = 40)").properties(height=150),
-        sampling_distribution.properties(
+        sample_distribution.encode(
+            x=alt.X("price")
+                .bin(extent=[0, 660], maxbins=40)
+                .title("Price per night (Canadian dollars)")
+        ).properties(title="Sample (n = 40)").properties(height=150),
+        sampling_distribution.encode(
+            x=alt.X("sample_mean")
+                .bin(extent=[0, 660], maxbins=40)
+                .title("Price per night (Canadian dollars)")
+        ).properties(
             title=alt.TitleParams(
                 "Sampling distribution of the mean",
                 subtitle="For 20,000 samples of size 40"
@@ -934,12 +942,10 @@ one_sample
 :tags: []
 
 one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
-    x=alt.X(
-        "price",
-        bin=alt.Bin(maxbins=30),
-        title="Price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count"),
+    x=alt.X("price")
+        .bin(maxbins=30)
+        .title("Price per night (Canadian dollars)"),
+    y=alt.Y("count()").title("Count"),
 )
 
 one_sample_dist
@@ -976,11 +982,9 @@ we change the `replace` parameter to `True`.
 
 boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
-    x=alt.X(
-        "price",
-        bin=alt.Bin(maxbins=30),
-        title="Price per night (Canadian dollars)",
-    ),
+    x=alt.X("price")
+        .bin(maxbins=30)
+        .title("Price per night (Canadian dollars)"),
     y=alt.Y("count()", title="Count"),
 )
 
@@ -1031,12 +1035,10 @@ Let's take a look at histograms of the first six replicates of our bootstrap sam
 
 six_bootstrap_samples = boot20000.query("replicate < 6")
 alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
-    x=alt.X(
-        "price",
-        bin=alt.Bin(maxbins=20),
-        title="Price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count")
+    x=alt.X("price")
+        .bin(maxbins=20)
+        .title("Price per night (Canadian dollars)"),
+    y=alt.Y("count()").title("Count")
 ).facet(
     "replicate",
     columns=2
@@ -1099,12 +1101,10 @@ boot20000_means
 :tags: []
 
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
-    x=alt.X(
-        "sample_mean",
-        bin=alt.Bin(maxbins=20),
-        title="Sample mean price per night (Canadian dollars)",
-    ),
-    y=alt.Y("count()", title="Count"),
+    x=alt.X("sample_mean")
+        .bin(maxbins=20)
+        .title("Sample mean price per night (Canadian dollars)"),
+    y=alt.Y("count()").title("Count"),
 )
 
 boot_est_dist

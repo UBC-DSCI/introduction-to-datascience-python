@@ -841,16 +841,27 @@ indicating they are integer data types (i.e., numbers)!
 
 Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
 using the powerful suite of functions from the `pandas`.
-We revisit the `[]` from the chapter on {ref}`intro`,
-which lets us create a subset of rows from a data frame.
-Recall the argument to `[]`:
-a list of column names, or a logical statement that evaluates to either `True` or `False`,
-where `[]` returns the rows where the logical statement evaluates to `True`.
-This section will highlight more advanced usage of the `[]` function.
-In particular, this section provides an in-depth treatment of the variety of logical statements
+We will first revisit the `[]` from the chapter on {ref}`intro`,
+which lets us obtain a subset of either the rows **or** the columns of a data frame.
+This section will highlight more advanced usage of the `[]` function,
+including an in-depth treatment of the variety of logical statements
 one can use in the `[]` to select subsets of rows.
 
 +++
+
+### Extracting columns by name
+
+Recall that if we provide a list of column names, `[]` returns the subset of columns with those names.
+Suppose we wanted to select the columns `language`, `region`,
+`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
+learned in the chapter on {ref}`intro`, we can pass all of these column 
+names into the square brackets.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+```
+
 
 ### Extracting rows that have a certain value with `==`
 Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
@@ -1022,7 +1033,10 @@ to make long chains of filtering operations a bit easier to read.
 The `[]` operation is only used when you want to either filter rows **or** select columns;
 it cannot be used to do both operations at the same time. This is where `loc[]`
 comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
-which lets us create a subset of columns from a data frame.
+which lets us create a subset of the rows and columns in the `tidy_lang` data frame.
+In the first argument to `loc[]`, we specify a logical statement that 
+filters the rows to only those pertaining to the Toronto region, 
+and the second argument specifies a list of columns to keep by name.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -1032,53 +1046,61 @@ tidy_lang.loc[
 ]
 ```
 
-### Using `loc[]` to select ranges of columns
-
-Suppose we wanted to select only the columns `language`, `region`,
-`most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in the chapter on {ref}`intro`, we would pass all of these column names into the square brackets.
+In addition to simultaneous subsetting of rows and columns, `loc[]` has two
+more special capabilities beyond those of `[]`. First, `loc[]` has the ability to specify *ranges* of rows and columns. 
+For example, note that the list of columns `language`, `region`, `most_at_home`, `most_at_work` 
+corresponds to the *range* of columns from `language` to `most_at_work`.
+Rather than explicitly listing all of the column names as we did above,
+we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax 
+denotes a range, and is supported by the `loc[]` function, but not by `[]`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+tidy_lang.loc[
+    tidy_lang['region'] == 'Toronto',
+    "language":"most_at_work"
+]
 ```
 
-Note that we could obtain the same result by stating that we would like all of the columns
-from `language` through `most_at_work`. Instead of passing a list of all of the column
-names that we want, we can ask for the range of columns `"language":"most_at_work"`, which
-you can read as "The columns from `language` to `most_at_work`".
-This `:`-syntax is supported by the `loc` function,
-but not by the `[]`, so we need to switch to using `loc[]` here.
+We can pass `:` by itself&mdash;without anything before or after&mdash;to denote that we want to retrieve
+everything. For example, to obtain a subset of all rows and only those columns ranging from `language` to `most_at_work`,
+we could use the following expression.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[:, "language":"most_at_work"]
 ```
 
-We pass `:` before the comma indicating we want to retrieve all rows,
-i.e. we are not filtering any rows in this expression.
-Similarly, you can ask for all of the columns including and after `language` by doing the following
+We can also omit the beginning or end of the `:` range expression to denote
+that we want "everything up to" or "everything after" an element. For example,
+if we want all of the columns including and after `language`, we can write the expression:
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[:, "language":]
 ```
-
 By not putting anything after the `:`, Python reads this as "from `language` until the last column".
+Similarly, we can specify that we want everything up to and including `language` by writing
+the expression:
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang.loc[:, :"language"]
+```
+
+By not putting anything before the `:`, Python reads this as "from the first column until `language`."
 Although the notation for selecting a range using `:` is convenient because less code is required,
 it must be used carefully. If you were to re-order columns or add a column to the data frame, the
-output would change. Using a list is more explicit and less prone to potential confusion.
+output would change. Using a list is more explicit and less prone to potential confusion, but sometimes
+involves a lot more typing.
 
-Suppose instead we wanted to extract columns that followed a particular pattern
-rather than just selecting a range. For example, let's say we wanted only to select the
-columns `most_at_home` and `most_at_work`. There are other functions that allow
-us to select variables based on their names. In particular, we can use the `.str.startswith` method
+The second special capability of `.loc[]` over `[]` is that it enables *selecting columns* using
+logical statements. The `[]` operator can only use logical statements to filter rows; `.loc[]` can do both!
+For example, let's say we wanted only to select the
+columns `most_at_home` and `most_at_work`. We could then use the `.str.startswith` method
 to choose only the columns that start with the word "most".
-The `str.startswith` expression returns a boolean list
-corresponding to the column names
-which means that we have to use `.loc[]`
-since passing this list to `[]`
-would attempt to filter the rows instead of the columns.
+The `str.startswith` expression returns a list of `True` or `False` values
+corresponding to the column names that start with the desired characters.
 
 ```{code-cell} ipython3
 tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
@@ -1110,32 +1132,26 @@ has index `1`!).
 tidy_lang.iloc[:, 1]
 ```
 
-You can also ask for multiple columns,
-we pass `1:` after the comma
+You can also ask for multiple columns.
+We pass `1:` after the comma
 indicating we want columns after and including index 1 (*i.e.* `language`).
 
 ```{code-cell} ipython3
 tidy_lang.iloc[:, 1:]
 ```
 
-We can also use `iloc[]` to select ranges of rows, using a similar syntax.
-For example to select the ten first rows we could use the following:
+We can also use `iloc[]` to select ranges of rows, or simultaneously select ranges of rows and columns, using a similar syntax.
+For example, to select the first five rows and columns after and including index 1, we could use the following:
 
 ```{code-cell} ipython3
-tidy_lang.iloc[:10, :]
+tidy_lang.iloc[:5, 1:]
 ```
 
-`pandas` also provides a shorthand for selecting ranges of rows by using `[]`:
-
-```{code-cell} ipython3
-tidy_lang[:10]
-```
-
-The `iloc[]` method is less commonly used, and needs to be used with care.
+Note that the `iloc[]` method is not commonly used, and must be used with care.
 For example, it is easy to
 accidentally put in the wrong integer index! If you did not correctly remember
 that the `language` column was index `1`, and used `2` instead, your code
-would end up having a bug that might be quite hard to track down.
+might end up having a bug that is quite hard to track down.
 
 ```{index} pandas.Series; str.startswith
 ```
@@ -1292,12 +1308,12 @@ region_lang.mean(numeric_only=True)
 ```
 
 If there are only some columns for which you would like to get summary statistics,
-you can first use `[]` to select those columns
-and then ask for the summary statistic,
-as we did for a single column previously:
-Lets say that we want to know
-the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`.
-We use `[]` to specify the columns and then `agg` to ask for both the `mean` and `std`.
+you can first use `[]` or `.loc[]` to select those columns,
+and then ask for the summary statistic
+as we did for a single column previously.
+For example, if we want to know
+the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`,
+we use `.loc[]` to select those columns and then `agg` to ask for both the `mean` and `std`.
 ```{code-cell} ipython3
 region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
@@ -1344,15 +1360,17 @@ region_lang.groupby("region")
 
 Notice that `groupby` converts a `DataFrame` object to a `DataFrameGroupBy`
 object, which contains information about the groups of the data frame. We can
-then apply aggregating functions to the `DataFrameGroupBy` object. This can be handy if you would like to perform multiple operations and assign
-each output to its own object.
+then apply aggregating functions to the `DataFrameGroupBy` object. Here we first
+select the `most_at_home` column, and then summarize the grouped data by their
+minimum and maximum values using `agg`.
 
 ```{code-cell} ipython3
 region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 ```
 
 The resulting dataframe has `region` as an index name.
-This is similar to what happened when we reshaped data frames in the previous chapter,
+This is similar to what happened when we used the `pivot` function
+in the section on {ref}`pivot-wider`;
 and just as we did then,
 you can use `reset_index` to get back to a regular dataframe
 with `region` as a column name.
@@ -1369,7 +1387,7 @@ list including `region` and `category` to `groupby`.
 region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
 ```
 
-You can also ask for grouped summary statistics on the whole data frame
+You can also ask for grouped summary statistics on the whole data frame.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]

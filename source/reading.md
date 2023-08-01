@@ -194,7 +194,7 @@ name when we are loading the data set because this data set is located in a
 sub-folder, named `data`, relative to where we are running our Python code.
 Here is what the text in the file `data/can_lang.csv` looks like.
 
-```code
+```text
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -237,7 +237,7 @@ gives the data scientist useful context and information about the data,
 however, it is not well formatted or intended to be read into a data frame cell
 along with the tabular data that follows later in the file.
 
-```code
+```text
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -261,7 +261,7 @@ message, indicating that it wasn't able to read the file.
 ```python
 canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ```
-```code
+```text
 ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
 ```
 
@@ -286,7 +286,7 @@ canlang_data
 How did we know to skip three rows? We looked at the data! The first three rows
 of the data had information we didn't need to import:
 
-```code
+```text
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -300,7 +300,7 @@ Another common way data is stored is with tabs as the separator. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas.
 
-```code
+```text
 category	language	mother_tongue	most_at_home	most_at_work	lang_known
 Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
 Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
@@ -355,7 +355,7 @@ The `can_lang_no_names.tsv` file contains a slightly different version
 of this data set, except with no column names, and tabs for separators.
 Here is how the file looks in a text editor:
 
-```code
+```text
 Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
 Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
 Non-Official & Non-Aboriginal languages	Afro-Asiatic languages, n.i.e.	1150	445	10	2775
@@ -495,7 +495,7 @@ files. Take a look at a snippet of what a `.xlsx` file would look like in a text
 
 +++
 
-```code
+```text
 ,?'O
     _rels/.rels???J1??>E?{7?
 <?V????w8?'J???'QrJ???Tf?d??d?o?wZ'???@>?4'?|??hlIo??F
@@ -1202,7 +1202,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```code
+% ```text
 % td:nth-child(8) ,
 % td:nth-child(6) ,
 % td:nth-child(4) ,

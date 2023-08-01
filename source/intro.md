@@ -1057,18 +1057,17 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 There are many Python functions in the `pandas` package (and beyond!), and
 nobody can be expected to remember what every one of them does
-or all of the arguments we have to give them. Fortunately, Python provides
-the `help` function, which
+or all of the arguments we have to give them. Fortunately, Jupyter provides
 provides an easy way to pull up the documentation for
-most functions quickly. To use the `help` function to access the documentation, you
-just put the name of the function you are curious about as an argument inside the `help` function.
+most functions quickly by using the `?` character. To access the documentation this way, you
+prefix `?` to the name of the function you are curious about.
 For example, if you had forgotten what the `pd.read_csv` function
 did or exactly what arguments to pass in, you could run the following
 code:
 
 ```{code-cell} ipython3
 :tags: ["remove-output"]
-help(pd.read_csv)
+?pd.read_csv
 ```
 
 {numref}`help_read_csv` shows the documentation that will pop up,
@@ -1088,7 +1087,7 @@ you about the different arguments and usage of functions that you have already l
 height: 700px
 name: help_read_csv
 ---
-The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.
+The documentation for the `read_csv` function including a high-level description, a list of arguments and their meanings, and more.
 ```
 
 +++
@@ -1117,7 +1116,7 @@ The suggestions that are shown after typing `pd.read` and pressing <kbd>Tab</kbd
 To get more info on the function you want to use,
 you can type out the full name
 and then hold <kbd>Shift</kbd> while pressing <kbd>Tab</kbd>
-to bring up a help dialogue including the same information as when using `help()`.
+to bring up a help dialogue including the same information as when using `?`.
 
 +++
 

@@ -245,7 +245,7 @@ is included with [the code for this book](https://github.com/UBC-DSCI/introducti
 If we were to open this data in a plain text editor (a program like Notepad that just shows
 text with no formatting), we would see each row on its own line, and each entry in the table separated by a comma:
 
-```code
+```text
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415

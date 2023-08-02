@@ -710,10 +710,12 @@ Let's rewrite this code in a more readable format using multiline expressions.
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[
-  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
+    can_lang["category"] == "Aboriginal languages",
+    ["language", "mother_tongue"]
 ]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-  by='mother_tongue', ascending=False
+    by='mother_tongue',
+    ascending=False
 )
 ten_lang = arranged_lang_sorted.head(10)
 ```

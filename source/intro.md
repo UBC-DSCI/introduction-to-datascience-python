@@ -1130,8 +1130,13 @@ The documentation for the read_csv function including a high-level description, 
 +++
 
 If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
-and access the documentation.
-You can type the first characters of the function you want to use,
+and access the documentation. First, rather than `help`, you can use the more concise `?` character. So for example,
+to read the documentation for the `pd.read_csv` function, you can run the following code:
+```{code-cell} ipython3
+:tags: ["remove-output"]
+?pd.read_csv
+```
+You can also type the first characters of the function you want to use,
 and then press <kbd>Tab</kbd> to bring up small menu
 that shows you all the available functions
 that starts with those characters.

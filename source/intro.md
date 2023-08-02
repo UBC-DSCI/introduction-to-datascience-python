@@ -559,9 +559,7 @@ Syntax for using the `loc[]` operation to filter rows and select columns.
 ```
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang.loc[
-  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
-]
+aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 ```
 There is one very important thing to notice in this code example.
 The first is that we used the `loc[]` operation on the `can_lang` data frame by
@@ -586,7 +584,7 @@ with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages.
 So it looks like the `loc[]` operation gave us the result we wanted!
 
-### Using `sort_values` and `head` to select rows by ordered values
+## Using `sort_values` and `head` to select rows by ordered values
 
 ```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
 ```
@@ -630,6 +628,44 @@ We do this using the `head` function, and specifying the argument
 ten_lang = arranged_lang.head(10)
 ten_lang
 ```
+
+## Adding and modifying columns using `assign`
+
+```{index} assign
+```
+
+Recall that our data analysis question referred to the *count* of Canadians
+that speak each of the top ten most commonly reported Aboriginal languages as
+their mother tongue, and the `ten_lang` data frame indeed contains those
+counts... But perhaps, seeing these numbers, we became curious about the
+*percentage* of the population of Canada associated with each count. It is
+common to come up with new data analysis questions in the process of answering
+a first one&mdash;so fear not and explore! To answer this small
+question-along-the-way, we need to divide each count in the `mother_tongue`
+column by the total Canadian population according to the 2016
+census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
+this computation using the code `100 * ten_lang['mother_tongue'] / canadian_population`. 
+Then to store the result in a new column (or
+overwrite an existing column), we use the `assign` method. We specify the name of the new
+column to create (or old column to modify), then the assignment symbol `=`, 
+and then the computation to store in that column. In this case, we will opt to
+create a new column called `mother_tongue_percent`. 
+
+> **Note:** You will see below that we write the Canadian population in
+> Python as `35_151_728`. The underscores (`_`) are just there for readability,
+> and do not affect how Python interprets the number. In other words, 
+> `35151728` and `35_151_728` are treated identically in Python, 
+> although the latter is much clearer!
+
+```{code-cell} ipython3
+canadian_population = 35_151_728
+ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang['mother_tongue'] / canadian_population)
+ten_lang_percent
+```
+
+The `ten_lang_percent` data frame shows that
+the ten Aboriginal languages in the `ten_lang` data frame were spoken 
+as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
 ## Combining analysis steps with chaining and multiline expressions
 

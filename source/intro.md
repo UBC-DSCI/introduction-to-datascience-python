@@ -796,36 +796,6 @@ more easily understood format.
 Visualizations are a great tool for summarizing information to help you
 effectively communicate with your audience.
 
-## Adding new columns using `assign`
-
-What if we wanted to perform a computation on a column
-and then store it in the dataframe?
-For example,
-maybe we want to know what proportion of Canadian residents
-speak each of the most common Aboriginal languages as their mother tongue?
-To compute this quantity
-we need to divide the absolute number of residents with the total population of Canada.
-Note that we formatted the number for the Canadian population using underscores (`_`) so that it is easier to read;
-this does not affect how Python interprets the number and is just added for readability.
-
-```{code-cell} ipython3
-canadian_population = 35_151_728
-ten_lang['mother_tongue'] / canadian_population
-```
-
-To create a new column which stores the results of this operation,
-we can use the `assign` method:
-
-```{code-cell} ipython3
-ten_lang = ten_lang.assign(
-    mother_tongue_proportion=ten_lang['mother_tongue'] / canadian_population,
-)
-ten_lang
-```
-
-We can see that the 64,050 speakers of Cree
-correspond to only 0.18% of Canada's overall population.
-
 ## Exploring data with visualizations
 
 ```{index} visualization

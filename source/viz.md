@@ -1198,7 +1198,7 @@ we'll swap the `x` and `y` variables,
 so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
 > **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
-> the ten rows with the *largest* values of a variable. We could have instead used the `nlargest` function
+> the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
 > from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
 > as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
 > In general, it is good to use more specialized functions when they are available!

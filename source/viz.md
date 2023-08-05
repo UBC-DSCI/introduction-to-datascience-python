@@ -1189,15 +1189,21 @@ Alright, not bad! The plot in {numref}`islands_bar` is
 definitely the right kind of visualization, as we can clearly see and compare
 sizes of landmasses. The major issues are that the smaller landmasses' sizes
 are hard to distinguish, and the plot is so wide that we can't compare them all! But remember that the
-question we asked was only about the largest landmasses; let's make the plot a
+question we asked was only about the largest landmasses. So let's make the plot a
 little bit clearer by keeping only the largest 12 landmasses. We do this using
-the `nlargest` function; the first argument is the number of rows we want and
-the second is the name of the column we want to use for comparing who is
+the `nlargest` function: the first argument is the number of rows we want and
+the second is the name of the column we want to use for comparing which is
 largest. Then to help make the landmass labels easier to read
 we'll swap the `x` and `y` variables,
 so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
-```{index} pandas.DataFrame; nlargest
+> **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
+> the ten rows with the *largest* values of a variable. We could have instead used the `nlargest` function
+> from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
+> as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
+> In general, it is good to use more specialized functions when they are available!
+
+```{index} pandas.DataFrame; nlargest; nsmallest
 ```
 
 ```{code-cell} ipython3

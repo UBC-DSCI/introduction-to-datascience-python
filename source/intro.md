@@ -787,23 +787,21 @@ Chaining many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.
 
+## Exploring data with visualizations
+
+```{index} visualization
+```
 We have now answered our initial question by generating the `ten_lang` table!
 Are we done? Well, not quite; tables are almost never the best way to present
-the result of your analysis to your audience. Even the simple table above with
+the result of your analysis to your audience. Even the `ten_lang` table with
 only two columns presents some difficulty: for example, you have to scrutinize
 the table quite closely to get a sense for the relative numbers of speakers of
 each language. When you move on to more complicated analyses, this issue only
 gets worse. In contrast, a *visualization* would convey this information in a much
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
-effectively communicate with your audience.
-
-## Exploring data with visualizations
-
-```{index} visualization
-```
-
-Creating effective data visualizations is an essential component of any data
+effectively communicate with your audience, and creating effective data visualizations 
+is an essential component of any data
 analysis. In this section we will develop a visualization of the
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in
 Canada, as well as the number of people that speak each of them.

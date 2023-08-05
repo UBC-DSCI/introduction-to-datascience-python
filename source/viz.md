@@ -1189,7 +1189,7 @@ Alright, not bad! The plot in {numref}`islands_bar` is
 definitely the right kind of visualization, as we can clearly see and compare
 sizes of landmasses. The major issues are that the smaller landmasses' sizes
 are hard to distinguish, and the plot is so wide that we can't compare them all! But remember that the
-question we asked was only about the largest landmasses. So let's make the plot a
+question we asked was only about the largest landmasses; let's make the plot a
 little bit clearer by keeping only the largest 12 landmasses. We do this using
 the `nlargest` function: the first argument is the number of rows we want and
 the second is the name of the column we want to use for comparing which is

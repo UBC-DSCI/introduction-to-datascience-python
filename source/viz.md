@@ -52,7 +52,7 @@ By the end of the chapter, readers will be able to do the following:
     - encoding channels
 - Use the altair library in Python to create and refine the above visualizations using:
     - graphical marks: `mark_point`, `mark_line`, `mark_bar`
-    - encoding channels: `x`, `y`, `fill`, `color`, `shape`
+    - encoding channels: `x`, `y`, `color`, `shape`
     - subplots: `facet`
 - Describe the difference in raster and vector output formats.
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.

@@ -599,11 +599,8 @@ distance using the formula above: we square the differences between the two obse
 and concavity coordinates, add the squared differences, and then take the square root.
 In order to find the $K=5$ nearest neighbors, we will use the `nsmallest` function from `pandas`.
 
-> **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
-> the ten rows with the *largest* values of a variable. We could have instead used the `nlargest` function
-> from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
-> as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
-> In general, it is good to use more specialized functions when they are available!
+```{index} nsmallest
+```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

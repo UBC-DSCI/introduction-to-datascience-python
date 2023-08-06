@@ -297,6 +297,9 @@ For the example shown in {numref}`fig:07-small-eda-regr`,
 we find and label the 5 nearest neighbors to our observation
 of a house that is 2,000 square feet.
 
+```{index} nsmallest
+```
+
 ```{code-cell} ipython3
 nearest_neighbors = (
     small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))

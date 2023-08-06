@@ -174,7 +174,7 @@ from myst_nb import glue
 import pandas as pd
 
 data = pd.read_csv(
-    'data/toy_penguins.csv'
+    'data/penguins_toy.csv'
 ).replace(
     [2, 3],
     [0, 2]
@@ -547,7 +547,7 @@ below using an unscaled and unstandardized version of the data set in this chapt
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-unstandardized_data = pd.read_csv("data/toy_penguins.csv", usecols=["bill_length_mm", "flipper_length_mm"])
+unstandardized_data = pd.read_csv("data/penguins_toy.csv", usecols=["bill_length_mm", "flipper_length_mm"])
 unstandardized_data.to_csv("data/penguins_not_standardized.csv", index=False)
 unstandardized_data
 ```

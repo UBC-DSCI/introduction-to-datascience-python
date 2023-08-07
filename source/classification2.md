@@ -633,7 +633,7 @@ We could compute the accuracy manually
 by using our earlier formula: the number of correct predictions divided by the total
 number of predictions. First we filter the rows to find the number of correct predictions,
 and then divide the number of rows with correct predictions by the total number of rows
-using the `len` function.
+using the `shape` attribute.
 ```{code-cell} ipython3
 correct_preds = cancer_test_predictions[
     cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
@@ -650,7 +650,7 @@ and we provide the true labels via the `cancer_test["Class"]` series.
 
 ```{code-cell} ipython3
 cancer_acc_1 = knn_fit.score(
-    cancer_test.loc[:, ["Smoothness", "Concavity"]],
+    cancer_test[["Smoothness", "Concavity"]],
     cancer_test["Class"]
 )
 cancer_acc_1

@@ -66,22 +66,23 @@ exploratory analysis, i.e., uncovering patterns in the data.
 ```{index} classification, regression, supervised, unsupervised
 ```
 
-Note that clustering is a fundamentally different kind of task
-than classification or regression.
-In particular, both classification and regression are *supervised tasks*
-where there is a *response variable* (a category label or value),
-and we have examples of past data with labels/values
-that help us predict those of future data.
-By contrast, clustering is an *unsupervised task*,
-as we are trying to understand
-and examine the structure of data without any response variable labels
-or values to help us.
-This approach has both advantages and disadvantages.
-Clustering requires no additional annotation or input on the data.
-For example, it would be nearly impossible to annotate
-all the articles on Wikipedia with human-made topic labels.
-However, we can still cluster the articles without this information
-to find groupings corresponding to topics automatically.
+Note that clustering is a fundamentally different kind of task than
+classification or regression.  In particular, both classification and
+regression are *supervised tasks* where there is a *response variable* (a
+category label or value), and we have examples of past data with labels/values
+that help us predict those of future data.  By contrast, clustering is an
+*unsupervised task*, as we are trying to understand and examine the structure
+of data without any response variable labels or values to help us.  This
+approach has both advantages and disadvantages.  Clustering requires no
+additional annotation or input on the data.  For example, while it would be
+nearly impossible to annotate all the articles on Wikipedia with human-made
+topic labels, we can cluster the articles without this information to find
+groupings corresponding to topics automatically.  However, given that there is
+no response variable, it is not as easy to evaluate the "quality" of a
+clustering.  With classification, we can use a test data set to assess
+prediction performance. In clustering, there is not a single good choice for
+evaluation. In this book, we will use visualization to ascertain the quality of
+a clustering, and leave rigorous evaluation for more advanced courses.
 
 Given that there is no response variable, it is not as easy to evaluate
 the "quality" of a clustering.  With classification, we can use a test data set
@@ -105,15 +106,17 @@ for where to begin learning more about these other methods.
 ```{index} semisupervised
 ```
 
-> **Note:** There are also so-called *semisupervised* tasks,
-> where only some of the data come with response variable labels/values,
-> but the vast majority don't.
-> The goal is to try to uncover underlying structure in the data
-> that allows one to guess the missing labels.
-> This sort of task is beneficial, for example,
-> when one has an unlabeled data set that is too large to manually label,
-> but one is willing to provide a few informative example labels as a "seed"
-> to guess the labels for all the data.
+```{note}
+There are also so-called *semisupervised* tasks,
+where only some of the data come with response variable labels/values,
+but the vast majority don't.
+The goal is to try to uncover underlying structure in the data
+that allows one to guess the missing labels.
+This sort of task is beneficial, for example,
+when one has an unlabeled data set that is too large to manually label,
+but one is willing to provide a few informative example labels as a "seed"
+to guess the labels for all the data.
+```
 
 **An illustrative example**
 
@@ -174,7 +177,7 @@ from myst_nb import glue
 import pandas as pd
 
 data = pd.read_csv(
-    'data/toy_penguins.csv'
+    'data/penguins_toy.csv'
 ).replace(
     [2, 3],
     [0, 2]
@@ -436,12 +439,14 @@ in the fourth iteration; both the centers and labels will remain the same from t
 ```{index} K-means; termination
 ```
 
-> **Note:** Is K-means *guaranteed* to stop at some point, or could it iterate forever? As it turns out,
-> thankfully, the answer is that K-means is guaranteed to stop after *some* number of iterations. For the interested reader, the
-> logic for this has three steps: (1) both the label update and the center update decrease total WSSD in each iteration,
-> (2) the total WSSD is always greater than or equal to 0, and (3) there are only a finite number of possible
-> ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
-> are changing, and the algorithm terminates.
+```{note}
+Is K-means *guaranteed* to stop at some point, or could it iterate forever? As it turns out,
+thankfully, the answer is that K-means is guaranteed to stop after *some* number of iterations. For the interested reader, the
+logic for this has three steps: (1) both the label update and the center update decrease total WSSD in each iteration,
+(2) the total WSSD is always greater than or equal to 0, and (3) there are only a finite number of possible
+ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
+are changing, and the algorithm terminates.
+```
 
 What kind of data is suitable for K-means clustering?
 In the simplest version of K-means clustering that we have presented here,
@@ -527,40 +532,37 @@ name: toy-kmeans-elbow-1
 Total WSSD for K clusters ranging from 1 to 9.
 ```
 
-## Data pre-processing for K-means
+## K-means in Python
 
-```{index} pair: standardization; K-means
+```{index} K-means; kmeans function, scikit-learn; KMeans
 ```
 
-Similar to K-nearest neighbors classification and regression, K-means
-clustering uses straight-line distance to decide which points are similar to
+We can perform K-means in Python using a workflow similar to those
+in the earlier classification and regression chapters. We will begin
+by reading the original (i.e., unstandardized) subset of 18 observations
+from the penguins dataset.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+unstandardized_data = pd.read_csv("data/penguins_toy.csv", usecols=["bill_length_mm", "flipper_length_mm"])
+unstandardized_data.to_csv("data/penguins.csv", index=False)
+```
+
+```{code-cell} ipython3
+penguins = pd.read_csv("data/penguins.csv")
+penguins
+```
+
+
+Recall that K-means clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the *scale* of each of the variables in the data
 will influence which cluster data points end up being assigned.
 Variables with a large scale will have a much larger
 effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
-The `StandardScaler()` function in scikit-learn can be used to do this.
-We show an example of how to use this function
-below using an unscaled and unstandardized version of the data set in this chapter.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-unstandardized_data = pd.read_csv("data/toy_penguins.csv", usecols=["bill_length_mm", "flipper_length_mm"])
-unstandardized_data.to_csv("data/penguins_not_standardized.csv", index=False)
-unstandardized_data
-```
-
-First, here is what the raw (i.e., not standardized) data looks like:
-
-```{code-cell} ipython3
-not_standardized_data = pd.read_csv("data/penguins_not_standardized.csv")
-not_standardized_data
-```
-
-And then we apply the `StandardScaler()` function to both the columns in the data frame
-using `fit_transform()`.
+The `StandardScaler` function in scikit-learn can be used to do this.
 
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
@@ -574,43 +576,48 @@ preprocessor = make_column_transformer(
     (StandardScaler(), ['bill_length_mm', 'flipper_length_mm']),
     verbose_feature_names_out=False,
 )
-
-standardized_data = preprocessor.fit_transform(not_standardized_data)
-standardized_data
+preprocessor
 ```
 
-## K-means in Python
-
-```{index} K-means; kmeans function, scikit-learn; KMeans
-```
-
-To perform K-means clustering in Python, we use the `KMeans` function. It takes at
-least one argument: K, the number of clusters (here we choose K = 3). Note that the K-means
-algorithm uses a random initialization of assignments, but since we set the random seed in the beginning of this chapter, the clustering will be reproducible.
+To indicate that we are performing K-means clustering, we will create a `KMeans`
+model object. It takes at
+least one argument: the number of clusters `n_clusters`, which we set to 3.
 
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
 
-penguin_clust = KMeans(n_clusters=3).fit(standardized_data)
+kmeans = KMeans(n_clusters=3)
+kmeans
+```
+
+To actually run the K-means clustering, we combine the preprocessor and model object
+in a `Pipeline`, and use the `fit` function. Note that the K-means
+algorithm uses a random initialization of assignments, but since we set 
+the random seed in the beginning of this chapter, the clustering will be reproducible.
+
+```{code-cell} ipython3
+from sklearn.pipeline import make_pipeline
+
+penguin_clust = make_pipeline(preprocessor, kmeans).fit(penguins)
 penguin_clust
 ```
 
 ```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
 ```
 
-The clustering object returned by `KMeans`
-has a lot of information that can be used to visualize the clusters,
-pick K, and evaluate the total WSSD.
-Here,
-we will start by finding out which cluster each data point has been grouped into.
-In machine learning terms,
-we usually say that we "label" each data points
-as belonging to one of these clusters,
-and these labels are contained in the `labels_` attribute of the clustering object.
+The fit `KMeans` object&mdash;which is the second item in the 
+pipeline, and can be accessed as `penguin_clust[1]`&mdash;has a lot of information
+that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
+Let's start by visualizing the clusters as a colored scatter plot! In 
+order to do that, we first need to augment our 
+original `penguins` data frame with the cluster assignments. 
+We can access these using the `labels_` attribute of the clustering object 
+("labels" is a common alternative term to "assignments" in clustering), and 
+add them to the data frame using `assign`.
 
 ```{code-cell} ipython3
-labels = penguin_clust.labels_
-labels
+clustered_data = penguins.assign(cluster = penguin_clust[1].labels_)
+clustered_data
 ```
 
 Let's start by visualizing the clustering
@@ -619,18 +626,16 @@ we will add a new column and store assign the above predictions to that. The fin
 data frame will contain the data and the cluster assignments for
 each point:
 
-```{code-cell} ipython3
-clustered_data = standardized_data.assign(cluster=labels)
-clustered_data
-```
-
-Now that we have this information in a data frame, we can make a visualization
-of the cluster assignments for each point, as shown in {numref}`cluster_plot`.
+Now that we have the cluster assignments included in the `clustered_data` data frame, we can 
+visualize them as shown in {numref}`cluster_plot`.
+Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
+visualize the *standardized* data, we would need to use the `fit` and `transform` functions
+on the `StandardScaler` preprocessor directly to obtain that first.
 
 ```{code-cell} ipython3
 cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
-    x=alt.X("flipper_length_mm").title("Flipper Length (standardized)"),
-    y=alt.Y("bill_length_mm").title("Bill Length (standardized)"),
+    x=alt.X("flipper_length_mm").title("Flipper Length").scale(zero=False),
+    y=alt.Y("bill_length_mm").title("Bill Length").scale(zero=False),
     color=alt.Color("cluster:N").title("Cluster"),
 )
 ```
@@ -655,14 +660,13 @@ The data colored by the cluster assignments returned by K-means.
 ```
 
 As mentioned above,
-instead of arbitrarily setting K to a number as we did above,
-we can find the best value for K
+we also need to select K
 by finding where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
 The total WSSD is stored in the `.inertia_` attribute
 of the clustering object ("inertia" is the term scikit-learn uses to denote WSSD).
 
 ```{code-cell} ipython3
-penguin_clust.inertia_
+penguin_clust[1].inertia_
 ```
 
 To calculate the total WSSD for a variety of Ks, we will
@@ -687,22 +691,28 @@ we could square all the numbers from 0-4 and store them in a list:
 [number ** 2 for number in range(5)]
 ```
 
-Next,
-we will use this approach to compute the WSSD/inertia for the K-values 1 through 9,
-and store these values in a list
-that we will use to create a dataframe of both the K-values and their corresponding WSSDs/inertias.
+Next, we will use this approach to compute the WSSD for the K-values 1 through 9,
+and store these values in a list that we will use to create a dataframe 
+of both the K-values and their corresponding WSSDs.
 
-> **Note:** We are creating the variable `ks` to store the range of possible k-values,
-> so that we only need to change this range in one place
-> if we decide to change which values of k we want to explore.
-> Otherwise it would be easy to forget to update it
-> in either the list comprehension or in the data frame assignment.
-> If you are using a value multiple times,
-> it is always the safest to assign it to a variable name for reuse.
+```{note}
+We are creating the variable `ks` to store the range of possible k-values,
+so that we only need to change this range in one place
+if we decide to change which values of k we want to explore.
+Otherwise it would be easy to forget to update it
+in either the list comprehension or in the data frame assignment.
+If you are using a value multiple times,
+it is always the safest to assign it to a variable name for reuse.
+```
 
 ```{code-cell} ipython3
 ks = range(1, 10)
-inertias = [KMeans(n_clusters=k).fit(standardized_data).inertia_ for k in ks]
+inertias = [
+    make_pipeline(
+    	preprocessor, 
+    	KMeans(n_clusters = k)
+    ).fit(penguins)[1].inertia_ for k in ks
+]
 
 penguin_clust_ks = pd.DataFrame({
     'k': ks,
@@ -751,15 +761,17 @@ This is because K-means can get "stuck" in a bad solution
 due to an unlucky initialization of the initial centroid positions
 as we mentioned earlier in the chapter.
 
-> **Note:** It is rare that the KMeans function from scikit-learn
-> gets stuck in a bad solution,
-> because the selection of the centroid starting points
-> is optimized to prevent this from happening.
-> If you still find yourself in a situation where you have a bump in the elbow plot,
-> you can increase the `n_init` parameter
-> to try more different starting points for the centroids.
-> The larger the value the better from an analysis perspective,
-> but there is a trade-off that doing many clusterings could take a long time.
+```{note}
+It is rare that the KMeans function from scikit-learn
+gets stuck in a bad solution,
+because the selection of the centroid starting points
+is optimized to prevent this from happening.
+If you still find yourself in a situation where you have a bump in the elbow plot,
+you can increase the `n_init` parameter
+to try more different starting points for the centroids.
+The larger the value the better from an analysis perspective,
+but there is a trade-off that doing many clusterings could take a long time.
+```
 
 ## Exercises
 

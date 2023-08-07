@@ -319,7 +319,7 @@ import pandas as pd
 np.random.seed(1)
 
 # load data
-cancer = pd.read_csv("data/unscaled_wdbc.csv")
+cancer = pd.read_csv("data/wdbc_unscaled.csv")
 # re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign',
 # and change the Class variable to have a category type
 cancer['Class'] = cancer['Class'].replace({

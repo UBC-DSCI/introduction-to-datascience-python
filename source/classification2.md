@@ -32,7 +32,7 @@ from myst_nb import glue
 ## Overview 
 This chapter continues the introduction to predictive modeling through
 classification. While the previous chapter covered training and data
-preprocessing, this chapter focuses on how to evaluate the accuracy of
+preprocessing, this chapter focuses on how to evaluate the performance of
 a classifier, as well as how to improve the classifier (where possible)
 to maximize its accuracy.
 
@@ -43,13 +43,15 @@ By the end of the chapter, readers will be able to do the following:
 - Split data into training, validation, and test data sets.
 - Describe what a random seed is and its importance in reproducible data analysis.
 - Set the random seed in Python using the `numpy.random.seed` function. 
-- Evaluate classification accuracy in Python using a validation data set and appropriate metrics.
+- Describe and interpret accuracy, precision, recall, and confusion matrices.
+- Evaluate classification accuracy in Python using a validation data set.
+- Produce a confusion matrix in Python.
 - Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
 - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
 
 +++
 
-## Evaluating accuracy
+## Evaluating performance
 
 ```{index} breast cancer
 ```
@@ -63,16 +65,19 @@ and think about how our classifier will be used in practice. A biopsy will be
 performed on a *new* patient's tumor, the resulting image will be analyzed,
 and the classifier will be asked to decide whether the tumor is benign or
 malignant. The key word here is *new*: our classifier is "good" if it provides
-accurate predictions on data *not seen during training*. But then, how can we
-evaluate our classifier without visiting the hospital to collect more
+accurate predictions on data *not seen during training*, as this implies that
+it has actually learned about the relationship between the predictor variables and response variable,
+as opposed to simply memorizing the labels of individual training data examples. 
+But then, how can we evaluate our classifier without visiting the hospital to collect more
 tumor images? 
+
 
 ```{index} training set, test set
 ```
 
 The trick is to split the data into a **training set** and **test set** ({numref}`fig:06-training-test`)
 and use only the **training set** when building the classifier.
-Then, to evaluate the accuracy of the classifier, we first set aside the true labels from the **test set**,
+Then, to evaluate the performance of the classifier, we first set aside the true labels from the **test set**,
 and then use the classifier to predict the labels in the **test set**. If our predictions match the true
 labels for the observations in the **test set**, then we have some
 confidence that our classifier might also accurately predict the class
@@ -81,11 +86,13 @@ labels for new observations without known class labels.
 ```{index} golden rule of machine learning
 ```
 
-> **Note:** If there were a golden rule of machine learning, it might be this: 
-> *you cannot use the test data to build the model!* If you do, the model gets to
-> "see" the test data in advance, making it look more accurate than it really
-> is. Imagine how bad it would be to overestimate your classifier's accuracy
-> when predicting whether a patient's tumor is malignant or benign!
+```{note}
+If there were a golden rule of machine learning, it might be this: 
+*you cannot use the test data to build the model!* If you do, the model gets to
+"see" the test data in advance, making it look more accurate than it really
+is. Imagine how bad it would be to overestimate your classifier's accuracy
+when predicting whether a patient's tumor is malignant or benign!
+```
 
 +++
 
@@ -105,19 +112,13 @@ Splitting the data into training and testing sets.
 
 How exactly can we assess how well our predictions match the true labels for
 the observations in the test set? One way we can do this is to calculate the
-**prediction accuracy**. This is the fraction of examples for which the
+prediction **accuracy**. This is the fraction of examples for which the
 classifier made the correct prediction. To calculate this, we divide the number
 of correct predictions by the number of predictions made. 
-
-$$\mathrm{prediction \; accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}}$$
-
-+++
-
 The process for assessing if our predictions match the true labels in the 
-test set is illustrated in {numref}`fig:06-ML-paradigm-test`. Note that there 
-are other measures for how well classifiers perform, such as *precision* and *recall*; 
-these will not be discussed here, but you will likely encounter them in other more advanced
-books on this topic.
+test set is illustrated in {numref}`fig:06-ML-paradigm-test`.
+
+$$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}}$$
 
 +++
 
@@ -125,6 +126,114 @@ books on this topic.
 :name: fig:06-ML-paradigm-test
 
 Process for splitting the data and finding the prediction accuracy.
+```
+
+Accuracy is a convenient, general-purpose way to summarize the performance of a classifier with
+a single number.  But prediction accuracy by itself does not tell the whole
+story.  In particular, accuracy alone only tells us how often the classifier
+makes mistakes in general, but does not tell us anything about the *kinds* of
+mistakes the classifier makes.  A more comprehensive view of performance can be
+obtained by additionally examining the **confusion matrix**. The confusion
+matrix shows how many test set labels of each type are predicted correctly and
+incorrectly, which gives us more detail about the kinds of mistakes the
+classifier tends to make.  {numref}`confusion-matrix-table` shows an example
+of what a confusion matrix might look like for the tumor image data with
+a test set of 65 observations.
+
+```{list-table} An example confusion matrix for the tumor image data.
+:header-rows: 1
+:name: confusion-matrix-table
+
+* - 
+  - Truly Malignant
+  - Truly Benign
+* - **Predicted Malignant** 
+  - 1
+  - 4
+* - **Predicted Benign**
+  - 3
+  - 57
+``` 
+
+In the example in {numref}`confusion-matrix-table`, we see that there was
+1 malignant observation that was correctly classified as malignant (top left corner),
+and 57 benign observations that were correctly classified as benign (bottom right corner).
+However, we can also see that the classifier made some mistakes:
+it classified 3 malignant observations as benign, and 4 benign observations as
+malignant. The accuracy of this classifier is roughly
+89%, given by the formula
+
+$$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}} = \frac{1+57}{1+57+4+3} = 0.892$$
+
+But we can also see that the classifier only identified 1 out of 4 total malignant
+tumors; in other words, it misclassified 75% of the malignant cases present in the
+data set! In this example, misclassifying a malignant tumor is a potentially
+disastrous error, since it may lead to a patient who requires treatment not receiving it.
+Since we are particularly interested in identifying malignant cases, this 
+classifier would likely be unacceptable even with an accuracy of 89%.
+
+Focusing more on one label than the other is
+common in classification problems. In such cases, we typically refer to the label we are more
+interested in identifying as the *positive* label, and the other as the
+*negative* label. In the tumor example, we would refer to malignant
+observations as *positive*, and benign observations as *negative*.  We can then
+use the following terms to talk about the four kinds of prediction that the
+classifier can make, corresponding to the four entries in the confusion matrix:
+
+- **True Positive:** A malignant observation that was classified as malignant (top left in {numref}`confusion-matrix-table`).
+- **False Positive:** A benign observation that was classified as malignant (top right in {numref}`confusion-matrix-table`).
+- **True Negative:** A benign observation that was classified as benign (bottom right in {numref}`confusion-matrix-table`).
+- **False Negative:** A malignant observation that was classified as benign (bottom left in {numref}`confusion-matrix-table`).
+
+A perfect classifier would have zero false negatives and false positives (and
+therefore, 100% accuracy). However, classifiers in practice will almost always
+make some errors. So you should think about which kinds of error are most
+important in your application, and use the confusion matrix to quantify and
+report them. Two commonly used metrics that we can compute using the confusion
+matrix are the **precision** and **recall** of the classifier. These are often
+reported together with accuracy.  *Precision* quantifies how many of the
+positive predictions the classifier made were actually positive. Intuitively,
+we would like a classifier to have a *high* precision: for a classifier with
+high precision, if the classifier reports that a new observation is positive,
+we can trust that that new observation is indeed positive. We can compute the
+precision of a classifier using the entries in the confusion matrix, with the
+formula
+
+$$\mathrm{precision} = \frac{\mathrm{number \; of  \; correct \; positive \; predictions}}{\mathrm{total \;  number \;  of \; positive  \; predictions}}.$$
+
+*Recall* quantifies how many of the positive observations in the test set were
+identified as positive. Intuitively, we would like a classifier to have a
+*high* recall: for a classifier with high recall, if there is a positive
+observation in the test data, we can trust that the classifier will find it.
+We can also compute the recall of the classifier using the entries in the
+confusion matrix, with the formula
+
+$$\mathrm{recall} = \frac{\mathrm{number \; of  \; correct  \; positive \; predictions}}{\mathrm{total \;  number \;  of  \; positive \; test \; set \; observations}}.$$
+
+In the example presented in {numref}`confusion-matrix-table`, we have that the precision and recall are
+
+$$\mathrm{precision} = \frac{1}{1+4} = 0.20, \quad \mathrm{recall} = \frac{1}{1+3} = 0.25.$$
+
+So even with an accuracy of 89%, the precision and recall of the classifier
+were both relatively low. For this data analysis context, recall is
+particularly important: if someone has a malignant tumor, we certainly want to
+identify it.  A recall of just 25% would likely be unacceptable!
+
+```{note}
+It is difficult to achieve both high precision and high recall at
+the same time; models with high precision tend to have low recall and vice
+versa.  As an example, we can easily make a classifier that has *perfect
+recall*: just *always* guess positive! This classifier will of course find
+every positive observation in the test set, but it will make lots of false
+positive predictions along the way  and have low precision. Similarly, we can
+easily make a classifier that has *perfect precision*: *never* guess
+positive! This classifier will never incorrectly identify an obsevation as
+positive, but it will make a lot of false negative predictions along the way.
+In fact, this classifier will have 0% recall! Of course, most real
+classifiers fall somewhere in between these two extremes. But these examples
+serve to show that in settings where one of the classes is of interest (i.e.,
+there is a *positive* label), there is a trade-off between precision and recall that one has to
+make when designing a classifier.
 ```
 
 +++
@@ -293,7 +402,7 @@ array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 
 ````
 
-## Evaluating accuracy with `scikit-learn`
+## Evaluating performance with `scikit-learn`
 
 ```{index} scikit-learn, visualization; scatter
 ```
@@ -415,7 +524,7 @@ glue("cancer_test_nrow", len(cancer_test))
 
 We can see from the `info` method above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
-a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification` chapter
+a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification1` chapter
 that we use the `info` method to preview the number of rows, the variable names, their data types, and 
 missing entries of a data frame.
 
@@ -514,12 +623,13 @@ cancer_test_predictions = cancer_test.assign(
 cancer_test_predictions[['ID', 'Class', 'predicted']]
 ```
 
-### Compute the accuracy
+### Evaluate performance
 
 ```{index} scikit-learn; score
 ```
 
-Finally, we can assess our classifier's accuracy. We could compute the accuracy manually
+Finally, we can assess our classifier's performance. First, we will examine accuracy.
+We could compute the accuracy manually
 by using our earlier formula: the number of correct predictions divided by the total
 number of predictions. First we filter the rows to find the number of correct predictions,
 and then divide the number of rows with correct predictions by the total number of rows
@@ -575,46 +685,68 @@ _ctab = pd.crosstab(cancer_test_predictions["Class"],
             cancer_test_predictions["predicted"]
            )
 
-glue("confu11", _ctab["Malignant"]["Malignant"])
-glue("confu00", _ctab["Benign"]["Benign"])
-glue("confu10", _ctab["Benign"]["Malignant"])
-glue("confu01", _ctab["Malignant"]["Benign"])
-glue("confu11_00", _ctab["Malignant"]["Malignant"] + _ctab["Benign"]["Benign"])
-glue("confu10_11", _ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])
-glue("confu_fal_neg", round(100 * _ctab["Benign"]["Malignant"] / (_ctab["Benign"]["Malignant"] + _ctab["Malignant"]["Malignant"])))
+c11 = _ctab["Malignant"]["Malignant"]
+c00 = _ctab["Benign"]["Benign"]
+c10 = _ctab["Benign"]["Malignant"] # classify benign, true malignant 
+c01 = _ctab["Malignant"]["Benign"] # classify malignant, true benign
+
+glue("confu11", c11)
+glue("confu00", c00)
+glue("confu10", c10)
+glue("confu01", c01)
+glue("confu11_00", c11 + c00)
+glue("confu10_11", c10 + c11)
+glue("confu_fal_neg", np.round(100 * c10 / (c10 + c11)))
+glue("confu_accuracy", np.round(100*(c00+c11)/(c00+c11+c01+c10),2))
+glue("confu_precision", np.round(100*c11/(c11+c01), 2))
+glue("confu_recall", np.round(100*c11/(c11+c10),2))
+glue("confu_precision_0", np.round(100*c11/(c11+c01)))
+glue("confu_recall_0", np.round(100*c11/(c11+c10)))
 ```
 
 The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
-as malignant, and {glue:}`confu00` were correctly predicted as benign. Therefore the classifier labeled 
-{glue:}`confu11` + {glue:}`confu00` = {glue:}`confu11_00` observations 
-correctly. It also shows that the classifier made some mistakes; in particular,
+as malignant, and {glue:}`confu00` were correctly predicted as benign. 
+It also shows that the classifier made some mistakes; in particular,
 it classified {glue:}`confu10` observations as benign when they were truly malignant,
 and {glue:}`confu01` observations as malignant when they were truly benign.
+Using our formulas from earlier, we see that the accuracy agrees with what Python reported,
+and can also compute the precision and recall of the classifier:
+
+$$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}} = \frac{{glue:}`confu00`+{glue:}`confu11`}{{glue:}`confu00`+{glue:}`confu11`+{glue:}`confu01`+{glue:}`confu10`} = {glue:}`confu_accuracy`$$
+
+$$\mathrm{precision} = \frac{\mathrm{number \; of  \; correct \; positive \; predictions}}{\mathrm{total \;  number \;  of \; positive  \; predictions}} = \frac{{glue:}`confu00`}{{glue:}`confu00` + {glue:}`confu01`} = {glue:}`confu_precision`$$
+
+$$\mathrm{recall} = \frac{\mathrm{number \; of  \; correct  \; positive \; predictions}}{\mathrm{total \;  number \;  of  \; positive \; test \; set \; observations}} = \frac{{glue:}`confu00`}{{glue:}`confu00`+{glue:}`confu10`} = {glue:}`confu_recall`$$
 
 +++
 
 ### Critically analyze performance
 
 We now know that the classifier was {glue:}`cancer_acc_1`% accurate
-on the test data set. That sounds pretty good! Wait, *is* it good? 
+on the test data set, and had a precision of {glue:}`confu_precision_0`% and 
+a recall of {glue:}`confu_recall_0`%. 
+That sounds pretty good! Wait, *is* it good? 
 Or do we need something higher?
 
 ```{index} accuracy; assessment
 ```
 
-In general, what a *good* value for accuracy is depends on the application.
- For instance, suppose you are predicting whether a tumor is benign or malignant
- for a type of tumor that is benign 99% of the time. It is very easy to obtain 
- a 99% accuracy just by guessing benign for every observation. In this case, 
- 99% accuracy is probably not good enough.  And beyond just accuracy,
-sometimes the *kind* of mistake the classifier makes is important as well. In
-the previous example, it might be very bad for the classifier to predict
-"benign" when the true class is "malignant", as this might result in a patient
-not receiving appropriate medical attention. On the other hand, it might be
-less bad for the classifier to guess "malignant" when the true class is
-"benign", as the patient will then likely see a doctor who can provide an
-expert diagnosis. This is why it is important not only to look at accuracy, but
-also the confusion matrix.
+In general, a *good* value for accuracy (as well as precision and recall, if applicable) 
+depends on the application; you must critically analyze your accuracy in the context of the problem
+you are solving. For example, if we were building a classifier for a kind of tumor that is benign 99%
+of the time, a classifier with 99% accuracy is not terribly impressive (just always guess benign!).
+And beyond just accuracy, we need to consider the precision and recall: as mentioned
+earlier, the *kind* of mistake the classifier makes is
+important in many applications as well. In the previous example with 99% benign observations, it might be very bad for the
+classifier to predict "benign" when the true class is "malignant" (a false negative), as this
+might result in a patient not receiving appropriate medical attention. In other
+words, in this context, we need the classifier to have a *high recall*. On the
+other hand, it might be less bad for the classifier to guess "malignant" when
+the true class is "benign" (a false positive), as the patient will then likely see a doctor who
+can provide an expert diagnosis. In other words, we are fine with sacrificing
+some precision in the interest of achieving high recall. This is why it is 
+important not only to look at accuracy, but also the confusion matrix.
+
 
 ```{index} classification; majority
 ```
@@ -677,8 +809,9 @@ By picking different values of $K$, we create different classifiers
 that make different predictions.
 
 So then, how do we pick the *best* value of $K$, i.e., *tune* the model? 
-And is it possible to make this selection in a principled way?  Ideally, 
-we want somehow to maximize the performance of our classifier on data *it
+And is it possible to make this selection in a principled way?  In this book,
+we will focus on maximizing the accuracy of the classifier. Ideally, 
+we want somehow to maximize the accuracy of our classifier on data *it
 hasn't seen yet*. But we cannot use our test data set in the process of building
 our model. So we will play the same trick we did before when evaluating
 our classifier: we'll split our *training data itself* into two subsets,
@@ -1387,9 +1520,11 @@ the $K$-NN here.
 <!--
 ## Predictor variable selection
 
-> **Note:** This section is not required reading for the remainder of the textbook. It is included for those readers 
-> interested in learning how irrelevant variables can influence the performance of a classifier, and how to
-> pick a subset of useful variables to include as predictors.
+```{note}
+This section is not required reading for the remainder of the textbook. It is included for those readers 
+interested in learning how irrelevant variables can influence the performance of a classifier, and how to
+pick a subset of useful variables to include as predictors.
+```
 
 ```{index} irrelevant predictors
 ```
@@ -1684,16 +1819,18 @@ models that best subset selection requires you to train! For example, while best
 training over 1000 candidate models with $m=10$ predictors, forward selection requires training only 55 candidate models.
  Therefore we will continue the rest of this section using forward selection.
 
-> **Note:** One word of caution before we move on. Every additional model that you train 
-> increases the likelihood that you will get unlucky and stumble 
-> on a model that has a high cross-validation accuracy estimate, but a low true
-> accuracy on the test data and other future observations.
-> Since forward selection involves training a lot of models, you run a fairly
-> high risk of this happening. To keep this risk low, only use forward selection
-> when you have a large amount of data and a relatively small total number of 
-> predictors. More advanced methods do not suffer from this
-> problem as much; see the additional resources at the end of this chapter for
-> where to learn more about advanced predictor selection methods.
+```{note}
+One word of caution before we move on. Every additional model that you train 
+increases the likelihood that you will get unlucky and stumble 
+on a model that has a high cross-validation accuracy estimate, but a low true
+accuracy on the test data and other future observations.
+Since forward selection involves training a lot of models, you run a fairly
+high risk of this happening. To keep this risk low, only use forward selection
+when you have a large amount of data and a relatively small total number of 
+predictors. More advanced methods do not suffer from this
+problem as much; see the additional resources at the end of this chapter for
+where to learn more about advanced predictor selection methods.
+```
 
 +++
 
@@ -1941,9 +2078,11 @@ Estimated accuracy versus the number of predictors for the sequence of models bu
 
 +++
 
-> **Note:** Since the choice of which variables to include as predictors is
-> part of tuning your classifier, you *cannot use your test data* for this
-> process! 
+```{note}
+Since the choice of which variables to include as predictors is
+part of tuning your classifier, you *cannot use your test data* for this
+process! 
+```
 
 -->
 

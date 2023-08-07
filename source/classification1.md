@@ -24,7 +24,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from IPython.display import HTML
 ```
 
-(classification)=
+(classification1)=
 # Classification I: training & predicting
 
 ## Overview 

@@ -1763,34 +1763,25 @@ possible approach is to *impute* the missing entries, i.e., fill in synthetic
 values based on the other observations in the data set. One reasonable choice
 is to perform *mean imputation*, where missing entries are filled in using the
 mean of the present entries in each variable. To perform mean imputation, we
-add the `step_impute_mean` step to the `tidymodels` preprocessing recipe.
+use a `SimpleImputer` transformer with the default arguments, and wrap it in a 
+`ColumnTransformer` to indicate which columns need imputation.
 
 ```{code-cell} ipython3
 from sklearn.impute import SimpleImputer
-imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-imp.fit(missing_cancer)
-imp.transform(missing_cancer)
+
+preprocessor = make_column_transformer(
+    (SimpleImputer(), ["Radius", "Texture", "Perimeter"]),
+)
+preprocessor
 ```
 
-todo: convert rest of this
-```text
-impute_missing_recipe <- recipe(Class ~ ., data = missing_cancer) |>
-  step_impute_mean(all_predictors()) |>
-  prep()
-impute_missing_recipe
-```
-
-```text
-hidden_print_cli(impute_missing_recipe)
-```
-
-We can now include this recipe in a `workflow`. To visualize what mean
-imputation does, let's just apply the recipe directly to the `missing_cancer`
-data frame using the `bake` function.  The imputation step fills in the missing
+To visualize what mean imputation does, let's just apply the transformer directly to the `missing_cancer`
+data frame using the `fit` and `transform` functions.  The imputation step fills in the missing
 entries with the mean values of their corresponding variables.
 
-```text
-imputed_cancer <- bake(impute_missing_recipe, missing_cancer)
+```{code-cell} ipython3
+preprocessor.fit(missing_cancer)
+imputed_cancer = preprocessor.transform(missing_cancer)
 imputed_cancer
 ```
 
@@ -1799,7 +1790,6 @@ Many other options for missing data imputation can be found in
 you decide to handle missing data in your data analysis, it is always crucial
 to think critically about the setting, how the data were collected, and the
 question you are answering.
-
 
 +++
 

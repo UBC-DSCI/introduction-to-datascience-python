@@ -66,22 +66,23 @@ exploratory analysis, i.e., uncovering patterns in the data.
 ```{index} classification, regression, supervised, unsupervised
 ```
 
-Note that clustering is a fundamentally different kind of task
-than classification or regression.
-In particular, both classification and regression are *supervised tasks*
-where there is a *response variable* (a category label or value),
-and we have examples of past data with labels/values
-that help us predict those of future data.
-By contrast, clustering is an *unsupervised task*,
-as we are trying to understand
-and examine the structure of data without any response variable labels
-or values to help us.
-This approach has both advantages and disadvantages.
-Clustering requires no additional annotation or input on the data.
-For example, it would be nearly impossible to annotate
-all the articles on Wikipedia with human-made topic labels.
-However, we can still cluster the articles without this information
-to find groupings corresponding to topics automatically.
+Note that clustering is a fundamentally different kind of task than
+classification or regression.  In particular, both classification and
+regression are *supervised tasks* where there is a *response variable* (a
+category label or value), and we have examples of past data with labels/values
+that help us predict those of future data.  By contrast, clustering is an
+*unsupervised task*, as we are trying to understand and examine the structure
+of data without any response variable labels or values to help us.  This
+approach has both advantages and disadvantages.  Clustering requires no
+additional annotation or input on the data.  For example, while it would be
+nearly impossible to annotate all the articles on Wikipedia with human-made
+topic labels, we can cluster the articles without this information to find
+groupings corresponding to topics automatically.  However, given that there is
+no response variable, it is not as easy to evaluate the "quality" of a
+clustering.  With classification, we can use a test data set to assess
+prediction performance. In clustering, there is not a single good choice for
+evaluation. In this book, we will use visualization to ascertain the quality of
+a clustering, and leave rigorous evaluation for more advanced courses.
 
 Given that there is no response variable, it is not as easy to evaluate
 the "quality" of a clustering.  With classification, we can use a test data set

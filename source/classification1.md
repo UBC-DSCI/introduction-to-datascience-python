@@ -24,7 +24,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from IPython.display import HTML
 ```
 
-(classification)=
+(classification1)=
 # Classification I: training & predicting
 
 ## Overview 
@@ -897,6 +897,8 @@ Before getting started with $K$-nearest neighbors, we need to tell the `sklearn`
 that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
 ```{code-cell} ipython3
 from sklearn import set_config
+
+# Output dataframes instead of arrays
 set_config(transform_output="pandas")
 ```
 
@@ -1031,7 +1033,7 @@ and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")[['Class', 'Area', 'Smoothness']]
+unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")[['Class', 'Area', 'Smoothness']]
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
@@ -1708,6 +1710,90 @@ glue("fig:05-upsample-plot", (rare_plot + upsampled_plot))
 Upsampled data with background color indicating the decision of the classifier.
 :::
 
+### Missing data
+
+```{index} missing data
+```
+
+One of the most common issues in real data sets in the wild is *missing data*,
+i.e., observations where the values of some of the variables were not recorded.
+Unfortunately, as common as it is, handling missing data properly is very
+challenging and generally relies on expert knowledge about the data, setting,
+and how the data were collected. One typical challenge with missing data is
+that missing entries can be *informative*: the very fact that an entries were
+missing is related to the values of other variables.  For example, survey
+participants from a marginalized group of people may be less likely to respond
+to certain kinds of questions if they fear that answering honestly will come
+with negative consequences. In that case, if we were to simply throw away data
+with missing entries, we would bias the conclusions of the survey by
+inadvertently removing many members of that group of respondents.  So ignoring
+this issue in real problems can easily lead to misleading analyses, with
+detrimental impacts.  In this book, we will cover only those techniques for
+dealing with missing entries in situations where missing entries are just
+"randomly missing", i.e., where the fact that certain entries are missing
+*isn't related to anything else* about the observation.
+
+Let's load and examine a modified subset of the tumor image data
+that has a few missing entries:
+
+```{code-cell} ipython3
+missing_cancer = pd.read_csv("data/wdbc_missing.csv")[['Class', 'Radius', 'Texture', 'Perimeter']]
+missing_cancer['Class'] = missing_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+}).astype('category')
+missing_cancer
+```
+
+Recall that K-nearest neighbor classification makes predictions by computing
+the straight-line distance to nearby training observations, and hence requires
+access to the values of *all* variables for *all* observations in the training
+data.  So how can we perform K-nearest neighbor classification in the presence
+of missing data?  Well, since there are not too many observations with missing
+entries, one option is to simply remove those observations prior to building
+the K-nearest neighbor classifier. We can accomplish this by using the
+`dropna` method prior to working with the data.
+
+```{code-cell} ipython3
+no_missing_cancer = missing_cancer.dropna()
+no_missing_cancer
+```
+
+However, this strategy will not work when many of the rows have missing
+entries, as we may end up throwing away too much data. In this case, another
+possible approach is to *impute* the missing entries, i.e., fill in synthetic
+values based on the other observations in the data set. One reasonable choice
+is to perform *mean imputation*, where missing entries are filled in using the
+mean of the present entries in each variable. To perform mean imputation, we
+use a `SimpleImputer` transformer with the default arguments, and wrap it in a 
+`ColumnTransformer` to indicate which columns need imputation.
+
+```{code-cell} ipython3
+from sklearn.impute import SimpleImputer
+
+preprocessor = make_column_transformer(
+    (SimpleImputer(), ["Radius", "Texture", "Perimeter"]),
+    verbose_feature_names_out=False
+)
+preprocessor
+```
+
+To visualize what mean imputation does, let's just apply the transformer directly to the `missing_cancer`
+data frame using the `fit` and `transform` functions.  The imputation step fills in the missing
+entries with the mean values of their corresponding variables.
+
+```{code-cell} ipython3
+preprocessor.fit(missing_cancer)
+imputed_cancer = preprocessor.transform(missing_cancer)
+imputed_cancer
+```
+
+Many other options for missing data imputation can be found in 
+[the `scikit-learn` documentation](https://scikit-learn.org/stable/modules/impute.html).  However
+you decide to handle missing data in your data analysis, it is always crucial
+to think critically about the setting, how the data were collected, and the
+question you are answering.
+
 +++
 
 (08:puttingittogetherworkflow)=
@@ -1718,12 +1804,12 @@ Upsampled data with background color indicating the decision of the classifier.
 
 The `scikit-learn` package collection also provides the [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), 
 a  way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
-To illustrate the whole workflow, let's start from scratch with the `unscaled_wdbc.csv` data.
+To illustrate the whole workflow, let's start from scratch with the `wdbc_unscaled.csv` data.
 First we will load the data, create a model, and specify a preprocessor for the data.
 
 ```{code-cell} ipython3
 # load the unscaled cancer data, make Class readable
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
+unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'

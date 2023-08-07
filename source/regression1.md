@@ -156,6 +156,10 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn import set_config
+
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
 
 np.random.seed(10)
 

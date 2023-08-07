@@ -569,6 +569,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.compose import make_column_transformer
 from sklearn import set_config
 
+# Output dataframes instead of arrays
 set_config(transform_output="pandas")
 
 preprocessor = make_column_transformer(

@@ -372,6 +372,10 @@ import altair as alt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from sklearn import set_config
+
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
 
 np.random.seed(1)
 

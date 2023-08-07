@@ -1771,6 +1771,7 @@ from sklearn.impute import SimpleImputer
 
 preprocessor = make_column_transformer(
     (SimpleImputer(), ["Radius", "Texture", "Perimeter"]),
+    verbose_feature_names_out=False
 )
 preprocessor
 ```

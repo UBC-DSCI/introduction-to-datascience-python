@@ -897,6 +897,8 @@ Before getting started with $K$-nearest neighbors, we need to tell the `sklearn`
 that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
 ```{code-cell} ipython3
 from sklearn import set_config
+
+# Output dataframes instead of arrays
 set_config(transform_output="pandas")
 ```
 

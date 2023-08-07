@@ -423,6 +423,10 @@ as described in the {ref}`randomseeds` section.
 # load packages
 import altair as alt
 import pandas as pd
+from sklearn import set_config
+
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
 
 # set the seed
 np.random.seed(1)

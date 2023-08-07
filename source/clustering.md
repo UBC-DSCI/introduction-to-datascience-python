@@ -106,15 +106,17 @@ for where to begin learning more about these other methods.
 ```{index} semisupervised
 ```
 
-> **Note:** There are also so-called *semisupervised* tasks,
-> where only some of the data come with response variable labels/values,
-> but the vast majority don't.
-> The goal is to try to uncover underlying structure in the data
-> that allows one to guess the missing labels.
-> This sort of task is beneficial, for example,
-> when one has an unlabeled data set that is too large to manually label,
-> but one is willing to provide a few informative example labels as a "seed"
-> to guess the labels for all the data.
+```{note}
+There are also so-called *semisupervised* tasks,
+where only some of the data come with response variable labels/values,
+but the vast majority don't.
+The goal is to try to uncover underlying structure in the data
+that allows one to guess the missing labels.
+This sort of task is beneficial, for example,
+when one has an unlabeled data set that is too large to manually label,
+but one is willing to provide a few informative example labels as a "seed"
+to guess the labels for all the data.
+```
 
 **An illustrative example**
 
@@ -437,12 +439,14 @@ in the fourth iteration; both the centers and labels will remain the same from t
 ```{index} K-means; termination
 ```
 
-> **Note:** Is K-means *guaranteed* to stop at some point, or could it iterate forever? As it turns out,
-> thankfully, the answer is that K-means is guaranteed to stop after *some* number of iterations. For the interested reader, the
-> logic for this has three steps: (1) both the label update and the center update decrease total WSSD in each iteration,
-> (2) the total WSSD is always greater than or equal to 0, and (3) there are only a finite number of possible
-> ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
-> are changing, and the algorithm terminates.
+```{note}
+Is K-means *guaranteed* to stop at some point, or could it iterate forever? As it turns out,
+thankfully, the answer is that K-means is guaranteed to stop after *some* number of iterations. For the interested reader, the
+logic for this has three steps: (1) both the label update and the center update decrease total WSSD in each iteration,
+(2) the total WSSD is always greater than or equal to 0, and (3) there are only a finite number of possible
+ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
+are changing, and the algorithm terminates.
+```
 
 What kind of data is suitable for K-means clustering?
 In the simplest version of K-means clustering that we have presented here,
@@ -694,13 +698,15 @@ we will use this approach to compute the WSSD/inertia for the K-values 1 through
 and store these values in a list
 that we will use to create a dataframe of both the K-values and their corresponding WSSDs/inertias.
 
-> **Note:** We are creating the variable `ks` to store the range of possible k-values,
-> so that we only need to change this range in one place
-> if we decide to change which values of k we want to explore.
-> Otherwise it would be easy to forget to update it
-> in either the list comprehension or in the data frame assignment.
-> If you are using a value multiple times,
-> it is always the safest to assign it to a variable name for reuse.
+```{note}
+We are creating the variable `ks` to store the range of possible k-values,
+so that we only need to change this range in one place
+if we decide to change which values of k we want to explore.
+Otherwise it would be easy to forget to update it
+in either the list comprehension or in the data frame assignment.
+If you are using a value multiple times,
+it is always the safest to assign it to a variable name for reuse.
+```
 
 ```{code-cell} ipython3
 ks = range(1, 10)
@@ -753,15 +759,17 @@ This is because K-means can get "stuck" in a bad solution
 due to an unlucky initialization of the initial centroid positions
 as we mentioned earlier in the chapter.
 
-> **Note:** It is rare that the KMeans function from scikit-learn
-> gets stuck in a bad solution,
-> because the selection of the centroid starting points
-> is optimized to prevent this from happening.
-> If you still find yourself in a situation where you have a bump in the elbow plot,
-> you can increase the `n_init` parameter
-> to try more different starting points for the centroids.
-> The larger the value the better from an analysis perspective,
-> but there is a trade-off that doing many clusterings could take a long time.
+```{note}
+It is rare that the KMeans function from scikit-learn
+gets stuck in a bad solution,
+because the selection of the centroid starting points
+is optimized to prevent this from happening.
+If you still find yourself in a situation where you have a bump in the elbow plot,
+you can increase the `n_init` parameter
+to try more different starting points for the centroids.
+The larger the value the better from an analysis perspective,
+but there is a trade-off that doing many clusterings could take a long time.
+```
 
 ## Exercises
 

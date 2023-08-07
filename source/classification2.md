@@ -696,12 +696,12 @@ glue("confu10", c10)
 glue("confu01", c01)
 glue("confu11_00", c11 + c00)
 glue("confu10_11", c10 + c11)
-glue("confu_fal_neg", np.round(100 * c10 / (c10 + c11)))
+glue("confu_fal_neg", round(100 * c10 / (c10 + c11)))
 glue("confu_accuracy", np.round(100*(c00+c11)/(c00+c11+c01+c10),2))
 glue("confu_precision", np.round(100*c11/(c11+c01), 2))
 glue("confu_recall", np.round(100*c11/(c11+c10),2))
-glue("confu_precision_0", np.round(100*c11/(c11+c01)))
-glue("confu_recall_0", np.round(100*c11/(c11+c10)))
+glue("confu_precision_0", round(100*c11/(c11+c01)))
+glue("confu_recall_0", round(100*c11/(c11+c10)))
 ```
 
 The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
@@ -712,11 +712,35 @@ and {glue:}`confu01` observations as malignant when they were truly benign.
 Using our formulas from earlier, we see that the accuracy agrees with what Python reported,
 and can also compute the precision and recall of the classifier:
 
-$$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}} = \frac{{glue:}`confu00`+{glue:}`confu11`}{{glue:}`confu00`+{glue:}`confu11`+{glue:}`confu01`+{glue:}`confu10`} = {glue:}`confu_accuracy`$$
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-$$\mathrm{precision} = \frac{\mathrm{number \; of  \; correct \; positive \; predictions}}{\mathrm{total \;  number \;  of \; positive  \; predictions}} = \frac{{glue:}`confu00`}{{glue:}`confu00` + {glue:}`confu01`} = {glue:}`confu_precision`$$
+from IPython.display import display, Math
+# accuracy string
+acc_eq_str = r"\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}} = \frac{"
+acc_eq_str += str(c00) + "+" + str(c11) + "}{" + str(c00) + "+" + str(c11) + "+" + str(c01) + "+" + str(c10) + "} = " + str( np.round(100*(c00+c11)/(c00+c11+c01+c10),2))
+acc_eq_math = Math(acc_eq_str)
+glue("acc_eq_math_glued", acc_eq_math)
 
-$$\mathrm{recall} = \frac{\mathrm{number \; of  \; correct  \; positive \; predictions}}{\mathrm{total \;  number \;  of  \; positive \; test \; set \; observations}} = \frac{{glue:}`confu00`}{{glue:}`confu00`+{glue:}`confu10`} = {glue:}`confu_recall`$$
+prec_eq_str = r"\mathrm{precision} = \frac{\mathrm{number \; of  \; correct  \; positive \; predictions}}{\mathrm{total \;  number \;  of  \; positive \; predictions}} = \frac{"
+prec_eq_str += str(c00) + "}{" + str(c00) + "+" + str(c01) + "} = " + str( np.round(100*c11/(c11+c01), 2))
+prec_eq_math = Math(prec_eq_str)
+glue("prec_eq_math_glued", prec_eq_math)
+
+rec_eq_str = r"\mathrm{recall} = \frac{\mathrm{number \; of  \; correct  \; positive \; predictions}}{\mathrm{total \;  number \;  of  \; positive \; test \; set \; observations}} = \frac{"
+rec_eq_str += str(c00) + "}{" + str(c00) + "+" + str(c10) + "} = " + str( np.round(100*c11/(c11+c10), 2))
+rec_eq_math = Math(rec_eq_str)
+glue("rec_eq_math_glued", rec_eq_math)
+```
+
+```{glue:math} acc_eq_math_glued
+```	
+
+```{glue:math} prec_eq_math_glued
+```	
+
+```{glue:math} rec_eq_math_glued
+```	
 
 +++
 

@@ -1,6 +1,8 @@
 ## Data Science: A First Introduction (Python Edition)
 This is the source for the python edition of the *Data Science: A First Introduction* textbook.
 
+The book is available online at: https://python.datasciencebook.ca/
+
 For the R version of the textbook, please visit https://datasciencebook.ca or the github repository
 at https://github.com/ubc-dsci/introduction-to-datascience.
 

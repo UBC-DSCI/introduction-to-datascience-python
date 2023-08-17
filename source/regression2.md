@@ -399,8 +399,8 @@ intercept of the line via the `intercept_` property.
 # fit the linear regression model
 lm = LinearRegression()
 lm.fit(
-   sacramento_train[["sqft"]],
-   sacramento_train[["price"]]
+   sacramento_train["sqft"].to_frame(),
+   sacramento_train["price"]
 )
 
 # make a dataframe containing slope and intercept coefficients
@@ -446,7 +446,7 @@ we predict on the test data set to assess how well our model does.
 ```{code-cell} ipython3
 # make predictions
 sacr_preds = sacramento_test.assign(
-    predicted = lm.predict(sacramento_test[["sqft"]])
+    predicted = lm.predict(sacramento_test["sqft"].to_frame())
 )
 
 # calculate RMSPE
@@ -728,7 +728,7 @@ method as usual.
 
 mlm = LinearRegression().fit(
     sacramento_train[["sqft", "beds"]],
-    sacramento_train[["price"]]
+    sacramento_train["price"]
 )
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.

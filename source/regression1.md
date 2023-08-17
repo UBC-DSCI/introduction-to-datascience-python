@@ -306,7 +306,7 @@ of a house that is 2,000 square feet.
 
 ```{code-cell} ipython3
 nearest_neighbors = (
-    small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
+    small_sacramento.assign(diff=(2000 - small_sacramento["sqft"]).abs())
     .nsmallest(5, "diff")
 )
 
@@ -1018,7 +1018,7 @@ sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
 sacr_results[
-   sacr_results["mean_test_score"] == min(sacr_results["mean_test_score"])
+   sacr_results["mean_test_score"] == sacr_results["mean_test_score"].min()
 ]
 ```
 

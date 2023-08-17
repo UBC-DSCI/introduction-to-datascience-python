@@ -214,10 +214,7 @@ We will also improve the readability of our analysis
 by renaming `'M'` to `'Malignant'` and `'B'` to `'Benign'` using the `replace`
 method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values. 
-Furthermore, since we will be working with `Class` as a categorical statistical variable,
-it is a good idea to convert it to the `category` type using the `astype` method 
-on the `cancer` data frame. We will verify the result using the `info` 
-and `unique` methods again.
+We will verify the result using the `unique` method.
 
 ```{index} replace
 ```
@@ -226,11 +223,8 @@ and `unique` methods again.
 cancer['Class'] = cancer['Class'].replace({
     'M' : 'Malignant',
     'B' : 'Benign'
-}).astype('category')
-cancer.info()
-```
+})
 
-```{code-cell} ipython3
 cancer['Class'].unique()
 ```
 
@@ -1037,7 +1031,7 @@ unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")[['Class', 'Area', 'Smoot
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
-}).astype('category')
+})
 unscaled_cancer
 ```
 
@@ -1741,7 +1735,7 @@ missing_cancer = pd.read_csv("data/wdbc_missing.csv")[['Class', 'Radius', 'Textu
 missing_cancer['Class'] = missing_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
-}).astype('category')
+})
 missing_cancer
 ```
 
@@ -1813,7 +1807,7 @@ unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
-}).astype('category')
+})
 unscaled_cancer
 
 # create the KNN model

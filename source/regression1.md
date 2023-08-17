@@ -807,15 +807,22 @@ To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we first need to retrain the 
 KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
-does it for us. We just need to obtain the `best_estimator_` attribute of original
+does it for us automatically. If we want to see which parameters were identified
+as the best ones during grid search, we can access the `best_params_` attribute of the original
 fit `GridSearchCV` object.
 
 ```{code-cell} ipython3
-sacr_fit.best_estimator_
+sacr_fit.best_params_
 ```
 
-Given the `best_estimator_` tuned model, we can use the `predict` method 
-to make predictions on the test data. We then use the `mean_squared_error`
+We can see that this value is the same that we identified
+when plotting the cross-validation results manually.
+It is still useful to visualize the results as we did above
+since this provides additional information on how the model performance varies.
+
+To make predictions with the best model on the test data,
+we can use the `predict` method of the fitted `GridSearchCV` object.
+We then use the `mean_squared_error`
 function (with the `y_true` and `y_pred` arguments) 
 to compute the mean squared prediction error, and finally take the
 square root to get the RMSPE. The reason that we do not just use the `score` 
@@ -826,10 +833,10 @@ model uses a different default scoring metric than the RMSPE.
 from sklearn.metrics import mean_squared_error
 
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
-    y_true = sacr_preds["price"], 
+    y_true = sacr_preds["price"],
     y_pred=sacr_preds["predicted"]
 )**(1/2)
 RMSPE
@@ -1040,12 +1047,13 @@ Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
 Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
-and evaluate its performance on test data. We will extract the `best_estimator_` model,
-use the `predict` method on the test data, and finally use the `mean_squared_error` function
+and evaluate its performance on test data. As previously, we will use the best model to make predictions on the test data
+via the `predict` method of the fitted `GridSearchCV` object. Finally, we will use the `mean_squared_error` function
 to compute the RMSPE.
+
 ```{code-cell} ipython3
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.predict(sacramento_test)
 )
 RMSPE_mult = mean_squared_error(
     y_true = sacr_preds["price"], 

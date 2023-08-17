@@ -600,19 +600,20 @@ and rename the parameter column to be more readable.
 ```{code-cell} ipython3
 # fit the GridSearchCV object 
 sacr_fit = sacr_gridsearch.fit(
-                  sacramento_train[["sqft"]],
-                  sacramento_train[["price"]]
-              )
-# retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
+    sacramento_train[["sqft"]],
+    sacramento_train[["price"]]
+)
+
+# Retrieve the CV scores
+sacr_results = (
+    pd.DataFrame(sacr_fit.cv_results_)[[
+        "param_kneighborsregressor__n_neighbors",
+        "mean_test_score",
+        "std_test_score"
+    ]]
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors": "n_neighbors"})
+    .drop(columns=["std_test_score"])
 )
 sacr_results
 ```
@@ -826,7 +827,7 @@ model uses a different default scoring metric than the RMSPE.
 from sklearn.metrics import mean_squared_error
 
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted=sacr_fit.best_estimator_.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
     y_true = sacr_preds["price"], 
@@ -871,7 +872,7 @@ generated it as a learning challenge.
 
 sacr_preds = pd.DataFrame({"sqft": np.arange(500, 5001, 10)})
 sacr_preds = sacr_preds.assign(
-                   predicted = sacr_fit.predict(sacr_preds)
+    predicted=sacr_fit.predict(sacr_preds)
 )
 
 # the base plot: the training data scatter plot
@@ -887,7 +888,10 @@ base_plot = alt.Chart(sacramento_train).mark_circle().encode(
 # add the prediction layer
 sacr_preds_plot = base_plot + alt.Chart(sacr_preds, title=f"K = {best_k_sacr}").mark_line(
     color="#ff7f0e"
-).encode(x="sqft", y="predicted")
+).encode(
+    x="sqft",
+    y="predicted"
+)
 
 sacr_preds_plot
 ```
@@ -1000,16 +1004,16 @@ sacr_fit = GridSearchCV(
     )
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
-)
+sacr_results = (
+    pd.DataFrame(sacr_fit.cv_results_)[[
+        "param_kneighborsregressor__n_neighbors",
+        "mean_test_score",
+        "std_test_score"
+    ]]
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
+    .drop(columns=["std_test_score"])
+
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE

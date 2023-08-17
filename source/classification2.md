@@ -1196,10 +1196,11 @@ and print the `info` of the result.
 
 ```{code-cell} ipython3
 accuracies_grid = pd.DataFrame(
-             cancer_tune_grid
-             .fit(cancer_train[["Smoothness", "Concavity"]],
-                  cancer_train["Class"]
-            ).cv_results_)
+    cancer_tune_grid.fit(
+        cancer_train[["Smoothness", "Concavity"]],
+        cancer_train["Class"]
+    ).cv_results_
+)
 ```
 
 ```{code-cell} ipython3
@@ -1220,14 +1221,16 @@ We will also rename the parameter name column to be a bit more readable,
 and drop the now unused `std_test_score` column.
 
 ```{code-cell} ipython3
-accuracies_grid = accuracies_grid[["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
-              ].assign(
-                  sem_test_score = accuracies_grid["std_test_score"] / 10**(1/2)
-              ).rename(
-                  columns = {"param_kneighborsclassifier__n_neighbors" : "n_neighbors"}
-              ).drop(
-                  columns = ["std_test_score"]
-              )
+accuracies_grid = (
+    accuracies_grid[[
+        "param_kneighborsclassifier__n_neighbors",
+        "mean_test_score",
+        "std_test_score"
+    ]]
+    .assign(sem_test_score=accuracies_grid["std_test_score"] / 10**(1/2))
+    .rename(columns={"param_kneighborsclassifier__n_neighbors": "n_neighbors"})
+    .drop(columns=["std_test_score"])
+)
 accuracies_grid
 ```
 

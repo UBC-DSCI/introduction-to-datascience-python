@@ -186,7 +186,7 @@ want to predict (sale price) on the y-axis.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-eda = alt.Chart(sacramento).mark_circle().encode(
+scatter = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -195,12 +195,12 @@ eda = alt.Chart(sacramento).mark_circle().encode(
         .title("Price (USD)")
 )
 
-eda
+scatter
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("fig:07-edaRegr", eda)
+glue("fig:07-edaRegr", scatter)
 ```
 
 :::{glue:figure} fig:07-edaRegr

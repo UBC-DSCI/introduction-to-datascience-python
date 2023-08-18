@@ -210,7 +210,7 @@ benign, represented by `'B'`, and malignant, represented by `'M'`.
 cancer['Class'].unique()
 ```
 
-We will also improve the readability of our analysis
+We will improve the readability of our analysis
 by renaming `'M'` to `'Malignant'` and `'B'` to `'Benign'` using the `replace`
 method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values. 

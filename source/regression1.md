@@ -817,7 +817,7 @@ assess its RMSPE on the test data. To do this, we first need to retrain the
 KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
 does it for us automatically. To make predictions with the best model on the test data,
-we can use the `predict` method of the fitted `GridSearchCV` object.
+we can use the `predict` method of the fit `GridSearchCV` object.
 We then use the `mean_squared_error`
 function (with the `y_true` and `y_pred` arguments) 
 to compute the mean squared prediction error, and finally take the
@@ -1044,7 +1044,7 @@ by a large amount by adding this additional predictor.
 
 Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
 and evaluate its performance on test data. As previously, we will use the best model to make predictions on the test data
-via the `predict` method of the fitted `GridSearchCV` object. Finally, we will use the `mean_squared_error` function
+via the `predict` method of the fit `GridSearchCV` object. Finally, we will use the `mean_squared_error` function
 to compute the RMSPE.
 
 ```{code-cell} ipython3

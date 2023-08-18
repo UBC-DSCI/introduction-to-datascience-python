@@ -171,7 +171,7 @@ This is covered in detail in the {ref}`viz` chapter, but again appears regularly
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in the {ref}`classification` and {ref}`classification2` chapters.
+Classification is covered in the {ref}`classification1` and {ref}`classification2` chapters.
 4. **Regression:** predicting a quantitative value for a new observation.
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:

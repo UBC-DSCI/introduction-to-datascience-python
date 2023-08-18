@@ -556,6 +556,7 @@ be human-readable. Committing one big archive defeats the whole purpose of using
 version control: you won't be able to see, interpret, or find changes in the history
 of any of the actual content of your project!
 
+(local-repo-jupyter)=
 ## Working with local repositories using Jupyter
 
 ```{index} git;Jupyter extension

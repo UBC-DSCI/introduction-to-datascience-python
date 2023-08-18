@@ -146,7 +146,7 @@ To learn about K-means clustering
 we will work with `penguin_data` in this chapter.
 `penguin_data` is a subset of 18 observations of the original data,
 which has already been standardized
-(remember from Chapter {ref}`classification`
+(remember from Chapter {ref}`classification1`
 that scaling is part of the standardization process).
 We will discuss scaling for K-means in more detail later in this chapter.
 
@@ -350,7 +350,7 @@ The second step in computing the WSSD is to add up the squared distance
 between each point in the cluster
 and the cluster center.
 We use the straight-line / Euclidean distance formula
-that we learned about in Chapter {ref}`classification`.
+that we learned about in Chapter {ref}`classification1`.
 In the {glue:}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 

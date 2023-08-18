@@ -19,6 +19,10 @@ RUN pip install referencing
 RUN pip install jupyter-book
 RUN pip install numpy jinja2 altair_data_server vl-convert-python click ibis-framework ghp-import jupytext nodejs
 
+# forces scikit-learn to grab latest to avoid bug in 1.3.0 related to checking for c-contiguity breaking figures in classification 2. See https://github.com/scikit-learn/scikit-learn/pull/26772
+# TODO: remove this once scikit-learn 1.4.x or beyond releases and is incorporated into jupyter/scipy-notebook
+RUN pip install -U git+https://github.com/scikit-learn/scikit-learn.git@main
+
 # disable warnings that pollute build logs; seems to be related to the update to python 3.11
 # https://discourse.jupyter.org/t/debugger-warning-it-seems-that-frozen-modules-are-being-used-python-3-11-0/16544/12
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1

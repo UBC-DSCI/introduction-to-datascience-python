@@ -52,7 +52,7 @@ we will split our data into training, validation, and test sets, we will
 use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
 Because of how similar these procedures are, make sure to read the
-{ref}`classification` and {ref}`classification2` chapters before reading
+{ref}`classification1` and {ref}`classification2` chapters before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor,
@@ -565,7 +565,7 @@ So we need to specify that we want to use the RMSPE for tuning by setting the
 
 > **Note:** We obtained the identifier of the parameter representing the number
 > of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
-> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification`
+> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification1`
 > chapter.
 
 ```{index} scikit-learn; GridSearchCV

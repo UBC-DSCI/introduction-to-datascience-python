@@ -677,6 +677,15 @@ glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
 Effect of the number of neighbors on the RMSPE.
 :::
 
+To see which parameter value corresponds to the minimum RMSPE, 
+we can also access the `best_params_` attribute of the original fit `GridSearchCV` object.
+Note that it is still useful to visualize the results as we did above
+since this provides additional information on how the model performance varies.
+
+```{code-cell} ipython3
+sacr_fit.best_params_
+```
+
 +++
 
 ## Underfitting and overfitting
@@ -807,20 +816,7 @@ To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we first need to retrain the 
 KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
-does it for us automatically. If we want to see which parameters were identified
-as the best ones during grid search, we can access the `best_params_` attribute of the original
-fit `GridSearchCV` object.
-
-```{code-cell} ipython3
-sacr_fit.best_params_
-```
-
-We can see that this value is the same that we identified
-when plotting the cross-validation results manually.
-It is still useful to visualize the results as we did above
-since this provides additional information on how the model performance varies.
-
-To make predictions with the best model on the test data,
+does it for us automatically. To make predictions with the best model on the test data,
 we can use the `predict` method of the fitted `GridSearchCV` object.
 We then use the `mean_squared_error`
 function (with the `y_true` and `y_pred` arguments) 

@@ -862,20 +862,28 @@ could make or break whether or not they could afford put an offer on a house.
 
 Finally, {numref}`fig:07-predict-all` shows the predictions that our final
 model makes across the range of house sizes we might encounter in the
-Sacramento area&mdash;from 500 to 5000 square feet.  You have already seen a
+Sacramento area.
+Note that instead of predicting the house price only for those house sizes that happen to appear in our data,
+we predict it for evenly spaced values between the minimum and maximum in the data set
+(roughly 500 to 5000 square feet).
+You have already seen a
 few plots like this in this chapter, but here we also provide the code that
-generated it as a learning challenge.
+generated it as a learning opportunity.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-sacr_preds = pd.DataFrame({"sqft": np.arange(500, 5001, 10)})
-sacr_preds = sacr_preds.assign(
-                   predicted = sacr_fit.predict(sacr_preds)
+# Create a grid of evenly spaced values along the range of the sqft data
+sqft_prediction_grid = pd.DataFrame({
+    "sqft": np.arange(sacramento['sqft'].min(), sacramento['sqft'].max(), 10)
+})
+# Predict the price for each of the sqft values in the grid
+sacr_preds = sqft_prediction_grid.assign(
+    predicted = sacr_fit.predict(sqft_prediction_grid)
 )
 
-# the base plot: the training data scatter plot
-base_plot = alt.Chart(sacramento_train).mark_circle().encode(
+# Plot all the houses
+base_plot = alt.Chart(sacramento_train).mark_circle(opacity=0.4).encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -884,10 +892,13 @@ base_plot = alt.Chart(sacramento_train).mark_circle().encode(
         .title("Price (USD)")
 )
 
-# add the prediction layer
+# Add the predictions as a line
 sacr_preds_plot = base_plot + alt.Chart(sacr_preds, title=f"K = {best_k_sacr}").mark_line(
     color="#ff7f0e"
-).encode(x="sqft", y="predicted")
+).encode(
+    x="sqft",
+    y="predicted"
+)
 
 sacr_preds_plot
 ```

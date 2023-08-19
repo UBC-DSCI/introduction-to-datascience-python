@@ -866,6 +866,9 @@ Sacramento area.
 Note that instead of predicting the house price only for those house sizes that happen to appear in our data,
 we predict it for evenly spaced values between the minimum and maximum in the data set
 (roughly 500 to 5000 square feet).
+We superimpose this prediction line on a scatter
+plot of the original housing price data,
+so that we can qualitatively assess if the model seems to fit the data well.
 You have already seen a
 few plots like this in this chapter, but here we also provide the code that
 generated it as a learning opportunity.

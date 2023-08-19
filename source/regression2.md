@@ -474,11 +474,13 @@ sale price based off of the predictor of home size? Again, answering this is
 tricky and requires knowledge of how you intend to use the prediction.
 
 To visualize the simple linear regression model, we can plot the predicted house
-sale price across all possible house sizes we might encounter superimposed on a scatter
-plot of the original housing price data.
+sale price across all possible house sizes we might encounter.
 Since our model is linear,
 we only need to compute the predicted value of the min and max points,
 and then connect them with a straight line.
+We superimpose this prediction line on a scatter
+plot of the original housing price data,
+so that we can qualitatively assess if the model seems to fit the data well.
 {numref}`fig:08-lm-predict-all` displays the result.
 
 ```{code-cell} ipython3

@@ -449,9 +449,10 @@ sacr_preds = sacramento_test.assign(
 )
 
 # calculate RMSPE
-RMSPE = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
-)
+RMSPE = mean_squared_error(
+    y_true=sacr_preds["price"],
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 
 RMSPE
 ```

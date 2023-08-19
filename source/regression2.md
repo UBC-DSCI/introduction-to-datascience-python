@@ -487,7 +487,7 @@ sacr_preds = sqft_prediction_grid.assign(
     predicted=lm.predict(sqft_prediction_grid)
 )
 
-all_points = alt.Chart(sacramento_train).mark_circle(opacity=0.4).encode(
+all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),

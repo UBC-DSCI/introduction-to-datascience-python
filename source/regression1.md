@@ -596,16 +596,19 @@ on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
 we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
-In `scikit-learn`, it is easier to work with a data frame as the input features,
+In `scikit-learn`, it is easier to work with the input features as a data frame,
 rather than a series. So, when we select a single column,
-we explicitly convert the series to a data frame with the `to_frame()` method.
-The target variable can be a series, so we don't need to convert it to a data frame.
+we pass the name of the column as a list rather than a string
+to return a data frame
+as we learned in the {ref}`wrangling` chapter.
+The target variable can be a series,
+so we can pass its column name as a string.
 
 ```{code-cell} ipython3
 # fit the GridSearchCV object
 sacr_fit = sacr_gridsearch.fit(
-    sacramento_train["sqft"].to_frame(),
-    sacramento_train["price"]
+    sacramento_train[["sqft"]],  # A single column data frame
+    sacramento_train["price"]  # A series
 )
 
 # Retrieve the CV scores

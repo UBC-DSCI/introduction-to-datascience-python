@@ -399,8 +399,8 @@ intercept of the line via the `intercept_` property.
 # fit the linear regression model
 lm = LinearRegression()
 lm.fit(
-   sacramento_train["sqft"].to_frame(),
-   sacramento_train["price"]
+   sacramento_train[["sqft"]],  # A single column data frame
+   sacramento_train["price"]  # A series
 )
 
 # make a dataframe containing slope and intercept coefficients

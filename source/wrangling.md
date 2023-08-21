@@ -304,22 +304,20 @@ because then we have access to the built-in functionality in
 `pandas` (e.g. `loc[]`, `[]`, and many functions that we will discuss in the upcoming sections)!
 
 ```{code-cell} ipython3
-population_in_2016 = pd.DataFrame(population_in_2016)
-population_in_2016
+population_in_2016_df = pd.DataFrame(population_in_2016)
+population_in_2016_df
 ```
 
-When we need to create a new DataFrame from scratch,
-the most convenient way is often to use a dictionary.
-Instead of assigning the dictionary to a variable in a separate step,
-we create the dictionary inside the data frame constructor
-in a single call.
+Of course, there is no need to name the dictionary separately before passing it to
+`pd.DataFrame`; we can instead construct the dictionary right inside the call.
+This is often the most convenient way to create a new data frame.
 
 ```{code-cell} ipython3
-population_in_2016 = pd.DataFrame({
+population_in_2016_df = pd.DataFrame({
   "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
   "population": [2235145, 1027613, 1823281, 544870, 571146, 321484]
 })
-population_in_2016
+population_in_2016_df
 ```
 
 +++

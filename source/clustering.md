@@ -292,7 +292,7 @@ have.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-clus = data[data["cluster"] == 2].loc[:,["bill_length_standardized", "flipper_length_standardized"]]
+clus = data[data["cluster"] == 2][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
 ```{index} see: within-cluster sum-of-squared-distances; WSSD

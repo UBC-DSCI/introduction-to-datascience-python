@@ -399,21 +399,21 @@ intercept of the line via the `intercept_` property.
 # fit the linear regression model
 lm = LinearRegression()
 lm.fit(
-   sacramento_train[["sqft"]],
-   sacramento_train[["price"]]
+   sacramento_train[["sqft"]],  # A single-column data frame
+   sacramento_train["price"]  # A series
 )
 
 # make a dataframe containing slope and intercept coefficients
-pd.DataFrame({"slope": lm.coef_[0], "intercept": lm.intercept_})
+pd.DataFrame({"slope": [lm.coef_[0]], "intercept": [lm.intercept_]})
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("train_lm_slope", round(lm.coef_[0][0]))
-glue("train_lm_intercept", round(lm.intercept_[0]))
-glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0][0]))
-glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_[0]))
+glue("train_lm_slope", round(lm.coef_[0]))
+glue("train_lm_intercept", round(lm.intercept_))
+glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0]))
+glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```
 
 ```{index} standardization
@@ -728,7 +728,7 @@ method as usual.
 
 mlm = LinearRegression().fit(
     sacramento_train[["sqft", "beds"]],
-    sacramento_train[["price"]]
+    sacramento_train["price"]
 )
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
@@ -843,7 +843,7 @@ you will see that `mlm.coef_` above is just an array of values without any varia
 Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coef_` appear
 in the *same order* as the columns of the predictor data frame you used when training.
 So since we used `sacramento_train[["sqft", "beds"]]` when training, 
-we have that `mlm.coef_[0][0]` corresponds to `sqft`, and `mlm.coef_[0][1]` corresponds to `beds`.
+we have that `mlm.coef_[0]` corresponds to `sqft`, and `mlm.coef_[1]` corresponds to `beds`.
 
 ```{index} plane equation
 ```
@@ -863,9 +863,9 @@ to create the equation of the plane of best fit to the data:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-icept = "{0:,.0f}".format(mlm.intercept_[0])
-sqftc = "{0:,.0f}".format(mlm.coef_[0][0])
-bedsc = "{0:,.0f}".format(mlm.coef_[0][1])
+icept = "{0:,.0f}".format(mlm.intercept_)
+sqftc = "{0:,.0f}".format(mlm.coef_[0])
+bedsc = "{0:,.0f}".format(mlm.coef_[1])
 glue("icept", icept)
 glue("sqftc", sqftc)
 glue("bedsc", bedsc)
@@ -1177,11 +1177,11 @@ has regression coefficients that are very sensitive to the exact values in the d
 if we change the data ever so slightly&mdash;e.g., by running cross-validation, which splits
 up the data randomly into different chunks&mdash;the coefficients vary by large amounts:
 
-Best Fit 1: $\text{house sale price} =$ {glue:text}`icept1` $+$ {glue:text}`sqft1` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft11` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 1: $\text{house sale price} =$ {glue:text}`icept1` $+$ {glue:text}`sqft1` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft11` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
-Best Fit 2: $\text{house sale price} =$ {glue:text}`icept2` $+$ {glue:text}`sqft2` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft22` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 2: $\text{house sale price} =$ {glue:text}`icept2` $+$ {glue:text}`sqft2` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft22` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
-Best Fit 3: $\text{house sale price} =$ {glue:text}`icept3` $+$ {glue:text}`sqft3` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft33` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 3: $\text{house sale price} =$ {glue:text}`icept3` $+$ {glue:text}`sqft3` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft33` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
  Therefore, when performing multivariable linear regression, it is important to avoid including very
 linearly related predictors. However, techniques for doing so are beyond the scope of this

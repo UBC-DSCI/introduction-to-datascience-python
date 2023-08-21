@@ -186,7 +186,7 @@ want to predict (sale price) on the y-axis.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-eda = alt.Chart(sacramento).mark_circle().encode(
+scatter = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -195,12 +195,12 @@ eda = alt.Chart(sacramento).mark_circle().encode(
         .title("Price (USD)")
 )
 
-eda
+scatter
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("fig:07-edaRegr", eda)
+glue("fig:07-edaRegr", scatter)
 ```
 
 :::{glue:figure} fig:07-edaRegr
@@ -306,7 +306,7 @@ of a house that is 2,000 square feet.
 
 ```{code-cell} ipython3
 nearest_neighbors = (
-    small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
+    small_sacramento.assign(diff=(2000 - small_sacramento["sqft"]).abs())
     .nsmallest(5, "diff")
 )
 
@@ -592,27 +592,40 @@ sacr_gridsearch = GridSearchCV(
 ```
 
 Next, we use the run cross validation by calling the `fit` method
-on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
+on `sacr_gridsearch`. Note the use of two brackets for the input features
+(`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
+As we learned in the {ref}`wrangling` chapter, we can obtain a data frame with a 
+subset of columns by passing a list of column names; `["sqft"]` is a list with one
+item, so we obtain a data frame with one column. If instead we used 
+just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
+In `scikit-learn`, it is easier to work with the input features as a data frame
+rather than a series, so we opt for two brackets here. On the other hand, the response variable
+can be a series, so we use just one bracket there (`sacramento_train["price"]`).
+
+As in the {ref}`classification2` chapter, once the model has been fit 
 we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
 
+
 ```{code-cell} ipython3
-# fit the GridSearchCV object 
+# fit the GridSearchCV object
 sacr_fit = sacr_gridsearch.fit(
-                  sacramento_train[["sqft"]],
-                  sacramento_train[["price"]]
-              )
-# retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
+    sacramento_train[["sqft"]],  # A single-column data frame
+    sacramento_train["price"]  # A series
+)
+
+# Retrieve the CV scores
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+    "param_kneighborsregressor__n_neighbors",
+    "mean_test_score",
+    "std_test_score"
+]]
+sacr_results = (
+    sacr_results
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors": "n_neighbors"})
+    .drop(columns=["std_test_score"])
 )
 sacr_results
 ```
@@ -874,7 +887,7 @@ generated it as a learning challenge.
 
 sacr_preds = pd.DataFrame({"sqft": np.arange(500, 5001, 10)})
 sacr_preds = sacr_preds.assign(
-                   predicted = sacr_fit.predict(sacr_preds)
+    predicted=sacr_fit.predict(sacr_preds)
 )
 
 # the base plot: the training data scatter plot
@@ -890,7 +903,10 @@ base_plot = alt.Chart(sacramento_train).mark_circle().encode(
 # add the prediction layer
 sacr_preds_plot = base_plot + alt.Chart(sacr_preds, title=f"K = {best_k_sacr}").mark_line(
     color="#ff7f0e"
-).encode(x="sqft", y="predicted")
+).encode(
+    x="sqft",
+    y="predicted"
+)
 
 sacr_preds_plot
 ```
@@ -999,25 +1015,28 @@ sacr_fit = GridSearchCV(
     scoring="neg_root_mean_squared_error"
     ).fit(
       sacramento_train[["sqft", "beds"]],
-      sacramento_train[["price"]]
+      sacramento_train["price"]
     )
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+    "param_kneighborsregressor__n_neighbors",
+    "mean_test_score",
+    "std_test_score"
+]]
+
+sacr_results = (
+    sacr_results
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
+    .drop(columns=["std_test_score"])
 )
+
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
 sacr_results[
-   sacr_results["mean_test_score"] == min(sacr_results["mean_test_score"])
+   sacr_results["mean_test_score"] == sacr_results["mean_test_score"].min()
 ]
 ```
 

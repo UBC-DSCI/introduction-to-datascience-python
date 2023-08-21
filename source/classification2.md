@@ -598,7 +598,7 @@ from sklearn.pipeline import make_pipeline
 
 knn = KNeighborsClassifier(n_neighbors=3) 
 
-X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 
 knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
@@ -621,7 +621,7 @@ variables in the output data frame.
 
 ```{code-cell} ipython3
 cancer_test_predictions = cancer_test.assign(
-    predicted = knn_fit.predict(cancer_test.loc[:, ["Smoothness", "Concavity"]])
+    predicted = knn_fit.predict(cancer_test[["Smoothness", "Concavity"]])
 )
 cancer_test_predictions[['ID', 'Class', 'predicted']]
 ```
@@ -889,13 +889,13 @@ cancer_subtrain, cancer_validation = train_test_split(
 
 # fit the model on the sub-training data
 knn = KNeighborsClassifier(n_neighbors=3) 
-X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
+X = cancer_subtrain[["Smoothness", "Concavity"]]
 y = cancer_subtrain["Class"]
 knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
 # compute the score on validation data
 acc = knn_fit.score(
-    cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+    cancer_validation[["Smoothness", "Concavity"]],
     cancer_validation["Class"]
 )
 acc
@@ -913,13 +913,13 @@ for i in range(1, 5):
 
     # fit the model on the sub-training data
     knn = KNeighborsClassifier(n_neighbors=3) 
-    X = cancer_subtrain.loc[:, ["Smoothness", "Concavity"]]
+    X = cancer_subtrain[["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
     knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
     # compute the score on validation data
     accuracies.append(knn_fit.score(
-        cancer_validation.loc[:, ["Smoothness", "Concavity"]],
+        cancer_validation[["Smoothness", "Concavity"]],
         cancer_validation["Class"]
        ))
 avg_accuracy = np.round(np.array(accuracies).mean()*100,1)
@@ -995,7 +995,7 @@ from sklearn.model_selection import cross_validate
 
 knn = KNeighborsClassifier(n_neighbors=3) 
 cancer_pipe = make_pipeline(cancer_preprocessor, knn)
-X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 cv_5_df = pd.DataFrame(
     cross_validate(
@@ -1195,10 +1195,11 @@ and print the `info` of the result.
 
 ```{code-cell} ipython3
 accuracies_grid = pd.DataFrame(
-             cancer_tune_grid
-             .fit(cancer_train.loc[:, ["Smoothness", "Concavity"]],
-                  cancer_train["Class"]
-            ).cv_results_)
+    cancer_tune_grid.fit(
+        cancer_train[["Smoothness", "Concavity"]],
+        cancer_train["Class"]
+    ).cv_results_
+)
 ```
 
 ```{code-cell} ipython3
@@ -1219,14 +1220,16 @@ We will also rename the parameter name column to be a bit more readable,
 and drop the now unused `std_test_score` column.
 
 ```{code-cell} ipython3
-accuracies_grid = accuracies_grid[["param_kneighborsclassifier__n_neighbors", "mean_test_score", "std_test_score"]
-              ].assign(
-                  sem_test_score = accuracies_grid["std_test_score"] / 10**(1/2)
-              ).rename(
-                  columns = {"param_kneighborsclassifier__n_neighbors" : "n_neighbors"}
-              ).drop(
-                  columns = ["std_test_score"]
-              )
+accuracies_grid = (
+    accuracies_grid[[
+        "param_kneighborsclassifier__n_neighbors",
+        "mean_test_score",
+        "std_test_score"
+    ]]
+    .assign(sem_test_score=accuracies_grid["std_test_score"] / 10**(1/2))
+    .rename(columns={"param_kneighborsclassifier__n_neighbors": "n_neighbors"})
+    .drop(columns=["std_test_score"])
+)
 accuracies_grid
 ```
 
@@ -1313,7 +1316,7 @@ large_cancer_tune_grid = GridSearchCV(
 
 large_accuracies_grid = pd.DataFrame(
     large_cancer_tune_grid.fit(
-        cancer_train.loc[:, ["Smoothness", "Concavity"]],
+        cancer_train[["Smoothness", "Concavity"]],
         cancer_train["Class"]
     ).cv_results_
 )
@@ -1403,7 +1406,7 @@ cancer_plot = (
     )
 )
 
-X = cancer_train.loc[:, ["Smoothness", "Concavity"]]
+X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 
 # create a prediction pt grid

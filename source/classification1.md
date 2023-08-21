@@ -335,7 +335,7 @@ points_df = pd.DataFrame(
 perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
+my_distances = euclidean_distances(perim_concav_with_new_point_df[attrs])[
     len(cancer)
 ][:-1]
 ```
@@ -436,7 +436,7 @@ points_df2 = pd.DataFrame(
 perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
+my_distances2 = euclidean_distances(perim_concav_with_new_point_df2[attrs])[
     len(cancer)
 ][:-1]
 glue("new_point_2_0", new_point[0])
@@ -772,7 +772,7 @@ points_df4 = pd.DataFrame(
 perim_concav_with_new_point_df4 = pd.concat((cancer, points_df4), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances4 = euclidean_distances(perim_concav_with_new_point_df4.loc[:, attrs])[
+my_distances4 = euclidean_distances(perim_concav_with_new_point_df4[attrs])[
     len(cancer)
 ][:-1]
 ```
@@ -1197,7 +1197,7 @@ attrs = ["Area", "Smoothness"]
 new_obs = pd.DataFrame({"Class": ["Unknown"], "Area": 400, "Smoothness": 0.135})
 unscaled_cancer["Class"] = unscaled_cancer["Class"].apply(class_dscp)
 area_smoothness_new_df = pd.concat((unscaled_cancer, new_obs), ignore_index=True)
-my_distances = euclidean_distances(area_smoothness_new_df.loc[:, attrs])[
+my_distances = euclidean_distances(area_smoothness_new_df[attrs])[
     len(unscaled_cancer)
 ][:-1]
 area_smoothness_new_point = (
@@ -1273,7 +1273,7 @@ scaled_cancer_all["Class"] = scaled_cancer_all["Class"].apply(class_dscp)
 area_smoothness_new_df_scaled = pd.concat(
     (scaled_cancer_all, new_obs_scaled), ignore_index=True
 )
-my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled.loc[:, attrs])[
+my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled[attrs])[
     len(scaled_cancer_all)
 ][:-1]
 area_smoothness_new_point_scaled = (
@@ -1466,7 +1466,7 @@ new_point_df = pd.DataFrame(
 )
 rare_cancer["Class"] = rare_cancer["Class"].apply(class_dscp)
 rare_cancer_with_new_df = pd.concat((rare_cancer, new_point_df), ignore_index=True)
-my_distances = euclidean_distances(rare_cancer_with_new_df.loc[:, attrs])[
+my_distances = euclidean_distances(rare_cancer_with_new_df[attrs])[
     len(rare_cancer)
 ][:-1]
 
@@ -1532,7 +1532,7 @@ always "benign," corresponding to the blue color.
 :tags: [remove-cell]
 
 knn = KNeighborsClassifier(n_neighbors=7)
-knn.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"])
+knn.fit(X=rare_cancer[["Perimeter", "Concavity"]], y=rare_cancer["Class"])
 
 # create a prediction pt grid
 per_grid = np.linspace(
@@ -1651,7 +1651,7 @@ closer to the benign tumor observations.
 
 knn = KNeighborsClassifier(n_neighbors=7)
 knn.fit(
-    X=upsampled_cancer.loc[:, ["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
+    X=upsampled_cancer[["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
 )
 
 # create a prediction pt grid

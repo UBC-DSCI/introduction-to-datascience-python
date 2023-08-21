@@ -847,7 +847,7 @@ one can use in the `[]` to select subsets of rows.
 
 ### Extracting columns by name
 
-Recall that if we provide a list of column names, `[]` returns the subset of columns with those names.
+Recall that if we provide a list of column names, `[]` returns the subset of columns with those names as a data frame.
 Suppose we wanted to select the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
 learned in the chapter on {ref}`intro`, we can pass all of these column 
@@ -856,6 +856,28 @@ names into the square brackets.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+```
+
+Likewise,
+if we pass a list containing a single column name,
+a data frame with this column will be returned.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang[["language"]]
+```
+
+When we need to extract only a single column,
+we can also pass the column name as a string rather than a list.
+The returned data type will now be a series.
+Throughout this textbook,
+we will mostly extract single columns this way,
+but we will point out a few occasions
+where it is advantageous to extract single columns as data frames.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang["language"]
 ```
 
 

@@ -288,6 +288,7 @@ the key-value pairs in a dictionary can all be of different types, too.
  In the example below,
 we create a dictionary that has two keys: `"cities"` and `"population"`.
 The values associated with each are lists.
+
 ```{code-cell} ipython3
 population_in_2016 = {
   "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
@@ -295,13 +296,29 @@ population_in_2016 = {
 }
 population_in_2016
 ```
+
 A dictionary can be converted to a data frame. Keys
 become the column names, and the values become the entries in
 those columns. Dictionaries on their own are quite simple objects; it is preferable to work with a data frame
 because then we have access to the built-in functionality in
 `pandas` (e.g. `loc[]`, `[]`, and many functions that we will discuss in the upcoming sections)!
+
 ```{code-cell} ipython3
 population_in_2016 = pd.DataFrame(population_in_2016)
+population_in_2016
+```
+
+When we need to create a new DataFrame from scratch,
+the most convenient way is often to use a dictionary.
+Instead of assigning the dictionary to a variable in a separate step,
+we create the dictionary inside the data frame constructor
+in a single call.
+
+```{code-cell} ipython3
+population_in_2016 = pd.DataFrame({
+  "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
+  "population": [2235145, 1027613, 1823281, 544870, 571146, 321484]
+})
 population_in_2016
 ```
 
@@ -1755,55 +1772,6 @@ you make a mistake, you can start again from the original data frame.
 
 +++
 
-
-### Using `assign` to create a new data frame
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-english_lang = region_lang[region_lang["language"] == "English"]
-five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
-english_lang = english_lang[english_lang["region"].isin(five_cities)]
-english_lang
-```
-
-Sometimes you want to create a new data frame. You can use `assign` to create a data frame from scratch.
-Lets return to the example of wanting to compute the proportions of people who speak English
-most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
-our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
-of interest.
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-english_lang
-```
-We then wanted to add the populations of these cities as a column using `assign`
-(Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
-Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
-right order, and it could be easy to make a mistake this way. An alternative approach, that we demonstrate here
-is to (1) create a new, empty data frame, (2) use `assign` to assign the city names and populations in that
-data frame, and (3) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
-
-We create a new, empty data frame by calling `pd.DataFrame` with no arguments.
-We then use `assign` to add the city names in a column called `"region"`
-and their populations in a column called `"population"`.
-```{code-cell} ipython3
-city_populations = pd.DataFrame().assign(
-  region=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
-  population=[5928040, 4098927, 2463431, 1392609, 1321426]
-)
-city_populations
-```
-This new data frame has the same `region` column as the `english_lang` data frame. The order of
-the cities is different, but that is okay! We can use the `merge` function in `pandas` to say
-we would like to combine the two data frames by matching the `region` between them. The argument
-`on="region"` tells pandas we would like to use the `region` column to match up the entries.
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-english_lang = english_lang.merge(city_populations, on="region")
-english_lang
-```
-You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
-and we could proceed to with our analysis from here.
 
 ## Summary
 

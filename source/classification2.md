@@ -145,13 +145,13 @@ a test set of 65 observations.
 :name: confusion-matrix-table
 
 * - 
-  - Truly Malignant
-  - Truly Benign
-* - **Predicted Malignant** 
+  - Predicted Malignant
+  - Predicted Benign
+* - **Truly Malignant**
   - 1
-  - 4
-* - **Predicted Benign**
   - 3
+* - **Truly Benign**
+  - 4
   - 57
 ``` 
 
@@ -181,9 +181,9 @@ use the following terms to talk about the four kinds of prediction that the
 classifier can make, corresponding to the four entries in the confusion matrix:
 
 - **True Positive:** A malignant observation that was classified as malignant (top left in {numref}`confusion-matrix-table`).
-- **False Positive:** A benign observation that was classified as malignant (top right in {numref}`confusion-matrix-table`).
+- **False Positive:** A benign observation that was classified as malignant (bottom left in {numref}`confusion-matrix-table`).
 - **True Negative:** A benign observation that was classified as benign (bottom right in {numref}`confusion-matrix-table`).
-- **False Negative:** A malignant observation that was classified as benign (bottom left in {numref}`confusion-matrix-table`).
+- **False Negative:** A malignant observation that was classified as benign (top right in {numref}`confusion-matrix-table`).
 
 A perfect classifier would have zero false negatives and false positives (and
 therefore, 100% accuracy). However, classifiers in practice will almost always

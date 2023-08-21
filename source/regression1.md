@@ -611,7 +611,7 @@ and rename the parameter column to be more readable.
 ```{code-cell} ipython3
 # fit the GridSearchCV object
 sacr_fit = sacr_gridsearch.fit(
-    sacramento_train[["sqft"]],  # A single column data frame
+    sacramento_train[["sqft"]],  # A single-column data frame
     sacramento_train["price"]  # A series
 )
 

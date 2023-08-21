@@ -592,17 +592,21 @@ sacr_gridsearch = GridSearchCV(
 ```
 
 Next, we use the run cross validation by calling the `fit` method
-on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
+on `sacr_gridsearch`. Note the use of two brackets for the input features
+(`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
+As we learned in the {ref}`wrangling` chapter, we can obtain a data frame with a 
+subset of columns by passing a list of column names; `["sqft"]` is a list with one
+item, so we obtain a data frame with one column. If instead we used 
+just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
+In `scikit-learn`, it is easier to work with the input features as a data frame
+rather than a series, so we opt for two brackets here. On the other hand, the response variable
+can be a series, so we use just one bracket there (`sacramento_train["price"]`).
+
+As in the {ref}`classification2` chapter, once the model has been fit 
 we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
-In `scikit-learn`, it is easier to work with the input features as a data frame,
-rather than a series. So, when we select a single column,
-we pass the name of the column as a list rather than a string
-to return a data frame
-as we learned in the {ref}`wrangling` chapter.
-The target variable can be a series,
-so we can pass its column name as a string.
+
 
 ```{code-cell} ipython3
 # fit the GridSearchCV object

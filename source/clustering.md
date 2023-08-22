@@ -154,7 +154,8 @@ Before we get started, we will set a random seed.
 This will ensure that our analysis will be reproducible.
 As we will learn in more detail later in the chapter,
 setting the seed here is important
-because the K-means clustering algorithm uses random numbers.
+because the K-means clustering algorithm uses randomness
+when choosing a starting position for each cluster.
 
 ```{index} seed; numpy.random.seed
 ```
@@ -691,8 +692,12 @@ we could square all the numbers from 0-4 and store them in a list:
 [number ** 2 for number in range(5)]
 ```
 
-Next, we will use this approach to compute the WSSD for the K-values 1 through 9,
-and store these values in a list that we will use to create a dataframe 
+Next, we will use this approach to compute the WSSD for the K-values 1 through 9.
+For each value of K,
+we create a new KMeans model
+and wrap it in a scikit-learn pipeline
+with the preprocessor we created earlier.
+We store the WSSD values in a list that we will use to create a dataframe 
 of both the K-values and their corresponding WSSDs.
 
 ```{note}

@@ -56,7 +56,6 @@ By the end of the chapter, readers will be able to do the following:
 * Use Python and `scikit-learn` to fit a linear regression model on training data.
 * Evaluate the linear regression model on test data.
 * Compare and contrast predictions obtained from K-nearest neighbor regression to those obtained using linear regression from the same data set.
-* In `altair`, overlay predictions from linear regression on a scatter plot of data using `transform_regression`.
 
 +++
 
@@ -450,9 +449,10 @@ sacr_preds = sacramento_test.assign(
 )
 
 # calculate RMSPE
-RMSPE = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
-)
+RMSPE = mean_squared_error(
+    y_true=sacr_preds["price"],
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 
 RMSPE
 ```
@@ -474,17 +474,23 @@ sale price based off of the predictor of home size? Again, answering this is
 tricky and requires knowledge of how you intend to use the prediction.
 
 To visualize the simple linear regression model, we can plot the predicted house
-sale price across all possible house sizes we might encounter superimposed on a scatter
-plot of the original housing price data. There is a function in
-the `altair`, `transform_regression`, that
-allows us to add a layer on our plot with the simple
-linear regression predicted line of best fit.
+sale price across all possible house sizes we might encounter.
+Since our model is linear,
+we only need to compute the predicted price of the minimum and maximum house size,
+and then connect them with a straight line.
+We superimpose this prediction line on a scatter
+plot of the original housing price data,
+so that we can qualitatively assess if the model seems to fit the data well.
 {numref}`fig:08-lm-predict-all` displays the result.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+sqft_prediction_grid = sacramento[['sqft']].agg(['min', 'max'])
+sacr_preds = sqft_prediction_grid.assign(
+    predicted=lm.predict(sqft_prediction_grid)
+)
 
-lm_plot_final = alt.Chart(sacramento_train).mark_circle().encode(
+all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -494,17 +500,20 @@ lm_plot_final = alt.Chart(sacramento_train).mark_circle().encode(
         .title("Price (USD)")
 )
 
-lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(
+sacr_preds_plot = all_points + alt.Chart(sacr_preds).mark_line(
     color="#ff7f0e"
+).encode(
+    x="sqft",
+    y="predicted"
 )
 
-lm_plot_final
+sacr_preds_plot
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:08-lm-predict-all", lm_plot_final)
+glue("fig:08-lm-predict-all", sacr_preds_plot)
 ```
 
 :::{glue:figure} fig:08-lm-predict-all
@@ -512,7 +521,6 @@ glue("fig:08-lm-predict-all", lm_plot_final)
 
 Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
 :::
-
 
 ## Comparing simple linear and KNN regression
 

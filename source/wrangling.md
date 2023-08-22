@@ -1770,6 +1770,53 @@ you make a mistake, you can start again from the original data frame.
 
 +++
 
+## Using `merge` to combine data frames
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+english_lang = region_lang[region_lang["language"] == "English"]
+five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
+english_lang = english_lang[english_lang["region"].isin(five_cities)]
+english_lang
+```
+
+Lets return to the example of wanting to compute the proportions of people who speak English
+most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
+our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
+of interest.
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+english_lang
+```
+We then added the populations of these cities as a column using `assign`
+(Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
+Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
+right order; this is an error-prone process. An alternative approach, that we demonstrate here
+is to (1) create a new data frame with the city names and populations, and
+(2) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
+
+We create a new data frame by calling `pd.DataFrame` with a dictionary 
+as its argument. The dictionary associates each column name in the data frame to be created
+with a list of entries. Here we list city names in a column called `"region"`
+and their populations in a column called `"population"`.
+```{code-cell} ipython3
+city_populations = pd.DataFrame({
+  "region" : ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+  "population" : [5928040, 4098927, 2463431, 1392609, 1321426]
+})
+city_populations
+```
+This new data frame has the same `region` column as the `english_lang` data frame. The order of
+the cities is different, but that is okay! We can use the `merge` function in `pandas` to say
+we would like to combine the two data frames by matching the `region` between them. The argument
+`on="region"` tells pandas we would like to use the `region` column to match up the entries.
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+english_lang = english_lang.merge(city_populations, on="region")
+english_lang
+```
+You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
+and we can proceed to with our analysis from here.
 
 ## Summary
 

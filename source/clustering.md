@@ -686,10 +686,10 @@ Here is an examples of a list comprehension that stores the numbers 0-2 in a lis
 We can change the variable `n` to be called whatever we prefer
 and we can also perform any operation we want as part of the list comprehension.
 For example,
-we could square all the numbers from 0-4 and store them in a list:
+we could square all the numbers from 1-4 and store them in a list:
 
 ```{code-cell} ipython3
-[number ** 2 for number in range(5)]
+[number ** 2 for number in range(1, 5)]
 ```
 
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.

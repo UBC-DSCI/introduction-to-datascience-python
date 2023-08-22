@@ -712,22 +712,23 @@ it is always the safest to assign it to a variable name for reuse.
 
 ```{code-cell} ipython3
 ks = range(1, 10)
-inertias = [
+wssds = [
     make_pipeline(
     	preprocessor, 
-    	KMeans(n_clusters = k)
-    ).fit(penguins)[1].inertia_ for k in ks
+    	KMeans(n_clusters=k)  # Create a new KMeans model with `k` clusters
+    ).fit(penguins)[1].inertia_
+    for k in ks
 ]
 
 penguin_clust_ks = pd.DataFrame({
     'k': ks,
-    'inertia': inertias,
+    'wssd': wssds,
 })
 
 penguin_clust_ks
 ```
 
-Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot
+Now that we have `wssd` and `k` as columns in a data frame, we can make a line plot
 ({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use.
 
 ```{code-cell} ipython3

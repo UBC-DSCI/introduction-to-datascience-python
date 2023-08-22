@@ -563,7 +563,7 @@ Variables with a large scale will have a much larger
 effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
-The `StandardScaler` function in scikit-learn can be used to do this.
+The `StandardScaler` function in `scikit-learn` can be used to do this.
 
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
@@ -664,7 +664,7 @@ As mentioned above,
 we also need to select K
 by finding where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
 The total WSSD is stored in the `.inertia_` attribute
-of the clustering object ("inertia" is the term scikit-learn uses to denote WSSD).
+of the clustering object ("inertia" is the term `scikit-learn` uses to denote WSSD).
 
 ```{code-cell} ipython3
 penguin_clust[1].inertia_
@@ -695,7 +695,7 @@ we could square all the numbers from 1-4 and store them in a list:
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.
 For each value of K,
 we create a new KMeans model
-and wrap it in a scikit-learn pipeline
+and wrap it in a `scikit-learn` pipeline
 with the preprocessor we created earlier.
 We store the WSSD values in a list that we will use to create a dataframe 
 of both the K-values and their corresponding WSSDs.
@@ -768,7 +768,7 @@ due to an unlucky initialization of the initial centroid positions
 as we mentioned earlier in the chapter.
 
 ```{note}
-It is rare that the KMeans function from scikit-learn
+It is rare that the KMeans function from `scikit-learn`
 gets stuck in a bad solution,
 because the selection of the centroid starting points
 is optimized to prevent this from happening.

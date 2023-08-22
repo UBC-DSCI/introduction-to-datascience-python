@@ -732,9 +732,9 @@ Now that we have `wssd` and `k` as columns in a data frame, we can make a line p
 ({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use.
 
 ```{code-cell} ipython3
-elbow_plot = alt.Chart(penguin_clust_ks).mark_line().encode(
-    x=alt.X("k").title("K"),
-    y=alt.Y("inertia").title("Total within-cluster sum of squares"),
+elbow_plot = alt.Chart(penguin_clust_ks).mark_line(point=True).encode(
+    x=alt.X("k").title("Number of clusters"),
+    y=alt.Y("wssd").title("Total within-cluster sum of squares"),
 )
 ```
 

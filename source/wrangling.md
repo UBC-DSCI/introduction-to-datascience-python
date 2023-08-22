@@ -288,6 +288,7 @@ the key-value pairs in a dictionary can all be of different types, too.
  In the example below,
 we create a dictionary that has two keys: `"cities"` and `"population"`.
 The values associated with each are lists.
+
 ```{code-cell} ipython3
 population_in_2016 = {
   "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
@@ -295,14 +296,28 @@ population_in_2016 = {
 }
 population_in_2016
 ```
+
 A dictionary can be converted to a data frame. Keys
 become the column names, and the values become the entries in
 those columns. Dictionaries on their own are quite simple objects; it is preferable to work with a data frame
 because then we have access to the built-in functionality in
 `pandas` (e.g. `loc[]`, `[]`, and many functions that we will discuss in the upcoming sections)!
+
 ```{code-cell} ipython3
-population_in_2016 = pd.DataFrame(population_in_2016)
-population_in_2016
+population_in_2016_df = pd.DataFrame(population_in_2016)
+population_in_2016_df
+```
+
+Of course, there is no need to name the dictionary separately before passing it to
+`pd.DataFrame`; we can instead construct the dictionary right inside the call.
+This is often the most convenient way to create a new data frame.
+
+```{code-cell} ipython3
+population_in_2016_df = pd.DataFrame({
+  "cities": ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"],
+  "population": [2235145, 1027613, 1823281, 544870, 571146, 321484]
+})
+population_in_2016_df
 ```
 
 +++
@@ -847,7 +862,7 @@ one can use in the `[]` to select subsets of rows.
 
 ### Extracting columns by name
 
-Recall that if we provide a list of column names, `[]` returns the subset of columns with those names.
+Recall that if we provide a list of column names, `[]` returns the subset of columns with those names as a data frame.
 Suppose we wanted to select the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
 learned in the chapter on {ref}`intro`, we can pass all of these column 
@@ -856,6 +871,28 @@ names into the square brackets.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
+```
+
+Likewise,
+if we pass a list containing a single column name,
+a data frame with this column will be returned.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang[["language"]]
+```
+
+When we need to extract only a single column,
+we can also pass the column name as a string rather than a list.
+The returned data type will now be a series.
+Throughout this textbook,
+we will mostly extract single columns this way,
+but we will point out a few occasions
+where it is advantageous to extract single columns as data frames.
+
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+tidy_lang["language"]
 ```
 
 
@@ -1755,19 +1792,16 @@ you make a mistake, you can start again from the original data frame.
 
 +++
 
-
-### Using `assign` to create a new data frame
+## Using `merge` to combine data frames
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 english_lang = region_lang[region_lang["language"] == "English"]
 five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
 english_lang = english_lang[english_lang["region"].isin(five_cities)]
 english_lang
 ```
 
-Sometimes you want to create a new data frame. You can use `assign` to create a data frame from scratch.
 Lets return to the example of wanting to compute the proportions of people who speak English
 most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
 our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
@@ -1776,21 +1810,22 @@ of interest.
 :tags: ["output_scroll"]
 english_lang
 ```
-We then wanted to add the populations of these cities as a column using `assign`
+We then added the populations of these cities as a column using `assign`
 (Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
 Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
-right order, and it could be easy to make a mistake this way. An alternative approach, that we demonstrate here
-is to (1) create a new, empty data frame, (2) use `assign` to assign the city names and populations in that
-data frame, and (3) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
+right order; this is an error-prone process. An alternative approach, that we demonstrate here
+is to (1) create a new data frame with the city names and populations, and
+(2) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
 
-We create a new, empty data frame by calling `pd.DataFrame` with no arguments.
-We then use `assign` to add the city names in a column called `"region"`
+We create a new data frame by calling `pd.DataFrame` with a dictionary 
+as its argument. The dictionary associates each column name in the data frame to be created
+with a list of entries. Here we list city names in a column called `"region"`
 and their populations in a column called `"population"`.
 ```{code-cell} ipython3
-city_populations = pd.DataFrame().assign(
-  region=["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
-  population=[5928040, 4098927, 2463431, 1392609, 1321426]
-)
+city_populations = pd.DataFrame({
+  "region" : ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
+  "population" : [5928040, 4098927, 2463431, 1392609, 1321426]
+})
 city_populations
 ```
 This new data frame has the same `region` column as the `english_lang` data frame. The order of
@@ -1803,7 +1838,7 @@ english_lang = english_lang.merge(city_populations, on="region")
 english_lang
 ```
 You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
-and we could proceed to with our analysis from here.
+and we can proceed to with our analysis from here.
 
 ## Summary
 

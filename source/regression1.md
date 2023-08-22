@@ -52,7 +52,7 @@ we will split our data into training, validation, and test sets, we will
 use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
 Because of how similar these procedures are, make sure to read the
-{ref}`classification` and {ref}`classification2` chapters before reading
+{ref}`classification1` and {ref}`classification2` chapters before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor,
@@ -186,7 +186,7 @@ want to predict (sale price) on the y-axis.
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-eda = alt.Chart(sacramento).mark_circle().encode(
+scatter = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -195,12 +195,12 @@ eda = alt.Chart(sacramento).mark_circle().encode(
         .title("Price (USD)")
 )
 
-eda
+scatter
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("fig:07-edaRegr", eda)
+glue("fig:07-edaRegr", scatter)
 ```
 
 :::{glue:figure} fig:07-edaRegr
@@ -306,7 +306,7 @@ of a house that is 2,000 square feet.
 
 ```{code-cell} ipython3
 nearest_neighbors = (
-    small_sacramento.assign(diff=abs(2000 - small_sacramento["sqft"]))
+    small_sacramento.assign(diff=(2000 - small_sacramento["sqft"]).abs())
     .nsmallest(5, "diff")
 )
 
@@ -565,7 +565,7 @@ So we need to specify that we want to use the RMSPE for tuning by setting the
 
 > **Note:** We obtained the identifier of the parameter representing the number
 > of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
-> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification`
+> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification1`
 > chapter.
 
 ```{index} scikit-learn; GridSearchCV
@@ -592,27 +592,40 @@ sacr_gridsearch = GridSearchCV(
 ```
 
 Next, we use the run cross validation by calling the `fit` method
-on `sacr_gridsearch`. As we did in the {ref}`classification2` chapter,
+on `sacr_gridsearch`. Note the use of two brackets for the input features
+(`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
+As we learned in the {ref}`wrangling` chapter, we can obtain a data frame with a 
+subset of columns by passing a list of column names; `["sqft"]` is a list with one
+item, so we obtain a data frame with one column. If instead we used 
+just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
+In `scikit-learn`, it is easier to work with the input features as a data frame
+rather than a series, so we opt for two brackets here. On the other hand, the response variable
+can be a series, so we use just one bracket there (`sacramento_train["price"]`).
+
+As in the {ref}`classification2` chapter, once the model has been fit 
 we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
 
+
 ```{code-cell} ipython3
-# fit the GridSearchCV object 
+# fit the GridSearchCV object
 sacr_fit = sacr_gridsearch.fit(
-                  sacramento_train[["sqft"]],
-                  sacramento_train[["price"]]
-              )
-# retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
+    sacramento_train[["sqft"]],  # A single-column data frame
+    sacramento_train["price"]  # A series
+)
+
+# Retrieve the CV scores
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+    "param_kneighborsregressor__n_neighbors",
+    "mean_test_score",
+    "std_test_score"
+]]
+sacr_results = (
+    sacr_results
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors": "n_neighbors"})
+    .drop(columns=["std_test_score"])
 )
 sacr_results
 ```
@@ -676,6 +689,15 @@ glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
 
 Effect of the number of neighbors on the RMSPE.
 :::
+
+To see which parameter value corresponds to the minimum RMSPE, 
+we can also access the `best_params_` attribute of the original fit `GridSearchCV` object.
+Note that it is still useful to visualize the results as we did above
+since this provides additional information on how the model performance varies.
+
+```{code-cell} ipython3
+sacr_fit.best_params_
+```
 
 +++
 
@@ -807,15 +829,9 @@ To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we first need to retrain the 
 KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
-does it for us. We just need to obtain the `best_estimator_` attribute of original
-fit `GridSearchCV` object.
-
-```{code-cell} ipython3
-sacr_fit.best_estimator_
-```
-
-Given the `best_estimator_` tuned model, we can use the `predict` method 
-to make predictions on the test data. We then use the `mean_squared_error`
+does it for us automatically. To make predictions with the best model on the test data,
+we can use the `predict` method of the fit `GridSearchCV` object.
+We then use the `mean_squared_error`
 function (with the `y_true` and `y_pred` arguments) 
 to compute the mean squared prediction error, and finally take the
 square root to get the RMSPE. The reason that we do not just use the `score` 
@@ -826,10 +842,10 @@ model uses a different default scoring metric than the RMSPE.
 from sklearn.metrics import mean_squared_error
 
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
-    y_true = sacr_preds["price"], 
+    y_true = sacr_preds["price"],
     y_pred=sacr_preds["predicted"]
 )**(1/2)
 RMSPE
@@ -1010,25 +1026,28 @@ sacr_fit = GridSearchCV(
     scoring="neg_root_mean_squared_error"
     ).fit(
       sacramento_train[["sqft", "beds"]],
-      sacramento_train[["price"]]
+      sacramento_train["price"]
     )
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[
-    ["param_kneighborsregressor__n_neighbors", "mean_test_score", "std_test_score"]
-]
-sacr_results = sacr_results.assign(
-    sem_test_score = sacr_results["std_test_score"] / 5**(1/2)
-).rename(
-    columns = {"param_kneighborsregressor__n_neighbors" : "n_neighbors"}
-).drop(
-    columns = ["std_test_score"]
+sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+    "param_kneighborsregressor__n_neighbors",
+    "mean_test_score",
+    "std_test_score"
+]]
+
+sacr_results = (
+    sacr_results
+    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
+    .drop(columns=["std_test_score"])
 )
+
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
 sacr_results[
-   sacr_results["mean_test_score"] == min(sacr_results["mean_test_score"])
+   sacr_results["mean_test_score"] == sacr_results["mean_test_score"].min()
 ]
 ```
 
@@ -1054,12 +1073,13 @@ Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
 Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
-and evaluate its performance on test data. We will extract the `best_estimator_` model,
-use the `predict` method on the test data, and finally use the `mean_squared_error` function
+and evaluate its performance on test data. As previously, we will use the best model to make predictions on the test data
+via the `predict` method of the fit `GridSearchCV` object. Finally, we will use the `mean_squared_error` function
 to compute the RMSPE.
+
 ```{code-cell} ipython3
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.best_estimator_.predict(sacramento_test)
+    predicted = sacr_fit.predict(sacramento_test)
 )
 RMSPE_mult = mean_squared_error(
     y_true = sacr_preds["price"], 

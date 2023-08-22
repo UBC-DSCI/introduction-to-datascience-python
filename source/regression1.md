@@ -417,7 +417,7 @@ that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 
 +++
 
-> Note that we are not specifying the `stratify` argument here like we did in
+> **Note:** We are not specifying the `stratify` argument here like we did in
 > the {ref}`classification2` chapter, since
 > the `train_test_split` function cannot stratify based on a
 > quantitative variable.

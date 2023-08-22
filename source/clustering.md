@@ -154,7 +154,8 @@ Before we get started, we will set a random seed.
 This will ensure that our analysis will be reproducible.
 As we will learn in more detail later in the chapter,
 setting the seed here is important
-because the K-means clustering algorithm uses random numbers.
+because the K-means clustering algorithm uses randomness
+when choosing a starting position for each cluster.
 
 ```{index} seed; numpy.random.seed
 ```
@@ -562,7 +563,7 @@ Variables with a large scale will have a much larger
 effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
-The `StandardScaler` function in scikit-learn can be used to do this.
+The `StandardScaler` function in `scikit-learn` can be used to do this.
 
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
@@ -663,7 +664,7 @@ As mentioned above,
 we also need to select K
 by finding where the "elbow" occurs in the plot of total WSSD versus the number of clusters.
 The total WSSD is stored in the `.inertia_` attribute
-of the clustering object ("inertia" is the term scikit-learn uses to denote WSSD).
+of the clustering object ("inertia" is the term `scikit-learn` uses to denote WSSD).
 
 ```{code-cell} ipython3
 penguin_clust[1].inertia_
@@ -685,14 +686,18 @@ Here is an examples of a list comprehension that stores the numbers 0-2 in a lis
 We can change the variable `n` to be called whatever we prefer
 and we can also perform any operation we want as part of the list comprehension.
 For example,
-we could square all the numbers from 0-4 and store them in a list:
+we could square all the numbers from 1-4 and store them in a list:
 
 ```{code-cell} ipython3
-[number ** 2 for number in range(5)]
+[number ** 2 for number in range(1, 5)]
 ```
 
-Next, we will use this approach to compute the WSSD for the K-values 1 through 9,
-and store these values in a list that we will use to create a dataframe 
+Next, we will use this approach to compute the WSSD for the K-values 1 through 9.
+For each value of K,
+we create a new KMeans model
+and wrap it in a `scikit-learn` pipeline
+with the preprocessor we created earlier.
+We store the WSSD values in a list that we will use to create a dataframe 
 of both the K-values and their corresponding WSSDs.
 
 ```{note}
@@ -707,28 +712,29 @@ it is always the safest to assign it to a variable name for reuse.
 
 ```{code-cell} ipython3
 ks = range(1, 10)
-inertias = [
+wssds = [
     make_pipeline(
     	preprocessor, 
-    	KMeans(n_clusters = k)
-    ).fit(penguins)[1].inertia_ for k in ks
+    	KMeans(n_clusters=k)  # Create a new KMeans model with `k` clusters
+    ).fit(penguins)[1].inertia_
+    for k in ks
 ]
 
 penguin_clust_ks = pd.DataFrame({
     'k': ks,
-    'inertia': inertias,
+    'wssd': wssds,
 })
 
 penguin_clust_ks
 ```
 
-Now that we have `inertia` and `k` as columns in a data frame, we can make a line plot
+Now that we have `wssd` and `k` as columns in a data frame, we can make a line plot
 ({numref}`elbow_plot`) and search for the "elbow" to find which value of K to use.
 
 ```{code-cell} ipython3
-elbow_plot = alt.Chart(penguin_clust_ks).mark_line().encode(
-    x=alt.X("k").title("K"),
-    y=alt.Y("inertia").title("Total within-cluster sum of squares"),
+elbow_plot = alt.Chart(penguin_clust_ks).mark_line(point=True).encode(
+    x=alt.X("k").title("Number of clusters"),
+    y=alt.Y("wssd").title("Total within-cluster sum of squares"),
 )
 ```
 
@@ -762,7 +768,7 @@ due to an unlucky initialization of the initial centroid positions
 as we mentioned earlier in the chapter.
 
 ```{note}
-It is rare that the KMeans function from scikit-learn
+It is rare that the KMeans function from `scikit-learn`
 gets stuck in a bad solution,
 because the selection of the centroid starting points
 is optimized to prevent this from happening.

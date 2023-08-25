@@ -1257,22 +1257,29 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
-alt.layer(
-    boot_est_dist,
-    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
-    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
-        x=alt.datum(ci_bounds[0.025]),
-        y=alt.value(-10),
-        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
-    ),
-    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
-    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
-        x=alt.datum(ci_bounds[0.975]),
-        y=alt.value(-10),
-        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
-    ),
+# Create the annotation for for the 2.5th percentile
+text_025 = alt.Chart().mark_text(
+    color='#f58518',
+    size=12,
+    fontWeight='bold',
+    dy=-160
+).encode(
+    x=alt.datum(ci_bounds[0.025]),
+    text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
+).properties(
     width=500
 )
+rule_025 = text_025.mark_rule(color='#f58518', size=3, strokeDash=[5])
+
+# Create the annotation for for the 97.5th percentile
+text_975 = text_025.encode(
+    x=alt.datum(ci_bounds[0.975]),
+    text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+)
+rule_975 = rule_025.encode(x=alt.datum(ci_bounds[0.975]))
+
+# Layer the annotations on top of the distribution plot
+boot_est_dist + rule_025 + text_025 + rule_975 + text_975
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

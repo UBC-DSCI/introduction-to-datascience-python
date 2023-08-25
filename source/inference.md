@@ -265,7 +265,10 @@ The call to `concat` concatenates all the 20,000 data frames
 returned from the list comprehension into a single big data frame.
 
 ```{code-cell} ipython3
-samples = pd.concat([airbnb.sample(40).assign(replicate=n) for n in range(20_000)])
+samples = pd.concat([
+    airbnb.sample(40).assign(replicate=n)
+    for n in range(20_000)
+])
 samples
 ```
 

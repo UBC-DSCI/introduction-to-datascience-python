@@ -52,7 +52,7 @@ In order to save your progress, you will need to download the worksheets to your
 work on them locally. You can download the worksheets as a compressed zip file 
 using [the link at the top of the page](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/archive/refs/heads/main.zip).
 Once you unzip the downloaded file, you will have a folder containing all of the Jupyter notebook worksheets
-accompanying this book. See Chapter \@ref(getting-started-with-jupyter) for
+accompanying this book. See the chapter on {ref}`getting-started-with-jupyter` for
 instructions on working with Jupyter notebooks.
 
 ## Working with Docker
@@ -66,7 +66,8 @@ exactly right! To keep things simple, we instead recommend that you install
 [Docker](https://docker.com). Docker lets you run your Jupyter notebooks inside
 a pre-built *container* that comes with precisely the right versions of 
 all software packages needed run the worksheets that come with this book.
-\index{Docker}
+```{index} Docker
+```
 
 ```{note}
 A *container* is a virtualized user space within your computer.
@@ -100,10 +101,10 @@ Occasionally, when you first run Docker on Windows, you will encounter an error 
 
 **Running JupyterLab** Run Docker Desktop. Once it is running, you need to download and run the
 Docker *image* that we have made available for the worksheets (an *image* is like a "snapshot" of a 
-computer with all the right packages pre-installed). In the search bar, enter `ubcdsci/r-dsci-100`, as this is 
+computer with all the right packages pre-installed). In the search bar, enter `ubcdsci/py-dsci-100`, as this is 
 the name of the image. You will be presented
 with a few options ({numref}`docker-desktop-search`). In the "Tag" drop down menu, click 
-the tag `20230724142640d8f06f` to select the correct version of the image. Then click 
+the tag `20230720213731d08401` to select the correct version of the image. Then click 
 the "Pull" button to download the image.
 
 ```{figure} img/docker-1.png
@@ -113,8 +114,6 @@ name: docker-desktop-search
 ---
 The Docker Desktop search window. Make sure to click the Tag drop down menu and find the right version of the image before clicking the Pull button to download it.
 ```
-
-
 
 Once the image is done downloading, click the "Images" button on the left side
 of the Docker Desktop window ({numref}`docker-desktop-images`). You
@@ -200,7 +199,7 @@ sudo sh get-docker.sh
 **Running JupyterLab** In the terminal, navigate to the directory where you want to run JupyterLab, and run
 the following command.
 ```
-docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/r-dsci-100:20230724142640d8f06f jupyter lab
+docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/py-dsci-100:20230720213731d08401 jupyter lab
 ```
 The terminal will then print some text as the Docker container starts. Once the text stops scrolling, find the 
 URL in your terminal that starts with `http://127.0.0.1:8888` (highlighted by the 
@@ -228,10 +227,11 @@ you may not end up with the right versions of all the python packages needed for
 *guarantees* that the worksheets will work exactly as intended. 
 
 In this section, we will cover how to install JupyterLab Desktop,
-Git and the JupyterLab Git extension (for version control, as discussed in Chapter \@ref(Getting-started-with-version-control)), and 
+Git and the JupyterLab Git extension (for version control, as discussed in the chapter on {ref}`getting-started-with-version-control`), and
 all of the python packages needed to run
 the code in this book.
-\index{git!installation}\index{JupyterLab Desktop}
+```{index} JupyterLab Desktop, git;installation
+```
 
 ### Windows
 

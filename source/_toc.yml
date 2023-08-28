@@ -7,7 +7,6 @@ parts:
     #- file: foreword.md
     - file: acknowledgements.md
     - file: authors.md
-    - file: setup.md
 - caption: Chapters
   numbered: 3
   chapters:
@@ -23,3 +22,4 @@ parts:
     - file: inference.md
     - file: jupyter.md
     - file: version-control.md
+    - file: setup.md

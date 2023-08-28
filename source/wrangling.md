@@ -107,7 +107,7 @@ data set. There are 13 entities in the data set in total, corresponding to the
 
 +++
 
-```{figure} img/data_frame_slides_cdn/data_frame_slides_cdn.004.jpeg
+```{figure} img/wrangling/data_frame_slides_cdn.004.jpeg
 :name: fig:02-obs
 :figclass: figure
 
@@ -343,7 +343,7 @@ three criteria.
 
 +++ {"tags": []}
 
-```{figure} img/tidy_data/tidy_data.001-cropped.jpeg
+```{figure} img/wrangling/tidy_data.001-cropped.jpeg
 :name: fig:02-tidy-image
 :figclass: figure
 
@@ -424,7 +424,7 @@ for a total of 30 entries.
 
 +++ {"tags": []}
 
-```{figure} img/pivot_functions/pivot_functions.001.jpeg
+```{figure} img/wrangling/pivot_functions.001.jpeg
 :name: fig:02-wide-to-long
 :figclass: figure
 
@@ -573,7 +573,7 @@ This is illustrated in the right table of {numref}`fig:long-to-wide`.
 
 +++ {"tags": []}
 
-```{figure} img/pivot_functions/pivot_functions.002.jpeg
+```{figure} img/wrangling/pivot_functions.002.jpeg
 :name: fig:long-to-wide
 :figclass: figure
 
@@ -1211,7 +1211,7 @@ or columns, as shown in {numref}`fig:summarize`.
 
 +++ {"tags": []}
 
-```{figure} img/summarize/summarize.001.jpeg
+```{figure} img/wrangling/summarize.001.jpeg
 :name: fig:summarize
 :figclass: figure
 
@@ -1369,7 +1369,7 @@ for each of the regions in the data set.
 
 +++ {"tags": []}
 
-```{figure} img/summarize/summarize.002.jpeg
+```{figure} img/wrangling/summarize.002.jpeg
 :name: fig:summarize-groupby
 :figclass: figure
 
@@ -1502,7 +1502,7 @@ We illustrate such a data transformation in {numref}`fig:mutate-across`.
 
 +++ {"tags": []}
 
-```{figure} img/summarize/summarize.005.jpeg
+```{figure} img/wrangling/summarize.005.jpeg
 :name: fig:mutate-across
 :figclass: figure
 
@@ -1576,7 +1576,7 @@ We illustrate such a data transformation in {numref}`fig:rowwise`.
 
 +++ {"tags": []}
 
-```{figure} img/summarize/summarize.004.jpeg
+```{figure} img/wrangling/summarize.004.jpeg
 :name: fig:rowwise
 :figclass: figure
 

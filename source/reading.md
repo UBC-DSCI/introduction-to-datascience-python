@@ -96,7 +96,7 @@ read the `.csv` file named `happiness_report.csv` into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.
 
-```{figure} img/filesystem.jpeg
+```{figure} img/reading/filesystem.jpeg
 ---
 height: 500px
 name: Filesystem
@@ -1017,7 +1017,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/craigslist_human.png
+% ```{figure} img/reading/craigslist_human.png
 % :name: fig:craigslist-human
 %
 % Craigslist webpage of advertisements for one-bedroom apartments.
@@ -1031,7 +1031,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % examining the *source code* that the web server actually sent our browser to
 % display for us. We show a snippet of it below; the
 % entire source
-% is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
+% is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/reading/website_source.txt):
 %
 % ```html
 %         <span class="result-meta">
@@ -1127,7 +1127,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % in its toolbar, and highlights all the other apartment
 % prices that would be obtained using that selector ({numref}`fig:sg1`).
 %
-% ```{figure} img/sg1.png
+% ```{figure} img/reading/sg1.png
 % :name: fig:sg1
 %
 % Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
@@ -1137,7 +1137,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % the `span` selector, and highlights many of the lines on the page; this indicates that the
 % `span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`).
 %
-% ```{figure} img/sg3.png
+% ```{figure} img/reading/sg3.png
 % :name: fig:sg3
 %
 % Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
@@ -1147,7 +1147,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % we *do not* want. For example, we can deselect the "pic/map" links,
 % resulting in only the data we want highlighted using the `.housing` selector ({numref}`fig:sg2`).
 %
-% ```{figure} img/sg2.png
+% ```{figure} img/reading/sg2.png
 % :name: fig:sg2
 %
 % Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
@@ -1190,7 +1190,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % (city names and population counts) and deselect others to indicate that we are not
 % interested in them (province names), as shown in {numref}`fig:sg4`.
 %
-% ```{figure} img/selectorgadget-wiki-updated.png
+% ```{figure} img/reading/selectorgadget-wiki-updated.png
 % :name: fig:sg4
 %
 % Using the SelectorGadget on a Wikipedia webpage.
@@ -1370,7 +1370,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/twitter-API-keys-tokens.png
+% ```{figure} img/reading/twitter-API-keys-tokens.png
 % :name: fig:twitter-API-keys-tokens
 %
 % Generating the API key-secret pair and the access token-secret pair in Twitter API.
@@ -1421,7 +1421,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/scikit-learn-twitter.png
+% ```{figure} img/reading/scikit-learn-twitter.png
 % :name: fig:01-scikit-learn-twitter
 %
 % The `scikit-learn` account Twitter feed.

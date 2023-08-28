@@ -134,7 +134,7 @@ there are distinct types of penguins in our data.
 Understanding this might help us with species discovery and classification in a data-driven
 way.
 
-```{figure} img/gentoo.jpg
+```{figure} img/clustering/gentoo.jpg
 ---
 height: 400px
 name: 09-penguins
@@ -336,7 +336,7 @@ In the first cluster from the example, there are {glue:}`clus_rows_glue` data po
 in {numref}`toy-example-clus1-center-1`
 
 
-```{figure} img/toy-example-clus1-center-1.png
+```{figure} img/clustering/toy-example-clus1-center-1.png
 ---
 height: 400px
 name: toy-example-clus1-center-1
@@ -360,7 +360,7 @@ $S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + 
 
 These distances are denoted by lines in {numref}`toy-example-clus1-dists-1` for the first cluster of the penguin data example.
 
-```{figure} img/toy-example-clus1-dists-1.png
+```{figure} img/clustering/toy-example-clus1-dists-1.png
 ---
 height: 400px
 name: toy-example-clus1-dists-1
@@ -378,7 +378,7 @@ this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
 {numref}`toy-example-all-clus-dists-1`
 
-```{figure} img/toy-example-all-clus-dists-1.png
+```{figure} img/clustering/toy-example-all-clus-dists-1.png
 ---
 height: 400px
 name: toy-example-all-clus-dists-1
@@ -400,7 +400,7 @@ An example random initialization is shown in {numref}`toy-kmeans-init-1`
 
 
 
-```{figure} img/toy-kmeans-init-1.png
+```{figure} img/clustering/toy-kmeans-init-1.png
 ---
 height: 400px
 name: toy-kmeans-init-1
@@ -425,7 +425,7 @@ There each row corresponds to an iteration,
 where the left column depicts the center update,
 and the right column depicts the reassignment of data to clusters.
 
-```{figure} img/toy-kmeans-iter-1.png
+```{figure} img/clustering/toy-kmeans-iter-1.png
 ---
 height: 400px
 name: toy-kmeans-iter-1
@@ -468,7 +468,7 @@ These, however, are beyond the scope of this book.
 Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
 For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
 
-```{figure} img/toy-kmeans-bad-init-1.png
+```{figure} img/clustering/toy-kmeans-bad-init-1.png
 ---
 height: 400px
 name: toy-kmeans-bad-init-1
@@ -480,7 +480,7 @@ Random initialization of labels.
 
 
 
-```{figure} img/toy-kmeans-bad-iter-1.png
+```{figure} img/clustering/toy-kmeans-bad-iter-1.png
 ---
 height: 700px
 name: toy-kmeans-bad-iter-1
@@ -507,7 +507,7 @@ In both cases, we will potentially miss interesting structure in the data.
 on K-means clustering of our penguin flipper and bill length data
 by showing the different clusterings for K's ranging from 1 to 9.
 
-```{figure} img/toy-kmeans-vary-k-1.png
+```{figure} img/clustering/toy-kmeans-vary-k-1.png
 ---
 height: 700px
 name: toy-kmeans-vary-k-1
@@ -525,7 +525,7 @@ decrease the total WSSD, but by only a *diminishing amount*. If we plot the tota
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
 the right number of clusters ({numref}`toy-kmeans-elbow-1`)).
 
-```{figure} img/toy-kmeans-elbow-1.png
+```{figure} img/clustering/toy-kmeans-elbow-1.png
 ---
 height: 400px
 name: toy-kmeans-elbow-1

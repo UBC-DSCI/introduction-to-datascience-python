@@ -107,7 +107,7 @@ with a few options ({numref}`docker-desktop-search`). In the "Tag" drop down men
 the tag `20230720213731d08401` to select the correct version of the image. Then click 
 the "Pull" button to download the image.
 
-```{figure} img/docker-1.png
+```{figure} img/setup/docker-1.png
 ---
 height: 400px
 name: docker-desktop-search
@@ -119,7 +119,7 @@ Once the image is done downloading, click the "Images" button on the left side
 of the Docker Desktop window ({numref}`docker-desktop-images`). You
 will see the recently downloaded image listed there under the "Local" tab.
 
-```{figure} img/docker-2.png
+```{figure} img/setup/docker-2.png
 ---
 height: 400px
 name: docker-desktop-images
@@ -137,7 +137,7 @@ folder where your Jupyter worksheets are stored. In the "Container path" text
 box, enter `/home/jovyan/work`. Then click the "Run" button to start the
 container.
 
-```{figure} img/docker-3.png
+```{figure} img/setup/docker-3.png
 ---
 height: 400px
 name: docker-desktop-runconfig
@@ -151,7 +151,7 @@ URL in the terminal that starts
 with `http://127.0.0.1:8888` (highlighted by the red box in {numref}`docker-desktop-url`), and paste it 
 into your browser to start JupyterLab.
 
-```{figure} img/docker-4.png
+```{figure} img/setup/docker-4.png
 ---
 height: 400px
 name: docker-desktop-url
@@ -207,7 +207,7 @@ red box in {numref}`ubuntu-docker-terminal`), and paste it into your browser to 
 More information on installing and running Docker on Ubuntu, as well as troubleshooting tips, can be found in
 [the online Docker documentation](https://docs.docker.com/engine/install/ubuntu/).
 
-```{figure} img/ubuntu-docker.png
+```{figure} img/setup/ubuntu-docker.png
 ---
 height: 400px
 name: ubuntu-docker-terminal
@@ -250,7 +250,7 @@ Next, in the JupyterLab Desktop graphical interface that appears ({numref}`setup
 you will see text at the bottom saying "Python environment not found". Click "Install using the bundled installer"
 to set up the environment.
 
-```{figure} img/jlab-1.png
+```{figure} img/setup/jlab-1.png
 ---
 height: 400px
 name: setup-jlab-gui
@@ -264,7 +264,7 @@ the IPython kernel (to enable the python programming language),
 and various python software packages. Click "New session..." in the JupyterLab Desktop
 user interface, then scroll to the bottom, and click "Terminal" under the "Other" heading ({numref}`setup-jlab-gui-2`).
 
-```{figure} img/jlab-2.png
+```{figure} img/setup/jlab-2.png
 ---
 height: 400px
 name: setup-jlab-gui-2

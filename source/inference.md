@@ -265,7 +265,10 @@ The call to `concat` concatenates all the 20,000 data frames
 returned from the list comprehension into a single big data frame.
 
 ```{code-cell} ipython3
-samples = pd.concat([airbnb.sample(40).assign(replicate=n) for n in range(20_000)])
+samples = pd.concat([
+    airbnb.sample(40).assign(replicate=n)
+    for n in range(20_000)
+])
 samples
 ```
 
@@ -564,7 +567,7 @@ sample_estimates = (
     ['price']
     .mean()
     .reset_index()
-    .rename(columns={'price': 'sample_mean'})
+    .rename(columns={'price': 'mean_price'})
 )
 sample_estimates
 ```
@@ -573,7 +576,7 @@ sample_estimates
 :tags: [remove-output]
 
 sampling_distribution = alt.Chart(sample_estimates).mark_bar().encode(
-    x=alt.X("sample_mean")
+    x=alt.X("mean_price")
         .bin(maxbins=30)
         .title("Sample mean price per night (dollars)"),
     y=alt.Y("count()").title("Count")
@@ -597,8 +600,8 @@ Sampling distribution of the sample means for sample size of 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("quantile_1", round(int(sample_estimates["sample_mean"].quantile(0.25)), - 1))
-glue("quantile_3", round(int(sample_estimates["sample_mean"].quantile(0.75)), - 1))
+glue("quantile_1", round(int(sample_estimates["mean_price"].quantile(0.25)), - 1))
+glue("quantile_3", round(int(sample_estimates["mean_price"].quantile(0.75)), - 1))
 ```
 
 ```{index} sampling distribution; shape
@@ -658,7 +661,7 @@ glue(
                 .title("Price per night (dollars)")
         ).properties(title="Sample (n = 40)").properties(height=150),
         sampling_distribution.encode(
-            x=alt.X("sample_mean")
+            x=alt.X("mean_price")
                 .bin(extent=[0, 660], maxbins=40)
                 .title("Price per night (dollars)")
         ).properties(
@@ -1059,7 +1062,7 @@ bootstrap samples differ. If we calculate the sample mean for each of
 these six samples, we can see that these are also different between samples.
 To compute the mean for each sample,
 we first group by the "replicate" which is the column containing the sample/replicate number.
-Then we compute the mean of the `price` column and rename it to `sample_mean`
+Then we compute the mean of the `price` column and rename it to `mean_price`
 for it to be more descriptive.
 Finally we use `reset_index` to get the `replicate` values back as a column in the dataframe.
 
@@ -1070,7 +1073,7 @@ Finally we use `reset_index` to get the `replicate` values back as a column in t
     ["price"]
     .mean()
     .reset_index()
-    .rename(columns={"price": "sample_mean"})
+    .rename(columns={"price": "mean_price"})
 )
 ```
 
@@ -1091,7 +1094,7 @@ boot20000_means = (
     ["price"]
     .mean()
     .reset_index()
-    .rename(columns={"price": "sample_mean"})
+    .rename(columns={"price": "mean_price"})
 )
 
 boot20000_means
@@ -1101,7 +1104,7 @@ boot20000_means
 :tags: []
 
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
-    x=alt.X("sample_mean")
+    x=alt.X("mean_price")
         .bin(maxbins=20)
         .title("Sample mean price per night (dollars)"),
     y=alt.Y("count()").title("Count"),
@@ -1128,20 +1131,20 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
         sampling_distribution.mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
-            x='mean(sample_mean)',
+            x='mean(mean_price)',
             y=alt.value(7),
-            text=alt.value(f"Mean = {sampling_distribution['data']['sample_mean'].mean().round(1)}")
+            text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title='Sampling distribution', height=150),
     alt.layer(
         boot_est_dist,
-        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(sample_mean)', y=alt.Y()),
+        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
         boot_est_dist.mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
-            x='mean(sample_mean)',
+            x='mean(mean_price)',
             y=alt.value(6),
-            text=alt.value(f"Mean = {boot_est_dist['data']['sample_mean'].mean().round(1)}")
+            text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title='Bootstrap distribution', height=150)
 ).resolve_scale(
@@ -1238,7 +1241,7 @@ would be quantiles 0.025 and 0.975, respectively.
 ```
 
 ```{code-cell} ipython3
-ci_bounds = boot20000_means["sample_mean"].quantile([0.025, 0.975])
+ci_bounds = boot20000_means["mean_price"].quantile([0.025, 0.975])
 ci_bounds
 ```
 
@@ -1254,22 +1257,29 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
-alt.layer(
-    boot_est_dist,
-    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.025])),
-    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
-        x=alt.datum(ci_bounds[0.025]),
-        y=alt.value(-10),
-        text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
-    ),
-    alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(x=alt.datum(ci_bounds[0.975])),
-    alt.Chart().mark_text(color='#f58518', size=12, fontWeight='bold').encode(
-        x=alt.datum(ci_bounds[0.975]),
-        y=alt.value(-10),
-        text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
-    ),
+# Create the annotation for for the 2.5th percentile
+text_025 = alt.Chart().mark_text(
+    color='#f58518',
+    size=12,
+    fontWeight='bold',
+    dy=-160
+).encode(
+    x=alt.datum(ci_bounds[0.025]),
+    text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
+).properties(
     width=500
 )
+rule_025 = text_025.mark_rule(color='#f58518', size=3, strokeDash=[5])
+
+# Create the annotation for for the 97.5th percentile
+text_975 = text_025.encode(
+    x=alt.datum(ci_bounds[0.975]),
+    text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+)
+rule_975 = rule_025.encode(x=alt.datum(ci_bounds[0.975]))
+
+# Layer the annotations on top of the distribution plot
+boot_est_dist + rule_025 + text_025 + rule_975 + text_975
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

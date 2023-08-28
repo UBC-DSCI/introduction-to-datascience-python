@@ -1242,7 +1242,7 @@ to layer a point and line chart.
 :tags: [remove-output]
 
 accuracy_vs_k = alt.Chart(accuracies_grid).mark_line(point=True).encode(
-    x=alt.X("n_neighbors").title("Neighbors"),
+    x=alt.X("n_neighbors:Q").title("Neighbors"),
     y=alt.Y("mean_test_score")
         .scale(domain=(0.85, 0.90))
         .title("Accuracy estimate")
@@ -1322,7 +1322,7 @@ large_accuracies_grid = pd.DataFrame(
 )
 
 large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
-    x=alt.X("param_kneighborsclassifier__n_neighbors").title("Neighbors"),
+    x=alt.X("param_kneighborsclassifier__n_neighbors:Q").title("Neighbors"),
     y=alt.Y("mean_test_score")
         .scale(domain=(0.60, 0.90))
         .title("Accuracy estimate")

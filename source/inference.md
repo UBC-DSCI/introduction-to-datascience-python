@@ -732,7 +732,7 @@ glue(
         )
     ).facet(
         alt.Facet(
-            'sample_size',
+            'sample_size:N',
             header=alt.Header(
                 title='',
                 labelFontWeight='bold',
@@ -1043,7 +1043,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
         .title("Price per night (dollars)"),
     y=alt.Y("count()").title("Count")
 ).facet(
-    "replicate",
+    "replicate:O",
     columns=2
 )
 ```

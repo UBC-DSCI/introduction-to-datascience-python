@@ -388,13 +388,10 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-near_neighbor_df = pd.concat(
-    (
-        cancer.loc[np.argmin(my_distances), attrs],
-        perim_concav_with_new_point_df.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df = pd.concat([
+    cancer.loc[[np.argmin(my_distances)], attrs],
+    perim_concav_with_new_point_df.loc[[cancer.shape[0]], attrs],
+])
 glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
 glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
 ```
@@ -466,13 +463,10 @@ perim_concav_with_new_point2 = (
     )
 )
 
-near_neighbor_df2 = pd.concat(
-    (
-        cancer.loc[np.argmin(my_distances2), attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df2 = pd.concat([
+    cancer.loc[[np.argmin(my_distances2)], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
 line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
     x='Perimeter',
     y='Concavity',
@@ -507,20 +501,14 @@ label.
 
 # The index of 3 rows that has smallest distance to the new point
 min_3_idx = np.argpartition(my_distances2, 3)[:3]
-near_neighbor_df3 = pd.concat(
-    (
-        cancer.loc[min_3_idx[1], attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
-near_neighbor_df4 = pd.concat(
-    (
-        cancer.loc[min_3_idx[2], attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df3 = pd.concat([
+    cancer.loc[[min_3_idx[1]], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
+near_neighbor_df4 = pd.concat([
+    cancer.loc[[min_3_idx[2]], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
 ```
 
 ```{code-cell} ipython3
@@ -1223,27 +1211,18 @@ area_smoothness_new_point = (
 
 # The index of 3 rows that has smallest distance to the new point
 min_3_idx = np.argpartition(my_distances, 3)[:3]
-neighbor1 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[0], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor2 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[1], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor3 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[2], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
+neighbor1 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[0]], attrs],
+    new_obs[attrs],
+])
+neighbor2 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[1]], attrs],
+    new_obs[attrs],
+])
+neighbor3 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[2]], attrs],
+    new_obs[attrs],
+])
 
 line1 = (
     alt.Chart(neighbor1)
@@ -1297,27 +1276,18 @@ area_smoothness_new_point_scaled = (
     )
 )
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
-neighbor1_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[0], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor2_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[1], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor3_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[2], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
+neighbor1_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[0]], attrs],
+    new_obs_scaled[attrs],
+])
+neighbor2_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[1]], attrs],
+    new_obs_scaled[attrs],
+])
+neighbor3_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[2]], attrs],
+    new_obs_scaled[attrs],
+])
 
 line1_scaled = (
     alt.Chart(neighbor1_scaled)
@@ -1499,13 +1469,10 @@ for i in range(7):
     clr = "#1f77b4"
     if rare_cancer.iloc[min_7_idx[i], :]["Class"] == "Malignant":
         clr = "#ff7f0e"
-    neighbor = pd.concat(
-        (
-            rare_cancer.iloc[min_7_idx[i], :][attrs],
-            new_point_df[attrs].T,
-        ),
-        axis=1,
-    ).T
+    neighbor = pd.concat([
+        rare_cancer.iloc[[min_7_idx[i]], :][attrs],
+        new_point_df[attrs],
+    ])
     rare_plot = rare_plot + (
         alt.Chart(neighbor)
         .mark_line(opacity=0.3)

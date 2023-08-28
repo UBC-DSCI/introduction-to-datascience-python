@@ -22,7 +22,6 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-import altair as alt
 import numpy as np
 import pandas as pd
 
@@ -38,6 +37,10 @@ import pandas as pd
 from IPython.display import HTML
 
 from myst_nb import glue
+
+# Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame).
+# This line is also targetted when adding image support in the PDF build
+import altair as alt; alt.data_transformers.enable("vegafusion")
 ```
 
 ## Overview

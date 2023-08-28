@@ -18,13 +18,14 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import altair as alt
 from myst_nb import glue
 import warnings
 
-
 warnings.filterwarnings("ignore", category=FutureWarning)
-alt.data_transformers.disable_max_rows()
+
+# Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame).
+# This line is also targetted when adding image support in the PDF build
+import altair as alt; alt.data_transformers.enable("vegafusion")
 ```
 
 ## Overview

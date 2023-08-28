@@ -22,6 +22,10 @@ from myst_nb import glue
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 from IPython.display import HTML
+
+# Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame).
+# This line is also targetted when adding image support in the PDF build
+import altair as alt; alt.data_transformers.enable("vegafusion")
 ```
 
 (classification1)=

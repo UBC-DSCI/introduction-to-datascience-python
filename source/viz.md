@@ -19,9 +19,11 @@ kernelspec:
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
+
+# Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame).
+# This line is also targetted when adding image support in the PDF build
+import altair as alt; alt.data_transformers.enable("vegafusion")
 ```
-
-
 
 (viz)=
 # Effective data visualization

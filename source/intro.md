@@ -18,10 +18,16 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 from myst_nb import glue
+import altair as alt
+import os
 
-# Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame).
-# This line is also targetted when adding image support in the PDF build
-import altair as alt; alt.data_transformers.enable("vegafusion")
+
+# Use PNG images in the PDF version of the books to make sure that they render
+if os.environ['BOOK_BUILD_TYPE'] == 'PDF':
+    alt.renderers.enable('png', scale_factor=0.7, ppi=300)
+else:
+    # Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame)
+    alt.data_transformers.enable('vegafusion')
 ```
 
 ## Overview

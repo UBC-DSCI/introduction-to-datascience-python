@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -222,7 +222,8 @@ Next we use `read_csv` to load the data into Python, and in that call we specify
 relative path to the file.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data = pd.read_csv("data/can_lang.csv")
 canlang_data
 ```
@@ -278,7 +279,8 @@ it should start reading in the data. In the example above, we would set this
 value to 3 to read and load the data correctly.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data = pd.read_csv("data/can_lang_meta-data.csv", skiprows=3)
 canlang_data
 ```
@@ -332,9 +334,9 @@ in the `read_csv` function to the *tab character* `\t`.
 > Escaped characters are used to represent non-printing characters
 > (like the tab) or characters with special meanings (such as quotation marks).
 
-
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
@@ -378,7 +380,8 @@ and finally set `header = None` to tell `pandas` that the data file does not
 contain its own column names.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data =  pd.read_csv(
     "data/can_lang_no_names.tsv",
     sep = "\t",
@@ -405,7 +408,8 @@ Below, we create a dictionary called `col_map` that maps the old column names in
 names, and then pass it to the `rename` function.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 col_map = {
     0 : "category",
     1 : "language",
@@ -425,7 +429,8 @@ The column names can also be assigned to the data frame immediately upon reading
 list of column names to the `names` argument in `read_csv`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data = pd.read_csv(
     "data/can_lang_no_names.tsv",
     sep="\t",
@@ -455,7 +460,8 @@ path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 url = "https://raw.githubusercontent.com/UBC-DSCI/introduction-to-datascience-python/reading/source/data/can_lang.csv"
 pd.read_csv(url)
 canlang_data = pd.read_csv(url)
@@ -522,7 +528,8 @@ function developed specifically for this
 purpose.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_data = pd.read_excel("data/can_lang.xlsx")
 canlang_data
 ```
@@ -687,6 +694,7 @@ the `count` command.
 ```{code-cell} ipython3
 canlang_table.count().execute()
 ```
+
 There we go! There are 214 rows in the `can_lang` table. If you are interested in seeing
 the *actual* text of the SQL query that `ibis` sends to the database, you can use the `compile` function
 instead of `execute`. But note that you have to pass the result of `compile` to the `str` function to turn it into
@@ -713,7 +721,8 @@ we won't forget to `execute` to see the result!
 ```
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_table.head(10).execute()
 ```
 
@@ -733,6 +742,7 @@ to obtain only certain rows. Below we filter the data to include only Aboriginal
 canlang_table_filtered = canlang_table[canlang_table["category"] == "Aboriginal languages"]
 canlang_table_filtered
 ```
+
 Above you can see that we have not yet executed this command; `canlang_table_filtered` is just showing
 the first part of our query (the part that starts with `Selection[r0]` above).
 We didn't call `execute` because we are not ready to bring the data into Python yet.
@@ -746,9 +756,11 @@ in Python. Let's add the second part of our SQL query: selecting only the `langu
 canlang_table_selected = canlang_table_filtered[["language", "mother_tongue"]]
 canlang_table_selected
 ```
+
 Now you can see that the `ibis` query will have two steps: it will first find rows corresponding to
 Aboriginal languages, then it will extract only the `language` and `mother_tongue` columns that we are interested in.
 Let's actually execute the query now to bring the data into Python as a `pandas` data frame, and print the result.
+
 ```{code-cell} ipython3
 aboriginal_lang_data = canlang_table_selected.execute()
 aboriginal_lang_data
@@ -765,7 +777,8 @@ rows in a database, even though `pandas` does.
 ```
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 canlang_table_selected.tail(6)
 ```
 
@@ -878,11 +891,11 @@ lowest.execute()
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-input"]
+:tags: [remove-input]
+
 lowest = pd.DataFrame({"average_rating" : [1.0]})
 lowest
 ```
-
 
 We see the lowest rating given to a movie is 1, indicating that it must have
 been a really bad movie...

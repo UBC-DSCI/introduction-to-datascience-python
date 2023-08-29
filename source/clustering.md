@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -554,7 +554,6 @@ unstandardized_data.to_csv("data/penguins.csv", index=False)
 penguins = pd.read_csv("data/penguins.csv")
 penguins
 ```
-
 
 Recall that K-means clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the *scale* of each of the variables in the data

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -146,6 +146,7 @@ small_plot
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue("fig:08-lin-reg1", small_plot)
 ```
 
@@ -188,6 +189,7 @@ predictor variable&mdash;here 2,000 square feet. {numref}`fig:08-lin-reg2` demon
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 from sklearn.linear_model import LinearRegression
 
 lm = LinearRegression()
@@ -485,6 +487,7 @@ so that we can qualitatively assess if the model seems to fit the data well.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+
 sqft_prediction_grid = sacramento[['sqft']].agg(['min', 'max'])
 sacr_preds = sqft_prediction_grid.assign(
     predicted=lm.predict(sqft_prediction_grid)
@@ -536,6 +539,7 @@ obtained from the same problem, shown in {numref}`fig:08-compareRegression`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 from sklearn.model_selection import GridSearchCV
 from sklearn.compose import make_column_transformer
 from sklearn.neighbors import KNeighborsRegressor
@@ -733,12 +737,12 @@ both the `sqft` and `beds` variables as predictors, and then use the `fit`
 method as usual.
 
 ```{code-cell} ipython3
-
 mlm = LinearRegression().fit(
     sacramento_train[["sqft", "beds"]],
     sacramento_train["price"]
 )
 ```
+
 Finally, we make predictions on the test data set to assess the quality of our model.
 
 ```{code-cell} ipython3

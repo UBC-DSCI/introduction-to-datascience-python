@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -942,8 +942,6 @@ one_sample
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
     x=alt.X("price")
         .bin(maxbins=30)
@@ -981,8 +979,6 @@ Since we need to sample with replacement when bootstrapping,
 we change the `replace` parameter to `True`.
 
 ```{code-cell} ipython3
-:tags: []
-
 boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
     x=alt.X("price")
@@ -1034,8 +1030,6 @@ boot20000
 Let's take a look at histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
-:tags: []
-
 six_bootstrap_samples = boot20000.query("replicate < 6")
 alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
     x=alt.X("price")
@@ -1101,8 +1095,6 @@ boot20000_means
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
     x=alt.X("mean_price")
         .bin(maxbins=20)

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -300,6 +300,7 @@ nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 random_numbers1 = nums_0_to_9.sample(n = 10).to_numpy()
 random_numbers1
 ```
+
 You can see that `random_numbers1` is a list of 10 numbers
 from 0 to 9 that, from all appearances, looks random. If 
 we run the `sample` method again, 
@@ -498,6 +499,7 @@ right proportions of each category of observation.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 # seed hacking to get a split that makes 10-fold have a lower std error than 5-fold
 np.random.seed(5)
 ```
@@ -637,6 +639,7 @@ by using our earlier formula: the number of correct predictions divided by the t
 number of predictions. First we filter the rows to find the number of correct predictions,
 and then divide the number of rows with correct predictions by the total number of rows
 using the `shape` attribute.
+
 ```{code-cell} ipython3
 correct_preds = cancer_test_predictions[
     cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
@@ -665,8 +668,6 @@ cancer_acc_1
 glue("cancer_acc_1", round(100*cancer_acc_1))
 ```
 
-+++
-
 The output shows that the estimated accuracy of the classifier on the test data 
 was {glue:}`cancer_acc_1`%.
 We can also look at the *confusion matrix* for the classifier 
@@ -684,6 +685,7 @@ pd.crosstab(
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 _ctab = pd.crosstab(cancer_test_predictions["Class"],
             cancer_test_predictions["predicted"]
            )
@@ -743,7 +745,7 @@ glue("rec_eq_math_glued", rec_eq_math)
 ```	
 
 ```{glue:math} rec_eq_math_glued
-```	
+```
 
 +++
 
@@ -928,16 +930,17 @@ accuracies = list(np.round(np.array(accuracies)*100, 1))
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue(f"acc_seed1", np.round(100 * acc,1))
 glue("avg_5_splits", avg_accuracy)
 glue("accuracies", accuracies)
 ```
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+
 ```
-
-
 
 The accuracy estimate using this split is {glue:}`acc_seed1`%.
 Now we repeat the above code 4 more times, which generates 4 more splits.
@@ -972,7 +975,6 @@ resulting in 5 different choices for the **validation set**; we call this
 
 5-fold cross-validation.
 ```
-
 
 +++
 
@@ -1128,16 +1130,16 @@ knn = KNeighborsClassifier()
 cancer_tune_pipe = make_pipeline(cancer_preprocessor, knn)
 ```
 
-+++
-
 Next we specify the grid of parameter values that we want to try for 
 each tunable parameter. We do this in a Python dictionary: the key is 
 the identifier of the parameter to tune, and the value is a list of parameter values
 to try when tuning. We can find the "identifier" of a parameter by using
 the `get_params` method on the pipeline.
+
 ```{code-cell} ipython3
 cancer_tune_pipe.get_params()
 ```
+
 Wow, there's quite a bit of *stuff* there! If you sift through the muck
 a little bit, you will see one parameter identifier that stands out:
 `"kneighborsclassifier__n_neighbors"`. This identifier combines the name
@@ -1148,11 +1150,13 @@ what parameter values to try.
 Note that you can specify multiple tunable parameters
 by creating a dictionary with multiple key-value pairs, but
 here we just have to tune the number of neighbors.
+
 ```{code-cell} ipython3
 parameter_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 100, 5),
 }
 ```
+
 The `range` function in Python that we used above allows us to specify a sequence of values.
 The first argument is the starting number (here, `1`), 
 the second argument is *one greater than* the final number (here, `100`),
@@ -1200,11 +1204,10 @@ accuracies_grid = pd.DataFrame(
         cancer_train["Class"]
     ).cv_results_
 )
-```
 
-```{code-cell} ipython3
 accuracies_grid.info()
 ```
+
 There is a lot of information to look at here, but we are most interested
 in three quantities: the number of neighbors (`param_kneighbors_classifier__n_neighbors`),
 the cross-validation accuracy estimate (`mean_test_score`), 
@@ -1376,6 +1379,7 @@ training data, it is said to **overfit** the data.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 alt.data_transformers.disable_max_rows()
 
 cancer_plot = (

@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -16,7 +16,8 @@ kernelspec:
 # Python and Pandas
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 from myst_nb import glue
 ```
 
@@ -290,8 +291,6 @@ using the `import` command. The `pandas` package contains many
 functions that we will use throughout this book to load, clean, wrangle,
 and visualize data.
 
-+++
-
 ```{code-cell} ipython3
 import pandas as pd
 ```
@@ -319,15 +318,11 @@ name: img-read-csv
 Syntax for the `read_csv` function
 ```
 
-
-+++
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 pd.read_csv("data/can_lang.csv")
-
 ```
-
-
 
 ## Naming things in Python
 
@@ -425,7 +420,8 @@ variables (i.e., columns) are printed just underneath the data frame (214 rows a
 Printing a few rows from data frame like this is a handy way to get a quick sense for what is contained in it.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 can_lang
 ```
 
@@ -498,7 +494,8 @@ This operation returns a data frame that has all the columns of the input data f
 but only those rows corresponding to Aboriginal languages that we asked for in the logical statement.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 can_lang[can_lang["category"] == "Aboriginal languages"]
 ```
 
@@ -561,6 +558,7 @@ Syntax for using the `loc[]` operation to filter rows and select columns.
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 ```
+
 There is one very important thing to notice in this code example.
 The first is that we used the `loc[]` operation on the `can_lang` data frame by
 writing `can_lang.loc[]`---first the data frame name, then a dot, then `loc[]`.
@@ -576,9 +574,11 @@ containing *only* rows where the `category` is `"Aboriginal languages"`,
 and containing *only* the `language` and `mother_tongue` columns.
 Any time you take a step in a data analysis, it's good practice to check the output
 by printing the result.
+
 ```{code-cell} ipython3
 aboriginal_lang
 ```
+
 We can see the original `can_lang` data set contained 214 rows
 with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages.
@@ -622,7 +622,6 @@ Next, we will obtain the ten most common Aboriginal languages by selecting only
 the first ten rows of the `arranged_lang` data frame.
 We do this using the `head` function, and specifying the argument
 `10`.
-
 
 ```{code-cell} ipython3
 ten_lang = arranged_lang.head(10)
@@ -683,6 +682,7 @@ It took us 3 steps to find the ten Aboriginal languages most often reported in
 
 One way of performing these steps is to just write
 multiple lines of code, storing temporary, intermediate objects as you go.
+
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
@@ -835,10 +835,7 @@ First, we need to import the `altair` package.
 
 ```{code-cell} ipython3
 import altair as alt
-
 ```
-
-+++
 
 The fundamental object in `altair` is the `Chart`, which takes a data frame as an argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized.
@@ -857,23 +854,16 @@ name: img-altair
 Syntax for using `altair` to make a bar chart.
 ```
 
-+++
-
 ```{code-cell} ipython3
-:tags: []
-
 barplot_mother_tongue = (
   alt.Chart(ten_lang).mark_bar().encode(x="language", y="mother_tongue")
 )
-
-
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 glue('barplot-mother-tongue', barplot_mother_tongue, display=True)
-
 ```
 
 :::{glue:figure} barplot-mother-tongue
@@ -923,14 +913,11 @@ barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 )
 ```
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 glue('barplot-mother-tongue-labs', barplot_mother_tongue, display=True)
-
 ```
-
 
 :::{glue:figure} barplot-mother-tongue-labs
 :figwidth: 700px
@@ -947,7 +934,6 @@ currently making it difficult to read the different language names.
 One solution is to rotate the plot such that the bars are horizontal rather than vertical.
 To accomplish this, we will swap the x and y coordinate axes:
 
-
 ```{code-cell} ipython3
 barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
     x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
@@ -956,10 +942,9 @@ barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True)
-
 ```
 
 :::{glue:figure} barplot-mother-tongue-labs-axis
@@ -988,15 +973,11 @@ ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 )
 ```
 
-+++
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 glue('barplot-mother-tongue-reorder', ordered_barplot_mother_tongue, display=True)
-
 ```
-
 
 :::{glue:figure} barplot-mother-tongue-reorder
 :figwidth: 700px
@@ -1066,12 +1047,10 @@ ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
 
 glue('final_plot', ten_lang_plot, display=True)
-
 ```
-
 
 :::{glue:figure} final_plot
 :figwidth: 700px
@@ -1103,7 +1082,8 @@ did or exactly what arguments to pass in, you could run the following
 code:
 
 ```{code-cell} ipython3
-:tags: ["remove-output"]
+:tags: [remove-output]
+
 help(pd.read_csv)
 ```
 
@@ -1132,10 +1112,13 @@ The documentation for the read_csv function including a high-level description, 
 If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
 and access the documentation. First, rather than `help`, you can use the more concise `?` character. So for example,
 to read the documentation for the `pd.read_csv` function, you can run the following code:
+
 ```{code-cell} ipython3
-:tags: ["remove-output"]
+:tags: [remove-output]
+
 ?pd.read_csv
 ```
+
 You can also type the first characters of the function you want to use,
 and then press <kbd>Tab</kbd> to bring up small menu
 that shows you all the available functions
@@ -1199,4 +1182,3 @@ and guidance that the worksheets provide will function as intended.
 ```{bibliography}
 :filter: docname in docnames
 ```
-

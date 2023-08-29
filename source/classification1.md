@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.7
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -13,7 +13,6 @@ kernelspec:
 ---
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -151,7 +150,8 @@ arguments, and then inspect its contents:
 ```
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 cancer = pd.read_csv("data/wdbc.csv")
 cancer
 ```
@@ -235,6 +235,7 @@ cancer['Class'].unique()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue("benign_count", cancer['Class'].value_counts()['Benign'])
 glue("benign_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Benign'])))
 glue("malignant_count", cancer['Class'].value_counts()['Malignant'])
@@ -888,7 +889,8 @@ many [other models](https://scikit-learn.org/stable/user_guide.html) that you wi
 in the `scikit-learn` package (named `sklearn` in Python) will help keep our code simple, readable and accurate; the 
 less we have to code ourselves, the fewer mistakes we will likely make. 
 Before getting started with $K$-nearest neighbors, we need to tell the `sklearn` package 
-that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
+that we prefer using `pandas` data frames over regular arrays via the `set_config` function.
+
 ```{code-cell} ipython3
 from sklearn import set_config
 
@@ -1117,11 +1119,14 @@ preprocessor.fit(unscaled_cancer)
 scaled_cancer = preprocessor.transform(unscaled_cancer)
 scaled_cancer
 ```
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue('scaled-cancer-column-0', scaled_cancer.columns[0])
 glue('scaled-cancer-column-1', scaled_cancer.columns[1])
 ```
+
 It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
 But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
 the columns from the input to `transform` (here, `unscaled_cancer`) that had a preprocessing step applied
@@ -1445,8 +1450,6 @@ Imbalanced data.
 rare_cancer['Class'].value_counts()
 ```
 
-+++
-
 Suppose we now decided to use $K = 7$ in $K$-nearest neighbor classification.
 With only 3 observations of malignant tumors, the classifier 
 will *always predict that the tumor is benign, no matter what its concavity and perimeter
@@ -1621,6 +1624,7 @@ in data analysis in the {ref}`classification2` chapter.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 # hidden seed call to make the below resample reproducible
 # we haven't taught students about seeds / prngs yet, so 
 # for now just hide this.
@@ -1874,6 +1878,7 @@ predict the label of each, and visualize the predictions with a colored scatter 
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+
 import numpy as np
 
 # create the grid of area/smoothness vals, and arrange in a data frame
@@ -1934,6 +1939,7 @@ unscaled_plot + prediction_plot
 
 ```{code-cell} ipython3
 :tags: [remove-input]
+
 glue("fig:05-workflow-plot", (unscaled_plot + prediction_plot))
 ```
 
@@ -1960,6 +1966,7 @@ found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the 
 and guidance that the worksheets provide will function as intended.
 
 +++
+
 ## References
 
 ```{bibliography}

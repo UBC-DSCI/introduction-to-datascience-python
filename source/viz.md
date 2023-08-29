@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -177,8 +177,10 @@ and then how to create the visualization in Python using `altair`.  To use the `
 import pandas as pd
 import altair as alt
 ```
+
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 from myst_nb import glue
 ```
 
@@ -204,7 +206,8 @@ For this book, we are going to focus on the last 40 years of the data set,
 and are there any interesting patterns to note?
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 mauna_loa = pd.read_csv("data/mauna_loa.csv")
 mauna_loa['day']=1
 mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
@@ -222,7 +225,6 @@ co2_df = pd.read_csv(
 )
 co2_df
 ```
-
 
 ```{code-cell} ipython3
 co2_df.info()
@@ -290,7 +292,8 @@ There are a few basic aspects of a plot that we need to specify:
       rather than from zero.
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 from myst_nb import glue
 ```
 
@@ -302,7 +305,8 @@ co2_scatter = alt.Chart(co2_df).mark_point().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('co2_scatter', co2_scatter, display=False)
 ```
 
@@ -346,9 +350,9 @@ co2_line = alt.Chart(co2_df).mark_line().encode(
 )
 ```
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('co2_line', co2_line, display=False)
 ```
 
@@ -391,7 +395,8 @@ co2_line_labels = alt.Chart(co2_df).mark_line().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('co2_line_labels', co2_line_labels, display=False)
 ```
 
@@ -435,7 +440,8 @@ co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('co2_line_scale', co2_line_scale, display=False)
 ```
 
@@ -491,7 +497,6 @@ and the duration of the eruption?
 ```{code-cell} ipython3
 faithful = pd.read_csv("data/faithful.csv")
 faithful
-
 ```
 
 Here again, we investigate the relationship between two quantitative variables
@@ -513,7 +518,8 @@ faithful_scatter = alt.Chart(faithful).mark_point().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('faithful_scatter', faithful_scatter, display=False)
 ```
 
@@ -540,7 +546,8 @@ faithful_scatter_labels = alt.Chart(faithful).mark_point().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("faithful_scatter_labels", faithful_scatter_labels, display=False)
 ```
 
@@ -562,7 +569,8 @@ faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="b
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('faithful_scatter_labels_black', faithful_scatter_labels_black, display=False)
 ```
 
@@ -597,13 +605,15 @@ non-official and non-Aboriginal languages)?
 To get started, we will read and inspect the data:
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 can_lang = pd.read_csv("data/can_lang.csv")
 can_lang
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] > 0)]
 ```
 
@@ -629,7 +639,8 @@ can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('can_lang_plot', can_lang_plot, display=False)
 ```
 
@@ -666,7 +677,8 @@ can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('can_lang_plot_labels', can_lang_plot_labels, display=False)
 ```
 
@@ -677,11 +689,9 @@ glue('can_lang_plot_labels', can_lang_plot_labels, display=False)
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with x and y labels.
 :::
 
-
-
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 import numpy as np
 numlang_speakers_max=int(max(can_lang['mother_tongue']))
 print(numlang_speakers_max)
@@ -712,7 +722,8 @@ to Canada's two official languages by filtering the data:
 ```
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 can_lang.loc[
     (can_lang['language']=='English')
     | (can_lang['language']=='French')
@@ -754,7 +765,8 @@ can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('can_lang_plot_log', can_lang_plot_log, display=False)
 ```
 
@@ -790,7 +802,8 @@ can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
 ```
 
@@ -801,16 +814,15 @@ glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with log-adjusted x and y axes. Only the major gridlines are shown. The suffix "k" indicates 1,000 ("kilo"), while the suffix "M" indicates 1,000,000 ("million").
 :::
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 english_mother_tongue = can_lang.loc[can_lang['language']=='English'].mother_tongue.values[0]
 census_popn = int(35151728)
 result = round((english_mother_tongue/census_popn)*100,2)
 glue("english_mother_tongue", english_mother_tongue)
 glue("census_popn", census_popn)
 glue("result", result)
-
 ```
 
 Similar to some of the examples in the chapter on {ref}`wrangling`,
@@ -870,7 +882,8 @@ can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
 glue('can_lang_plot_percent', can_lang_plot_percent.properties(height=320, width=420), display=False)
 ```
@@ -954,11 +967,11 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
         .title(["Mother tongue", "(percentage of Canadian residents)"]),
     color="category"
 ).configure_axis(titleFontSize=12)
-
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
 glue('can_lang_plot_category', can_lang_plot_category.properties(height=320, width=420), display=False)
 ```
@@ -995,7 +1008,8 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
 glue('can_lang_plot_legend', can_lang_plot_legend.properties(height=320, width=420), display=False)
 ```
@@ -1051,7 +1065,8 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
 glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420), display=False)
 ```
@@ -1094,7 +1109,8 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
 glue('can_lang_plot_tooltip', can_lang_plot_tooltip.properties(height=320, width=420), display=False)
 ```
@@ -1146,7 +1162,8 @@ The `islands.csv` data set contains a list of Earth's landmasses as well as thei
 To get started, we will read and inspect the data:
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 islands_df = pd.read_csv("data/islands.csv")
 islands_df
 ```
@@ -1174,7 +1191,8 @@ islands_bar = alt.Chart(islands_df).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('islands_bar', islands_bar, display=False)
 ```
 
@@ -1216,7 +1234,8 @@ islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('islands_bar_top', islands_bar_top, display=True)
 ```
 
@@ -1264,7 +1283,8 @@ islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('islands_plot_sorted', islands_plot_sorted, display=True)
 ```
 
@@ -1348,7 +1368,8 @@ morley_bars = alt.Chart(morley_df).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_bars", morley_bars, display=False)
 ```
 
@@ -1379,7 +1400,8 @@ morley_hist = alt.Chart(morley_df).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_hist", morley_hist, display=False)
 ```
 
@@ -1442,9 +1464,9 @@ v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
 morley_hist_line = morley_hist + v_line
 ```
 
-
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_hist_line", morley_hist_line, display=False)
 ```
 
@@ -1475,11 +1497,11 @@ morley_hist_colored = alt.Chart(morley_df).mark_bar().encode(
 )
 
 morley_hist_colored = morley_hist_colored + v_line
-
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('morley_hist_colored', morley_hist_colored, display=True)
 ```
 
@@ -1500,6 +1522,7 @@ can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
 is currently an *integer*---specifically, an `int64` type. But we want to treat it as a
 *category*, i.e., there should be one category per type of experiment.
+
 ```{code-cell} ipython3
 morley_df.info()
 ```
@@ -1532,7 +1555,8 @@ morley_hist_categorical = morley_hist_categorical + v_line
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('morley_hist_categorical', morley_hist_categorical, display=True)
 ```
 
@@ -1570,7 +1594,6 @@ Note that we are re-using the chart we created just above,
 instead of re-creating the same chart from scratch.
 
 ```{code-cell} ipython3
-
 morley_hist_facet = morley_hist_categorical.properties(
     height=100
 ).facet(
@@ -1580,7 +1603,8 @@ morley_hist_facet = morley_hist_categorical.properties(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue('morley_hist_facet', morley_hist_facet, display=True)
 ```
 
@@ -1644,11 +1668,11 @@ morley_hist_relative = (morley_hist_rel + v_line).properties(
     columns=1,
     title="Histogram of relative error of Michelson’s speed of light data"
 )
-
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_hist_relative", morley_hist_relative, display=True)
 ```
 
@@ -1678,7 +1702,8 @@ morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_hist_maxbins", morley_hist_maxbins, display=False)
 ```
 
@@ -1711,7 +1736,8 @@ and the `maxbins=70` of  are effective for helping to answer our question.
 On the other hand, the `maxbins=200` and `maxbins=5` are too small and too big, respectively.
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X(
         "RelativeError",
@@ -1778,7 +1804,8 @@ morley_hist_max_bins = alt.vconcat(
 ```
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
+:tags: [remove-cell]
+
 glue("morley_hist_max_bins", morley_hist_max_bins, display=True)
 ```
 
@@ -1944,11 +1971,11 @@ we demonstrate how to save PNG and SVG file types for the
 ```{code-cell} ipython3
 faithful_scatter_labels.save("img/viz/faithful_plot.png")
 faithful_scatter_labels.save("img/viz/faithful_plot.svg")
-
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 import os
 import numpy as np
 png_size = np.round(os.path.getsize("img/viz/faithful_plot.png")/(1024*1024), 2)

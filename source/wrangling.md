@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -138,15 +138,12 @@ region = pd.Series(["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"])
 region
 ```
 
-+++ {"tags": []}
-
 ```{figure} img/wrangling/pandas_dataframe_series.png
 :name: fig:02-series
 :figclass: figure
 
 Example of a `pandas` series whose type is string.
 ```
-
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -220,7 +217,7 @@ that name should be a string, whereas if the variable is a year, that should be 
 integer. So even though series let you put different types in them, it is most common
 (and good practice!) to have just one type per column.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pandas_dataframe_series-3.png
 :name: fig:02-dataframe
@@ -236,7 +233,6 @@ Data frame and series types.
 >  **Note:** You can use the function `type` on a data object.
 > For example we can check the class of the Canadian languages data set,
 > `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
-
 
 ```{code-cell} ipython3
 can_lang = pd.read_csv("data/can_lang.csv")
@@ -272,7 +268,9 @@ of different types. The example below contains six `str` entries.
 cities = ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Winnipeg"]
 cities
 ```
+
 A list can directly be converted to a pandas `Series`.
+
 ```{code-cell} ipython3
 cities_series = pd.Series(cities)
 cities_series
@@ -320,8 +318,6 @@ population_in_2016_df = pd.DataFrame({
 population_in_2016_df
 ```
 
-+++
-
 ## Tidy data
 
 ```{index} tidy data; definition
@@ -341,7 +337,7 @@ the following three criteria {cite:p}`wickham2014tidy`:
 {numref}`fig:02-tidy-image` demonstrates a tidy data set that satisfies these
 three criteria.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/tidy_data.001-cropped.jpeg
 :name: fig:02-tidy-image
@@ -422,7 +418,7 @@ can change in this transformation. The "untidy" data has 5 rows and 3 columns fo
 a total of 15 entries, whereas the "tidy" data on the right has 15 rows and 2 columns
 for a total of 30 entries.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pivot_functions.001.jpeg
 :name: fig:02-wide-to-long
@@ -451,7 +447,8 @@ To get started,
 we will use `pd.read_csv` to load the (untidy) data.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_wide = pd.read_csv("data/region_lang_top5_cities_wide.csv")
 lang_wide
 ```
@@ -477,7 +474,7 @@ as shown in the tidy data on the right in
 we could simply use one line of code (`df["mother_tongue"].max()`)
 to get the maximum value.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pandas_melt_wide-long.png
 :name: fig:img-pivot-longer-with-table
@@ -491,7 +488,7 @@ Going from wide to long with the `melt` function.
 {numref}`fig:img-pivot-longer` details the arguments that we need to specify
 in the `melt` function to accomplish this data transformation.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pandas_melt_args_labels.png
 :name: fig:img-pivot-longer
@@ -515,7 +512,8 @@ Canadians report each language as their mother tongue for each metropolitan
 area
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_mother_tidy = lang_wide.melt(
     id_vars=["category", "language"],
     var_name="region",
@@ -571,7 +569,7 @@ To reshape this untidy data set to a tidy (and in this case, wider) format,
 we need to create columns called "population", "commuters", and "incorporated."
 This is illustrated in the right table of {numref}`fig:long-to-wide`.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pivot_functions.002.jpeg
 :name: fig:long-to-wide
@@ -593,7 +591,8 @@ the primary language at home and work for five
 major cities (Toronto, Montréal, Vancouver, Calgary and Edmonton).
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_long = pd.read_csv("data/region_lang_top5_cities_long.csv")
 lang_long
 ```
@@ -611,7 +610,7 @@ since these two variables are stored in the same column.
 {numref}`fig:img-pivot-wider-table` shows how this data
 will be tidied using the `pivot` function.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pandas_pivot_long-wide.png
 :name: fig:img-pivot-wider-table
@@ -626,7 +625,7 @@ Going from long to wide with the `pivot` function.
 
 **TODO make figure match code below**
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/pandas_pivot_args_labels.png
 :name: fig:img-pivot-wider
@@ -640,7 +639,8 @@ Syntax for the `pivot` function.
 We will apply the function as detailed in {numref}`fig:img-pivot-wider`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_home_tidy = lang_long.pivot(
     index=["region", "category", "language"],
     columns=["type"],
@@ -676,6 +676,7 @@ colums. Here there are 5 columns total. The little table it prints out tells you
 column, the number of non-null values (e.g. the number of entries that are not missing values), and
 the type of the entries. Finally the last two rows summarize the types of each column and how much
 memory the data frame is using on your computer.
+
 ```{code-cell} ipython3
 lang_home_tidy.info()
 ```
@@ -696,7 +697,6 @@ This is just because the original `type` column only had
 two categories in it. If it had more than two, `pivot` would have created
 more columns, and we would see the data set "widen."
 
-
 +++
 
 (str-split)=
@@ -714,7 +714,8 @@ values of a variable, *and* each value does not have its own cell! To turn this
 messy data into tidy data, we'll have to fix these issues.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_messy = pd.read_csv("data/region_lang_top5_cities_messy.csv")
 lang_messy
 ```
@@ -727,7 +728,8 @@ data that we need to further separate, i.e., the
 number of Canadians reporting their primary language at home and work.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 lang_messy_longer = lang_messy.melt(
     id_vars=["category", "language"],
     var_name="region",
@@ -741,6 +743,7 @@ Next we'll split the `value` column into two columns.
 In basic Python, if we wanted to split the string `"50/0"` into two numbers `["50", "0"]`
 we would use the  `split` method on the string, and specify that the split should be made
 on the slash character `"/"`.
+
 ```{code-cell} ipython3
 "50/0".split("/")
 ```
@@ -756,7 +759,7 @@ that speak each language most at work for each region.
 {numref}`fig:img-separate`
 outlines what we need to specify to use `str.split`.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/str-split_args_labels.png
 :name: fig:img-separate
@@ -773,6 +776,7 @@ to tell `pandas` that we want to expand the output into two columns.
 split_counts = lang_messy_longer["value"].str.split("/", expand=True)
 split_counts
 ```
+
 Since we only operated on the `value` column, the `split_counts` data frame
 doesn't have the rest of the columns (`language`, `region`, etc.)
 that were in our original data frame. We don't want to lose this information, so
@@ -783,7 +787,8 @@ along an axis. By default, it concatenates the data frames vertically along `axi
 new `split_counts` data frame (to obtain a *wider* data frame), we will specify `axis=1`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang = pd.concat(
     [lang_messy_longer, split_counts],
     axis=1,
@@ -796,13 +801,15 @@ Next, we will rename our newly created columns (currently called
 and drop the `value` column from our data frame using the `drop` method.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang = (
     tidy_lang.rename(columns={0: "most_at_home", 1: "most_at_work"})
     .drop(columns=["value"])
 )
 tidy_lang
 ```
+
 Note that we could have chained these steps together to make our code more compact.
 Is this data set now tidy? If we recall the three criteria for tidy data:
 
@@ -813,6 +820,7 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Although we can't see it in the data frame above, all of the variables are actually
 "object" data types. We can check this using the `info` method.
+
 ```{code-cell} ipython3
 tidy_lang.info()
 ```
@@ -833,7 +841,8 @@ Fortunately, the `pandas.to_numeric` function provides a natural way to fix prob
 like this: it will convert the columns to the best numeric data types.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])
 tidy_lang["most_at_work"] = pd.to_numeric(tidy_lang["most_at_work"])
 tidy_lang
@@ -869,7 +878,8 @@ learned in the chapter on {ref}`intro`, we can pass all of these column
 names into the square brackets.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang[["language", "region", "most_at_home", "most_at_work"]]
 ```
 
@@ -878,7 +888,8 @@ if we pass a list containing a single column name,
 a data frame with this column will be returned.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang[["language"]]
 ```
 
@@ -891,10 +902,10 @@ but we will point out a few occasions
 where it is advantageous to extract single columns as data frames.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang["language"]
 ```
-
 
 ### Extracting rows that have a certain value with `==`
 Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
@@ -909,7 +920,8 @@ those where the `category` column holds the value `"Official languages"`.
 We name this data frame `official_langs`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 official_langs = tidy_lang[tidy_lang["category"] == "Official languages"]
 official_langs
 ```
@@ -923,7 +935,8 @@ where the `category` does *not* equal `"Official languages"` we write the code
 below.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang[tidy_lang["category"] != "Official languages"]
 ```
 
@@ -946,8 +959,6 @@ tidy_lang[
   (tidy_lang["language"] == "French")
 ]
 ```
-
-+++ {"tags": []}
 
 ### Extracting rows satisfying at least one condition using `|`
 
@@ -977,7 +988,8 @@ as it contains statistics for number of households, land area, population
 and number of dwellings for different regions.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_data = pd.read_csv("data/region_data.csv")
 region_data
 ```
@@ -1072,7 +1084,8 @@ filters the rows to only those pertaining to the Toronto region,
 and the second argument specifies a list of columns to keep by name.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang.loc[
     tidy_lang['region'] == 'Toronto',
     ["language", "region", "most_at_home", "most_at_work"]
@@ -1088,7 +1101,8 @@ we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax
 denotes a range, and is supported by the `loc[]` function, but not by `[]`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang.loc[
     tidy_lang['region'] == 'Toronto',
     "language":"most_at_work"
@@ -1100,7 +1114,8 @@ everything. For example, to obtain a subset of all rows and only those columns r
 we could use the following expression.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang.loc[:, "language":"most_at_work"]
 ```
 
@@ -1109,15 +1124,18 @@ that we want "everything up to" or "everything after" an element. For example,
 if we want all of the columns including and after `language`, we can write the expression:
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang.loc[:, "language":]
 ```
+
 By not putting anything after the `:`, Python reads this as "from `language` until the last column".
 Similarly, we can specify that we want everything up to and including `language` by writing
 the expression:
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 tidy_lang.loc[:, :"language"]
 ```
 
@@ -1189,7 +1207,7 @@ might end up having a bug that is quite hard to track down.
 ```{index} pandas.Series; str.startswith
 ```
 
-+++ {"tags": []}
++++
 
 ## Aggregating data
 
@@ -1209,7 +1227,7 @@ Oftentimes,
 this summary statistic is calculated from the values in a data frame column,
 or columns, as shown in {numref}`fig:summarize`.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/summarize.001.jpeg
 :name: fig:summarize
@@ -1226,7 +1244,8 @@ We will start by showing how to compute the minimum and maximum number of Canadi
 language as their primary language at home. First, a reminder of what `region_lang` looks like:
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
 ```
@@ -1246,6 +1265,7 @@ region_lang["most_at_home"].max()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue("lang_most_people", "{0:,.0f}".format(int(region_lang["most_at_home"].max())))
 ```
 
@@ -1254,6 +1274,7 @@ as their primary language at home. We also see that the most commonly spoken
 primary language at home is spoken by
 {glue:text}`lang_most_people` people. If instead we wanted to know the
 total number of people in the survey, we could use the `sum` summary statistic method.
+
 ```{code-cell} ipython3
 region_lang["most_at_home"].sum()
 ```
@@ -1299,8 +1320,6 @@ summary statistics that you can compute with `pandas`.
 ```
 
 +++
-+++
-
 
 > **Note:** In `pandas`, the value `NaN` is often used to denote missing data.
 > By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
@@ -1347,6 +1366,7 @@ as we did for a single column previously.
 For example, if we want to know
 the mean and standard deviation of all of the columns between `"mother_tongue"` and `"lang_known"`,
 we use `.loc[]` to select those columns and then `agg` to ask for both the `mean` and `std`.
+
 ```{code-cell} ipython3
 region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 ```
@@ -1367,7 +1387,7 @@ frame and then calculate the minimum and maximum number of Canadians
 reporting the language as the primary language at home
 for each of the regions in the data set.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/summarize.002.jpeg
 :name: fig:summarize-groupby
@@ -1411,6 +1431,7 @@ with `region` as a column name.
 ```{code-cell} ipython3
 region_lang.groupby("region")["most_at_home"].agg(["min", "max"]).reset_index()
 ```
+
 You can also pass multiple column names to `groupby`. For example, if we wanted to
 know about how the different categories of languages (Aboriginal, Non-Official &
 Non-Aboriginal, and  Official) are spoken at home in different regions, we would pass a
@@ -1423,7 +1444,8 @@ region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
 You can also ask for grouped summary statistics on the whole data frame.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang.groupby("region").agg(["min", "max"])
 ```
 
@@ -1439,6 +1461,7 @@ in our case, we get an error.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+
 region_lang["most_at_home":"lang_known"].groupby("region").max()
 ```
 
@@ -1453,7 +1476,8 @@ and then call `[]` with a list of column names that includes `region`;
 this approach always works.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max()
 ```
 
@@ -1461,7 +1485,8 @@ To see how many observations there are in each group,
 we can use `value_counts`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang.value_counts("region")
 ```
 
@@ -1469,11 +1494,10 @@ Which takes the `normalize` parameter to show the output as proportion
 instead of a count.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang.value_counts("region", normalize=True)
 ```
-
-+++
 
 ## Apply functions across multiple columns with `apply`
 
@@ -1500,7 +1524,7 @@ Sometimes we need to apply a function to many columns in a data frame.
 For example, we would need to do this when converting units of measurements across many columns.
 We illustrate such a data transformation in {numref}`fig:mutate-across`.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/summarize.005.jpeg
 :name: fig:mutate-across
@@ -1519,7 +1543,8 @@ When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang
 ```
 
@@ -1537,9 +1562,11 @@ except that you don't need to give them a name.
 That means you can pass them as an argument into `apply` easily!
 Let's consider a simple example of a `lambda` function that
 multiplies a number by two.
+
 ```{code-cell} ipython3
 lambda x: 2*x
 ```
+
 We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word
 that tells Python "what follows is
 a function." Following this, we then state the name of the arguments of the function.
@@ -1547,9 +1574,11 @@ In this case, we just have one argument named `x`. After the list of arguments, 
 colon `:`. And finally after the colon are the instructions: take the value provided and multiply it by 2.
 Let's call our shiny new `lambda` function with the argument `2` (so the output should be `4`).
 Just like a regular function, we pass its argument between parentheses `()` symbols.
+
 ```{code-cell} ipython3
 (lambda x: 2*x)(2)
 ```
+
 > **Note:** Because we didn't give the `lambda` function a name, we have to surround it with
 > parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
 > and think that `(2)` was part of the instructions that comprise the `lambda` function.
@@ -1560,10 +1589,12 @@ Returning to our example, let's use `apply` to convert the columns `"mother_tong
 to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
 of the data frame, which we will name `col`---and apply the `astype` method to it.
 Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
+
 ```{code-cell} ipython3
 region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
 region_lang_nums.info()
 ```
+
 You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`.
 You can also see that `apply` returns a data frame with the same number of columns and rows
 as the input data frame. The only thing `apply` does is use the `lambda` function argument
@@ -1574,7 +1605,7 @@ on each of the specified columns.
 What if you want to apply a function across columns but within one row?
 We illustrate such a data transformation in {numref}`fig:rowwise`.
 
-+++ {"tags": []}
++++
 
 ```{figure} img/wrangling/summarize.004.jpeg
 :name: fig:rowwise
@@ -1631,19 +1662,21 @@ to `assign` begins with `maximum = `.
 Then after the `=`, we specify what the contents of that new column
 should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
 Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 region_lang.assign(
   maximum = region_lang_nums.apply(max, axis=1)
 )
 ```
+
 This gives us a new data frame that looks like the `region_lang` data frame,
 except that it has an additional column named `maximum`.
 The `maximum` column contains
 the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region, just as we specified!
-
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1681,8 +1714,10 @@ we will use the `&` symbol.
 and with the `[]` operation,
  `"English"` as the `language` and filter the rows,
 and name the new data frame `english_langs`.
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 english_lang = region_lang[
     (region_lang["language"] == "English") &
     (region_lang["region"].isin(five_cities["region"]))
@@ -1694,9 +1729,11 @@ Okay, now we have a data frame that pertains only to the English language
 and the five cities mentioned earlier.
 In order to compute the proportion of the population speaking English in each of these cities,
 we need to add the population data from the `five_cities` data frame.
+
 ```{code-cell} ipython3
 five_cities
 ```
+
 The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
 We will add this information to our data frame in a new column named `city_pops` by using `assign`.
@@ -1708,13 +1745,16 @@ order, and add it to our data frame.
 Also note that we write `english_lang = ` on the left so that the newly created data frame overwrites our
 old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not
 modify the original data frame directly!
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 english_lang = english_lang.assign(
   city_pops=[4098927, 5928040, 1392609, 1321426, 2463431]
 )
 english_lang
 ```
+
 > **Note**: Inserting data manually in this is generally very error-prone and is not recommended.
 > We do it here to demonstrate another usage of `assign` that does not involve `apply`.
 > But in more advanced data wrangling,
@@ -1725,16 +1765,14 @@ english_lang
 Now we have a new column with the population for each city. Finally, we calculate the
 proportion of people who speak English the most at home by taking the ratio of the columns
 `most_at_home` and `city_pops`. We will again add this to our data frame using `assign`.
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 english_lang.assign(
     proportion=english_lang["most_at_home"]/english_lang["city_pops"]
 )
 ```
-
-
-+++
-
 
 ### Using `assign` to modify columns
 
@@ -1760,7 +1798,8 @@ then `assign` would create new columns with the names we specified.
 The syntax is detailed in {numref}`fig:img-assign`.
 
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 official_langs_numeric = official_langs.assign(
     most_at_home=pd.to_numeric(official_langs["most_at_home"]),
     most_at_work=pd.to_numeric(official_langs["most_at_work"]),
@@ -1769,17 +1808,12 @@ official_langs_numeric = official_langs.assign(
 official_langs_numeric
 ```
 
-+++ {"tags": []}
-
 ```{figure} img/wrangling/pandas_assign_args_labels.png
 :name: fig:img-assign
 :figclass: figure
 
 Syntax for the `assign` function.
 ```
-
-+++
-
 
 ```{code-cell} ipython3
 official_langs_numeric.info()
@@ -1796,6 +1830,7 @@ you make a mistake, you can start again from the original data frame.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 english_lang = region_lang[region_lang["language"] == "English"]
 five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
 english_lang = english_lang[english_lang["region"].isin(five_cities)]
@@ -1806,10 +1841,13 @@ Lets return to the example of wanting to compute the proportions of people who s
 most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
 our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
 of interest.
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 english_lang
 ```
+
 We then added the populations of these cities as a column using `assign`
 (Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
 Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
@@ -1821,6 +1859,7 @@ We create a new data frame by calling `pd.DataFrame` with a dictionary
 as its argument. The dictionary associates each column name in the data frame to be created
 with a list of entries. Here we list city names in a column called `"region"`
 and their populations in a column called `"population"`.
+
 ```{code-cell} ipython3
 city_populations = pd.DataFrame({
   "region" : ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"],
@@ -1828,15 +1867,19 @@ city_populations = pd.DataFrame({
 })
 city_populations
 ```
+
 This new data frame has the same `region` column as the `english_lang` data frame. The order of
 the cities is different, but that is okay! We can use the `merge` function in `pandas` to say
 we would like to combine the two data frames by matching the `region` between them. The argument
 `on="region"` tells pandas we would like to use the `region` column to match up the entries.
+
 ```{code-cell} ipython3
-:tags: ["output_scroll"]
+:tags: [output_scroll]
+
 english_lang = english_lang.merge(city_populations, on="region")
 english_lang
 ```
+
 You can see that the populations for each city are correct (e.g. Montréal: 4098927, Toronto: 5928040),
 and we can proceed to with our analysis from here.
 
@@ -1882,7 +1925,7 @@ make sure to follow the instructions for computer setup
 found in the chapter on {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-+++ {"tags": []}
++++
 
 ## Additional resources
 

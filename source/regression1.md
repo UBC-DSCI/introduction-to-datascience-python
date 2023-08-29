@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -200,6 +200,7 @@ scatter
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 glue("fig:07-edaRegr", scatter)
 ```
 
@@ -400,7 +401,7 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions
 about what the data must look like for it to work.
 
-+++ 
++++
 
 ## Training, evaluating, and tuning the model
 
@@ -607,7 +608,6 @@ we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
 
-
 ```{code-cell} ipython3
 # fit the GridSearchCV object
 sacr_fit = sacr_gridsearch.fit(
@@ -661,6 +661,7 @@ The smallest RMSPE occurs when $K$ is {glue:}`best_k_sacr`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 best_k_sacr = sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()]
 best_cv_RMSPE = min(sacr_results["mean_test_score"])
 glue("best_k_sacr", best_k_sacr)
@@ -698,8 +699,6 @@ since this provides additional information on how the model performance varies.
 ```{code-cell} ipython3
 sacr_fit.best_params_
 ```
-
-+++
 
 ## Underfitting and overfitting
 Similar to the setting of classification, by setting the number of neighbors
@@ -836,7 +835,7 @@ function (with the `y_true` and `y_pred` arguments)
 to compute the mean squared prediction error, and finally take the
 square root to get the RMSPE. The reason that we do not just use the `score` 
 method---as in the {ref}`classification2` chapter---is that the `KNeighborsRegressor` 
-model uses a different default scoring metric than the RMSPE. 
+model uses a different default scoring metric than the RMSPE.
 
 ```{code-cell} ipython3
 from sklearn.metrics import mean_squared_error
@@ -1086,7 +1085,6 @@ RMSPE_mult = mean_squared_error(
     y_pred=sacr_preds["predicted"]
 )**(1/2)
 RMSPE_mult
-
 ```
 
 ```{code-cell} ipython3

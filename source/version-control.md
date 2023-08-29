@@ -166,7 +166,7 @@ The other copy is typically stored in a repository hosting service (e.g., GitHub
 we can easily share it with our collaborators.
 This copy is commonly referred to as the **remote repository**.
 
-```{figure} img/vc1-no-changes.png
+```{figure} img/version-control/vc1-no-changes.png
 ---
 name: vc1-no-changes
 ---
@@ -233,7 +233,7 @@ When working on files in your local version control
 repository (e.g., using Jupyter) and saving your work, these changes will only initially exist in the
 working directory of the local repository ({numref}`vc2-changes`).
 
-```{figure} img/vc2-changes.png
+```{figure} img/version-control/vc2-changes.png
 ---
 name: vc2-changes
 ---
@@ -256,7 +256,7 @@ in {numref}`vc-ba2-add`, we add only the two files
 that are important to the analysis project (`analysis.ipynb` and `README.md`)
 and not our personal scratch notes for the project (`notes.txt`).
 
-```{figure} img/vc-ba2-add.png
+```{figure} img/version-control/vc-ba2-add.png
 ---
 name: vc-ba2-add
 ---
@@ -276,7 +276,7 @@ these changes are only being committed to the local repository's history.  The
 remote repository on GitHub has not changed, and collaborators would not yet be
 able to see your new changes.
 
-```{figure} img/vc-ba3-commit.png
+```{figure} img/version-control/vc-ba3-commit.png
 ---
 name: vc-ba3-commit
 ---
@@ -298,7 +298,7 @@ local repository. Now when collaborators interact with the remote repository, th
 to see the changes you made. And you can also take comfort in the fact that your work is now backed
 up in the cloud!
 
-```{figure} img/vc5-push.png
+```{figure} img/version-control/vc5-push.png
 ---
 name: vc5-push
 ---
@@ -313,7 +313,7 @@ committing them to their own local repository, and pushing their commits to the 
 to share them with you. When they push their changes, those changes will only initially exist in
 the remote GitHub repository and not in your local repository ({numref}`vc6-remote-changes`).
 
-```{figure} img/vc6-remote-changes.png
+```{figure} img/version-control/vc6-remote-changes.png
 ---
 name: vc6-remote-changes
 ---
@@ -330,7 +330,7 @@ Additionally, until you pull changes from the remote repository, you will not
 be able to push any more changes yourself (though you will still be able to
 work and make commits in your own local repository).
 
-```{figure} img/vc7-pull.png
+```{figure} img/version-control/vc7-pull.png
 ---
 name: vc7-pull
 ---
@@ -368,7 +368,7 @@ your project by clicking on the "+" icon in the upper right-hand
 corner, and then on "New Repository," as shown in
 {numref}`new-repository-01`.
 
-```{figure} img/version_control/new_repository_01.png
+```{figure} img/version-control/new_repository_01.png
 ---
 name: new-repository-01
 ---
@@ -394,7 +394,7 @@ following steps shown in {numref}`new-repository-02`:
 3. Select "Add a README file." This creates a template `README.md` file in your repository's root folder.
 4. When you are happy with your repository name and configuration, click on the green "Create Repository" button.
 
-```{figure} img/version_control/new_repository_02.png
+```{figure} img/version-control/new_repository_02.png
 ---
 name: new-repository-02
 ---
@@ -406,7 +406,7 @@ Repository configuration for a project that is public and initialized with a REA
 A newly created public repository with a `README.md` template file should look something
 like what is shown in {numref}`new-repository-03`.
 
-```{figure} img/version_control/new_repository_03.png
+```{figure} img/version-control/new_repository_03.png
 ---
 name: new-repository-03
 ---
@@ -426,7 +426,7 @@ The pen tool can be used to edit existing plain text files. When you click on
 the pen tool, the file will be opened in a text box where you can use your
 keyboard to make changes ({numref}`pen-tool-01` and {numref}`pen-tool-02`).
 
-```{figure} img/version_control/pen-tool_01.png
+```{figure} img/version-control/pen-tool_01.png
 ---
 name: pen-tool-01
 ---
@@ -434,7 +434,7 @@ Clicking on the pen tool opens a text box for editing plain text files.
 ```
 
 
-```{figure} img/version_control/pen-tool_02.png
+```{figure} img/version-control/pen-tool_02.png
 ---
 name: pen-tool-02
 ---
@@ -465,7 +465,7 @@ changes to multiple files simultaneously. This is especially useful when one
 You can also do things like run code when working in a local repository, which you cannot
 do on GitHub. In general, editing on GitHub is reserved for small edits to plain text files.
 
-```{figure} img/version_control/pen-tool_03.png
+```{figure} img/version-control/pen-tool_03.png
 ---
 name: pen-tool-03
 ---
@@ -484,7 +484,7 @@ from your computer. To create a new plain text file, click the "Add file"
 drop-down menu and select the "Create new file" option
 ({numref}`create-new-file-01`).
 
-```{figure} img/version_control/create-new-file_01.png
+```{figure} img/version-control/create-new-file_01.png
 ---
 name: create-new-file-01
 ---
@@ -506,7 +506,7 @@ Note that GitHub understands and renders `.md` files using a
 very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
 for checking markdown code correctness.
 
-```{figure} img/version_control/create-new-file_02.png
+```{figure} img/version-control/create-new-file_02.png
 ---
 name: create-new-file-02
 ---
@@ -516,7 +516,7 @@ New plain text files require a file name in the text box circled in red, and fil
 Save and commit your changes by clicking the green "Commit changes" button at the
 bottom of the page ({numref}`create-new-file-03`).
 
-```{figure} img/version_control/create-new-file_03.png
+```{figure} img/version-control/create-new-file_03.png
 ---
 name: create-new-file-03
 ---
@@ -532,14 +532,14 @@ link to access a file browser dialog. Once the files you want to upload have
 been selected, click the green "Commit changes" button at the bottom of the
 page ({numref}`upload-files-02`).
 
-```{figure} img/version_control/upload-files_01.png
+```{figure} img/version-control/upload-files_01.png
 ---
 name: upload-files-01
 ---
 New files of any type can be uploaded to GitHub.
 ```
 
-```{figure} img/version_control/upload-files_02.png
+```{figure} img/version-control/upload-files_02.png
 ---
 name: upload-files-02
 ---
@@ -604,7 +604,7 @@ Note that you may be asked to re-authenticate with your username
 and password to proceed.
 
 
-```{figure} img/generate-pat_01.png
+```{figure} img/version-control/generate-pat_01.png
 ---
 name: generate-pat-01
 ---
@@ -623,7 +623,7 @@ token access to our repositories (so that we can push and pull) but none of our 
 account features. Finally, to generate the token, scroll to the bottom of that page
 and click the green "Generate token" button ({numref}`generate-pat-02`).
 
-```{figure} img/generate-pat_02.png
+```{figure} img/version-control/generate-pat_02.png
 ---
 name: generate-pat-02
 ---
@@ -643,7 +643,7 @@ store it, though, do not fret&mdash;you can delete that token by clicking the
 To learn more about GitHub authentication,
 see the additional resources section at the end of this chapter.
 
-```{figure} img/generate-pat_03.png
+```{figure} img/version-control/generate-pat_03.png
 ---
 name: generate-pat-03
 ---
@@ -668,7 +668,7 @@ copy that knows where it was obtained from so that it knows where to send/receiv
 new committed edits. In order to do this, first copy the URL from the HTTPS tab
 of the Code drop-down menu on GitHub ({numref}`clone-02`).
 
-```{figure} img/version_control/clone_02.png
+```{figure} img/version-control/clone_02.png
 ---
 name: clone-02
 ---
@@ -678,7 +678,7 @@ The green "Code" drop-down menu contains the remote address (URL) corresponding 
 Open Jupyter, and click the Git+ icon on the file browser tab
 ({numref}`clone-01`).
 
-```{figure} img/version_control/clone_01.png
+```{figure} img/version-control/clone_01.png
 ---
 name: clone-01
 ---
@@ -690,7 +690,7 @@ The Jupyter Git Clone icon (red circle).
 Paste the URL of the GitHub project repository you
 created and click the blue "CLONE" button ({numref}`clone-03`).
 
-```{figure} img/version_control/clone_03.png
+```{figure} img/version-control/clone_03.png
 ---
 name: clone-03
 ---
@@ -700,7 +700,7 @@ Prompt where the remote address (URL) corresponding to the location of the GitHu
 On the file browser tab, you will now see a folder for the repository.
 Inside this folder  will be all the files that existed on GitHub ({numref}`clone-04`).
 
-```{figure} img/version_control/clone_04.png
+```{figure} img/version-control/clone_04.png
 ---
 name: clone-04
 ---
@@ -717,7 +717,7 @@ To "add" this modified file to the staging area (i.e., flag that this is a
 file whose changes we would like to commit), click the Jupyter Git extension
 icon on the far left-hand side of Jupyter ({numref}`git-add-01`).
 
-```{figure} img/version_control/git_add_01.png
+```{figure} img/version-control/git_add_01.png
 ---
 name: git-add-01
 ---
@@ -740,7 +740,7 @@ This is a temporary "checkpoint file" created by Jupyter when you work on `eda.i
 You generally do not want to add auto-generated files to Git repositories;
 only add the files you directly create and edit.
 
-```{figure} img/version_control/git_add_02.png
+```{figure} img/version-control/git_add_02.png
 ---
 name: git-add-02
 ---
@@ -754,7 +754,7 @@ Make sure to include a (clear and helpful!) message about what was changed
 so that your collaborators (and future you) know what happened in this commit.
 
 
-```{figure} img/version_control/git_add_03.png
+```{figure} img/version-control/git_add_03.png
 ---
 name: git-add-03
 ---
@@ -781,7 +781,7 @@ When you click the "Commit" button for the first time, you will be prompted to
 enter your name and email. This only needs to be done once for each machine
 you use Git on.
 
-```{figure} img/version_control/git_commit_01.png
+```{figure} img/version-control/git_commit_01.png
 ---
 name: git-commit-01
 ---
@@ -794,7 +794,7 @@ You are now ready to push your changes
 to the remote repository on GitHub ({numref}`git-commit-03`).
 
 
-```{figure} img/version_control/git_commit_03.png
+```{figure} img/version-control/git_commit_03.png
 ---
 name: git-commit-03
 ---
@@ -815,7 +815,7 @@ GitHub, you need to *push* them. To do this,
 click on the cloud icon with the up arrow on the Jupyter Git tab
 ({numref}`git-push-01`).
 
-```{figure} img/version_control/git_push_01.png
+```{figure} img/version-control/git_push_01.png
 ---
 name: git-push-01
 ---
@@ -828,7 +828,7 @@ and the personal access token that you generated
 earlier (not your account password!). Click
 the blue "OK" button to initiate the push ({numref}`git-push-02`).
 
-```{figure} img/version_control/git_push_02.png
+```{figure} img/version-control/git_push_02.png
 ---
 name: git-push-02
 ---
@@ -840,7 +840,7 @@ If the files were successfully pushed to the project repository on
 GitHub, you will be shown a success message ({numref}`git-push-03`).
 Click "Dismiss" to continue working in Jupyter.
 
-```{figure} img/version_control/git_push_03.png
+```{figure} img/version-control/git_push_03.png
 ---
 name: git-push-03
 ---
@@ -852,7 +852,7 @@ If you visit the remote repository on GitHub,
 you will see that the changes now exist there too
 ({numref}`git-push-04`)!
 
-```{figure} img/version_control/git_push_04.png
+```{figure} img/version-control/git_push_04.png
 ---
 name: git-push-04
 ---
@@ -875,7 +875,7 @@ person who created the GitHub repository has permissions to create, edit and
 delete files (*write access*). To give your collaborators write access to the
 projects, navigate to the "Settings" tab ({numref}`add-collab-01`).
 
-```{figure} img/version_control/add_collab_01.png
+```{figure} img/version-control/add_collab_01.png
 ---
 name: add-collab-01
 ---
@@ -884,7 +884,7 @@ The "Settings" tab on the GitHub web interface.
 
 Then click "Manage access" ({numref}`add-collab-02`).
 
-```{figure} img/version_control/add_collab_02.png
+```{figure} img/version-control/add_collab_02.png
 ---
 name: add-collab-02
 ---
@@ -893,7 +893,7 @@ The "Manage access" tab on the GitHub web interface.
 
 Then click the green "Invite a collaborator" button ({numref}`add-collab-03`).
 
-```{figure} img/version_control/add_collab_03.png
+```{figure} img/version-control/add_collab_03.png
 ---
 name: add-collab-03
 ---
@@ -903,7 +903,7 @@ The "Invite a collaborator" button on the GitHub web interface.
 Type in the collaborator's GitHub username or email,
 and select their name when it appears ({numref}`add-collab-04`).
 
-```{figure} img/version_control/add_collab_04.png
+```{figure} img/version-control/add_collab_04.png
 ---
 name: add-collab-04
 ---
@@ -912,7 +912,7 @@ The text box where a collaborator's GitHub username or email can be entered.
 
 Finally, click the green "Add <COLLABORATORS_GITHUB_USER_NAME> to this repository" button ({numref}`add-collab-05`).
 
-```{figure} img/version_control/add_collab_05.png
+```{figure} img/version-control/add_collab_05.png
 ---
 name: add-collab-05
 ---
@@ -930,7 +930,7 @@ We will now walk through how to use the Jupyter Git extension tool to pull chang
 to our `eda.ipynb` analysis file that were made by a collaborator
 ({numref}`git-pull-00`).
 
-```{figure} img/version_control/git_pull_00.png
+```{figure} img/version-control/git_pull_00.png
 ---
 name: git-pull-00
 ---
@@ -943,7 +943,7 @@ The GitHub interface indicates the name of the last person to push a commit to t
 You can tell Git to "pull" by clicking on the cloud icon with
 the down arrow in Jupyter ({numref}`git-pull-01`).
 
-```{figure} img/version_control/git_pull_01.png
+```{figure} img/version-control/git_pull_01.png
 ---
 name: git-pull-01
 ---
@@ -953,7 +953,7 @@ The Jupyter Git extension clone button.
 Once the files are successfully pulled from GitHub, you need to click "Dismiss"
 to keep working ({numref}`git-pull-02`).
 
-```{figure} img/version_control/git_pull_02.png
+```{figure} img/version-control/git_pull_02.png
 ---
 name: git-pull-02
 ---
@@ -963,7 +963,7 @@ The prompt after changes have been successfully pulled from a remote repository.
 And then when you open (or refresh) the files whose changes you just pulled,
 you should be able to see them ({numref}`git-pull-03`).
 
-```{figure} img/version_control/git_pull_03.png
+```{figure} img/version-control/git_pull_03.png
 ---
 name: git-pull-03
 ---
@@ -974,7 +974,7 @@ It can be very useful to review the history of the changes to your project. You
 can do this directly in Jupyter by clicking "History" in the Git tab
 ({numref}`git-pull-04`).
 
-```{figure} img/version_control/git_pull_04.png
+```{figure} img/version-control/git_pull_04.png
 ---
 name: git-pull-04
 ---
@@ -990,7 +990,7 @@ then you will be unable to push your changes to GitHub until you pull.
 This situation can be recognized by the error message
 shown in {numref}`merge-conflict-01`.
 
-```{figure} img/version_control/merge_conflict_01.png
+```{figure} img/version-control/merge_conflict_01.png
 ---
 name: merge-conflict-01
 ---
@@ -1010,7 +1010,7 @@ not know whether to keep your version of the line(s), your collaborators
 version of the line(s), or some blend of the two. When this happens, Git will
 tell you that you have a merge conflict in certain file(s) ({numref}`merge-conflict-03`).
 
-```{figure} img/version_control/merge_conflict_03.png
+```{figure} img/version-control/merge_conflict_03.png
 ---
 name: merge-conflict-03
 ---
@@ -1033,7 +1033,7 @@ in a plain text editor and look for special marks that Git puts in the file to
 tell you where the merge conflict occurred ({numref}`merge-conflict-04`).
 
 
-```{figure} img/version_control/merge_conflict_04.png
+```{figure} img/version-control/merge_conflict_04.png
 ---
 name: merge-conflict-04
 ---
@@ -1049,7 +1049,7 @@ In {numref}`merge-conflict-05`, you can see that in your local repository
 there is a line of code that calls `scale_color_manual` with three color values (`deeppink2`, `cyan4`, and `purple1`).
 It looks like your collaborator made an edit to that line too, except with different colors (to `blue3`, `red3`, and `black`)!
 
-```{figure} img/version_control/merge_conflict_05.png
+```{figure} img/version-control/merge_conflict_05.png
 ---
 name: merge-conflict-05
 ---
@@ -1060,7 +1060,7 @@ Once you have decided which version of the change (or what combination!) to
 keep, you need to use the plain text editor to remove the special marks that
 Git added ({numref}`merge-conflict-06`).
 
-```{figure} img/version_control/merge_conflict_06.png
+```{figure} img/version-control/merge_conflict_06.png
 ---
 name: merge-conflict-06
 ---
@@ -1097,7 +1097,7 @@ thread. Replying to issues from email is also possible. Given all of these advan
 To open a GitHub issue,
 first click on the "Issues" tab ({numref}`issue-01`).
 
-```{figure} img/version_control/issue_01.png
+```{figure} img/version-control/issue_01.png
 ---
 name: issue-01
 ---
@@ -1106,7 +1106,7 @@ The "Issues" tab on the GitHub web interface.
 
 Next click the "New issue" button ({numref}`issue-02`).
 
-```{figure} img/version_control/issue_02.png
+```{figure} img/version-control/issue_02.png
 ---
 name: issue-02
 ---
@@ -1117,7 +1117,7 @@ Add an issue title (which acts like an email subject line), and then put the
 body of the message in the larger text box. Finally, click "Submit new issue"
 to post the issue to share with others ({numref}`issue-03`).
 
-```{figure} img/version_control/issue_03.png
+```{figure} img/version-control/issue_03.png
 ---
 name: issue-03
 ---
@@ -1127,7 +1127,7 @@ Dialog boxes and submission button for creating new GitHub issues.
 You can reply to an issue that someone opened by adding your written response to
 the large text box and clicking comment ({numref}`issue-04`).
 
-```{figure} img/version_control/issue_04.png
+```{figure} img/version-control/issue_04.png
 ---
 name: issue-04
 ---
@@ -1139,7 +1139,7 @@ When a conversation is resolved, you can click "Close issue".
 The closed issue can be later viewed by clicking the "Closed" header link
 in the "Issue" tab ({numref}`issue-06`).
 
-```{figure} img/version_control/issue_06.png
+```{figure} img/version-control/issue_06.png
 ---
 name: issue-06
 ---

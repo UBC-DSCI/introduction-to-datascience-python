@@ -13,6 +13,7 @@ kernelspec:
 ---
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)

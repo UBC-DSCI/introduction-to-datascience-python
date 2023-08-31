@@ -1381,8 +1381,8 @@ cancer_plot = (
             "Smoothness",
             scale=alt.Scale(
                 domain=(
-                    cancer_train["Smoothness"].min(),
-                    cancer_train["Smoothness"].max(),
+                    cancer_train["Smoothness"].min() * 0.95,
+                    cancer_train["Smoothness"].max() * 1.05,
                 )
             ),
         ),
@@ -1390,8 +1390,8 @@ cancer_plot = (
             "Concavity",
             scale=alt.Scale(
                 domain=(
-                    cancer_train["Concavity"].min(),
-                    cancer_train["Concavity"].max(),
+                    cancer_train["Concavity"].min() -0.025,
+                    cancer_train["Concavity"].max() * 1.05,
                 )
             ),
         ),

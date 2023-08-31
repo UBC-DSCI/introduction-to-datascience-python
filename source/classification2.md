@@ -18,23 +18,7 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import numpy as np
-import pandas as pd
-from myst_nb import glue
-import altair as alt
-import os
-
-
-# Use PNG images in the PDF version of the books to make sure that they render
-if os.environ['BOOK_BUILD_TYPE'] == 'PDF':
-    alt.renderers.enable('png', scale_factor=0.7, ppi=300)
-else:
-    # Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame)
-    alt.data_transformers.enable('vegafusion')
+from chapter_preamble import *
 ```
 
 ## Overview 
@@ -300,6 +284,7 @@ on the series of numbers, passing the argument `n = 10` to indicate that we want
 
 ```{code-cell} ipython3
 import numpy as np
+import pandas as pd
 
 np.random.seed(1)
 

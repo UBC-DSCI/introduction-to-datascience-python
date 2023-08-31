@@ -14,24 +14,10 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
 
-from myst_nb import glue
-import numpy as np
-from sklearn.metrics.pairwise import euclidean_distances
+from chapter_preamble import *
 from IPython.display import HTML
-import altair as alt
-import os
-
-
-# Use PNG images in the PDF version of the books to make sure that they render
-if os.environ['BOOK_BUILD_TYPE'] == 'PDF':
-    alt.renderers.enable('png', scale_factor=0.7, ppi=300)
-else:
-    # Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame)
-    alt.data_transformers.enable('vegafusion')
+from sklearn.metrics.pairwise import euclidean_distances
 ```
 
 (classification1)=

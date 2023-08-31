@@ -18,11 +18,9 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import numpy as np
+from chapter_preamble import *
 import pandas as pd
 pd.set_option('display.max_rows', 20)
-
-from myst_nb import glue
 ```
 
 ## Overview

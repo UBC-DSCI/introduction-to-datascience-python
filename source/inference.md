@@ -18,22 +18,7 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-from myst_nb import glue
-import warnings
-
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import altair as alt
-import os
-
-
-# Use PNG images in the PDF version of the books to make sure that they render
-if os.environ['BOOK_BUILD_TYPE'] == 'PDF':
-    alt.data_transformers.disable_max_rows()
-    alt.renderers.enable('png', scale_factor=0.7, ppi=300)
-else:
-    # Reduce chart sizes and allow to plot up to 100k graphical objects (not the same as rows in the data frame)
-    alt.data_transformers.enable('vegafusion')
+from chapter_preamble import *
 ```
 
 ## Overview

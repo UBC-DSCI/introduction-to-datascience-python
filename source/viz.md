@@ -95,7 +95,7 @@ are as follows:
 - **bar plots** visualize comparisons of amounts
 - **histograms** visualize the distribution of one quantitative variable (i.e., all its possible values and how often they occur)
 
-```{figure} img/plot-sketches-1.png
+```{figure} img/viz/plot-sketches-1.png
 ---
 height: 400px
 name: plot_sketches
@@ -1921,23 +1921,24 @@ Let's learn how to save plot images to `.png` and `.svg` file formats using the
 {cite:p}`faithfuldata` that we created earlier, shown in {numref}`faithful_scatter_labels`.
 To save the plot to a file, we can use the `save`
 method. The `save` method takes the path to the filename where you would like to
-save the file (e.g., `img/filename.png` to save a file named `filename.png` to the `img` directory).
+save the file (e.g., `img/viz/filename.png` to save a file named `filename.png` to the `img/viz/` directory).
 The kind of image to save is specified by the file extension.  For example, to
 create a PNG image file, we specify that the file extension is `.png`.  Below
 we demonstrate how to save PNG and SVG file types for the
 `faithful_scatter_labels` plot.
 
 ```{code-cell} ipython3
-faithful_scatter_labels.save("img/faithful_plot.png")
-faithful_scatter_labels.save("img/faithful_plot.svg")
+faithful_scatter_labels.save("img/viz/faithful_plot.png")
+faithful_scatter_labels.save("img/viz/faithful_plot.svg")
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 import os
-png_size = np.round(os.path.getsize("img/faithful_plot.png")/(1024*1024), 2)
-svg_size = np.round(os.path.getsize("img/faithful_plot.svg")/(1024*1024), 2)
+import numpy as np
+png_size = np.round(os.path.getsize("img/viz/faithful_plot.png")/(1024*1024), 2)
+svg_size = np.round(os.path.getsize("img/viz/faithful_plot.svg")/(1024*1024), 2)
 
 glue("png_size", png_size)
 glue("svg_size", svg_size)
@@ -1970,7 +1971,7 @@ based on mathematical formulas, vector graphics can be scaled up to arbitrary
 sizes.  This makes them great for presentation media of all sizes, from papers
 to posters to billboards.
 
-```{figure} img/png-vs-svg.png
+```{figure} img/viz/png-vs-svg.png
 ---
 height: 400px
 name: png-vs-svg

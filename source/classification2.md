@@ -88,7 +88,7 @@ when predicting whether a patient's tumor is malignant or benign!
 
 +++
 
-```{figure} img/training_test.jpeg
+```{figure} img/classification2/training_test.jpeg
 :name: fig:06-training-test
 
 Splitting the data into training and testing sets.
@@ -114,7 +114,7 @@ $$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\
 
 +++
 
-```{figure} img/ML-paradigm-test.png
+```{figure} img/classification2/ML-paradigm-test.png
 :name: fig:06-ML-paradigm-test
 
 Process for splitting the data and finding the prediction accuracy.
@@ -960,7 +960,7 @@ resulting in 5 different choices for the **validation set**; we call this
 
 +++
 
-```{figure} img/cv.png
+```{figure} img/classification2/cv.png
 :name: fig:06-cv-image
 
 5-fold cross-validation.
@@ -1499,7 +1499,7 @@ estimate its accuracy.  The overall process is summarized in
 
 +++
 
-```{figure} img/train-test-overview.jpeg
+```{figure} img/classification2/train-test-overview.jpeg
 :name: fig:06-overview
 
 Overview of KNN classification.

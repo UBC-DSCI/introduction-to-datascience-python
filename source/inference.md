@@ -95,7 +95,7 @@ broader population from which it is taken is referred to as **statistical infere
 
 +++
 
-```{figure} img/population_vs_sample.png
+```{figure} img/inference/population_vs_sample.png
 :name: fig:11-population-vs-sample
 
 Population versus sample.
@@ -913,7 +913,7 @@ For a sample of size $n$, you would do the following:
 
 +++
 
-```{figure} img/intro-bootstrap.jpeg
+```{figure} img/inference/intro-bootstrap.jpeg
 :name: fig:11-intro-bootstrap-image
 
 Overview of the bootstrap process.

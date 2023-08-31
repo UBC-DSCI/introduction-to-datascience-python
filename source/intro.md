@@ -223,7 +223,7 @@ collect the data on, e.g., voters, cities, etc. We refer to the columns as
 affiliations, cities' populations, etc.
 
 
-```{figure} img/spreadsheet_vs_df.png
+```{figure} img/intro/spreadsheet_vs_df.png
 ---
 height: 500px
 name: img-spreadsheet-vs-data frame
@@ -312,7 +312,7 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python.
 
-```{figure} img/read_csv_function.png
+```{figure} img/intro/read_csv_function.png
 ---
 height: 220px
 name: img-read-csv
@@ -487,7 +487,7 @@ or one of the names we have given to objects in the code we have already written
 > of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
 > Try both out for yourself!
 
-```{figure} img/filter_rows.png
+```{figure} img/intro/filter_rows.png
 ---
 height: 220px
 name: img-filter
@@ -519,7 +519,7 @@ selecting only the `language` and `mother_tongue` columns from our original
 `can_lang` data frame, we put the list `["language", "mother_tongue"]`
 containing those two column names inside the square brackets of the `[]` operation.
 
-```{figure} img/select_columns.png
+```{figure} img/intro/select_columns.png
 ---
 height: 220px
 name: img-select
@@ -551,7 +551,7 @@ that with the `.loc[]` method. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
-```{figure} img/filter_rows_and_columns.png
+```{figure} img/intro/filter_rows_and_columns.png
 ---
 height: 220px
 name: img-loc
@@ -606,7 +606,7 @@ language, we will use the `sort_values` function to order the rows in our
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
-```{figure} img/sort_values.png
+```{figure} img/intro/sort_values.png
 ---
 height: 220px
 name: img-sort-values
@@ -850,7 +850,7 @@ the `x` and `y` *channels* (which represent the x-axis and y-axis position of th
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 
-```{figure} img/altair_syntax.png
+```{figure} img/intro/altair_syntax.png
 ---
 height: 220px
 name: img-altair
@@ -1120,7 +1120,7 @@ you about the different arguments and usage of functions that you have already l
 
 +++
 
-```{figure} img/help_read_csv.png
+```{figure} img/intro/help_read_csv.png
 ---
 height: 700px
 name: help_read_csv
@@ -1146,7 +1146,7 @@ and to prevent typos.
 
 +++
 
-```{figure} img/completion_menu.png
+```{figure} img/intro/completion_menu.png
 ---
 height: 400px
 name: completion_menu
@@ -1163,7 +1163,7 @@ to bring up a help dialogue including the same information as when using `help()
 
 +++
 
-```{figure} img/help_dialog.png
+```{figure} img/intro/help_dialog.png
 ---
 height: 400px
 name: help_dialog

@@ -78,6 +78,8 @@ sphinx:
   local_extensions: # A list of local extensions to load by sphinx specified by "name: path" items
   config: # key-value pairs to directly over-ride the Sphinx configuration
     bibtex_reference_style: author_year
+  html_context:
+    default_mode: light
 
 #######################################################################################
 bibtex_bibfiles:

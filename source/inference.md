@@ -1251,18 +1251,19 @@ visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
 # Create the annotation for for the 2.5th percentile
-text_025 = alt.Chart().mark_text(
+rule_025 = alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(
+    x=alt.datum(ci_bounds[0.025])
+).properties(
+    width=500
+)
+text_025 = rule_025.mark_text(
     color='#f58518',
     size=12,
     fontWeight='bold',
     dy=-160
 ).encode(
-    x=alt.datum(ci_bounds[0.025]),
     text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
-).properties(
-    width=500
 )
-rule_025 = text_025.mark_rule(color='#f58518', size=3, strokeDash=[5])
 
 # Create the annotation for for the 97.5th percentile
 text_975 = text_025.encode(

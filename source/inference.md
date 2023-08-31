@@ -1122,11 +1122,12 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
+sampling_distribution.encoding.x['bin']['extent'] = (90, 250)
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
-        sampling_distribution.mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
+        alt.Chart(sample_estimates).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
+        alt.Chart(sample_estimates).mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
             x='mean(mean_price)',
             y=alt.value(7),
             text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
@@ -1134,15 +1135,13 @@ alt.vconcat(
     ).properties(title='Sampling distribution', height=150),
     alt.layer(
         boot_est_dist,
-        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
-        boot_est_dist.mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
+        alt.Chart(boot20000_means).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
+        alt.Chart(boot20000_means).mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
             x='mean(mean_price)',
-            y=alt.value(6),
+            y=alt.value(7),
             text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title='Bootstrap distribution', height=150)
-).resolve_scale(
-    x='shared'
 )
 ```
 

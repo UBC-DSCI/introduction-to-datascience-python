@@ -1122,11 +1122,12 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
+sampling_distribution.encoding.x['bin']['extent'] = (90, 250)
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        sampling_distribution.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
-        sampling_distribution.mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
+        alt.Chart(sample_estimates).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
+        alt.Chart(sample_estimates).mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
             x='mean(mean_price)',
             y=alt.value(7),
             text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
@@ -1134,15 +1135,13 @@ alt.vconcat(
     ).properties(title='Sampling distribution', height=150),
     alt.layer(
         boot_est_dist,
-        boot_est_dist.mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)', y=alt.Y()),
-        boot_est_dist.mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
+        alt.Chart(boot20000_means).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
+        alt.Chart(boot20000_means).mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
             x='mean(mean_price)',
-            y=alt.value(6),
+            y=alt.value(7),
             text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title='Bootstrap distribution', height=150)
-).resolve_scale(
-    x='shared'
 )
 ```
 
@@ -1252,18 +1251,19 @@ visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
 # Create the annotation for for the 2.5th percentile
-text_025 = alt.Chart().mark_text(
+rule_025 = alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(
+    x=alt.datum(ci_bounds[0.025])
+).properties(
+    width=500
+)
+text_025 = rule_025.mark_text(
     color='#f58518',
     size=12,
     fontWeight='bold',
     dy=-160
 ).encode(
-    x=alt.datum(ci_bounds[0.025]),
     text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
-).properties(
-    width=500
 )
-rule_025 = text_025.mark_rule(color='#f58518', size=3, strokeDash=[5])
 
 # Create the annotation for for the 97.5th percentile
 text_975 = text_025.encode(

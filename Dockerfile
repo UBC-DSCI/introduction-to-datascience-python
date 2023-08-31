@@ -28,6 +28,8 @@ RUN pip install -U git+https://github.com/scikit-learn/scikit-learn.git@main
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 
 ## Install various python packages
+# commented out for now due to various package version conflicts
+# installing via pip instead above
 #RUN mamba install --quiet --yes \
 #        'numpy' \
 #        'jinja2' \

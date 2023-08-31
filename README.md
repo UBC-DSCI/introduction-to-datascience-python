@@ -1,8 +1,10 @@
 ## Data Science: A First Introduction (Python Edition)
 This is the source for the python edition of the *Data Science: A First Introduction* textbook.
 
+The book is available online at: https://python.datasciencebook.ca/
+
 For the R version of the textbook, please visit https://datasciencebook.ca or the github repository
-at https://github.com/ubc-dsci/introduction-to-datascience .
+at https://github.com/ubc-dsci/introduction-to-datascience.
 
 ## License Information
 
@@ -24,11 +26,17 @@ The `production` branch contains the source material for the live, publicly view
 
 ### Build locally
 
-You can build the book on your own machine by running
+You can build the HTML version of the book on your own machine by running
 ```
 ./build_html.sh
 ```
 in the root directory of this repository. The book can be viewed in your browser by opening the `source/_build/html/index.html` file.
+
+You can build the PDF version of the book on your own machine by running
+```
+./build_pdf.sh
+```
+in the root directory of this repository. The book can be viewed in a PDF reader by opening `source/_build/latex/python.pdf`.
 
 ### Update build environment
 

@@ -68,7 +68,7 @@ An example of what a Jupyter notebook looks like is shown in
 {numref}`img-jupyter`.
 
 
-```{figure} img/jupyter.png
+```{figure} img/jupyter/jupyter.png
 ---
 name: img-jupyter
 ---
@@ -108,14 +108,14 @@ also have a number inside the square brackets to the left of the cell.
 This number indicates the order in which the cells were run
 ({numref}`code-cell-run`).
 
-```{figure} img/code-cell-not-run.png
+```{figure} img/jupyter/code-cell-not-run.png
 ---
 name: code-cell-not-run
 ---
 A code cell in Jupyter that has not yet been executed.
 ```
 
-```{figure} img/code-cell-run.png
+```{figure} img/jupyter/code-cell-run.png
 ---
 name: code-cell-run
 ---
@@ -146,7 +146,7 @@ has been activated ({numref}`activate-and-run-button`), the cell can be run by e
 the **Run** (&blacktriangleright;) button in the toolbar, or by using a keyboard shortcut of
 `Shift + Enter`.
 
-```{figure} img/activate-and-run-button-annotated.png
+```{figure} img/jupyter/activate-and-run-button-annotated.png
 ---
 name: activate-and-run-button
 ---
@@ -172,7 +172,7 @@ command was run will be deleted. In other words, restarting the session and
 then running all cells (options 2 or 3) emulates how your notebook code would
 run if you completely restarted Jupyter before executing your entire notebook.
 
-```{figure} img/restart-kernel-run-all.png
+```{figure} img/jupyter/restart-kernel-run-all.png
 ---
 name: restart-kernel-run-all
 ---
@@ -189,7 +189,7 @@ The kernel is a program that executes the code inside your notebook and
 outputs the results. Kernels for many different programming languages have
 been created for Jupyter, which means that Jupyter can interpret and execute
 the code of many different programming languages. To run Python code, your notebook
-will need an Python kernel. In the top right of your window, you can see a circle
+will need a Python kernel. In the top right of your window, you can see a circle
 that indicates the status of your kernel. If the circle is empty
 (&#x25EF;), the kernel is idle and ready to execute code. If the circle is filled in
 (&#x2B24;), the kernel is busy running some code.
@@ -212,7 +212,7 @@ toolbar. By default, all new cells in Jupyter start out as code cells,
 so after this, all you have to do is write Python code within the new cell you just
 created!
 
-```{figure} img/create-new-code-cell.png
+```{figure} img/jupyter/create-new-code-cell.png
 ---
 name: create-new-code-cell
 ---
@@ -243,14 +243,14 @@ can then use your keyboard to edit the text. To view the formatted
 (or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (&blacktriangleright;) button in the toolbar,
 or use the `Shift + Enter` keyboard shortcut.
 
-```{figure} img/markdown-cell-not-run.png
+```{figure} img/jupyter/markdown-cell-not-run.png
 ---
 name: markdown-cell-not-run
 ---
 A Markdown cell in Jupyter that has not yet been rendered and can be edited.
 ```
 
-```{figure} img/markdown-cell-run.png
+```{figure} img/jupyter/markdown-cell-run.png
 ---
 name: markdown-cell-run
 ---
@@ -266,7 +266,7 @@ cell. To do this, click on the cell with your cursor to
 ensure it is activated.  Then click on the drop-down box on the toolbar that says "Code" (it
 is next to the &#x23ED; button), and change it from "**Code**" to "**Markdown**" ({numref}`convert-to-markdown-cell`).
 
-```{figure} img/convert-to-markdown-cell.png
+```{figure} img/jupyter/convert-to-markdown-cell.png
 ---
 name: convert-to-markdown-cell
 ---
@@ -304,7 +304,7 @@ from top to bottom of the notebook.
 
 The most common way to inadvertently create a nonlinear notebook is to rely solely
 on using the (&blacktriangleright;) button to execute cells. For example,
-suppose you write some Python code that creates an Python object, say a variable named
+suppose you write some Python code that creates a Python object, say a variable named
 `y`. When you execute that cell and create `y`, it will continue
 to exist until it is deliberately deleted with Python code, or when the Jupyter
 notebook Python session (*i.e.*, kernel) is stopped or restarted. It can also be
@@ -319,14 +319,14 @@ the future, this would lead
 to errors when the notebook is run in the conventional
 linear order ({numref}`out-of-order-3`).
 
-```{figure} img/out-of-order-1.png
+```{figure} img/jupyter/out-of-order-1.png
 ---
 name: out-of-order-1
 ---
 Code that was written out of order, but not yet executed.
 ```
 
-```{figure} img/out-of-order-2.png
+```{figure} img/jupyter/out-of-order-2.png
 ---
 name: out-of-order-2
 ---
@@ -339,7 +339,7 @@ order in which the cells were executed.
 +++
 
 
-```{figure} img/out-of-order-3.png
+```{figure} img/jupyter/out-of-order-3.png
 ---
 name: out-of-order-3
 ---
@@ -431,14 +431,14 @@ for you, and you will not be able to see the column delimiters, and therefore
 you will not know which function to use, nor which arguments to use and values
 to specify for them.
 
-```{figure} img/open_data_w_editor_01.png
+```{figure} img/jupyter/open_data_w_editor_01.png
 ---
 name: open-data-w-editor-1
 ---
 Opening data files with an editor in Jupyter.
 ```
 
-```{figure} img/open_data_w_editor_02.png
+```{figure} img/jupyter/open_data_w_editor_02.png
 ---
 name: open-data-w-editor-2
 ---
@@ -488,11 +488,11 @@ the Python icon under the **Notebook** heading. If no **Launcher** tab is visibl
 you can get a new one via clicking the **+** button at the top of the Jupyter
 file explorer ({numref}`launcher`).
 
-```{figure} img/launcher-annotated.png
+```{figure} img/jupyter/launcher-annotated.png
 ---
 name: launcher
 ---
-Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with an Python kernel.
+Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with a Python kernel.
 ```
 
 +++

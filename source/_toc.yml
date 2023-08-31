@@ -6,10 +6,7 @@ parts:
     - file: preface-text.md
     #- file: foreword.md
     - file: acknowledgements.md
-    - file: acknowledgements-python.md
     - file: authors.md
-    - file: editors.md
-    - file: setup.md
 - caption: Chapters
   numbered: 3
   chapters:
@@ -25,7 +22,4 @@ parts:
     - file: inference.md
     - file: jupyter.md
     - file: version-control.md
-- caption: Appendix
-  chapters:
-    - file: appendixA.md
-    #- file: references.md
+    - file: setup.md

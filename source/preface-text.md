@@ -31,8 +31,8 @@ analyses allows both you and others to easily double-check and validate your wor
 
 At a high level, in this book, you will learn how to
 
-(1) identify common problems in data science, and
-(2) solve those problems with reproducible and auditable workflows.
+1. identify common problems in data science, and
+2. solve those problems with reproducible and auditable workflows.
 
 {numref}`preface-overview-fig` summarizes what you will learn in each chapter
 of this book. Throughout, you will learn how to use the [Python programming language](https://www.python.org/) to perform
@@ -54,7 +54,7 @@ But if you are reading this independently, you may want to jump to these last th
 early before going on to make sure your computer is set up in such a way that you can
 try out the example code that we include throughout the book.
 
-```{figure} img/chapter_overview.jpeg
+```{figure} img/frontmatter/chapter_overview.jpeg
 ---
 height: 400px
 name: preface-overview-fig
@@ -69,7 +69,7 @@ to help you practice the concepts you will learn. We strongly recommend that you
 work through the worksheet when you finish reading each chapter
 before moving on to the next chapter. All of the worksheets
 are available at
-[https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme);
+[https://worksheets.python.datasciencebook.ca](https://worksheets.python.datasciencebook.ca);
 the "Exercises" section at the end of each chapter points you to the right worksheet for that chapter.
 For each worksheet, you can either launch an interactive version of the worksheet in your browser by clicking the "launch binder" button,
 or preview a non-interactive version of the worksheet by clicking "view worksheet."

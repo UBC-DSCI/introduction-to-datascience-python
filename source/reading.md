@@ -54,12 +54,13 @@ By the end of the chapter, readers will be able to do the following:
     - `names`
     - `skiprows`
 - Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
+- Use the `rename` function to rename columns in a data frame.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Connect to a database using the `ibis` library's `connect` function.
-- List the tables in a database using the `ibis` library's `list_tables` function
-- Create a reference to a database table using the `ibis` library's `table` function
-- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function
-- Use `to_csv` to save a data frame to a `.csv` file
+- List the tables in a database using the `ibis` library's `list_tables` function.
+- Create a reference to a database table using the `ibis` library's `table` function.
+- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function.
+- Use `to_csv` to save a data frame to a `.csv` file.
 % - (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
 %     - Read/scrape data from an internet URL using the `BeautifulSoup` package
 %     - Compare downloading tabular data from a plain text file (e.g. `.csv`) from the web versus scraping data from a `.html` file
@@ -95,7 +96,7 @@ read the `.csv` file named `happiness_report.csv` into Python, we could do this
 using either a relative or an absolute path.  We show both choices
 below.
 
-```{figure} img/filesystem.jpeg
+```{figure} img/reading/filesystem.jpeg
 ---
 height: 500px
 name: Filesystem
@@ -193,7 +194,7 @@ name when we are loading the data set because this data set is located in a
 sub-folder, named `data`, relative to where we are running our Python code.
 Here is what the text in the file `data/can_lang.csv` looks like.
 
-```code
+```text
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -236,7 +237,7 @@ gives the data scientist useful context and information about the data,
 however, it is not well formatted or intended to be read into a data frame cell
 along with the tabular data that follows later in the file.
 
-```code
+```text
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -260,7 +261,7 @@ message, indicating that it wasn't able to read the file.
 ```python
 canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ```
-```code
+```text
 ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
 ```
 
@@ -285,7 +286,7 @@ canlang_data
 How did we know to skip three rows? We looked at the data! The first three rows
 of the data had information we didn't need to import:
 
-```code
+```text
 Data source: https://ttimbers.github.io/canlang/
 Data originally published in: Statistics Canada Census of Population 2016.
 Reproduced and distributed on an as-is basis with their permission.
@@ -299,7 +300,7 @@ Another common way data is stored is with tabs as the separator. Notice the
 data file, `can_lang.tsv`, has tabs in between the columns instead of
 commas.
 
-```code
+```text
 category	language	mother_tongue	most_at_home	most_at_work	lang_known
 Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
 Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
@@ -338,9 +339,9 @@ canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
 
-Let's compare the data frame here to the resulting data frame in Section
-{ref}`readcsv` after using `read_csv`. Notice anything? They look the same; they have
-the same number of columns and rows, and have the same column names!
+If you compare the data frame here to the data frame we obtained in Section
+{ref}`readcsv` using `read_csv`, you'll notice that they look identical: they have
+the same number of columns and rows, the same column names, and the same entries!
 So even though we needed to use different
 arguments depending on the file format, our resulting data frame
 (`canlang_data`) in both cases was the same.
@@ -350,11 +351,11 @@ arguments depending on the file format, our resulting data frame
 ```{index} read function; header, reading; separator
 ```
 
-The `can_lang_no_cols.tsv` file contains a slightly different version
+The `can_lang_no_names.tsv` file contains a slightly different version
 of this data set, except with no column names, and tabs for separators.
 Here is how the file looks in a text editor:
 
-```code
+```text
 Aboriginal languages	Aboriginal languages, n.o.s.	590	235	30	665
 Non-Official & Non-Aboriginal languages	Afrikaans	10260	4785	85	23415
 Non-Official & Non-Aboriginal languages	Afro-Asiatic languages, n.i.e.	1150	445	10	2775
@@ -367,9 +368,9 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 
 ```
 
-Data frames in Python need to have column names.  Thus if you read in data that
-don't have column names, Python will assign names automatically. In this example,
-Python assigns each column a name of `0, 1, 2, 3, 4, 5`.
+Data frames in Python need to have column names.  Thus if you read in data 
+without column names, Python will assign names automatically. In this example,
+Python assigns the column names `0, 1, 2, 3, 4, 5`.
 To read this data into Python, we specify the first
 argument as the path to the file (as done with `read_csv`), and then provide
 values to the `sep` argument (here a tab, which we represent by `"\t"`),
@@ -379,7 +380,7 @@ contain its own column names.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data =  pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep = "\t",
     header = None
 )
@@ -426,7 +427,7 @@ list of column names to the `names` argument in `read_csv`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 canlang_data = pd.read_csv(
-    "data/can_lang_no_cols.tsv",
+    "data/can_lang_no_names.tsv",
     sep="\t",
     header=None,
     names=[
@@ -447,8 +448,8 @@ canlang_data
 ```
 
 We can also use `read_csv` to read in data directly from a **U**niform **R**esource **L**ocator (URL) that
-contains tabular data. Here, we provide the URL to a remote file
-as the path in `read_csv`, instead of a path to a local file on our
+contains tabular data. Here, we provide the URL of a remote file
+to `read_csv`, instead of a path to a local file on our
 computer. We need to surround the URL with quotes similar to when we specify a
 path on our local computer. All other arguments that we use are the same as
 when using these functions with a local file on our computer.
@@ -468,7 +469,7 @@ In many of the examples above, we gave you previews of the data file before we r
 it into Python. Previewing data is essential to see whether or not there are column
 names, what the separators are, and if there are rows you need to skip. You
 should do this yourself when trying to read in data files: open the file in whichever
-text editor your prefer to inspect its contents prior to reading it into Python.
+text editor you prefer to inspect its contents prior to reading it into Python.
 
 ## Reading tabular data from a Microsoft Excel file
 
@@ -494,7 +495,7 @@ files. Take a look at a snippet of what a `.xlsx` file would look like in a text
 
 +++
 
-```code
+```text
 ,?'O
     _rels/.rels???J1??>E?{7?
 <?V????w8?'J???'QrJ???Tf?d??d?o?wZ'???@>?4'?|??hlIo??F
@@ -594,8 +595,8 @@ using Python with SQLite and PostgreSQL databases.
 ```
 
 SQLite is probably the simplest relational database system
-that one can use in combination with Python. SQLite databases are self-contained and
-usually stored and accessed locally on one computer. Data is usually stored in
+that one can use in combination with Python. SQLite databases are self-contained, and are
+usually stored and accessed locally on one computer from
 a file with a `.db` extension (or sometimes a `.sqlite` extension).
 Similar to Excel files, these are not plain text files and cannot be read in a plain text editor.
 
@@ -1016,7 +1017,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/craigslist_human.png
+% ```{figure} img/reading/craigslist_human.png
 % :name: fig:craigslist-human
 %
 % Craigslist webpage of advertisements for one-bedroom apartments.
@@ -1030,7 +1031,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % examining the *source code* that the web server actually sent our browser to
 % display for us. We show a snippet of it below; the
 % entire source
-% is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/website_source.txt):
+% is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/reading/website_source.txt):
 %
 % ```html
 %         <span class="result-meta">
@@ -1126,7 +1127,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % in its toolbar, and highlights all the other apartment
 % prices that would be obtained using that selector ({numref}`fig:sg1`).
 %
-% ```{figure} img/sg1.png
+% ```{figure} img/reading/sg1.png
 % :name: fig:sg1
 %
 % Using the SelectorGadget on a Craigslist webpage to obtain the CCS selector useful for obtaining apartment prices.
@@ -1136,7 +1137,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % the `span` selector, and highlights many of the lines on the page; this indicates that the
 % `span` selector is not specific enough to capture only apartment sizes ({numref}`fig:sg3`).
 %
-% ```{figure} img/sg3.png
+% ```{figure} img/reading/sg3.png
 % :name: fig:sg3
 %
 % Using the SelectorGadget on a Craigslist webpage to obtain a CCS selector useful for obtaining apartment sizes.
@@ -1146,7 +1147,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % we *do not* want. For example, we can deselect the "pic/map" links,
 % resulting in only the data we want highlighted using the `.housing` selector ({numref}`fig:sg2`).
 %
-% ```{figure} img/sg2.png
+% ```{figure} img/reading/sg2.png
 % :name: fig:sg2
 %
 % Using the SelectorGadget on a Craigslist webpage to refine the CCS selector to one that is most useful for obtaining apartment sizes.
@@ -1189,7 +1190,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % (city names and population counts) and deselect others to indicate that we are not
 % interested in them (province names), as shown in {numref}`fig:sg4`.
 %
-% ```{figure} img/selectorgadget-wiki-updated.png
+% ```{figure} img/reading/selectorgadget-wiki-updated.png
 % :name: fig:sg4
 %
 % Using the SelectorGadget on a Wikipedia webpage.
@@ -1201,7 +1202,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```code
+% ```text
 % td:nth-child(8) ,
 % td:nth-child(6) ,
 % td:nth-child(4) ,
@@ -1369,7 +1370,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/twitter-API-keys-tokens.png
+% ```{figure} img/reading/twitter-API-keys-tokens.png
 % :name: fig:twitter-API-keys-tokens
 %
 % Generating the API key-secret pair and the access token-secret pair in Twitter API.
@@ -1420,7 +1421,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % +++
 %
-% ```{figure} img/scikit-learn-twitter.png
+% ```{figure} img/reading/scikit-learn-twitter.png
 % :name: fig:01-scikit-learn-twitter
 %
 % The `scikit-learn` account Twitter feed.
@@ -1547,7 +1548,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Reading in data locally and from the web" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

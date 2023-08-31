@@ -1,6 +1,6 @@
 # Book settings
 title: "Data Science: A First Introduction (Python Edition)"
-author: UBC
+author: "The DSCI100 Development Team"
 copyright: "2022" # Copyright year to be placed in the footer
 logo: "" # A path to the book logo
 # Patterns to skip when building the book. Can be glob-style (e.g. "*skip.ipynb")
@@ -58,7 +58,7 @@ html:
 #######################################################################################
 # LaTeX-specific settings
 latex:
-  latex_engine: pdflatex # one of 'pdflatex', 'xelatex' (recommended for unicode), 'luatex', 'platex', 'uplatex'
+  latex_engine: xelatex # pdflatex # one of 'pdflatex', 'xelatex' (recommended for unicode), 'luatex', 'platex', 'uplatex'
   use_jupyterbook_latex: true # use sphinx-jupyterbook-latex for pdf builds as default
 
 #######################################################################################
@@ -78,7 +78,9 @@ sphinx:
   local_extensions: # A list of local extensions to load by sphinx specified by "name: path" items
   config: # key-value pairs to directly over-ride the Sphinx configuration
     bibtex_reference_style: author_year
+  html_context:
+    default_mode: light
 
 #######################################################################################
 bibtex_bibfiles:
-    - ../references.bib
+    - references.bib

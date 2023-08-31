@@ -18,26 +18,9 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import altair as alt
-import numpy as np
-import pandas as pd
-
-# from sklearn.linear_model import LinearRegression
-# from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
-# from sklearn.compose import make_column_transformer
-# from sklearn.neighbors import KNeighborsRegressor
-# from sklearn.pipeline import Pipeline, make_pipeline
-# from sklearn.preprocessing import StandardScaler
-# import plotly.express as px
-# import plotly.graph_objs as go
-# from plotly.offline import plot
+from chapter_preamble import *
 from IPython.display import HTML
-
-from myst_nb import glue
+import numpy as np
 ```
 
 ## Overview
@@ -56,7 +39,6 @@ By the end of the chapter, readers will be able to do the following:
 * Use Python and `scikit-learn` to fit a linear regression model on training data.
 * Evaluate the linear regression model on test data.
 * Compare and contrast predictions obtained from K-nearest neighbor regression to those obtained using linear regression from the same data set.
-* In `altair`, overlay predictions from linear regression on a scatter plot of data using `transform_regression`.
 
 +++
 
@@ -120,6 +102,8 @@ in {numref}`fig:08-lin-reg1`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import pandas as pd
+
 np.random.seed(2)
 
 sacramento = pd.read_csv("data/sacramento.csv")
@@ -130,13 +114,13 @@ small_plot = (
     alt.Chart(small_sacramento)
     .mark_circle()
     .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y(
-            "price",
-            title="Price (USD)",
-            axis=alt.Axis(format="$,.0f"),
-            scale=alt.Scale(zero=False),
-        ),
+        x=alt.X("sqft")
+            .scale(zero=False)
+            .title("House size (square feet)"),
+        y=alt.Y("price")
+            .axis(format="$,.0f")
+            .scale(zero=False)
+            .title("Price (USD)"),
     )
 )
 
@@ -274,7 +258,7 @@ for i in range(len(slope_l)):
             )
         )
         .mark_line(color=line_color_l[i])
-        .encode(x=alt.X("x"), y=alt.Y("y"))
+        .encode(x="x", y="y")
     )
 
 several_lines_plot
@@ -350,8 +334,8 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 
 We can perform simple linear regression in Python using `scikit-learn` in a
 very similar manner to how we performed KNN regression.
-To do this, instead of creating a `KNeighborsRegressor` model specification,
-we use a `LinearRegression` model specification;
+To do this, instead of creating a `KNeighborsRegressor` model object,
+we use a `LinearRegression` model object;
 and as usual, we first have to import it from `sklearn`.
 Another difference is that we do not need to choose $K$ in the
 context of linear regression, and so we do not need to perform cross-validation.
@@ -367,11 +351,16 @@ putting some test data away in a lock box that we
 can come back to after we choose our final model. Let's take care of that now.
 
 ```{code-cell} ipython3
-import pandas as pd
+import numpy as np
 import altair as alt
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from sklearn import set_config
+
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
 
 np.random.seed(1)
 
@@ -395,21 +384,21 @@ intercept of the line via the `intercept_` property.
 # fit the linear regression model
 lm = LinearRegression()
 lm.fit(
-   sacramento_train[["sqft"]],
-   sacramento_train[["price"]]
+   sacramento_train[["sqft"]],  # A single-column data frame
+   sacramento_train["price"]  # A series
 )
 
 # make a dataframe containing slope and intercept coefficients
-pd.DataFrame({"slope": lm.coef_[0], "intercept": lm.intercept_})
+pd.DataFrame({"slope": [lm.coef_[0]], "intercept": [lm.intercept_]})
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("train_lm_slope", round(lm.coef_[0][0]))
-glue("train_lm_intercept", round(lm.intercept_[0]))
-glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0][0]))
-glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_[0]))
+glue("train_lm_slope", round(lm.coef_[0]))
+glue("train_lm_intercept", round(lm.intercept_))
+glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0]))
+glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```
 
 ```{index} standardization
@@ -446,9 +435,10 @@ sacr_preds = sacramento_test.assign(
 )
 
 # calculate RMSPE
-RMSPE = np.sqrt(
-    mean_squared_error(y_true=sacr_preds["price"], y_pred=sacr_preds["predicted"])
-)
+RMSPE = mean_squared_error(
+    y_true=sacr_preds["price"],
+    y_pred=sacr_preds["predicted"]
+)**(1/2)
 
 RMSPE
 ```
@@ -464,47 +454,52 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 
 Our final model's test error as assessed by RMSPE
 is {glue:text}`sacr_RMSPE`.
-Remember that this is in units of the target/response variable, and here that
+Remember that this is in units of the response variable, and here that
 is US Dollars (USD). Does this mean our model is "good" at predicting house
 sale price based off of the predictor of home size? Again, answering this is
 tricky and requires knowledge of how you intend to use the prediction.
 
 To visualize the simple linear regression model, we can plot the predicted house
-sale price across all possible house sizes we might encounter superimposed on a scatter
-plot of the original housing price data. There is a function in
-the `altair`, `transform_regression`, that
-allows us to add a layer on our plot with the simple
-linear regression predicted line of best fit.
+sale price across all possible house sizes we might encounter.
+Since our model is linear,
+we only need to compute the predicted price of the minimum and maximum house size,
+and then connect them with a straight line.
+We superimpose this prediction line on a scatter
+plot of the original housing price data,
+so that we can qualitatively assess if the model seems to fit the data well.
 {numref}`fig:08-lm-predict-all` displays the result.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
-
-lm_plot_final = (
-    alt.Chart(sacramento_train)
-    .mark_circle()
-    .encode(
-        x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
-        y=alt.Y(
-            "price",
-            title="Price (USD)",
-            axis=alt.Axis(format="$,.0f"),
-            scale=alt.Scale(zero=False),
-        ),
-    )
+sqft_prediction_grid = sacramento[['sqft']].agg(['min', 'max'])
+sacr_preds = sqft_prediction_grid.assign(
+    predicted=lm.predict(sqft_prediction_grid)
 )
 
-lm_plot_final += lm_plot_final.transform_regression("sqft", "price").mark_line(
+all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format="$,.0f")
+        .scale(zero=False)
+        .title("Price (USD)")
+)
+
+sacr_preds_plot = all_points + alt.Chart(sacr_preds).mark_line(
     color="#ff7f0e"
+).encode(
+    x="sqft",
+    y="predicted"
 )
 
-lm_plot_final
+sacr_preds_plot
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("fig:08-lm-predict-all", lm_plot_final)
+glue("fig:08-lm-predict-all", sacr_preds_plot)
 ```
 
 :::{glue:figure} fig:08-lm-predict-all
@@ -512,7 +507,6 @@ glue("fig:08-lm-predict-all", lm_plot_final)
 
 Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
 :::
-
 
 ## Comparing simple linear and KNN regression
 
@@ -645,7 +639,7 @@ flexible and can be quite wiggly. But there is a major interpretability advantag
 model to a straight line. A
 straight line can be defined by two numbers, the
 vertical intercept and the slope. The intercept tells us what the prediction is when
-all of the predictors are equal to 0; and the slope tells us what unit increase in the target/response
+all of the predictors are equal to 0; and the slope tells us what unit increase in the response
 variable we predict given a unit increase in the predictor
 variable. KNN regression, as simple as it is to implement and understand, has no such
 interpretability from its wiggly line.
@@ -654,7 +648,7 @@ interpretability from its wiggly line.
 ```
 
 There can, however, also be a disadvantage to using a simple linear regression
-model in some cases, particularly when the relationship between the target and
+model in some cases, particularly when the relationship between the response variable and
 the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
 these cases the prediction model from a simple linear regression
 will underfit (have high bias), meaning that model/predicted values do not
@@ -728,7 +722,7 @@ method as usual.
 
 mlm = LinearRegression().fit(
     sacramento_train[["sqft", "beds"]],
-    sacramento_train[["price"]]
+    sacramento_train["price"]
 )
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
@@ -843,7 +837,7 @@ you will see that `mlm.coef_` above is just an array of values without any varia
 Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coef_` appear
 in the *same order* as the columns of the predictor data frame you used when training.
 So since we used `sacramento_train[["sqft", "beds"]]` when training, 
-we have that `mlm.coef_[0][0]` corresponds to `sqft`, and `mlm.coef_[0][1]` corresponds to `beds`.
+we have that `mlm.coef_[0]` corresponds to `sqft`, and `mlm.coef_[1]` corresponds to `beds`.
 
 ```{index} plane equation
 ```
@@ -863,9 +857,9 @@ to create the equation of the plane of best fit to the data:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-icept = "{0:,.0f}".format(mlm.intercept_[0])
-sqftc = "{0:,.0f}".format(mlm.coef_[0][0])
-bedsc = "{0:,.0f}".format(mlm.coef_[0][1])
+icept = "{0:,.0f}".format(mlm.intercept_)
+sqftc = "{0:,.0f}".format(mlm.coef_[0])
+bedsc = "{0:,.0f}".format(mlm.coef_[1])
 glue("icept", icept)
 glue("sqftc", sqftc)
 glue("bedsc", bedsc)
@@ -1177,11 +1171,11 @@ has regression coefficients that are very sensitive to the exact values in the d
 if we change the data ever so slightly&mdash;e.g., by running cross-validation, which splits
 up the data randomly into different chunks&mdash;the coefficients vary by large amounts:
 
-Best Fit 1: $\text{house sale price} =$ {glue:text}`icept1` $+$ {glue:text}`sqft1` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft11` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 1: $\text{house sale price} =$ {glue:text}`icept1` $+$ {glue:text}`sqft1` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft11` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
-Best Fit 2: $\text{house sale price} =$ {glue:text}`icept2` $+$ {glue:text}`sqft2` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft22` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 2: $\text{house sale price} =$ {glue:text}`icept2` $+$ {glue:text}`sqft2` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft22` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
-Best Fit 3: $\text{house sale price} =$ {glue:text}`icept3` $+$ {glue:text}`sqft3` $\cdot (\text{house size 1}$ $({ft}^2)) +$ {glue:text}`sqft33` $\cdot (\text{house size 2}$ $({ft}^2)).$
+Best Fit 3: $\text{house sale price} =$ {glue:text}`icept3` $+$ {glue:text}`sqft3` $\cdot (\text{house size 1}$ $(\text{ft}^2)) +$ {glue:text}`sqft33` $\cdot (\text{house size 2}$ $(\text{ft}^2)).$
 
  Therefore, when performing multivariable linear regression, it is important to avoid including very
 linearly related predictors. However, techniques for doing so are beyond the scope of this
@@ -1324,7 +1318,7 @@ predictive performance.
 
 So far in this textbook we have used regression only in the context of
 prediction. However, regression can also be seen as a method to understand and
-quantify the effects of individual variables on a response / outcome of interest.
+quantify the effects of individual variables on a response variable of interest.
 In the housing example from this chapter, beyond just using past data
 to predict future sale prices,
 we might also be interested in describing the
@@ -1342,7 +1336,7 @@ that will serve you well when moving to more advanced books on the topic.
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Regression II: linear regression" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

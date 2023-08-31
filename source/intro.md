@@ -16,8 +16,9 @@ kernelspec:
 # Python and Pandas
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
-from myst_nb import glue
+:tags: [remove-cell]
+
+from chapter_preamble import *
 ```
 
 ## Overview
@@ -171,7 +172,7 @@ This is covered in detail in the {ref}`viz` chapter, but again appears regularly
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in the {ref}`classification` and {ref}`classification2` chapters.
+Classification is covered in the {ref}`classification1` and {ref}`classification2` chapters.
 4. **Regression:** predicting a quantitative value for a new observation.
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
@@ -222,7 +223,7 @@ collect the data on, e.g., voters, cities, etc. We refer to the columns as
 affiliations, cities' populations, etc.
 
 
-```{figure} img/spreadsheet_vs_df.png
+```{figure} img/intro/spreadsheet_vs_df.png
 ---
 height: 500px
 name: img-spreadsheet-vs-data frame
@@ -245,7 +246,7 @@ is included with [the code for this book](https://github.com/UBC-DSCI/introducti
 If we were to open this data in a plain text editor (a program like Notepad that just shows
 text with no formatting), we would see each row on its own line, and each entry in the table separated by a comma:
 
-```code
+```text
 category,language,mother_tongue,most_at_home,most_at_work,lang_known
 Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
 Non-Official & Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
@@ -311,7 +312,7 @@ file satisfies everything else that the `read_csv` function expects in the defau
 use-case. {numref}`img-read-csv` describes how we use the `read_csv`
 to read data into Python.
 
-```{figure} img/read_csv_function.png
+```{figure} img/intro/read_csv_function.png
 ---
 height: 220px
 name: img-read-csv
@@ -383,15 +384,15 @@ my_number + 2
 
 Object names can consist of letters, numbers, and underscores (`_`).
 Other symbols won't work since they have their own meanings in Python. For example,
-`+` is the addition symbol; if we try to assign a name with
-the `+` symbol, Python will complain and we will get an error!
+`-` is the subtraction symbol; if we try to assign a name with
+the `-` symbol, Python will complain and we will get an error!
 
 ```
-na+me = 1
+my-number = 1
 ```
 
 ```
-SyntaxError: cannot assign to operator
+SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
 ```
 
 ```{index} object; naming convention
@@ -478,7 +479,7 @@ You will learn about many other kinds of logical
 statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
-and not one of the special words that makes up the Python programming language,
+and not one of the special words that make up the Python programming language,
 or one of the names we have given to objects in the code we have already written.
 
 > **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
@@ -486,7 +487,7 @@ or one of the names we have given to objects in the code we have already written
 > of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
 > Try both out for yourself!
 
-```{figure} img/filter_rows.png
+```{figure} img/intro/filter_rows.png
 ---
 height: 220px
 name: img-filter
@@ -518,7 +519,7 @@ selecting only the `language` and `mother_tongue` columns from our original
 `can_lang` data frame, we put the list `["language", "mother_tongue"]`
 containing those two column names inside the square brackets of the `[]` operation.
 
-```{figure} img/select_columns.png
+```{figure} img/intro/select_columns.png
 ---
 height: 220px
 name: img-select
@@ -550,7 +551,7 @@ that with the `.loc[]` method. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
-```{figure} img/filter_rows_and_columns.png
+```{figure} img/intro/filter_rows_and_columns.png
 ---
 height: 220px
 name: img-loc
@@ -559,9 +560,7 @@ Syntax for using the `loc[]` operation to filter rows and select columns.
 ```
 
 ```{code-cell} ipython3
-aboriginal_lang = can_lang.loc[
-  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
-]
+aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
 ```
 There is one very important thing to notice in this code example.
 The first is that we used the `loc[]` operation on the `can_lang` data frame by
@@ -586,7 +585,7 @@ with multiple kinds of `category`. The data frame
 `aboriginal_lang` contains only 67 rows, and looks like it only contains Aboriginal languages.
 So it looks like the `loc[]` operation gave us the result we wanted!
 
-### Using `sort_values` and `head` to select rows by ordered values
+## Using `sort_values` and `head` to select rows by ordered values
 
 ```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
 ```
@@ -607,7 +606,7 @@ language, we will use the `sort_values` function to order the rows in our
 arrange the rows in descending order (from largest to smallest),
 so we specify the argument `ascending` as `False`.
 
-```{figure} img/sort_values.png
+```{figure} img/intro/sort_values.png
 ---
 height: 220px
 name: img-sort-values
@@ -630,6 +629,44 @@ We do this using the `head` function, and specifying the argument
 ten_lang = arranged_lang.head(10)
 ten_lang
 ```
+
+## Adding and modifying columns using `assign`
+
+```{index} assign
+```
+
+Recall that our data analysis question referred to the *count* of Canadians
+that speak each of the top ten most commonly reported Aboriginal languages as
+their mother tongue, and the `ten_lang` data frame indeed contains those
+counts... But perhaps, seeing these numbers, we became curious about the
+*percentage* of the population of Canada associated with each count. It is
+common to come up with new data analysis questions in the process of answering
+a first one&mdash;so fear not and explore! To answer this small
+question-along-the-way, we need to divide each count in the `mother_tongue`
+column by the total Canadian population according to the 2016
+census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
+this computation using the code `100 * ten_lang['mother_tongue'] / canadian_population`. 
+Then to store the result in a new column (or
+overwrite an existing column), we use the `assign` method. We specify the name of the new
+column to create (or old column to modify), then the assignment symbol `=`, 
+and then the computation to store in that column. In this case, we will opt to
+create a new column called `mother_tongue_percent`. 
+
+> **Note:** You will see below that we write the Canadian population in
+> Python as `35_151_728`. The underscores (`_`) are just there for readability,
+> and do not affect how Python interprets the number. In other words, 
+> `35151728` and `35_151_728` are treated identically in Python, 
+> although the latter is much clearer!
+
+```{code-cell} ipython3
+canadian_population = 35_151_728
+ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang['mother_tongue'] / canadian_population)
+ten_lang_percent
+```
+
+The `ten_lang_percent` data frame shows that
+the ten Aboriginal languages in the `ten_lang` data frame were spoken 
+as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
 ## Combining analysis steps with chaining and multiline expressions
 
@@ -674,10 +711,12 @@ Let's rewrite this code in a more readable format using multiline expressions.
 
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[
-  can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]
+    can_lang["category"] == "Aboriginal languages",
+    ["language", "mother_tongue"]
 ]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-  by='mother_tongue', ascending=False
+    by='mother_tongue',
+    ascending=False
 )
 ten_lang = arranged_lang_sorted.head(10)
 ```
@@ -749,23 +788,21 @@ Chaining many functions can be overwhelming and difficult to debug;
 you may want to store a temporary object midway through to inspect your result
 before moving on with further steps.
 
+## Exploring data with visualizations
+
+```{index} visualization
+```
 We have now answered our initial question by generating the `ten_lang` table!
 Are we done? Well, not quite; tables are almost never the best way to present
-the result of your analysis to your audience. Even the simple table above with
+the result of your analysis to your audience. Even the `ten_lang` table with
 only two columns presents some difficulty: for example, you have to scrutinize
 the table quite closely to get a sense for the relative numbers of speakers of
 each language. When you move on to more complicated analyses, this issue only
 gets worse. In contrast, a *visualization* would convey this information in a much
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
-effectively communicate with your audience.
-
-## Exploring data with visualizations
-
-```{index} visualization
-```
-
-Creating effective data visualizations is an essential component of any data
+effectively communicate with your audience, and creating effective data visualizations 
+is an essential component of any data
 analysis. In this section we will develop a visualization of the
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in
 Canada, as well as the number of people that speak each of them.
@@ -804,17 +841,16 @@ import altair as alt
 
 +++
 
-The fundamental object in `altair` is the `Chart`, which takes a data frame as a single argument: `alt.Chart(ten_lang)`.
+The fundamental object in `altair` is the `Chart`, which takes a data frame as an argument: `alt.Chart(ten_lang)`.
 With a chart object in hand, we can now specify how we would like the data to be visualized.
-We first indicate what kind of geometric mark we want to use to represent the data. Here we set the mark attribute
+We first indicate what kind of graphical *mark* we want to use to represent the data. Here we set the mark attribute
 of the chart object using the `Chart.mark_bar` function, because we want to create a bar chart.
-Next, we need to encode the variables of the data frame using
-the `x` (represents the x-axis position of the points) and
-`y` (represents the y-axis position of the points) *channels*. We use the `encode()`
+Next, we need to *encode* the variables of the data frame using
+the `x` and `y` *channels* (which represent the x-axis and y-axis position of the points). We use the `encode()`
 function to handle this: we specify that the `language` column should correspond to the x-axis,
 and that the `mother_tongue` column should correspond to the y-axis.
 
-```{figure} img/altair_syntax.png
+```{figure} img/intro/altair_syntax.png
 ---
 height: 220px
 name: img-altair
@@ -853,7 +889,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 ```{index} see: .; chaining methods
 ```
 
-### Formatting `altair` objects
+### Formatting `altair` charts
 
 It is exciting that we can already visualize our data to help answer our
 question, but we are not done yet! We can (and should) do more to improve the
@@ -865,28 +901,27 @@ example above, Python uses the column name `mother_tongue` as the label for the
 y axis, but most people will not know what that is. And even if they did, they
 will not know how we measured this variable, or the group of people on which the
 measurements were taken. An axis label that reads "Mother Tongue (Number of
-Canadian Residents)" would be much more informative.
+Canadian Residents)" would be much more informative. To make the code easier to
+read, we're spreading it out over multiple lines just as we did in the previous
+section with pandas.
 
 ```{index} plot; labels, plot; axis labels
 ```
 
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
-in the `altair` objects using `alt.X` and `alt.Y` with the `title` argument to make
-the axes titles more informative.
+in the `altair` objects using `alt.X` and `alt.Y` with the `title` method to make
+the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
-`alt.X` and `alt.Y`, we surround them with double quotation marks. We can do many other modifications
+the `title` method, we surround them with quotation marks. We can do many other modifications
 to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
-barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('language', title='Language'),
-        y=alt.Y('mother_tongue', title='Mother Tongue (Number of Canadian Residents)')
-    ))
-
+barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('language').title('Language'),
+    y=alt.Y('mother_tongue').title('Mother Tongue (Number of Canadian Residents)')
+)
 ```
 
 
@@ -915,13 +950,10 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 
 ```{code-cell} ipython3
-barplot_mother_tongue_axis = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', title='Language')
-    ))
-
+barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').title('Language')
+)
 ```
 
 ```{code-cell} ipython3
@@ -947,17 +979,14 @@ the visualization to make it even more well-suited to answering the question
 we asked earlier in this chapter. For example, the visualization could be made more transparent by
 organizing the bars according to the number of Canadian residents reporting
 each language, rather than in alphabetical order. We can reorder the bars using
-the `sort` argument, which orders a variable (here `language`) based on the
+the `sort` method, which orders a variable (here `language`) based on the
 values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
-ordered_barplot_mother_tongue = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', sort='x', title='Language')
-    ))
-
+ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').sort('x').title('Language')
+)
 ```
 
 +++
@@ -1028,17 +1057,13 @@ ten_lang = (
     can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
     .sort_values(by="mother_tongue", ascending=False)
     .head(10)
-    )
+)
 
 # create the visualization
-ten_lang_plot = (
-    alt.Chart(ten_lang)
-    .mark_bar().encode(
-        x=alt.X('mother_tongue', title='Mother Tongue (Number of Canadian Residents)'),
-        y=alt.Y('language', sort='x', title='Language')
-    ))
-
-
+ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
+    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
+    y=alt.Y('language').sort('x').title('Language')
+)
 ```
 
 ```{code-cell} ipython3
@@ -1095,7 +1120,7 @@ you about the different arguments and usage of functions that you have already l
 
 +++
 
-```{figure} img/help_read_csv.png
+```{figure} img/intro/help_read_csv.png
 ---
 height: 700px
 name: help_read_csv
@@ -1106,8 +1131,13 @@ The documentation for the read_csv function including a high-level description, 
 +++
 
 If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
-and access the documentation.
-You can type the first characters of the function you want to use,
+and access the documentation. First, rather than `help`, you can use the more concise `?` character. So for example,
+to read the documentation for the `pd.read_csv` function, you can run the following code:
+```{code-cell} ipython3
+:tags: ["remove-output"]
+?pd.read_csv
+```
+You can also type the first characters of the function you want to use,
 and then press <kbd>Tab</kbd> to bring up small menu
 that shows you all the available functions
 that starts with those characters.
@@ -1116,7 +1146,7 @@ and to prevent typos.
 
 +++
 
-```{figure} img/completion_menu.png
+```{figure} img/intro/completion_menu.png
 ---
 height: 400px
 name: completion_menu
@@ -1133,7 +1163,7 @@ to bring up a help dialogue including the same information as when using `help()
 
 +++
 
-```{figure} img/help_dialog.png
+```{figure} img/intro/help_dialog.png
 ---
 height: 400px
 name: help_dialog
@@ -1154,7 +1184,7 @@ and then selecting `Show Contextual Help`.
 
 Practice exercises for the material covered in this chapter
 can be found in the accompanying
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Python and Pandas" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

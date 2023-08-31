@@ -14,17 +14,14 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
 
-from myst_nb import glue
-import numpy as np
-from sklearn.metrics.pairwise import euclidean_distances
+from chapter_preamble import *
 from IPython.display import HTML
+from sklearn.metrics.pairwise import euclidean_distances
+import numpy as np
 ```
 
-(classification)=
+(classification1)=
 # Classification I: training & predicting
 
 ## Overview 
@@ -210,14 +207,11 @@ benign, represented by `'B'`, and malignant, represented by `'M'`.
 cancer['Class'].unique()
 ```
 
-We will also improve the readability of our analysis
+We will improve the readability of our analysis
 by renaming `'M'` to `'Malignant'` and `'B'` to `'Benign'` using the `replace`
 method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values. 
-Furthermore, since we will be working with `Class` as a categorical statistical variable,
-it is a good idea to convert it to the `category` type using the `astype` method 
-on the `cancer` data frame. We will verify the result using the `info` 
-and `unique` methods again.
+We will verify the result using the `unique` method.
 
 ```{index} replace
 ```
@@ -226,11 +220,8 @@ and `unique` methods again.
 cancer['Class'] = cancer['Class'].replace({
     'M' : 'Malignant',
     'B' : 'Benign'
-}).astype('category')
-cancer.info()
-```
+})
 
-```{code-cell} ipython3
 cancer['Class'].unique()
 ```
 
@@ -252,16 +243,17 @@ the `groupby` and `count` methods to find the number and percentage
 of benign and malignant tumor observations in our data set. When paired with
 `groupby`, `count` counts the number of observations for each value of the `Class`
 variable. Then we calculate the percentage in each group by dividing by the total
-number of observations and multiplying by 100. We have 
+number of observations and multiplying by 100.
+The total number of observations equals the number of rows in the data frame,
+which we can access via the `shape` attribute of the data frame
+(`shape[0]` is the number of rows and `shape[1]` is the number of columns).
+We have 
 {glue:}`benign_count` ({glue:}`benign_pct`\%) benign and
 {glue:}`malignant_count` ({glue:}`malignant_pct`\%) malignant 
 tumor observations.
 
 ```{code-cell} ipython3
-explore_cancer = pd.DataFrame()
-explore_cancer['count'] = cancer.groupby('Class')['ID'].count()
-explore_cancer['percentage'] = 100 * explore_cancer['count']/len(cancer)
-explore_cancer
+100 * cancer.groupby('Class').size() / cancer.shape[0]
 ```
 
 ```{index} value_counts
@@ -289,14 +281,10 @@ perimeter and concavity variables. Recall that `altair's` default palette
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
-perim_concav = (
-    alt.Chart(cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+perim_concav = alt.Chart(cancer).mark_circle().encode(
+    x=alt.X("Perimeter").title("Perimeter (standardized)"),
+    y=alt.Y("Concavity").title("Concavity (standardized)"),
+    color=alt.Color("Class").title("Diagnosis")
 )
 perim_concav
 ```
@@ -344,7 +332,7 @@ points_df = pd.DataFrame(
 perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances = euclidean_distances(perim_concav_with_new_point_df.loc[:, attrs])[
+my_distances = euclidean_distances(perim_concav_with_new_point_df[attrs])[
     len(cancer)
 ][:-1]
 ```
@@ -374,17 +362,13 @@ depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 :tags: [remove-cell]
 
 perim_concav_with_new_point = (
-    alt.Chart(
-        perim_concav_with_new_point_df,
-    )
+    alt.Chart(perim_concav_with_new_point_df)
     .mark_point(opacity=0.6, filled=True, size=40)
     .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-        shape=alt.Shape(
-            "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
-        ),
+        x=alt.X("Perimeter").title("Perimeter (standardized)"),
+        y=alt.Y("Concavity").title("Concavity (standardized)"),
+        color=alt.Color("Class").title("Diagnosis"),
+        shape=alt.Shape("Class").scale(range=["circle", "circle", "diamond"]),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
         stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
     )
@@ -401,13 +385,10 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-near_neighbor_df = pd.concat(
-    (
-        cancer.loc[np.argmin(my_distances), attrs],
-        perim_concav_with_new_point_df.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df = pd.concat([
+    cancer.loc[[np.argmin(my_distances)], attrs],
+    perim_concav_with_new_point_df.loc[[cancer.shape[0]], attrs],
+])
 glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
 glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
 ```
@@ -449,7 +430,7 @@ points_df2 = pd.DataFrame(
 perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances2 = euclidean_distances(perim_concav_with_new_point_df2.loc[:, attrs])[
+my_distances2 = euclidean_distances(perim_concav_with_new_point_df2[attrs])[
     len(cancer)
 ][:-1]
 glue("new_point_2_0", new_point[0])
@@ -479,13 +460,10 @@ perim_concav_with_new_point2 = (
     )
 )
 
-near_neighbor_df2 = pd.concat(
-    (
-        cancer.loc[np.argmin(my_distances2), attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df2 = pd.concat([
+    cancer.loc[[np.argmin(my_distances2)], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
 line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
     x='Perimeter',
     y='Concavity',
@@ -520,20 +498,14 @@ label.
 
 # The index of 3 rows that has smallest distance to the new point
 min_3_idx = np.argpartition(my_distances2, 3)[:3]
-near_neighbor_df3 = pd.concat(
-    (
-        cancer.loc[min_3_idx[1], attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
-near_neighbor_df4 = pd.concat(
-    (
-        cancer.loc[min_3_idx[2], attrs],
-        perim_concav_with_new_point_df2.loc[len(cancer), attrs],
-    ),
-    axis=1,
-).T
+near_neighbor_df3 = pd.concat([
+    cancer.loc[[min_3_idx[1]], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
+near_neighbor_df4 = pd.concat([
+    cancer.loc[[min_3_idx[2]], attrs],
+    perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
+])
 ```
 
 ```{code-cell} ipython3
@@ -606,11 +578,8 @@ distance using the formula above: we square the differences between the two obse
 and concavity coordinates, add the squared differences, and then take the square root.
 In order to find the $K=5$ nearest neighbors, we will use the `nsmallest` function from `pandas`.
 
-> **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
-> the ten rows with the *largest* values of a variable. We could have instead used the `nlargest` function
-> from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
-> as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
-> In general, it is good to use more specialized functions when they are available!
+```{index} nsmallest
+```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -788,7 +757,7 @@ points_df4 = pd.DataFrame(
 perim_concav_with_new_point_df4 = pd.concat((cancer, points_df4), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
 # in the orginal dataset
-my_distances4 = euclidean_distances(perim_concav_with_new_point_df4.loc[:, attrs])[
+my_distances4 = euclidean_distances(perim_concav_with_new_point_df4[attrs])[
     len(cancer)
 ][:-1]
 ```
@@ -907,6 +876,8 @@ Before getting started with $K$-nearest neighbors, we need to tell the `sklearn`
 that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
 ```{code-cell} ipython3
 from sklearn import set_config
+
+# Output dataframes instead of arrays
 set_config(transform_output="pandas")
 ```
 
@@ -954,7 +925,7 @@ In order to fit the model on the breast cancer data, we need to call `fit` on
 the model object. The `X` argument is used to specify the data for the predictor
 variables, while the `y` argument is used to specify the data for the response variable.
 So below, we set `X=cancer_train[["Perimeter", "Concavity"]]` and
-`y=cancer_train['Class']` to specify that `Class` is the target
+`y=cancer_train['Class']` to specify that `Class` is the response
 variable (the one we want to predict), and both `Perimeter` and `Concavity` are
 to be used as the predictors. Note that the `fit` function might look like it does not
 do much from the outside, but it is actually doing all the heavy lifting to train
@@ -1041,11 +1012,11 @@ and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")[['Class', 'Area', 'Smoothness']]
+unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")[['Class', 'Area', 'Smoothness']]
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
-}).astype('category')
+})
 unscaled_cancer
 ```
 
@@ -1211,7 +1182,7 @@ attrs = ["Area", "Smoothness"]
 new_obs = pd.DataFrame({"Class": ["Unknown"], "Area": 400, "Smoothness": 0.135})
 unscaled_cancer["Class"] = unscaled_cancer["Class"].apply(class_dscp)
 area_smoothness_new_df = pd.concat((unscaled_cancer, new_obs), ignore_index=True)
-my_distances = euclidean_distances(area_smoothness_new_df.loc[:, attrs])[
+my_distances = euclidean_distances(area_smoothness_new_df[attrs])[
     len(unscaled_cancer)
 ][:-1]
 area_smoothness_new_point = (
@@ -1237,27 +1208,18 @@ area_smoothness_new_point = (
 
 # The index of 3 rows that has smallest distance to the new point
 min_3_idx = np.argpartition(my_distances, 3)[:3]
-neighbor1 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[0], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor2 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[1], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor3 = pd.concat(
-    (
-        unscaled_cancer.loc[min_3_idx[2], attrs],
-        new_obs[attrs].T,
-    ),
-    axis=1,
-).T
+neighbor1 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[0]], attrs],
+    new_obs[attrs],
+])
+neighbor2 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[1]], attrs],
+    new_obs[attrs],
+])
+neighbor3 = pd.concat([
+    unscaled_cancer.loc[[min_3_idx[2]], attrs],
+    new_obs[attrs],
+])
 
 line1 = (
     alt.Chart(neighbor1)
@@ -1287,7 +1249,7 @@ scaled_cancer_all["Class"] = scaled_cancer_all["Class"].apply(class_dscp)
 area_smoothness_new_df_scaled = pd.concat(
     (scaled_cancer_all, new_obs_scaled), ignore_index=True
 )
-my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled.loc[:, attrs])[
+my_distances_scaled = euclidean_distances(area_smoothness_new_df_scaled[attrs])[
     len(scaled_cancer_all)
 ][:-1]
 area_smoothness_new_point_scaled = (
@@ -1311,27 +1273,18 @@ area_smoothness_new_point_scaled = (
     )
 )
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
-neighbor1_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[0], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor2_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[1], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
-neighbor3_scaled = pd.concat(
-    (
-        scaled_cancer_all.loc[min_3_idx_scaled[2], attrs],
-        new_obs_scaled[attrs].T,
-    ),
-    axis=1,
-).T
+neighbor1_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[0]], attrs],
+    new_obs_scaled[attrs],
+])
+neighbor2_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[1]], attrs],
+    new_obs_scaled[attrs],
+])
+neighbor3_scaled = pd.concat([
+    scaled_cancer_all.loc[[min_3_idx_scaled[2]], attrs],
+    new_obs_scaled[attrs],
+])
 
 line1_scaled = (
     alt.Chart(neighbor1_scaled)
@@ -1440,14 +1393,10 @@ rare_cancer = pd.concat((
     cancer[cancer["Class"] == 'Malignant'].head(3)
 ))
 
-rare_plot = (
-    alt.Chart(rare_cancer)
-    .mark_circle()
-    .encode(
-        x=alt.X("Perimeter", title="Perimeter (standardized)"),
-        y=alt.Y("Concavity", title="Concavity (standardized)"),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
+    x=alt.X("Perimeter").title("Perimeter (standardized)"),
+    y=alt.Y("Concavity").title("Concavity (standardized)"),
+    color=alt.Color("Class").title("Diagnosis")
 )
 rare_plot
 ```
@@ -1484,7 +1433,7 @@ new_point_df = pd.DataFrame(
 )
 rare_cancer["Class"] = rare_cancer["Class"].apply(class_dscp)
 rare_cancer_with_new_df = pd.concat((rare_cancer, new_point_df), ignore_index=True)
-my_distances = euclidean_distances(rare_cancer_with_new_df.loc[:, attrs])[
+my_distances = euclidean_distances(rare_cancer_with_new_df[attrs])[
     len(rare_cancer)
 ][:-1]
 
@@ -1517,13 +1466,10 @@ for i in range(7):
     clr = "#1f77b4"
     if rare_cancer.iloc[min_7_idx[i], :]["Class"] == "Malignant":
         clr = "#ff7f0e"
-    neighbor = pd.concat(
-        (
-            rare_cancer.iloc[min_7_idx[i], :][attrs],
-            new_point_df[attrs].T,
-        ),
-        axis=1,
-    ).T
+    neighbor = pd.concat([
+        rare_cancer.iloc[[min_7_idx[i]], :][attrs],
+        new_point_df[attrs],
+    ])
     rare_plot = rare_plot + (
         alt.Chart(neighbor)
         .mark_line(opacity=0.3)
@@ -1550,14 +1496,14 @@ always "benign," corresponding to the blue color.
 :tags: [remove-cell]
 
 knn = KNeighborsClassifier(n_neighbors=7)
-knn.fit(X=rare_cancer.loc[:, ["Perimeter", "Concavity"]], y=rare_cancer["Class"])
+knn.fit(X=rare_cancer[["Perimeter", "Concavity"]], y=rare_cancer["Class"])
 
 # create a prediction pt grid
 per_grid = np.linspace(
-    rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max(), 50
+    rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05, 50
 )
 con_grid = np.linspace(
-    rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max(), 50
+    rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05, 50
 )
 pcgrid = np.array(np.meshgrid(per_grid, con_grid)).reshape(2, -1).T
 pcgrid = pd.DataFrame(pcgrid, columns=["Perimeter", "Concavity"])
@@ -1593,14 +1539,16 @@ prediction_plot = (
             "Perimeter",
             title="Perimeter (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+                domain=(rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05),
+                nice=False
             ),
         ),
         y=alt.Y(
             "Concavity",
             title="Concavity (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+                domain=(rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05),
+                nice=False
             ),
         ),
         color=alt.Color("Class", title="Diagnosis"),
@@ -1649,7 +1597,7 @@ from sklearn.utils import resample
 malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
 benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
 malignant_cancer_upsample = resample(
-    malignant_cancer, n_samples=len(benign_cancer)
+    malignant_cancer, n_samples=benign_cancer.shape[0]
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer['Class'].value_counts()
@@ -1667,7 +1615,7 @@ closer to the benign tumor observations.
 
 knn = KNeighborsClassifier(n_neighbors=7)
 knn.fit(
-    X=upsampled_cancer.loc[:, ["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
+    X=upsampled_cancer[["Perimeter", "Concavity"]], y=upsampled_cancer["Class"]
 )
 
 # create a prediction pt grid
@@ -1684,14 +1632,16 @@ rare_plot = (
             "Perimeter",
             title="Perimeter (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Perimeter"].min(), rare_cancer["Perimeter"].max())
+                domain=(rare_cancer["Perimeter"].min() * 1.05, rare_cancer["Perimeter"].max() * 1.05),
+                nice=False
             ),
         ),
         y=alt.Y(
             "Concavity",
             title="Concavity (standardized)",
             scale=alt.Scale(
-                domain=(rare_cancer["Concavity"].min(), rare_cancer["Concavity"].max())
+                domain=(rare_cancer["Concavity"].min() * 1.05, rare_cancer["Concavity"].max() * 1.05),
+                nice=False
             ),
         ),
         color=alt.Color("Class", title="Diagnosis"),
@@ -1718,6 +1668,90 @@ glue("fig:05-upsample-plot", (rare_plot + upsampled_plot))
 Upsampled data with background color indicating the decision of the classifier.
 :::
 
+### Missing data
+
+```{index} missing data
+```
+
+One of the most common issues in real data sets in the wild is *missing data*,
+i.e., observations where the values of some of the variables were not recorded.
+Unfortunately, as common as it is, handling missing data properly is very
+challenging and generally relies on expert knowledge about the data, setting,
+and how the data were collected. One typical challenge with missing data is
+that missing entries can be *informative*: the very fact that an entries were
+missing is related to the values of other variables.  For example, survey
+participants from a marginalized group of people may be less likely to respond
+to certain kinds of questions if they fear that answering honestly will come
+with negative consequences. In that case, if we were to simply throw away data
+with missing entries, we would bias the conclusions of the survey by
+inadvertently removing many members of that group of respondents.  So ignoring
+this issue in real problems can easily lead to misleading analyses, with
+detrimental impacts.  In this book, we will cover only those techniques for
+dealing with missing entries in situations where missing entries are just
+"randomly missing", i.e., where the fact that certain entries are missing
+*isn't related to anything else* about the observation.
+
+Let's load and examine a modified subset of the tumor image data
+that has a few missing entries:
+
+```{code-cell} ipython3
+missing_cancer = pd.read_csv("data/wdbc_missing.csv")[['Class', 'Radius', 'Texture', 'Perimeter']]
+missing_cancer['Class'] = missing_cancer['Class'].replace({
+   'M' : 'Malignant',
+   'B' : 'Benign'
+})
+missing_cancer
+```
+
+Recall that K-nearest neighbor classification makes predictions by computing
+the straight-line distance to nearby training observations, and hence requires
+access to the values of *all* variables for *all* observations in the training
+data.  So how can we perform K-nearest neighbor classification in the presence
+of missing data?  Well, since there are not too many observations with missing
+entries, one option is to simply remove those observations prior to building
+the K-nearest neighbor classifier. We can accomplish this by using the
+`dropna` method prior to working with the data.
+
+```{code-cell} ipython3
+no_missing_cancer = missing_cancer.dropna()
+no_missing_cancer
+```
+
+However, this strategy will not work when many of the rows have missing
+entries, as we may end up throwing away too much data. In this case, another
+possible approach is to *impute* the missing entries, i.e., fill in synthetic
+values based on the other observations in the data set. One reasonable choice
+is to perform *mean imputation*, where missing entries are filled in using the
+mean of the present entries in each variable. To perform mean imputation, we
+use a `SimpleImputer` transformer with the default arguments, and wrap it in a 
+`ColumnTransformer` to indicate which columns need imputation.
+
+```{code-cell} ipython3
+from sklearn.impute import SimpleImputer
+
+preprocessor = make_column_transformer(
+    (SimpleImputer(), ["Radius", "Texture", "Perimeter"]),
+    verbose_feature_names_out=False
+)
+preprocessor
+```
+
+To visualize what mean imputation does, let's just apply the transformer directly to the `missing_cancer`
+data frame using the `fit` and `transform` functions.  The imputation step fills in the missing
+entries with the mean values of their corresponding variables.
+
+```{code-cell} ipython3
+preprocessor.fit(missing_cancer)
+imputed_cancer = preprocessor.transform(missing_cancer)
+imputed_cancer
+```
+
+Many other options for missing data imputation can be found in 
+[the `scikit-learn` documentation](https://scikit-learn.org/stable/modules/impute.html).  However
+you decide to handle missing data in your data analysis, it is always crucial
+to think critically about the setting, how the data were collected, and the
+question you are answering.
+
 +++
 
 (08:puttingittogetherworkflow)=
@@ -1728,16 +1762,16 @@ Upsampled data with background color indicating the decision of the classifier.
 
 The `scikit-learn` package collection also provides the [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline), 
 a  way to chain together multiple data analysis steps without a lot of otherwise necessary code for intermediate steps.
-To illustrate the whole workflow, let's start from scratch with the `unscaled_wdbc.csv` data.
+To illustrate the whole workflow, let's start from scratch with the `wdbc_unscaled.csv` data.
 First we will load the data, create a model, and specify a preprocessor for the data.
 
 ```{code-cell} ipython3
 # load the unscaled cancer data, make Class readable
-unscaled_cancer = pd.read_csv("data/unscaled_wdbc.csv")
+unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")
 unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
    'M' : 'Malignant',
    'B' : 'Benign'
-}).astype('category')
+})
 unscaled_cancer
 
 # create the KNN model
@@ -1808,10 +1842,10 @@ import numpy as np
 
 # create the grid of area/smoothness vals, and arrange in a data frame
 are_grid = np.linspace(
-    unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max(), 50
+    unscaled_cancer["Area"].min() * 0.95, unscaled_cancer["Area"].max() * 1.05, 50
 )
 smo_grid = np.linspace(
-    unscaled_cancer["Smoothness"].min(), unscaled_cancer["Smoothness"].max(), 50
+    unscaled_cancer["Smoothness"].min() * 0.95, unscaled_cancer["Smoothness"].max() * 1.05, 50
 )
 asgrid = np.array(np.meshgrid(are_grid, smo_grid)).reshape(2, -1).T
 asgrid = pd.DataFrame(asgrid, columns=["Area", "Smoothness"])
@@ -1825,42 +1859,39 @@ prediction_table["Class"] = knnPredGrid
 
 # plot:
 # 1. the colored scatter of the original data
-unscaled_plot = (
-    alt.Chart(
-        unscaled_cancer,
-    )
-    .mark_point(opacity=0.6, filled=True, size=40)
-    .encode(
-        x=alt.X(
-            "Area",
-            title="Area",
-            scale=alt.Scale(
-                domain=(unscaled_cancer["Area"].min(), unscaled_cancer["Area"].max())
-            ),
+unscaled_plot = alt.Chart(unscaled_cancer).mark_point(
+    opacity=0.6,
+    filled=True,
+    size=40
+).encode(
+    x=alt.X("Area")
+        .scale(
+            nice=False,
+            domain=(
+                unscaled_cancer["Area"].min() * 0.95,
+                unscaled_cancer["Area"].max() * 1.05
+            )
         ),
-        y=alt.Y(
-            "Smoothness",
-            title="Smoothness",
-            scale=alt.Scale(
-                domain=(
-                    unscaled_cancer["Smoothness"].min(),
-                    unscaled_cancer["Smoothness"].max(),
-                )
-            ),
+    y=alt.Y("Smoothness")
+        .scale(
+            nice=False,
+            domain=(
+                unscaled_cancer["Smoothness"].min() * 0.95,
+                unscaled_cancer["Smoothness"].max() * 1.05
+            )
         ),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+    color=alt.Color("Class").title("Diagnosis")
 )
 
 # 2. the faded colored scatter for the grid points
-prediction_plot = (
-    alt.Chart(prediction_table)
-    .mark_point(opacity=0.05, filled=True, size=300)
-    .encode(
-        x=alt.X("Area"),
-        y=alt.Y("Smoothness"),
-        color=alt.Color("Class", title="Diagnosis"),
-    )
+prediction_plot = alt.Chart(prediction_table).mark_point(
+    opacity=0.05,
+    filled=True,
+    size=300
+).encode(
+    x="Area",
+    y="Smoothness",
+    color=alt.Color("Class").title("Diagnosis")
 )
 unscaled_plot + prediction_plot
 ```
@@ -1883,7 +1914,7 @@ Scatter plot of smoothness versus area where background color indicates the deci
 
 Practice exercises for the material covered in this chapter 
 can be found in the accompanying 
-[worksheets repository](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets#readme)
+[worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Classification I: training and predicting" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."

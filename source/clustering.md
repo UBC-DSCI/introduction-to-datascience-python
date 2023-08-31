@@ -630,6 +630,10 @@ visualize them as shown in {numref}`cluster_plot`.
 Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
 visualize the *standardized* data, we would need to use the `fit` and `transform` functions
 on the `StandardScaler` preprocessor directly to obtain that first.
+As in Chapter {ref}`viz`,
+adding the `:N` suffix ensures that `altair`
+will treat the `cluster` variable as a nominal/categorical variable, and
+hence use a discrete color map for the visualization.
 
 ```{code-cell} ipython3
 cluster_plot=alt.Chart(clustered_data).mark_circle().encode(

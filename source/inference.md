@@ -1037,7 +1037,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
         .title("Price per night (dollars)"),
     y=alt.Y("count()").title("Count")
 ).facet(
-    "replicate:O",
+    "replicate:N",  # Remeber that `:N` converts the variable to a categorical type
     columns=2
 )
 ```

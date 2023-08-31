@@ -18,15 +18,7 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import altair as alt
-import numpy as np
-import pandas as pd
- 
-from myst_nb import glue
+from chapter_preamble import *
 ```
 
 ## Overview 
@@ -292,6 +284,7 @@ on the series of numbers, passing the argument `n = 10` to indicate that we want
 
 ```{code-cell} ipython3
 import numpy as np
+import pandas as pd
 
 np.random.seed(1)
 

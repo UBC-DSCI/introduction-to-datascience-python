@@ -15,13 +15,8 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-# ignore warnings from altair
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
+from chapter_preamble import *
 ```
-
-
 
 (viz)=
 # Effective data visualization
@@ -177,10 +172,6 @@ and then how to create the visualization in Python using `altair`.  To use the `
 import pandas as pd
 import altair as alt
 ```
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-from myst_nb import glue
-```
 
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
 
@@ -288,11 +279,6 @@ There are a few basic aspects of a plot that we need to specify:
       Here, we use `alt.Y` to change the domain of the y-axis,
       so that it starts from the lowest value in the `date_measured` column
       rather than from zero.
-
-```{code-cell} ipython3
-:tags: ["remove-cell"]
-from myst_nb import glue
-```
 
 ```{code-cell} ipython3
 co2_scatter = alt.Chart(co2_df).mark_point().encode(
@@ -1944,11 +1930,11 @@ we demonstrate how to save PNG and SVG file types for the
 ```{code-cell} ipython3
 faithful_scatter_labels.save("img/viz/faithful_plot.png")
 faithful_scatter_labels.save("img/viz/faithful_plot.svg")
-
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 import os
 import numpy as np
 png_size = np.round(os.path.getsize("img/viz/faithful_plot.png")/(1024*1024), 2)

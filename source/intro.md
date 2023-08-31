@@ -16,8 +16,9 @@ kernelspec:
 # Python and Pandas
 
 ```{code-cell} ipython3
-:tags: ["remove-cell"]
-from myst_nb import glue
+:tags: [remove-cell]
+
+from chapter_preamble import *
 ```
 
 ## Overview

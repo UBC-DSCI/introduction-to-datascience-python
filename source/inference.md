@@ -18,13 +18,7 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import altair as alt
-from myst_nb import glue
-import warnings
-
-
-warnings.filterwarnings("ignore", category=FutureWarning)
-alt.data_transformers.disable_max_rows()
+from chapter_preamble import *
 ```
 
 ## Overview
@@ -732,7 +726,7 @@ glue(
         )
     ).facet(
         alt.Facet(
-            'sample_size',
+            'sample_size:N',
             header=alt.Header(
                 title='',
                 labelFontWeight='bold',
@@ -1043,7 +1037,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
         .title("Price per night (dollars)"),
     y=alt.Y("count()").title("Count")
 ).facet(
-    "replicate",
+    "replicate:N",  # Recall that `:N` converts the variable to a categorical type
     columns=2
 )
 ```

@@ -18,26 +18,8 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import altair as alt
-import numpy as np
-import pandas as pd
-
-# from sklearn.model_selection import GridSearchCV, train_test_split
-# from sklearn.compose import make_column_transformer
-# from sklearn.neighbors import KNeighborsRegressor
-# from sklearn.pipeline import Pipeline, make_pipeline
-# from sklearn.preprocessing import StandardScaler
-
-# import plotly.express as px
-# import plotly.graph_objs as go
-# from plotly.offline import plot
+from chapter_preamble import *
 from IPython.display import HTML
-
-from myst_nb import glue
 ```
 
 ## Overview
@@ -150,8 +132,9 @@ We begin the analysis by loading and examining the data,
 as well as setting the seed value.
 
 ```{code-cell} ipython3
-import pandas as pd
 import altair as alt
+import numpy as np
+import pandas as pd
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
@@ -320,13 +303,10 @@ nn_plot = small_plot + rule
 
 # plot horizontal lines which is perpendicular to x=2000
 for i in range(5):
-    h_line_df = pd.concat(
-        (
-            pd.DataFrame(nearest_neighbors.iloc[i, [4, 6]]).T,
-            pd.DataFrame({"sqft": [2000], "price": [nearest_neighbors.iloc[i, 6]]}),
-        ),
-        ignore_index=True,
-    )
+    h_line_df = pd.DataFrame({
+        "sqft": [nearest_neighbors.iloc[i, 4], 2000],
+        "price": [nearest_neighbors.iloc[i, 6]] * 2
+    })
     h_line = alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price")
     nn_plot += h_line
 
@@ -671,7 +651,7 @@ glue("cv_RMSPE", "{0:,.0f}".format(int(best_cv_RMSPE)))
 :tags: [remove-cell]
 
 sacr_tunek_plot = alt.Chart(sacr_results).mark_line(point=True).encode(
-    x=alt.X("n_neighbors", title="Neighbors"),
+    x=alt.X("n_neighbors:Q", title="Neighbors"),
     y=alt.Y("mean_test_score", scale=alt.Scale(zero=False), title="Cross-Validation RMSPE Estimate")
 )
 

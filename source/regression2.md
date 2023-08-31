@@ -18,26 +18,9 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import altair as alt
-import numpy as np
-import pandas as pd
-
-# from sklearn.linear_model import LinearRegression
-# from sklearn.model_selection import GridSearchCV, cross_validate, train_test_split
-# from sklearn.compose import make_column_transformer
-# from sklearn.neighbors import KNeighborsRegressor
-# from sklearn.pipeline import Pipeline, make_pipeline
-# from sklearn.preprocessing import StandardScaler
-# import plotly.express as px
-# import plotly.graph_objs as go
-# from plotly.offline import plot
+from chapter_preamble import *
 from IPython.display import HTML
-
-from myst_nb import glue
+import numpy as np
 ```
 
 ## Overview
@@ -366,8 +349,9 @@ putting some test data away in a lock box that we
 can come back to after we choose our final model. Let's take care of that now.
 
 ```{code-cell} ipython3
-import pandas as pd
+import numpy as np
 import altair as alt
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error

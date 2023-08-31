@@ -101,11 +101,16 @@ Occasionally, when you first run Docker on Windows, you will encounter an error 
 
 **Running JupyterLab** Run Docker Desktop. Once it is running, you need to download and run the
 Docker *image* that we have made available for the worksheets (an *image* is like a "snapshot" of a 
-computer with all the right packages pre-installed). In the search bar, enter `ubcdsci/py-dsci-100`, as this is 
-the name of the image. You will be presented
-with a few options ({numref}`docker-desktop-search`). In the "Tag" drop down menu, click 
-the tag `20230720213731d08401` to select the correct version of the image. Then click 
-the "Pull" button to download the image.
+computer with all the right packages pre-installed). You only need to do this step one time; the image will remain
+the next time you run Docker Desktop.
+In the Docker Desktop search bar, enter `ubcdsci/py-dsci-100`, as this is 
+the name of the image. You will see the `ubcdsci/py-dsci-100` image in the list ({numref}`docker-desktop-search`),
+and "latest" in the Tag drop down menu. We need to change "latest" to the right image version before proceeding.
+To find the right tag, open 
+the [`Dockerfile` in the worksheets repository](https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/Dockerfile),
+and look for the line `FROM ubcdsci/py-dsci-100:` followed by the tag consisting of a sequence of numbers and letters.
+Back in Docker Desktop, in the "Tag" drop down menu, click that tag to select the correct image version. Then click 
+the "Pull" button to download the image. 
 
 ```{figure} img/setup/docker-1.png
 ---
@@ -126,8 +131,6 @@ name: docker-desktop-images
 ---
 The Docker Desktop images tab.
 ```
-
-
 
 To start up a *container* using that image, click the play button beside the
 image. This will open the run configuration menu ({numref}`docker-desktop-runconfig`).
@@ -196,10 +199,12 @@ sudo chmod u+x get-docker.sh
 sudo sh get-docker.sh
 ```
 
-**Running JupyterLab** In the terminal, navigate to the directory where you want to run JupyterLab, and run
-the following command.
+**Running JupyterLab** First, open the [`Dockerfile` in the worksheets repository](https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/Dockerfile),
+and look for the line `FROM ubcdsci/py-dsci-100:` followed by a tag consisting of a sequence of numbers and letters.
+Then in the terminal, navigate to the directory where you want to run JupyterLab, and run
+the following command, replacing `TAG` with the *tag* you found earlier.
 ```
-docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/py-dsci-100:20230720213731d08401 jupyter lab
+docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/py-dsci-100:TAG jupyter lab
 ```
 The terminal will then print some text as the Docker container starts. Once the text stops scrolling, find the 
 URL in your terminal that starts with `http://127.0.0.1:8888` (highlighted by the 

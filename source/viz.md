@@ -1554,13 +1554,14 @@ We also reduce the height of each chart
 so that they all fit in the same view.
 Note that we are re-using the chart we created just above,
 instead of re-creating the same chart from scratch.
+We also explicitly specify that `facet` is a categorical variable
+since faceting should only be done with categorical variables.
 
 ```{code-cell} ipython3
-
 morley_hist_facet = morley_hist_categorical.properties(
     height=100
 ).facet(
-    "Expt",
+    "Expt:N",
     columns=1
 )
 ```
@@ -1626,7 +1627,7 @@ v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
 morley_hist_relative = (morley_hist_rel + v_line).properties(
     height=100
 ).facet(
-    "Expt",
+    "Expt:N",
     columns=1,
     title="Histogram of relative error of Michelson’s speed of light data"
 )
@@ -1719,7 +1720,7 @@ morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
 morley_hist_max_bins = alt.vconcat(
     alt.hconcat(
         (morley_hist_default + v_line).facet(
-            'Expt',
+            'Expt:N',
             columns=1,
             title=alt.TitleParams('Default (bin=True)', fontSize=16, anchor='middle', dx=15)
         ),
@@ -1730,7 +1731,7 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt',
+            'Expt:N',
             columns=1,
             title=alt.TitleParams('maxbins=5', fontSize=16, anchor='middle', dx=15)
         ),
@@ -1743,7 +1744,7 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt',
+            'Expt:N',
             columns=1,
             title=alt.TitleParams('maxbins=70', fontSize=16, anchor='middle', dx=15)
         ),
@@ -1754,7 +1755,7 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt',
+            'Expt:N',
             columns=1,
             title=alt.TitleParams('maxbins=200', fontSize=16, anchor='middle', dx=15)
         )

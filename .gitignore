@@ -8,3 +8,4 @@ source/*.ipynb
 source/*.py
 *.swp
 *.swo
+source/__pycache__

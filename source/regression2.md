@@ -102,6 +102,8 @@ in {numref}`fig:08-lin-reg1`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+import pandas as pd
+
 np.random.seed(2)
 
 sacramento = pd.read_csv("data/sacramento.csv")

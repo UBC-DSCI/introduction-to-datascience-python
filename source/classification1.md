@@ -18,6 +18,7 @@ kernelspec:
 from chapter_preamble import *
 from IPython.display import HTML
 from sklearn.metrics.pairwise import euclidean_distances
+import numpy as np
 ```
 
 (classification1)=

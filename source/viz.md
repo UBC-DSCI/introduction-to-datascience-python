@@ -1508,7 +1508,7 @@ by setting the `opacity` argument in `mark_bar` to `0.5`
 to make the bars slightly translucent.
 
 ```{code-cell} ipython3
-morley_hist_categorical = alt.Chart(morley_df).mark_bar().encode(
+morley_hist_categorical = alt.Chart(morley_df).mark_bar(opacity=0.5).encode(
     x=alt.X("Speed").bin(),
     y=alt.Y("count()").stack(False),
     color="Expt:N"

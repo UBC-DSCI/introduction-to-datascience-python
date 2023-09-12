@@ -55,3 +55,8 @@ used to teach DSCI 100 at the University of British Columbia (UBC).
 We would like to give special thanks to Navya Dahiya and Gloria Ye
 for completing the first round of translation of the R material to Python,
 and to Philip Austin for his leadership and guidance throughout the translation process.
+We also gratefully acknowledge the UBC Open Educational Resources Fund
+and the UBC Department of Statistics for supporting the translation of 
+the original R textbook and exercises to the python programming language.
+
+

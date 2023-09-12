@@ -88,15 +88,17 @@ tongues in Canada, and how many people speak each of them?*
 ```{index} data science; good practices
 ```
 
-> **Note:** Data science cannot be done without
-> a deep understanding of the data and
-> problem domain. In this book, we have simplified the data sets used in our
-> examples to concentrate on methods and fundamental concepts. But in real
-> life, you cannot and should not do data science without a domain expert.
-> Alternatively, it is common to practice data science in your own domain of
-> expertise! Remember that when you work with data, it is essential to think
-> about *how* the data were collected, which affects the conclusions you can
-> draw. If your data are biased, then your results will be biased!
+```{note}
+Data science cannot be done without
+a deep understanding of the data and
+problem domain. In this book, we have simplified the data sets used in our
+examples to concentrate on methods and fundamental concepts. But in real
+life, you cannot and should not do data science without a domain expert.
+Alternatively, it is common to practice data science in your own domain of
+expertise! Remember that when you work with data, it is essential to think
+about *how* the data were collected, which affects the conclusions you can
+draw. If your data are biased, then your results will be biased!
+```
 
 ## Asking a question
 
@@ -450,10 +452,12 @@ at the same time. We will first investigate filtering rows and selecting
 columns with the `[]` operation,
 and then use `loc[]` to do both in our analysis of the Aboriginal languages data.
 
-> **Note:** The `[]` and `loc[]` operations, and related operations, in `pandas`
-> are much more powerful than we describe in this chapter.
-> You will learn more sophisticated ways to index data frames later on
-> in the {ref}`wrangling` chapter.
+```{note}
+The `[]` and `loc[]` operations, and related operations, in `pandas`
+are much more powerful than we describe in this chapter.
+You will learn more sophisticated ways to index data frames later on
+in the {ref}`wrangling` chapter.
+```
 
 ### Using `[]` to filter rows
 Looking at the `can_lang` data above, we see the column `category` contains different
@@ -482,10 +486,12 @@ quotes tells Python that this is a *string value* (e.g., a column name, or word 
 and not one of the special words that make up the Python programming language,
 or one of the names we have given to objects in the code we have already written.
 
-> **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
-> treated the same. So we could have written `'Aboriginal languages'` instead
-> of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
-> Try both out for yourself!
+```{note}
+In Python, single quotes (`'`) and double quotes (`"`) are generally
+treated the same. So we could have written `'Aboriginal languages'` instead
+of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
+Try both out for yourself!
+```
 
 ```{figure} img/intro/filter_rows.png
 ---
@@ -652,11 +658,13 @@ column to create (or old column to modify), then the assignment symbol `=`,
 and then the computation to store in that column. In this case, we will opt to
 create a new column called `mother_tongue_percent`. 
 
-> **Note:** You will see below that we write the Canadian population in
-> Python as `35_151_728`. The underscores (`_`) are just there for readability,
-> and do not affect how Python interprets the number. In other words, 
-> `35151728` and `35_151_728` are treated identically in Python, 
-> although the latter is much clearer!
+```{note}
+You will see below that we write the Canadian population in
+Python as `35_151_728`. The underscores (`_`) are just there for readability,
+and do not affect how Python interprets the number. In other words, 
+`35151728` and `35_151_728` are treated identically in Python, 
+although the latter is much clearer!
+```
 
 ```{code-cell} ipython3
 canadian_population = 35_151_728
@@ -1013,12 +1021,14 @@ were, according to the 2016 Canadian census, and how many people speak each of t
 instance, we can see that the Aboriginal language most often reported was Cree
 n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 
-> **Note:** "n.o.s." means "not otherwise specified", so Cree n.o.s. refers to
-> individuals who reported Cree as their mother tongue. In this data set, the
-> Cree languages include the following categories: Cree n.o.s., Swampy Cree,
-> Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
-> includes Moose Cree, Northern East Cree and Southern East Cree)
-> {cite:p}`language2016`.
+```{note}
+"n.o.s." means "not otherwise specified", so Cree n.o.s. refers to
+individuals who reported Cree as their mother tongue. In this data set, the
+Cree languages include the following categories: Cree n.o.s., Swampy Cree,
+Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
+includes Moose Cree, Northern East Cree and Southern East Cree)
+{cite:p}`language2016`.
+```
 
 ### Putting it all together
 

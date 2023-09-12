@@ -226,19 +226,21 @@ The `ppm` column holds the value of CO$_{\text{2}}$ in parts per million
 that was measured on each date, and is type `float64`; this is the usual
 type for decimal numbers.
 
-> **Note:** `read_csv` was able to parse the `date_measured` column into the
-> `datetime` vector type because it was entered
-> in the international standard date format,
-> called ISO 8601, which lists dates as `year-month-day` and we used `parse_dates=True`.
-> `datetime` vectors are `double` vectors with special properties that allow
-> them to handle dates correctly.
-> For example, `datetime` type vectors allow functions like `altair`
-> to treat them as numeric dates and not as character vectors,
-> even though they contain non-numeric characters
-> (e.g., in the `date_measured` column in the `co2_df` data frame).
-> This means Python will not accidentally plot the dates in the wrong order
-> (i.e., not alphanumerically as would happen if it was a character vector).
-> More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html).
+```{note}
+`read_csv` was able to parse the `date_measured` column into the
+`datetime` vector type because it was entered
+in the international standard date format,
+called ISO 8601, which lists dates as `year-month-day` and we used `parse_dates=True`.
+`datetime` vectors are `double` vectors with special properties that allow
+them to handle dates correctly.
+For example, `datetime` type vectors allow functions like `altair`
+to treat them as numeric dates and not as character vectors,
+even though they contain non-numeric characters
+(e.g., in the `date_measured` column in the `co2_df` data frame).
+This means Python will not accidentally plot the dates in the wrong order
+(i.e., not alphanumerically as would happen if it was a character vector).
+More about dates and times can be viewed [here](https://wesmckinney.com/book/time-series.html).
+```
 
 Since we are investigating a relationship between two variables
 (CO$_{\text{2}}$ concentration and date),
@@ -388,7 +390,12 @@ glue('co2_line_labels', co2_line_labels, display=False)
 Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes and labels.
 :::
 
-> **Note:** The `configure_*` function in `altair` supports many other functionalities for customizing visualizations, for example updating the size of the plot, changing the font color, or many other options that can be viewed [here](https://altair-viz.github.io/user_guide/configuration.html).
+```{note}
+The `configure_*` function in `altair` supports many other functionalities for
+customizing visualizations, for example updating the size of the plot, changing
+the font color, or many other options that can be viewed
+[here](https://altair-viz.github.io/user_guide/configuration.html).
+```
 
 ```{index} altair; alt.Scale
 ```
@@ -1183,11 +1190,13 @@ largest. Then to help make the landmass labels easier to read
 we'll swap the `x` and `y` variables,
 so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
-> **Note:** Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
-> the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
-> from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
-> as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
-> In general, it is good to use more specialized functions when they are available!
+```{note}
+Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
+the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
+from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
+as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
+In general, it is good to use more specialized functions when they are available!
+```
 
 ```{index} pandas.DataFrame; nlargest; nsmallest
 ```
@@ -1414,11 +1423,13 @@ using the assignment symbol (`=`), you can add to it using the `+` operator.
 Below we add a vertical line created using `mark_rule`
 to the `morley_hist` we created previously.
 
-> **Note:** Technically we could have left out the data argument
-> when creating the rule chart
-> since we're not using any values from the `morley_df` data frame,
-> but we will need it later when we facet this layered chart,
-> so we are including it here already.
+```{note}
+Technically we could have left out the data argument
+when creating the rule chart
+since we're not using any values from the `morley_df` data frame,
+but we will need it later when we facet this layered chart,
+so we are including it here already.
+```
 
 ```{code-cell} ipython3
 v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
@@ -1913,9 +1924,11 @@ bad, while raster images eventually start to look "pixelated."
 ```{index} see: portable document dormat; PDF
 ```
 
-> **Note:** The portable document format [PDF](https://en.wikipedia.org/wiki/PDF) (`.pdf`) is commonly used to
-> store *both* raster and vector formats. If you try to open a PDF and it's taking a long time
-> to load, it may be because there is a complicated vector graphics image that your computer is rendering.
+```{note}
+The portable document format [PDF](https://en.wikipedia.org/wiki/PDF) (`.pdf`) is commonly used to
+store *both* raster and vector formats. If you try to open a PDF and it's taking a long time
+to load, it may be because there is a complicated vector graphics image that your computer is rendering.
+```
 
 Let's learn how to save plot images to `.png` and `.svg` file formats using the
 `faithful_scatter_labels` scatter plot of the [Old Faithful data set](https://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat)

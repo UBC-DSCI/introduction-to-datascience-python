@@ -327,10 +327,12 @@ in the `read_csv` function to the *tab character* `\t`.
 ```{index} escape character
 ```
 
-> **Note:** `\t` is an example of an *escaped character*,
-> which always starts with a backslash (`\`).
-> Escaped characters are used to represent non-printing characters
-> (like the tab) or characters with special meanings (such as quotation marks).
+```{note}
+`\t` is an example of an *escaped character*,
+which always starts with a backslash (`\`).
+Escaped characters are used to represent non-printing characters
+(like the tab) or characters with special meanings (such as quotation marks).
+```
 
 
 ```{code-cell} ipython3
@@ -614,11 +616,13 @@ the `connect` function from the
 in the data, but simply tells Python where the database is and opens up a
 communication channel that Python can use to send SQL commands to the database.
 
-> **Note:** There is another database package in python called `sqlalchemy`.
-> That package is a bit more mature than `ibis`,
-> so if you want to dig deeper into working with databases in Python, that is a good next
-> package to learn about. We will work with `ibis` in this book, as it
-> provides a more modern and friendlier syntax that is more like `pandas` for data analysis code.
+```{note}
+There is another database package in python called `sqlalchemy`.
+That package is a bit more mature than `ibis`,
+so if you want to dig deeper into working with databases in Python, that is a good next
+package to learn about. We will work with `ibis` in this book, as it
+provides a more modern and friendlier syntax that is more like `pandas` for data analysis code.
+```
 
 ```{code-cell} ipython3
 import ibis
@@ -933,10 +937,12 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 ```
 
 % ## Obtaining data from the web
-%
-% > **Note:** This section is not required reading for the remainder of the textbook. It
-% > is included for those readers interested in learning a little bit more about
-% > how to obtain different types of data from the web.
+% 
+% ```{note}
+% This section is not required reading for the remainder of the textbook. It
+% is included for those readers interested in learning a little bit more about
+% how to obtain different types of data from the web.
+% ```
 %
 % ```{index} see: application programming interface; API
 % ```

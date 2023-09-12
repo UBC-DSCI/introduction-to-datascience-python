@@ -70,16 +70,18 @@ straight line of best fit through the training data and then
 ```{index} regression; logistic
 ```
 
-> **Note:** Although we did not cover it in earlier chapters, there
-> is another popular method for classification called *logistic
-> regression* (it is used for classification even though the name, somewhat confusingly,
-> has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
-> "fit" the model to the training data and then "look up" the prediction for each new observation.
-> Logistic regression and KNN classification have an advantage/disadvantage comparison
-> similar to that of linear regression and KNN
-> regression. It is useful to have a good understanding of linear regression before learning about
-> logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
-> classification chapters to learn more about logistic regression.
+```{note}
+Although we did not cover it in earlier chapters, there
+is another popular method for classification called *logistic
+regression* (it is used for classification even though the name, somewhat confusingly,
+has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
+"fit" the model to the training data and then "look up" the prediction for each new observation.
+Logistic regression and KNN classification have an advantage/disadvantage comparison
+similar to that of linear regression and KNN
+regression. It is useful to have a good understanding of linear regression before learning about
+logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
+classification chapters to learn more about logistic regression.
+```
 
 +++
 
@@ -404,14 +406,16 @@ glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```{index} standardization
 ```
 
-> **Note:** An additional difference that you will notice here is that we do
-> not standardize (i.e., scale and center) our
-> predictors. In K-nearest neighbors models, recall that the model fit changes
-> depending on whether we standardize first or not. In linear regression,
-> standardization does not affect the fit (it *does* affect the coefficients in
-> the equation, though!).  So you can standardize if you want&mdash;it won't
-> hurt anything&mdash;but if you leave the predictors in their original form,
-> the best fit coefficients are usually easier to interpret afterward.
+```{note}
+An additional difference that you will notice here is that we do
+not standardize (i.e., scale and center) our
+predictors. In K-nearest neighbors models, recall that the model fit changes
+depending on whether we standardize first or not. In linear regression,
+standardization does not affect the fit (it *does* affect the coefficients in
+the equation, though!).  So you can standardize if you want&mdash;it won't
+hurt anything&mdash;but if you leave the predictors in their original form,
+the best fit coefficients are usually easier to interpret afterward.
+```
 
 +++
 
@@ -1307,10 +1311,12 @@ a deep understanding of the problem&mdash;as well as the wrangling tools
 from previous chapters&mdash;to engineer useful new features that improve
 predictive performance.
 
-> **Note:** Feature engineering
-> is *part of tuning your model*, and as such you must not use your test data
-> to evaluate the quality of the features you produce. You are free to use
-> cross-validation, though!
+```{note}
+Feature engineering
+is *part of tuning your model*, and as such you must not use your test data
+to evaluate the quality of the features you produce. You are free to use
+cross-validation, though!
+```
 
 +++
 

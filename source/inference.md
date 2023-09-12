@@ -766,16 +766,30 @@ about the sample mean become clear:
    estimate of the population parameter.
 3. The distribution of the sample mean is roughly bell-shaped.
 
-> **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
-> the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
-> You might also notice that in the `n = 50` case and larger, that skew seems to disappear.
-> In general, the sampling distribution&mdash;for both means and proportions&mdash;only
-> becomes bell-shaped *once the sample size is large enough*.
-> How large is "large enough?" Unfortunately, it depends entirely on the problem at hand. But
-> as a rule of thumb, often a sample size of at least 20 will suffice.
+```{note}
+You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
+the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
+You might also notice that in the `n = 50` case and larger, that skew seems to disappear.
+In general, the sampling distribution&mdash;for both means and proportions&mdash;only
+becomes bell-shaped *once the sample size is large enough*.
+How large is "large enough?" Unfortunately, it depends entirely on the problem at hand. But
+as a rule of thumb, often a sample size of at least 20 will suffice.
+```
 
-<!--- > **Note:** If random samples of size $n$ are taken from a population, the sample mean $\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation $\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$ is the population mean, $\sigma$ is the population standard deviation, $\bar{x}$ is the sample mean, and $n$ is the sample size.
-> If samples are selected from a finite population as we are doing in this chapter, we should apply a finite population correction. We multiply $\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the population size and $n$ is the sample size. If our sample size, $n$, is small relative to the population size, this finite correction factor is less important.
+<!--- 
+```{note}
+If random samples of size $n$ are taken from a population, the sample mean
+$\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation
+$\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$
+is the population mean, $\sigma$ is the population standard deviation,
+$\bar{x}$ is the sample mean, and $n$ is the sample size.
+If samples are selected from a finite population as we are doing in this
+chapter, we should apply a finite population correction. We multiply
+$\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the
+population size and $n$ is the sample size. If our sample size, $n$, is small
+relative to the population size, this finite correction factor is less
+important.
+```
 --->
 
 +++
@@ -893,9 +907,11 @@ called **the bootstrap**.  Note that by taking many samples from our single, obs
 sample, we do not obtain the true sampling distribution, but rather an
 approximation that we call **the bootstrap distribution**.
 
-> **Note:** We must sample *with* replacement when using the bootstrap.
-> Otherwise, if we had a sample of size $n$, and obtained a sample from it of
-> size $n$ *without* replacement, it would just return our original sample!
+```{note}
+We must sample *with* replacement when using the bootstrap.
+Otherwise, if we had a sample of size $n$, and obtained a sample from it of
+size $n$ *without* replacement, it would just return our original sample!
+```
 
 This section will explore how to create a bootstrap distribution from a single
 sample using Python.  The process is visualized in {numref}`fig:11-intro-bootstrap-image`.

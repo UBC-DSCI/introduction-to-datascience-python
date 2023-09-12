@@ -22,9 +22,6 @@ you may need to open the table of contents first by clicking the menu button on
 the top left of the page.
 
 For the R version of the textbook, please visit https://datasciencebook.ca.
-You can purchase a PDF or print copy of the R version of the book
-on the [CRC Press website](https://www.routledge.com/Data-Science-A-First-Introduction/Timbers-Campbell-Lee/p/book/9780367524685) or
-on [Amazon](https://www.amazon.com/Data-Science-First-Introduction-Chapman/dp/0367532174/ref=sr_[…]qid=1644637450&sprefix=data+science+timber%2Caps%2C166&sr=8-1).
 
 <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
 

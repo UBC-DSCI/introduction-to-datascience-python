@@ -9,3 +9,5 @@ source/*.py
 *.swp
 *.swo
 source/__pycache__
+.local/
+.viminfo

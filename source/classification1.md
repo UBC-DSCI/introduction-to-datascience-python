@@ -13,6 +13,7 @@ kernelspec:
 ---
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
 from chapter_preamble import *
 from IPython.display import HTML
 from sklearn.metrics.pairwise import euclidean_distances

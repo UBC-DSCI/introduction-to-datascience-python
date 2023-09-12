@@ -1098,7 +1098,7 @@ xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
 xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
 
 # add prediction
-knnPredGrid = sacr_pipeline_mult.predict(xygrid)
+knnPredGrid = sacr_fit.predict(xygrid)
 
 fig = px.scatter_3d(
     sacramento_train,

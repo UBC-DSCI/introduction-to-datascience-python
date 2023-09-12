@@ -20,6 +20,8 @@ kernelspec:
 
 from chapter_preamble import *
 from IPython.display import HTML
+import plotly.express as px
+import plotly.graph_objects as go
 ```
 
 ## Overview
@@ -1083,7 +1085,7 @@ time the predictions are a surface in 3D space, instead of a line in 2D space, a
 predictors instead of 1.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+:tags: [remove-input]
 
 # create a prediction pt grid
 xvals = np.linspace(
@@ -1125,13 +1127,7 @@ fig.update_layout(
     template="plotly_white",
 )
 
-plot(fig, filename="img/regression1/fig07-knn-mult-viz.html", auto_open=False)
-```
-
-```{code-cell} ipython3
-:tags: [remove-input]
-
-display(HTML("img/regression1/fig07-knn-mult-viz.html"))
+glue("fig:07-knn-mult-viz", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

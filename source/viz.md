@@ -160,7 +160,7 @@ understand and remember your message quickly.
 +++
 
 ## Creating visualizations with `altair`
-#### Build the visualization iteratively
+#### *Build the visualization iteratively*
 
 ```{index} altair
 ```

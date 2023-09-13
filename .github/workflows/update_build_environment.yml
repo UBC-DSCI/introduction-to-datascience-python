@@ -1,6 +1,7 @@
 name: Rebuild and publish new ubcdsci/py-intro-to-ds image on DockerHub
 on:
   pull_request:
+    types: [opened, synchronize]
     paths:
       - Dockerfile
 jobs:
@@ -29,7 +30,6 @@ jobs:
                 echo "PR synchronized, and Dockerfile was edited, so rebuilding the image."
             fi
         fi
-    - name: Check if Dockerfile needs to be rebuilt
     - name: Rebuild and publish image
       if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       id: rebuild

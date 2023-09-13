@@ -1,7 +1,6 @@
 name: Rebuild and publish new ubcdsci/py-intro-to-ds image on DockerHub
 on:
   pull_request:
-    types: [opened, synchronize]
     paths:
       - Dockerfile
 jobs:

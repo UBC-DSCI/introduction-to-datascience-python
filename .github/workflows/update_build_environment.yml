@@ -1,8 +1,6 @@
 name: Rebuild and publish new ubcdsci/py-intro-to-ds image on DockerHub
 on:
-  push:
-    branches:
-      - main
+  pull_request:
     paths:
       - Dockerfile
 jobs:
@@ -11,11 +9,11 @@ jobs:
     permissions:
       contents: write
     steps:
-    - name: Checkout main
+    - name: Checkout PR branch
       uses: actions/checkout@v3
       with:
         fetch-depth: '0'
-        ref: 'main'
+        ref: ${{ github.head_ref }}
     - name: Rebuild and publish image
       id: rebuild
       uses: elgohr/Publish-Docker-Github-Action@v5
@@ -29,7 +27,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git pull origin main
+        git pull origin ${{ github.head_ref }}
         sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.outputs.snapshot-tag }}/g' build_html.sh > build_html.tmp && mv build_html.tmp build_html.sh
         chmod u+x build_html.sh
         git add build_html.sh
@@ -38,7 +36,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git pull origin main
+        git pull origin ${{ github.head_ref }}
         sed 's/ubcdsci\/py-intro-to-ds:[[:alnum:]]\+/ubcdsci\/py-intro-to-ds:${{ steps.rebuild.outputs.snapshot-tag }}/g' build_pdf.sh > build_pdf.tmp && mv build_pdf.tmp build_pdf.sh
         chmod u+x build_pdf.sh
         git add build_pdf.sh
@@ -47,4 +45,4 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: 'main'
+        branch: ${{ github.head_ref }}

@@ -1,6 +1,7 @@
 name: Rebuild and publish new ubcdsci/py-intro-to-ds image on DockerHub
 on:
   pull_request:
+    types: [opened, synchronize]
     paths:
       - Dockerfile
 jobs:
@@ -14,7 +15,24 @@ jobs:
       with:
         fetch-depth: '0'
         ref: ${{ github.head_ref }}
+    - name: Check if Dockerfile needs to be rebuilt
+      id: check-stale
+      run: |
+        if [[ ${{ github.event.action == 'opened' }} ]]; then
+            echo "stale_dockerfile=1" >> "$GITHUB_OUTPUT"
+            echo "PR just opened, and it edits the Dockerfile, so rebuilding the image."
+        else
+            git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile
+            echo "stale_dockerfile=$?" >> "$GITHUB_OUTPUT"
+            if [[ ${{ steps.check-stale.outputs.stale_dockerfile == 0 }} ]]; then
+                echo "PR synchronized, but Dockerfile was not edited. Not rebuilding the image."
+            else
+                echo "PR synchronized, and Dockerfile was edited, so rebuilding the image."
+            fi
+        fi
+    - name: Check if Dockerfile needs to be rebuilt
     - name: Rebuild and publish image
+      if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       id: rebuild
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -24,6 +42,7 @@ jobs:
         dockerfile: Dockerfile
         snapshot: true
     - name: Update build_html.sh script
+      if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
@@ -33,6 +52,7 @@ jobs:
         git add build_html.sh
         git commit -m "update build_html.sh script with new docker image"
     - name: Update build_pdf.sh script
+      if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
@@ -42,6 +62,7 @@ jobs:
         git add build_pdf.sh
         git commit -m "update build_pdf.sh script with new docker image"
     - name: Push changes to build scripts
+      if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

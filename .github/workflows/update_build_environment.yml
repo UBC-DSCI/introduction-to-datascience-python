@@ -21,18 +21,17 @@ jobs:
         echo "GitHub PR action type: ${{ github.event.action }}"
         echo "Checking if the PR modifies the Dockerfile"
         if [[ ${{ github.event.action }} == 'opened' ]]; then
-            DOCKERFILE_STALE=1
             echo "PR just opened, and it edits the Dockerfile, so rebuilding the image."
+            echo "stale_dockerfile=true" >> "$GITHUB_OUTPUT"
         else
-            git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile
-            DOCKERFILE_STALE=$?
-            if [[ $DOCKERFILE_STALE ]]; then
-                echo "PR synchronized, and Dockerfile was edited, so rebuilding the image."
-            else
+            if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile; then
                 echo "PR synchronized, but Dockerfile was not edited. Not rebuilding the image."
+                echo "stale_dockerfile=false" >> "$GITHUB_OUTPUT"
+            else
+                echo "PR synchronized, and Dockerfile was edited, so rebuilding the image."
+                echo "stale_dockerfile=true" >> "$GITHUB_OUTPUT"
             fi
         fi
-        echo "stale_dockerfile=$DOCKERFILE_STALE" >> "$GITHUB_OUTPUT"
     - name: Rebuild and publish image
       if: ${{ steps.check-stale.outputs.stale_dockerfile }}
       id: rebuild

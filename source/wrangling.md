@@ -230,9 +230,11 @@ Data frame and series types.
 ```{index} type
 ```
 
->  **Note:** You can use the function `type` on a data object.
-> For example we can check the class of the Canadian languages data set,
-> `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
+```{note}
+You can use the function `type` on a data object.
+For example we can check the class of the Canadian languages data set,
+`can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
+```
 
 
 ```{code-cell} ipython3
@@ -366,13 +368,15 @@ upfront. Fortunately, there are many well-designed `pandas` data
 cleaning/wrangling tools to help you easily tidy your data. Let's explore them
 below!
 
-> **Note:** Is there only one shape for tidy data for a given data set? Not
-> necessarily! It depends on the statistical question you are asking and what
-> the variables are for that question. For tidy data, each variable should be
-> its own column. So, just as it's essential to match your statistical question
-> with the appropriate data analysis tool, it's important to match your
-> statistical question with the appropriate variables and ensure they are
-> represented as individual columns to make the data tidy.
+```{note}
+Is there only one shape for tidy data for a given data set? Not
+necessarily! It depends on the statistical question you are asking and what
+the variables are for that question. For tidy data, each variable should be
+its own column. So, just as it's essential to match your statistical question
+with the appropriate data analysis tool, it's important to match your
+statistical question with the appropriate variables and ensure they are
+represented as individual columns to make the data tidy.
+```
 
 +++
 
@@ -521,15 +525,17 @@ lang_mother_tidy = lang_wide.melt(
 lang_mother_tidy
 ```
 
-> **Note**: In the code above, the call to the
-> `melt` function is split across several lines. Recall from
-> the {ref}`intro` chapter that this is allowed in
-> certain cases. For example, when calling a function as above, the input
-> arguments are between parentheses `()` and Python knows to keep reading on
-> the next line. Each line ends with a comma `,` making it easier to read.
-> Splitting long lines like this across multiple lines is encouraged
-> as it helps significantly with code readability. Generally speaking, you should
-> limit each line of code to about 80 characters.
+```{note}
+In the code above, the call to the
+`melt` function is split across several lines. Recall from
+the {ref}`intro` chapter that this is allowed in
+certain cases. For example, when calling a function as above, the input
+arguments are between parentheses `()` and Python knows to keep reading on
+the next line. Each line ends with a comma `,` making it easier to read.
+Splitting long lines like this across multiple lines is encouraged
+as it helps significantly with code readability. Generally speaking, you should
+limit each line of code to about 80 characters.
+```
 
 The data above is now tidy because all three criteria for tidy data have now
 been met:
@@ -992,15 +998,17 @@ five_cities = region_data[region_data["region"].isin(city_names)]
 five_cities
 ```
 
-> **Note:** What's the difference between `==` and `isin`? Suppose we have two
-> Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
-> will compare the series element by element. Python checks if the first element of
-> `seriesA` equals the first element of `seriesB`, the second element of
-> `seriesA` equals the second element of `seriesB`, and so on. On the other hand,
-> `seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
-> elements in `seriesB`. Then the second element of `seriesA` is compared
-> to all the elements in `seriesB`, and so on. Notice the difference between `==` and
-> `isin` in the example below.
+```{note}
+What's the difference between `==` and `isin`? Suppose we have two
+Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
+will compare the series element by element. Python checks if the first element of
+`seriesA` equals the first element of `seriesB`, the second element of
+`seriesA` equals the second element of `seriesB`, and so on. On the other hand,
+`seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
+elements in `seriesB`. Then the second element of `seriesA` is compared
+to all the elements in `seriesB`, and so on. Notice the difference between `==` and
+`isin` in the example below.
+```
 
 ```{code-cell} ipython3
 pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
@@ -1299,11 +1307,13 @@ summary statistics that you can compute with `pandas`.
 +++
 
 
-> **Note:** In `pandas`, the value `NaN` is often used to denote missing data.
-> By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
-> it ignores these values. If you look at the documentation for these functions, you will
-> see an input variable `skipna`, which by default is set to `skipna=True`. This means that
-> `pandas` will skip `NaN` values when computing statistics.
+```{note}
+In `pandas`, the value `NaN` is often used to denote missing data.
+By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
+it ignores these values. If you look at the documentation for these functions, you will
+see an input variable `skipna`, which by default is set to `skipna=True`. This means that
+`pandas` will skip `NaN` values when computing statistics.
+```
 
 ### Calculating summary statistics on data frames
 
@@ -1547,11 +1557,14 @@ Just like a regular function, we pass its argument between parentheses `()` symb
 ```{code-cell} ipython3
 (lambda x: 2*x)(2)
 ```
-> **Note:** Because we didn't give the `lambda` function a name, we have to surround it with
-> parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
-> and think that `(2)` was part of the instructions that comprise the `lambda` function.
-> As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
-> we can pass a `lambda` function as an argument to `apply` without any parentheses.
+
+```{note}
+Because we didn't give the `lambda` function a name, we have to surround it with
+parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
+and think that `(2)` was part of the instructions that comprise the `lambda` function.
+As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
+we can pass a `lambda` function as an argument to `apply` without any parentheses.
+```
 
 Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"`
 to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
@@ -1712,12 +1725,15 @@ english_lang = english_lang.assign(
 )
 english_lang
 ```
-> **Note**: Inserting data manually in this is generally very error-prone and is not recommended.
-> We do it here to demonstrate another usage of `assign` that does not involve `apply`.
-> But in more advanced data wrangling,
-> one would solve this problem in a less error-prone way using
-> the `merge` function, which lets you combine two data frames. We will show you an
-> example using `merge` at the end of the chapter!
+
+```{note}
+Inserting data manually in this is generally very error-prone and is not recommended.
+We do it here to demonstrate another usage of `assign` that does not involve `apply`.
+But in more advanced data wrangling,
+one would solve this problem in a less error-prone way using
+the `merge` function, which lets you combine two data frames. We will show you an
+example using `merge` at the end of the chapter!
+```
 
 Now we have a new column with the population for each city. Finally, we calculate the
 proportion of people who speak English the most at home by taking the ratio of the columns

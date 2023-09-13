@@ -100,18 +100,20 @@ is that we are now predicting numerical variables instead of categorical variabl
 ```{index} categorical variable, numerical variable
 ```
 
-> **Note:** You can usually tell whether a variable is numerical or
-> categorical&mdash;and therefore whether you need to perform regression or
-> classification&mdash;by taking two response variables X and Y from your data,
-> and asking the question, "is response variable X *more* than response
-> variable Y?" If the variable is categorical, the question will make no sense.
-> (Is blue more than red?  Is benign more than malignant?) If the variable is
-> numerical, it will make sense. (Is 1.5 hours more than 2.25 hours? Is
-> \$500,000 more than \$400,000?) Be careful when applying this heuristic,
-> though: sometimes categorical variables will be encoded as numbers in your
-> data (e.g., "1" represents "benign", and "0" represents "malignant"). In
-> these cases you have to ask the question about the *meaning* of the labels
-> ("benign" and "malignant"), not their values ("1" and "0").
+```{note}
+You can usually tell whether a variable is numerical or
+categorical&mdash;and therefore whether you need to perform regression or
+classification&mdash;by taking two response variables X and Y from your data,
+and asking the question, "is response variable X *more* than response
+variable Y?" If the variable is categorical, the question will make no sense.
+(Is blue more than red?  Is benign more than malignant?) If the variable is
+numerical, it will make sense. (Is 1.5 hours more than 2.25 hours? Is
+\$500,000 more than \$400,000?) Be careful when applying this heuristic,
+though: sometimes categorical variables will be encoded as numbers in your
+data (e.g., "1" represents "benign", and "0" represents "malignant"). In
+these cases you have to ask the question about the *meaning* of the labels
+("benign" and "malignant"), not their values ("1" and "0").
+```
 
 +++
 
@@ -162,11 +164,13 @@ the data as a scatter plot where we place the predictor variable
 (house size) on the x-axis, and we place the response variable that we
 want to predict (sale price) on the y-axis.
 
-> **Note:** Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`,
-> we format the axis labels to put dollar signs in front of the house prices,
-> as well as commas to increase the readability of the larger numbers.
-> We can do this in `altair` by passing the `axis=alt.Axis(format='$,.0f')` argument
-> to the `y` encoding channel in an `altair` specification.
+```{note}
+Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`,
+we format the axis labels to put dollar signs in front of the house prices,
+as well as commas to increase the readability of the larger numbers.
+We can do this in `altair` by passing the `axis=alt.Axis(format='$,.0f')` argument
+to the `y` encoding channel in an `altair` specification.
+```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -399,10 +403,12 @@ that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 
 +++
 
-> **Note:** We are not specifying the `stratify` argument here like we did in
-> the {ref}`classification2` chapter, since
-> the `train_test_split` function cannot stratify based on a
-> quantitative variable.
+```{note}
+We are not specifying the `stratify` argument here like we did in
+the {ref}`classification2` chapter, since
+the `train_test_split` function cannot stratify based on a
+quantitative variable.
+```
 
 ```{code-cell} ipython3
 sacramento_train, sacramento_test = train_test_split(
@@ -508,19 +514,21 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 ```{index} RMSPE; comparison with RMSE
 ```
 
-> **Note:** When using many code packages, the evaluation output
-> we will get to assess the prediction quality of
-> our KNN regression models is labeled "RMSE", or "root mean squared
-> error". Why is this so, and why not RMSPE?
-> In statistics, we try to be very precise with our
-> language to indicate whether we are calculating the prediction error on the
-> training data (*in-sample* prediction) versus on the testing data
-> (*out-of-sample* prediction). When predicting and evaluating prediction quality on the training data, we
->  say RMSE. By contrast, when predicting and evaluating prediction quality
-> on the testing or validation data, we say RMSPE.
-> The equation for calculating RMSE and RMSPE is exactly the same; all that changes is whether the $y$s are
-> training or testing data. But many people just use RMSE for both,
-> and rely on context to denote which data the root mean squared error is being calculated on.
+```{note}
+When using many code packages, the evaluation output
+we will get to assess the prediction quality of
+our KNN regression models is labeled "RMSE", or "root mean squared
+error". Why is this so, and why not RMSPE?
+In statistics, we try to be very precise with our
+language to indicate whether we are calculating the prediction error on the
+training data (*in-sample* prediction) versus on the testing data
+(*out-of-sample* prediction). When predicting and evaluating prediction quality on the training data, we
+say RMSE. By contrast, when predicting and evaluating prediction quality
+on the testing or validation data, we say RMSPE.
+The equation for calculating RMSE and RMSPE is exactly the same; all that changes is whether the $y$s are
+training or testing data. But many people just use RMSE for both,
+and rely on context to denote which data the root mean squared error is being calculated on.
+```
 
 ```{index} scikit-learn, scikit-learn; pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
 ```
@@ -545,10 +553,12 @@ do not use the RMSPE for tuning by default.
 So we need to specify that we want to use the RMSPE for tuning by setting the
 `scoring` argument to `"neg_root_mean_squared_error"`.
 
-> **Note:** We obtained the identifier of the parameter representing the number
-> of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
-> of `sacr_pipeline.get_params()`, as we did in the {ref}`classification1`
-> chapter.
+```{note}
+We obtained the identifier of the parameter representing the number
+of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
+of `sacr_pipeline.get_params()`, as we did in the {ref}`classification1`
+chapter.
+```
 
 ```{index} scikit-learn; GridSearchCV
 ```

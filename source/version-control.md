@@ -138,18 +138,20 @@ additional resources section at the end of the chapter,
 we list many of the common version control systems
 and repository hosting services in use today.
 
-> **Note:** Technically you don't *have to* use a repository hosting service.
-> You can, for example, version control a project
-> that is stored only in a folder on your computer&mdash;never
-> sharing it on a repository hosting service.
-> But using a repository hosting service provides a few big benefits,
-> including managing collaborator access permissions,
-> tools to discuss and track bugs,
-> and the ability to have external collaborators contribute work,
-> not to mention the safety of having your work backed up in the cloud.
-> Since most repository hosting services now offer free accounts,
-> there are not many situations in which you wouldn't
-> want to use one for your project.
+```{note}
+Technically you don't *have to* use a repository hosting service.
+You can, for example, version control a project
+that is stored only in a folder on your computer&mdash;never
+sharing it on a repository hosting service.
+But using a repository hosting service provides a few big benefits,
+including managing collaborator access permissions,
+tools to discuss and track bugs,
+and the ability to have external collaborators contribute work,
+not to mention the safety of having your work backed up in the cloud.
+Since most repository hosting services now offer free accounts,
+there are not many situations in which you wouldn't
+want to use one for your project.
+```
 
 ## Version control repositories
 
@@ -562,8 +564,6 @@ of any of the actual content of your project!
 ```{index} git;Jupyter extension
 ```
 
-
-
 Although there are several ways to create and edit files on GitHub, they are
 not quite powerful enough for efficiently creating and editing complex files,
 or files that need to be executed to assess whether they work (e.g., files
@@ -574,8 +574,8 @@ can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using
 the Jupyter Git extension. The Jupyter Git extension
 can be run by Jupyter on your local computer, or on a JupyterHub server.
-*Note: we recommend reading the {ref}`getting-started-with-jupyter` chapter*
-*to learn how to use Jupyter before reading this chapter.*
+We recommend reading the {ref}`getting-started-with-jupyter` chapter
+to learn how to use Jupyter before reading this chapter.
 
 ### Generating a GitHub personal access token
 

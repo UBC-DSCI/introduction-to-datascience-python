@@ -902,11 +902,13 @@ Next, we create a *model object* for $K$-nearest neighbors classification
 by creating a `KNeighborsClassifier` instance, specifying that we want to use $K = 5$ neighbors;
 we will discuss how to choose $K$ in the next chapter.
 
-> **Note:** You can specify the `weights` argument in order to control
-> how neighbors vote when classifying a new observation. The default is `"uniform"`, where
-> each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
-> which weigh each neighbor's vote differently, can be found on 
-> [the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
+```{note}
+You can specify the `weights` argument in order to control
+how neighbors vote when classifying a new observation. The default is `"uniform"`, where
+each of the $K$ nearest neighbors gets exactly 1 vote as described above. Other choices, 
+which weigh each neighbor's vote differently, can be found on 
+[the `scikit-learn` website](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html?highlight=kneighborsclassifier#sklearn.neighbors.KNeighborsClassifier).
+```
 
 ```{code-cell} ipython3
 knn = KNeighborsClassifier(n_neighbors=5)
@@ -1116,8 +1118,10 @@ of the preprocessing step separated by underscores. This default behavior is use
 multiple different preprocessing steps to the same columns; but again, for visualization it can be useful to preserve
 the original column names. To keep original column names, we need to set the `verbose_feature_names_out` argument to `False`.
 
-> **Note:** Only specify the `remainder` and `verbose_feature_names_out` arguments when you want to examine the result
-> of your preprocessing step. In most cases, you should leave these arguments at their default values.
+```{note}
+Only specify the `remainder` and `verbose_feature_names_out` arguments when you want to examine the result
+of your preprocessing step. In most cases, you should leave these arguments at their default values.
+```
 
 ```{code-cell} ipython3
 preprocessor_keep_all = make_column_transformer(
@@ -1827,9 +1831,11 @@ The basic idea is to create a grid of synthetic new observations using the `mesh
 predict the label of each, and visualize the predictions with a colored scatter having a very high transparency 
 (low `opacity` value) and large point radius. See if you can figure out what each line is doing!
 
-> **Note:** Understanding this code is not required for the remainder of the
-> textbook. It is included for those readers who would like to use similar
-> visualizations in their own data analyses.
+```{note}
+Understanding this code is not required for the remainder of the
+textbook. It is included for those readers who would like to use similar
+visualizations in their own data analyses.
+```
 
 ```{code-cell} ipython3
 :tags: [remove-output]

@@ -32,11 +32,6 @@ jobs:
                 echo "stale_dockerfile=true" >> "$GITHUB_OUTPUT"
             fi
         fi
-    - name: Test conditional step
-      if: ${{steps.check-stale.outputs.stale_dockerfile == true }}
-      run: |
-        echo "Running the conditional step!"
-        echo "Here's the value of the output variable: ${{ steps.check-stale.outputs.stale_dockerfile }}"
     - name: Rebuild and publish image
       if: ${{steps.check-stale.outputs.stale_dockerfile == true }}
       id: rebuild

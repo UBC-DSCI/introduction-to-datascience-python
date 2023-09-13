@@ -391,9 +391,9 @@ Line plot of atmospheric concentration of CO$_{2}$ over time with clearer axes a
 :::
 
 ```{note}
-The `configure_*` function in `altair` supports many other functionalities for
-customizing visualizations, for example updating the size of the plot, changing
-the font color, or many other options that can be viewed
+The `configure_*` functions in `altair` support additional customization,
+such as updating the size of the plot, changing
+the font color, and many other options that can be viewed
 [here](https://altair-viz.github.io/user_guide/configuration.html).
 ```
 

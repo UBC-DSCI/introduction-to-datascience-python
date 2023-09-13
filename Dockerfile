@@ -24,6 +24,9 @@ RUN pip install numpy jinja2 pandas"<2.1" altair">=5.1.1" "vegafusion[embed]" vl
 # TODO: remove this once scikit-learn 1.4.x or beyond releases and is incorporated into jupyter/scipy-notebook
 RUN pip install -U git+https://github.com/scikit-learn/scikit-learn.git@main
 
+# install plotly for 3d figures
+RUN pip install plotly
+
 # disable warnings that pollute build logs; seems to be related to the update to python 3.11
 # https://discourse.jupyter.org/t/debugger-warning-it-seems-that-frozen-modules-are-being-used-python-3-11-0/16544/12
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1

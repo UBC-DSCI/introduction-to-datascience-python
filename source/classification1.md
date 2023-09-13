@@ -14,11 +14,12 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 from chapter_preamble import *
 from IPython.display import HTML
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 ```
 
 (classification1)=
@@ -781,7 +782,7 @@ for idx in min_5_idx:
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+:tags: [remove-input]
 
 fig = px.scatter_3d(
     perim_concav_with_new_point_df4,
@@ -828,13 +829,7 @@ for neighbor_df in neighbor_df_list:
 # tight layout
 fig.update_layout(margin=dict(l=0, r=0, b=0, t=1), template="plotly_white")
 
-plot(fig, filename="img/classification1/fig05-more.html", auto_open=False)
-```
-
-```{code-cell} ipython3
-:tags: [remove-input]
-
-display(HTML("img/classification1/fig05-more.html"))
+glue("fig:05-more", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

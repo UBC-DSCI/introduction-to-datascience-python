@@ -21,6 +21,8 @@ kernelspec:
 from chapter_preamble import *
 from IPython.display import HTML
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 ```
 
 ## Overview
@@ -751,7 +753,7 @@ In the case of two predictors, we can plot the predictions made by our linear re
 shown in {numref}`fig:08-3DlinReg`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+:tags: [remove-input]
 
 # create a prediction pt grid
 xvals = np.linspace(
@@ -793,13 +795,7 @@ fig.update_layout(
     template="plotly_white",
 )
 
-plot(fig, filename="img/regression2/fig08-3DlinReg.html", auto_open=False)
-```
-
-```{code-cell} ipython3
-:tags: [remove-input]
-
-display(HTML("img/regression2/fig08-3DlinReg.html"))
+glue("fig:08-3DlinReg", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

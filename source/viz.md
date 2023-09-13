@@ -174,13 +174,13 @@ import altair as alt
 ```
 
 ```{note}
-By default, `altair` will raise an error if you try to plot a data frame with
-more than 5,000 rows. The simplest way to plot larger data sets is to enable
-the `vegafusion` data transformer by including this line just after you import
-the `altair` package: `alt.data_transformers.enable("vegafusion")`. This will
-allow you to plot up to 100,000 graphical objects (e.g. a scatter plot with
-100,000 points). To plot even larger datasets, see [the `altair`
-documentation](https://altair-viz.github.io/user_guide/large_datasets).
+In this chapter, we will provide example visualizations using relatively small
+data sets. But note that if you try to plot with a data frame that has more than 5,000 rows,
+`altair` will raise an error. The simplest way to plot larger
+data sets is to enable the `vegafusion` data transformer 
+right after you import the `altair` package: `alt.data_transformers.enable("vegafusion")`. This will allow you to plot up to
+100,000 graphical objects (e.g., a scatter plot with 100,000 points). To visualize
+*even larger* datasets, see [the `altair` documentation](https://altair-viz.github.io/user_guide/large_datasets).
 ```
 
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set

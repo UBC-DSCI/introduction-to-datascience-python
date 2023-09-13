@@ -18,16 +18,18 @@ jobs:
     - name: Check if Dockerfile needs to be rebuilt
       id: check-stale
       run: |
-        if [[ ${{ github.event.action == 'opened' }} ]]; then
+        echo "GitHub PR action type: ${{ github.event.action }}"
+        echo "Checking if the PR modifies the Dockerfile"
+        if [[ ${{ github.event.action }} == 'opened' ]]; then
             echo "stale_dockerfile=1" >> "$GITHUB_OUTPUT"
             echo "PR just opened, and it edits the Dockerfile, so rebuilding the image."
         else
             git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile
             echo "stale_dockerfile=$?" >> "$GITHUB_OUTPUT"
-            if [[ ${{ steps.check-stale.outputs.stale_dockerfile == 0 }} ]]; then
-                echo "PR synchronized, but Dockerfile was not edited. Not rebuilding the image."
-            else
+            if [[ ${{ steps.check-stale.outputs.stale_dockerfile }} ]]; then
                 echo "PR synchronized, and Dockerfile was edited, so rebuilding the image."
+            else
+                echo "PR synchronized, but Dockerfile was not edited. Not rebuilding the image."
             fi
         fi
     - name: Rebuild and publish image

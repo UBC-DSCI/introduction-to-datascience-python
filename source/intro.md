@@ -621,7 +621,7 @@ Syntax for using `sort_values` to arrange rows in decending order.
 ```
 
 ```{code-cell} ipython3
-arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang = aboriginal_lang.sort_values(by="mother_tongue", ascending=False)
 arranged_lang
 ```
 
@@ -651,7 +651,7 @@ a first one&mdash;so fear not and explore! To answer this small
 question-along-the-way, we need to divide each count in the `mother_tongue`
 column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
-this computation using the code `100 * ten_lang['mother_tongue'] / canadian_population`. 
+this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`. 
 Then to store the result in a new column (or
 overwrite an existing column), we use the `assign` method. We specify the name of the new
 column to create (or old column to modify), then the assignment symbol `=`, 
@@ -668,7 +668,7 @@ although the latter is much clearer!
 
 ```{code-cell} ipython3
 canadian_population = 35_151_728
-ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang['mother_tongue'] / canadian_population)
+ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang["mother_tongue"] / canadian_population)
 ten_lang_percent
 ```
 
@@ -694,7 +694,7 @@ One way of performing these steps is to just write
 multiple lines of code, storing temporary, intermediate objects as you go.
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
-arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang_sorted = aboriginal_lang.sort_values(by="mother_tongue", ascending=False)
 ten_lang = arranged_lang_sorted.head(10)
 ```
 
@@ -723,7 +723,7 @@ aboriginal_lang = can_lang.loc[
     ["language", "mother_tongue"]
 ]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-    by='mother_tongue',
+    by="mother_tongue",
     ascending=False
 )
 ten_lang = arranged_lang_sorted.head(10)
@@ -881,7 +881,7 @@ barplot_mother_tongue = (
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue', barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue", barplot_mother_tongue, display=True)
 
 ```
 
@@ -927,8 +927,8 @@ to format the plot further, and we will explore these in the {ref}`viz` chapter.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('language').title('Language'),
-    y=alt.Y('mother_tongue').title('Mother Tongue (Number of Canadian Residents)')
+    x=alt.X("language").title("Language"),
+    y=alt.Y("mother_tongue").title("Mother Tongue (Number of Canadian Residents)")
 )
 ```
 
@@ -936,7 +936,7 @@ barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-labs', barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue-labs", barplot_mother_tongue, display=True)
 
 ```
 
@@ -959,15 +959,15 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 ```{code-cell} ipython3
 barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").title("Language")
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True)
+glue("barplot-mother-tongue-labs-axis", barplot_mother_tongue_axis, display=True)
 
 ```
 
@@ -992,8 +992,8 @@ values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
 ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').sort('x').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").sort("x").title("Language")
 )
 ```
 
@@ -1002,7 +1002,7 @@ ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-reorder', ordered_barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue-reorder", ordered_barplot_mother_tongue, display=True)
 
 ```
 
@@ -1071,15 +1071,15 @@ ten_lang = (
 
 # create the visualization
 ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').sort('x').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").sort("x").title("Language")
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('final_plot', ten_lang_plot, display=True)
+glue("final_plot", ten_lang_plot, display=True)
 
 ```
 

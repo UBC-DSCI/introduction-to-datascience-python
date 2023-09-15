@@ -221,7 +221,7 @@ To get started, we will read and inspect the data:
 # mauna loa carbon dioxide data
 co2_df = pd.read_csv(
     "data/mauna_loa_data.csv",
-    parse_dates=['date_measured']
+    parse_dates=["date_measured"]
 )
 co2_df
 ```
@@ -431,7 +431,7 @@ we stack them on separate lines to make the code easier to read.
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
     x=alt.X("date_measured")
-        .scale(domain=['1990', '1995'])
+        .scale(domain=["1990", "1995"])
         .title("Measurement Date"),
     y=alt.Y("ppm")
         .scale(zero=False)
@@ -719,8 +719,8 @@ to Canada's two official languages by filtering the data:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 can_lang.loc[
-    (can_lang['language']=='English')
-    | (can_lang['language']=='French')
+    (can_lang["language"]=="English")
+    | (can_lang["language"]=="French")
 ]
 ```
 
@@ -786,11 +786,11 @@ can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home")
         .scale(type="log")
         .title(["Language spoken most at home", "(number of Canadian residents)"])
-        .axis(tickCount=7, format='s'),
+        .axis(tickCount=7, format="s"),
     y=alt.Y("mother_tongue")
         .scale(type="log")
         .title(["Mother tongue", "(number of Canadian residents)"])
-        .axis(tickCount=7, format='s')
+        .axis(tickCount=7, format="s")
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -846,10 +846,10 @@ and is just added for readability.
 ```{code-cell} ipython3
 canadian_population = 35_151_728
 can_lang = can_lang.assign(
-    mother_tongue_percent=(can_lang['mother_tongue'] / canadian_population) * 100,
-    most_at_home_percent=(can_lang['most_at_home'] / canadian_population) * 100
+    mother_tongue_percent=(can_lang["mother_tongue"] / canadian_population) * 100,
+    most_at_home_percent=(can_lang["most_at_home"] / canadian_population) * 100
 )
-can_lang[['mother_tongue_percent', 'most_at_home_percent']]
+can_lang[["mother_tongue_percent", "most_at_home_percent"]]
 ```
 
 Next, we will edit the visualization to use the percentages we just computed
@@ -981,7 +981,7 @@ This is a matter of preference and not critical for the visualization.
 We move the legend title using the `alt.Legend` method
 and specify that we want it on the top of the chart.
 This automatically changes the legend items to be laid out horizontally instead of vertically,
-but we could also keep the vertical layout by specifying `direction='vertical'` inside `alt.Legend`.
+but we could also keep the vertical layout by specifying `direction="vertical"` inside `alt.Legend`.
 
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
@@ -994,8 +994,8 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
         .axis(tickCount=7)
         .title(["Mother tongue", "(percentage of Canadian residents)"]),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
+        .legend(orient="top")
+        .title("")
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -1013,7 +1013,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
+the default `altair` color scheme, which is called `"tableau10"`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
 In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
 If you are unsure about a certain color combination, you can use
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
@@ -1048,9 +1048,9 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
         .axis(tickCount=7)
         .title("Mother tongue(percentage of Canadian residents)"),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
-        .scale(scheme='dark2'),
+        .legend(orient="top")
+        .title("")
+        .scale(scheme="dark2"),
     shape="category"
 ).configure_axis(titleFontSize=12)
 ```
@@ -1090,11 +1090,11 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
         .axis(tickCount=7)
         .title("Mother tongue(percentage of Canadian residents)"),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
-        .scale(scheme='dark2'),
+        .legend(orient="top")
+        .title("")
+        .scale(scheme="dark2"),
     shape="category",
-    tooltip=alt.Tooltip(['language', 'mother_tongue', 'most_at_home'])
+    tooltip=alt.Tooltip(["language", "mother_tongue", "most_at_home"])
 ).configure_axis(titleFontSize=12)
 ```
 
@@ -1250,14 +1250,14 @@ To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
 in the y-encoding of the chart.
 Since the `size` variable is encoded in the x channel of the chart,
-we specify `sort('x')` on `alt.Y`.
+we specify `sort("x")` on `alt.Y`.
 This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
 which is generally the most visually appealing when sorting bars.
 If instead
 we want to sort the values on `y-axis` in descending order of `x-axis`,
-we can add a minus sign to reverse the order and specify `sort='-x'`.
+we can add a minus sign to reverse the order and specify `sort="-x"`.
 
 ```{index} altair; sort
 ```
@@ -1627,7 +1627,7 @@ an absolute measurement.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458
-morley_df['RelativeError'] = (
+morley_df["RelativeError"] = (
     100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
 )
 morley_df
@@ -1743,9 +1743,9 @@ morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
 morley_hist_max_bins = alt.vconcat(
     alt.hconcat(
         (morley_hist_default + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('Default (bin=True)', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("Default (bin=True)", fontSize=16, anchor="middle", dx=15)
         ),
         (morley_hist_default.encode(
             x=alt.X(
@@ -1754,9 +1754,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=5', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=5", fontSize=16, anchor="middle", dx=15)
         ),
     ),
     alt.hconcat(
@@ -1767,9 +1767,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=70', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=70", fontSize=16, anchor="middle", dx=15)
         ),
         (morley_hist_default.encode(
             x=alt.X(
@@ -1778,9 +1778,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=200', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=200", fontSize=16, anchor="middle", dx=15)
         )
     ),
     spacing=50

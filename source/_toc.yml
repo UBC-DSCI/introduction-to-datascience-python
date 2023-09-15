@@ -8,7 +8,7 @@ parts:
     - file: acknowledgements.md
     - file: authors.md
 - caption: Chapters
-  numbered: 2
+  numbered: 3
   chapters:
     - file: intro.md
     - file: reading.md

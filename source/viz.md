@@ -54,7 +54,7 @@ By the end of the chapter, readers will be able to do the following:
 
 ## Choosing the visualization
 
-#### *Ask a question, and answer it*
+<font size="5">*Ask a question, and answer it*</font>
 
 ```{index} question; visualization
 ```
@@ -118,7 +118,7 @@ alternative.
 
 ## Refining the visualization
 
-#### *Convey the message, minimize noise*
+<font size="5">*Convey the message, minimize noise*</font>
 
 Just being able to make a visualization in Python with `altair` (or any other tool
 for that matter) doesn't mean that it effectively communicates your message to
@@ -160,7 +160,8 @@ understand and remember your message quickly.
 +++
 
 ## Creating visualizations with `altair`
-#### *Build the visualization iteratively*
+
+<font size="5">*Build the visualization iteratively*</font>
 
 ```{index} altair
 ```
@@ -1799,7 +1800,7 @@ Effect of varying number of max bins on histograms.
 :::
 
 ## Explaining the visualization
-#### *Tell a story*
+<font size="5">*Tell a story*</font>
 
 Typically, your visualization will not be shown entirely on its own, but rather
 it will be part of a larger presentation.  Further, visualizations can provide
@@ -1872,7 +1873,8 @@ result. (4) It would be worth further investigating the differences between
 these experiments to see why they produced different results.
 
 ## Saving the visualization
-#### *Choose the right output format for your needs*
+
+<font size="5">*Choose the right output format for your needs*</font>
 
 ```{index} see: bitmap; raster graphics
 ```

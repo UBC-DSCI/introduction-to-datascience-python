@@ -202,14 +202,14 @@ cancer.info()
 From the summary of the data above, we can see that `Class` is of type `object`.
 We can use the `unique` method on the `Class` column to see all unique values
 present in that column. We see that there are two diagnoses:
-benign, represented by `'B'`, and malignant, represented by `'M'`.
+benign, represented by `"B"`, and malignant, represented by `"M"`.
 
 ```{code-cell} ipython3
-cancer['Class'].unique()
+cancer["Class"].unique()
 ```
 
 We will improve the readability of our analysis
-by renaming `'M'` to `'Malignant'` and `'B'` to `'Benign'` using the `replace`
+by renaming `"M"` to `"Malignant"` and `"B"` to `"Benign"` using the `replace`
 method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values. 
 We will verify the result using the `unique` method.
@@ -218,12 +218,12 @@ We will verify the result using the `unique` method.
 ```
 
 ```{code-cell} ipython3
-cancer['Class'] = cancer['Class'].replace({
-    'M' : 'Malignant',
-    'B' : 'Benign'
+cancer["Class"] = cancer["Class"].replace({
+    "M" : "Malignant",
+    "B" : "Benign"
 })
 
-cancer['Class'].unique()
+cancer["Class"].unique()
 ```
 
 ### Exploring the cancer data
@@ -233,10 +233,10 @@ cancer['Class'].unique()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("benign_count", cancer['Class'].value_counts()['Benign'])
-glue("benign_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Benign'])))
-glue("malignant_count", cancer['Class'].value_counts()['Malignant'])
-glue("malignant_pct", int(np.round(100*cancer['Class'].value_counts(normalize=True)['Malignant'])))
+glue("benign_count", cancer["Class"].value_counts()["Benign"])
+glue("benign_pct", int(np.round(100*cancer["Class"].value_counts(normalize=True)["Benign"])))
+glue("malignant_count", cancer["Class"].value_counts()["Malignant"])
+glue("malignant_pct", int(np.round(100*cancer["Class"].value_counts(normalize=True)["Malignant"])))
 ```
 
 Before we start doing any modeling, let's explore our data set. Below we use
@@ -254,7 +254,7 @@ We have
 tumor observations.
 
 ```{code-cell} ipython3
-100 * cancer.groupby('Class').size() / cancer.shape[0]
+100 * cancer.groupby("Class").size() / cancer.shape[0]
 ```
 
 ```{index} value_counts
@@ -267,11 +267,11 @@ of each value. If we instead pass the argument `normalize=True`, it instead prin
 of occurrences of each value.
 
 ```{code-cell} ipython3
-cancer['Class'].value_counts()
+cancer["Class"].value_counts()
 ```
 
 ```{code-cell} ipython3
-cancer['Class'].value_counts(normalize=True)
+cancer["Class"].value_counts(normalize=True)
 ```
 
 ```{index} visualization; scatter
@@ -371,7 +371,7 @@ perim_concav_with_new_point = (
         color=alt.Color("Class").title("Diagnosis"),
         shape=alt.Shape("Class").scale(range=["circle", "circle", "diamond"]),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(100), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None)),
     )
 )
 glue('fig:05-knn-2', perim_concav_with_new_point, display=True)
@@ -390,8 +390,8 @@ near_neighbor_df = pd.concat([
     cancer.loc[[np.argmin(my_distances)], attrs],
     perim_concav_with_new_point_df.loc[[cancer.shape[0]], attrs],
 ])
-glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]['Perimeter'], 1))
-glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]['Concavity'], 1))
+glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]["Perimeter"], 1))
+glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]["Concavity"], 1))
 ```
 
 {numref}`fig:05-knn-3` shows that the nearest point to this new observation is
@@ -457,7 +457,7 @@ perim_concav_with_new_point2 = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None)),
     )
 )
 
@@ -466,13 +466,13 @@ near_neighbor_df2 = pd.concat([
     perim_concav_with_new_point_df2.loc[[cancer.shape[0]], attrs],
 ])
 line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
-    x='Perimeter',
-    y='Concavity',
-    color=alt.value('black')
+    x="Perimeter",
+    y="Concavity",
+    color=alt.value("black")
 )
 
-glue("2-neighbor_per", round(near_neighbor_df2.iloc[0, :]['Perimeter'], 1))
-glue("2-neighbor_con", round(near_neighbor_df2.iloc[0, :]['Concavity'], 1))
+glue("2-neighbor_per", round(near_neighbor_df2.iloc[0, :]["Perimeter"], 1))
+glue("2-neighbor_con", round(near_neighbor_df2.iloc[0, :]["Concavity"], 1))
 glue('fig:05-knn-4', (perim_concav_with_new_point2 + line2), display=True)
 ```
 
@@ -513,16 +513,16 @@ near_neighbor_df4 = pd.concat([
 :tags: [remove-cell]
 
 line3 = alt.Chart(near_neighbor_df3).mark_line().encode(
-    x='Perimeter',
-    y='Concavity',
-    color=alt.value('black')
+    x="Perimeter",
+    y="Concavity",
+    color=alt.value("black")
 )
 line4 = alt.Chart(near_neighbor_df4).mark_line().encode(
-    x='Perimeter',
-    y='Concavity',
-    color=alt.value('black')
+    x="Perimeter",
+    y="Concavity",
+    color=alt.value("black")
 )
-glue('fig:05-knn-5', (perim_concav_with_new_point2 + line2 + line3 + line4), display=True)
+glue("fig:05-knn-5", (perim_concav_with_new_point2 + line2 + line3 + line4), display=True)
 ```
 
 To improve the prediction we can consider several
@@ -607,7 +607,7 @@ perim_concav_with_new_point3 = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None)),
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None)),
     )
 )
 
@@ -670,10 +670,10 @@ circle_path_df = pd.DataFrame(
         "Concavity": new_point[1] + 1.4 * np.sin(np.linspace(0, 2 * np.pi, 100)),
     }
 )
-circle = alt.Chart(circle_path_df.reset_index()).mark_line(color='black').encode(
-    x='Perimeter',
-    y='Concavity',
-    order='index'
+circle = alt.Chart(circle_path_df.reset_index()).mark_line(color="black").encode(
+    x="Perimeter",
+    y="Concavity",
+    order="index"
 )
 
 glue("fig:05-multiknn-3", (perim_concav_with_new_point3 + circle))
@@ -773,8 +773,8 @@ neighbor_df_list = []
 for idx in min_5_idx:
     neighbor_df = pd.concat(
         (
-            cancer.loc[idx, attrs + ['Class']],
-            perim_concav_with_new_point_df4.loc[len(cancer), attrs + ['Class']],
+            cancer.loc[idx, attrs + ["Class"]],
+            perim_concav_with_new_point_df4.loc[len(cancer), attrs + ["Class"]],
         ),
         axis=1,
     ).T
@@ -891,7 +891,7 @@ perimeter 0, concavity 3.5, and an unknown diagnosis label. Let's pick out our t
 predictor variables and class label and store them with the name `cancer_train`:
 
 ```{code-cell} ipython3
-cancer_train = cancer[['Class', 'Perimeter', 'Concavity']]
+cancer_train = cancer[["Class", "Perimeter", "Concavity"]]
 cancer_train
 ```
 
@@ -922,7 +922,7 @@ In order to fit the model on the breast cancer data, we need to call `fit` on
 the model object. The `X` argument is used to specify the data for the predictor
 variables, while the `y` argument is used to specify the data for the response variable.
 So below, we set `X=cancer_train[["Perimeter", "Concavity"]]` and
-`y=cancer_train['Class']` to specify that `Class` is the response
+`y=cancer_train["Class"]` to specify that `Class` is the response
 variable (the one we want to predict), and both `Perimeter` and `Concavity` are
 to be used as the predictors. Note that the `fit` function might look like it does not
 do much from the outside, but it is actually doing all the heavy lifting to train
@@ -944,7 +944,7 @@ model's prediction; you can actually make multiple predictions at the same
 time using the `predict` function, which is why the output is stored as an `array`.
 
 ```{code-cell} ipython3
-new_obs = pd.DataFrame({'Perimeter': [0], 'Concavity': [3.5]})
+new_obs = pd.DataFrame({"Perimeter": [0], "Concavity": [3.5]})
 knn.predict(new_obs)
 ```
 
@@ -1009,10 +1009,10 @@ and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
 variables:
 
 ```{code-cell} ipython3
-unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")[['Class', 'Area', 'Smoothness']]
-unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
-   'M' : 'Malignant',
-   'B' : 'Benign'
+unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")[["Class", "Area", "Smoothness"]]
+unscaled_cancer["Class"] = unscaled_cancer["Class"].replace({
+   "M" : "Malignant",
+   "B" : "Benign"
 })
 unscaled_cancer
 ```
@@ -1070,14 +1070,14 @@ predictor variables. Rather than writing out the column names individually,
 we can instead use the 
 [`make_column_selector`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector) function. For
 example, if we wanted to standardize all *numerical* predictors,
-we would use `make_column_selector` and specify the `dtype_include` argument to be `'number'`. 
+we would use `make_column_selector` and specify the `dtype_include` argument to be `"number"`. 
 This creates a preprocessor equivalent to the one we created previously.
 
 ```{code-cell} ipython3
 from sklearn.compose import make_column_selector
 
 preprocessor = make_column_transformer(
-    (StandardScaler(), make_column_selector(dtype_include='number')),
+    (StandardScaler(), make_column_selector(dtype_include="number")),
 )
 preprocessor
 ```
@@ -1101,8 +1101,8 @@ scaled_cancer
 ```
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue('scaled-cancer-column-0', scaled_cancer.columns[0])
-glue('scaled-cancer-column-1', scaled_cancer.columns[1])
+glue("scaled-cancer-column-0", scaled_cancer.columns[0])
+glue("scaled-cancer-column-1", scaled_cancer.columns[1])
 ```
 It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
 But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
@@ -1111,7 +1111,7 @@ to them. The default behavior of the `ColumnTransformer` that we build using `ma
 is to *drop* the remaining columns. This default behavior works well with the rest of `sklearn` (as we will see below
 in the {ref}`08:puttingittogetherworkflow` section), but for visualizing the result of preprocessing it can be useful to keep the other columns
 in our original data frame, such as the `Class` variable here.
-To keep other columns, we need to set the `remainder` argument to `'passthrough'` in the `make_column_transformer` function.
+To keep other columns, we need to set the `remainder` argument to `"passthrough"` in the `make_column_transformer` function.
 Furthermore, you can see that the new column names---{glue:}`scaled-cancer-column-0`
 and {glue:}`scaled-cancer-column-1`---include the name
 of the preprocessing step separated by underscores. This default behavior is useful in `sklearn` because we sometimes want to apply
@@ -1125,8 +1125,8 @@ of your preprocessing step. In most cases, you should leave these arguments at t
 
 ```{code-cell} ipython3
 preprocessor_keep_all = make_column_transformer(
-    (StandardScaler(), make_column_selector(dtype_include='number')),
-    remainder='passthrough',
+    (StandardScaler(), make_column_selector(dtype_include="number")),
+    remainder="passthrough",
     verbose_feature_names_out=False
 )
 preprocessor_keep_all.fit(unscaled_cancer)
@@ -1201,7 +1201,7 @@ area_smoothness_new_point = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None))
     )
 )
 
@@ -1268,7 +1268,7 @@ area_smoothness_new_point_scaled = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None))
     )
 )
 min_3_idx_scaled = np.argpartition(my_distances_scaled, 3)[:3]
@@ -1343,7 +1343,7 @@ zoom_area_smoothness_new_point = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None))
     )
 )
 zoom_area_smoothness_new_point + line1 + line2 + line3
@@ -1388,8 +1388,8 @@ and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
 rare_cancer = pd.concat((
-    cancer[cancer["Class"] == 'Benign'],
-    cancer[cancer["Class"] == 'Malignant'].head(3)
+    cancer[cancer["Class"] == "Benign"],
+    cancer[cancer["Class"] == "Malignant"].head(3)
 ))
 
 rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
@@ -1408,7 +1408,7 @@ Imbalanced data.
 ```
 
 ```{code-cell} ipython3
-rare_cancer['Class'].value_counts()
+rare_cancer["Class"].value_counts()
 ```
 
 +++
@@ -1453,7 +1453,7 @@ rare_plot = (
             "Class", scale=alt.Scale(range=["circle", "circle", "diamond"])
         ),
         size=alt.condition("datum.Class == 'Unknown'", alt.value(80), alt.value(30)),
-        stroke=alt.condition("datum.Class == 'Unknown'", alt.value('black'), alt.value(None))
+        stroke=alt.condition("datum.Class == 'Unknown'", alt.value("black"), alt.value(None))
     )
 )
 
@@ -1475,7 +1475,7 @@ for i in range(7):
         .encode(x="Perimeter", y="Concavity", color=alt.value(clr))
     )
 
-glue('fig:05-upsample', rare_plot)
+glue("fig:05-upsample", rare_plot)
 ```
 
 :::{glue:figure} fig:05-upsample
@@ -1599,7 +1599,7 @@ malignant_cancer_upsample = resample(
     malignant_cancer, n_samples=benign_cancer.shape[0]
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
-upsampled_cancer['Class'].value_counts()
+upsampled_cancer["Class"].value_counts()
 ```
 
 Now suppose we train our $K$-nearest neighbor classifier with $K=7$ on this *balanced* data. 
@@ -1694,10 +1694,10 @@ Let's load and examine a modified subset of the tumor image data
 that has a few missing entries:
 
 ```{code-cell} ipython3
-missing_cancer = pd.read_csv("data/wdbc_missing.csv")[['Class', 'Radius', 'Texture', 'Perimeter']]
-missing_cancer['Class'] = missing_cancer['Class'].replace({
-   'M' : 'Malignant',
-   'B' : 'Benign'
+missing_cancer = pd.read_csv("data/wdbc_missing.csv")[["Class", "Radius", "Texture", "Perimeter"]]
+missing_cancer["Class"] = missing_cancer["Class"].replace({
+   "M" : "Malignant",
+   "B" : "Benign"
 })
 missing_cancer
 ```
@@ -1767,9 +1767,9 @@ First we will load the data, create a model, and specify a preprocessor for the 
 ```{code-cell} ipython3
 # load the unscaled cancer data, make Class readable
 unscaled_cancer = pd.read_csv("data/wdbc_unscaled.csv")
-unscaled_cancer['Class'] = unscaled_cancer['Class'].replace({
-   'M' : 'Malignant',
-   'B' : 'Benign'
+unscaled_cancer["Class"] = unscaled_cancer["Class"].replace({
+   "M" : "Malignant",
+   "B" : "Benign"
 })
 unscaled_cancer
 

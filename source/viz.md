@@ -1066,7 +1066,7 @@ glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420
 :figwidth: 700px
 :name: can_lang_plot_theme
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors.
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors.
 :::
 
 The chart above gives a good indication of how the different language categories differ,
@@ -1112,7 +1112,7 @@ else:
 :figwidth: 700px
 :name: can_lang_plot_tooltip
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with color-blind friendly colors and mouse hover tooltip. 
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and mouse hover tooltip. 
 :::
 
 From the visualization in {numref}`can_lang_plot_tooltip`,

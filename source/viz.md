@@ -209,9 +209,9 @@ and are there any interesting patterns to note?
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 mauna_loa = pd.read_csv("data/mauna_loa.csv")
-mauna_loa['day']=1
-mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
-mauna_loa = mauna_loa[['date_measured', 'ppm']].query('ppm>0 and date_measured>"1980-1-1"')
+mauna_loa["day"]=1
+mauna_loa["date_measured"]=pd.to_datetime(mauna_loa[["year", "month", "day"]])
+mauna_loa = mauna_loa[["date_measured", "ppm"]].query('ppm>0 and date_measured>"1980-1-1"')
 mauna_loa.to_csv("data/mauna_loa_data.csv", index=False)
 ```
 
@@ -303,7 +303,7 @@ co2_scatter = alt.Chart(co2_df).mark_point().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_scatter', co2_scatter, display=False)
+glue("co2_scatter", co2_scatter, display=False)
 ```
 
 :::{glue:figure} co2_scatter
@@ -349,7 +349,7 @@ co2_line = alt.Chart(co2_df).mark_line().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line', co2_line, display=False)
+glue("co2_line", co2_line, display=False)
 ```
 
 :::{glue:figure} co2_line
@@ -392,7 +392,7 @@ co2_line_labels = alt.Chart(co2_df).mark_line().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line_labels', co2_line_labels, display=False)
+glue("co2_line_labels", co2_line_labels, display=False)
 ```
 
 :::{glue:figure} co2_line_labels
@@ -441,7 +441,7 @@ co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line_scale', co2_line_scale, display=False)
+glue("co2_line_scale", co2_line_scale, display=False)
 ```
 
 :::{glue:figure} co2_line_scale
@@ -519,7 +519,7 @@ faithful_scatter = alt.Chart(faithful).mark_point().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('faithful_scatter', faithful_scatter, display=False)
+glue("faithful_scatter", faithful_scatter, display=False)
 ```
 
 :::{glue:figure} faithful_scatter
@@ -568,7 +568,7 @@ faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="b
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('faithful_scatter_labels_black', faithful_scatter_labels_black, display=False)
+glue("faithful_scatter_labels_black", faithful_scatter_labels_black, display=False)
 ```
 
 :::{glue:figure} faithful_scatter_labels_black
@@ -609,7 +609,7 @@ can_lang
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] > 0)]
+can_lang = can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)]
 ```
 
 ```{index} altair; mark_circle
@@ -635,7 +635,7 @@ can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot', can_lang_plot, display=False)
+glue("can_lang_plot", can_lang_plot, display=False)
 ```
 
 :::{glue:figure} can_lang_plot
@@ -672,7 +672,7 @@ can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_labels', can_lang_plot_labels, display=False)
+glue("can_lang_plot_labels", can_lang_plot_labels, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_labels
@@ -688,9 +688,9 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import numpy as np
-numlang_speakers_max=int(max(can_lang['mother_tongue']))
+numlang_speakers_max=int(max(can_lang["mother_tongue"]))
 print(numlang_speakers_max)
-numlang_speakers_min = int(min(can_lang['mother_tongue']))
+numlang_speakers_min = int(min(can_lang["mother_tongue"]))
 print(numlang_speakers_min)
 log_result = int(np.floor(np.log10(numlang_speakers_max/numlang_speakers_min)))
 print(log_result)
@@ -760,7 +760,7 @@ can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_log', can_lang_plot_log, display=False)
+glue("can_lang_plot_log", can_lang_plot_log, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_log
@@ -796,7 +796,7 @@ can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
+glue("can_lang_plot_log_revised", can_lang_plot_log_revised, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_log_revised
@@ -809,7 +809,7 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-english_mother_tongue = can_lang.loc[can_lang['language']=='English'].mother_tongue.values[0]
+english_mother_tongue = can_lang.loc[can_lang["language"]=="English"].mother_tongue.values[0]
 census_popn = int(35151728)
 result = round((english_mother_tongue/census_popn)*100,2)
 glue("english_mother_tongue", english_mother_tongue)
@@ -877,7 +877,7 @@ can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_percent', can_lang_plot_percent.properties(height=320, width=420), display=False)
+glue("can_lang_plot_percent", can_lang_plot_percent.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_percent
@@ -965,7 +965,7 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_category', can_lang_plot_category.properties(height=320, width=420), display=False)
+glue("can_lang_plot_category", can_lang_plot_category.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_category
@@ -1002,7 +1002,7 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_legend', can_lang_plot_legend.properties(height=320, width=420), display=False)
+glue("can_lang_plot_legend", can_lang_plot_legend.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_legend
@@ -1058,7 +1058,7 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420), display=False)
+glue("can_lang_plot_theme", can_lang_plot_theme.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_theme
@@ -1101,7 +1101,7 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_tooltip', can_lang_plot_tooltip.properties(height=320, width=420), display=False)
+glue("can_lang_plot_tooltip", can_lang_plot_tooltip.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_tooltip
@@ -1180,7 +1180,7 @@ islands_bar = alt.Chart(islands_df).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_bar', islands_bar, display=False)
+glue("islands_bar", islands_bar, display=False)
 ```
 
 :::{glue:figure} islands_bar
@@ -1224,7 +1224,7 @@ islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_bar_top', islands_bar_top, display=True)
+glue("islands_bar_top", islands_bar_top, display=True)
 ```
 
 :::{glue:figure} islands_bar_top
@@ -1272,7 +1272,7 @@ islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_plot_sorted', islands_plot_sorted, display=True)
+glue("islands_plot_sorted", islands_plot_sorted, display=True)
 ```
 
 :::{glue:figure} islands_plot_sorted
@@ -1489,7 +1489,7 @@ morley_hist_colored = morley_hist_colored + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_colored', morley_hist_colored, display=True)
+glue("morley_hist_colored", morley_hist_colored, display=True)
 ```
 
 :::{glue:figure} morley_hist_colored
@@ -1542,7 +1542,7 @@ morley_hist_categorical = morley_hist_categorical + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_categorical', morley_hist_categorical, display=True)
+glue("morley_hist_categorical", morley_hist_categorical, display=True)
 ```
 
 :::{glue:figure} morley_hist_categorical
@@ -1591,7 +1591,7 @@ morley_hist_facet = morley_hist_categorical.properties(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_facet', morley_hist_facet, display=True)
+glue("morley_hist_facet", morley_hist_facet, display=True)
 ```
 
 :::{glue:figure} morley_hist_facet

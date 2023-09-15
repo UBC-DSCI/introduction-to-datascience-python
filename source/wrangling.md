@@ -20,7 +20,7 @@ kernelspec:
 
 from chapter_preamble import *
 import pandas as pd
-pd.set_option('display.max_rows', 20)
+pd.set_option("display.max_rows", 20)
 ```
 
 ## Overview
@@ -1450,7 +1450,7 @@ region_lang["most_at_home":"lang_known"].groupby("region").max()
 ```
 
 ```
-KeyError: 'region'
+KeyError: "region"
 ```
 
 This is because when we use `[]` we selected only the columns between

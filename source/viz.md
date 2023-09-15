@@ -210,9 +210,9 @@ and are there any interesting patterns to note?
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 mauna_loa = pd.read_csv("data/mauna_loa.csv")
-mauna_loa['day']=1
-mauna_loa['date_measured']=pd.to_datetime(mauna_loa[["year", "month", "day"]])
-mauna_loa = mauna_loa[['date_measured', 'ppm']].query('ppm>0 and date_measured>"1980-1-1"')
+mauna_loa["day"]=1
+mauna_loa["date_measured"]=pd.to_datetime(mauna_loa[["year", "month", "day"]])
+mauna_loa = mauna_loa[["date_measured", "ppm"]].query('ppm>0 and date_measured>"1980-1-1"')
 mauna_loa.to_csv("data/mauna_loa_data.csv", index=False)
 ```
 
@@ -222,7 +222,7 @@ To get started, we will read and inspect the data:
 # mauna loa carbon dioxide data
 co2_df = pd.read_csv(
     "data/mauna_loa_data.csv",
-    parse_dates=['date_measured']
+    parse_dates=["date_measured"]
 )
 co2_df
 ```
@@ -304,7 +304,7 @@ co2_scatter = alt.Chart(co2_df).mark_point().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_scatter', co2_scatter, display=False)
+glue("co2_scatter", co2_scatter, display=False)
 ```
 
 :::{glue:figure} co2_scatter
@@ -350,7 +350,7 @@ co2_line = alt.Chart(co2_df).mark_line().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line', co2_line, display=False)
+glue("co2_line", co2_line, display=False)
 ```
 
 :::{glue:figure} co2_line
@@ -393,7 +393,7 @@ co2_line_labels = alt.Chart(co2_df).mark_line().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line_labels', co2_line_labels, display=False)
+glue("co2_line_labels", co2_line_labels, display=False)
 ```
 
 :::{glue:figure} co2_line_labels
@@ -432,7 +432,7 @@ we stack them on separate lines to make the code easier to read.
 ```{code-cell} ipython3
 co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
     x=alt.X("date_measured")
-        .scale(domain=['1990', '1995'])
+        .scale(domain=["1990", "1995"])
         .title("Measurement Date"),
     y=alt.Y("ppm")
         .scale(zero=False)
@@ -442,7 +442,7 @@ co2_line_scale = alt.Chart(co2_df).mark_line(clip=True).encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('co2_line_scale', co2_line_scale, display=False)
+glue("co2_line_scale", co2_line_scale, display=False)
 ```
 
 :::{glue:figure} co2_line_scale
@@ -520,7 +520,7 @@ faithful_scatter = alt.Chart(faithful).mark_point().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('faithful_scatter', faithful_scatter, display=False)
+glue("faithful_scatter", faithful_scatter, display=False)
 ```
 
 :::{glue:figure} faithful_scatter
@@ -569,7 +569,7 @@ faithful_scatter_labels_black = alt.Chart(faithful).mark_point(size=10, color="b
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('faithful_scatter_labels_black', faithful_scatter_labels_black, display=False)
+glue("faithful_scatter_labels_black", faithful_scatter_labels_black, display=False)
 ```
 
 :::{glue:figure} faithful_scatter_labels_black
@@ -610,7 +610,7 @@ can_lang
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-can_lang = can_lang[(can_lang['most_at_home'] > 0) & (can_lang['mother_tongue'] > 0)]
+can_lang = can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)]
 ```
 
 ```{index} altair; mark_circle
@@ -636,7 +636,7 @@ can_lang_plot = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot', can_lang_plot, display=False)
+glue("can_lang_plot", can_lang_plot, display=False)
 ```
 
 :::{glue:figure} can_lang_plot
@@ -673,7 +673,7 @@ can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_labels', can_lang_plot_labels, display=False)
+glue("can_lang_plot_labels", can_lang_plot_labels, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_labels
@@ -689,9 +689,9 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 import numpy as np
-numlang_speakers_max=int(max(can_lang['mother_tongue']))
+numlang_speakers_max=int(max(can_lang["mother_tongue"]))
 print(numlang_speakers_max)
-numlang_speakers_min = int(min(can_lang['mother_tongue']))
+numlang_speakers_min = int(min(can_lang["mother_tongue"]))
 print(numlang_speakers_min)
 log_result = int(np.floor(np.log10(numlang_speakers_max/numlang_speakers_min)))
 print(log_result)
@@ -720,8 +720,8 @@ to Canada's two official languages by filtering the data:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 can_lang.loc[
-    (can_lang['language']=='English')
-    | (can_lang['language']=='French')
+    (can_lang["language"]=="English")
+    | (can_lang["language"]=="French")
 ]
 ```
 
@@ -761,7 +761,7 @@ can_lang_plot_log = alt.Chart(can_lang).mark_circle().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_log', can_lang_plot_log, display=False)
+glue("can_lang_plot_log", can_lang_plot_log, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_log
@@ -787,17 +787,17 @@ can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home")
         .scale(type="log")
         .title(["Language spoken most at home", "(number of Canadian residents)"])
-        .axis(tickCount=7, format='s'),
+        .axis(tickCount=7, format="s"),
     y=alt.Y("mother_tongue")
         .scale(type="log")
         .title(["Mother tongue", "(number of Canadian residents)"])
-        .axis(tickCount=7, format='s')
+        .axis(tickCount=7, format="s")
 ).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('can_lang_plot_log_revised', can_lang_plot_log_revised, display=False)
+glue("can_lang_plot_log_revised", can_lang_plot_log_revised, display=False)
 ```
 
 :::{glue:figure} can_lang_plot_log_revised
@@ -810,7 +810,7 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-english_mother_tongue = can_lang.loc[can_lang['language']=='English'].mother_tongue.values[0]
+english_mother_tongue = can_lang.loc[can_lang["language"]=="English"].mother_tongue.values[0]
 census_popn = int(35151728)
 result = round((english_mother_tongue/census_popn)*100,2)
 glue("english_mother_tongue", english_mother_tongue)
@@ -847,10 +847,10 @@ and is just added for readability.
 ```{code-cell} ipython3
 canadian_population = 35_151_728
 can_lang = can_lang.assign(
-    mother_tongue_percent=(can_lang['mother_tongue'] / canadian_population) * 100,
-    most_at_home_percent=(can_lang['most_at_home'] / canadian_population) * 100
+    mother_tongue_percent=(can_lang["mother_tongue"] / canadian_population) * 100,
+    most_at_home_percent=(can_lang["most_at_home"] / canadian_population) * 100
 )
-can_lang[['mother_tongue_percent', 'most_at_home_percent']]
+can_lang[["mother_tongue_percent", "most_at_home_percent"]]
 ```
 
 Next, we will edit the visualization to use the percentages we just computed
@@ -878,7 +878,7 @@ can_lang_plot_percent = alt.Chart(can_lang).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_percent', can_lang_plot_percent.properties(height=320, width=420), display=False)
+glue("can_lang_plot_percent", can_lang_plot_percent.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_percent
@@ -966,7 +966,7 @@ can_lang_plot_category=alt.Chart(can_lang).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_category', can_lang_plot_category.properties(height=320, width=420), display=False)
+glue("can_lang_plot_category", can_lang_plot_category.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_category
@@ -982,7 +982,7 @@ This is a matter of preference and not critical for the visualization.
 We move the legend title using the `alt.Legend` method
 and specify that we want it on the top of the chart.
 This automatically changes the legend items to be laid out horizontally instead of vertically,
-but we could also keep the vertical layout by specifying `direction='vertical'` inside `alt.Legend`.
+but we could also keep the vertical layout by specifying `direction="vertical"` inside `alt.Legend`.
 
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
@@ -995,15 +995,15 @@ can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
         .axis(tickCount=7)
         .title(["Mother tongue", "(percentage of Canadian residents)"]),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
+        .legend(orient="top")
+        .title("")
 ).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_legend', can_lang_plot_legend.properties(height=320, width=420), display=False)
+glue("can_lang_plot_legend", can_lang_plot_legend.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_legend
@@ -1014,7 +1014,7 @@ Scatter plot of percentage of Canadians reporting a language as their mother ton
 :::
 
 In {numref}`can_lang_plot_legend`, the points are colored with
-the default `altair` color scheme, which is called `'tableau10'`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
+the default `altair` color scheme, which is called `"tableau10"`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
 In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
 If you are unsure about a certain color combination, you can use
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
@@ -1049,9 +1049,9 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
         .axis(tickCount=7)
         .title("Mother tongue(percentage of Canadian residents)"),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
-        .scale(scheme='dark2'),
+        .legend(orient="top")
+        .title("")
+        .scale(scheme="dark2"),
     shape="category"
 ).configure_axis(titleFontSize=12)
 ```
@@ -1059,7 +1059,7 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-glue('can_lang_plot_theme', can_lang_plot_theme.properties(height=320, width=420), display=False)
+glue("can_lang_plot_theme", can_lang_plot_theme.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_theme
@@ -1091,21 +1091,21 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
         .axis(tickCount=7)
         .title("Mother tongue(percentage of Canadian residents)"),
     color=alt.Color("category")
-        .legend(orient='top')
-        .title('')
-        .scale(scheme='dark2'),
+        .legend(orient="top")
+        .title("")
+        .scale(scheme="dark2"),
     shape="category",
-    tooltip=alt.Tooltip(['language', 'mother_tongue', 'most_at_home'])
+    tooltip=alt.Tooltip(["language", "mother_tongue", "most_at_home"])
 ).configure_axis(titleFontSize=12)
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-if 'BOOK_BUILD_TYPE' in os.environ and os.environ['BOOK_BUILD_TYPE'] == 'PDF':
-    glue('can_lang_plot_tooltip', Image('img/viz/languages_with_mouse.png'), display=False)
+if "BOOK_BUILD_TYPE" in os.environ and os.environ["BOOK_BUILD_TYPE"] == "PDF":
+    glue("can_lang_plot_tooltip", Image("img/viz/languages_with_mouse.png"), display=False)
 else:
     # Increasing the dimensions makes all the ticks fit in jupyter book (the fit with the default dimensions in jupyterlab)
-    glue('can_lang_plot_tooltip', can_lang_plot_tooltip.properties(height=320, width=420), display=False)
+    glue("can_lang_plot_tooltip", can_lang_plot_tooltip.properties(height=320, width=420), display=False)
 ```
 
 :::{glue:figure} can_lang_plot_tooltip
@@ -1184,7 +1184,7 @@ islands_bar = alt.Chart(islands_df).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_bar', islands_bar, display=False)
+glue("islands_bar", islands_bar, display=False)
 ```
 
 :::{glue:figure} islands_bar
@@ -1228,7 +1228,7 @@ islands_bar_top = alt.Chart(islands_top12).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_bar_top', islands_bar_top, display=True)
+glue("islands_bar_top", islands_bar_top, display=True)
 ```
 
 :::{glue:figure} islands_bar_top
@@ -1254,14 +1254,14 @@ To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
 in the y-encoding of the chart.
 Since the `size` variable is encoded in the x channel of the chart,
-we specify `sort('x')` on `alt.Y`.
+we specify `sort("x")` on `alt.Y`.
 This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
 which is generally the most visually appealing when sorting bars.
 If instead
 we want to sort the values on `y-axis` in descending order of `x-axis`,
-we can add a minus sign to reverse the order and specify `sort='-x'`.
+we can add a minus sign to reverse the order and specify `sort="-x"`.
 
 ```{index} altair; sort
 ```
@@ -1276,7 +1276,7 @@ islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('islands_plot_sorted', islands_plot_sorted, display=True)
+glue("islands_plot_sorted", islands_plot_sorted, display=True)
 ```
 
 :::{glue:figure} islands_plot_sorted
@@ -1493,7 +1493,7 @@ morley_hist_colored = morley_hist_colored + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_colored', morley_hist_colored, display=True)
+glue("morley_hist_colored", morley_hist_colored, display=True)
 ```
 
 :::{glue:figure} morley_hist_colored
@@ -1546,7 +1546,7 @@ morley_hist_categorical = morley_hist_categorical + v_line
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_categorical', morley_hist_categorical, display=True)
+glue("morley_hist_categorical", morley_hist_categorical, display=True)
 ```
 
 :::{glue:figure} morley_hist_categorical
@@ -1595,7 +1595,7 @@ morley_hist_facet = morley_hist_categorical.properties(
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-glue('morley_hist_facet', morley_hist_facet, display=True)
+glue("morley_hist_facet", morley_hist_facet, display=True)
 ```
 
 :::{glue:figure} morley_hist_facet
@@ -1631,7 +1631,7 @@ an absolute measurement.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458
-morley_df['RelativeError'] = (
+morley_df["RelativeError"] = (
     100 * (299000 + morley_df["Speed"] - speed_of_light) / speed_of_light
 )
 morley_df
@@ -1747,9 +1747,9 @@ morley_hist_default = alt.Chart(morley_df).mark_bar().encode(
 morley_hist_max_bins = alt.vconcat(
     alt.hconcat(
         (morley_hist_default + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('Default (bin=True)', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("Default (bin=True)", fontSize=16, anchor="middle", dx=15)
         ),
         (morley_hist_default.encode(
             x=alt.X(
@@ -1758,9 +1758,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=5', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=5", fontSize=16, anchor="middle", dx=15)
         ),
     ),
     alt.hconcat(
@@ -1771,9 +1771,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=70', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=70", fontSize=16, anchor="middle", dx=15)
         ),
         (morley_hist_default.encode(
             x=alt.X(
@@ -1782,9 +1782,9 @@ morley_hist_max_bins = alt.vconcat(
                 title="Relative error (%)"
             )
         ) + v_line).facet(
-            'Expt:N',
+            "Expt:N",
             columns=1,
-            title=alt.TitleParams('maxbins=200', fontSize=16, anchor='middle', dx=15)
+            title=alt.TitleParams("maxbins=200", fontSize=16, anchor="middle", dx=15)
         )
     ),
     spacing=50

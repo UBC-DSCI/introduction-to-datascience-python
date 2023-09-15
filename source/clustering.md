@@ -176,7 +176,7 @@ Now we can load and preview the data.
 import pandas as pd
 
 data = pd.read_csv(
-    'data/penguins_toy.csv'
+    "data/penguins_toy.csv"
 ).replace(
     [2, 3],
     [0, 2]
@@ -205,7 +205,7 @@ scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('scatter_plot', scatter_plot, display=True)
+glue("scatter_plot", scatter_plot, display=True)
 ```
 
 :::{glue:figure} scatter_plot
@@ -253,10 +253,10 @@ denoted by colored scatter points.
 colored_scatter_plot = alt.Chart(data).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
-    color=alt.Color('cluster:N')
+    color=alt.Color("cluster:N")
 )
 
-glue('colored_scatter_plot', colored_scatter_plot, display=True)
+glue("colored_scatter_plot", colored_scatter_plot, display=True)
 ```
 
 :::{glue:figure} colored_scatter_plot
@@ -321,8 +321,8 @@ $\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)
 
 clus_rows = clus.shape[0]
 
-mean_flipper_len_std = round(np.mean(clus['flipper_length_standardized']),2)
-mean_bill_len_std = round(np.mean(clus['bill_length_standardized']),2)
+mean_flipper_len_std = round(np.mean(clus["flipper_length_standardized"]),2)
+mean_bill_len_std = round(np.mean(clus["bill_length_standardized"]),2)
 
 glue("clus_rows_glue", clus_rows)
 glue("mean_flipper_len_std_glue",mean_flipper_len_std)
@@ -572,7 +572,7 @@ from sklearn import set_config
 set_config(transform_output="pandas")
 
 preprocessor = make_column_transformer(
-    (StandardScaler(), ['bill_length_mm', 'flipper_length_mm']),
+    (StandardScaler(), ["bill_length_mm", "flipper_length_mm"]),
     verbose_feature_names_out=False,
 )
 preprocessor
@@ -646,7 +646,7 @@ cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('cluster_plot', cluster_plot, display=True)
+glue("cluster_plot", cluster_plot, display=True)
 ```
 
 :::{glue:figure} cluster_plot
@@ -723,8 +723,8 @@ wssds = [
 ]
 
 penguin_clust_ks = pd.DataFrame({
-    'k': ks,
-    'wssd': wssds,
+    "k": ks,
+    "wssd": wssds,
 })
 
 penguin_clust_ks
@@ -743,7 +743,7 @@ elbow_plot = alt.Chart(penguin_clust_ks).mark_line(point=True).encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('elbow_plot', elbow_plot, display=True)
+glue("elbow_plot", elbow_plot, display=True)
 ```
 
 :::{glue:figure} elbow_plot

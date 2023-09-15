@@ -426,10 +426,10 @@ np.random.seed(1)
 
 # load data
 cancer = pd.read_csv("data/wdbc_unscaled.csv")
-# re-label Class 'M' as 'Malignant', and Class 'B' as 'Benign'
-cancer['Class'] = cancer['Class'].replace({
-    'M' : 'Malignant',
-    'B' : 'Benign'
+# re-label Class "M" as "Malignant", and Class "B" as "Benign"
+cancer["Class"] = cancer["Class"].replace({
+    "M" : "Malignant",
+    "B" : "Benign"
 })
 
 # create scatter plot of tumor cell concavity versus smoothness,
@@ -486,7 +486,7 @@ Let's use the `train_test_split` function to create the training and testing set
 We first need to import the function from the `sklearn` package. Then
 we will specify that `train_size=0.75` so that 75% of our original data set ends up
 in the training set. We will also set the `stratify` argument to the categorical label variable
-(here, `cancer['Class']`) to ensure that the training and testing subsets contain the
+(here, `cancer["Class"]`) to ensure that the training and testing subsets contain the
 right proportions of each category of observation.
 
 ```{code-cell} ipython3
@@ -616,7 +616,7 @@ variables in the output data frame.
 cancer_test_predictions = cancer_test.assign(
     predicted = knn_fit.predict(cancer_test[["Smoothness", "Concavity"]])
 )
-cancer_test_predictions[['ID', 'Class', 'predicted']]
+cancer_test_predictions[["ID", "Class", "predicted"]]
 ```
 
 ### Evaluate performance
@@ -632,7 +632,7 @@ and then divide the number of rows with correct predictions by the total number 
 using the `shape` attribute.
 ```{code-cell} ipython3
 correct_preds = cancer_test_predictions[
-    cancer_test_predictions['Class'] == cancer_test_predictions['predicted']
+    cancer_test_predictions["Class"] == cancer_test_predictions["predicted"]
 ]
 
 correct_preds.shape[0] / cancer_test_predictions.shape[0]
@@ -1013,7 +1013,7 @@ classifier to be somewhere roughly between {glue:}`cv_5_lower`% and {glue:}`cv_5
 fall outside this range). You may ignore the other columns in the metrics data frame.
 
 ```{code-cell} ipython3
-cv_5_metrics = cv_5_df.agg(['mean', 'sem'])
+cv_5_metrics = cv_5_df.agg(["mean", "sem"])
 cv_5_metrics
 ```
 
@@ -1065,7 +1065,7 @@ cv_10 = pd.DataFrame(
 )
 
 cv_10_df = pd.DataFrame(cv_10)
-cv_10_metrics = cv_10_df.agg(['mean', 'sem'])
+cv_10_metrics = cv_10_df.agg(["mean", "sem"])
 cv_10_metrics
 ```
 
@@ -1086,7 +1086,7 @@ cv_50_df = pd.DataFrame(
         y=y
     )
 )
-cv_50_metrics = cv_50_df.agg(['mean', 'sem'])
+cv_50_metrics = cv_50_df.agg(["mean", "sem"])
 cv_50_metrics
 ```
 
@@ -1742,7 +1742,7 @@ Tuned number of neighbors for varying number of irrelevant predictors.
 melted_summary_df = summary_df.melt(
             id_vars=["ks", "nghbrs"], var_name="Type", value_name="Accuracy"
         )
-melted_summary_df['Type'] = melted_summary_df['Type'].apply(lambda x: 'Tuned K' if x=='accs' else 'K = 3')
+melted_summary_df["Type"] = melted_summary_df["Type"].apply(lambda x: "Tuned K" if x=="accs" else "K = 3")
 
 plt_irrelevant_nghbrs_fixed = (
     alt.Chart(
@@ -1929,7 +1929,7 @@ y = cancer_subset["Class"]
 
 cancer_pipe_forward.fit(X, y)
 
-cancer_pipe_forward.named_steps['sequentialfeatureselector'].n_features_to_select_
+cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_
 ```
 
 ```{code-cell} ipython3
@@ -2046,7 +2046,7 @@ for i in range(1, n_total + 1):
     best_set = models[accs.index(max(accs))]
     
     accuracy_dict["size"].append(i)
-    accuracy_dict["selected_predictors"].append(', '.join(best_set))
+    accuracy_dict["selected_predictors"].append(", ".join(best_set))
     accuracy_dict["accuracy"].append(max(accs))
     
     selected = best_set

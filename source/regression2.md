@@ -477,7 +477,7 @@ so that we can qualitatively assess if the model seems to fit the data well.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
-sqft_prediction_grid = sacramento[['sqft']].agg(['min', 'max'])
+sqft_prediction_grid = sacramento[["sqft"]].agg(["min", "max"])
 sacr_preds = sqft_prediction_grid.assign(
     predicted=lm.predict(sqft_prediction_grid)
 )

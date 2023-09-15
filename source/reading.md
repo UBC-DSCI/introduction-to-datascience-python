@@ -829,7 +829,7 @@ conn.list_tables()
 ```
 
 ```text
-['themes', 'medium', 'titles', 'title_aliases', 'forms', 'episodes', 'names', 'names_occupations', 'occupation', 'ratings']
+["themes", "medium", "titles", "title_aliases", "forms", "episodes", "names", "names_occupations", "occupation", "ratings"]
 ```
 
 We see that there are 10 tables in this database. Let's first look at the
@@ -1330,7 +1330,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % ```
 %
 % ```
-% ['Toronto', '6,202,225', 'London', '543,551\n', 'Montreal']
+% ["Toronto", "6,202,225", "London", "543,551\n", "Montreal"]
 % ```
 %
 % +++

@@ -168,7 +168,7 @@ want to predict (sale price) on the y-axis.
 Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`,
 we format the axis labels to put dollar signs in front of the house prices,
 as well as commas to increase the readability of the larger numbers.
-We can do this in `altair` by passing the `axis=alt.Axis(format='$,.0f')` argument
+We can do this in `altair` by passing the `axis=alt.Axis(format="$,.0f")` argument
 to the `y` encoding channel in an `altair` specification.
 ```
 
@@ -180,7 +180,7 @@ scatter = alt.Chart(sacramento).mark_circle().encode(
         .scale(zero=False)
         .title("House size (square feet)"),
     y=alt.Y("price")
-        .axis(format='$,.0f')
+        .axis(format="$,.0f")
         .title("Price (USD)")
 )
 
@@ -255,7 +255,7 @@ small_plot = alt.Chart(small_sacramento).mark_circle().encode(
         .scale(zero=False)
         .title("House size (square feet)"),
     y=alt.Y("price")
-        .axis(format='$,.0f')
+        .axis(format="$,.0f")
         .title("Price (USD)")
 )
 
@@ -886,7 +886,7 @@ generated it as a learning opportunity.
 
 # Create a grid of evenly spaced values along the range of the sqft data
 sqft_prediction_grid = pd.DataFrame({
-    "sqft": np.arange(sacramento['sqft'].min(), sacramento['sqft'].max(), 10)
+    "sqft": np.arange(sacramento["sqft"].min(), sacramento["sqft"].max(), 10)
 })
 # Predict the price for each of the sqft values in the grid
 sacr_preds = sqft_prediction_grid.assign(
@@ -899,7 +899,7 @@ base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
         .scale(zero=False)
         .title("House size (square feet)"),
     y=alt.Y("price")
-        .axis(format='$,.0f')
+        .axis(format="$,.0f")
         .title("Price (USD)")
 )
 

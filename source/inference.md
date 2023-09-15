@@ -172,13 +172,13 @@ as we did in previous chapters.
 ```
 
 ```{code-cell} ipython3
-airbnb['room_type'].value_counts(normalize=True)
+airbnb["room_type"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_proportion", airbnb['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
+glue("population_proportion", airbnb["room_type"].value_counts(normalize=True)["Entire home/apt"].round(3))
 ```
 
 We can see that the proportion of `Entire home/apt` listings in
@@ -204,13 +204,13 @@ import numpy as np
 
 np.random.seed(155)
 
-airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
+airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
+glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)["room_type"].value_counts(normalize=True)["Entire home/apt"].round(3))
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
@@ -224,7 +224,7 @@ if we were to take *another* random sample of size 40 and compute the proportion
 we would not get the same answer:
 
 ```{code-cell} ipython3
-airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
+airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 ```
 
 Confirmed! We get a different value for our estimate this time.
@@ -274,7 +274,7 @@ starting at sample 0 and ending at sample 19,999.
 
 Now that we have obtained the samples, we need to compute the
 proportion of entire home/apartment listings in each sample.
-We first `query` the observations with room type of 'Entire home/apt';
+We first `query` the observations with room type of "Entire home/apt";
 group the data by the `replicate` variable&mdash;to group the
 set of listings in each sample together&mdash;and then use `count`
 to compute the number of qualified observations in each sample; finally compute the proportion.
@@ -284,8 +284,8 @@ below to show that we end up with 20,000 point estimates, one for each of the 20
 ```{code-cell} ipython3
 (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
 )
 ```
@@ -309,10 +309,10 @@ with the `name` parameter:
 ```{code-cell} ipython3
 (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
-    .reset_index(name='sample_proportion')
+    .reset_index(name="sample_proportion")
 )
 ```
 
@@ -323,13 +323,13 @@ that we are interested in.
 ```{code-cell} ipython3
 sample_estimates = (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
-    .reset_index(name='sample_proportion')
+    .reset_index(name="sample_proportion")
 )
 
-sample_estimates = sample_estimates[sample_estimates['room_type'] == 'Entire home/apt']
+sample_estimates = sample_estimates[sample_estimates["room_type"] == "Entire home/apt"]
 sample_estimates
 ```
 
@@ -525,7 +525,7 @@ one_sample["price"].mean()
 :tags: [remove-cell]
 
 glue("estimate_mean", one_sample["price"].mean().round(2))
-glue("diff_perc", round(100 * abs(1 - (one_sample['price'].mean() / airbnb['price'].mean())), 1))
+glue("diff_perc", round(100 * abs(1 - (one_sample["price"].mean() / airbnb["price"].mean())), 1))
 ```
 
 The average value of the sample of size 40
@@ -557,11 +557,11 @@ distribution of sample means for samples of size 40.
 ```{code-cell} ipython3
 sample_estimates = (
     samples
-    .groupby('replicate')
-    ['price']
+    .groupby("replicate")
+    ["price"]
     .mean()
     .reset_index()
-    .rename(columns={'price': 'mean_price'})
+    .rename(columns={"price": "mean_price"})
 )
 sample_estimates
 ```
@@ -647,7 +647,7 @@ glue(
                 #scale=alt.Scale(domainMax=700)
             )
         ).properties(
-            title='Population', height=150
+            title="Population", height=150
         ),
         sample_distribution.encode(
             x=alt.X("price")
@@ -665,7 +665,7 @@ glue(
             )
         ).properties(height=150)
     ).resolve_scale(
-        x='shared'
+        x="shared"
     )
 )
 ```
@@ -699,7 +699,7 @@ base = alt.Chart(
         ])
         for replicate in range(20_000)
     ]).groupby(
-        ["sample_size", 'replicate'],
+        ["sample_size", "replicate"],
         as_index=False
     )["price"].mean(),
     height=150
@@ -709,27 +709,27 @@ glue(
     "fig:11-example-means7",
     alt.layer(
         base.mark_bar().encode(
-            alt.X('price', bin=alt.Bin(maxbins=30)),
-            alt.Y('count()')
+            alt.X("price", bin=alt.Bin(maxbins=30)),
+            alt.Y("count()")
         ),
-        base.mark_rule(color='#f58518', size=3).encode(
-            x='mean(price)'
+        base.mark_rule(color="#f58518", size=3).encode(
+            x="mean(price)"
         ),
-        base.mark_text(align='left', color='#f58518', size=12, fontWeight='bold', dx=10).transform_aggregate(
-            mean_price = 'mean(price)',
+        base.mark_text(align="left", color="#f58518", size=12, fontWeight="bold", dx=10).transform_aggregate(
+            mean_price = "mean(price)",
         ).transform_calculate(
             label = "'Mean = ' + round(datum.mean_price * 10) / 10"
         ).encode(
-            x=alt.X('mean_price:Q', title="Sample mean price per night (dollars)"),
+            x=alt.X("mean_price:Q", title="Sample mean price per night (dollars)"),
             y=alt.value(10),
-            text='label:N'
+            text="label:N"
         )
     ).facet(
         alt.Facet(
-            'sample_size:N',
+            "sample_size:N",
             header=alt.Header(
-                title='',
-                labelFontWeight='bold',
+                title="",
+                labelFontWeight="bold",
                 labelFontSize=12,
                 labelPadding=3,
                 labelExpr='"Sample size = " + datum.value'
@@ -737,7 +737,7 @@ glue(
         ),
         columns=1,
     ).resolve_scale(
-        y='independent'
+        y="independent"
     )
 )
 ```
@@ -1138,26 +1138,26 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-sampling_distribution.encoding.x['bin']['extent'] = (90, 250)
+sampling_distribution.encoding.x["bin"]["extent"] = (90, 250)
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        alt.Chart(sample_estimates).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
-        alt.Chart(sample_estimates).mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
-            x='mean(mean_price)',
+        alt.Chart(sample_estimates).mark_rule(color="#f58518", size=2).encode(x="mean(mean_price)"),
+        alt.Chart(sample_estimates).mark_text(color="#f58518", size=12, align="left", dx=16, fontWeight="bold").encode(
+            x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
+            text=alt.value(f"Mean = {sampling_distribution["data"]["mean_price"].mean().round(1)}")
         )
-    ).properties(title='Sampling distribution', height=150),
+    ).properties(title="Sampling distribution", height=150),
     alt.layer(
         boot_est_dist,
-        alt.Chart(boot20000_means).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
-        alt.Chart(boot20000_means).mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
-            x='mean(mean_price)',
+        alt.Chart(boot20000_means).mark_rule(color="#f58518", size=2).encode(x="mean(mean_price)"),
+        alt.Chart(boot20000_means).mark_text(color="#f58518", size=12, align="left", dx=18, fontWeight="bold").encode(
+            x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
+            text=alt.value(f"Mean = {boot_est_dist["data"]["mean_price"].mean().round(1)}")
         )
-    ).properties(title='Bootstrap distribution', height=150)
+    ).properties(title="Bootstrap distribution", height=150)
 )
 ```
 
@@ -1267,24 +1267,24 @@ visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
 # Create the annotation for for the 2.5th percentile
-rule_025 = alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(
+rule_025 = alt.Chart().mark_rule(color="#f58518", size=3, strokeDash=[5]).encode(
     x=alt.datum(ci_bounds[0.025])
 ).properties(
     width=500
 )
 text_025 = rule_025.mark_text(
-    color='#f58518',
+    color="#f58518",
     size=12,
-    fontWeight='bold',
+    fontWeight="bold",
     dy=-160
 ).encode(
-    text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
+    text=alt.datum(f"2.5th percentile ({ci_bounds[0.025].round(1)})")
 )
 
 # Create the annotation for for the 97.5th percentile
 text_975 = text_025.encode(
     x=alt.datum(ci_bounds[0.975]),
-    text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+    text=alt.datum(f"97.5th percentile ({ci_bounds[0.975].round(1)})")
 )
 rule_975 = rule_025.encode(x=alt.datum(ci_bounds[0.975]))
 

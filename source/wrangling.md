@@ -1079,7 +1079,7 @@ and the second argument specifies a list of columns to keep by name.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[
-    tidy_lang['region'] == 'Toronto',
+    tidy_lang["region"] == "Toronto",
     ["language", "region", "most_at_home", "most_at_work"]
 ]
 ```
@@ -1095,7 +1095,7 @@ denotes a range, and is supported by the `loc[]` function, but not by `[]`.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[
-    tidy_lang['region'] == 'Toronto',
+    tidy_lang["region"] == "Toronto",
     "language":"most_at_work"
 ]
 ```
@@ -1141,7 +1141,7 @@ The `str.startswith` expression returns a list of `True` or `False` values
 corresponding to the column names that start with the desired characters.
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
+tidy_lang.loc[:, tidy_lang.columns.str.startswith("most")]
 ```
 
 ```{index} pandas.Series; str.contains
@@ -1152,7 +1152,7 @@ We could also have chosen the columns containing an underscore `_` by using the
 the columns we want contain underscores and the others don't.
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
+tidy_lang.loc[:, tidy_lang.columns.str.contains("_")]
 ```
 
 ## Using `iloc[]` to extract rows and columns by position
@@ -1161,9 +1161,9 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
 Another approach for selecting rows and columns is to use `iloc[]`,
 which provides the ability to index with the position rather than the label of the columns.
 For example, the column labels of the `tidy_lang` data frame are
-`['category', 'language', 'region', 'most_at_home', 'most_at_work']`.
+`["category", "language", "region", "most_at_home", "most_at_work"]`.
 Using `iloc[]`, you can ask for the `language` column by requesting the
-column at index `1` (remember that Python starts counting at `0`, so the second item `'language'`
+column at index `1` (remember that Python starts counting at `0`, so the second item `"language"`
 has index `1`!).
 
 ```{code-cell} ipython3
@@ -1267,7 +1267,7 @@ Other handy summary statistics include the `mean`, `median` and `std` for
 computing the mean, median, and standard deviation of observations, respectively.
 We can also compute multiple statistics at once using `agg` to "aggregate" results.
 For example, if we wanted to
-compute both the `min` and `max` at once, we could use `agg` with the argument `['min', 'max']`.
+compute both the `min` and `max` at once, we could use `agg` with the argument `["min", "max"]`.
 Note that `agg` outputs a `Series` object.
 
 ```{code-cell} ipython3

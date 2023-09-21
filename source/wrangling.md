@@ -627,8 +627,6 @@ Going from long to wide with the `pivot` function.
 
 {numref}`fig:img-pivot-wider` details the arguments that we need to specify in the `pivot` function.
 
-**TODO make figure match code below**
-
 +++ {"tags": []}
 
 ```{figure} img/wrangling/pandas_pivot_args_labels.png

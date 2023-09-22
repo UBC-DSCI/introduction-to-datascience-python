@@ -162,8 +162,8 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question:
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in {numref}`Chapter %s <reading>`
-and {numref}`Chapter %s <wrangling>`, but appear regularly throughout the text.
+Tools for summarization are covered in detail in {numref}`Chapters %s <reading>`
+and {numref}`%s <wrangling>`, but appear regularly throughout the text.
 1. **Visualization:** plotting data graphically.
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
@@ -480,7 +480,7 @@ we are interested in keeping only languages in the `"Aboriginal languages"` high
 category. We can use the *equivalency operator* `==` to compare the values of the `category`
 column---denoted by `can_lang["category"]`---with the value `"Aboriginal languages"`.
 You will learn about many other kinds of logical
-statement in {ref}`Chapter %s <wrangling>`. Similar to when we loaded the data file and put quotes
+statement in {numref}`Chapter %s <wrangling>`. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
 and not one of the special words that make up the Python programming language,

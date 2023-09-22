@@ -233,10 +233,10 @@ cancer["Class"].unique()
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("benign_count", cancer["Class"].value_counts()["Benign"])
-glue("benign_pct", int(np.round(100*cancer["Class"].value_counts(normalize=True)["Benign"])))
-glue("malignant_count", cancer["Class"].value_counts()["Malignant"])
-glue("malignant_pct", int(np.round(100*cancer["Class"].value_counts(normalize=True)["Malignant"])))
+glue("benign_count", "{:0.0f}".format(cancer["Class"].value_counts()["Benign"]))
+glue("benign_pct", "{:0.0f}".format(100*cancer["Class"].value_counts(normalize=True)["Benign"]))
+glue("malignant_count", "{:0.0f}".format(cancer["Class"].value_counts()["Malignant"]))
+glue("malignant_pct", "{:0.0f}".format(100*cancer["Class"].value_counts(normalize=True)["Malignant"]))
 ```
 
 Before we start doing any modeling, let's explore our data set. Below we use
@@ -249,8 +249,8 @@ The total number of observations equals the number of rows in the data frame,
 which we can access via the `shape` attribute of the data frame
 (`shape[0]` is the number of rows and `shape[1]` is the number of columns).
 We have 
-{glue:}`benign_count` ({glue:}`benign_pct`\%) benign and
-{glue:}`malignant_count` ({glue:}`malignant_pct`\%) malignant 
+{glue:text}`benign_count` ({glue:text}`benign_pct`\%) benign and
+{glue:text}`malignant_count` ({glue:text}`malignant_pct`\%) malignant 
 tumor observations.
 
 ```{code-cell} ipython3
@@ -324,8 +324,8 @@ tumor images with unknown diagnoses.
 :tags: [remove-cell]
 
 new_point = [2, 4]
-glue("new_point_1_0", new_point[0])
-glue("new_point_1_1", new_point[1])
+glue("new_point_1_0", "{:.1f}".format(new_point[0]))
+glue("new_point_1_1", "{:.1f}".format(new_point[1]))
 attrs = ["Perimeter", "Concavity"]
 points_df = pd.DataFrame(
     {"Perimeter": new_point[0], "Concavity": new_point[1], "Class": ["Unknown"]}
@@ -354,8 +354,8 @@ $K$ for us. We will cover how to choose $K$ ourselves in the next chapter.
 To illustrate the concept of $K$-nearest neighbors classification, we 
 will walk through an example.  Suppose we have a
 new observation, with standardized perimeter 
-of {glue:}`new_point_1_0` and standardized concavity 
-of {glue:}`new_point_1_1`, whose 
+of {glue:text}`new_point_1_0` and standardized concavity 
+of {glue:text}`new_point_1_1`, whose 
 diagnosis "Class" is unknown. This new observation is 
 depicted by the red, diamond point in {numref}`fig:05-knn-2`.
 
@@ -390,13 +390,13 @@ near_neighbor_df = pd.concat([
     cancer.loc[[np.argmin(my_distances)], attrs],
     perim_concav_with_new_point_df.loc[[cancer.shape[0]], attrs],
 ])
-glue("1-neighbor_per", round(near_neighbor_df.iloc[0, :]["Perimeter"], 1))
-glue("1-neighbor_con", round(near_neighbor_df.iloc[0, :]["Concavity"], 1))
+glue("1-neighbor_per", "{:.1f}".format(near_neighbor_df.iloc[0, :]["Perimeter"]))
+glue("1-neighbor_con", "{:.1f}".format(near_neighbor_df.iloc[0, :]["Concavity"]))
 ```
 
 {numref}`fig:05-knn-3` shows that the nearest point to this new observation is
-**malignant** and located at the coordinates ({glue:}`1-neighbor_per`,
-{glue:}`1-neighbor_con`). The idea here is that if a point is close to another
+**malignant** and located at the coordinates ({glue:text}`1-neighbor_per`,
+{glue:text}`1-neighbor_con`). The idea here is that if a point is close to another
 in the scatter plot, then the perimeter and concavity values are similar, 
 and so we may expect that they would have the same diagnosis.
 
@@ -434,8 +434,8 @@ perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=T
 my_distances2 = euclidean_distances(perim_concav_with_new_point_df2[attrs])[
     len(cancer)
 ][:-1]
-glue("new_point_2_0", new_point[0])
-glue("new_point_2_1", new_point[1])
+glue("new_point_2_0", "{:.1f}".format(new_point[0]))
+glue("new_point_2_1", "{:.1f}".format(new_point[1]))
 ```
 
 ```{code-cell} ipython3
@@ -471,16 +471,16 @@ line2 = alt.Chart(near_neighbor_df2).mark_line().encode(
     color=alt.value("black")
 )
 
-glue("2-neighbor_per", round(near_neighbor_df2.iloc[0, :]["Perimeter"], 1))
-glue("2-neighbor_con", round(near_neighbor_df2.iloc[0, :]["Concavity"], 1))
+glue("2-neighbor_per", "{:.1f}".format(near_neighbor_df2.iloc[0, :]["Perimeter"]))
+glue("2-neighbor_con", "{:.1f}".format(near_neighbor_df2.iloc[0, :]["Concavity"]))
 glue('fig:05-knn-4', (perim_concav_with_new_point2 + line2), display=True)
 ```
 
 Suppose we have another new observation with standardized perimeter
-{glue:}`new_point_2_0` and concavity of {glue:}`new_point_2_1`. Looking at the
+{glue:text}`new_point_2_0` and concavity of {glue:text}`new_point_2_1`. Looking at the
 scatter plot in {numref}`fig:05-knn-4`, how would you classify this red,
 diamond observation? The nearest neighbor to this new point is a
-**benign** observation at ({glue:}`2-neighbor_per`, {glue:}`2-neighbor_con`).
+**benign** observation at ({glue:text}`2-neighbor_per`, {glue:text}`2-neighbor_con`).
 Does this seem like the right prediction to make for this observation? Probably 
 not, if you consider the other nearby points.
 
@@ -570,8 +570,8 @@ $$\mathrm{Distance} = \sqrt{(a_x -b_x)^2 + (a_y - b_y)^2}$$
 To find the $K$ nearest neighbors to our new observation, we compute the distance
 from that new observation to each observation in our training data, and select the $K$ observations corresponding to the
 $K$ *smallest* distance values. For example, suppose we want to use $K=5$ neighbors to classify a new 
-observation with perimeter of {glue:}`3-new_point_0` and 
-concavity of {glue:}`3-new_point_1`, shown as a red diamond in {numref}`fig:05-multiknn-1`. Let's calculate the distances
+observation with perimeter {glue:text}`3-new_point_0` and 
+concavity {glue:text}`3-new_point_1`, shown as a red diamond in {numref}`fig:05-multiknn-1`. Let's calculate the distances
 between our new point and each of the observations in the training set to find
 the $K=5$ neighbors that are nearest to our new point. 
 You will see in the code below, we compute the straight-line
@@ -611,8 +611,8 @@ perim_concav_with_new_point3 = (
     )
 )
 
-glue("3-new_point_0", new_point[0])
-glue("3-new_point_1", new_point[1])
+glue("3-new_point_0", "{:.1f}".format(new_point[0]))
+glue("3-new_point_1", "{:.1f}".format(new_point[1]))
 glue("fig:05-multiknn-1", perim_concav_with_new_point3)
 ```
 
@@ -1101,8 +1101,8 @@ scaled_cancer
 ```
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue("scaled-cancer-column-0", scaled_cancer.columns[0])
-glue("scaled-cancer-column-1", scaled_cancer.columns[1])
+glue("scaled-cancer-column-0", '"'+scaled_cancer.columns[0]+'"')
+glue("scaled-cancer-column-1", '"'+scaled_cancer.columns[1]+'"')
 ```
 It looks like our `Smoothness` and `Area` variables have been standardized. Woohoo!
 But there are two important things to notice about the new `scaled_cancer` data frame. First, it only keeps
@@ -1112,8 +1112,8 @@ is to *drop* the remaining columns. This default behavior works well with the re
 in {numref}`08:puttingittogetherworkflow`), but for visualizing the result of preprocessing it can be useful to keep the other columns
 in our original data frame, such as the `Class` variable here.
 To keep other columns, we need to set the `remainder` argument to `"passthrough"` in the `make_column_transformer` function.
-Furthermore, you can see that the new column names---{glue:}`scaled-cancer-column-0`
-and {glue:}`scaled-cancer-column-1`---include the name
+Furthermore, you can see that the new column names---{glue:text}`scaled-cancer-column-0`
+and {glue:text}`scaled-cancer-column-1`---include the name
 of the preprocessing step separated by underscores. This default behavior is useful in `sklearn` because we sometimes want to apply
 multiple different preprocessing steps to the same columns; but again, for visualization it can be useful to preserve
 the original column names. To keep original column names, we need to set the `verbose_feature_names_out` argument to `False`.

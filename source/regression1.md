@@ -648,14 +648,14 @@ may fall outside this range).
 
 {numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
 We take the *minimum* RMSPE to find the best setting for the number of neighbors.
-The smallest RMSPE occurs when $K$ is {glue:}`best_k_sacr`.
+The smallest RMSPE occurs when $K$ is {glue:text}`best_k_sacr`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 best_k_sacr = sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()]
 best_cv_RMSPE = min(sacr_results["mean_test_score"])
-glue("best_k_sacr", best_k_sacr)
-glue("cv_RMSPE", "{0:,.0f}".format(int(best_cv_RMSPE)))
+glue("best_k_sacr", "{:d}".format(best_k_sacr))
+glue("cv_RMSPE", "{0:,.0f}".format(best_cv_RMSPE))
 ```
 
 ```{code-cell} ipython3
@@ -699,7 +699,7 @@ to be too small or too large, we cause the RMSPE to increase, as shown in
 
 {numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 regression model. Each plot shows the predicted values for house sale price from
-our KNN regression model for 6 different values for $K$: 1, 3, {glue:}`best_k_sacr`, 41, 250, and 699 (i.e., all of the training data).
+our KNN regression model for 6 different values for $K$: 1, 3, {glue:text}`best_k_sacr`, 41, 250, and 699 (i.e., all of the training data).
 For each model, we predict prices for the range of possible home sizes we
 observed in the data set (here 500 to 5,000 square feet) and we plot the
 predicted prices as a orange line.
@@ -807,7 +807,7 @@ we would like a model that (1) follows the overall "trend" in the training data,
 actually uses the training data to learn something useful, and (2) does not follow
 the noisy fluctuations, so that we can be confident that our model will transfer/generalize
 well to other new data. If we explore
-the other values for $K$, in particular $K$ = {glue:}`best_k_sacr` (as suggested by cross-validation),
+the other values for $K$, in particular $K$ = {glue:text}`best_k_sacr` (as suggested by cross-validation),
 we can see it achieves this goal: it follows the increasing trend of house price
 versus house size, but is not influenced too much by the idiosyncratic variations
 in price. All of this is similar to how
@@ -818,7 +818,7 @@ chapter.
 
 To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we first need to retrain the 
-KNN regression model on the entire training data set using $K =$ {glue:}`best_k_sacr`
+KNN regression model on the entire training data set using $K =$ {glue:text}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
 does it for us automatically. To make predictions with the best model on the test data,
 we can use the `predict` method of the fit `GridSearchCV` object.
@@ -845,7 +845,7 @@ RMSPE
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("test_RMSPE", "{0:,.0f}".format(int(RMSPE)))
+glue("test_RMSPE", "{0:,.0f}".format(RMSPE))
 ```
 
 Our final model's test error as assessed by RMSPE
@@ -1047,17 +1047,17 @@ sacr_results[
 
 best_k_sacr_multi = sacr_results["n_neighbors"][sacr_results["mean_test_score"].idxmin()]
 min_rmspe_sacr_multi = min(sacr_results["mean_test_score"])
-glue("best_k_sacr_multi", best_k_sacr_multi)
-glue("cv_RMSPE_2pred", "{0:,.0f}".format(int(min_rmspe_sacr_multi)))
+glue("best_k_sacr_multi", "{:d}".format(best_k_sacr_multi))
+glue("cv_RMSPE_2pred", "{0:,.0f}".format(min_rmspe_sacr_multi))
 ```
 
-Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:}`best_k_sacr_multi`.
+Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:text}`best_k_sacr_multi`.
 If we want to compare this multivariable KNN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
 then we must compare the accuracy estimated using only the training data via cross-validation.
 Looking back, the estimated cross-validation accuracy for the single-predictor
-model was {glue:}`cv_RMSPE`.
+model was {glue:text}`cv_RMSPE`.
 The estimated cross-validation accuracy for the multivariable model is
 {glue:text}`cv_RMSPE_2pred`.
 Thus in this case, we did not improve the model

@@ -324,13 +324,13 @@ clus_rows = clus.shape[0]
 mean_flipper_len_std = round(np.mean(clus["flipper_length_standardized"]),2)
 mean_bill_len_std = round(np.mean(clus["bill_length_standardized"]),2)
 
-glue("clus_rows_glue", clus_rows)
-glue("mean_flipper_len_std_glue",mean_flipper_len_std)
-glue("mean_bill_len_std_glue", mean_bill_len_std)
+glue("clus_rows_glue", "{:d}".format(clus_rows))
+glue("mean_flipper_len_std_glue","{:.2f}".format(mean_flipper_len_std))
+glue("mean_bill_len_std_glue", "{:.2f}".format(mean_bill_len_std))
 ```
 
-In the first cluster from the example, there are {glue:}`clus_rows_glue` data points. These are shown with their cluster center
-(flipper_length_standardized = {glue:}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:}`mean_bill_len_std_glue`) highlighted
+In the first cluster from the example, there are {glue:text}`clus_rows_glue` data points. These are shown with their cluster center
+(flipper_length_standardized = {glue:text}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:text}`mean_bill_len_std_glue`) highlighted
 in {numref}`toy-example-clus1-center-1`.
 
 
@@ -350,7 +350,7 @@ between each point in the cluster
 and the cluster center.
 We use the straight-line / Euclidean distance formula
 that we learned about in {numref}`Chapter %s <classification1>`.
-In the {glue:}`clus_rows_glue`-observation cluster example above,
+In the {glue:text}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 
 

@@ -178,12 +178,12 @@ airbnb["room_type"].value_counts(normalize=True)
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_proportion", airbnb["room_type"].value_counts(normalize=True)["Entire home/apt"].round(3))
+glue("population_proportion", "{:.3f}".format(airbnb["room_type"].value_counts(normalize=True)["Entire home/apt"]))
 ```
 
 We can see that the proportion of `Entire home/apt` listings in
-the data set is {glue:}`population_proportion`. This
-value, {glue:}`population_proportion`, is the population parameter. Remember, this
+the data set is {glue:text}`population_proportion`. This
+value, {glue:text}`population_proportion`, is the population parameter. Remember, this
 parameter value is usually unknown in real data analysis problems, as it is
 typically not possible to make measurements for an entire population.
 
@@ -210,11 +210,11 @@ airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)["room_type"].value_counts(normalize=True)["Entire home/apt"].round(3))
+glue("sample_1_proportion", "{:.3f}".format(airbnb.sample(n=40, random_state=155)["room_type"].value_counts(normalize=True)["Entire home/apt"]))
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
-random sample is {glue:}`sample_1_proportion`. Wow&mdash;that's close to our
+random sample is {glue:text}`sample_1_proportion`. Wow&mdash;that's close to our
 true population value! But remember, we computed the proportion using a random sample of size 40.
 This has two consequences. First, this value is only an *estimate*, i.e., our best guess
 of our population parameter using this sample.
@@ -369,9 +369,9 @@ Sampling distribution of the sample proportion for sample size 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 2))
-glue("sample_proportion_min", round(sample_estimates["sample_proportion"].quantile(0.004), 2))
-glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quantile(0.9997), 2))
+glue("sample_proportion_center", "{:.2f}".format(sample_estimates["sample_proportion"].mean()))
+glue("sample_proportion_min", "{:.2f}".format(sample_estimates["sample_proportion"].quantile(0.004)))
+glue("sample_proportion_max", "{:.2f}".format(sample_estimates["sample_proportion"].quantile(0.9997)))
 ```
 
 ```{index} sampling distribution; shape
@@ -379,9 +379,9 @@ glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quanti
 
 The sampling distribution in {numref}`fig:11-example-proportions7` appears
 to be bell-shaped, is roughly symmetric, and has one peak. It is centered
-around {glue:}`sample_proportion_center` and the sample proportions
-range from about {glue:}`sample_proportion_min` to about
-{glue:}`sample_proportion_max`. In fact, we can
+around {glue:text}`sample_proportion_center` and the sample proportions
+range from about {glue:text}`sample_proportion_min` to about
+{glue:text}`sample_proportion_max`. In fact, we can
 calculate the mean of the sample proportions.
 
 ```{code-cell} ipython3
@@ -391,11 +391,11 @@ sample_estimates["sample_proportion"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_proportion_mean", round(sample_estimates["sample_proportion"].mean(), 3))
+glue("sample_proportion_mean", "{:.3f}".format(sample_estimates["sample_proportion"].mean()))
 ```
 
 We notice that the sample proportions are centered around the population
-proportion value, {glue:}`sample_proportion_mean`! In general, the mean of
+proportion value, {glue:text}`sample_proportion_mean`! In general, the mean of
 the sampling distribution should be equal to the population proportion.
 This is great news because it means that the sample proportion is neither an overestimate nor an
 underestimate of the population proportion.
@@ -463,14 +463,14 @@ airbnb["price"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_mean", airbnb["price"].mean().round(2))
+glue("population_mean", "{:.2f}".format(airbnb["price"].mean()))
 ```
 
 ```{index} population; parameter
 ```
 
 The price per night of all Airbnb rentals in Vancouver, BC
-is \${glue:}`population_mean`, on average. This value is our
+is \${glue:text}`population_mean`, on average. This value is our
 population parameter since we are calculating it using the population data.
 
 ```{index} pandas.DataFrame; sample
@@ -524,17 +524,17 @@ one_sample["price"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("estimate_mean", one_sample["price"].mean().round(2))
-glue("diff_perc", round(100 * abs(1 - (one_sample["price"].mean() / airbnb["price"].mean())), 1))
+glue("estimate_mean", "{:.2f}".format(one_sample["price"].mean()))
+glue("diff_perc", "{:.1f}".format(100 * abs(1 - (one_sample["price"].mean() / airbnb["price"].mean()))))
 ```
 
 The average value of the sample of size 40
-is \${glue:}`estimate_mean`.  This
+is \${glue:text}`estimate_mean`.  This
 number is a point estimate for the mean of the full population.
 Recall that the population mean was
-\${glue:}`population_mean`. So our estimate was fairly close to
+\${glue:text}`population_mean`. So our estimate was fairly close to
 the population parameter: the mean was about
-{glue:}`diff_perc`%
+{glue:text}`diff_perc`%
 off.  Note that we usually cannot compute the estimate's accuracy in practice
 since we do not have access to the population parameter; if we did, we wouldn't
 need to estimate it!
@@ -594,8 +594,8 @@ Sampling distribution of the sample means for sample size of 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("quantile_1", round(int(sample_estimates["mean_price"].quantile(0.25)), - 1))
-glue("quantile_3", round(int(sample_estimates["mean_price"].quantile(0.75)), - 1))
+glue("quantile_1", "{:0.0f}".format(round(sample_estimates["mean_price"].quantile(0.25), -1)))
+glue("quantile_3", "{:0.0f}".format(round(sample_estimates["mean_price"].quantile(0.75), -1)))
 ```
 
 ```{index} sampling distribution; shape
@@ -603,12 +603,12 @@ glue("quantile_3", round(int(sample_estimates["mean_price"].quantile(0.75)), - 1
 
 In {numref}`fig:11-example-means4`, the sampling distribution of the mean
 has one peak and is bell-shaped. Most of the estimates are between
-about  \${glue:}`quantile_1` and
-\${glue:}`quantile_3`; but there are
+about  \${glue:text}`quantile_1` and
+\${glue:text}`quantile_3`; but there are
 a good fraction of cases outside this range (i.e., where the point estimate was
 not close to the population parameter). So it does indeed look like we were
 quite lucky when we estimated the population mean with only
-{glue:}`diff_perc`% error.
+{glue:text}`diff_perc`% error.
 
 ```{index} sampling distribution; compared to population distribution
 ```
@@ -944,7 +944,7 @@ and use a bootstrap distribution using just a single sample from the population.
 Once again, suppose we are
 interested in estimating the population mean price per night of all Airbnb
 listings in Vancouver, Canada, using a single sample size of 40.
-Recall our point estimate was \${glue:}`estimate_mean`. The
+Recall our point estimate was \${glue:text}`estimate_mean`. The
 histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
 
 ```{code-cell} ipython3
@@ -974,7 +974,7 @@ Histogram of price per night (dollars) for one sample of size 40.
 +++
 
 The histogram for the sample is skewed, with a few observations out to the right. The
-mean of the sample is \${glue:}`estimate_mean`.
+mean of the sample is \${glue:text}`estimate_mean`.
 Remember, in practice, we usually only have this one sample from the population. So
 this sample and estimate are the only data we can work with.
 
@@ -1171,7 +1171,7 @@ Comparison of the distribution of the bootstrap sample means and sampling distri
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("one_sample_mean", round(one_sample["price"].mean(), 2))
+glue("one_sample_mean", "{:.2f}".format(one_sample["price"].mean()))
 ```
 
 ```{index} sampling distribution; compared to bootstrap distribution
@@ -1183,9 +1183,9 @@ distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
 second important point is that the means of these two distributions are
 slightly different. The sampling distribution is centered at
-\${glue:}`population_mean`, the population mean value. However, the bootstrap
+\${glue:text}`population_mean`, the population mean value. However, the bootstrap
 distribution is centered at the original sample's mean price per night,
-\${glue:}`one_sample_mean`. Because we are resampling from the
+\${glue:text}`one_sample_mean`. Because we are resampling from the
 original sample repeatedly, we see that the bootstrap distribution is centered
 at the original sample's mean value (unlike the sampling distribution of the
 sample mean, which is centered at the population parameter value).
@@ -1257,11 +1257,11 @@ ci_bounds
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", round(ci_bounds[0.025], 1))
-glue("ci_upper", round(ci_bounds[0.975], 1))
+glue("ci_lower", "{:.1f}".format(ci_bounds[0.025]))
+glue("ci_upper", "{:.1f}".format(ci_bounds[0.975]))
 ```
 
-Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
+Our interval, \${glue:text}`ci_lower` to \${glue:text}`ci_upper`, captures
 the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
@@ -1304,11 +1304,11 @@ Distribution of the bootstrap sample means with percentile lower and upper bound
 To finish our estimation of the population parameter, we would report the point
 estimate and our confidence interval's lower and upper bounds. Here the sample
 mean price-per-night of 40 Airbnb listings was
-\${glue:}`one_sample_mean`, and we are 95\% "confident" that the true
+\${glue:text}`one_sample_mean`, and we are 95\% "confident" that the true
 population mean price-per-night for all Airbnb listings in Vancouver is between
-\$({glue:}`ci_lower`, {glue:}`ci_upper`).
+\$({glue:text}`ci_lower`, {glue:text}`ci_upper`).
 Notice that our interval does indeed contain the true
-population mean value, \${glue:}`population_mean`\! However, in
+population mean value, \${glue:text}`population_mean`\! However, in
 practice, we would not know whether our interval captured the population
 parameter or not because we usually only have a single sample, not the entire
 population. This is the best we can do when we only have one sample!

@@ -511,15 +511,15 @@ cancer_test.info()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_train_nrow", len(cancer_train))
-glue("cancer_test_nrow", len(cancer_test))
+glue("cancer_train_nrow", "{:d}".format(len(cancer_train)))
+glue("cancer_test_nrow", "{:d}".format(len(cancer_test)))
 ```
 
 ```{index} info
 ```
 
-We can see from the `info` method above that the training set contains {glue:}`cancer_train_nrow` observations, 
-while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
+We can see from the `info` method above that the training set contains {glue:text}`cancer_train_nrow` observations, 
+while the test set contains {glue:text}`cancer_test_nrow` observations. This corresponds to
 a train / test split of 75% / 25%, as desired. Recall from {numref}`Chapter %s <classification1>`
 that we use the `info` method to preview the number of rows, the variable names, their data types, and 
 missing entries of a data frame.
@@ -529,8 +529,8 @@ missing entries of a data frame.
 
 We can use the `value_counts` method with the `normalize` argument set to `True` 
 to find the percentage of malignant and benign classes 
-in `cancer_train`. We see about {glue:}`cancer_train_b_prop`% of the training
-data are benign and {glue:}`cancer_train_m_prop`% 
+in `cancer_train`. We see about {glue:text}`cancer_train_b_prop`% of the training
+data are benign and {glue:text}`cancer_train_m_prop`% 
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
 
 ```{code-cell} ipython3
@@ -540,8 +540,8 @@ cancer_train["Class"].value_counts(normalize=True)
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_train_b_prop", round(cancer_train["Class"].value_counts(normalize = True)["Benign"]*100))
-glue("cancer_train_m_prop", round(cancer_train["Class"].value_counts(normalize = True)["Malignant"]*100))
+glue("cancer_train_b_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize = True)["Benign"]*100))
+glue("cancer_train_m_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize = True)["Malignant"]*100))
 ```
 
 ### Preprocess the data
@@ -655,13 +655,13 @@ cancer_acc_1
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_acc_1", round(100*cancer_acc_1))
+glue("cancer_acc_1", "{:0.0f}".format(100*cancer_acc_1))
 ```
 
 +++
 
 The output shows that the estimated accuracy of the classifier on the test data 
-was {glue:}`cancer_acc_1`%.
+was {glue:text}`cancer_acc_1`%.
 We can also look at the *confusion matrix* for the classifier 
 using the `crosstab` function from `pandas`. A confusion matrix shows how many 
 observations of each (true) label were classified as each (predicted) label.
@@ -686,25 +686,25 @@ c00 = _ctab["Benign"]["Benign"]
 c10 = _ctab["Benign"]["Malignant"] # classify benign, true malignant 
 c01 = _ctab["Malignant"]["Benign"] # classify malignant, true benign
 
-glue("confu11", c11)
-glue("confu00", c00)
-glue("confu10", c10)
-glue("confu01", c01)
-glue("confu11_00", c11 + c00)
-glue("confu10_11", c10 + c11)
-glue("confu_fal_neg", round(100 * c10 / (c10 + c11)))
-glue("confu_accuracy", np.round(100*(c00+c11)/(c00+c11+c01+c10),2))
-glue("confu_precision", np.round(100*c11/(c11+c01), 2))
-glue("confu_recall", np.round(100*c11/(c11+c10),2))
-glue("confu_precision_0", round(100*c11/(c11+c01)))
-glue("confu_recall_0", round(100*c11/(c11+c10)))
+glue("confu11", "{:d}".format(c11))
+glue("confu00", "{:d}".format(c00))
+glue("confu10", "{:d}".format(c10))
+glue("confu01", "{:d}".format(c01))
+glue("confu11_00", "{:d}".format(c11 + c00))
+glue("confu10_11", "{:d}".format(c10 + c11))
+glue("confu_fal_neg", "{:0.0f}".format(100 * c10 / (c10 + c11)))
+glue("confu_accuracy", "{:.2f}".format(100*(c00+c11)/(c00+c11+c01+c10)))
+glue("confu_precision", "{:.2f}".format(100*c11/(c11+c01)))
+glue("confu_recall", "{:.2f}".format(100*c11/(c11+c10)))
+glue("confu_precision_0", "{:0.0f}".format(100*c11/(c11+c01)))
+glue("confu_recall_0", "{:0.0f}".format(100*c11/(c11+c10)))
 ```
 
-The confusion matrix shows {glue:}`confu11` observations were correctly predicted 
-as malignant, and {glue:}`confu00` were correctly predicted as benign. 
+The confusion matrix shows {glue:text}`confu11` observations were correctly predicted 
+as malignant, and {glue:text}`confu00` were correctly predicted as benign. 
 It also shows that the classifier made some mistakes; in particular,
-it classified {glue:}`confu10` observations as benign when they were truly malignant,
-and {glue:}`confu01` observations as malignant when they were truly benign.
+it classified {glue:text}`confu10` observations as benign when they were truly malignant,
+and {glue:text}`confu01` observations as malignant when they were truly benign.
 Using our formulas from earlier, we see that the accuracy agrees with what Python reported,
 and can also compute the precision and recall of the classifier:
 
@@ -742,9 +742,9 @@ glue("rec_eq_math_glued", rec_eq_math)
 
 ### Critically analyze performance
 
-We now know that the classifier was {glue:}`cancer_acc_1`% accurate
-on the test data set, and had a precision of {glue:}`confu_precision_0`% and 
-a recall of {glue:}`confu_recall_0`%. 
+We now know that the classifier was {glue:text}`cancer_acc_1`% accurate
+on the test data set, and had a precision of {glue:text}`confu_precision_0`% and 
+a recall of {glue:text}`confu_recall_0`%. 
 That sounds pretty good! Wait, *is* it good? 
 Or do we need something higher?
 
@@ -795,16 +795,16 @@ the majority classifier would *always* predict that a new observation
 is benign. The estimated accuracy of the majority classifier is usually
 fairly close to the majority class proportion in the training data.
 In this case, we would suspect that the majority classifier will have 
-an accuracy of around {glue:}`cancer_train_b_prop`%.
+an accuracy of around {glue:text}`cancer_train_b_prop`%.
 The $K$-nearest neighbors classifier we built does quite a bit better than this, 
-with an accuracy of {glue:}`cancer_acc_1`%. 
+with an accuracy of {glue:text}`cancer_acc_1`%. 
 This means that from the perspective of accuracy,
 the $K$-nearest neighbors classifier improved quite a bit on the basic
 majority classifier. Hooray! But we still need to be cautious; in 
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
 that the classifier does, indeed, misdiagnose a significant number of 
-malignant tumors as benign ({glue:}`confu10` out of {glue:}`confu10_11` malignant tumors, or {glue:}`confu_fal_neg`%!).
+malignant tumors as benign ({glue:text}`confu10` out of {glue:text}`confu10_11` malignant tumors, or {glue:text}`confu_fal_neg`%!).
 Therefore, even though the accuracy improved upon the majority classifier,
 our critical analysis suggests that this classifier may not have appropriate performance
 for the application.
@@ -921,25 +921,23 @@ accuracies = list(np.round(np.array(accuracies)*100, 1))
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-glue(f"acc_seed1", np.round(100 * acc,1))
-glue("avg_5_splits", avg_accuracy)
-glue("accuracies", accuracies)
+glue("acc_seed1", "{:0.1f}".format(100 * acc))
+glue("avg_5_splits", "{:0.1f}".format(avg_accuracy))
+glue("accuracies", "[" + "%, ".join(["{:0.1f}".format(acc) for acc in accuracies]) + "%]")
 ```
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 ```
 
-
-
-The accuracy estimate using this split is {glue:}`acc_seed1`%.
+The accuracy estimate using this split is {glue:text}`acc_seed1`%.
 Now we repeat the above code 4 more times, which generates 4 more splits.
 Therefore we get five different shuffles of the data, and therefore five different values for
-accuracy: {glue:}`accuracies` (each a percentage). None of these values are
+accuracy: {glue:text}`accuracies`. None of these values are
 necessarily "more correct" than any other; they're
 just five estimates of the true, underlying accuracy of our classifier built
 using our overall training data. We can combine the estimates by taking their
-average (here {glue:}`avg_5_splits`%) to try to get a single assessment of our
+average (here {glue:text}`avg_5_splits`%) to try to get a single assessment of our
 classifier's accuracy; this has the effect of reducing the influence of any one
 (un)lucky validation set on the estimate. 
 
@@ -1007,9 +1005,9 @@ We can then aggregate the *mean* and *standard error*
 of the classifier's validation accuracy across the folds. 
 You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
 error (`sem`) is a measure of how uncertain we are in that mean value. A detailed treatment of this
-is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:}`cv_5_mean` and standard
-error is {glue:}`cv_5_std`, you can expect the *true* average accuracy of the 
-classifier to be somewhere roughly between {glue:}`cv_5_lower`% and {glue:}`cv_5_upper`% (although it may
+is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:text}`cv_5_mean` and standard
+error is {glue:text}`cv_5_std`, you can expect the *true* average accuracy of the 
+classifier to be somewhere roughly between {glue:text}`cv_5_lower`% and {glue:text}`cv_5_upper`% (although it may
 fall outside this range). You may ignore the other columns in the metrics data frame.
 
 ```{code-cell} ipython3
@@ -1020,27 +1018,25 @@ cv_5_metrics
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cv_5_mean", round(cv_5_metrics.loc["mean", "test_score"], 2))
-glue("cv_5_std", round(cv_5_metrics.loc["sem", "test_score"], 2))
-glue(
-    "cv_5_upper",
-    round(
+glue("cv_5_mean", "{:.2f}".format(cv_5_metrics.loc["mean", "test_score"]))
+glue("cv_5_std", "{:.2f}".format(cv_5_metrics.loc["sem", "test_score"]))
+glue("cv_5_upper",
+    "{:0.0f}".format(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
             + round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
-    ),
+    )
 )
-glue(
-    "cv_5_lower",
-    round(
+glue("cv_5_lower",
+    "{:0.0f}".format(
         100
         * (
             round(cv_5_metrics.loc["mean", "test_score"], 2)
             - round(cv_5_metrics.loc["sem", "test_score"], 2)
         )
-    ),
+    )
 )
 ```
 
@@ -1093,19 +1089,19 @@ cv_50_metrics
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cv_10_mean", round(100 * cv_10_metrics.loc["mean", "test_score"]))
+glue("cv_10_mean", "{:0.0f}".format(100 * cv_10_metrics.loc["mean", "test_score"]))
 ```
 
 ### Parameter value selection
 
 Using 5- and 10-fold cross-validation, we have estimated that the prediction
-accuracy of our classifier is somewhere around {glue:}`cv_10_mean`%. 
+accuracy of our classifier is somewhere around {glue:text}`cv_10_mean`%. 
 Whether that is good or not
 depends entirely on the downstream application of the data analysis. In the
 present situation, we are trying to predict a tumor diagnosis, with expensive,
 damaging chemo/radiation therapy or patient death as potential consequences of
 misprediction. Hence, we might like to 
-do better than {glue:}`cv_10_mean`% for this application.  
+do better than {glue:text}`cv_10_mean`% for this application.  
 
 In order to improve our classifier, we have one choice of parameter: the number of
 neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
@@ -1248,8 +1244,8 @@ accuracy_vs_k
 :tags: [remove-cell]
 
 glue("fig:06-find-k", accuracy_vs_k)
-glue("best_k_unique", accuracies_grid["n_neighbors"][accuracies_grid["mean_test_score"].idxmax()])
-glue("best_acc", np.round(accuracies_grid["mean_test_score"].max()*100,1))
+glue("best_k_unique", "{:d}".format(accuracies_grid["n_neighbors"][accuracies_grid["mean_test_score"].idxmax()]))
+glue("best_acc", "{:.1f}".format(accuracies_grid["mean_test_score"].max()*100))
 ```
 
 :::{glue:figure} fig:06-find-k
@@ -1261,13 +1257,13 @@ Plot of estimated accuracy versus the number of neighbors.
 +++
 
 Setting the number of 
-neighbors to $K =$ {glue:}`best_k_unique`
-provides the highest accuracy ({glue:}`best_acc`%). But there is no exact or perfect answer here;
+neighbors to $K =$ {glue:text}`best_k_unique`
+provides the highest accuracy ({glue:text}`best_acc`%). But there is no exact or perfect answer here;
 any selection from $K = 30$ to $80$ or so would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
 classifier. Although the 
-$K =$ {glue:}`best_k_unique` value is 
+$K =$ {glue:text}`best_k_unique` value is 
 higher than the others on this plot,
 that doesn't mean the classifier is actually more accurate with this parameter
 value! Generally, when selecting $K$ (and other parameters for other predictive
@@ -1277,12 +1273,12 @@ models), we are looking for a value where:
 - changing the value to a nearby one (e.g., adding or subtracting a small number) doesn't decrease accuracy too much, so that our choice is reliable in the presence of uncertainty;
 - the cost of training the model is not prohibitive (e.g., in our situation, if $K$ is too large, predicting becomes expensive!).
 
-We know that $K =$ {glue:}`best_k_unique` 
+We know that $K =$ {glue:text}`best_k_unique` 
 provides the highest estimated accuracy. Further, {numref}`fig:06-find-k` shows that the estimated accuracy 
-changes by only a small amount if we increase or decrease $K$ near $K =$ {glue:}`best_k_unique`.
-And finally, $K =$ {glue:}`best_k_unique` does not create a prohibitively expensive
+changes by only a small amount if we increase or decrease $K$ near $K =$ {glue:text}`best_k_unique`.
+And finally, $K =$ {glue:text}`best_k_unique` does not create a prohibitively expensive
 computational cost of training. Considering these three points, we would indeed select
-$K =$ {glue:}`best_k_unique` for the classifier.
+$K =$ {glue:text}`best_k_unique` for the classifier.
 
 +++
 
@@ -1700,12 +1696,12 @@ Effect of inclusion of irrelevant predictors.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_propn_1", round(cancer_proportions.loc["Benign", "percent"]))
+glue("cancer_propn_1", "{:0.0f}".format(cancer_proportions.loc["Benign", "percent"]))
 ```
 
 Although the accuracy decreases as expected, one surprising thing about 
 {numref}`fig:06-performance-irrelevant-features` is that it shows that the method
-still outperforms the baseline majority classifier (with about {glue:}`cancer_propn_1`% accuracy) 
+still outperforms the baseline majority classifier (with about {glue:text}`cancer_propn_1`% accuracy) 
 even with 40 irrelevant variables.
 How could that be? {numref}`fig:06-neighbors-irrelevant-features` provides the answer:
 the tuning procedure for the $K$-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
@@ -1937,11 +1933,11 @@ cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_selec
 
 glue(
     "sequentialfeatureselector_n_features",
-    cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_,
+    "{:d}".format(cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_),
 )
 ```
 
-This means that {glue:}`sequentialfeatureselector_n_features` features were selected according to the forward selection algorithm.
+This means that {glue:text}`sequentialfeatureselector_n_features` features were selected according to the forward selection algorithm.
 
 +++
 

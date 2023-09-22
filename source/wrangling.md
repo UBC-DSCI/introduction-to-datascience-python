@@ -62,7 +62,7 @@ By the end of the chapter, readers will be able to do the following:
 
 ## Data frames and series
 
-In the chapters on {ref}`intro` and {ref}`reading`, *data frames* were the focus:
+In {numref}`Chapters %s <intro>` and {numref}`%s <reading>`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require
 that data are represented as a `pandas` **data frame** in Python. Therefore, in this section,
@@ -528,7 +528,7 @@ lang_mother_tidy
 ```{note}
 In the code above, the call to the
 `melt` function is split across several lines. Recall from
-the {ref}`intro` chapter that this is allowed in
+{numref}`Chapter %s <intro>` that this is allowed in
 certain cases. For example, when calling a function as above, the input
 arguments are between parentheses `()` and Python knows to keep reading on
 the next line. Each line ends with a comma `,` making it easier to read.
@@ -819,7 +819,7 @@ tidy_lang.info()
 ```
 
 Object columns in `pandas` data frames are columns of strings or columns with
-mixed types. In the previous example in the section on {ref}`pivot-wider`, the
+mixed types. In the previous example in {numref}`pivot-wider`, the
 `most_at_home` and `most_at_work` variables were `int64` (integer), which is a type of numeric data.
 This change is due to the delimiter (`/`) when we read in this messy data set.
 Python read these columns in as string types, and by default, `str.split` will
@@ -853,7 +853,7 @@ indicating they are integer data types (i.e., numbers)!
 
 Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
 using the powerful suite of functions from the `pandas`.
-We will first revisit the `[]` from the chapter on {ref}`intro`,
+We will first revisit the `[]` from {numref}`Chapter %s <intro>`,
 which lets us obtain a subset of either the rows **or** the columns of a data frame.
 This section will highlight more advanced usage of the `[]` function,
 including an in-depth treatment of the variety of logical statements
@@ -866,7 +866,7 @@ one can use in the `[]` to select subsets of rows.
 Recall that if we provide a list of column names, `[]` returns the subset of columns with those names as a data frame.
 Suppose we wanted to select the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in the chapter on {ref}`intro`, we can pass all of these column 
+learned in {numref}`Chapter %s <intro>`, we can pass all of these column 
 names into the square brackets.
 
 ```{code-cell} ipython3
@@ -1025,7 +1025,7 @@ glue("census_popn", "{0:,.0f}".format(35151728))
 glue("most_french", "{0:,.0f}".format(2669195))
 ```
 
-We saw in the section on {ref}`filter-and` that
+We saw in {numref}`filter-and` that
 {glue:text}`most_french` people reported
 speaking French in Montréal as their primary language at home.
 If we are interested in finding the official languages in regions
@@ -1068,7 +1068,7 @@ to make long chains of filtering operations a bit easier to read.
 
 The `[]` operation is only used when you want to either filter rows **or** select columns;
 it cannot be used to do both operations at the same time. This is where `loc[]`
-comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
+comes in. For the first example, recall `loc[]` from {numref}`Chapter %s <intro>`,
 which lets us create a subset of the rows and columns in the `tidy_lang` data frame.
 In the first argument to `loc[]`, we specify a logical statement that 
 filters the rows to only those pertaining to the Toronto region, 
@@ -1408,7 +1408,7 @@ region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 
 The resulting dataframe has `region` as an index name.
 This is similar to what happened when we used the `pivot` function
-in the section on {ref}`pivot-wider`;
+in {numref}`pivot-wider`;
 and just as we did then,
 you can use `reset_index` to get back to a regular dataframe
 with `region` as a column name.
@@ -1750,7 +1750,7 @@ english_lang.assign(
 ### Using `assign` to modify columns
 
 
-In the section on {ref}`str-split`,
+In {numref}`str-split`,
 when we first read in the `"region_lang_top5_cities_messy.csv"` data,
 all of the variables were "object" data types.
 During the tidying process,
@@ -1890,7 +1890,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the chapter on {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++ {"tags": []}

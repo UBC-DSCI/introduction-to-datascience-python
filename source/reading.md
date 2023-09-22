@@ -341,8 +341,8 @@ canlang_data = pd.read_csv("data/can_lang.tsv", sep="\t")
 canlang_data
 ```
 
-If you compare the data frame here to the data frame we obtained in Section
-{ref}`readcsv` using `read_csv`, you'll notice that they look identical: they have
+If you compare the data frame here to the data frame we obtained in
+{numref}`readcsv` using `read_csv`, you'll notice that they look identical: they have
 the same number of columns and rows, the same column names, and the same entries!
 So even though we needed to use different
 arguments depending on the file format, our resulting data frame
@@ -1343,7 +1343,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 % population (like a spreadsheet).
 % Additionally, the populations contain commas (not useful for programmatically
 % dealing with numbers), and some even contain a line break character at the end
-% (`\n`). In Chapter {ref}`wrangling`, we will learn more about how to *wrangle* data
+% (`\n`). In {numref}`Chapter %s <wrangling>`, we will learn more about how to *wrangle* data
 % such as this into a more useful format for data analysis using Python.
 %
 % +++
@@ -1560,7 +1560,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources

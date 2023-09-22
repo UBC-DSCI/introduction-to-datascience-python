@@ -399,8 +399,8 @@ pd.DataFrame({"slope": [lm.coef_[0]], "intercept": [lm.intercept_]})
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("train_lm_slope", round(lm.coef_[0]))
-glue("train_lm_intercept", round(lm.intercept_))
+glue("train_lm_slope", "{:0.0f}".format(lm.coef_[0]))
+glue("train_lm_intercept", "{:0.0f}".format(lm.intercept_))
 glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0]))
 glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```
@@ -422,11 +422,11 @@ the best fit coefficients are usually easier to interpret afterward.
 +++
 
 Our coefficients are
-(intercept) $\beta_0=$ {glue:}`train_lm_intercept`
-and (slope) $\beta_1=$ {glue:}`train_lm_slope`.
+(intercept) $\beta_0=$ {glue:text}`train_lm_intercept`
+and (slope) $\beta_1=$ {glue:text}`train_lm_slope`.
 This means that the equation of the line of best fit is
 
-$\text{house sale price} =$ {glue:}`train_lm_intercept` $+$ {glue:}`train_lm_slope` $\cdot (\text{house size}).$
+$\text{house sale price} =$ {glue:text}`train_lm_intercept` $+$ {glue:text}`train_lm_slope` $\cdot (\text{house size}).$
 
 In other words, the model predicts that houses
 start at \${glue:text}`train_lm_intercept_f` for 0 square feet, and that

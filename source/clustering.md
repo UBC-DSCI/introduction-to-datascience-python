@@ -145,7 +145,7 @@ To learn about K-means clustering
 we will work with `penguin_data` in this chapter.
 `penguin_data` is a subset of 18 observations of the original data,
 which has already been standardized
-(remember from Chapter {ref}`classification1`
+(remember from {numref}`Chapter %s <classification1>`
 that scaling is part of the standardization process).
 We will discuss scaling for K-means in more detail later in this chapter.
 
@@ -331,7 +331,7 @@ glue("mean_bill_len_std_glue", mean_bill_len_std)
 
 In the first cluster from the example, there are {glue:}`clus_rows_glue` data points. These are shown with their cluster center
 (flipper_length_standardized = {glue:}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:}`mean_bill_len_std_glue`) highlighted
-in {numref}`toy-example-clus1-center-1`
+in {numref}`toy-example-clus1-center-1`.
 
 
 ```{figure} img/clustering/toy-example-clus1-center-1.png
@@ -349,7 +349,7 @@ The second step in computing the WSSD is to add up the squared distance
 between each point in the cluster
 and the cluster center.
 We use the straight-line / Euclidean distance formula
-that we learned about in Chapter {ref}`classification1`.
+that we learned about in {numref}`Chapter %s <classification1>`.
 In the {glue:}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 
@@ -374,7 +374,7 @@ we sum them together to get the *total WSSD*.
 For our example,
 this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
-{numref}`toy-example-all-clus-dists-1`
+{numref}`toy-example-all-clus-dists-1`.
 
 ```{figure} img/clustering/toy-example-all-clus-dists-1.png
 ---
@@ -394,7 +394,7 @@ All clusters from the penguin_data data set example. Observations are in orange,
 We begin the K-means algorithm by picking K,
 and randomly assigning a roughly equal number of observations
 to each of the K clusters.
-An example random initialization is shown in {numref}`toy-kmeans-init-1`
+An example random initialization is shown in {numref}`toy-kmeans-init-1`.
 
 
 
@@ -418,7 +418,7 @@ sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 
 These two steps are repeated until the cluster assignments no longer change.
 We show what the first four iterations of K-means would look like in
-{numref}`toy-kmeans-iter-1`
+{numref}`toy-kmeans-iter-1`.
 There each row corresponds to an iteration,
 where the left column depicts the center update,
 and the right column depicts the reassignment of data to clusters.
@@ -474,7 +474,7 @@ name: toy-kmeans-bad-init-1
 Random initialization of labels.
 ```
 
-{numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
+{numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`.
 
 
 
@@ -521,7 +521,7 @@ total WSSD, since the cluster center (denoted by an "x") is not close to any of 
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
-the right number of clusters ({numref}`toy-kmeans-elbow-1`)).
+the right number of clusters ({numref}`toy-kmeans-elbow-1`).
 
 ```{figure} img/clustering/toy-kmeans-elbow-1.png
 ---
@@ -630,7 +630,7 @@ visualize them as shown in {numref}`cluster_plot`.
 Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
 visualize the *standardized* data, we would need to use the `fit` and `transform` functions
 on the `StandardScaler` preprocessor directly to obtain that first.
-As in Chapter {ref}`viz`,
+As in {numref}`Chapter %s <viz>`,
 adding the `:N` suffix ensures that `altair`
 will treat the `cluster` variable as a nominal/categorical variable, and
 hence use a discrete color map for the visualization.
@@ -791,7 +791,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources

@@ -71,7 +71,7 @@ if you aren't standing at the poster explaining things, an effective
 visualization will convey your message to the audience.
 
 Recall the different data analysis questions
-from the {ref}`intro` chapter.
+from {numref}`Chapter %s <intro>`.
 With the visualizations we will cover in this chapter,
 we will be able to answer *only descriptive and exploratory* questions.
 Be careful to not answer any *predictive, inferential, causal*
@@ -586,7 +586,7 @@ Scatter plot of waiting time and eruption time with black points.
 ```{index} Canadian languages
 ```
 
-Recall the `can_lang` data set {cite:p}`timbers2020canlang` from the {ref}`intro`, {ref}`reading`, and {ref}`wrangling` chapters.
+Recall the `can_lang` data set {cite:p}`timbers2020canlang` from {numref}`Chapters %s <intro>`, {numref}`%s <reading>`, and {numref}`%s <wrangling>`.
 It contains counts of languages from the 2016
 Canadian census.
 
@@ -819,7 +819,7 @@ glue("result", result)
 
 ```
 
-Similar to some of the examples in the chapter on {ref}`wrangling`,
+Similar to some of the examples in {numref}`Chapter %s <wrangling>`,
 we can convert the counts to percentages to give them context
 and make them easier to understand.
 We can do this by dividing the number of people reporting a given language
@@ -1207,7 +1207,7 @@ we'll swap the `x` and `y` variables,
 so that the labels are on the y-axis and we don't have to tilt our head to read them.
 
 ```{note}
-Recall that in the {ref}`intro` chapter, we used `sort_values` followed by `head` to obtain
+Recall that in {numref}`Chapter %s <intro>`, we used `sort_values` followed by `head` to obtain
 the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
 from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
 as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
@@ -1508,7 +1508,7 @@ Histogram of Michelson's speed of light data colored by experiment.
 
 Alright great, {numref}`morley_hist_colored` looks... wait a second! We are not able to easily distinguish
 between the colors of the different Experiments in the histogram! What is going on here? Well, if you
-recall from the {ref}`wrangling` chapter, the *data type* you use for each variable
+recall from {numref}`Chapter %s <wrangling>`, the *data type* you use for each variable
 can influence how Python and `altair` treats it. Here, we indeed have an issue
 with the data types in the `morley` data frame. In particular, the `Expt` column
 is currently an *integer*---specifically, an `int64` type. But we want to treat it as a
@@ -2020,7 +2020,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources

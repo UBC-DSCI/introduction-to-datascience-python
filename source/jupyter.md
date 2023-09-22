@@ -27,7 +27,7 @@ document. In this chapter, we will focus on the *use* of Jupyter notebooks to pr
 text via a web interface.
 These skills are essential to getting your analysis running; think of it like getting dressed in the morning!
 Note that we assume that you already have Jupyter set up and ready to use. If that is not the case, please first read
-the {ref}`move-to-your-own-machine` chapter to learn how to install and configure Jupyter on your own
+{numref}`Chapter %s <move-to-your-own-machine>` to learn how to install and configure Jupyter on your own
 computer.
 
 ```{note}
@@ -90,7 +90,7 @@ this book as part of a course, your instructor may have a JupyterHub
 already set up for you to use! <!--- Insert link to public JupyterHub here if we can get
 access/permission (either 2i2c collaboration, or
 https://notebooks.gesis.org/hub/home) --> Jupyter can also be installed on your
-own computer; see the {ref}`move-to-your-own-machine` chapter for instructions.
+own computer; see {numref}`Chapter %s <move-to-your-own-machine>` for instructions.
 
 ## Code cells
 

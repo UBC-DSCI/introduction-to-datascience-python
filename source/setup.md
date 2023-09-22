@@ -52,7 +52,7 @@ In order to save your progress, you will need to download the worksheets to your
 work on them locally. You can download the worksheets as a compressed zip file 
 using [the link at the top of the page](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/archive/refs/heads/main.zip).
 Once you unzip the downloaded file, you will have a folder containing all of the Jupyter notebook worksheets
-accompanying this book. See the chapter on {ref}`getting-started-with-jupyter` for
+accompanying this book. See {numref}`Chapter %s <getting-started-with-jupyter>` for
 instructions on working with Jupyter notebooks.
 
 ## Working with Docker
@@ -232,7 +232,7 @@ you may not end up with the right versions of all the python packages needed for
 *guarantees* that the worksheets will work exactly as intended. 
 
 In this section, we will cover how to install JupyterLab Desktop,
-Git and the JupyterLab Git extension (for version control, as discussed in the chapter on {ref}`getting-started-with-version-control`), and
+Git and the JupyterLab Git extension (for version control, as discussed in {numref}`Chapter %s <getting-started-with-version-control>`), and
 all of the python packages needed to run
 the code in this book.
 ```{index} JupyterLab Desktop, git;installation

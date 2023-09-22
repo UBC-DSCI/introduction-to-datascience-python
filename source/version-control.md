@@ -358,7 +358,7 @@ Once you have a remote repository set up, we recommend **cloning** (or copying) 
 repository to create a local repository in which you primarily work.
 You can clone the repository either
 on your own computer or in a workspace on a server (e.g., a JupyterHub server).
-Section {numref}`local-repo-jupyter` below will cover this second step in detail.
+{numref}`local-repo-jupyter` below will cover this second step in detail.
 
 ### Creating a remote repository on GitHub
 
@@ -574,7 +574,7 @@ can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using
 the Jupyter Git extension. The Jupyter Git extension
 can be run by Jupyter on your local computer, or on a JupyterHub server.
-We recommend reading the {ref}`getting-started-with-jupyter` chapter
+We recommend reading {numref}`Chapter %s <getting-started-with-jupyter>`
 to learn how to use Jupyter before reading this chapter.
 
 ### Generating a GitHub personal access token
@@ -1156,7 +1156,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources

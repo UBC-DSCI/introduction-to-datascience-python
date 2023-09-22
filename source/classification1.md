@@ -1109,7 +1109,7 @@ But there are two important things to notice about the new `scaled_cancer` data 
 the columns from the input to `transform` (here, `unscaled_cancer`) that had a preprocessing step applied
 to them. The default behavior of the `ColumnTransformer` that we build using `make_column_transformer` 
 is to *drop* the remaining columns. This default behavior works well with the rest of `sklearn` (as we will see below
-in the {ref}`08:puttingittogetherworkflow` section), but for visualizing the result of preprocessing it can be useful to keep the other columns
+in {numref}`08:puttingittogetherworkflow`), but for visualizing the result of preprocessing it can be useful to keep the other columns
 in our original data frame, such as the `Class` variable here.
 To keep other columns, we need to set the `remainder` argument to `"passthrough"` in the `make_column_transformer` function.
 Furthermore, you can see that the new column names---{glue:}`scaled-cancer-column-0`
@@ -1144,8 +1144,8 @@ we used while training. Proper use of a `ColumnTransformer` helps keep our code 
 readable, and error-free. Furthermore, note that using `fit` and `transform` on
 the preprocessor is required only when you want to inspect the result of the
 preprocessing steps
-yourself. You will see further on in the
-{ref}`08:puttingittogetherworkflow` section that `scikit-learn` provides tools to
+yourself. You will see further on in
+{numref}`08:puttingittogetherworkflow` that `scikit-learn` provides tools to
 automatically streamline the preprocesser and the model so that you can call `fit` 
 and `transform` on the `Pipeline` as necessary without additional coding effort.
 
@@ -1580,7 +1580,7 @@ from the `sklearn` package to increase the number of `Malignant` observations to
 of `Benign` observations. We set the `n_samples` argument to be the number of `Malignant` observations we want. 
 Finally, we use the `value_counts` method to see that our classes are now balanced.
 Note that `resample` picks which data to replicate *randomly*; we will learn more about properly handling randomness
-in data analysis in the {ref}`classification2` chapter.
+in data analysis in {numref}`Chapter %s <classification2>`.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1921,7 +1921,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

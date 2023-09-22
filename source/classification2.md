@@ -410,7 +410,7 @@ reading in the breast cancer data,
 and then making a quick scatter plot visualization of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
 You will also notice that we set the random seed using the `np.random.seed` function, 
-as described in the {ref}`randomseeds` section.
+as described in {numref}`randomseeds`.
 
 ```{code-cell} ipython3
 # load packages
@@ -520,7 +520,7 @@ glue("cancer_test_nrow", len(cancer_test))
 
 We can see from the `info` method above that the training set contains {glue:}`cancer_train_nrow` observations, 
 while the test set contains {glue:}`cancer_test_nrow` observations. This corresponds to
-a train / test split of 75% / 25%, as desired. Recall from the {ref}`classification1` chapter
+a train / test split of 75% / 25%, as desired. Recall from {numref}`Chapter %s <classification1>`
 that we use the `info` method to preview the number of rows, the variable names, their data types, and 
 missing entries of a data frame.
 
@@ -560,7 +560,7 @@ training and test data sets.
 ```
 
 Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our 
-analysis steps in a `Pipeline`, as in the {ref}`classification1` chapter.
+analysis steps in a `Pipeline`, as in {numref}`Chapter %s <classification1>`.
 So below we construct and prepare
 the preprocessor using `make_column_transformer` just as before.
 
@@ -2119,7 +2119,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

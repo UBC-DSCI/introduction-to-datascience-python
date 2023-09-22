@@ -162,36 +162,36 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question:
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in the {ref}`reading`
-and {ref}`wrangling` chapters, but appear regularly throughout the text.
+Tools for summarization are covered in detail in {numref}`Chapters %s <reading>`
+and {numref}`%s <wrangling>`, but appear regularly throughout the text.
 1. **Visualization:** plotting data graphically.
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?*
-This is covered in detail in the {ref}`viz` chapter, but again appears regularly throughout the book.
+This is covered in detail in {numref}`Chapter %s <viz>`, but again appears regularly throughout the book.
 3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in the {ref}`classification1` and {ref}`classification2` chapters.
+Classification is covered in {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`.
 4. **Regression:** predicting a quantitative value for a new observation.
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in the {ref}`regression1` and {ref}`regression2` chapters.
+Regression is covered in {numref}`Chapters %s <regression1>` and {numref}`%s <regression2>`.
 5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in the {ref}`clustering` chapter.
+Clustering is covered in {numref}`Chapter %s <clustering>`.
 6. **Estimation:** taking measurements for a small number of items from a large group
  and making a good guess for the average or proportion for the large group. Estimation
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?*
-Estimation is covered in the {ref}`inference` chapter.
+Estimation is covered in {numref}`Chapter %s <inference>`.
 
 Referring to {numref}`questions-table`, our question about
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -456,7 +456,7 @@ and then use `loc[]` to do both in our analysis of the Aboriginal languages data
 The `[]` and `loc[]` operations, and related operations, in `pandas`
 are much more powerful than we describe in this chapter.
 You will learn more sophisticated ways to index data frames later on
-in the {ref}`wrangling` chapter.
+in {numref}`Chapter %s <wrangling>`.
 ```
 
 ### Using `[]` to filter rows
@@ -480,7 +480,7 @@ we are interested in keeping only languages in the `"Aboriginal languages"` high
 category. We can use the *equivalency operator* `==` to compare the values of the `category`
 column---denoted by `can_lang["category"]`---with the value `"Aboriginal languages"`.
 You will learn about many other kinds of logical
-statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
+statement in {numref}`Chapter %s <wrangling>`. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
 and not one of the special words that make up the Python programming language,
@@ -826,7 +826,7 @@ The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
 book: many of the functions from `pandas` require tidy data, as does the
 `altair` package that we will use shortly for our visualization. We will
-formally introduce tidy data in the {ref}`wrangling` chapter.
+formally introduce tidy data in {numref}`Chapter %s <wrangling>`.
 
 ```{index} see: plot; visualization
 ```
@@ -919,11 +919,11 @@ section with pandas.
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
 in the `altair` objects using `alt.X` and `alt.Y` with the `title` method to make
-the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
+the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in {numref}`Chapter %s <viz>`).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 the `title` method, we surround them with quotation marks. We can do many other modifications
-to format the plot further, and we will explore these in the {ref}`viz` chapter.
+to format the plot further, and we will explore these in {numref}`Chapter %s <viz>`.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
@@ -1200,7 +1200,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## References

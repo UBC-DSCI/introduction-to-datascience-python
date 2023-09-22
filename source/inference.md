@@ -1333,7 +1333,7 @@ You can launch an interactive version of each worksheet in your browser by click
 You can also preview a non-interactive version of each worksheet by clicking "view worksheet."
 If you instead decide to download the worksheets and run them on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

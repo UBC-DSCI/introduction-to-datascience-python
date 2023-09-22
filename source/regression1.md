@@ -35,8 +35,8 @@ to classification: for example, just as in the case of classification,
 we will split our data into training, validation, and test sets, we will
 use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
 approach to make predictions, and we will use cross-validation to choose K.
-Because of how similar these procedures are, make sure to read the
-{ref}`classification1` and {ref}`classification2` chapters before reading
+Because of how similar these procedures are, make sure to read
+{numref}`Chapters %s <classification1>` and {numref}`%s <classification2>` before reading
 this one&mdash;we will move a little bit faster here with the
 concepts that have already been covered.
 This chapter will primarily focus on the case where there is a single predictor,
@@ -283,7 +283,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 ```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
 ```
 
-We will employ the same intuition from the classification chapter, and use the
+We will employ the same intuition from {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`, and use the
 neighboring points to the new point of interest to suggest/predict what its
 sale price might be.
 For the example shown in {numref}`fig:07-small-eda-regr`,
@@ -405,7 +405,7 @@ that we used earlier in the chapter ({numref}`fig:07-small-eda-regr`).
 
 ```{note}
 We are not specifying the `stratify` argument here like we did in
-the {ref}`classification2` chapter, since
+{numref}`Chapter %s <classification2>`, since
 the `train_test_split` function cannot stratify based on a
 quantitative variable.
 ```
@@ -556,8 +556,7 @@ So we need to specify that we want to use the RMSPE for tuning by setting the
 ```{note}
 We obtained the identifier of the parameter representing the number
 of neighbours, `"kneighborsregressor__n_neighbors"` by examining the output
-of `sacr_pipeline.get_params()`, as we did in the {ref}`classification1`
-chapter.
+of `sacr_pipeline.get_params()`, as we did in {numref}`Chapter %s <classification1>`.
 ```
 
 ```{index} scikit-learn; GridSearchCV
@@ -586,7 +585,7 @@ sacr_gridsearch = GridSearchCV(
 Next, we use the run cross validation by calling the `fit` method
 on `sacr_gridsearch`. Note the use of two brackets for the input features
 (`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
-As we learned in the {ref}`wrangling` chapter, we can obtain a data frame with a 
+As we learned in {numref}`Chapter %s <wrangling>`, we can obtain a data frame with a
 subset of columns by passing a list of column names; `["sqft"]` is a list with one
 item, so we obtain a data frame with one column. If instead we used 
 just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
@@ -594,7 +593,7 @@ In `scikit-learn`, it is easier to work with the input features as a data frame
 rather than a series, so we opt for two brackets here. On the other hand, the response variable
 can be a series, so we use just one bracket there (`sacramento_train["price"]`).
 
-As in the {ref}`classification2` chapter, once the model has been fit 
+As in {numref}`Chapter %s <classification2>`, once the model has been fit
 we will wrap the `cv_results_` output in a data frame, extract
 only the relevant columns, compute the standard error based on 5 folds, 
 and rename the parameter column to be more readable.
@@ -827,7 +826,7 @@ We then use the `mean_squared_error`
 function (with the `y_true` and `y_pred` arguments) 
 to compute the mean squared prediction error, and finally take the
 square root to get the RMSPE. The reason that we do not just use the `score` 
-method---as in the {ref}`classification2` chapter---is that the `KNeighborsRegressor` 
+method---as in {numref}`Chapter %s <classification2>`---is that the `KNeighborsRegressor`
 model uses a different default scoring metric than the RMSPE. 
 
 ```{code-cell} ipython3
@@ -942,7 +941,7 @@ Note that we also have the same concern regarding the selection of predictors
 in KNN regression as in KNN classification: having more predictors is **not** always
 better, and the choice of which predictors to use has a potentially large influence
 on the quality of predictions. Fortunately, we can use the predictor selection
-algorithm from the classification chapter in KNN regression as well.
+algorithm from {numref}`Chapter %s <classification2>` in KNN regression as well.
 As the algorithm is the same, we will not cover it again in this chapter.
 
 ```{index} K-nearest neighbors; multivariable regression, Sacramento real estate
@@ -1190,7 +1189,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

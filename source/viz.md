@@ -695,8 +695,8 @@ numlang_speakers_min = int(min(can_lang["mother_tongue"]))
 print(numlang_speakers_min)
 log_result = int(np.floor(np.log10(numlang_speakers_max/numlang_speakers_min)))
 print(log_result)
-glue("numlang_speakers_max", numlang_speakers_max)
-glue("numlang_speakers_min", numlang_speakers_min)
+glue("numlang_speakers_max", "{0:,.0f}".format(numlang_speakers_max))
+glue("numlang_speakers_min", "{0:,.0f}".format(numlang_speakers_min))
 glue("log_result", log_result)
 ```
 
@@ -707,8 +707,8 @@ up in the lower left-hand side of the visualization. The data is clumped because
 many more people in Canada speak English or French (the two points in
 the upper right corner) than other languages.
 In particular, the most common mother tongue language
-has {glue:}`numlang_speakers_max` speakers,
-while the least common has only {glue:}`numlang_speakers_min`.
+has {glue:text}`numlang_speakers_max` speakers,
+while the least common has only {glue:text}`numlang_speakers_min`.
 That's a six-decimal-place difference
 in the magnitude of these two numbers!
 We can confirm that the two points in the upper right-hand corner correspond
@@ -813,9 +813,9 @@ Scatter plot of number of Canadians reporting a language as their mother tongue 
 english_mother_tongue = can_lang.loc[can_lang["language"]=="English"].mother_tongue.values[0]
 census_popn = int(35151728)
 result = round((english_mother_tongue/census_popn)*100,2)
-glue("english_mother_tongue", english_mother_tongue)
-glue("census_popn", census_popn)
-glue("result", result)
+glue("english_mother_tongue", "{0:,.0f}".format(english_mother_tongue))
+glue("census_popn", "{0:,.0f}".format(census_popn))
+glue("result", "{:.2f}".format(result))
 
 ```
 
@@ -828,8 +828,8 @@ by the number of people who live in Canada and multiplying by 100\%.
 For example,
 the percentage of people who reported that their mother tongue was English
 in the 2016 Canadian census
-was {glue:}`english_mother_tongue` / {glue:}`census_popn` $\times$
-`100` \% = {glue:}`result`\%
+was {glue:text}`english_mother_tongue` / {glue:text}`census_popn` $\times$
+100\% = {glue:text}`result`\%
 
 Below we use `assign` to calculate the percentage of people reporting a given
 language as their mother tongue and primary language at home for all the
@@ -1971,8 +1971,8 @@ import numpy as np
 png_size = np.round(os.path.getsize("img/viz/faithful_plot.png")/(1024*1024), 2)
 svg_size = np.round(os.path.getsize("img/viz/faithful_plot.svg")/(1024*1024), 2)
 
-glue("png_size", png_size)
-glue("svg_size", svg_size)
+glue("png_size", "{:.2f}".format(png_size))
+glue("svg_size", "{:.2f}".format(svg_size))
 ```
 
 ```{list-table} File sizes of the scatter plot of the Old Faithful data set when saved as different file formats.
@@ -1984,10 +1984,10 @@ glue("svg_size", svg_size)
   - Image size
 * - Raster
   - PNG
-  - {glue:}`png_size` MB
+  - {glue:text}`png_size` MB
 * - Vector
   - SVG
-  - {glue:}`svg_size` MB
+  - {glue:text}`svg_size` MB
 ```
 
 Take a look at the file sizes in {numref}`png-vs-svg-table`.

@@ -710,7 +710,7 @@ nor do we need to standardize (i.e., center and scale) the data for linear regre
 Note once again that we have the same concerns regarding multiple predictors
  as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
 better. But because the same predictor selection
-algorithm from the classification chapter extends to the setting of linear regression,
+algorithm from {numref}`Chapter %s <classification2>` extends to the setting of linear regression,
 it will not be covered again in this chapter.
 
 ```{index} Sacramento real estate

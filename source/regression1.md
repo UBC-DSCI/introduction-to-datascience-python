@@ -283,7 +283,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 ```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
 ```
 
-We will employ the same intuition from the classification chapter, and use the
+We will employ the same intuition from {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`, and use the
 neighboring points to the new point of interest to suggest/predict what its
 sale price might be.
 For the example shown in {numref}`fig:07-small-eda-regr`,
@@ -941,7 +941,7 @@ Note that we also have the same concern regarding the selection of predictors
 in KNN regression as in KNN classification: having more predictors is **not** always
 better, and the choice of which predictors to use has a potentially large influence
 on the quality of predictions. Fortunately, we can use the predictor selection
-algorithm from the classification chapter in KNN regression as well.
+algorithm from {numref}`Chapter %s <classification2>` in KNN regression as well.
 As the algorithm is the same, we will not cover it again in this chapter.
 
 ```{index} K-nearest neighbors; multivariable regression, Sacramento real estate

@@ -90,7 +90,7 @@ classification chapters to learn more about logistic regression.
 ```{index} Sacramento real estate, question; regression
 ```
 
-Let's return to the Sacramento housing data from Chapter {ref}`regression1` to learn
+Let's return to the Sacramento housing data from {numref}`Chapter %s <regression1>` to learn
 how to apply linear regression and compare it to KNN regression. For now, we
 will consider
 a smaller version of the housing data to help make our visualizations clear.
@@ -1344,7 +1344,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++

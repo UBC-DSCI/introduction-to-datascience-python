@@ -953,14 +953,14 @@ how to obtain different types of data from the web.
 Data doesn't just magically appear on your computer; you need to get it from
 somewhere. Earlier in the chapter we showed you how to access data stored in a
 plain text, spreadsheet-like format (e.g., comma- or tab-separated) from a web
-URL using one of the `read_*` functions from the `pandas`. But as time goes
+URL using the `read_csv` function from `pandas`. But as time goes
 on, it is increasingly uncommon to find data (especially large amounts of data)
 in this format available for download from a URL. Instead, websites now often
 offer something known as an **a**pplication **p**rogramming **i**nterface
 (API), which
 provides a programmatic way to ask for subsets of a data set. This allows the
 website owner to control *who* has access to the data, *what portion* of the
-data they have access to, and *how much* data they can access.  Typically, the
+data they have access to, and *how much* data they can access.  Sometimes, the
 website owner will give you a *token* (a secret string of characters somewhat
 like a password) that you have to provide when accessing the API.
 

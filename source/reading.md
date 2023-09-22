@@ -725,7 +725,7 @@ You can see that `ibis` actually returned a `pandas` data frame to us after we e
 which is very convenient for working with the data after getting it from the database.
 So now that we have the `canlang_table` table reference for the 2016 Canadian Census data in hand, we
 can mostly continue onward as if it were a regular data frame. For example, let's do the same exercise
-from Chapter 1: we will obtain only those rows corresponding to Aboriginal languages, and keep only
+from {numref}`Chapter %s <intro>`: we will obtain only those rows corresponding to Aboriginal languages, and keep only
 the `language` and `mother_tongue` columns.
 We can use the `[]` operation with a logical statement
 to obtain only certain rows. Below we filter the data to include only Aboriginal languages.

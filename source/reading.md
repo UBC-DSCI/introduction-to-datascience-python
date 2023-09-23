@@ -1057,6 +1057,7 @@ is [included with the code for this book](https://github.com/UBC-DSCI/introducti
         <span class="restore-narrow-text">restore</span>
         <span class="restore-wide-text">restore this posting</span>
     </a>
+    <span class="result-price">$2285</span>
 </span>
 ```
 
@@ -1183,7 +1184,7 @@ We will use the SelectorGadget tool to pick elements that we are interested in
 (city names and population counts) and deselect others to indicate that we are not
 interested in them (province names), as shown in {numref}`fig:sg4`.
 
-```{figure} img/reading/selectorgadget-wiki-updated.png
+```{figure} img/reading/sg4.png
 :name: fig:sg4
 
 Using the SelectorGadget on a Wikipedia webpage.

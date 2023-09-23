@@ -1336,26 +1336,44 @@ format for data analysis.
 ```{index} API
 ```
 
-Rather than posting a data file at a URL for you to download, many websites these days
-provide an API that must be accessed through a programming language like Python. The benefit of this
-is that data owners have much more control over the data they provide to users. However, unlike
-web scraping, there is no consistent way to access an API across websites. Every website typically
-has its own API designed especially for its own use case. Therefore we will just provide one example
-of accessing data through an API in this book, with the hope that it gives you enough of a basic
-idea that you can learn how to use another API if needed.
+Rather than posting a data file at a URL for you to download, many websites
+these days provide an API that can be accessed through a programming language
+like Python. The benefit of this is that data owners have much more control
+over the data they provide to users. However, unlike web scraping, there is no
+consistent way to access an API across websites. Every website typically has
+its own API designed especially for its own use case. Therefore we will just
+provide one example of accessing data through an API in this book, with the
+hope that it gives you enough of a basic idea that you can learn how to use
+another API if needed.
 
 ```{index} API; tweepy, tweepy, Twitter, API; token
 ```
 
 +++
 
-In particular, in this book we will show you the basics of how to use
-the `tweepy` package in Python to access
-data from the Twitter API. `tweepy` requires the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to get tokens and secrets from that, through which your access to the data will then be authenticated and controlled.
+In particular, in this book we will show you the basics of how to use the
+`tweepy` package in Python to access data from the Twitter API. `tweepy`
+requires the [Twitter Developer
+Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to
+get tokens and secrets from that, through which your access to the data will
+then be authenticated and controlled.
 
 +++
 
-First, we go to the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an account if you do not have one yet. Note that you will need a valid phone number to associate with your developer account. After filling out the basic information, we will get the *essential access* to the Twitter API. Then we can create an app and hit the "get key" button, and we will get the API key and API key secret of the app (along with the bearer token which will not be used in this demonstration). **We need to store the key and secret at a safe place, and make sure do not show them to anyone else (also do not accidentally push it to the GitHub repository).** If you lose the key, you can always regenerate it. Next, we go to the "Keys and tokens" tab of the app, and generate an access token and an access token secret. **Save the access token and the access token secret at a safe place as well.** Your app will look something like {numref}`fig:twitter-API-keys-tokens`.
+First, we go to the [Twitter Developer
+Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an
+account if you do not have one yet. Note that you will need a valid phone
+number to associate with your developer account. After filling out the basic
+information, we will get the *essential access* to the Twitter API. Then we can
+create an app and hit the "get key" button, and we will get the API key and API
+key secret of the app (along with the bearer token which will not be used in
+this demonstration). **We need to store the key and secret at a safe place, and
+make sure do not show them to anyone else (also do not accidentally push it to
+the GitHub repository).** If you lose the key, you can always regenerate it.
+Next, we go to the "Keys and tokens" tab of the app, and generate an access
+token and an access token secret. **Save the access token and the access token
+secret at a safe place as well.** Your app will look something like
+{numref}`fig:twitter-API-keys-tokens`.
 
 +++
 

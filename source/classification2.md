@@ -1849,31 +1849,9 @@ where to learn more about advanced predictor selection methods.
 ### Forward selection in `scikit-learn`
  
 We now turn to implementing forward selection in Python.
-The function [`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 
-in the `scikit-learn` can automate this for us, and a simple demo is shown below. However, for
-the learning purpose, we also want to show how each predictor is selected over iterations, 
-so we will have to code it ourselves. 
-
-+++
-
-First we will extract the "total" set of predictors that we are willing to work with. 
-Here we will load the modified version of the cancer data with irrelevant 
-predictors, and select `Smoothness`, `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`
-as potential predictors, and the `Class` variable as the label.
-We will also extract the column names for the full set of predictor variables.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We now turn to implementing forward selection in Python.
-# Unfortunately there is no built-in way to do this using the `tidymodels` framework,
-# so we will have to code it ourselves. First we will use the `select` function
-# to extract the "total" set of predictors that we are willing to work with. 
-# Here we will load the modified version of the cancer data with irrelevant 
-# predictors, and select `Smoothness`, `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`
-# as potential predictors, and the `Class` variable as the label.
-# We will also extract the column names for the full set of predictor variables.
-```
+First we will extract a smaller set of predictors to work with in this illustrative example&mdash;`Smoothness`,
+`Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`&mdash;as well as the `Class` variable as the label.
+We will also extract the column names for the full set of predictors.
 
 ```{code-cell} ipython3
 cancer_subset = cancer_irrelevant[
@@ -1895,151 +1873,79 @@ names = list(cancer_subset.drop(
 cancer_subset
 ```
 
-```{code-cell} ipython3
-:tags: []
-
-# Using scikit-learn SequentialFeatureSelector
-from sklearn.feature_selection import SequentialFeatureSelector
-cancer_preprocessor = make_column_transformer(
-    (
-        StandardScaler(),
-        list(cancer_subset.drop(columns=["Class"]).columns),
-    ),
-)
-
-cancer_pipe_forward = make_pipeline(
-    cancer_preprocessor,
-    SequentialFeatureSelector(KNeighborsClassifier(), direction="forward"),
-    KNeighborsClassifier(),
-)
-
-X = cancer_subset.drop(columns=["Class"])
-y = cancer_subset["Class"]
-
-cancer_pipe_forward.fit(X, y)
-
-cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_
-```
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-glue(
-    "sequentialfeatureselector_n_features",
-    "{:d}".format(cancer_pipe_forward.named_steps["sequentialfeatureselector"].n_features_to_select_),
-)
-```
-
-This means that {glue:text}`sequentialfeatureselector_n_features` features were selected according to the forward selection algorithm.
-
-+++
-
-Now, let's code the actual algorithm by ourselves. The key idea of the forward
-selection code is to properly extract each subset of predictors for which we
-want to build a model, pass them to the preprocessor and fit the pipeline with
-them.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The key idea of the forward selection code is to use the `paste` function (which concatenates strings
-# separated by spaces) to create a model formula for each subset of predictors for which we want to build a model.
-# The `collapse` argument tells `paste` what to put between the items in the list;
-# to make a formula, we need to put a `+` symbol between each variable.
-# As an example, let's make a model formula for all the predictors,
-# which should output something like
-# `Class ~ Smoothness + Concavity + Perimeter + Irrelevant1 + Irrelevant2 + Irrelevant3`:
-```
-
-Finally, we need to write some code that performs the task of sequentially
-finding the best predictor to add to the model.
+To perform forward selection, we could use the
+[`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 
+from `scikit-learn`; but it is difficult to combine this approach with parameter tuning to find a good number of neighbors 
+for each set of features. Instead we will code the forward selection algorithm manually. 
+In particular, we need code that tries adding each available predictor to a model, finding the best, and iterating. 
 If you recall the end of the wrangling chapter, we mentioned
 that sometimes one needs more flexible forms of iteration than what 
 we have used earlier, and in these cases one typically resorts to
-a *for loop*; see [the section on control flow (for loops)](https://wesmckinney.com/book/python-basics.html#control_for) in *Python for Data Analysis* {cite:p}`mckinney2012python`.
-Here we will use two for loops:
-one over increasing predictor set sizes 
+a *for loop*; see
+the [control flow section](https://wesmckinney.com/book/python-basics.html#control_for) in
+*Python for Data Analysis* {cite:p}`mckinney2012python`.
+Here we will use two for loops: one over increasing predictor set sizes
 (where you see `for i in range(1, n_total + 1):` below),
 and another to check which predictor to add in each round (where you see `for j in range(len(names))` below).
 For each set of predictors to try, we extract the subset of predictors,
 pass it into a preprocessor, build a `Pipeline` that tunes
-a $K$-NN classifier using 10-fold cross-validation, 
+a K-NN classifier using 10-fold cross-validation, 
 and finally records the estimated accuracy.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+from sklearn.compose import make_column_selector
 
-# Finally, we need to write some code that performs the task of sequentially
-# finding the best predictor to add to the model.
-# If you recall the end of the wrangling chapter, we mentioned
-# that sometimes one needs more flexible forms of iteration than what 
-# we have used earlier, and in these cases one typically resorts to
-# a *for loop*; see [the chapter on iteration](https://r4ds.had.co.nz/iteration.html) in *R for Data Science* [@wickham2016r].
-# Here we will use two for loops:
-# one over increasing predictor set sizes 
-# (where you see `for (i in 1:length(names))` below),
-# and another to check which predictor to add in each round (where you see `for (j in 1:length(names))` below).
-# For each set of predictors to try, we construct a model formula,
-# pass it into a `recipe`, build a `workflow` that tunes
-# a $K$-NN classifier using 5-fold cross-validation, 
-# and finally records the estimated accuracy.
-```
-
-```{code-cell} ipython3
 accuracy_dict = {"size": [], "selected_predictors": [], "accuracy": []}
 
 # store the total number of predictors
 n_total = len(names)
 
+# start with an empty list of selected predictors
 selected = []
+
+
+# create the pipeline and CV grid search objects
+param_grid = {
+    "kneighborsclassifier__n_neighbors": range(1, 61, 5),
+}
+cancer_preprocessor = make_column_transformer(
+    (StandardScaler(), make_column_selector(dtype_include="number"))
+)
+cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
+cancer_tune_grid = GridSearchCV(
+    estimator=cancer_tune_pipe,
+    param_grid=param_grid,
+    cv=10, 
+    n_jobs=-1
+)
 
 # for every possible number of predictors
 for i in range(1, n_total + 1):
-    accs = []
-    models = []
+    accs = np.zeros(len(names)) 
+    # for every possible predictor to add
     for j in range(len(names)):
-        # create the preprocessor and pipeline with specified set of predictors
-        cancer_preprocessor = make_column_transformer(
-            (StandardScaler(), selected + [names[j]]),
-        )
-        cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
-        # tune the KNN classifier with these predictors,
-        # and collect the accuracy for the best K
-        param_grid = {
-            "kneighborsclassifier__n_neighbors": range(1, 61, 5),
-        }  ## double check
-
-        cancer_tune_grid = GridSearchCV(
-            estimator=cancer_tune_pipe,
-            param_grid=param_grid,
-            cv=10,  ## double check
-            n_jobs=-1,
-            # return_train_score=True,
-        )
-
+        # Add remaining predictor j to the model
         X = cancer_subset[selected + [names[j]]]
         y = cancer_subset["Class"]
-
+        
+        # Find the best K for this set of predictors
         cancer_model_grid = cancer_tune_grid.fit(X, y)
         accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
-        sorted_accuracies = accuracies_grid.sort_values(
-            by="mean_test_score", ascending=False
-        )
 
-        res = sorted_accuracies.iloc[0, :]
-        accs.append(res["mean_test_score"])
-        models.append(
-            selected + [names[j]]
-        )  # (res["param_kneighborsclassifier__n_neighbors"]) ## if want to know the best selection of K
-    # get the best selection of (newly added) feature which maximizes cv accuracy    
-    best_set = models[accs.index(max(accs))]
+        # Store the tuned accuracy for this set of predictors
+        accs[j] = accuracies_grid["mean_test_score"].max()
+
+    # get the best new set of predictors that maximize cv accuracy    
+    best_set = selected + [names[accs.argmax()]]
     
+    # store the results for this round of forward selection
     accuracy_dict["size"].append(i)
     accuracy_dict["selected_predictors"].append(", ".join(best_set))
-    accuracy_dict["accuracy"].append(max(accs))
+    accuracy_dict["accuracy"].append(accs.max())
     
+    # update the selected & available sets of predictors
     selected = best_set
-    del names[accs.index(max(accs))]
+    del names[accs.argmax()]
 
 accuracies = pd.DataFrame(accuracy_dict)
 accuracies

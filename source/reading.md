@@ -1194,147 +1194,142 @@ We include a link to a short video tutorial on this process at the end of the ch
 in the additional resources section. SelectorGadget provides in its toolbar
 the following list of CSS selectors to use:
 
-+++
-
 ```text
 td:nth-child(8) ,
-td:nth-child(6) ,
 td:nth-child(4) ,
-.mw-parser-output div tr+ tr td:nth-child(2)
+.largestCities-cell-background+ td a
 ```
-
-+++
 
 Now that we have the CSS selectors that describe the properties of the elements
 that we want to target (e.g., has a tag name `price`), we can use them to find
 certain elements in web pages and extract data.
 
-+++
 
-**Using `pandas.read_html`**
-
-+++
-
-The easiest way to read a table from HTML is to use [`pandas.read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html). We can see that the Wikipedia page of "Canada" has 18 tables.
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-canada_wiki = pd.read_html("https://en.wikipedia.org/wiki/Canada")
-len(canada_wiki)
-```
-
-```
-18
-```
-
-+++
-
-With some inspection, we find that the table that shows the population of the most populated provinces is of index 1.
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-df = canada_wiki[1]
-df.columns = df.columns.droplevel()
-df
-```
-
-```{code-cell} ipython3
-:tags: [remove-input]
-
-df = pd.read_csv("data/canada-wiki-read_html.csv", index_col=0)
-df
-```
-
-**Using `BeautifulSoup`**
+#### Scraping with `BeautifulSoup`
 
 ```{index} BeautifulSoup, requests
 ```
 
-Now that we have our CSS selectors we can use the `requests` and `BeautifulSoup` Python packages to scrape our desired data from the website. We start by loading the packages:
+We will use the `requests` and `BeautifulSoup` Python packages to scrape data
+from the Wikipedia page. After loading those packages, we tell Python which
+page we want to scrape by providing its URL in quotations to the `requests.get`
+function. This function obtains the raw HTML of the page, which we then
+pass to the `BeautifulSoup` function for parsing:
 
-```{code-cell} ipython3
+```python
 import requests
 import bs4
-```
 
-Next, we tell Python what page we want to scrape by providing the webpage's URL in quotations to the function `requests.get` and pass it into the `BeautifulSoup` function for parsing:
+wiki = requests.get("https://en.wikipedia.org/wiki/Canada")
+page = bs4.BeautifulSoup(wiki.content, "html.parser")
+```
 
 ```{code-cell} ipython3
-wiki = requests.get("https://en.wikipedia.org/wiki/Canada")
-page = BeautifulSoup(wiki.content, "html.parser")
+:tags: [remove-cell]
+import bs4
+
+# the above cell doesn't actually run; this one does run
+# and loads the html data from a local, static file 
+
+with open("data/canada_wiki.html", "r") as f:
+    wiki_hidden = f.read()
+page = bs4.BeautifulSoup(wiki_hidden, "html.parser")
 ```
 
-The `requests.get` function sends a `GET` request to the specified URL and returns the server's response to the HTTP request (*i.e.* a `requests.Response` object). The `BeautifulSoup` function takes the content of the response and returns the HTML source code itself, which we have
-stored in the `page` variable. Next, we use the `select` method of the page object along with the CSS selectors we obtained from the SelectorGadget tool. Make sure to surround the selectors with quotation marks; `select` expects that
-argument is a string. It selects *nodes* from the HTML document that
-match the CSS selectors you specified. A *node* is an HTML tag pair (e.g.,
-`<td>` and `</td>` which defines the cell of a table) combined with the content
-stored between the tags. For our CSS selector `td:nth-child(6)`, an example
-node that would be selected would be:
+The `requests.get` function downloads the HTML source code for the page at the
+URL you specify, just like your browser would if you navigated to this site.
+But instead of displaying the website to you, the `requests.get` function just
+returns the HTML source code itself&mdash;stored in the `wiki.content`
+variable&mdash;which we then parse using `BeautifulSoup` and store in the
+`page` variable. Next, we pass the CSS selectors we obtained from
+SelectorGadget to the `select` method of the `page` object.  Make sure to
+surround the selectors with quotation marks; `select` expects that argument is
+a string.  The method then selects *nodes* from the HTML document that match the CSS
+selectors you specified. A *node* is an HTML tag pair (e.g., `<td>` and `</td>`
+which defines the cell of a table) combined with the content stored between the
+tags. For our CSS selector `td:nth-child(6)`, an example node that would be
+selected would be:
 
-+++
-
-```
+```html
 <td style="text-align:left;background:#f0f0f0;">
 <a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
 </td>
 ```
 
-+++
-
-We store the result of the `select` function in the `population_nodes` variable. Note that it returns a list, and we slice the list to only print the first 5 elements.
+We store the result of the `select` function in the `population_nodes`
+variable. Note that it returns a list; we slice the list to only print the
+first 5 elements.
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
 population_nodes = page.select(
     "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
 )
 population_nodes[:5]
 ```
 
-```
-[<td style="text-align:left;"><a href="/wiki/Greater_Toronto_Area" title="Greater Toronto Area">Toronto</a></td>,
- <td style="text-align:right;">6,202,225</td>,
- <td style="text-align:left;"><a href="/wiki/London,_Ontario" title="London, Ontario">London</a></td>,
- <td style="text-align:right;">543,551
- </td>,
- <td style="text-align:left;"><a href="/wiki/Greater_Montreal" title="Greater Montreal">Montreal</a></td>]
-```
-
-+++
-
-Next we extract the meaningful data&mdash;in other words, we get rid of the HTML code syntax and tags&mdash;from
-the nodes using the `get_text`
-function. In the case of the example
-node above, `get_text` function returns `"London"`.
+Next we extract the meaningful data&mdash;in other words, we get rid of the
+HTML code syntax and tags&mdash;from the nodes using the `get_text` function.
+In the case of the example node above, `get_text` function returns `"London"`.
 
 ```{code-cell} ipython3
-:tags: [remove-output]
-
-[row.get_text() for row in population_nodes][:5]
+[row.get_text() for row in population_nodes[:5]]
 ```
 
-```
-["Toronto", "6,202,225", "London", "543,551\n", "Montreal"]
-```
+Fantastic! We seem to have extracted the data of interest from the raw HTML
+source code. But we are not quite done; the data is not yet in an optimal
+format for data analysis. Both the city names and population are encoded as
+characters in a single vector, instead of being in a data frame with one
+character column for city and one numeric column for population (like a
+spreadsheet).  Additionally, the populations contain commas (not useful for
+programmatically dealing with numbers), and some even contain a line break
+character at the end (`\n`). In {numref}`Chapter %s <wrangling>`, we will learn
+more about how to *wrangle* data such as this into a more useful format for
+data analysis using Python.
 
 +++
 
-Fantastic! We seem to have extracted the data of interest from the
-raw HTML source code. But we are not quite done; the data
-is not yet in an optimal format for data analysis. Both the city names and
-population are encoded as characters in a single vector, instead of being in a
-data frame with one character column for city and one numeric column for
-population (like a spreadsheet).
-Additionally, the populations contain commas (not useful for programmatically
-dealing with numbers), and some even contain a line break character at the end
-(`\n`). In {numref}`Chapter %s <wrangling>`, we will learn more about how to *wrangle* data
-such as this into a more useful format for data analysis using Python.
+#### Scraping with `read_html`
 
-+++
+Using `requests` and `BeautifulSoup` to extract data based on CSS selectors is
+a very general way to scrape data from the web, albeit perhaps a little bit
+complicated.  Fortunately, `pandas` provides the
+[`read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html)
+function, which is easier method to try when you know the data are tabular, and
+appear on the webpage as an HTML table.  The `read_html` function takes one
+argument&mdash;the URL of the page to scrape&mdash;and will return a list of
+data frames corresponding to all the tables it finds at that URL. We can see
+below that `read_html` found 17 tables on the Wikipedia page for Canada.
+
+```python
+canada_wiki_tables = pd.read_html("https://en.wikipedia.org/wiki/Canada")
+len(canada_wiki_tables)
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+canada_wiki_tables = pd.read_html("data/canada_wiki.html")
+len(canada_wiki_tables)
+```
+
+After manually searching through these, we find that the table containing the
+population counts of the largest metropolitan areas in Canada is contained in
+index 1. We use the `droplevel` method to simplify the column names in the resulting
+data frame:
+
+```{code-cell} ipython3
+canada_wiki_df = canada_wiki_tables[1]
+canada_wiki_df.columns = canada_wiki_df.columns.droplevel()
+canada_wiki_df
+```
+
+Once again, we have managed to extract the data of interest from the raw HTML
+source code&mdash;but this time using the convenient `read_html` function,
+without needing to explicitly use CSS selectors! However, once again, we still
+need to do some cleaning of this result. Referring back to {numref}`fig:sg4`,
+we can see that the table is formatted with two sets of columns (e.g., `Name`
+and `Name.1`) that we will need to somehow merge. In {numref}`Chapter %s
+<wrangling>`, we will learn more about how to *wrangle* data into a useful
+format for data analysis.
 
 ### Using an API
 
@@ -1440,7 +1435,7 @@ we should abide by when using the API.
 
 +++
 
-**Using `tweepy`**
+#### Accessing twitter with `tweepy`
 
 After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
 So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.

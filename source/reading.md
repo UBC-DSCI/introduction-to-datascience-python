@@ -1566,15 +1566,14 @@ and guidance that the worksheets provide will function as intended.
 ## Additional resources
 
 - The [`pandas` documentation](https://pandas.pydata.org/docs/getting_started/index.html)
-  provides the documentation for many of the reading functions we cover in this chapter.
-  It is where you should look if you want to learn more about the functions in this
-  chapter, the full set of arguments you can use, and other related functions.
-  The site also provides a very nice cheat sheet that summarizes many of the data
-  wrangling functions from this chapter.
-- Sometimes you might run into data in such poor shape that none of the reading
-  functions we cover in this chapter work. In that case, you can consult the
-  [data loading chapter](https://wesmckinney.com/book/accessing-data.html#io_flat_files) from *Python for Data Analysis* {cite:p}`mckinney2012python`, which goes into a lot more detail about how Python parses
-  text from files into data frames.
+  provides the documentation for the functions we cover in this chapter.
+  It is where you should look if you want to learn more about these functions, the
+  full set of arguments you can use, and other related functions.
+- Sometimes you might run into data in such poor shape that the reading
+  functions we cover in this chapter do not work. In that case, you can consult the
+  [data loading chapter](https://wesmckinney.com/book/accessing-data.html#io_flat_files)
+  from *Python for Data Analysis* {cite:p}`mckinney2012python`, which goes into a lot
+  more detail about how Python parses text from files into data frames.
 - A [video](https://www.youtube.com/embed/ephId3mYu9o) from the Udacity
   course *Linux Command Line Basics* provides a good explanation of absolute versus relative paths.
 - If you read the subsection on obtaining data from the web via scraping and

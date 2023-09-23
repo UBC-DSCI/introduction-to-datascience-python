@@ -873,8 +873,9 @@ that we prefer using `pandas` data frames over regular arrays via the `set_confi
 You will notice a new way of importing functions in the code below: `from ... import ...`. This lets us
 import *just* `set_config` from `sklearn`, and then call `set_config` without any package prefix.
 We will import functions using `from` extensively throughout
-this chapter to avoid very long names that would otherwise occur with `scikit-learn`,
-like `sklearn.metrics.pairwise.euclidean_distances`, which has 44 characters&mdash;yikes!
+this and subsequent chapters to avoid very long names from `scikit-learn`
+that clutter the code
+(like `sklearn.neighbors.KNeighborsClassifier`, which has 38 characters!).
 ```
 
 ```{code-cell} ipython3

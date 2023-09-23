@@ -1181,3 +1181,11 @@ you can expand your knowledge through the resources listed below:
   token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   is an excellent additional resource to consult if you need help
   generating and using personal access tokens.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

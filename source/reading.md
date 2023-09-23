@@ -1268,7 +1268,7 @@ no_official_lang_data.to_csv("data/no_official_languages.csv", index=False)
 %
 % ```{code-cell} ipython3
 % import requests
-% from bs4 import BeautifulSoup
+% import bs4
 % ```
 %
 % Next, we tell Python what page we want to scrape by providing the webpage's URL in quotations to the function `requests.get` and pass it into the `BeautifulSoup` function for parsing:

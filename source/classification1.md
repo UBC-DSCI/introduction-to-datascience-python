@@ -869,6 +869,15 @@ in the `scikit-learn` package (named `sklearn` in Python) will help keep our cod
 less we have to code ourselves, the fewer mistakes we will likely make. 
 Before getting started with $K$-nearest neighbors, we need to tell the `sklearn` package 
 that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
+```{note}
+You will notice a new way of importing functions in the code below: `from ... import ...`. This lets us
+import *just* `set_config` from `sklearn`, and then call `set_config` without any package prefix.
+We will import functions using `from` extensively throughout
+this and subsequent chapters to avoid very long names from `scikit-learn`
+that clutter the code
+(like `sklearn.neighbors.KNeighborsClassifier`, which has 38 characters!).
+```
+
 ```{code-cell} ipython3
 from sklearn import set_config
 

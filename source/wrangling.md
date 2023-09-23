@@ -1900,7 +1900,7 @@ and guidance that the worksheets provide will function as intended.
 - The [`pandas` package documentation](https://pandas.pydata.org/docs/reference/index.html) is
   another resource to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
-- *Python for Data Analysis* {cite:p}`mckinney2012python` has a few chapters related to
+- [*Python for Data Analysis*](https://wesmckinney.com/book/) {cite:p}`mckinney2012python` has a few chapters related to
   data wrangling that go into more depth than this book. For example, the
   [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
   `melt` and `pivot`, but also covers missing values

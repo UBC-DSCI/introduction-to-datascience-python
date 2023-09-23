@@ -1572,7 +1572,7 @@ and guidance that the worksheets provide will function as intended.
 - Sometimes you might run into data in such poor shape that the reading
   functions we cover in this chapter do not work. In that case, you can consult the
   [data loading chapter](https://wesmckinney.com/book/accessing-data.html#io_flat_files)
-  from *Python for Data Analysis* {cite:p}`mckinney2012python`, which goes into a lot
+  from [*Python for Data Analysis*](https://wesmckinney.com/book/) {cite:p}`mckinney2012python`, which goes into a lot
   more detail about how Python parses text from files into data frames.
 - A [video](https://www.youtube.com/embed/ephId3mYu9o) from the Udacity
   course *Linux Command Line Basics* provides a good explanation of absolute versus relative paths.

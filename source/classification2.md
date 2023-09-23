@@ -1588,7 +1588,7 @@ cancer_irrelevant[
 ]
 ```
 
-Next, we build a sequence of $K$-NN classifiers that include `Smoothness`,
+Next, we build a sequence of KNN classifiers that include `Smoothness`,
 `Concavity`, and `Perimeter` as predictor variables, but also increasingly many irrelevant
 variables. In particular, we create 6 data sets with 0, 5, 10, 15, 20, and 40 irrelevant predictors.
 Then we build a model, tuned via 5-fold cross-validation, for each data set.
@@ -1692,15 +1692,9 @@ glue("fig:06-performance-irrelevant-features", plt_irrelevant_accuracies)
 Effect of inclusion of irrelevant predictors.
 :::
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-glue("cancer_propn_1", "{:0.0f}".format(cancer_proportions.loc["Benign", "percent"]))
-```
-
 Although the accuracy decreases as expected, one surprising thing about 
 {numref}`fig:06-performance-irrelevant-features` is that it shows that the method
-still outperforms the baseline majority classifier (with about {glue:text}`cancer_propn_1`% accuracy) 
+still outperforms the baseline majority classifier (with about {glue:text}`cancer_train_b_prop`% accuracy) 
 even with 40 irrelevant variables.
 How could that be? {numref}`fig:06-neighbors-irrelevant-features` provides the answer:
 the tuning procedure for the $K$-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
@@ -1803,13 +1797,13 @@ Best subset selection is applicable to any classification method ($K$-NN or othe
 However, it becomes very slow when you have even a moderate
 number of predictors to choose from (say, around 10). This is because the number of possible predictor subsets
 grows very quickly with the number of predictors, and you have to train the model (itself
-a slow process!) for each one. For example, if we have $2$ predictors&mdash;let's call
+a slow process!) for each one. For example, if we have 2 predictors&mdash;let's call
 them A and B&mdash;then we have 3 variable sets to try: A alone, B alone, and finally A
-and B together. If we have $3$ predictors&mdash;A, B, and C&mdash;then we have 7
+and B together. If we have 3 predictors&mdash;A, B, and C&mdash;then we have 7
 to try: A, B, C, AB, BC, AC, and ABC. In general, the number of models
 we have to train for $m$ predictors is $2^m-1$; in other words, when we 
-get to $10$ predictors we have over *one thousand* models to train, and 
-at $20$ predictors we have over *one million* models to train! 
+get to 10 predictors we have over *one thousand* models to train, and 
+at 20 predictors we have over *one million* models to train! 
 So although it is a simple method, best subset selection is usually too computationally 
 expensive to use in practice.
 
@@ -1834,8 +1828,8 @@ This pattern continues for as many iterations as you want. If you run the method
 all the way until you run out of predictors to choose, you will end up training
 $\frac{1}{2}m(m+1)$ separate models. This is a *big* improvement from the $2^m-1$
 models that best subset selection requires you to train! For example, while best subset selection requires
-training over 1000 candidate models with $m=10$ predictors, forward selection requires training only 55 candidate models.
- Therefore we will continue the rest of this section using forward selection.
+training over 1000 candidate models with 10 predictors, forward selection requires training only 55 candidate models.
+Therefore we will continue the rest of this section using forward selection.
 
 ```{note}
 One word of caution before we move on. Every additional model that you train 

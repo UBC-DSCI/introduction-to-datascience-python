@@ -1146,7 +1146,7 @@ alt.vconcat(
         alt.Chart(sample_estimates).mark_text(color="#f58518", size=12, align="left", dx=16, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {sampling_distribution["data"]["mean_price"].mean().round(1)}")
+            text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title="Sampling distribution", height=150),
     alt.layer(
@@ -1155,7 +1155,7 @@ alt.vconcat(
         alt.Chart(boot20000_means).mark_text(color="#f58518", size=12, align="left", dx=18, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {boot_est_dist["data"]["mean_price"].mean().round(1)}")
+            text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title="Bootstrap distribution", height=150)
 )

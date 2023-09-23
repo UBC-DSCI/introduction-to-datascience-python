@@ -2134,7 +2134,7 @@ and guidance that the worksheets provide will function as intended.
   two chapters, you'll learn about another kind of predictive modeling setting,
   so it might be worth visiting the website only after reading through those
   chapters. 
-- *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides 
+- [*An Introduction to Statistical Learning*](https://www.statlearning.com/) {cite:p}`james2013introduction` provides 
   a great next stop in the process of
   learning about classification. Chapter 4 discusses additional basic techniques
   for classification that we do not cover, such as logistic regression, linear

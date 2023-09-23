@@ -2025,17 +2025,19 @@ and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
 
-- The [altair documentation](https://altair-viz.github.io/){cite:p}`altair` is
+- The [altair documentation](https://altair-viz.github.io/) {cite:p}`altair` is
   where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
   The site also provides a very nice cheat sheet that summarizes many of the data
   wrangling functions from this chapter.
-- The *Fundamentals of Data Visualization* {cite:p}`wilkeviz` has
+- The [*Fundamentals of Data Visualization*](https://clauswilke.com/dataviz/) {cite:p}`wilkeviz` has
   a wealth of information on designing effective visualizations. It is not
   specific to any particular programming language or library. If you want to
   improve your visualization skills, this is the next place to look.
-- The [dates and times](https://wesmckinney.com/book/time-series.html){cite:p}`mckinney2012python`
-  chapter is where you should look if you want to learn about `date` and `time`, including how to create them, and how to use them to effectively handle durations, etc
+- The [dates and times](https://wesmckinney.com/book/time-series.html) chapter
+  of [*Python for Data Analysis*](https://wesmckinney.com/book/) {cite:p}`mckinney2012python`
+  is where you should look if you want to learn about `date` and `time`, including
+  how to create them, and how to use them to effectively handle durations, etc
 
 ## References
 

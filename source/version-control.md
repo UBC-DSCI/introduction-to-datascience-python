@@ -1170,7 +1170,7 @@ you can expand your knowledge through the resources listed below:
   learning about Git and GitHub.
 - [Good enough practices in scientific
   computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec014)
-  [@wilson2014best] provides more advice on useful workflows and "good enough"
+  {cite:p}`wilson2014best` provides more advice on useful workflows and "good enough"
   practices in data analysis projects.
 - In addition to [GitHub](https://github.com), there are other popular Git
   repository hosting services such as [GitLab](https://gitlab.com) and
@@ -1181,3 +1181,11 @@ you can expand your knowledge through the resources listed below:
   token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   is an excellent additional resource to consult if you need help
   generating and using personal access tokens.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

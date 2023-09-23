@@ -1146,7 +1146,7 @@ alt.vconcat(
         alt.Chart(sample_estimates).mark_text(color="#f58518", size=12, align="left", dx=16, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {sampling_distribution["data"]["mean_price"].mean().round(1)}")
+            text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title="Sampling distribution", height=150),
     alt.layer(
@@ -1155,7 +1155,7 @@ alt.vconcat(
         alt.Chart(boot20000_means).mark_text(color="#f58518", size=12, align="left", dx=18, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
-            text=alt.value(f"Mean = {boot_est_dist["data"]["mean_price"].mean().round(1)}")
+            text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
     ).properties(title="Bootstrap distribution", height=150)
 )
@@ -1340,17 +1340,8 @@ and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
 
-- Chapters 7 to 10 of *Modern Dive* {cite:p}`moderndive` provide a great
-  next step in learning about inference. In particular, Chapters 7 and 8 cover
-  sampling and bootstrapping using `tidyverse` and `infer` in a slightly more
-  in-depth manner than the present chapter. Chapters 9 and 10 take the next step
-  beyond the scope of this chapter and begin to provide some of the initial
-  mathematical underpinnings of inference and more advanced applications of the
-  concept of inference in testing hypotheses and performing regression. This
-  material offers a great starting point for getting more into the technical side
-  of statistics.
 - Chapters 4 to 7 of *OpenIntro Statistics* {cite:p}`openintro`
-  provide a good next step after *Modern Dive*. Although it is still certainly
+  provide a good next step in learning about inference. Although it is still certainly
   an introductory text, things get a bit more mathematical here. Depending on
   your background, you may actually want to start going through Chapters 1 to 3
   first, where you will learn some fundamental concepts in probability theory.

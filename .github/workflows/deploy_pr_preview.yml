@@ -1,11 +1,9 @@
-name: Rebuild and deploy book to gh-pages branch
+name: "Rebuild and deploy PR version of book to gh-pages branch in pull###/ folder"
 on:
-  push:
-    branches:
-      - production
+  pull_request:
+    types: [reopened, opened, synchronize]
     paths:
       - source/**
-      
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
@@ -17,7 +15,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          ref: 'production'
+          fetch-depth: '0'
+          ref: ${{ github.head_ref }}
           
       - name: Build the book
         run: |
@@ -29,7 +28,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: source/_build/html
-          cname: python.datasciencebook.ca
-          force_orphan: true # this will clean up all previous PR previews / main branch preview
+          keep_files: true
+          destination_dir: pull${{ github.event.number }}
+          # force_orphan: true # once peaceiris updates to v4, change this to true and keep_files: true for the PR / main branch deploy previews
+
 
 

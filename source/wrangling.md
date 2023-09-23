@@ -1900,8 +1900,6 @@ and guidance that the worksheets provide will function as intended.
 - The [`pandas` package documentation](https://pandas.pydata.org/docs/reference/index.html) is
   another resource to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
-  The site also provides a very nice cheat sheet that summarizes many of the
-  data wrangling functions from this chapter.
 - *Python for Data Analysis* {cite:p}`mckinney2012python` has a few chapters related to
   data wrangling that go into more depth than this book. For example, the
   [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
@@ -1911,8 +1909,7 @@ and guidance that the worksheets provide will function as intended.
   `groupby`, aggregating functions, `apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items
   in a data frame, but none of the above functions are flexible enough to do
-  what you want. In that case, you may consider using [a for
-  loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
+  what you want. In that case, you may consider using [a for loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
 
 
 ## References

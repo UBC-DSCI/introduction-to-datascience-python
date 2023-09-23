@@ -1037,40 +1037,27 @@ using Python, without any manual human effort or copying and pasting. We do this
 examining the *source code* that the web server actually sent our browser to
 display for us. We show a snippet of it below; the
 entire source
-is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/img/reading/website_source.txt):
+is [included with the code for this book](https://github.com/UBC-DSCI/introduction-to-datascience-python/blob/main/source/data/website_source.txt):
 
 ```html
-        <span class="result-meta">
-                <span class="result-price">$800</span>
-
-                <span class="housing">
-                    1br -
-                </span>
-
-                <span class="result-hood"> (13768 108th Avenue)</span>
-
-                <span class="result-tags">
-                    <span class="maptag" data-pid="6786042973">map</span>
-                </span>
-
-                <span class="banish icon icon-trash" role="button">
-                    <span class="screen-reader-text">hide this posting</span>
-                </span>
-
-            <span class="unbanish icon icon-trash red" role="button" aria-hidden
-            <a href="#" class="restore-link">
-                <span class="restore-narrow-text">restore</span>
-                <span class="restore-wide-text">restore this posting</span>
-            </a>
-
+<span class="result-meta">
+        <span class="result-price">$800</span>
+        <span class="housing">
+            1br -
         </span>
-    </p>
-</li>
-         <li class="result-row" data-pid="6788463837">
-
-        <a href="https://vancouver.craigslist.org/nvn/apa/d/north-vancouver-luxu
-                <span class="result-price">$2285</span>
-        </a>
+        <span class="result-hood"> (13768 108th Avenue)</span>
+        <span class="result-tags">
+            <span class="maptag" data-pid="6786042973">map</span>
+        </span>
+        <span class="banish icon icon-trash" role="button">
+            <span class="screen-reader-text">hide this posting</span>
+        </span>
+    <span class="unbanish icon icon-trash red" role="button"></span>
+    <a href="#" class="restore-link">
+        <span class="restore-narrow-text">restore</span>
+        <span class="restore-wide-text">restore this posting</span>
+    </a>
+</span>
 ```
 
 Oof...you can tell that the source code for a web page is not really designed

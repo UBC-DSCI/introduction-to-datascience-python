@@ -1536,7 +1536,6 @@ the $K$-NN here.
 
 +++
 
-<!--
 ## Predictor variable selection
 
 ```{note}
@@ -2102,8 +2101,6 @@ Since the choice of which variables to include as predictors is
 part of tuning your classifier, you *cannot use your test data* for this
 process! 
 ```
-
--->
 
 ## Exercises
 

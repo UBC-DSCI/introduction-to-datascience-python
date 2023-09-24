@@ -1417,9 +1417,15 @@ it unable to talk to anyone else. Most servers have mechanisms to revoke your ac
 careful, but you should try to prevent issues from happening in the first place by being extra careful
 with how you write and run your code. You should also keep in mind that when a website owner
 grants you API access, they also usually specify a limit (or *quota*) of how much data you can ask for.
-Be careful not to overrun your quota! In this example, we should take a look at
- [the Twitter website](https://developer.twitter.com/en/docs/twitter-api/rate-limits) to see what limits
-we should abide by when using the API.
+Be careful not to overrun your quota! In this example,
+[the NASA website](https://api.nasa.gov/) specifies what limits we should abide by when using the API,
+as shown in {numref}`fig:NASA-API-limits`.
+
+```{figure} img/reading/NASA-API-limits.png
+:name: fig:NASA-API-limits
+
+The NASA website specifies an hourly limit of 1,000 requests.
+```
 
 +++
 

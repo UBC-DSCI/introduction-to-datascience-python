@@ -1241,21 +1241,9 @@ variable&mdash;which we then parse using `BeautifulSoup` and store in the
 `page` variable. Next, we pass the CSS selectors we obtained from
 SelectorGadget to the `select` method of the `page` object.  Make sure to
 surround the selectors with quotation marks; `select` expects that argument is
-a string.  The method then selects *nodes* from the HTML document that match the CSS
-selectors you specified. A *node* is an HTML tag pair (e.g., `<td>` and `</td>`
-which defines the cell of a table) combined with the content stored between the
-tags. For our CSS selector `td:nth-child(6)`, an example node that would be
-selected would be:
-
-```html
-<td style="text-align:left;background:#f0f0f0;">
-<a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
-</td>
-```
-
-We store the result of the `select` function in the `population_nodes`
-variable. Note that it returns a list; we slice the list to only print the
-first 5 elements.
+a string. We store the result of the `select` function in the `population_nodes`
+variable. Note that `select` returns a list; below we slice the list to
+print only the first 5 elements for clarity.
 
 ```{code-cell} ipython3
 population_nodes = page.select(
@@ -1264,9 +1252,22 @@ population_nodes = page.select(
 population_nodes[:5]
 ```
 
-Next we extract the meaningful data&mdash;in other words, we get rid of the
+Each of the items in the `population_nodes` list is a *node* from the HTML document that matches the CSS
+selectors you specified. A *node* is an HTML tag pair (e.g., `<td>` and `</td>`
+which defines the cell of a table) combined with the content stored between the
+tags. For our CSS selector `td:nth-child(6)`, an example node that would be
+selected would be:
+
+```html
+<td style="text-align:left;">
+<a href="/wiki/London,_Ontario" title="London, Ontario">London</a>
+</td>
+```
+
+Next, we extract the meaningful data&mdash;in other words, we get rid of the
 HTML code syntax and tags&mdash;from the nodes using the `get_text` function.
 In the case of the example node above, `get_text` function returns `"London"`.
+Once again we show only the first 5 elements for clarity.
 
 ```{code-cell} ipython3
 [row.get_text() for row in population_nodes[:5]]
@@ -1291,8 +1292,8 @@ Using `requests` and `BeautifulSoup` to extract data based on CSS selectors is
 a very general way to scrape data from the web, albeit perhaps a little bit
 complicated.  Fortunately, `pandas` provides the
 [`read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html)
-function, which is easier method to try when you know the data are tabular, and
-appear on the webpage as an HTML table.  The `read_html` function takes one
+function, which is easier method to try when the data 
+appear on the webpage already in a tabular format.  The `read_html` function takes one
 argument&mdash;the URL of the page to scrape&mdash;and will return a list of
 data frames corresponding to all the tables it finds at that URL. We can see
 below that `read_html` found 17 tables on the Wikipedia page for Canada.
@@ -1358,8 +1359,8 @@ The James Webb Space Telescope's NIRCam image of the Rho Ophiuchi molecular clou
 
 +++
 
-First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key
-if you do not already have one. Note that a valid email address is required to
+First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key.
+Note that a valid email address is required to
 associate with the key. The signup form looks something like {numref}`fig:NASA-API-signup`.
 After filling out the basic information, you will receive the token via email.
 Make sure to store the key in a safe place, and keep it private.
@@ -1400,7 +1401,7 @@ That should be more than enough for our purposes in this section.
 #### Accessing the NASA API
 
 The NASA API is what is known as an *HTTP API*: this is a particularly common
-(and simple!) kind of API, where you can obtain data simply by accessing a
+kind of API, where you can obtain data simply by accessing a
 particular URL as if it were a regular website.  To make a query to the NASA
 API, we need to specify three things.  First, we specify the URL *endpoint* of
 the API, which is simply a URL that helps the remote server understand which
@@ -1422,7 +1423,7 @@ along with syntax, default settings, and a description of each.
 
 So for example, to obtain the image of the day
 from July 13, 2023, the API query would have two parameters: `api_key=YOUR_API_KEY`
-and `date=2023-07-13`:
+and `date=2023-07-13`.
 ```
 https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13
 ```
@@ -1481,7 +1482,8 @@ with open("data/nasa.json", "r") as f:
 nasa_data[-1] 
 ```
 
-We can obtain more records at once by using the `start_date` and `end_date` parameters.
+We can obtain more records at once by using the `start_date` and `end_date` parameters, as
+shown in the table of parameters in {numref}`fig:NASA-API-parameters`.
 Let's obtain all the records between May 1, 2023, and July 13, 2023, and store the result
 in an object called `nasa_data`; now the response
 will take the form of a Python list, with one dictionary item similar to the above
@@ -1500,10 +1502,13 @@ len(nasa_data)
 ```
 
 For further data processing using the techniques in this book, you'll need to turn this list of dictionaries
-into a `pandas` data frame.
-these items For the demonstration purpose, let's only use a
-few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
-and `full_text`, and construct a `pandas` DataFrame using the extracted information.
+into a `pandas` data frame. Here we will extract the `date`, `title`, `copyright`, and `url` variables
+from the JSON data, and construct a `pandas` DataFrame using the extracted information.
+
+```{note}
+Understanding this code is not required for the remainder of the textbook. It is included for those
+readers who would like to parse JSON data into a `pandas` data frame in their own data analyses.
+```
 
 ```{code-cell} ipython3
 data_dict = {
@@ -1522,15 +1527,15 @@ nasa_df = pd.DataFrame(data_dict)
 nasa_df
 ```
 
-Success! We have created a small data set using the NASA
+Success&mdash;we have created a small data set using the NASA
 API! This data is also quite different from what we obtained from web scraping;
-the extracted information can be easily converted into a `pandas` data frame
-(although not *every* API will provide data in such a nice format).
+the extracted information is readily available in a JSON format, as opposed to raw
+HTML code (although not *every* API will provide data in such a nice format).
 From this point onward, the `nasa_df` data frame is stored on your
 machine, and you can play with it to your heart's content. For example, you can use
 `pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later;
 and after reading the next few chapters you will have the skills to
-do even more interesting things. If you decide that you want
+do even more interesting things! If you decide that you want
 to ask any of the various NASA APIs for more data
 (see [the list of awesome NASA APIS here](https://api.nasa.gov/)
 for more examples of what is possible), just be mindful as usual about how much

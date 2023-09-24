@@ -12,6 +12,12 @@ jobs:
       packages: write
 
     steps:
+      - name: wait for potential build environment update
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Rebuild docker image'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: checkout
         uses: actions/checkout@v2
         with:

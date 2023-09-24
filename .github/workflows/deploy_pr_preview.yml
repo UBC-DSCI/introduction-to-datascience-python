@@ -5,7 +5,7 @@ on:
     paths:
       - source/**
 jobs:
-  deploy-book:
+  deploy-pr-preview:
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -7,7 +7,7 @@ on:
       - source/**
       
 jobs:
-  deploy-book:
+  deploy-main-preview:
     runs-on: ubuntu-latest
     permissions:
       contents: write

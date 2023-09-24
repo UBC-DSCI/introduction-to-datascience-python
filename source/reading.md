@@ -953,16 +953,15 @@ how to obtain different types of data from the web.
 Data doesn't just magically appear on your computer; you need to get it from
 somewhere. Earlier in the chapter we showed you how to access data stored in a
 plain text, spreadsheet-like format (e.g., comma- or tab-separated) from a web
-URL using the `read_csv` function from `pandas`. But as time goes
-on, it is increasingly uncommon to find data (especially large amounts of data)
-in this format available for download from a URL. Instead, websites now often
-offer something known as an **a**pplication **p**rogramming **i**nterface
-(API), which
-provides a programmatic way to ask for subsets of a data set. This allows the
-website owner to control *who* has access to the data, *what portion* of the
-data they have access to, and *how much* data they can access.  Sometimes, the
-website owner will give you a *token* (a secret string of characters somewhat
-like a password) that you have to provide when accessing the API.
+URL using the `read_csv` function from `pandas`. But as time goes on, it is
+increasingly uncommon to find data (especially large amounts of data) in this
+format available for download from a URL. Instead, websites now often offer
+something known as an **a**pplication **p**rogramming **i**nterface (API),
+which provides a programmatic way to ask for subsets of a data set. This allows
+the website owner to control *who* has access to the data, *what portion* of
+the data they have access to, and *how much* data they can access.  Typically,
+the website owner will give you a *token* (or *key*, a secret string of characters
+somewhat like a password) that you have to provide when accessing the API.
 
 ```{index} web scraping, CSS, HTML
 ```
@@ -986,10 +985,8 @@ information manually is a painstaking and error-prone process, especially when
 there is a lot of information to gather. So instead of asking your browser to
 translate the information that the web server provides into something you can
 see, you can collect that data programmatically&mdash;in the form of
-**h**yper**t**ext **m**arkup **l**anguage
-(HTML)
-and **c**ascading **s**tyle **s**heet (CSS) code&mdash;and process it
-to extract useful information. HTML provides the
+**h**yper**t**ext **m**arkup **l**anguage (HTML) and **c**ascading **s**tyle **s**heet (CSS)
+code&mdash;and process it to extract useful information. HTML provides the
 basic structure of a site and tells the webpage how to display the content
 (e.g., titles, paragraphs, bullet lists etc.), whereas CSS helps style the
 content and tells the webpage how the HTML elements should
@@ -997,8 +994,8 @@ be presented (e.g., colors, layouts, fonts etc.).
 
 This subsection will show you the basics of both web scraping
 with the [`BeautifulSoup` Python package](https://beautiful-soup-4.readthedocs.io/en/latest/) {cite:p}`beautifulsoup`
-and accessing the Twitter API
-using the [`tweepy` Python package](https://github.com/tweepy/tweepy) {cite:p}`tweepy`.
+and accessing the NASA "Astronomy Picture of the Day" API
+using the [`requests` Python package](https://requests.readthedocs.io/en/latest/) {cite:p}`requests`.
 
 +++
 
@@ -1345,61 +1342,34 @@ its own API designed especially for its own use case. Therefore we will just
 provide one example of accessing data through an API in this book, with the
 hope that it gives you enough of a basic idea that you can learn how to use
 another API if needed.
-
-```{index} API; tweepy, tweepy, Twitter, API; token
-```
-
-+++
-
 In particular, in this book we will show you the basics of how to use the
-`tweepy` package in Python to access data from the Twitter API. `tweepy`
-requires the [Twitter Developer
-Portal](https://developer.twitter.com/en/portal/dashboard) and you will need to
-get tokens and secrets from that, through which your access to the data will
-then be authenticated and controlled.
+`requests` package in Python to access data from the NASA "Astronomy Picture of the Day" API. 
 
-+++
 
-First, we go to the [Twitter Developer
-Portal](https://developer.twitter.com/en/portal/dashboard) and sign up an
-account if you do not have one yet. Note that you will need a valid phone
-number to associate with your developer account. After filling out the basic
-information, we will get the *essential access* to the Twitter API. Then we can
-create an app and hit the "get key" button, and we will get the API key and API
-key secret of the app (along with the bearer token which will not be used in
-this demonstration). **We need to store the key and secret at a safe place, and
-make sure do not show them to anyone else (also do not accidentally push it to
-the GitHub repository).** If you lose the key, you can always regenerate it.
-Next, we go to the "Keys and tokens" tab of the app, and generate an access
-token and an access token secret. **Save the access token and the access token
-secret at a safe place as well.** Your app will look something like
-{numref}`fig:twitter-API-keys-tokens`.
 
-+++
-
-```{figure} img/reading/twitter-API-keys-tokens.png
-:name: fig:twitter-API-keys-tokens
-
-Generating the API key-secret pair and the access token-secret pair in Twitter API.
+```{index} API; requests, NASA, API; token; key
 ```
 
 +++
 
-Once you get the access keys and secrets, you can follow along with the examples that we show here.
-To get started, load the `tweepy` package and authenticate our access to the Twitter developer portal account.
+First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key
+if you do not already have one. Note that you will need a valid email address to
+associate with the key. The signup form looks something like {numref}`fig:NASA-API-signup`.
+
+```{figure} img/reading/NASA-API-signup.png
+:name: fig:NASA-API-signup
+
+Generating the API access token for the NASA API.
+```
+
+After filling out the basic information, you will receive the token via email.
+Make sure to store the key in a safe place, and keep it private.
+To get started with the example in this section, import the `requests` package.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
 
 import tweepy
-
-# replace these with the api key, api key secret, access token and access token secret
-# generated on your own
-api_key = "8OxHWiIWjy8M39LvnC8OfSXrj"
-api_key_secret = "scqjRqX5stoy4pYB5Zu52tCBKzhGLDh5nRqTEM6CMoLRkRLR8F"
-
-access_token = "1556029189484007425-mYwaDCI1WnCxjuMt0jb2UYD2ns8BYB"
-access_token_secret = "pDG4Ta7giYLY3mablPhd6y9bB5y2Aer1Cn18rihIJFBB7"
 
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(api_key, api_key_secret)
@@ -1453,7 +1423,7 @@ we should abide by when using the API.
 
 +++
 
-#### Accessing twitter with `tweepy`
+#### Accessing the NASA API
 
 After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
 So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.

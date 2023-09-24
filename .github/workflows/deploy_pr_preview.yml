@@ -44,7 +44,6 @@ jobs:
         uses: mshick/add-pr-comment@v2.8.1
         with:
           message: |
-            """
-            - PR deploy preview available [here](https://python.datasciencebook.ca/pull${{ github.event.number }}/index.html)
-            - Current `main` deploy preview available [here](https://python.datasciencebook.ca/dev/index.html)
-            """
+              Hello! I've built a preview of your PR so that you can compare it to the current `main` branch.
+              * PR deploy preview available [here](https://python.datasciencebook.ca/pull${{ github.event.number }}/index.html)
+              * Current `main` deploy preview available [here](https://python.datasciencebook.ca/dev/index.html)

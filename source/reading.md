@@ -1395,11 +1395,22 @@ The NASA website specifies an hourly limit of 1,000 requests.
 
 #### Accessing the NASA API
 
-After checking the NASA website, it seems like we can request at most 1,000 image records per hour.
+After checking the NASA website, it seems like we can send at most 1,000 requests per hour,
+but it does not specify explicitly how many records we can request. 
 So let's use the `requests` package to send a query for the most recent 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
 
+To make a query to the NASA API (and many other APIs!), we need to specify three things:
+the URL *endpoint* of the A query to a wide variety of APIs takes the following form:
 ```
-https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=2023-07-13
+[URL of the website]?[parameter]=[value]&[parameter]=[value]&[parameter]=value
+```
+
+
+
+the API looks like
+
+```
+https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-07-13&
 ```
 
 ```{figure} img/reading/NASA-API-parameters.png

@@ -1,7 +1,7 @@
 name: "Rebuild and deploy PR version of book to gh-pages branch in pull###/ folder"
 on:
   pull_request:
-    types: [reopened, opened, synchronize]
+    types: [opened, synchronize]
     paths:
       - source/**
 jobs:
@@ -18,7 +18,8 @@ jobs:
           ref: ${{ github.ref }}
           check-name: 'Rebuild docker image'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: checkout
+
+      - name: Checkout the repo
         uses: actions/checkout@v2
         with:
           fetch-depth: '0'
@@ -38,5 +39,11 @@ jobs:
           destination_dir: pull${{ github.event.number }}
           # force_orphan: true # once peaceiris updates to v4, change this to true and keep_files: true for the PR / main branch deploy previews
 
-
-
+      - name: Post URLS to PR thread
+        uses: mshick/add-pr-comment@v2.8.1
+        with:
+          message: |
+            """
+            - PR deploy preview available [here](https://python.datasciencebook.ca/pull${{ github.event.number }}/index.html)
+            - Current `main` deploy preview available [here](https://python.datasciencebook.ca/dev/index.html)
+            """

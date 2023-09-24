@@ -1342,8 +1342,9 @@ its own API designed especially for its own use case. Therefore we will just
 provide one example of accessing data through an API in this book, with the
 hope that it gives you enough of a basic idea that you can learn how to use
 another API if needed. In particular, in this book we will show you the basics
-of how to use the `requests` package in Python to request the NASA "Astronomy Picture
-of the Day" for July 13, 2023 from its API. 
+of how to use the `requests` package in Python to access data from the NASA "Astronomy Picture
+of the Day" API (a great source of desktop backgrounds, by the way&mdash;take a look at the stunning
+picture of the Rho-Ophiuchi cloud complex in {numref}`fig:NASA-API-Rho-Ophiuchi` from July 13, 2023!).
 
 ```{index} API; requests, NASA, API; token; key
 ```
@@ -1427,13 +1428,29 @@ https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13
 ```
 If you try putting this URL into your web browser, you'll actually find that the server
 responds to your request with some text:
-```
-{"date":"2023-07-13","explanation":"A mere 390 light-years away, Sun-like stars and future planetary systems are forming in the Rho Ophiuchi molecular cloud complex, the closest star-forming region to our fair planet. The James Webb Space Telescope's NIRCam peered into the nearby natal chaos to capture this infrared image at an inspiring scale. The spectacular cosmic snapshot was released to celebrate the successful first year of Webb's exploration of the Universe. The frame spans less than a light-year across the Rho Ophiuchi region and contains about 50 young stars. Brighter stars clearly sport Webb's characteristic pattern of diffraction spikes. Huge jets of shocked molecular hydrogen blasting from newborn stars are red in the image, with the large, yellowish dusty cavity carved out by the energetic young star near its center. Near some stars in the stunning image are shadows cast by their protoplanetary disks.","hdurl":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph.png","media_type":"image","service_version":"v1","title":"Webb's Rho Ophiuchi","url":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph1024.png"}
+
+```json
+{"date":"2023-07-13","explanation":"A mere 390 light-years away, Sun-like stars
+and future planetary systems are forming in the Rho Ophiuchi molecular cloud
+complex, the closest star-forming region to our fair planet. The James Webb
+Space Telescope's NIRCam peered into the nearby natal chaos to capture this
+infrared image at an inspiring scale. The spectacular cosmic snapshot was
+released to celebrate the successful first year of Webb's exploration of the
+Universe. The frame spans less than a light-year across the Rho Ophiuchi region
+and contains about 50 young stars. Brighter stars clearly sport Webb's
+characteristic pattern of diffraction spikes. Huge jets of shocked molecular
+hydrogen blasting from newborn stars are red in the image, with the large,
+yellowish dusty cavity carved out by the energetic young star near its center.
+Near some stars in the stunning image are shadows cast by their protoplanetary
+disks.","hdurl":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph.png",
+"media_type":"image","service_version":"v1","title":"Webb's
+Rho Ophiuchi","url":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph1024.png"}
 ```
 
-Woah! What a mess! There is definitely some data there, but it's a bit hard to
+Neat! There is definitely some data there, but it's a bit hard to
 see what it all is. As it turns out, this is a common format for data called
-*JSON* (JavaScript Object Notation). You can interpret this data just like
+*JSON* (JavaScript Object Notation). We won't encounter this kind of data much in this book,
+but for now you can interpret this data just like
 you'd interpret a Python dictionary: these are `key : value` pairs separated by
 commas. For example, if you look closely, you'll see that the first entry is
 `"date":"2023-07-13"`, which indicates that we indeed successfully received
@@ -1441,93 +1458,81 @@ data corresponding to July 13, 2023.
 
 So now the job is to do all of this programmatically in Python. We will load
 the `requests` package, and make the query using the `get` function, which takes a single URL argument;
-you will recognize the same query URL that we pasted into the browser earlier below.
-We will then name the response object `nasa_response`, and obtain a JSON representation using the `json` method.
-Finally, we use the `dumps` method from the `json` package to obtain the response as a nicely-formatted string object.
+you will recognize the same query URL that we pasted into the browser earlier.
+We will then name the response object `nasa_data`, and obtain a JSON representation of the
+response using the `json` method.
 
-```{code-cell} ipython3
-:tags: [remove-output]
-import requests, json
+<!-- we have disabled the below code for reproducibility, with hidden setting 
+of the nasa_data object. But you can reproduce this using the DEMO_KEY key -->
+```python
+import requests
 
-nasa_response = requests.get("https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13")
-json.dumps(nasa_response.json(), indent=4, sort_keys=True)
-```
-
-Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-for info in scikit_learn_tweets[:3]:
-    print("ID: {}".format(info.id))
-    print(info.created_at)
-    print(info.full_text)
-    print("\n")
-```
-
-```
-ID: 1555686128971403265
-2022-08-05 22:44:11+00:00
-scikit-learn 1.1.2 is out on https://t.co/lSpi4eDc2t and conda-forge!
-
-This is a small maintenance release that fixes a couple of regressions:
-https://t.co/Oa84ES0qpG
-
-
-ID: 1549321048943988737
-2022-07-19 09:11:37+00:00
-RT @MarenWestermann: @scikit_learn It is worth highlighting that this scikit-learn sprint is seeing the highest participation of women out…
-
-
-ID: 1548339716465930244
-2022-07-16 16:12:09+00:00
-@StefanieMolin @theBodlina @RichardKlima We continue pulling requests here in Dublin. Putting some Made in Ireland code in the scikit-learn codebase 🇮🇪 . Current stats: 18 PRs opened, 12 merged 🚀 https://t.co/ccWy8vh8YI
-```
-
-+++
-
-A full list of available attributes provided by Twitter API can be found [here](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
-
-+++
-
-For the demonstration purpose, let's only use a
-few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
-and `full_text`, and construct a `pandas` DataFrame using the extracted information.
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-columns = ["time", "user", "is_retweet", "text"]
-data = []
-for tweet in scikit_learn_tweets:
-    data.append(
-        [tweet.created_at, tweet.user.screen_name, tweet.retweeted, tweet.full_text]
-    )
-
-scikit_learn_tweets_df = pd.DataFrame(data, columns=columns)
-scikit_learn_tweets_df
+requests.get(
+	"https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13"
+	).json()
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-input]
-
-scikit_learn_tweets_df = pd.read_csv("data/reading_api_df.csv", index_col=0)
-scikit_learn_tweets_df
+import json
+with open("data/nasa.json", "r") as f:
+    nasa_data = json.load(f)
+# the last entry in the stored data is July 13, 2023, so print that
+nasa_data[-1] 
 ```
 
-If you look back up at the image of the [@scikit_learn](https://twitter.com/scikit_learn) Twitter page, you will
-recognize the text of the most recent few tweets in the above data frame.  In
-other words, we have successfully created a small data set using the Twitter
-API&mdash;neat! This data is also quite different from what we obtained from web scraping;
-the extracted information can be easily converted into a `pandas` data frame (although not *every* API will provide data in such a nice format).
-From this point onward, the `scikit_learn_tweets_df` data frame is stored on your
+We can obtain more records at once by using the `start_date` and `end_date` parameters.
+Let's obtain all the records between May 1, 2023, and July 13, 2023, and store the result
+in an object called `nasa_data`; now the response
+will take the form of a Python list, with one dictionary item similar to the above
+for each of the 74 days between the start and end dates:
+
+```python
+nasa_data = requests.get(
+	"https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-05-01&end_date=2023-07-13"
+	).json()
+len(nasa_data)
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+len(nasa_data)
+```
+
+For further data processing using the techniques in this book, you'll need to turn this list of dictionaries
+into a `pandas` data frame.
+these items For the demonstration purpose, let's only use a
+few variables of interest: `created_at`,  `user.screen_name`, `retweeted`,
+and `full_text`, and construct a `pandas` DataFrame using the extracted information.
+
+```{code-cell} ipython3
+data_dict = {
+	"date":[],
+	"title": [],
+	"copyright" : [],
+	"url": []
+}
+
+for item in nasa_data:
+	data_dict["copyright"].append(item["copyright"] if "copyright" in item else None)
+	for entry in ["url", "title", "date"]:
+		data_dict[entry].append(item[entry])
+
+nasa_df = pd.DataFrame(data_dict)
+nasa_df
+```
+
+Success! We have created a small data set using the NASA
+API! This data is also quite different from what we obtained from web scraping;
+the extracted information can be easily converted into a `pandas` data frame
+(although not *every* API will provide data in such a nice format).
+From this point onward, the `nasa_df` data frame is stored on your
 machine, and you can play with it to your heart's content. For example, you can use
 `pandas.to_csv` to save it to a file and `pandas.read_csv` to read it into Python again later;
 and after reading the next few chapters you will have the skills to
-compute the percentage of retweets versus tweets, find the most oft-retweeted
-account, make visualizations of the data, and much more! If you decide that you want
-to ask the Twitter API for more data
-(see [the `tweepy` page](https://github.com/tweepy/tweepy)
+do even more interesting things. If you decide that you want
+to ask any of the various NASA APIs for more data
+(see [the list of awesome NASA APIS here](https://api.nasa.gov/)
 for more examples of what is possible), just be mindful as usual about how much
 data you are requesting and how frequently you are making requests.
 

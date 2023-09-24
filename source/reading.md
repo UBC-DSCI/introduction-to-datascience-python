@@ -1341,70 +1341,34 @@ consistent way to access an API across websites. Every website typically has
 its own API designed especially for its own use case. Therefore we will just
 provide one example of accessing data through an API in this book, with the
 hope that it gives you enough of a basic idea that you can learn how to use
-another API if needed.
-In particular, in this book we will show you the basics of how to use the
-`requests` package in Python to access data from the NASA "Astronomy Picture of the Day" API. 
-
-
+another API if needed. In particular, in this book we will show you the basics
+of how to use the `requests` package in Python to request the NASA "Astronomy Picture
+of the Day" for July 13, 2023 from its API. 
 
 ```{index} API; requests, NASA, API; token; key
+```
+
+```{figure} img/reading/NASA-API-Rho-Ophiuchi.png
+:name: fig:NASA-API-Rho-Ophiuchi
+:width: 400px
+
+The James Webb Space Telescope's NIRCam image of the Rho Ophiuchi molecular cloud complex {cite:p}`rhoophiuchi`.
 ```
 
 +++
 
 First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key
-if you do not already have one. Note that you will need a valid email address to
+if you do not already have one. Note that a valid email address is required to
 associate with the key. The signup form looks something like {numref}`fig:NASA-API-signup`.
+After filling out the basic information, you will receive the token via email.
+Make sure to store the key in a safe place, and keep it private.
+
 
 ```{figure} img/reading/NASA-API-signup.png
 :name: fig:NASA-API-signup
 
 Generating the API access token for the NASA API.
 ```
-
-After filling out the basic information, you will receive the token via email.
-Make sure to store the key in a safe place, and keep it private.
-To get started with the example in this section, import the `requests` package.
-
-```{code-cell} ipython3
-:tags: [remove-output]
-
-import tweepy
-
-# Authenticate to Twitter
-auth = tweepy.OAuthHandler(api_key, api_key_secret)
-auth.set_access_token(access_token, access_token_secret)
-
-api = tweepy.API(auth)
-
-try:
-    api.verify_credentials()
-    print("Successful Authentication")
-except:
-    print("Failed authentication")
-```
-
-```
-Successful Authentication
-```
-
-+++
-
-`tweepy` provides an extensive set of functions to search
-Twitter for tweets, users, their followers, and more.
-Let's construct a small data set of the last 200 tweets and
-retweets from the [@scikit_learn](https://twitter.com/scikit_learn) account. A few of the most recent tweets
-are shown in {numref}`fig:01-scikit-learn-twitter`.
-
-+++
-
-```{figure} img/reading/scikit-learn-twitter.png
-:name: fig:01-scikit-learn-twitter
-
-The `scikit-learn` account Twitter feed.
-```
-
-+++
 
 **Stop! Think about your API usage carefully!**
 
@@ -1417,9 +1381,9 @@ it unable to talk to anyone else. Most servers have mechanisms to revoke your ac
 careful, but you should try to prevent issues from happening in the first place by being extra careful
 with how you write and run your code. You should also keep in mind that when a website owner
 grants you API access, they also usually specify a limit (or *quota*) of how much data you can ask for.
-Be careful not to overrun your quota! In this example,
-[the NASA website](https://api.nasa.gov/) specifies what limits we should abide by when using the API,
-as shown in {numref}`fig:NASA-API-limits`.
+Be careful not to overrun your quota! So *before* we try to use the API, we will first visit
+[the NASA website](https://api.nasa.gov/) to see what limits we should abide by when using the API.
+These limits are outlined in in {numref}`fig:NASA-API-limits`.
 
 ```{figure} img/reading/NASA-API-limits.png
 :name: fig:NASA-API-limits
@@ -1431,8 +1395,22 @@ The NASA website specifies an hourly limit of 1,000 requests.
 
 #### Accessing the NASA API
 
-After checking the Twitter website, it seems like asking for 200 tweets one time is acceptable.
-So we can use the `user_timeline` function to ask for the last 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
+After checking the NASA website, it seems like we can request at most 1,000 image records per hour.
+So let's use the `requests` package to send a query for the most recent 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
+
+```
+https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=2023-07-13
+```
+
+```{figure} img/reading/NASA-API-parameters.png
+:name: fig:NASA-API-parameters
+
+The set of parameters that you can specify when querying the NASA "Astronomy Picture of the Day" API,
+along with syntax, default settings, and a description of each.
+```
+
+
+
 
 ```{code-cell} ipython3
 :tags: [remove-output]

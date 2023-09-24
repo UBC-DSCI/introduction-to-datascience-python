@@ -1391,27 +1391,26 @@ These limits are outlined in in {numref}`fig:NASA-API-limits`.
 The NASA website specifies an hourly limit of 1,000 requests.
 ```
 
+After checking the NASA website, it seems like we can send at most 1,000 requests per hour,
+That should be more than enough for our purposes in this section.
+
 +++
 
 #### Accessing the NASA API
 
-After checking the NASA website, it seems like we can send at most 1,000 requests per hour,
-but it does not specify explicitly how many records we can request. 
-So let's use the `requests` package to send a query for the most recent 200 tweets from the [@scikit_learn](https://twitter.com/scikit_learn) account.
-
-To make a query to the NASA API (and many other APIs!), we need to specify three things:
-the URL *endpoint* of the A query to a wide variety of APIs takes the following form:
-```
-[URL of the website]?[parameter]=[value]&[parameter]=[value]&[parameter]=value
-```
-
-
-
-the API looks like
-
-```
-https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-07-13&
-```
+The NASA API is what is known as an *HTTP API*: this is a particularly common
+(and simple!) kind of API, where you can obtain data simply by accessing a
+particular URL as if it were a regular website.  To make a query to the NASA
+API, we need to specify three things.  First, we specify the URL *endpoint* of
+the API, which is simply a URL that helps the remote server understand which
+API you are trying to access. NASA offers a variety of APIs, each with its own
+endpoint; in the case of the NASA "Astronomy Picture of the Day" API, the URL
+endpoint is `https://api.nasa.gov/planetary/apod`, as shown at the top of
+{numref}`fig:NASA-API-parameters`. Second, we write `?`, which denotes that a
+list of *query parameters* will follow. And finally, we specify a list of
+query parameters of the form `parameter=value`, separated by `&` characters.  The NASA
+"Astronomy Picture of the Day" API accepts the parameters shown in
+{numref}`fig:NASA-API-parameters`. 
 
 ```{figure} img/reading/NASA-API-parameters.png
 :name: fig:NASA-API-parameters
@@ -1420,8 +1419,19 @@ The set of parameters that you can specify when querying the NASA "Astronomy Pic
 along with syntax, default settings, and a description of each.
 ```
 
+So for example, to obtain the image of the day
+from July 13, 2023, the API query would have two parameters: `api_key=YOUR_API_KEY`
+and `date=2023-07-13`:
+```
+https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13
+```
+If you try putting this URL into your web browser, you'll actually find that the server
+responds to your request with some text:
+```
+{"date":"2023-07-13","explanation":"A mere 390 light-years away, Sun-like stars and future planetary systems are forming in the Rho Ophiuchi molecular cloud complex, the closest star-forming region to our fair planet. The James Webb Space Telescope's NIRCam peered into the nearby natal chaos to capture this infrared image at an inspiring scale. The spectacular cosmic snapshot was released to celebrate the successful first year of Webb's exploration of the Universe. The frame spans less than a light-year across the Rho Ophiuchi region and contains about 50 young stars. Brighter stars clearly sport Webb's characteristic pattern of diffraction spikes. Huge jets of shocked molecular hydrogen blasting from newborn stars are red in the image, with the large, yellowish dusty cavity carved out by the energetic young star near its center. Near some stars in the stunning image are shadows cast by their protoplanetary disks.","hdurl":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph.png","media_type":"image","service_version":"v1","title":"Webb's Rho Ophiuchi","url":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph1024.png"}
+```
 
-
+Woah! What a mess! There is definitely some data there
 
 ```{code-cell} ipython3
 :tags: [remove-output]

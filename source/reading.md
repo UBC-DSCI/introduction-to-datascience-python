@@ -1431,19 +1431,20 @@ responds to your request with some text:
 {"date":"2023-07-13","explanation":"A mere 390 light-years away, Sun-like stars and future planetary systems are forming in the Rho Ophiuchi molecular cloud complex, the closest star-forming region to our fair planet. The James Webb Space Telescope's NIRCam peered into the nearby natal chaos to capture this infrared image at an inspiring scale. The spectacular cosmic snapshot was released to celebrate the successful first year of Webb's exploration of the Universe. The frame spans less than a light-year across the Rho Ophiuchi region and contains about 50 young stars. Brighter stars clearly sport Webb's characteristic pattern of diffraction spikes. Huge jets of shocked molecular hydrogen blasting from newborn stars are red in the image, with the large, yellowish dusty cavity carved out by the energetic young star near its center. Near some stars in the stunning image are shadows cast by their protoplanetary disks.","hdurl":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph.png","media_type":"image","service_version":"v1","title":"Webb's Rho Ophiuchi","url":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph1024.png"}
 ```
 
-Woah! What a mess! There is definitely some data there
+Woah! What a mess! There is definitely some data there, but it's a bit hard to see what it all is. As it turns out, this is a common format for data called *JSON* (JavaScript Object Notation). You can 
+interpret this data just like you'd interpret a Python dictionary: these are `key : value` pairs separated by commas. For example, if you look closely, you'll see that the first entry is
+`"date":"2023-07-13"`, which indicates that we indeed successfully received data corresponding to July 13, 2023.
+
+So now the job is to do all of this programmatically in Python. We will load the `requests` package to make the query, and the `json` package to interpret the JSON response.
+You will recognize the same query URL we pasted into the browser below as well.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
+import requests, json
 
-userID = "scikit_learn"
+nasa_response = requests.get("https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13")
 
-scikit_learn_tweets = api.user_timeline(
-    screen_name=userID,
-    count=200,
-    include_rts=True,
-    tweet_mode="extended",
-)
+json.dumps(nasa_response.json(), indent=4, sort_keys=True)
 ```
 
 Let's take a look at the first 3 most recent tweets of [@scikit_learn](https://twitter.com/scikit_learn) through accessing the attributes of tweet data dictionary:

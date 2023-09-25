@@ -1392,7 +1392,7 @@ These limits are outlined in {numref}`fig:NASA-API-limits`.
 The NASA website specifies an hourly limit of 1,000 requests.
 ```
 
-After checking the NASA website, it seems like we can send at most 1,000 requests per hour,
+After checking the NASA website, it seems like we can send at most 1,000 requests per hour.
 That should be more than enough for our purposes in this section.
 
 +++

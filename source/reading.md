@@ -1384,7 +1384,7 @@ with how you write and run your code. You should also keep in mind that when a w
 grants you API access, they also usually specify a limit (or *quota*) of how much data you can ask for.
 Be careful not to overrun your quota! So *before* we try to use the API, we will first visit
 [the NASA website](https://api.nasa.gov/) to see what limits we should abide by when using the API.
-These limits are outlined in in {numref}`fig:NASA-API-limits`.
+These limits are outlined in {numref}`fig:NASA-API-limits`.
 
 ```{figure} img/reading/NASA-API-limits.png
 :name: fig:NASA-API-limits

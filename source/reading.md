@@ -1572,7 +1572,7 @@ and guidance that the worksheets provide will function as intended.
   APIs, we provide two companion tutorial video links for how to use the
   SelectorGadget tool to obtain desired CSS selectors for:
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
-    - [extracting Canadian city names and 2016 populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
+    - [extracting Canadian city names and populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
 
 ## References
 

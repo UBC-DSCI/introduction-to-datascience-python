@@ -1246,7 +1246,7 @@ print only the first 5 elements for clarity.
 
 ```{code-cell} ipython3
 population_nodes = page.select(
-    "td:nth-child(8) , td:nth-child(6) , td:nth-child(4) , .mw-parser-output div td:nth-child(2)"
+	"td:nth-child(8) , td:nth-child(4) , .largestCities-cell-background+ td a"
 )
 population_nodes[:5]
 ```
@@ -1254,7 +1254,7 @@ population_nodes[:5]
 Each of the items in the `population_nodes` list is a *node* from the HTML document that matches the CSS
 selectors you specified. A *node* is an HTML tag pair (e.g., `<td>` and `</td>`
 which defines the cell of a table) combined with the content stored between the
-tags. For our CSS selector `td:nth-child(6)`, an example node that would be
+tags. For our CSS selector `td:nth-child(4)`, an example node that would be
 selected would be:
 
 ```html

@@ -1198,8 +1198,7 @@ td:nth-child(4) ,
 ```
 
 Now that we have the CSS selectors that describe the properties of the elements
-that we want to target (e.g., has a tag name `price`), we can use them to find
-certain elements in web pages and extract data.
+that we want to target, we can use them to find certain elements in web pages and extract data.
 
 
 #### Scraping with `BeautifulSoup`

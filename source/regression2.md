@@ -305,13 +305,13 @@ small_sacramento_pred = small_sacramento_pred[["sqft", "price", "predicted"]].me
     id_vars=["sqft"]
 )
 
-error_plot = small_plot.copy()
-
+v_lines = []
 for i in range(len(small_sacramento)):
     sqft_val = small_sacramento.iloc[i]["sqft"]
     line_df = small_sacramento_pred.query("sqft == @sqft_val")
-    error_plot += alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value")
+    v_lines.append(alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value"))
 
+error_plot = alt.layer(*v_lines, small_plot).configure_circle(opacity=1)
 error_plot
 ```
 

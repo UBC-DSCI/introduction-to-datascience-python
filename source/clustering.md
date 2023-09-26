@@ -471,10 +471,10 @@ penguin_data['label'] = [
     0, 1, 2, 2
 ]
 points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
-        alt.X("flipper_length_standardized"),
-        alt.Y("bill_length_standardized"),
-        alt.Color('label:N').legend(None),
-        alt.Shape('label:N').legend(None)
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None)
 )
 
 glue('toy-kmeans-init-1', points_kmeans_init, display=True)
@@ -624,8 +624,8 @@ penguin_data['label'] = [2, 2, 0, 0, 1, 0, 1, 0, 0, 0, 2, 0, 1, 1, 1, 2, 2, 2]
 centroid_init = penguin_data.groupby('label').mean()
 
 points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
-    alt.X("flipper_length_standardized"),
-    alt.Y("bill_length_standardized"),
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
     alt.Shape('label:N').legend(None)
 )

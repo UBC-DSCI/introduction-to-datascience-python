@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -291,7 +291,7 @@ have.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-clus = data[data["cluster"] == 2][["bill_length_standardized", "flipper_length_standardized"]]
+clus = data[data["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
 ```{index} see: within-cluster sum-of-squared-distances; WSSD

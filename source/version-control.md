@@ -1037,8 +1037,8 @@ marked by `>>>>>>>`. Between these markings, Git also inserts a separator
 (`=======`). The version of the change before the separator is your change, and
 the version that follows the separator was the change that existed on GitHub.
 In {numref}`merge-conflict-05`, you can see that in your local repository
-there is a line of code that calls `scale_color_manual` with three color values (`deeppink2`, `cyan4`, and `purple1`).
-It looks like your collaborator made an edit to that line too, except with different colors (to `blue3`, `red3`, and `black`)!
+there is a line of code that sets the axis scaling to `"sqrt"`.
+It looks like your collaborator made an edit to that line too, except with axis scaling `"log"`!
 
 ```{figure} img/version-control/merge_conflict_05.png
 ---

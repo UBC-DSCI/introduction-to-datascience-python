@@ -350,8 +350,8 @@ toy_example_clus1_center = alt.layer(
 glue('toy-example-clus1-center', toy_example_clus1_center, display=True)
 ```
 
-In the first cluster from the example, there are {glue:}`clus_rows_glue` data points. These are shown with their cluster center
-(flipper_length_standardized = {glue:}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:}`mean_bill_len_std_glue`) highlighted
+In the first cluster from the example, there are {glue:text}`clus_rows_glue` data points. These are shown with their cluster center
+(flipper_length_standardized = {glue:text}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:text}`mean_bill_len_std_glue`) highlighted
 in {numref}`toy-example-clus1-center`
 
 :::{glue:figure} toy-example-clus1-center

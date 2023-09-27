@@ -496,8 +496,7 @@ Random initialization of labels.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-from sklearn.cluster import KMeans
-
+from sklearn.metrics import euclidean_distances
 
 def plot_kmean_iterations(iterations, data, centroid_init):
     """Plot kmeans cluster and label updates for multiple iterations"""
@@ -510,18 +509,15 @@ def plot_kmean_iterations(iterations, data, centroid_init):
         data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
         dfs.append(data.copy())
 
-        cluster_columns = ['flipper_length_standardized', 'bill_length_standardized']
-        knn = KMeans(init=centroid_init[cluster_columns], n_clusters=3, max_iter=1, n_init=1)
-        knn.fit(data[cluster_columns])
-
-        data['label'] = knn.labels_
         data['iteration'] = f'Iteration {i}'
         data['update_type'] = 'Label Update'
+        cluster_columns = ['flipper_length_standardized', 'bill_length_standardized']
+        data['label'] = np.argmin(euclidean_distances(data[cluster_columns], centroid_init), axis=1)
         data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
         data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
         dfs.append(data.copy())
 
-        centroid_init = data.groupby('label').mean(numeric_only=True)
+        centroid_init = data.groupby('label')[cluster_columns].mean()
 
     points = alt.Chart(
         pd.concat(dfs),
@@ -553,12 +549,8 @@ def plot_kmean_iterations(iterations, data, centroid_init):
 :tags: [remove-cell]
 
 centroid_init = penguin_data.groupby('label').mean()
-# For some reason, this adjustment is needed to get roughly the same assignment of the points
-# to the clusters as in the R version
-centroid_init.loc[2] = [0.29, 0.36]
-centroid_init.loc[1] = [-0.01, -0.09]
 
-glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguin_data, centroid_init), display=True)
+glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguin_data.copy(), centroid_init.copy()), display=True)
 ```
 
 ```{index} WSSD; total
@@ -618,7 +610,7 @@ These, however, are beyond the scope of this book.
 
 penguin_data = pd.read_csv("data/penguins_standardized.csv")
 # Set up the initial "random" label assignment the same as in the R book
-penguin_data['label'] = [2, 2, 0, 0, 1, 0, 1, 0, 0, 0, 2, 0, 1, 1, 1, 2, 2, 2]
+penguin_data['label'] = [1, 1, 2, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 1, 1, 1]
 centroid_init = penguin_data.groupby('label').mean()
 
 points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
@@ -650,7 +642,7 @@ Random initialization of labels.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data, centroid_init), display=True)
+glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data.copy(), centroid_init.copy()), display=True)
 ```
 
 {numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
@@ -669,6 +661,9 @@ and pick the clustering that has the lowest final total WSSD.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
+from sklearn.cluster import KMeans
+
 
 penguin_data = pd.read_csv("data/penguins_standardized.csv")
 

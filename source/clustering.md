@@ -474,7 +474,8 @@ points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, op
     alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
-    alt.Shape('label:N').legend(None)
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
 )
 
 glue('toy-kmeans-init-1', points_kmeans_init, display=True)
@@ -491,6 +492,7 @@ An example random initialization is shown in {numref}`toy-kmeans-init-1`
 :name: toy-kmeans-init-1
 
 Random initialization of labels.
+Each cluster is depicted as a different color and shape.
 :::
 
 ```{code-cell} ipython3
@@ -523,20 +525,22 @@ def plot_kmean_iterations(iterations, data, centroid_init):
         pd.concat(dfs),
         width=200,
         height=200
-    ).mark_point(filled=True, size=75, opacity=1).encode(
+    ).mark_point(filled=True, size=50, opacity=1).encode(
         alt.X("flipper_length_standardized").scale(domain=(-2, 2)),
         alt.Y("bill_length_standardized").scale(domain=(-2, 2)),
         alt.Color('label:N').legend(None),
-        alt.Shape('label:N').legend(None)
+        alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+        alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
     )
 
-    centroids = points.mark_point(size=200, filled=True, stroke='black', strokeWidth=1.5).encode(
+    centroids = points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
         alt.X("mean(flipper_centroid)")
             .scale(domain=(-2, 2))
             .title("Flipper Length (standardized)"),
         alt.Y("mean(bill_centroid)")
             .scale(domain=(-2, 2))
-            .title("Flipper Length (standardized)")
+            .title("Bill Length (standardized)"),
+        size=alt.value(200)
     )
 
     return (points + centroids).facet(
@@ -617,7 +621,8 @@ points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, op
     alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
-    alt.Shape('label:N').legend(None)
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
 )
 
 glue('toy-kmeans-bad-init-1', points_kmeans_init, display=True)
@@ -686,14 +691,17 @@ points = alt.Chart(pd.concat(dfs), width=200, height=200).mark_point(filled=True
         .scale(zero=False)
         .title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
-    alt.Shape('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle', 'cross', 'diamond', 'triangle-right', 'triangle-down', 'triangle-left']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100, 100, 100, 100, 100, 100]),
+    # alt.Shape('label:N').legend(None),
 )
 
 vary_k = alt.layer(
     points,
-    points.mark_point(filled=True, size=200, stroke='black', strokeWidth=1).encode(
+    points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
         alt.X('mean(bill_length_standardized)'),
         alt.Y('mean(flipper_length_standardized)'),
+        size=alt.value(200)
     )
 ).facet(
     alt.Facet(

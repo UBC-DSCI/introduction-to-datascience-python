@@ -358,7 +358,7 @@ in {numref}`toy-example-clus1-center`
 :figwidth: 700px
 :name: toy-example-clus1-center
 
-Cluster 1 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange.
+Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange.
 :::
 
 ```{code-cell} ipython3
@@ -400,7 +400,7 @@ These distances are denoted by lines in {numref}`toy-example-clus1-dists` for th
 :figwidth: 700px
 :name: toy-example-clus1-dists
 
-Cluster 1 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
+Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
 :::
 
 ```{code-cell} ipython3

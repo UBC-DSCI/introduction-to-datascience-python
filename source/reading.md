@@ -961,7 +961,7 @@ something known as an **a**pplication **p**rogramming **i**nterface (API),
 which provides a programmatic way to ask for subsets of a data set. This allows
 the website owner to control *who* has access to the data, *what portion* of
 the data they have access to, and *how much* data they can access.  Typically,
-the website owner will give you a *token* (or *key*, a secret string of characters
+the website owner will give you a *token* or *key* (a secret string of characters
 somewhat like a password) that you have to provide when accessing the API.
 
 ```{index} web scraping, CSS, HTML
@@ -1069,7 +1069,7 @@ above you can see a line that looks like
 <span class="result-price">$800</span>
 ```
 
-That is definitely storing the price of a particular apartment. With some more
+That snippet is definitely storing the price of a particular apartment. With some more
 investigation, you should be able to find things like the date and time of the
 listing, the address of the listing, and more. So this source code most likely
 contains all the information we are interested in!
@@ -1152,7 +1152,7 @@ The selector gadget returns them to us as a comma-separated list (here
 `.housing , .result-price`), which is exactly the format we need to provide to
 Python if we are using more than one CSS selector.
 
-**Stop! Are you allowed to scrape that website?**
+**Caution: are you allowed to scrape that website?**
 
 ```{index} web scraping; permission
 ```
@@ -1336,7 +1336,7 @@ format for data analysis.
 
 Rather than posting a data file at a URL for you to download, many websites
 these days provide an API that can be accessed through a programming language
-like Python. The benefit of this is that data owners have much more control
+like Python. The benefit of using an API is that data owners have much more control
 over the data they provide to users. However, unlike web scraping, there is no
 consistent way to access an API across websites. Every website typically has
 its own API designed especially for its own use case. Therefore we will just
@@ -1359,7 +1359,7 @@ The James Webb Space Telescope's NIRCam image of the Rho Ophiuchi molecular clou
 
 +++
 
-First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key.
+First, you will need to visit the [NASA APIs page](https://api.nasa.gov/) and generate an API key (i.e., a password used to identify you when accessing the API).
 Note that a valid email address is required to
 associate with the key. The signup form looks something like {numref}`fig:NASA-API-signup`.
 After filling out the basic information, you will receive the token via email.
@@ -1372,7 +1372,7 @@ Make sure to store the key in a safe place, and keep it private.
 Generating the API access token for the NASA API.
 ```
 
-**Stop! Think about your API usage carefully!**
+**Caution: think about your API usage carefully!**
 
 When you access an API, you are initiating a transfer of data from a web server
 to your computer. Web servers are expensive to run and do not have infinite resources.
@@ -1407,8 +1407,7 @@ API, we need to specify three things.  First, we specify the URL *endpoint* of
 the API, which is simply a URL that helps the remote server understand which
 API you are trying to access. NASA offers a variety of APIs, each with its own
 endpoint; in the case of the NASA "Astronomy Picture of the Day" API, the URL
-endpoint is `https://api.nasa.gov/planetary/apod`, as shown at the top of
-{numref}`fig:NASA-API-parameters`. Second, we write `?`, which denotes that a
+endpoint is `https://api.nasa.gov/planetary/apod`. Second, we write `?`, which denotes that a
 list of *query parameters* will follow. And finally, we specify a list of
 query parameters of the form `parameter=value`, separated by `&` characters.  The NASA
 "Astronomy Picture of the Day" API accepts the parameters shown in
@@ -1423,7 +1422,8 @@ along with syntax, default settings, and a description of each.
 
 So for example, to obtain the image of the day
 from July 13, 2023, the API query would have two parameters: `api_key=YOUR_API_KEY`
-and `date=2023-07-13`.
+and `date=2023-07-13`. Remember to replace `YOUR_API_KEY` with the API key you 
+received from NASA in your email! Putting it all together, the query will look like the following:
 ```
 https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13
 ```
@@ -1457,10 +1457,10 @@ commas. For example, if you look closely, you'll see that the first entry is
 `"date":"2023-07-13"`, which indicates that we indeed successfully received
 data corresponding to July 13, 2023.
 
-So now the job is to do all of this programmatically in Python. We will load
+So now our job is to do all of this programmatically in Python. We will load
 the `requests` package, and make the query using the `get` function, which takes a single URL argument;
 you will recognize the same query URL that we pasted into the browser earlier.
-We will then name the response object `nasa_data`, and obtain a JSON representation of the
+We will then obtain a JSON representation of the
 response using the `json` method.
 
 <!-- we have disabled the below code for reproducibility, with hidden setting 
@@ -1468,9 +1468,10 @@ of the nasa_data object. But you can reproduce this using the DEMO_KEY key -->
 ```python
 import requests
 
-requests.get(
+nasa_data_single = requests.get(
 	"https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13"
 	).json()
+nasa_data_single
 ```
 
 ```{code-cell} ipython3
@@ -1486,8 +1487,8 @@ We can obtain more records at once by using the `start_date` and `end_date` para
 shown in the table of parameters in {numref}`fig:NASA-API-parameters`.
 Let's obtain all the records between May 1, 2023, and July 13, 2023, and store the result
 in an object called `nasa_data`; now the response
-will take the form of a Python list, with one dictionary item similar to the above
-for each of the 74 days between the start and end dates:
+will take the form of a Python list. Each item in the list will correspond to a single day's record (just like the `nasa_data_single` object), 
+and there will be 74 items total, one for each day between the start and end dates:
 
 ```python
 nasa_data = requests.get(

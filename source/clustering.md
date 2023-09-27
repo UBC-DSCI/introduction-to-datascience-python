@@ -571,13 +571,11 @@ sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 2. **Label update:** Reassign each data point to the cluster with the nearest center.
 
 These two steps are repeated until the cluster assignments no longer change.
-We show what the first four iterations of K-means would look like in
+We show what the first three iterations of K-means would look like in
 {numref}`toy-kmeans-iter-1`
 There each row corresponds to an iteration,
 where the left column depicts the center update,
 and the right column depicts the reassignment of data to clusters.
-
-
 
 
 :::{glue:figure} toy-kmeans-iter-1

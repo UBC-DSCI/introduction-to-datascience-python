@@ -1156,8 +1156,7 @@ Now that you've picked up the basics of version control with Git and GitHub,
 you can expand your knowledge through the resources listed below:
 
 - GitHub's [guides website](https://guides.github.com/) and [YouTube
-  channel](https://www.youtube.com/githubguides), and [*Happy Git and GitHub
-  for the useR*](https://happygitwithr.com/) are great resources to take the next steps in
+  channel](https://www.youtube.com/githubguides) are great resources to take the next steps in
   learning about Git and GitHub.
 - [Good enough practices in scientific
   computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec014)

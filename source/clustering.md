@@ -358,7 +358,7 @@ in {numref}`toy-example-clus1-center`
 :figwidth: 700px
 :name: toy-example-clus1-center
 
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.
+Cluster 1 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange.
 :::
 
 ```{code-cell} ipython3
@@ -400,7 +400,7 @@ These distances are denoted by lines in {numref}`toy-example-clus1-dists` for th
 :figwidth: 700px
 :name: toy-example-clus1-dists
 
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red. The distances from the observations to the cluster center are represented as black lines.
+Cluster 1 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
 :::
 
 ```{code-cell} ipython3
@@ -450,7 +450,7 @@ These distances are denoted by black lines in
 :figwidth: 700px
 :name: toy-example-all-clus-dists
 
-All clusters from the penguin_data data set example. Observations are in orange, blue, and yellow with the cluster center highlighted in red. The distances from the observations to each of the respective cluster centers are represented as black lines.
+All clusters from the `penguin_data` data set example. Observations are in blue, orange, and red with the cluster center highlighted in orange. The distances from the observations to each of the respective cluster centers are represented as black lines.
 :::
 
 +++
@@ -584,7 +584,7 @@ and the right column depicts the reassignment of data to clusters.
 :figwidth: 700px
 :name: toy-kmeans-iter-1
 
-First three iterations of K-means clustering on the penguin_data example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+First three iterations of K-means clustering on the `penguin_data` example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
 :::
 
 +++
@@ -662,7 +662,7 @@ glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data, centroid_in
 :figwidth: 700px
 :name: toy-kmeans-bad-iter-1
 
-First five iterations of K-means clustering on the penguin_data example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+First five iterations of K-means clustering on the `penguin_data` example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
 :::
 
 This looks like a relatively bad clustering of the data, but K-means cannot improve it.
@@ -764,7 +764,7 @@ glue('toy-kmeans-elbow', elbow_plot, display=True)
 ```
 
 If we set K less than 3, then the clustering merges separate groups of data; this causes a large
-total WSSD, since the cluster center (denoted by an "x") is not close to any of the data in the cluster. On
+total WSSD, since the cluster center (denoted by large shapes with black outlines) is not close to any of the data in the cluster. On
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly

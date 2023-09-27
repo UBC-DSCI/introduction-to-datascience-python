@@ -1520,8 +1520,9 @@ data_dict = {
 }
 
 for item in nasa_data:
-	data_dict["copyright"].append(item["copyright"] if "copyright" in item else None)
-	for entry in ["url", "title", "date"]:
+	if "copyright" not in item:
+		item["copyright"] = None
+	for entry in ["url", "title", "date", "copyright"]:
 		data_dict[entry].append(item[entry])
 
 nasa_df = pd.DataFrame(data_dict)

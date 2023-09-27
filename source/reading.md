@@ -1469,8 +1469,8 @@ of the nasa_data object. But you can reproduce this using the DEMO_KEY key -->
 import requests
 
 nasa_data_single = requests.get(
-	"https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13"
-	).json()
+    "https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13"
+    ).json()
 nasa_data_single
 ```
 
@@ -1492,8 +1492,8 @@ and there will be 74 items total, one for each day between the start and end dat
 
 ```python
 nasa_data = requests.get(
-	"https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-05-01&end_date=2023-07-13"
-	).json()
+    "https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-05-01&end_date=2023-07-13"
+    ).json()
 len(nasa_data)
 ```
 
@@ -1513,17 +1513,17 @@ readers who would like to parse JSON data into a `pandas` data frame in their ow
 
 ```{code-cell} ipython3
 data_dict = {
-	"date":[],
-	"title": [],
-	"copyright" : [],
-	"url": []
+    "date":[],
+    "title": [],
+    "copyright" : [],
+    "url": []
 }
 
 for item in nasa_data:
-	if "copyright" not in item:
-		item["copyright"] = None
-	for entry in ["url", "title", "date", "copyright"]:
-		data_dict[entry].append(item[entry])
+    if "copyright" not in item:
+        item["copyright"] = None
+    for entry in ["url", "title", "date", "copyright"]:
+        data_dict[entry].append(item[entry])
 
 nasa_df = pd.DataFrame(data_dict)
 nasa_df

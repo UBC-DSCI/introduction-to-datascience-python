@@ -1197,12 +1197,6 @@ sample. Since the bootstrap distribution pretty well approximates the sampling
 distribution spread, we can use the bootstrap spread to help us develop a
 plausible range for our population parameter along with our estimate!
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-!wget -O img/inference/11-bootstrapping7-1.png https://datasciencebook.ca/_main_files/figure-html/11-bootstrapping7-1.png
-```
-
 ```{figure} img/inference/11-bootstrapping7-1.png
 :name: fig:11-bootstrapping7
 

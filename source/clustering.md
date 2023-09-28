@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -291,7 +291,7 @@ have.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-clus = data[data["cluster"] == 2][["bill_length_standardized", "flipper_length_standardized"]]
+clus = data[data["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
 ```{index} see: within-cluster sum-of-squared-distances; WSSD
@@ -329,17 +329,55 @@ glue("mean_flipper_len_std_glue","{:.2f}".format(mean_flipper_len_std))
 glue("mean_bill_len_std_glue", "{:.2f}".format(mean_bill_len_std))
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+toy_example_clus1_center = alt.layer(
+    alt.Chart(clus).mark_circle(size=75, opacity=1, color='steelblue').encode(
+        x=alt.X("flipper_length_standardized"),
+        y=alt.Y("bill_length_standardized")
+    ),
+    alt.Chart(clus).mark_circle(color='coral', size=500, opacity=1).encode(
+        x=alt.X("mean(flipper_length_standardized)")
+            .scale(zero=False, padding=20)
+            .title("Flipper Length (standardized)"),
+        y=alt.Y("mean(bill_length_standardized)")
+            .scale(zero=False, padding=30)
+            .title("Bill Length (standardized)"),
+    )
+)
+
+glue('toy-example-clus1-center', toy_example_clus1_center, display=True)
+```
+
 In the first cluster from the example, there are {glue:text}`clus_rows_glue` data points. These are shown with their cluster center
-(flipper_length_standardized = {glue:text}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:text}`mean_bill_len_std_glue`) highlighted
-in {numref}`toy-example-clus1-center-1`.
+(standardized flipper length {glue:text}`mean_flipper_len_std_glue`, standardized bill length {glue:text}`mean_bill_len_std_glue`) highlighted
+in {numref}`toy-example-clus1-center`
 
+:::{glue:figure} toy-example-clus1-center
+:figwidth: 700px
+:name: toy-example-clus1-center
 
-```{figure} img/clustering/toy-example-clus1-center-1.png
----
-height: 400px
-name: toy-example-clus1-center-1
----
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.
+Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+centroid_lines = alt.Chart(
+    clus.assign(
+        mean_bill_length=clus['bill_length_standardized'].mean(),
+        mean_flipper_length=clus['flipper_length_standardized'].mean()
+    )
+).mark_rule(size=1.5).encode(
+    alt.Y('bill_length_standardized'),
+    alt.Y2('mean_bill_length'),
+    alt.X('flipper_length_standardized'),
+    alt.X2('mean_flipper_length')
+)
+toy_example_clus1_dists = centroid_lines + toy_example_clus1_center
+
+glue('toy-example-clus1-dists', toy_example_clus1_dists, display=True)
 ```
 
 ```{index} distance; K-means
@@ -356,14 +394,46 @@ we would compute the WSSD $S^2$ via
 
 $S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
 
-These distances are denoted by lines in {numref}`toy-example-clus1-dists-1` for the first cluster of the penguin data example.
+These distances are denoted by lines in {numref}`toy-example-clus1-dists` for the first cluster of the penguin data example.
 
-```{figure} img/clustering/toy-example-clus1-dists-1.png
----
-height: 400px
-name: toy-example-clus1-dists-1
----
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red. The distances from the observations to the cluster center are represented as black lines.
+:::{glue:figure} toy-example-clus1-dists
+:figwidth: 700px
+:name: toy-example-clus1-dists
+
+Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+toy_example_all_clus_dists = alt.layer(
+    alt.Chart(
+        data.assign(
+            mean_bill_length=data.groupby('cluster')['bill_length_standardized'].transform('mean'),
+            mean_flipper_length=data.groupby('cluster')['flipper_length_standardized'].transform('mean')
+        )
+    ).mark_rule(size=1.25).encode(
+        alt.Y('bill_length_standardized'),
+        alt.Y2('mean_bill_length'),
+        alt.X('flipper_length_standardized'),
+        alt.X2('mean_flipper_length')
+    ),
+    alt.Chart(data).mark_circle(size=40, opacity=1).encode(
+        alt.X("flipper_length_standardized"),
+        alt.Y("bill_length_standardized"),
+        alt.Color('cluster:N')
+    ),
+    alt.Chart(data).mark_circle(color='coral', size=200, opacity=1).encode(
+        alt.X("mean(flipper_length_standardized)")
+          .scale(zero=False)
+          .title("Flipper Length (standardized)"),
+        alt.Y("mean(bill_length_standardized)")
+          .scale(zero=False)
+          .title("Bill Length (standardized)"),
+        alt.Detail('cluster:N')
+    )
+)
+glue('toy-example-all-clus-dists', toy_example_all_clus_dists, display=True)
 ```
 
 The larger the value of $S^2$, the more spread out the cluster is, since large $S^2$ means that points are far from the cluster center.
@@ -374,37 +444,117 @@ we sum them together to get the *total WSSD*.
 For our example,
 this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
-{numref}`toy-example-all-clus-dists-1`.
+{numref}`toy-example-all-clus-dists`
 
-```{figure} img/clustering/toy-example-all-clus-dists-1.png
----
-height: 400px
-name: toy-example-all-clus-dists-1
----
-All clusters from the penguin_data data set example. Observations are in orange, blue, and yellow with the cluster center highlighted in red. The distances from the observations to each of the respective cluster centers are represented as black lines.
+:::{glue:figure} toy-example-all-clus-dists
+:figwidth: 700px
+:name: toy-example-all-clus-dists
 
+All clusters from the `penguin_data` data set example. Observations are in blue, orange, and red with the cluster center highlighted in orange. The distances from the observations to each of the respective cluster centers are represented as black lines.
+:::
 
-```
++++
 
 ### The clustering algorithm
 
 ```{index} K-means; algorithm
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+penguin_data = pd.read_csv("data/penguins_standardized.csv")
+# Set up the initial "random" label assignment the same as in the R book
+penguin_data['label'] = [
+    2, 2, 1, 1, 0, 0, 0, 1,
+    2, 2, 1, 2, 1, 2,
+    0, 1, 2, 2
+]
+points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+)
+
+glue('toy-kmeans-init-1', points_kmeans_init, display=True)
+```
+
 We begin the K-means algorithm by picking K,
 and randomly assigning a roughly equal number of observations
 to each of the K clusters.
-An example random initialization is shown in {numref}`toy-kmeans-init-1`.
+An example random initialization is shown in {numref}`toy-kmeans-init-1`
 
 
+:::{glue:figure} toy-kmeans-init-1
+:figwidth: 700px
+:name: toy-kmeans-init-1
 
-```{figure} img/clustering/toy-kmeans-init-1.png
----
-height: 400px
-name: toy-kmeans-init-1
----
 Random initialization of labels.
+Each cluster is depicted as a different color and shape.
+:::
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+from sklearn.metrics import euclidean_distances
+
+def plot_kmean_iterations(iterations, data, centroid_init):
+    """Plot kmeans cluster and label updates for multiple iterations"""
+    dfs = []
+    centroid_inits = []
+    for i in range(1, iterations+1):
+        data['iteration'] = f'Iteration {i}'
+        data['update_type'] = 'Center Update'
+        data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
+        data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
+        dfs.append(data.copy())
+
+        data['iteration'] = f'Iteration {i}'
+        data['update_type'] = 'Label Update'
+        cluster_columns = ['flipper_length_standardized', 'bill_length_standardized']
+        data['label'] = np.argmin(euclidean_distances(data[cluster_columns], centroid_init), axis=1)
+        data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
+        data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
+        dfs.append(data.copy())
+
+        centroid_init = data.groupby('label')[cluster_columns].mean()
+
+    points = alt.Chart(
+        pd.concat(dfs),
+        width=200,
+        height=200
+    ).mark_point(filled=True, size=50, opacity=1).encode(
+        alt.X("flipper_length_standardized").scale(domain=(-2, 2)),
+        alt.Y("bill_length_standardized").scale(domain=(-2, 2)),
+        alt.Color('label:N').legend(None),
+        alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+        alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+    )
+
+    centroids = points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
+        alt.X("mean(flipper_centroid)")
+            .scale(domain=(-2, 2))
+            .title("Flipper Length (standardized)"),
+        alt.Y("mean(bill_centroid)")
+            .scale(domain=(-2, 2))
+            .title("Bill Length (standardized)"),
+        size=alt.value(200)
+    )
+
+    return (points + centroids).facet(
+        row=alt.Row('iteration', header=alt.Header(title='', labelFontSize=18)),
+        column=alt.Column('update_type', header=alt.Header(title='', labelFontSize=18))
+    )
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+centroid_init = penguin_data.groupby('label').mean()
+
+glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguin_data.copy(), centroid_init.copy()), display=True)
 ```
 
 ```{index} WSSD; total
@@ -417,20 +567,21 @@ sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 2. **Label update:** Reassign each data point to the cluster with the nearest center.
 
 These two steps are repeated until the cluster assignments no longer change.
-We show what the first four iterations of K-means would look like in
-{numref}`toy-kmeans-iter-1`.
+We show what the first three iterations of K-means would look like in
+{numref}`toy-kmeans-iter-1`
 There each row corresponds to an iteration,
 where the left column depicts the center update,
 and the right column depicts the reassignment of data to clusters.
 
-```{figure} img/clustering/toy-kmeans-iter-1.png
----
-height: 400px
-name: toy-kmeans-iter-1
----
-First four iterations of K-means clustering on the penguin_data example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
 
-```
+:::{glue:figure} toy-kmeans-iter-1
+:figwidth: 700px
+:name: toy-kmeans-iter-1
+
+First three iterations of K-means clustering on the `penguin_data` example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+:::
+
++++
 
 Note that at this point, we can terminate the algorithm since none of the assignments changed
 in the fourth iteration; both the centers and labels will remain the same from this point onward.
@@ -458,6 +609,25 @@ that use other distance metrics
 to allow for non-quantitative data to be clustered.
 These, however, are beyond the scope of this book.
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+penguin_data = pd.read_csv("data/penguins_standardized.csv")
+# Set up the initial "random" label assignment the same as in the R book
+penguin_data['label'] = [1, 1, 2, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 1, 1, 1]
+centroid_init = penguin_data.groupby('label').mean()
+
+points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+)
+
+glue('toy-kmeans-bad-init-1', points_kmeans_init, display=True)
+```
+
 ### Random restarts
 
 ```{index} K-means; init argument
@@ -466,31 +636,82 @@ These, however, are beyond the scope of this book.
 Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
 For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
 
-```{figure} img/clustering/toy-kmeans-bad-init-1.png
----
-height: 400px
-name: toy-kmeans-bad-init-1
----
+
+:::{glue:figure} toy-kmeans-bad-init-1
+:figwidth: 700px
+:name: toy-kmeans-bad-init-1
+
 Random initialization of labels.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data.copy(), centroid_init.copy()), display=True)
 ```
 
-{numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`.
+{numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
 
 
+:::{glue:figure} toy-kmeans-bad-iter-1
+:figwidth: 700px
+:name: toy-kmeans-bad-iter-1
 
-```{figure} img/clustering/toy-kmeans-bad-iter-1.png
----
-height: 700px
-name: toy-kmeans-bad-iter-1
----
-First five iterations of K-means clustering on the penguin_data example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
-```
-
-
+First five iterations of K-means clustering on the `penguin_data` example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+:::
 
 This looks like a relatively bad clustering of the data, but K-means cannot improve it.
 To solve this problem when clustering data using K-means, we should randomly re-initialize the labels a few times, run K-means for each initialization,
 and pick the clustering that has the lowest final total WSSD.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+from sklearn.cluster import KMeans
+
+
+penguin_data = pd.read_csv("data/penguins_standardized.csv")
+
+dfs = []
+inertias = []
+for i in range(1, 10):
+    data = penguin_data.copy()
+    knn = KMeans(n_clusters=i, n_init='auto')
+    knn.fit(data)
+    data['n_clusters'] = f'{i} Cluster' + ('' if i == 1 else 's')
+    data['label'] = knn.labels_
+    dfs.append(data)
+    inertias.append(knn.inertia_)
+
+points = alt.Chart(pd.concat(dfs), width=200, height=200).mark_point(filled=True, opacity=1).encode(
+    alt.X('bill_length_standardized')
+        .scale(zero=False)
+        .title("Flipper Length (standardized)"),
+    alt.Y('flipper_length_standardized')
+        .scale(zero=False)
+        .title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle', 'cross', 'diamond', 'triangle-right', 'triangle-down', 'triangle-left']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100, 100, 100, 100, 100, 100]),
+    # alt.Shape('label:N').legend(None),
+)
+
+vary_k = alt.layer(
+    points,
+    points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
+        alt.X('mean(bill_length_standardized)'),
+        alt.Y('mean(flipper_length_standardized)'),
+        size=alt.value(200)
+    )
+).facet(
+    alt.Facet(
+        'n_clusters:N',
+        header=alt.Header(title='', labelFontSize=16)
+    ),
+    columns=3
+)
+glue('toy-kmeans-vary-k-1', vary_k, display=True)
+```
 
 ### Choosing K
 
@@ -505,31 +726,57 @@ In both cases, we will potentially miss interesting structure in the data.
 on K-means clustering of our penguin flipper and bill length data
 by showing the different clusterings for K's ranging from 1 to 9.
 
-```{figure} img/clustering/toy-kmeans-vary-k-1.png
----
-height: 700px
-name: toy-kmeans-vary-k-1
----
+:::{glue:figure} toy-kmeans-vary-k-1
+:figwidth: 700px
+:name: toy-kmeans-vary-k-1
+
 Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+elbow_plot = alt.layer(
+    alt.Chart(
+        pd.DataFrame({
+            'wssd': inertias,
+            'k': range(1, len(inertias) + 1)
+        })
+    ).mark_line(point=True).encode(
+        x=alt.X("k").title("Number of clusters"),
+        y=alt.Y("wssd").title("Total within-cluster sum of squares"),
+    ),
+    alt.Chart().mark_text(size=22, align='left', baseline='bottom').encode(
+        x=alt.datum(3.3),
+        y=alt.datum(9.8),
+        text=alt.datum('Elbow')
+    ),
+    alt.Chart().mark_text(size=50, align='left', baseline='bottom', fontWeight=100, angle=25).encode(
+        x=alt.datum(2.8),
+        y=alt.datum(5),
+        text=alt.datum('🠃')
+    )
+)
+
+glue('toy-kmeans-elbow', elbow_plot, display=True)
 ```
 
 ```{index} elbow method
 ```
 
 If we set K less than 3, then the clustering merges separate groups of data; this causes a large
-total WSSD, since the cluster center (denoted by an "x") is not close to any of the data in the cluster. On
+total WSSD, since the cluster center (denoted by large shapes with black outlines) is not close to any of the data in the cluster. On
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
-the right number of clusters ({numref}`toy-kmeans-elbow-1`).
+the right number of clusters ({numref}`toy-kmeans-elbow`)).
 
-```{figure} img/clustering/toy-kmeans-elbow-1.png
----
-height: 400px
-name: toy-kmeans-elbow-1
----
+:::{glue:figure} toy-kmeans-elbow
+:figwidth: 700px
+:name: toy-kmeans-elbow
+
 Total WSSD for K clusters ranging from 1 to 9.
-```
+:::
 
 ## K-means in Python
 
@@ -552,7 +799,6 @@ unstandardized_data.to_csv("data/penguins.csv", index=False)
 penguins = pd.read_csv("data/penguins.csv")
 penguins
 ```
-
 
 Recall that K-means clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the *scale* of each of the variables in the data

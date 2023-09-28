@@ -30,15 +30,6 @@ Note that we assume that you already have Jupyter set up and ready to use. If th
 {numref}`Chapter %s <move-to-your-own-machine>` to learn how to install and configure Jupyter on your own
 computer.
 
-```{note}
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on Jupyter notebooks
-has not yet been fully updated to focus on Python; it has images and examples from
-the R version of the book. But the concepts related to Jupyter notebooks are generally
-the same. We are currently working on producing new Python-based images and examples
-for this chapter.
-```
-
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:

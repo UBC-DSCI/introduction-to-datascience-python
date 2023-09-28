@@ -308,15 +308,15 @@ nearest_neighbors
 nn_plot = small_plot + rule
 
 # plot horizontal lines which is perpendicular to x=2000
+h_lines = []
 for i in range(5):
     h_line_df = pd.DataFrame({
         "sqft": [nearest_neighbors.iloc[i, 4], 2000],
         "price": [nearest_neighbors.iloc[i, 6]] * 2
     })
-    h_line = alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price")
-    nn_plot += h_line
+    h_lines.append(alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price"))
 
-nn_plot
+nn_plot = alt.layer(*h_lines, small_plot, rule)
 ```
 
 ```{code-cell} ipython3
@@ -487,13 +487,15 @@ errors_plot = (
     small_plot
     + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
     + alt.Chart(sacr_new_preds_hid)
-    .mark_circle()
+    .mark_circle(opacity=1)
     .encode(x="sqft", y="price")
 )
+v_lines = []
 for i in pts["sqft"]:
     line_df = sacr_new_preds_melted_df.query("sqft == @i")
-    errors_plot += alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value")
+    v_lines.append(alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value"))
 
+errors_plot = alt.layer(*v_lines, errors_plot)
 errors_plot
 ```
 

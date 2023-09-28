@@ -40,15 +40,6 @@ used day-to-day in a standard data science project.
 There are many user interfaces for Git; in this chapter
 we will cover the Jupyter Git interface.
 
-```{note}
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on version control
-has not yet been fully updated to focus on Python; it has images and examples from
-the R version of the book. But the concepts related to version control are generally
-the same. We are currently working on producing new Python-based images and examples
-for this chapter.
-```
-
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
@@ -1046,8 +1037,8 @@ marked by `>>>>>>>`. Between these markings, Git also inserts a separator
 (`=======`). The version of the change before the separator is your change, and
 the version that follows the separator was the change that existed on GitHub.
 In {numref}`merge-conflict-05`, you can see that in your local repository
-there is a line of code that calls `scale_color_manual` with three color values (`deeppink2`, `cyan4`, and `purple1`).
-It looks like your collaborator made an edit to that line too, except with different colors (to `blue3`, `red3`, and `black`)!
+there is a line of code that sets the axis scaling to `"sqrt"`.
+It looks like your collaborator made an edit to that line too, except with axis scaling `"log"`!
 
 ```{figure} img/version-control/merge_conflict_05.png
 ---
@@ -1165,8 +1156,7 @@ Now that you've picked up the basics of version control with Git and GitHub,
 you can expand your knowledge through the resources listed below:
 
 - GitHub's [guides website](https://guides.github.com/) and [YouTube
-  channel](https://www.youtube.com/githubguides), and [*Happy Git and GitHub
-  for the useR*](https://happygitwithr.com/) are great resources to take the next steps in
+  channel](https://www.youtube.com/githubguides) are great resources to take the next steps in
   learning about Git and GitHub.
 - [Good enough practices in scientific
   computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec014)

@@ -18,7 +18,7 @@ RUN pip install docutils==0.17.1 # Need to pin docutils to an old version for no
 RUN pip install referencing
 RUN pip install jupyter-book
 # Pinning pandas until altair 5.1.2 to avoid future warning https://github.com/altair-viz/altair/issues/3181
-RUN pip install numpy jinja2 pandas"<2.1" altair">=5.1.1" "vegafusion[embed]" vl-convert-python">=0.13" click ibis-framework ghp-import jupytext nodejs lxml
+RUN pip install numpy jinja2 pandas altair">=5.1.2" "vegafusion[embed]" vl-convert-python">=0.14" click ibis-framework ghp-import jupytext nodejs lxml
 
 # forces scikit-learn to grab latest to avoid bug in 1.3.0 related to checking for c-contiguity breaking figures in classification 2. See https://github.com/scikit-learn/scikit-learn/pull/26772
 # TODO: remove this once scikit-learn 1.4.x or beyond releases and is incorporated into jupyter/scipy-notebook

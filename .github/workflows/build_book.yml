@@ -4,7 +4,8 @@ on:
     branches:
       - production
     paths:
-      - source/**
+      - 'source/**'
+      - 'build_html.sh'
       
 jobs:
   deploy-book:

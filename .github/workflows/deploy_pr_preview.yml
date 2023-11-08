@@ -3,7 +3,8 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - source/**
+      - 'source/**'
+      - 'Dockerfile'
 jobs:
   deploy-pr-preview:
     runs-on: ubuntu-latest

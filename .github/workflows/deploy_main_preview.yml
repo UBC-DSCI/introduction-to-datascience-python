@@ -4,7 +4,8 @@ on:
     branches:
       - main
     paths:
-      - source/**
+      - 'source/**'
+      - 'build_html.sh'
       
 jobs:
   deploy-main-preview:

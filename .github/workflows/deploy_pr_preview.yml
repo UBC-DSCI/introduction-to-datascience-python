@@ -5,6 +5,8 @@ on:
     paths:
       - 'source/**'
       - 'Dockerfile'
+    branches:
+      - 'main'
 jobs:
   deploy-pr-preview:
     runs-on: ubuntu-latest

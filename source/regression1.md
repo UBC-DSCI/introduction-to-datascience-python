@@ -54,7 +54,7 @@ By the end of the chapter, readers will be able to do the following:
 * Recognize situations where a simple regression analysis would be appropriate for making predictions.
 * Explain the K-nearest neighbor (KNN) regression algorithm and describe how it differs from KNN classification.
 * Interpret the output of a KNN regression.
-* In a dataset with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
+* In a data set with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
 * Execute cross-validation in Python to choose the number of neighbors.
 * Evaluate KNN regression prediction accuracy in Python using a test data set and the root mean squared prediction error (RMSPE).
 * In the context of KNN regression, compare and contrast goodness of fit and prediction properties (namely RMSE vs RMSPE).
@@ -795,8 +795,8 @@ In this case the orange line becomes extremely smooth, and actually becomes flat
 once $K$ is equal to the number of datapoints in the entire data set.
 This happens because our predicted values for a given x value (here, home
 size), depend on many neighboring observations; in the case where $K$ is equal
-to the size of the dataset, the prediction is just the mean of the house prices
-in the dataset (completely ignoring the house size).
+to the size of the data set, the prediction is just the mean of the house prices
+in the data set (completely ignoring the house size).
 In contrast to the $K=1$ example,
 the smooth, inflexible orange line does not follow the training observations very closely.
 In other words, the model is *not influenced enough* by the training data.

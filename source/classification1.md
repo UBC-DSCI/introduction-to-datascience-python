@@ -332,7 +332,7 @@ points_df = pd.DataFrame(
 )
 perim_concav_with_new_point_df = pd.concat((cancer, points_df), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
-# in the orginal dataset
+# in the orginal data set
 my_distances = euclidean_distances(perim_concav_with_new_point_df[attrs])[
     len(cancer)
 ][:-1]
@@ -430,7 +430,7 @@ points_df2 = pd.DataFrame(
 )
 perim_concav_with_new_point_df2 = pd.concat((cancer, points_df2), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
-# in the orginal dataset
+# in the orginal data set
 my_distances2 = euclidean_distances(perim_concav_with_new_point_df2[attrs])[
     len(cancer)
 ][:-1]
@@ -783,7 +783,7 @@ points_df4 = pd.DataFrame(
 )
 perim_concav_with_new_point_df4 = pd.concat((cancer, points_df4), ignore_index=True)
 # Find the euclidean distances from the new point to each of the points
-# in the orginal dataset
+# in the orginal data set
 my_distances4 = euclidean_distances(perim_concav_with_new_point_df4[attrs])[
     len(cancer)
 ][:-1]

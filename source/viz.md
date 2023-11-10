@@ -183,7 +183,7 @@ than 5,000 rows. The simplest way to plot larger data sets is to enable the
 `vegafusion` data transformer right after you import the `altair` package:
 `alt.data_transformers.enable("vegafusion")`. This will allow you to plot up to
 100,000 graphical objects (e.g., a scatter plot with 100,000 points). To
-visualize *even larger* datasets, see [the `altair` documentation](https://altair-viz.github.io/user_guide/large_datasets).
+visualize *even larger* data sets, see [the `altair` documentation](https://altair-viz.github.io/user_guide/large_datasets).
 ```
 
 ### Scatter plots and line plots: the Mauna Loa CO$_{\text{2}}$ data set
@@ -277,7 +277,7 @@ There are a few basic aspects of a plot that we need to specify:
     - Here, we use the `mark_point` function to visualize our data as a scatter plot.
 - The **encoding channels**, which tells `altair` how the columns in the data frame map to visual properties in the chart.
     - To create an encoding, we use the `encode` function.
-    - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the dataset, accessed by field name (column names)
+    - The `encode` method builds a key-value mapping between encoding channels (such as x, y) to fields in the data set, accessed by field name (column names)
     - Here, we set the `x` axis of the plot to the `date_measured` variable,
       and on the `y` axis, we plot the `ppm` variable.
     - For the y-axis, we also provided the method

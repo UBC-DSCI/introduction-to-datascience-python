@@ -792,7 +792,7 @@ Total WSSD for K clusters ranging from 1 to 9.
 We can perform K-means in Python using a workflow similar to those
 in the earlier classification and regression chapters. We will begin
 by reading the original (i.e., unstandardized) subset of 18 observations
-from the penguins dataset.
+from the penguins data set.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1056,7 +1056,7 @@ and guidance that the worksheets provide will function as intended.
   clustering for when you expect there to be subgroups, and then subgroups within
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
-  popular technique for reducing the number of predictors in a dataset.
+  popular technique for reducing the number of predictors in a data set.
 
 ## References
 

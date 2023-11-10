@@ -644,8 +644,8 @@ Alright, now the `mean_test_score` variable actually has values of the RMSPE
 for different numbers of neighbors. Finally, the `sem_test_score` variable
 contains the standard error of our cross-validation RMSPE estimate, which
 is a measure of how uncertain we are in the mean value. Roughly, if
-your estimated mean RMSPE is 100,000 and standard error is 1,000, you can expect the
-*true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it
+your estimated mean RMSPE is \$100,000 and standard error is \$1,000, you can expect the
+*true* RMSPE to be somewhere roughly between \$99,000 and \$101,000 (although it
 may fall outside this range).
 
 {numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
@@ -1059,9 +1059,9 @@ predictor *as part of the model tuning process* (e.g., if we are running forward
 in the chapter on evaluating and tuning classification models),
 then we must compare the RMSPE estimated using only the training data via cross-validation.
 Looking back, the estimated cross-validation RMSPE for the single-predictor
-model was {glue:text}`cv_RMSPE`.
+model was \${glue:text}`cv_RMSPE`.
 The estimated cross-validation RMSPE for the multivariable model is
-{glue:text}`cv_RMSPE_2pred`.
+\${glue:text}`cv_RMSPE_2pred`.
 Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
@@ -1090,7 +1090,7 @@ glue("RMSPE_mult", "{0:,.0f}".format(RMSPE_mult))
 
 This time, when we performed KNN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error
-of {glue:text}`RMSPE_mult`.
+of \${glue:text}`RMSPE_mult`.
 {numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This
 time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
 predictors instead of 1.

@@ -395,9 +395,10 @@ that we learned about in {numref}`Chapter %s <classification1>`.
 In the {glue:text}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 
-
-$S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right)$
-$ + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
+$$
+S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right)
+ + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)
+$$
 
 These distances are denoted by lines in {numref}`toy-example-clus1-dists` for the first cluster of the penguin data example.
 

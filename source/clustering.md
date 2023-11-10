@@ -18,6 +18,10 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+# get rid of futurewarnings from sklearn kmeans
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning) 
+
 from chapter_preamble import *
 ```
 

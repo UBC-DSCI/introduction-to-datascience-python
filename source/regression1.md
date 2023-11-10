@@ -1057,10 +1057,10 @@ Here we see that the smallest estimated RMSPE from cross-validation occurs when 
 If we want to compare this multivariable KNN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
-then we must compare the accuracy estimated using only the training data via cross-validation.
-Looking back, the estimated cross-validation accuracy for the single-predictor
+then we must compare the RMSPE estimated using only the training data via cross-validation.
+Looking back, the estimated cross-validation RMSPE for the single-predictor
 model was {glue:text}`cv_RMSPE`.
-The estimated cross-validation accuracy for the multivariable model is
+The estimated cross-validation RMSPE for the multivariable model is
 {glue:text}`cv_RMSPE_2pred`.
 Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.

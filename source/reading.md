@@ -85,7 +85,7 @@ think of the path as directions to the file. There are two kinds of paths:
 *relative* paths and *absolute* paths. A relative path indicates where the file is
 with respect to your *working directory* (i.e., "where you are currently") on the computer. 
 On the other hand, an absolute path indicates where the file is
-in respect to the computer's filesystem base (or *root*) folder, regardless of where you are working.
+with respect to the computer's filesystem base (or *root*) folder, regardless of where you are working.
 
 ```{index} Happiness Report
 ```

@@ -278,7 +278,7 @@ cancer["Class"].value_counts(normalize=True)
 ```
 
 Next, let's draw a colored scatter plot to visualize the relationship between the
-perimeter and concavity variables. Recall that `altair's` default palette
+perimeter and concavity variables. Recall that the default palette in `altair`
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
@@ -639,6 +639,32 @@ new_obs_Concavity = 3.5
 )
 ```
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+# code needed to render the latex table with distance calculations 
+from IPython.display import Latex
+five_neighbors = (
+    cancer
+   [["Perimeter", "Concavity", "Class"]]
+   .assign(dist_from_new = (
+       (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+     + (cancer["Concavity"] - new_obs_Concavity) ** 2
+   )**(1/2))
+   .nsmallest(5, "dist_from_new")
+).reset_index()
+
+for i in range(5):
+    glue(f"gn{i}_perim", "{:0.2f}".format(five_neighbors["Perimeter"][i]))
+    glue(f"gn{i}_concav", "{:0.2f}".format(five_neighbors["Concavity"][i]))
+    glue(f"gn{i}_class", five_neighbors["Class"][i])
+
+    # typeset perimeter,concavity with parentheses if negative for latex
+    nperim = f"{five_neighbors['Perimeter'][i]:.2f}" if five_neighbors['Perimeter'][i] > 0 else f"({five_neighbors['Perimeter'][i]:.2f})"
+    nconcav = f"{five_neighbors['Concavity'][i]:.2f}" if five_neighbors['Concavity'][i] > 0 else f"({five_neighbors['Concavity'][i]:.2f})"
+
+    glue(f"gdisteqn{i}", Latex(f"\sqrt{{(0-{nperim})^2+(3.5-{nconcav})^2}}={five_neighbors['dist_from_new'][i]:.2f}"))
+```
+
 In {numref}`tab:05-multiknn-mathtable` we show in mathematical detail how
 we computed the `dist_from_new` variable (the
 distance to the new observation) for each of the 5 nearest neighbors in the
@@ -648,11 +674,11 @@ training data.
 :name: tab:05-multiknn-mathtable
 | Perimeter | Concavity | Distance            | Class |
 |-----------|-----------|----------------------------------------|-------|
-| 0.24      | 2.65      | $\sqrt{(0-0.24)^2+(3.5-2.65)^2}=0.88$| Benign     |
-| 0.75      | 2.87      | $\sqrt{(0-0.75)^2+(3.5-2.87)^2}=0.98$| Malignant     |
-| 0.62      | 2.54      | $\sqrt{(0-0.62)^2+(3.5-2.54)^2}=1.14$| Malignant     |
-| 0.42      | 2.31      | $\sqrt{(0-0.42)^2+(3.5-2.31)^2}=1.26$| Malignant     |
-| -1.16     | 4.04      | $\sqrt{(0-(-1.16))^2+(3.5-4.04)^2}=1.28$| Benign     |
+| {glue:text}`gn0_perim`  | {glue:text}`gn0_concav`  | {glue:}`gdisteqn0` | {glue:text}`gn0_class`     |
+| {glue:text}`gn1_perim`  | {glue:text}`gn1_concav`  | {glue:}`gdisteqn1` | {glue:text}`gn1_class`     |
+| {glue:text}`gn2_perim`  | {glue:text}`gn2_concav`  | {glue:}`gdisteqn2` | {glue:text}`gn2_class`     |
+| {glue:text}`gn3_perim`  | {glue:text}`gn3_concav`  | {glue:}`gdisteqn3` | {glue:text}`gn3_class`     |
+| {glue:text}`gn4_perim`  | {glue:text}`gn4_concav`  | {glue:}`gdisteqn4` | {glue:text}`gn4_class`     |
 ```
 
 +++

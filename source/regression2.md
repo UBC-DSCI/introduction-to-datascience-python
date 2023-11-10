@@ -459,7 +459,7 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 ```
 
 Our final model's test error as assessed by RMSPE
-is {glue:text}`sacr_RMSPE`.
+is \${glue:text}`sacr_RMSPE`.
 Remember that this is in units of the response variable, and here that
 is US Dollars (USD). Does this mean our model is "good" at predicting house
 sale price based off of the predictor of home size? Again, answering this is
@@ -752,7 +752,7 @@ glue("sacr_mult_RMSPE", "{0:,.0f}".format(lm_mult_test_RMSPE))
 ```
 
 Our model's test error as assessed by RMSPE
-is {glue:text}`sacr_mult_RMSPE`.
+is \${glue:text}`sacr_mult_RMSPE`.
 In the case of two predictors, we can plot the predictions made by our linear regression creates a *plane* of best fit, as
 shown in {numref}`fig:08-3DlinReg`.
 
@@ -889,12 +889,12 @@ lm_mult_test_RMSPE
 ```
 
 We obtain an RMSPE for the multivariable linear regression model
-of {glue:text}`sacr_mult_RMSPE`. This prediction error
+of \${glue:text}`sacr_mult_RMSPE`. This prediction error
  is less than the prediction error for the multivariable KNN regression model,
 indicating that we should likely choose linear regression for predictions of
 house sale price on this data set. Revisiting the simple linear regression model
 with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was
-{glue:text}`sacr_RMSPE`,
+\${glue:text}`sacr_RMSPE`,
 which is slightly higher than that of our more complex model. Our model with two predictors
 provided a slightly better fit on test data than our model with just one.
 As mentioned earlier, this is not always the case: sometimes including more

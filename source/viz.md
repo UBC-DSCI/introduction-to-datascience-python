@@ -1269,19 +1269,10 @@ we could add a minus sign to reverse the order and specify `sort="-x"`.
 To finalize this plot we will customize the axis and legend labels using the `title` method,
 and add a title to the chart by specifying the `title` argument of `alt.Chart`.
 Plot titles are not always required, especially when it would be redundant with an already-existing
-caption or surrounding context (e.g., in a slide presentation with annotations). 
+caption or surrounding context (e.g., in a slide presentation with annotations).
 But if you decide to include one, a good plot title should provide the take home message
 that you want readers to focus on, e.g., "The Earth's seven largest landmasses are all continents,"
-but it could also more general, e.g., "The twelve largest landmasses on Earth."
-
-Note that 
-For categorical encodings,
-such as the color and y channels in our chart,
-it is often not necessary to include the axis title
-as the labels of the categories are enough by themselves.
-Particularly in this case where the title clearly states
-that we are landmasses,
-the titles are redundant and we can remove them.
+or a more general summary of the information displayed, e.g., "The twelve largest landmasses on Earth."
 
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(

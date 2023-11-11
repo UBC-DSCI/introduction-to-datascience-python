@@ -1295,7 +1295,7 @@ glue("islands_plot_sorted", islands_plot_sorted, display=True)
 :figwidth: 700px
 :name: islands_plot_sorted
 
-Bar plot of size for Earth's largest 12 landmasses colored by whether its a continent with clearer axes and labels.
+Bar plot of size for Earth's largest 12 landmasses, colored by landmass type, with clearer axes and labels.
 :::
 
 

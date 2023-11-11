@@ -1247,12 +1247,10 @@ and allows us to answer our initial questions:
 "Are the seven continents Earth's largest landmasses?"
 and "Which are the next few largest landmasses?".
 However, we could still improve this visualization
-by organizing the bars by landmass size rather than by alphabetical order
-and by coloring the bars based on whether they correspond to a continent.
-The data for this is stored in the `landmass_type` column.
-To use this to color the bars,
+by coloring the bars based on whether they correspond to a continent, and
+by organizing the bars by landmass size rather than by alphabetical order.
+The data for coloring the bars is stored in the `landmass_type` column, so
 we set the `color` encoding to `landmass_type`.
-
 To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
 in the y-encoding of the chart.
@@ -1262,18 +1260,37 @@ This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
 which is generally the most visually appealing when sorting bars.
-If instead
-we want to sort the values on `y-axis` in descending order of `x-axis`,
-we can add a minus sign to reverse the order and specify `sort="-x"`.
+If instead we wanted to sort the values on `y-axis` in descending order of `x-axis`,
+we could add a minus sign to reverse the order and specify `sort="-x"`.
 
 ```{index} altair; sort
 ```
 
+To finalize this plot we will customize the axis and legend labels using the `title` method,
+and add a title to the chart by specifying the `title` argument of `alt.Chart`.
+Plot titles are not always required, especially when it would be redundant with an already-existing
+caption or surrounding context (e.g., in a slide presentation with annotations). 
+But if you decide to include one, a good plot title should provide the take home message
+that you want readers to focus on, e.g., "The Earth's seven largest landmasses are all continents,"
+but it could also more general, e.g., "The twelve largest landmasses on Earth."
+
+Note that 
+For categorical encodings,
+such as the color and y channels in our chart,
+it is often not necessary to include the axis title
+as the labels of the categories are enough by themselves.
+Particularly in this case where the title clearly states
+that we are landmasses,
+the titles are redundant and we can remove them.
+
 ```{code-cell} ipython3
-islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x="size",
-    y=alt.Y("landmass").sort("x"),
-    color=alt.Color("landmass_type")
+islands_plot_sorted = alt.Chart(
+	islands_top12,
+	title="The Earth's seven largest landmasses are all continents"
+).mark_bar().encode(
+    x=alt.X("size").title("Size (1000 square mi)"),
+    y=alt.Y("landmass").sort("x").title("Landmass"),
+    color=alt.Color("landmass_type").title("Type")
 )
 ```
 

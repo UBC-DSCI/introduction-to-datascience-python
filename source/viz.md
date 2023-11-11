@@ -1160,15 +1160,6 @@ islands_df = pd.read_csv("data/islands.csv")
 islands_df
 ```
 
-Here, we have a data frame of Earth's landmasses,
-and are trying to compare their sizes.
-The right type of visualization to answer this question is a bar plot.
-In a bar plot, the height of the bar represents the value of a summary statistic
-(usually a size, count, sum, proportion, or percentage).
-They are particularly useful for comparing summary statistics between different
-groups of a categorical variable.
-
-
 Here, we have a data frame of Earth's landmasses, 
 and are trying to compare their sizes. 
 The right type of visualization to answer this question is a bar plot. 

@@ -102,12 +102,12 @@ Splitting the data into training and testing sets.
 ```{index} accuracy
 ```
 
-How exactly can we assess how well our predictions match the labels for
+How exactly can we assess how well our predictions match the actual labels for
 the observations in the test set? One way we can do this is to calculate the
 prediction **accuracy**. This is the fraction of examples for which the
 classifier made the correct prediction. To calculate this, we divide the number
 of correct predictions by the number of predictions made. 
-The process for assessing if our predictions match the true labels in the 
+The process for assessing if our predictions match the actual labels in the
 test set is illustrated in {numref}`fig:06-ML-paradigm-test`.
 
 $$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}}$$

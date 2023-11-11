@@ -1047,7 +1047,7 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue(percentage of Canadian residents)"),
+        .title("Mother tongue (percentage of Canadian residents)"),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")
@@ -1089,7 +1089,7 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue(percentage of Canadian residents)"),
+        .title("Mother tongue (percentage of Canadian residents)"),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")

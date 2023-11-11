@@ -54,7 +54,7 @@ By the end of the chapter, readers will be able to do the following:
 * Recognize situations where a simple regression analysis would be appropriate for making predictions.
 * Explain the K-nearest neighbor (KNN) regression algorithm and describe how it differs from KNN classification.
 * Interpret the output of a KNN regression.
-* In a dataset with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
+* In a data set with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
 * Execute cross-validation in Python to choose the number of neighbors.
 * Evaluate KNN regression prediction accuracy in Python using a test data set and the root mean squared prediction error (RMSPE).
 * In the context of KNN regression, compare and contrast goodness of fit and prediction properties (namely RMSE vs RMSPE).
@@ -644,8 +644,8 @@ Alright, now the `mean_test_score` variable actually has values of the RMSPE
 for different numbers of neighbors. Finally, the `sem_test_score` variable
 contains the standard error of our cross-validation RMSPE estimate, which
 is a measure of how uncertain we are in the mean value. Roughly, if
-your estimated mean RMSPE is 100,000 and standard error is 1,000, you can expect the
-*true* RMSPE to be somewhere roughly between 99,000 and 101,000 (although it
+your estimated mean RMSPE is \$100,000 and standard error is \$1,000, you can expect the
+*true* RMSPE to be somewhere roughly between \$99,000 and \$101,000 (although it
 may fall outside this range).
 
 {numref}`fig:07-choose-k-knn-plot` visualizes how the RMSPE varies with the number of neighbors $K$.
@@ -795,8 +795,8 @@ In this case the orange line becomes extremely smooth, and actually becomes flat
 once $K$ is equal to the number of datapoints in the entire data set.
 This happens because our predicted values for a given x value (here, home
 size), depend on many neighboring observations; in the case where $K$ is equal
-to the size of the dataset, the prediction is just the mean of the house prices
-in the dataset (completely ignoring the house size).
+to the size of the data set, the prediction is just the mean of the house prices
+in the data set (completely ignoring the house size).
 In contrast to the $K=1$ example,
 the smooth, inflexible orange line does not follow the training observations very closely.
 In other words, the model is *not influenced enough* by the training data.
@@ -1057,11 +1057,11 @@ Here we see that the smallest estimated RMSPE from cross-validation occurs when 
 If we want to compare this multivariable KNN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
-then we must compare the accuracy estimated using only the training data via cross-validation.
-Looking back, the estimated cross-validation accuracy for the single-predictor
-model was {glue:text}`cv_RMSPE`.
-The estimated cross-validation accuracy for the multivariable model is
-{glue:text}`cv_RMSPE_2pred`.
+then we must compare the RMSPE estimated using only the training data via cross-validation.
+Looking back, the estimated cross-validation RMSPE for the single-predictor
+model was \${glue:text}`cv_RMSPE`.
+The estimated cross-validation RMSPE for the multivariable model is
+\${glue:text}`cv_RMSPE_2pred`.
 Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
@@ -1090,7 +1090,7 @@ glue("RMSPE_mult", "{0:,.0f}".format(RMSPE_mult))
 
 This time, when we performed KNN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error
-of {glue:text}`RMSPE_mult`.
+of \${glue:text}`RMSPE_mult`.
 {numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This
 time the predictions are a surface in 3D space, instead of a line in 2D space, as we have 2
 predictors instead of 1.

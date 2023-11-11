@@ -1197,12 +1197,6 @@ sample. Since the bootstrap distribution pretty well approximates the sampling
 distribution spread, we can use the bootstrap spread to help us develop a
 plausible range for our population parameter along with our estimate!
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-!wget -O img/inference/11-bootstrapping7-1.png https://datasciencebook.ca/_main_files/figure-html/11-bootstrapping7-1.png
-```
-
 ```{figure} img/inference/11-bootstrapping7-1.png
 :name: fig:11-bootstrapping7
 
@@ -1244,7 +1238,7 @@ To calculate a 95\% percentile bootstrap confidence interval, we will do the fol
 To do this in Python, we can use the `quantile` function of our DataFrame.
 Quantiles are expressed in proportions rather than percentages,
 so the 2.5th and 97.5th percentiles
-would be quantiles 0.025 and 0.975, respectively.
+would be the 0.025 and 0.975 quantiles, respectively.
 
 ```{index} numpy; percentile, pandas.DataFrame; df[]
 ```
@@ -1257,8 +1251,8 @@ ci_bounds
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", "{:.1f}".format(ci_bounds[0.025]))
-glue("ci_upper", "{:.1f}".format(ci_bounds[0.975]))
+glue("ci_lower", "{:.2f}".format(ci_bounds[0.025]))
+glue("ci_upper", "{:.2f}".format(ci_bounds[0.975]))
 ```
 
 Our interval, \${glue:text}`ci_lower` to \${glue:text}`ci_upper`, captures
@@ -1306,7 +1300,7 @@ estimate and our confidence interval's lower and upper bounds. Here the sample
 mean price-per-night of 40 Airbnb listings was
 \${glue:text}`one_sample_mean`, and we are 95\% "confident" that the true
 population mean price-per-night for all Airbnb listings in Vancouver is between
-\$({glue:text}`ci_lower`, {glue:text}`ci_upper`).
+\${glue:text}`ci_lower` and \${glue:text}`ci_upper`.
 Notice that our interval does indeed contain the true
 population mean value, \${glue:text}`population_mean`\! However, in
 practice, we would not know whether our interval captured the population

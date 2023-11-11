@@ -18,6 +18,10 @@ kernelspec:
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+# get rid of futurewarnings from sklearn kmeans
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning) 
+
 from chapter_preamble import *
 ```
 
@@ -391,8 +395,10 @@ that we learned about in {numref}`Chapter %s <classification1>`.
 In the {glue:text}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 
-
-$S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
+$$
+S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right)\\
+ + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)
+$$
 
 These distances are denoted by lines in {numref}`toy-example-clus1-dists` for the first cluster of the penguin data example.
 
@@ -786,7 +792,7 @@ Total WSSD for K clusters ranging from 1 to 9.
 We can perform K-means in Python using a workflow similar to those
 in the earlier classification and regression chapters. We will begin
 by reading the original (i.e., unstandardized) subset of 18 observations
-from the penguins dataset.
+from the penguins data set.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1050,7 +1056,7 @@ and guidance that the worksheets provide will function as intended.
   clustering for when you expect there to be subgroups, and then subgroups within
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
-  popular technique for reducing the number of predictors in a dataset.
+  popular technique for reducing the number of predictors in a data set.
 
 ## References
 

@@ -355,7 +355,7 @@ on your own computer or in a workspace on a server (e.g., a JupyterHub server).
 
 Before you can create remote repositories on GitHub,
 you will need a GitHub account; you can sign up for a free account
-at [https://github.com/](https://github.com/).
+at [github.com](https://github.com/).
 Once you have logged into your account, you can create a new repository to host
 your project by clicking on the "+" icon in the upper right-hand
 corner, and then on "New Repository," as shown in

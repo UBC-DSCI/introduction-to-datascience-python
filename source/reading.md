@@ -80,22 +80,21 @@ functions, we first need to talk about *where* the data lives. When you load a
 data set into Python, you first need to tell Python where those files live. The file
 could live on your computer (*local*) or somewhere on the internet (*remote*).
 
-The place where the file lives on your computer is called the "path". You can
+The place where the file lives on your computer is referred to as its "path". You can
 think of the path as directions to the file. There are two kinds of paths:
-*relative* paths and *absolute* paths. A relative path is where the file is
-with respect to where you currently are on the computer (e.g., where the file
-you're working in is). On the other hand, an absolute path is where the file is
-in respect to the computer's filesystem base (or root) folder.
+*relative* paths and *absolute* paths. A relative path indicates where the file is
+with respect to your *working directory* (i.e., "where you are currently") on the computer. 
+On the other hand, an absolute path indicates where the file is
+with respect to the computer's filesystem base (or *root*) folder, regardless of where you are working.
 
 ```{index} Happiness Report
 ```
 
 Suppose our computer's filesystem looks like the picture in
-{numref}`Filesystem`, and we are working in a
-file titled `worksheet_02.ipynb`. If we want to
-read the `.csv` file named `happiness_report.csv` into Python, we could do this
-using either a relative or an absolute path.  We show both choices
-below.
+{numref}`Filesystem`. We are working in a
+file titled `worksheet_02.ipynb`, and our current working directory is `worksheet_02`;
+typically, as is the case here, the working directory is the directory containing the file you are currently
+working on.
 
 ```{figure} img/reading/filesystem.jpeg
 ---
@@ -105,34 +104,42 @@ name: Filesystem
 Example file system
 ```
 
-
-**Reading `happiness_report.csv` using a relative path:**
-
-+++
-
-```python
-happy_data = pd.read_csv("data/happiness_report.csv")
-```
-
-+++
-
-**Reading `happiness_report.csv` using an absolute path:**
-
-+++
-
+Let's say we wanted to open the `happiness_report.csv` file. We have two options to indicate
+where the file is: using a relative path, or using an absolute path.
+The absolute path of the file always starts with a slash `/`&mdash;representing the root folder on the computer&mdash;and
+proceeds by listing out the sequence of folders you would have to enter to reach the file, each separated by another slash `/`.
+So in this case, `happiness_report.csv` would be reached by starting at the root, and entering the `home` folder,
+then the `dsci-100` folder, then the `worksheet_02` folder, and then finally the `data` folder. So its absolute
+path would be `/home/dsci-100/worksheet_02/data/happiness_report.csv`. We can load the file using its absolute path
+as a string passed to the `read_csv` function from `pandas`. 
 ```python
 happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
+If we instead wanted to use a relative path, we would need to list out the sequence of steps needed to get from our current
+working directory to the file, with slashes `/` separating each step. Since we are currently in the `worksheet_02` folder,
+we just need to enter the `data` folder to reach our desired file. Hence the relative path is `data/happiness_report.csv`,
+and we can load the file using its relative path as a string passed to `read_csv`.
+```python
+happy_data = pd.read_csv("data/happiness_report.csv")
+```
+Note that there is no forward slash at the beginning of a relative path; if we accidentally typed `"/data/happiness_report.csv"`,
+Python would look for a folder named `data` in the root folder of the computer&mdash;but that doesn't exist!
 
-+++
+Aside from specifying places to go in a path using folder names (like `data` and `worksheet_02`), we can also specify two additional
+special places: the *current directory* and the *previous directory*. We indicate the current working directory with a single dot `.`, and 
+the previous directory with two dots `..`. So for instance, if we wanted to reach the `bike_share.csv` file from the `worksheet_02` folder, we could
+use the relative path `../tutorial_01/bike_share.csv`. We can even combine these two; for example, we could reach the `bike_share.csv` file using
+the (very silly) path `../tutorial_01/../tutorial_01/./bike_share.csv` with quite a few redundant directions: it says to go back a folder, then open `tutorial_01`, 
+then go back a folder again, then open `tutorial_01` again, then stay in the current directory, then finally get to `bike_share.csv`. Whew, what a long trip!
 
-So which one should you use? Generally speaking, to ensure your code can be run
-on a different computer, you should use relative paths. An added bonus is that
-it's also less typing! Generally, you should use relative paths because the file's
-absolute path (the names of
-folders between the computer's root `/` and the file) isn't usually the same
-across different computers. For example, suppose Fatima and Jayden are working on a
-project together on the `happiness_report.csv` data. Fatima's file is stored at
+So which kind of path should you use: relative, or absolute? Generally speaking, you should use relative paths. 
+Using a relative path helps ensure that your code can be run 
+on a different computer (and as an added bonus, relative paths are often shorter&mdash;easier to type!).
+This is because a file's relative path is often the same across different computers, while a
+file's absolute path (the names of 
+all of the folders between the computer's root, represented by `/`, and the file) isn't usually the same 
+across different computers. For example, suppose Fatima and Jayden are working on a 
+project together on the `happiness_report.csv` data. Fatima's file is stored at 
 
 ```
 /home/Fatima/project/data/happiness_report.csv
@@ -150,16 +157,19 @@ their different usernames.  If Jayden has code that loads the
 `happiness_report.csv` data using an absolute path, the code won't work on
 Fatima's computer.  But the relative path from inside the `project` folder
 (`data/happiness_report.csv`) is the same on both computers; any code that uses
-relative paths will work on both!
+relative paths will work on both! In the additional resources section, 
+we include a link to a short video on the
+difference between absolute and relative paths.
 
 ```{index} URL
 ```
 
-Your file could be stored locally, as we discussed, or it could also be
-somewhere on the internet (remotely). For this purpose we use a
+Beyond files stored on your computer (i.e., locally), we also need a way to locate resources
+stored elsewhere on the internet (i.e., remotely). For this purpose we use a
 *Uniform Resource Locator (URL)*, i.e., a web address that looks something
-like https://google.com/. URLs indicate the location of a resource on the internet and
-helps us retrieve that resource.
+like https://datasciencebook.ca/. URLs indicate the location of a resource on the internet, and
+start with a web domain, followed by a forward slash `/`, and then a path
+to where the resource is located on the remote machine.
 
 ## Reading tabular data from a plain text file into Python
 

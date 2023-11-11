@@ -2028,8 +2028,6 @@ and guidance that the worksheets provide will function as intended.
 - The [altair documentation](https://altair-viz.github.io/) {cite:p}`altair` is
   where you should look if you want to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
-  The site also provides a very nice cheat sheet that summarizes many of the data
-  wrangling functions from this chapter.
 - The [*Fundamentals of Data Visualization*](https://clauswilke.com/dataviz/) {cite:p}`wilkeviz` has
   a wealth of information on designing effective visualizations. It is not
   specific to any particular programming language or library. If you want to

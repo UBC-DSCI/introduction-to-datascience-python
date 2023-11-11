@@ -49,7 +49,7 @@ By the end of the chapter, readers will be able to do the following:
 - Explain the $K$-nearest neighbor classification algorithm.
 - Perform $K$-nearest neighbor classification in Python using `scikit-learn`.
 - Use `StandardScaler` and `make_column_transformer` to preprocess data to be centered and scaled.
-- Use `resample` to preprocess data to be balanced.
+- Use `sample` to preprocess data to be balanced.
 - Combine preprocessing and model training using `make_pipeline`.
 
 +++
@@ -1600,7 +1600,7 @@ Imbalanced data with background color indicating the decision of the classifier 
 
 +++
 
-```{index} oversampling, scikit-learn; resample
+```{index} oversampling, scikit-learn; sample
 ```
 
 Despite the simplicity of the problem, solving it in a statistically sound manner is actually
@@ -1610,11 +1610,11 @@ In other words, we will replicate rare observations multiple times in our data s
 voting power in the $K$-nearest neighbor algorithm. In order to do this, we will 
 first separate the classes out into their own data frames by filtering.
 Then, we will
-use the [`resample`](https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html) function 
-from the `sklearn` package to increase the number of `Malignant` observations to be the same as the number 
-of `Benign` observations. We set the `n_samples` argument to be the number of `Malignant` observations we want. 
+use the `sample` method on the rare class data frame to increase the number of `Malignant` observations to be the same as the number
+of `Benign` observations. We set the `n` argument to be the number of `Malignant` observations we want, and set `replace=True`
+to indicate that we are sampling with replacement.
 Finally, we use the `value_counts` method to see that our classes are now balanced.
-Note that `resample` picks which data to replicate *randomly*; we will learn more about properly handling randomness
+Note that `sample` picks which data to replicate *randomly*; we will learn more about properly handling randomness
 in data analysis in {numref}`Chapter %s <classification2>`.
 
 ```{code-cell} ipython3
@@ -1626,12 +1626,10 @@ np.random.seed(1)
 ```
 
 ```{code-cell} ipython3
-from sklearn.utils import resample
-
 malignant_cancer = rare_cancer[rare_cancer["Class"] == "Malignant"]
 benign_cancer = rare_cancer[rare_cancer["Class"] == "Benign"]
-malignant_cancer_upsample = resample(
-    malignant_cancer, n_samples=benign_cancer.shape[0]
+malignant_cancer_upsample = malignant_cancer.sample(
+    n=benign_cancer.shape[0], replace=True
 )
 upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer["Class"].value_counts()

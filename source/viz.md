@@ -1168,6 +1168,18 @@ In a bar plot, the height of the bar represents the value of a summary statistic
 They are particularly useful for comparing summary statistics between different
 groups of a categorical variable.
 
+
+Here, we have a data frame of Earth's landmasses, 
+and are trying to compare their sizes. 
+The right type of visualization to answer this question is a bar plot. 
+In a bar plot, the height of each bar represents the value of an *amount*
+(a size, count, proportion, percentage, etc).
+They are particularly useful for comparing counts or proportions across different
+groups of a categorical variable. Note, however, that bar plots should generally not be 
+used to display mean or median values, as they hide important information about
+the variation of the data. Instead it's better to show the distribution of 
+all the individual data points, e.g., using a histogram, which we will discuss further in {numref}`histogramsviz`.
+
 ```{index} altair; mark_bar
 ```
 
@@ -1292,6 +1304,7 @@ visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that all the seven largest landmasses are continents.
 
+(histogramsviz)=
 ### Histograms: the Michelson speed of light data set
 
 ```{index} Michelson speed of light

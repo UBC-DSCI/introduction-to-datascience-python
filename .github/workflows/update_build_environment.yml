@@ -20,7 +20,12 @@ jobs:
       run: |
         echo "GitHub PR action type: ${{ github.event.action }}"
         echo "Checking if the PR modifies the Dockerfile"
-        if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile; then
+        echo "GitHub event before: ${{ github.event.before }}"
+        echo "GitHub event before: ${{ github.event.after }}"
+        git diff --quiet ${{ github.event.before }} ${{ github.event.after }} Dockerfile
+        DIFFSTATUS=$?
+        echo "Diff (1 if diff, 0 if not): $DIFFSTATUS"
+        if [ $DIFFSTATUS -eq 0 ]; then
             echo "PR synchronized, but Dockerfile was not edited. Not rebuilding the image."
             echo "stale_dockerfile=false" >> "$GITHUB_OUTPUT"
         else

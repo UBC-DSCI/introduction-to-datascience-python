@@ -69,8 +69,8 @@ tumor images?
 
 The trick is to split the data into a **training set** and **test set** ({numref}`fig:06-training-test`)
 and use only the **training set** when building the classifier.
-Then, to evaluate the performance of the classifier, we first set aside the true labels from the **test set**,
-and then use the classifier to predict the labels in the **test set**. If our predictions match the true
+Then, to evaluate the performance of the classifier, we first set aside the labels from the **test set**,
+and then use the classifier to predict the labels in the **test set**. If our predictions match the actual
 labels for the observations in the **test set**, then we have some
 confidence that our classifier might also accurately predict the class
 labels for new observations without known class labels.
@@ -102,12 +102,12 @@ Splitting the data into training and testing sets.
 ```{index} accuracy
 ```
 
-How exactly can we assess how well our predictions match the true labels for
+How exactly can we assess how well our predictions match the actual labels for
 the observations in the test set? One way we can do this is to calculate the
 prediction **accuracy**. This is the fraction of examples for which the
 classifier made the correct prediction. To calculate this, we divide the number
 of correct predictions by the number of predictions made. 
-The process for assessing if our predictions match the true labels in the 
+The process for assessing if our predictions match the actual labels in the
 test set is illustrated in {numref}`fig:06-ML-paradigm-test`.
 
 $$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\mathrm{total \;  number \;  of  \; predictions}}$$
@@ -139,10 +139,10 @@ a test set of 65 observations.
 * - 
   - Predicted Malignant
   - Predicted Benign
-* - **Truly Malignant**
+* - **Actually Malignant**
   - 1
   - 3
-* - **Truly Benign**
+* - **Actually Benign**
   - 4
   - 57
 ``` 
@@ -607,7 +607,7 @@ knn_fit
 Now that we have a $K$-nearest neighbors classifier object, we can use it to
 predict the class labels for our test set.  We will use the `assign` method to 
 augment the original test data with a column of predictions, creating the
-`cancer_test_predictions` data frame. The `Class` variable contains the true
+`cancer_test_predictions` data frame. The `Class` variable contains the actual
 diagnoses, while the `predicted` contains the predicted diagnoses from the
 classifier. Note that below we print out just the `ID`, `Class`, and `predicted`
 variables in the output data frame.
@@ -640,9 +640,9 @@ correct_preds.shape[0] / cancer_test_predictions.shape[0]
 
 The `scitkit-learn` package also provides a more convenient way to do this using
 the `score` method. To use the `score` method, we need to specify two arguments:
-predictors and true labels. We pass the same test data
+predictors and the actual labels. We pass the same test data
 for the predictors that we originally passed into `predict` when making predictions,
-and we provide the true labels via the `cancer_test["Class"]` series.
+and we provide the actual labels via the `cancer_test["Class"]` series.
 
 ```{code-cell} ipython3
 cancer_acc_1 = knn_fit.score(
@@ -664,9 +664,9 @@ The output shows that the estimated accuracy of the classifier on the test data
 was {glue:text}`cancer_acc_1`%.
 We can also look at the *confusion matrix* for the classifier 
 using the `crosstab` function from `pandas`. A confusion matrix shows how many 
-observations of each (true) label were classified as each (predicted) label.
+observations of each (actual) label were classified as each (predicted) label.
 The `crosstab` function
-takes two arguments: the true labels first, then the predicted labels second.
+takes two arguments: the actual labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
 pd.crosstab(
@@ -703,8 +703,8 @@ glue("confu_recall_0", "{:0.0f}".format(100*c11/(c11+c10)))
 The confusion matrix shows {glue:text}`confu11` observations were correctly predicted 
 as malignant, and {glue:text}`confu00` were correctly predicted as benign. 
 It also shows that the classifier made some mistakes; in particular,
-it classified {glue:text}`confu10` observations as benign when they were truly malignant,
-and {glue:text}`confu01` observations as malignant when they were truly benign.
+it classified {glue:text}`confu10` observations as benign when they were actually malignant,
+and {glue:text}`confu01` observations as malignant when they were actually benign.
 Using our formulas from earlier, we see that the accuracy agrees with what Python reported,
 and can also compute the precision and recall of the classifier:
 
@@ -758,11 +758,11 @@ of the time, a classifier with 99% accuracy is not terribly impressive (just alw
 And beyond just accuracy, we need to consider the precision and recall: as mentioned
 earlier, the *kind* of mistake the classifier makes is
 important in many applications as well. In the previous example with 99% benign observations, it might be very bad for the
-classifier to predict "benign" when the true class is "malignant" (a false negative), as this
+classifier to predict "benign" when the actual class is "malignant" (a false negative), as this
 might result in a patient not receiving appropriate medical attention. In other
 words, in this context, we need the classifier to have a *high recall*. On the
 other hand, it might be less bad for the classifier to guess "malignant" when
-the true class is "benign" (a false positive), as the patient will then likely see a doctor who
+the actual class is "benign" (a false positive), as the patient will then likely see a doctor who
 can provide an expert diagnosis. In other words, we are fine with sacrificing
 some precision in the interest of achieving high recall. This is why it is 
 important not only to look at accuracy, but also the confusion matrix.

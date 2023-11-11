@@ -1066,7 +1066,7 @@ glue("can_lang_plot_theme", can_lang_plot_theme.properties(height=320, width=420
 :figwidth: 700px
 :name: can_lang_plot_theme
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors.
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and shapes.
 :::
 
 The chart above gives a good indication of how the different language categories differ,
@@ -1194,7 +1194,7 @@ glue("islands_bar", islands_bar, display=False)
 :figwidth: 400px
 :name: islands_bar
 
-Bar plot of all Earth's landmasses' size with squished labels.
+Bar plot of Earth's landmass sizes. The plot is too wide with the default settings.
 :::
 
 Alright, not bad! The plot in {numref}`islands_bar` is

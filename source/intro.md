@@ -553,7 +553,7 @@ Fortunately, `pandas` provides the `loc[]` operation, which lets us do just that
 The syntax is very similar to the `[]` operation we have already covered: we will
 essentially combine both our row filtering and column selection steps from before.
 In particular, we first write the name of the data frame---`can_lang` again---then follow
-that with the `.loc[]` method. Inside the square brackets,
+that with the `.loc[]` operation. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
@@ -576,7 +576,17 @@ and wrote `pd.read_csv`. The dot means that the thing on the left (`pd`, i.e., t
 thing on the right (the `read_csv` function). In the case of `can_lang.loc[]`, the thing on the left (the `can_lang` data frame)
 *provides* the thing on the right (the `loc[]` operation). In Python,
 both packages (like `pandas`) *and* objects (like our `can_lang` data frame) can provide functions
-and other objects that we access using the dot syntax.
+and other objects that we access using the dot syntax. 
+
+```{note}
+A note on terminology: when an object `obj` provides a function `f` with the
+dot syntax (as in `obj.f()`), sometimes we call that function `f` a *method* of `obj` or an *operation* on `obj`.
+Similarly, when an object `obj` provides another object `x` with the dot syntax (as in `obj.x`), sometimes we call the object `x` an *attribute* of `obj`. 
+We will use all of these terms throughout the book, as you will see them used commonly in the community. 
+And just because we programmers like to be confusing for no apparent reason: we *don't* use the "method", "operation", or "attribute" terminology
+when referring to functions and objects from packages, like `pandas`. So for example, `pd.read_csv`
+would typically just be referred to as a function, but not as a method or operation.
+```
 
 At this point, if we have done everything correctly, `aboriginal_lang` should be a data frame
 containing *only* rows where the `category` is `"Aboriginal languages"`,

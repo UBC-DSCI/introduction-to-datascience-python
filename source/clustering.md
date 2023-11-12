@@ -121,37 +121,30 @@ but one is willing to provide a few informative example labels as a "seed"
 to guess the labels for all the data.
 ```
 
-**An illustrative example**
+## An illustrative example
 
 ```{index} Palmer penguins
 ```
 
-Here we will present an illustrative example using a data set from
+In this chapter we will focus on a data set from
 [the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. This
 data set was collected by Dr. Kristen Gorman and
 the Palmer Station, Antarctica Long Term Ecological Research Site, and includes
-measurements for adult penguins found near there {cite:p}`penguinpaper`. We have
-modified the data set for use in this chapter. Here we will focus on using two
+measurements for adult penguins ({numref}`09-penguins`) found near there {cite:p}`penguinpaper`. 
+Our goal will be to use two
 variables&mdash;penguin bill and flipper length, both in millimeters&mdash;to determine whether
 there are distinct types of penguins in our data.
 Understanding this might help us with species discovery and classification in a data-driven
-way.
+way. Note that we have reduced the size of the data set to 18 observations and 2 variables;
+this will help us make clear visualizations that illustrate how clustering works for learning purposes.
 
 ```{figure} img/clustering/gentoo.jpg
 ---
 height: 400px
 name: 09-penguins
 ---
-Gentoo penguin.
+A Gentoo penguin.
 ```
-
-To learn about K-means clustering
-we will work with `penguin_data` in this chapter.
-`penguin_data` is a subset of 18 observations of the original data,
-which has already been standardized
-(remember from {numref}`Chapter %s <classification1>`
-that scaling is part of the standardization process).
-We will discuss scaling for K-means in more detail later in this chapter.
 
 Before we get started, we will set a random seed.
 This will ensure that our analysis will be reproducible.
@@ -166,32 +159,38 @@ when choosing a starting position for each cluster.
 ```{code-cell} ipython3
 import numpy as np
 
-np.random.seed(149)
+np.random.seed(6)
 ```
 
 ```{index} read function; read_csv
 ```
 
-Now we can load and preview the data.
+Now we can load and preview the `penguins` data.
+
+```{code-cell} ipython3
+import pandas as pd
+
+penguins = pd.read_csv("data/penguins.csv")
+penguins
+```
+
+We will begin by using a version of the data that we have standardized, `penguins_standardized`,
+to illustrate how K-means clustering works (recall standardization from {numref}`Chapter %s <classification1>`).
+Later in this chapter, we will return to the original `penguins` data to see how to include standardization automatically
+in the clustering pipeline.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-import pandas as pd
-
-data = pd.read_csv(
-    "data/penguins_toy.csv"
-).replace(
-    [2, 3],
-    [0, 2]
+penguins_standardized = penguins.assign(
+    flipper_length_standardized = (penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std(),
+	bill_length_standardized = (penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std()
+).drop(
+    columns = ["bill_length_mm", "flipper_length_mm"]
 )
 ```
 
 ```{code-cell} ipython3
-import pandas as pd
-
-penguin_data = pd.read_csv("data/penguins_standardized.csv")
-penguin_data
+penguins_standardized
 ```
 
 Next, we can create a scatter plot using this data set
@@ -200,7 +199,7 @@ to see if we can detect subtypes or groups in our data set.
 ```{code-cell} ipython3
 import altair as alt
 
-scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
+scatter_plot = alt.Chart(penguins_standardized).mark_circle().encode(
     x=alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized").title("Bill Length (standardized)")
 )
@@ -222,8 +221,7 @@ Scatter plot of standardized bill length versus standardized flipper length.
 ```{index} altair, altair; mark_circle
 ```
 
-Based on the visualization
-in {numref}`scatter_plot`,
+Based on the visualization in {numref}`scatter_plot`,
 we might suspect there are a few subtypes of penguins within our data set.
 We can see roughly 3 groups of observations in {numref}`scatter_plot`,
 including:
@@ -253,8 +251,19 @@ denoted by colored scatter points.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+from sklearn import set_config
+from sklearn.cluster import KMeans
 
-colored_scatter_plot = alt.Chart(data).mark_circle().encode(
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
+
+kmeans = KMeans(n_clusters=3)
+
+penguin_clust = kmeans.fit(penguins_standardized)
+
+penguins_clustered = penguins_standardized.assign(cluster = penguin_clust.labels_)
+
+colored_scatter_plot = alt.Chart(penguins_clustered).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
     color=alt.Color("cluster:N")
@@ -295,7 +304,7 @@ have.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-clus = data[data["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
+clus = penguins_clustered[penguins_clustered["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
 ```{index} see: within-cluster sum-of-squared-distances; WSSD
@@ -317,8 +326,9 @@ cluster containing four observations, and we are using two variables, $x$ and $y
 Then we would compute the coordinates, $\mu_x$ and $\mu_y$, of the cluster center via
 
 
-
-$\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)$
+$$
+\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)
+$$
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -362,7 +372,7 @@ in {numref}`toy-example-clus1-center`
 :figwidth: 700px
 :name: toy-example-clus1-center
 
-Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange.
+Cluster 0 from the `penguins_standardized` data set example. Observations are in blue, with the cluster center highlighted in orange.
 :::
 
 ```{code-cell} ipython3
@@ -406,7 +416,7 @@ These distances are denoted by lines in {numref}`toy-example-clus1-dists` for th
 :figwidth: 700px
 :name: toy-example-clus1-dists
 
-Cluster 0 from the `penguin_data` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
+Cluster 0 from the `penguins_standardized` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
 :::
 
 ```{code-cell} ipython3
@@ -414,9 +424,9 @@ Cluster 0 from the `penguin_data` data set example. Observations are in blue, wi
 
 toy_example_all_clus_dists = alt.layer(
     alt.Chart(
-        data.assign(
-            mean_bill_length=data.groupby('cluster')['bill_length_standardized'].transform('mean'),
-            mean_flipper_length=data.groupby('cluster')['flipper_length_standardized'].transform('mean')
+        penguins_clustered.assign(
+            mean_bill_length=penguins_clustered.groupby('cluster')['bill_length_standardized'].transform('mean'),
+            mean_flipper_length=penguins_clustered.groupby('cluster')['flipper_length_standardized'].transform('mean')
         )
     ).mark_rule(size=1.25).encode(
         alt.Y('bill_length_standardized'),
@@ -424,12 +434,12 @@ toy_example_all_clus_dists = alt.layer(
         alt.X('flipper_length_standardized'),
         alt.X2('mean_flipper_length')
     ),
-    alt.Chart(data).mark_circle(size=40, opacity=1).encode(
+    alt.Chart(penguins_clustered).mark_circle(size=40, opacity=1).encode(
         alt.X("flipper_length_standardized"),
         alt.Y("bill_length_standardized"),
         alt.Color('cluster:N')
     ),
-    alt.Chart(data).mark_circle(color='coral', size=200, opacity=1).encode(
+    alt.Chart(penguins_clustered).mark_circle(color='coral', size=200, opacity=1).encode(
         alt.X("mean(flipper_length_standardized)")
           .scale(zero=False)
           .title("Flipper Length (standardized)"),
@@ -442,22 +452,31 @@ toy_example_all_clus_dists = alt.layer(
 glue('toy-example-all-clus-dists', toy_example_all_clus_dists, display=True)
 ```
 
-The larger the value of $S^2$, the more spread out the cluster is, since large $S^2$ means that points are far from the cluster center.
-Note, however, that "large" is relative to *both* the scale of the variables for clustering *and* the number of points in the cluster. A cluster where points are very close to the center might still have a large $S^2$ if there are many data points in the cluster.
+The larger the value of $S^2$, the more spread out the cluster is, since large $S^2$ means
+that points are far from the cluster center. Note, however, that "large" is relative to *both* the
+scale of the variables for clustering *and* the number of points in the cluster. A cluster where points
+are very close to the center might still have a large $S^2$ if there are many data points in the cluster.
 
 After we have calculated the WSSD for all the clusters,
-we sum them together to get the *total WSSD*.
-For our example,
+we sum them together to get the *total WSSD*. For our example,
 this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
-{numref}`toy-example-all-clus-dists`
+{numref}`toy-example-all-clus-dists`.
 
 :::{glue:figure} toy-example-all-clus-dists
 :figwidth: 700px
 :name: toy-example-all-clus-dists
 
-All clusters from the `penguin_data` data set example. Observations are in blue, orange, and red with the cluster center highlighted in orange. The distances from the observations to each of the respective cluster centers are represented as black lines.
+All clusters from the `penguins_standardized` data set example. Observations are in blue, orange, and red with the cluster center highlighted in orange. The distances from the observations to each of the respective cluster centers are represented as black lines.
 :::
+
+Since K-means uses the straight-line distance to measure the quality of a clustering,
+it is limited to clustering based on quantitative variables.
+However, note that there are variants of the K-means algorithm,
+as well as other clustering algorithms entirely,
+that use other distance metrics
+to allow for non-quantitative data to be clustered.
+These are beyond the scope of this book.
 
 +++
 
@@ -574,17 +593,15 @@ sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 
 These two steps are repeated until the cluster assignments no longer change.
 We show what the first three iterations of K-means would look like in
-{numref}`toy-kmeans-iter-1`
-There each row corresponds to an iteration,
+{numref}`toy-kmeans-iter-1`. Each row corresponds to an iteration,
 where the left column depicts the center update,
-and the right column depicts the reassignment of data to clusters.
-
+and the right column depicts the label update (i.e., the reassignment of data to clusters).
 
 :::{glue:figure} toy-kmeans-iter-1
 :figwidth: 700px
 :name: toy-kmeans-iter-1
 
-First three iterations of K-means clustering on the `penguin_data` example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+First three iterations of K-means clustering on the `penguins_standardized` example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
 :::
 
 +++
@@ -603,17 +620,6 @@ logic for this has three steps: (1) both the label update and the center update 
 ways to assign the data to clusters. So at some point, the total WSSD must stop decreasing, which means none of the assignments
 are changing, and the algorithm terminates.
 ```
-
-What kind of data is suitable for K-means clustering?
-In the simplest version of K-means clustering that we have presented here,
-the straight-line distance is used to measure the
-distance between observations and cluster centers.
-This means that only quantitative data should be used with this algorithm.
-There are variants on the K-means algorithm,
-as well as other clustering algorithms entirely,
-that use other distance metrics
-to allow for non-quantitative data to be clustered.
-These, however, are beyond the scope of this book.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -663,7 +669,7 @@ glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data.copy(), cent
 :figwidth: 700px
 :name: toy-kmeans-bad-iter-1
 
-First five iterations of K-means clustering on the `penguin_data` example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+First four iterations of K-means clustering on the `penguins_standardized` example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
 :::
 
 This looks like a relatively bad clustering of the data, but K-means cannot improve it.
@@ -790,23 +796,9 @@ Total WSSD for K clusters ranging from 1 to 9.
 ```
 
 We can perform K-means in Python using a workflow similar to those
-in the earlier classification and regression chapters. We will begin
-by reading the original (i.e., unstandardized) subset of 18 observations
-from the penguins data set.
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-unstandardized_data = pd.read_csv("data/penguins_toy.csv", usecols=["bill_length_mm", "flipper_length_mm"])
-unstandardized_data.to_csv("data/penguins.csv", index=False)
-```
-
-```{code-cell} ipython3
-penguins = pd.read_csv("data/penguins.csv")
-penguins
-```
-
-Recall that K-means clustering uses straight-line distance to decide which points are similar to
+in the earlier classification and regression chapters.
+Returning to the original (unstandardized) `penguins` data,
+recall that K-means clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the *scale* of each of the variables in the data
 will influence which cluster data points end up being assigned.
 Variables with a large scale will have a much larger
@@ -870,12 +862,6 @@ add them to the data frame using `assign`.
 clustered_data = penguins.assign(cluster = penguin_clust[1].labels_)
 clustered_data
 ```
-
-Let's start by visualizing the clustering
-as a colored scatter plot. To do that,
-we will add a new column and store assign the above predictions to that. The final
-data frame will contain the data and the cluster assignments for
-each point:
 
 Now that we have the cluster assignments included in the `clustered_data` data frame, we can 
 visualize them as shown in {numref}`cluster_plot`.
@@ -1018,17 +1004,16 @@ it is possible to have an elbow plot
 where the WSSD increases at one of the steps,
 causing a small bump in the line.
 This is because K-means can get "stuck" in a bad solution
-due to an unlucky initialization of the initial centroid positions
+due to an unlucky initialization of the initial center positions
 as we mentioned earlier in the chapter.
 
 ```{note}
 It is rare that the KMeans function from `scikit-learn`
-gets stuck in a bad solution,
-because the selection of the centroid starting points
-is optimized to prevent this from happening.
+gets stuck in a bad solution, because `scikit-learn` tries to choose
+the initial centers carefully to prevent this from happening.
 If you still find yourself in a situation where you have a bump in the elbow plot,
 you can increase the `n_init` parameter
-to try more different starting points for the centroids.
+when creating the `KMeans` object, e.g., `KMeans(n_clusters=k, n_init=10)`, to try more different random center initializations.
 The larger the value the better from an analysis perspective,
 but there is a trade-off that doing many clusterings could take a long time.
 ```

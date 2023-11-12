@@ -676,7 +676,7 @@ canlang_table
 
 Although it looks like we might have obtained the whole data frame from the database, we didn't!
 It's a *reference*; the data is still stored only in the SQLite database. The `canlang_table` object
-is an `AlchemyTable` (`ibis` is using `sqlalchemy` under the hood!), which, when printed, tells
+is a `DatabaseTable`, which, when printed, tells
 you which columns are available in the table. But unlike a usual `pandas` data frame,
 we do not immediately know how many rows are in the table. In order to find out how many
 rows there are, we have to send an SQL *query* (i.e., command) to the data base.

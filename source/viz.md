@@ -1112,7 +1112,7 @@ else:
 :figwidth: 700px
 :name: can_lang_plot_tooltip
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and mouse hover tooltip. 
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and mouse hover tooltip.
 :::
 
 From the visualization in {numref}`can_lang_plot_tooltip`,
@@ -1160,15 +1160,15 @@ islands_df = pd.read_csv("data/islands.csv")
 islands_df
 ```
 
-Here, we have a data frame of Earth's landmasses, 
-and are trying to compare their sizes. 
-The right type of visualization to answer this question is a bar plot. 
+Here, we have a data frame of Earth's landmasses,
+and are trying to compare their sizes.
+The right type of visualization to answer this question is a bar plot.
 In a bar plot, the height of each bar represents the value of an *amount*
 (a size, count, proportion, percentage, etc).
 They are particularly useful for comparing counts or proportions across different
-groups of a categorical variable. Note, however, that bar plots should generally not be 
+groups of a categorical variable. Note, however, that bar plots should generally not be
 used to display mean or median values, as they hide important information about
-the variation of the data. Instead it's better to show the distribution of 
+the variation of the data. Instead it's better to show the distribution of
 all the individual data points, e.g., using a histogram, which we will discuss further in {numref}`histogramsviz`.
 
 ```{index} altair; mark_bar
@@ -1212,7 +1212,7 @@ so that the labels are on the y-axis and we don't have to tilt our head to read 
 ```{note}
 Recall that in {numref}`Chapter %s <intro>`, we used `sort_values` followed by `head` to obtain
 the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
-from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
+from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal
 as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
 In general, it is good to use more specialized functions when they are available!
 ```
@@ -1360,7 +1360,7 @@ Note that this time,
 we are setting the `y` encoding to `"count()"`.
 There is no `"count()"` column-name in `morley_df`;
 we use `"count()"` to tell `altair`
-that we want to count the number of occurrences of each value in along the x-axis 
+that we want to count the number of occurrences of each value in along the x-axis
 (which we encoded as the `Speed` column).
 
 ```{code-cell} ipython3

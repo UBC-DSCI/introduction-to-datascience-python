@@ -13,7 +13,15 @@ kernelspec:
   name: python3
 ---
 
-# Welcome!
+![](img/frontmatter/ds-a-first-intro-graphic.jpg)
+
+# Data Science 
+
+## *A First Introduction (Python Edition)*
+
+*Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, Lindsey Heagy*
+
+### Welcome!
 
 This is the [website](https://python.datasciencebook.ca) for *Data Science: A First Introduction (Python Edition)*.
 You can read the web version of the book on this site. Click a section in the table of contents
@@ -28,7 +36,7 @@ For the R version of the textbook, please visit https://datasciencebook.ca.
 This work by [Tiffany Timbers](https://www.tiffanytimbers.com/),
 [Trevor Campbell](https://trevorcampbell.me/),
 [Melissa Lee](https://www.stat.ubc.ca/users/melissa-lee),
-[Lindsay Heagy](https://lindseyjh.ca/),
-and [Joel Ostblom](https://joelostblom.com/)
+[Joel Ostblom](https://joelostblom.com/),
+and [Lindsey Heagy](https://lindseyjh.ca/)
 is licensed under
 a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).

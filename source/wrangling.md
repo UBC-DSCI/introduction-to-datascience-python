@@ -1422,14 +1422,14 @@ Non-Aboriginal, and  Official) are spoken at home in different regions, we would
 list including `region` and `category` to `groupby`.
 
 ```{code-cell} ipython3
-region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
+region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"]).reset_index()
 ```
 
 You can also ask for grouped summary statistics on the whole data frame.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.groupby("region").agg(["min", "max"])
+region_lang.groupby("region").agg(["min", "max"]).reset_index()
 ```
 
 If you want to ask for only some columns, for example
@@ -1459,7 +1459,7 @@ this approach always works.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max()
+region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max().reset_index()
 ```
 
 To see how many observations there are in each group,

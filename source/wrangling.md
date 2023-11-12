@@ -747,13 +747,15 @@ on the slash character `"/"`.
 ```
 
 The `pandas` package provides similar functions that we can access
-by using the `str` method. So, to split all of the entries for an entire
-column in a data frame, we would use the `str.split` method.
-Once we use this method,
-one column will contain only the counts of Canadians
+by using the `str` method. So to split all of the entries for an entire
+column in a data frame, we will use the `str.split` method.
+The output of this method is a data frame with two columns:
+one containing only the counts of Canadians
 that speak each language most at home,
-and the other will contain the counts of Canadians
+and the other containing only the counts of Canadians
 that speak each language most at work for each region.
+We then drop the no-longer-needed `value` column from the `lang_messy_longer`
+data frame, and assign the two columns from `str.split` to two new columns.
 {numref}`fig:img-separate`
 outlines what we need to specify to use `str.split`.
 
@@ -766,45 +768,12 @@ outlines what we need to specify to use `str.split`.
 Syntax for the `str.split` function.
 ```
 
-We will do this in multiple steps. First, we create a new object
-that contains two columns. We will set the `expand` argument to `True`
-to tell `pandas` that we want to expand the output into two columns.
-
 ```{code-cell} ipython3
-split_counts = lang_messy_longer["value"].str.split("/", expand=True)
-split_counts
-```
-Since we only operated on the `value` column, the `split_counts` data frame
-doesn't have the rest of the columns (`language`, `region`, etc.)
-that were in our original data frame. We don't want to lose this information, so
-we will contatenate (combine) the original data frame with `split_counts` using
-the `concat` function from `pandas`. The `concat` function *concatenates* data frames
-along an axis. By default, it concatenates the data frames vertically along `axis=0` yielding a single
-*taller* data frame. Since we want to concatenate our old columns to our
-new `split_counts` data frame (to obtain a *wider* data frame), we will specify `axis=1`.
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang = pd.concat(
-    [lang_messy_longer, split_counts],
-    axis=1,
-)
+tidy_lang = lang_messy_longer.drop(columns=["value"])
+tidy_lang[["most_at_home", "most_at_work"]] = lang_messy_longer["value"].str.split("/", expand=True)
 tidy_lang
 ```
 
-Next, we will rename our newly created columns (currently called
-`0` and `1`) to the more meaningful names `"most_at_home"` and `"most_at_work"`,
-and drop the `value` column from our data frame using the `drop` method.
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang = (
-    tidy_lang.rename(columns={0: "most_at_home", 1: "most_at_work"})
-    .drop(columns=["value"])
-)
-tidy_lang
-```
-Note that we could have chained these steps together to make our code more compact.
 Is this data set now tidy? If we recall the three criteria for tidy data:
 
   - each row is a single observation,

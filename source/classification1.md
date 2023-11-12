@@ -1415,9 +1415,12 @@ what the data would look like if the cancer was rare. We will do this by
 picking only 3 observations from the malignant group, and keeping all
 of the benign observations. We choose these 3 observations using the `.head()`
 method, which takes the number of rows to select from the top (`n`).
-We use the [`concat`](https://pandas.pydata.org/docs/reference/api/pandas.concat.html) 
+We will then use the [`concat`](https://pandas.pydata.org/docs/reference/api/pandas.concat.html) 
 function from `pandas` to glue the two resulting filtered
-data frames back together by passing them together in a sequence.
+data frames back together. The `concat` function *concatenates* data frames
+along an axis. By default, it concatenates the data frames vertically along `axis=0` yielding a single
+*taller* data frame, which is what we want to do here. If we instead wanted to concatenate horizontally
+to produce a *wider* data frame, we would specify `axis=1`.
 The new imbalanced data is shown in {numref}`fig:05-unbalanced`, 
 and we print the counts of the classes using the `value_counts` function.
 

@@ -1346,9 +1346,7 @@ area_smoothness_new_point_scaled = (
 
 glue(
     "fig:05-scaling-plt",
-    (area_smoothness_new_point | area_smoothness_new_point_scaled).configure_legend(
-        orient="bottom", titleAnchor="middle"
-    ),
+    area_smoothness_new_point | area_smoothness_new_point_scaled
 )
 ```
 

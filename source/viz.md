@@ -1271,13 +1271,13 @@ and add a title to the chart by specifying the `title` argument of `alt.Chart`.
 Plot titles are not always required, especially when it would be redundant with an already-existing
 caption or surrounding context (e.g., in a slide presentation with annotations).
 But if you decide to include one, a good plot title should provide the take home message
-that you want readers to focus on, e.g., "Earth's seven largest landmasses are all continents,"
+that you want readers to focus on, e.g., "Earth's seven largest landmasses are continents,"
 or a more general summary of the information displayed, e.g., "The twelve largest landmasses on Earth."
 
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(
 	islands_top12,
-	title="Earth's seven largest landmasses are all continents"
+	title="Earth's seven largest landmasses are continents"
 ).mark_bar().encode(
     x=alt.X("size").title("Size (1000 square mi)"),
     y=alt.Y("landmass").sort("x").title("Landmass"),

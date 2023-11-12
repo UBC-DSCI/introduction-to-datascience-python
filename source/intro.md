@@ -585,7 +585,7 @@ Similarly, when an object `obj` provides another object `x` with the dot syntax 
 We will use all of these terms throughout the book, as you will see them used commonly in the community. 
 And just because we programmers like to be confusing for no apparent reason: we *don't* use the "method", "operation", or "attribute" terminology
 when referring to functions and objects from packages, like `pandas`. So for example, `pd.read_csv`
-would typically just be referred to as a function, but not as a method or operation.
+would typically just be referred to as a function, but not as a method or operation, even though it uses the dot syntax.
 ```
 
 At this point, if we have done everything correctly, `aboriginal_lang` should be a data frame

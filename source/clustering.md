@@ -182,8 +182,8 @@ in the clustering pipeline.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 penguins_standardized = penguins.assign(
-    flipper_length_standardized = (penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std(),
-	bill_length_standardized = (penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std()
+	bill_length_standardized = (penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std(),
+    flipper_length_standardized = (penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std()
 ).drop(
     columns = ["bill_length_mm", "flipper_length_mm"]
 )
@@ -537,7 +537,7 @@ def plot_kmean_iterations(iterations, data, centroid_init):
 
         data['iteration'] = f'Iteration {i}'
         data['update_type'] = 'Label Update'
-        cluster_columns = ['flipper_length_standardized', 'bill_length_standardized']
+        cluster_columns = ['bill_length_standardized', 'flipper_length_standardized']
         data['label'] = np.argmin(euclidean_distances(data[cluster_columns], centroid_init), axis=1)
         data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
         data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
@@ -620,6 +620,14 @@ ways to assign the data to clusters. So at some point, the total WSSD must stop 
 are changing, and the algorithm terminates.
 ```
 
+### Random restarts
+
+```{index} K-means; init argument
+```
+
+Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
+For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -637,15 +645,6 @@ points_kmeans_init = alt.Chart(penguins_standardized).mark_point(size=75, filled
 
 glue('toy-kmeans-bad-init-1', points_kmeans_init, display=True)
 ```
-
-### Random restarts
-
-```{index} K-means; init argument
-```
-
-Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
-For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
-
 
 :::{glue:figure} toy-kmeans-bad-init-1
 :figwidth: 700px
@@ -673,6 +672,19 @@ First four iterations of K-means clustering on the `penguins_standardized` examp
 This looks like a relatively bad clustering of the data, but K-means cannot improve it.
 To solve this problem when clustering data using K-means, we should randomly re-initialize the labels a few times, run K-means for each initialization,
 and pick the clustering that has the lowest final total WSSD.
+
+### Choosing K
+
+In order to cluster data using K-means,
+we also have to pick the number of clusters, K.
+But unlike in classification, we have no response variable
+and cannot perform cross-validation with some measure of model prediction error.
+Further, if K is chosen too small, then multiple clusters get grouped together;
+if K is too large, then clusters get subdivided.
+In both cases, we will potentially miss interesting structure in the data.
+{numref}`toy-kmeans-vary-k-1` illustrates the impact of K
+on K-means clustering of our penguin flipper and bill length data
+by showing the different clusterings for K's ranging from 1 to 9.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -722,18 +734,7 @@ vary_k = alt.layer(
 glue('toy-kmeans-vary-k-1', vary_k, display=True)
 ```
 
-### Choosing K
 
-In order to cluster data using K-means,
-we also have to pick the number of clusters, K.
-But unlike in classification, we have no response variable
-and cannot perform cross-validation with some measure of model prediction error.
-Further, if K is chosen too small, then multiple clusters get grouped together;
-if K is too large, then clusters get subdivided.
-In both cases, we will potentially miss interesting structure in the data.
-{numref}`toy-kmeans-vary-k-1` illustrates the impact of K
-on K-means clustering of our penguin flipper and bill length data
-by showing the different clusterings for K's ranging from 1 to 9.
 
 :::{glue:figure} toy-kmeans-vary-k-1
 :figwidth: 700px
@@ -741,6 +742,17 @@ by showing the different clusterings for K's ranging from 1 to 9.
 
 Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.
 :::
+
+
+```{index} elbow method
+```
+
+If we set K less than 3, then the clustering merges separate groups of data; this causes a large
+total WSSD, since the cluster center (denoted by large shapes with black outlines) is not close to any of the data in the cluster. On
+the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
+decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
+clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
+the right number of clusters ({numref}`toy-kmeans-elbow`)).
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -769,16 +781,6 @@ elbow_plot = alt.layer(
 
 glue('toy-kmeans-elbow', elbow_plot, display=True)
 ```
-
-```{index} elbow method
-```
-
-If we set K less than 3, then the clustering merges separate groups of data; this causes a large
-total WSSD, since the cluster center (denoted by large shapes with black outlines) is not close to any of the data in the cluster. On
-the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
-decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
-clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
-the right number of clusters ({numref}`toy-kmeans-elbow`)).
 
 :::{glue:figure} toy-kmeans-elbow
 :figwidth: 700px

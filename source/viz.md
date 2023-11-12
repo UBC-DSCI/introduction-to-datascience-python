@@ -1272,7 +1272,7 @@ Plot titles are not always required, especially when it would be redundant with 
 caption or surrounding context (e.g., in a slide presentation with annotations).
 But if you decide to include one, a good plot title should provide the take home message
 that you want readers to focus on, e.g., "Earth's seven largest landmasses are continents,"
-or a more general summary of the information displayed, e.g., "The twelve largest landmasses on Earth."
+or a more general summary of the information displayed, e.g., "Earth's twelve largest landmasses."
 
 ```{code-cell} ipython3
 islands_plot_sorted = alt.Chart(

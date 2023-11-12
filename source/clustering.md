@@ -488,14 +488,13 @@ These are beyond the scope of this book.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-penguin_data = pd.read_csv("data/penguins_standardized.csv")
 # Set up the initial "random" label assignment the same as in the R book
-penguin_data['label'] = [
+penguins_standardized['label'] = [
     2, 2, 1, 1, 0, 0, 0, 1,
     2, 2, 1, 2, 1, 2,
     0, 1, 2, 2
 ]
-points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
+points_kmeans_init = alt.Chart(penguins_standardized).mark_point(size=75, filled=True, opacity=1).encode(
     alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
@@ -577,9 +576,9 @@ def plot_kmean_iterations(iterations, data, centroid_init):
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-centroid_init = penguin_data.groupby('label').mean()
+centroid_init = penguins_standardized.groupby('label').mean()
 
-glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguin_data.copy(), centroid_init.copy()), display=True)
+glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguins_standardized.copy(), centroid_init.copy()), display=True)
 ```
 
 ```{index} WSSD; total
@@ -624,12 +623,11 @@ are changing, and the algorithm terminates.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-penguin_data = pd.read_csv("data/penguins_standardized.csv")
 # Set up the initial "random" label assignment the same as in the R book
-penguin_data['label'] = [1, 1, 2, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 1, 1, 1]
-centroid_init = penguin_data.groupby('label').mean()
+penguins_standardized['label'] = [1, 1, 2, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 1, 1, 1]
+centroid_init = penguins_standardized.groupby('label').mean()
 
-points_kmeans_init = alt.Chart(penguin_data).mark_point(size=75, filled=True, opacity=1).encode(
+points_kmeans_init = alt.Chart(penguins_standardized).mark_point(size=75, filled=True, opacity=1).encode(
     alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
     alt.Color('label:N').legend(None),
@@ -659,7 +657,7 @@ Random initialization of labels.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguin_data.copy(), centroid_init.copy()), display=True)
+glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguins_standardized.copy(), centroid_init.copy()), display=True)
 ```
 
 {numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
@@ -681,13 +679,12 @@ and pick the clustering that has the lowest final total WSSD.
 
 from sklearn.cluster import KMeans
 
-
-penguin_data = pd.read_csv("data/penguins_standardized.csv")
+penguins_standardized = penguins_standardized.drop(columns=["label"])
 
 dfs = []
 inertias = []
 for i in range(1, 10):
-    data = penguin_data.copy()
+    data = penguins_standardized.copy()
     knn = KMeans(n_clusters=i, n_init='auto')
     knn.fit(data)
     data['n_clusters'] = f'{i} Cluster' + ('' if i == 1 else 's')

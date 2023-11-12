@@ -21,10 +21,10 @@ jobs:
         echo "Checking if Dockerfile was modified since last commit on this PR"
         echo "GitHub PR action type: ${{ github.event.action }}"
         if [ "${{ github.event.action }}" == "opened" ]; then
-            echo "GitHub base ref: ${{ github.base_ref }}"
-            echo "GitHub head ref: ${{ github.head_ref }}"
-            BEFORE=${{ github.base_ref }}
-            AFTER=${{ github.head_ref }}
+            echo "GitHub base ref: ${{ github.base.sha }}"
+            echo "GitHub head ref: ${{ github.head.sha }}"
+            BEFORE=${{ github.base.sha }}
+            AFTER=${{ github.head.sha }}
         else
             echo "GitHub event before: ${{ github.event.before }}"
             echo "GitHub event after: ${{ github.event.after }}"

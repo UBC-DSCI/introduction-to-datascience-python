@@ -721,8 +721,8 @@ response for us. So `ibis` does all the hard work of translating from Python to 
 we can just stick with Python!
 
 The `ibis` package provides lots of `pandas`-like tools for working with database tables.
-For example, we can look at the first few rows of the table by using the `head` function---and
-we won't forget to `execute` to see the result!
+For example, we can look at the first few rows of the table by using the `head` function,
+followed by `execute` to retrieve the response.
 
 ```{index} database; head, ibis;
 ```

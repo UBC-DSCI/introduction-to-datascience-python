@@ -1047,7 +1047,7 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue(percentage of Canadian residents)"),
+        .title("Mother tongue (percentage of Canadian residents)"),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")
@@ -1066,7 +1066,7 @@ glue("can_lang_plot_theme", can_lang_plot_theme.properties(height=320, width=420
 :figwidth: 700px
 :name: can_lang_plot_theme
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors.
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and shapes.
 :::
 
 The chart above gives a good indication of how the different language categories differ,
@@ -1089,7 +1089,7 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue(percentage of Canadian residents)"),
+        .title("Mother tongue (percentage of Canadian residents)"),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")
@@ -1112,7 +1112,7 @@ else:
 :figwidth: 700px
 :name: can_lang_plot_tooltip
 
-Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and mouse hover tooltip. 
+Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with custom colors and mouse hover tooltip.
 :::
 
 From the visualization in {numref}`can_lang_plot_tooltip`,
@@ -1163,10 +1163,13 @@ islands_df
 Here, we have a data frame of Earth's landmasses,
 and are trying to compare their sizes.
 The right type of visualization to answer this question is a bar plot.
-In a bar plot, the height of the bar represents the value of a summary statistic
-(usually a size, count, sum, proportion, or percentage).
-They are particularly useful for comparing summary statistics between different
-groups of a categorical variable.
+In a bar plot, the height of each bar represents the value of an *amount*
+(a size, count, proportion, percentage, etc).
+They are particularly useful for comparing counts or proportions across different
+groups of a categorical variable. Note, however, that bar plots should generally not be
+used to display mean or median values, as they hide important information about
+the variation of the data. Instead it's better to show the distribution of
+all the individual data points, e.g., using a histogram, which we will discuss further in {numref}`histogramsviz`.
 
 ```{index} altair; mark_bar
 ```
@@ -1191,7 +1194,7 @@ glue("islands_bar", islands_bar, display=False)
 :figwidth: 400px
 :name: islands_bar
 
-Bar plot of all Earth's landmasses' size with squished labels.
+Bar plot of Earth's landmass sizes. The plot is too wide with the default settings.
 :::
 
 Alright, not bad! The plot in {numref}`islands_bar` is
@@ -1209,7 +1212,7 @@ so that the labels are on the y-axis and we don't have to tilt our head to read 
 ```{note}
 Recall that in {numref}`Chapter %s <intro>`, we used `sort_values` followed by `head` to obtain
 the ten rows with the largest values of a variable. We could have instead used the `nlargest` function
-from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal 
+from `pandas` for this purpose. The `nsmallest` and `nlargest` functions achieve the same goal
 as `sort_values` followed by `head`, but are slightly more efficient because they are specialized for this purpose.
 In general, it is good to use more specialized functions when they are available!
 ```
@@ -1244,12 +1247,10 @@ and allows us to answer our initial questions:
 "Are the seven continents Earth's largest landmasses?"
 and "Which are the next few largest landmasses?".
 However, we could still improve this visualization
-by organizing the bars by landmass size rather than by alphabetical order
-and by coloring the bars based on whether they correspond to a continent.
-The data for this is stored in the `landmass_type` column.
-To use this to color the bars,
+by coloring the bars based on whether they correspond to a continent, and
+by organizing the bars by landmass size rather than by alphabetical order.
+The data for coloring the bars is stored in the `landmass_type` column, so
 we set the `color` encoding to `landmass_type`.
-
 To organize the landmasses by their `size` variable,
 we will use the altair `sort` function
 in the y-encoding of the chart.
@@ -1259,18 +1260,28 @@ This plots the values on `y` axis
 in the ascending order of `x` axis values.
 This creates a chart where the largest bar is the closest to the axis line,
 which is generally the most visually appealing when sorting bars.
-If instead
-we want to sort the values on `y-axis` in descending order of `x-axis`,
-we can add a minus sign to reverse the order and specify `sort="-x"`.
+If instead we wanted to sort the values on `y-axis` in descending order of `x-axis`,
+we could add a minus sign to reverse the order and specify `sort="-x"`.
 
 ```{index} altair; sort
 ```
 
+To finalize this plot we will customize the axis and legend labels using the `title` method,
+and add a title to the chart by specifying the `title` argument of `alt.Chart`.
+Plot titles are not always required, especially when it would be redundant with an already-existing
+caption or surrounding context (e.g., in a slide presentation with annotations).
+But if you decide to include one, a good plot title should provide the take home message
+that you want readers to focus on, e.g., "Earth's seven largest landmasses are continents,"
+or a more general summary of the information displayed, e.g., "Earth's twelve largest landmasses."
+
 ```{code-cell} ipython3
-islands_plot_sorted = alt.Chart(islands_top12).mark_bar().encode(
-    x="size",
-    y=alt.Y("landmass").sort("x"),
-    color=alt.Color("landmass_type")
+islands_plot_sorted = alt.Chart(
+	islands_top12,
+	title="Earth's seven largest landmasses are continents"
+).mark_bar().encode(
+    x=alt.X("size").title("Size (1000 square mi)"),
+    y=alt.Y("landmass").sort("x").title("Landmass"),
+    color=alt.Color("landmass_type").title("Type")
 )
 ```
 
@@ -1283,7 +1294,7 @@ glue("islands_plot_sorted", islands_plot_sorted, display=True)
 :figwidth: 700px
 :name: islands_plot_sorted
 
-Bar plot of size for Earth's largest 12 landmasses colored by whether its a continent with clearer axes and labels.
+Bar plot of size for Earth's largest 12 landmasses, colored by landmass type, with clearer axes and labels.
 :::
 
 
@@ -1292,6 +1303,7 @@ visualization for answering our original questions. Landmasses are organized by
 their size, and continents are colored differently than other landmasses,
 making it quite clear that all the seven largest landmasses are continents.
 
+(histogramsviz)=
 ### Histograms: the Michelson speed of light data set
 
 ```{index} Michelson speed of light
@@ -1348,7 +1360,7 @@ Note that this time,
 we are setting the `y` encoding to `"count()"`.
 There is no `"count()"` column-name in `morley_df`;
 we use `"count()"` to tell `altair`
-that we want to count the number of occurrences of each value in along the x-axis 
+that we want to count the number of occurrences of each value in along the x-axis
 (which we encoded as the `Speed` column).
 
 ```{code-cell} ipython3

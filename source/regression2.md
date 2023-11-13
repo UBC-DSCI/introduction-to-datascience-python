@@ -440,8 +440,8 @@ sacramento_test["predicted"] = lm.predict(sacramento_test[["sqft"]])
 
 # calculate RMSPE
 RMSPE = mean_squared_error(
-    y_true = sacramento_test["price"],
-    y_pred = sacramento_test["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 
 RMSPE
@@ -734,8 +734,8 @@ Finally, we make predictions on the test data set to assess the quality of our m
 sacramento_test["predicted"] = mlm.predict(sacramento_test[["sqft","beds"]])
 
 lm_mult_test_RMSPE = mean_squared_error(
-    y_true = sacramento_test["price"], 
-    y_pred = sacramento_test["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 lm_mult_test_RMSPE
 ```

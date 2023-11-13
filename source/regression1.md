@@ -833,8 +833,8 @@ from sklearn.metrics import mean_squared_error
 
 sacramento_test["predicted"] = sacr_gridsearch.predict(sacramento_test)
 RMSPE = mean_squared_error(
-    y_true = sacramento_test["price"],
-    y_pred = sacramento_test["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 RMSPE
 ```
@@ -1066,8 +1066,8 @@ to compute the RMSPE.
 ```{code-cell} ipython3
 sacramento_test["predicted"] = sacr_gridsearch.predict(sacramento_test)
 RMSPE_mult = mean_squared_error(
-    y_true = sacramento_test["price"], 
-    y_pred = sacramento_test["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 RMSPE_mult
 

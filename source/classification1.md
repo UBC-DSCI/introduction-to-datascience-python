@@ -628,15 +628,13 @@ Scatter plot of concavity versus perimeter with new observation represented as a
 ```{code-cell} ipython3
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
-(
-    cancer
-   [["Perimeter", "Concavity", "Class"]]
-   .assign(dist_from_new = (
+cancer["dist_from_new"] = (
        (cancer["Perimeter"] - new_obs_Perimeter) ** 2
      + (cancer["Concavity"] - new_obs_Concavity) ** 2
-   )**(1/2))
-   .nsmallest(5, "dist_from_new")
-)
+)**(1/2)
+cancer.nsmallest(5, "dist_from_new")[
+	["Perimeter", "Concavity", "Class", "dist_from_new"]
+]
 ```
 
 ```{code-cell} ipython3
@@ -751,16 +749,14 @@ three predictors.
 new_obs_Perimeter = 0
 new_obs_Concavity = 3.5
 new_obs_Symmetry = 1
-(
-    cancer
-    [["Perimeter", "Concavity", "Symmetry", "Class"]]
-    .assign(dist_from_new = (
-        (cancer["Perimeter"] - new_obs_Perimeter) ** 2
-        + (cancer["Concavity"] - new_obs_Concavity) ** 2
-        + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
-    )**(1/2))
-    .nsmallest(5, "dist_from_new")
-)
+cancer["dist_from_new"] = (
+      (cancer["Perimeter"] - new_obs_Perimeter) ** 2
+    + (cancer["Concavity"] - new_obs_Concavity) ** 2
+    + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
+)**(1/2)
+cancer.nsmallest(5, "dist_from_new")[
+    ["Perimeter", "Concavity", "Symmetry", "Class", "dist_from_new"]
+]
 ```
 
 Based on $K=5$ nearest neighbors with these three predictors we would classify 

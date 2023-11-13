@@ -1558,7 +1558,7 @@ and region, just as we specified!
 
 To instead create an entirely new data frame, we can use the `assign` method and specify one argument for each column we want to create.
 In this case we want to create one new column named `maximum`, so the argument
-to `assign` begins with `maximum = `.
+to `assign` begins with `maximum= `.
 Then after the `=`, we specify what the contents of that new column
 should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
 Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.

@@ -1655,7 +1655,9 @@ one would solve this problem in a less error-prone way using
 the `merge` function, which lets you combine two data frames. We will show you an
 example using `merge` at the end of the chapter!
 ```
-Once again we can also instead directly modify the `english_lang` data frame using column assignment.
+Instead of using the `assign` method we can directly modify the `english_lang` data frame using regular column assignment.
+This would be a more natural choice in this particular case,
+since the syntax is more convenient for simple column modifications and additions.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]

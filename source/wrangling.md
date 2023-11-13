@@ -1536,8 +1536,8 @@ you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/
 ```{index} pandas.DataFrame; []
 ```
 
-When we compute summary statistics with `agg` or apply functions using `apply`,
-those give us new data frames. But what if we want to append that information
+When we compute summary statistics or apply functions,
+a new data frame or series is created. But what if we want to append that information
 to an existing data frame? For example, say we wanted to compute the
 maximum value in each row of the `region_lang_nums` data frame using `apply`,
 and to append that as an additional column of the `region_lang` data frame.

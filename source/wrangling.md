@@ -1452,44 +1452,23 @@ region_lang.value_counts("region", normalize=True)
 
 +++
 
-## Apply functions across multiple columns with `apply`
+## Apply functions across multiple columns
 
-### Apply a function to each column with `apply`
-
-An alternative to aggregating on a data frame
-for applying a function to many columns is the `apply` method.
-Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `apply` with the `max` function this time.
-We focus on the two arguments of `apply`:
-the function that you would like to apply to each column, and the `axis` along
-which the function will be applied (`0` for columns, `1` for rows).
-Note that `apply` does not have an argument
-to specify *which* columns to apply the function to.
-Therefore, we will use the `loc[]` before calling `apply`
-to choose the columns for which we want the maximum.
-
-```{code-cell} ipython3
-region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
-```
-
-We can use `apply` for much more than summary statistics.
-Sometimes we need to apply a function to many columns in a data frame.
-For example, we would need to do this when converting units of measurements across many columns.
-We illustrate such a data transformation in {numref}`fig:mutate-across`.
-
-+++ {"tags": []}
+Computing summary statistics is not the only situation in which we need
+to apply a function across columns in a data frame. There are two other
+common wrangling tasks that require the application of a function across columns.
+The first is when we want to apply a transformation, such as a conversion of measurement units, to multiple columns.
+We illustrate such a data transformation in {numref}`fig:mutate-across`; note that it does not
+change the shape of the data frame.
 
 ```{figure} img/wrangling/summarize.005.jpeg
 :name: fig:mutate-across
 :figclass: figure
 
-`apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
+A transformation applied across many columns. The darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For example,
-imagine that we wanted to convert all the numeric columns
+For example, imagine that we wanted to convert all the numeric columns
 in the `region_lang` data frame from `int64` type to `int32` type
 using the `.as_type` function.
 When we revisit the `region_lang` data frame,
@@ -1503,88 +1482,52 @@ region_lang
 ```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
 ```
 
-To accomplish such a task, we can use `apply`.
-As we did above,
-we again use `loc[]` to specify the columns
-as well as the `apply` to specify the function we want to apply on these columns.
-Now, we need a way to tell `apply` what function to perform to each column
-so that we can convert them from `int64` to `int32`. We will use what is called
-a `lambda` function in python; `lambda` functions are just regular functions,
-except that you don't need to give them a name.
-That means you can pass them as an argument into `apply` easily!
-Let's consider a simple example of a `lambda` function that
-multiplies a number by two.
-```{code-cell} ipython3
-lambda x: 2*x
-```
-We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word
-that tells Python "what follows is
-a function." Following this, we then state the name of the arguments of the function.
-In this case, we just have one argument named `x`. After the list of arguments, we put a
-colon `:`. And finally after the colon are the instructions: take the value provided and multiply it by 2.
-Let's call our shiny new `lambda` function with the argument `2` (so the output should be `4`).
-Just like a regular function, we pass its argument between parentheses `()` symbols.
-```{code-cell} ipython3
-(lambda x: 2*x)(2)
-```
+We can simply call the `.as_type` function to apply it across the desired range of columns.
 
-```{note}
-Because we didn't give the `lambda` function a name, we have to surround it with
-parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
-and think that `(2)` was part of the instructions that comprise the `lambda` function.
-As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
-we can pass a `lambda` function as an argument to `apply` without any parentheses.
-```
-
-Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"`
-to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
-of the data frame, which we will name `col`---and apply the `astype` method to it.
-Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
 ```{code-cell} ipython3
-region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
+region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].astype("int32")
 region_lang_nums.info()
 ```
-You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`.
-You can also see that `apply` returns a data frame with the same number of columns and rows
-as the input data frame. The only thing `apply` does is use the `lambda` function argument
-on each of the specified columns.
+You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`,
+and that we have obtained a data frame with the same number of columns and rows
+as the input data frame. 
 
-### Apply a function row-wise with `apply`
-
-What if you want to apply a function across columns but within one row?
-We illustrate such a data transformation in {numref}`fig:rowwise`.
-
-+++ {"tags": []}
+The second situation occurs when you want to apply a function across columns within each individual
+row, i.e., *row-wise*. This operation, illustrated in {numref}`fig:rowwise`,
+will produce a single column whose entries summarize each row in the original data frame;
+this new column can be added back into the original data.
 
 ```{figure} img/wrangling/summarize.004.jpeg
 :name: fig:rowwise
 :figclass: figure
 
-`apply` is useful for applying functions across columns within one row. The
+A function applied row-wise across a data frame, producing a new column. The
 darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For instance, suppose we want to know the maximum value between `mother_tongue`,
-and `lang_known` for each language and region
-in the `region_lang_nums` data set.
+For example, suppose we want to know the maximum value between `mother_tongue`,
+and `lang_known` for each language and region in the `region_lang_nums` data set.
 In other words, we want to apply the `max` function *row-wise.*
-In order to tell `apply` that we want to work row-wise (as opposed to acting on each column
+In order to tell `max` that we want to work row-wise (as opposed to acting on each column
 individually, which is the default behavior), we just specify the argument `axis=1`.
-For example, in the case of the `max` function, this tells Python that we would like
-the `max` within each row of the input, as opposed to being applied on each column.
 
 ```{code-cell} ipython3
-region_lang_nums.apply(max, axis=1)
+region_lang_nums.max(axis=1)
 ```
 
-We see that we get a column, which is the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work` and `lang_known` for each language
-and region. It is often the case that we want to include a column result
-from using `apply` row-wise as a new column in the data frame, so that we can make
+We see that we obtain a series containing the maximum value between `mother_tongue`,
+`most_at_home`, `most_at_work` and `lang_known` for each row in the data frame. It
+is often the case that we want to include a column result
+from a row-wise operation as a new column in the data frame, so that we can make
 plots or continue our analysis. To make this happen,
-we will use `assign` to create a new column. This is discussed in the next section.
+we will use column assignment or the `assign` function to create a new column. 
+This is discussed in the next section.
+
+```{note}
+While `pandas` provides many methods (like `max`, `as_type`, etc.) that can be applied to a data frame,
+sometimes you may want to apply your own function to multiple columns in a data frame. In this case
+you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html) method.
+```
 
 (pandas-assign)=
 ## Modifying and adding columns

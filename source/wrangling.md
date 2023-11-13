@@ -1631,9 +1631,8 @@ five_cities
 The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
 Next, we will add this information to a new data frame column called `city_pops`.
-Once again, we will illustrate how to do this using both regular column assignment
-and the  `assign` method, starting with the latter.
-Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`,
+Once again, we will illustrate how to do this using both the `assign` method and regular column assignment.
+We specify the new column name (`city_pops`) as the argument, followed by the equals symbol `=`,
 and finally the data in the column.
 Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.
 So we will create a column called `city_pops` where we list the populations of those cities in that
@@ -1693,19 +1692,24 @@ the `merge` function, which lets you combine two data frames. We will show you a
 example using `merge` at the end of the chapter!
 ```
 
-Now we have a new column with the population for each city. Finally, we calculate the
-proportion of people who speak English the most at home by taking the ratio of the columns
-`most_at_home` and `city_pops`. Let's modify the `most_at_home` column directly; in this case
-we can just assign directly to the column.
-This is precisely what we did in {numref}`str-split`,
+Now we have a new column with the population for each city. Finally, we can convert all the numerical
+columns to proportions of people who speak English by taking the ratio of all the numerical columns
+with `city_pops`. Let's modify the `english_lang` column directly; in this case
+we can just assign directly to the data frame.
+This is similar to what we did in {numref}`str-split`,
 when we first read in the `"region_lang_top5_cities_messy.csv"` data and we needed to convert a few
-of the variables to numeric types.
-Note that it is again possible to instead use the `assign` function to produce a new data frame when modifying an existing column,
-although this is not commonly done.
+of the variables to numeric types. Here we assign to a range of columns simultaneously using `loc[]`.
+Note that it is again possible to instead use the `assign` function to produce a new data
+frame when modifying existing columns, although this is not commonly done.
+Note also that we use the `div` method with the argument `axis=0` to divide a range of columns in a data frame
+by the values in a single column&mdash;the basic division symbol `/` won't work in this case.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-english_lang["most_at_home"] = english_lang["most_at_home"]/english_lang["city_pops"]
+english_lang.loc[:, "mother_tongue":"lang_known"] = english_lang.loc[
+    :,
+    "mother_tongue":"lang_known"
+    ].div(english_lang["city_pops"], axis=0)
 english_lang
 ```
 

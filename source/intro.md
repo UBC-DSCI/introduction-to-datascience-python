@@ -646,6 +646,7 @@ ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
+(ch1-adding-modifying)=
 ## Adding and modifying columns
 
 ```{index} assign

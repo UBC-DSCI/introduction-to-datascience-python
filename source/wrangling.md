@@ -800,7 +800,10 @@ It makes sense for `region`, `category`, and `language` to be stored as an
 above a numeric threshold of a column).
 That won't be possible if the variable is stored as a `object`.
 Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
-like this: it will convert the columns to the best numeric data types.
+like this: it will convert the columns to the best numeric data types. Note that below
+we *assign* the new numerical series to the `most_at_home` and `most_at_work` columns
+in `tidy_lang`; we have seen this syntax before in {numref}`ch1-adding-modifying`,
+and we will discuss it in more depth later in this chapter in {numref}`pandas-assign`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]

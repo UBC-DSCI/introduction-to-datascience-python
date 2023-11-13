@@ -44,8 +44,7 @@ By the end of the chapter, readers will be able to do the following:
   - Recall and use the following functions for their
     intended data wrangling tasks:
       - `agg`
-      - `apply`
-      - `assign`
+      - `assign` (as well as regular column assignment)
       - `groupby`
       - `melt`
       - `pivot`
@@ -782,7 +781,7 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Although we can't see it in the data frame above, all of the variables are actually
-"object" data types. We can check this using the `info` method.
+`object` data types. We can check this using the `info` method.
 ```{code-cell} ipython3
 tidy_lang.info()
 ```
@@ -795,20 +794,21 @@ Python read these columns in as string types, and by default, `str.split` will
 return columns with the `object` data type.
 
 It makes sense for `region`, `category`, and `language` to be stored as an
-`object` type. However, suppose we want to apply any functions that treat the
+`object` type since they hold categorical values. However, suppose we want to apply any functions that treat the
 `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
 above a numeric threshold of a column).
 That won't be possible if the variable is stored as an `object`.
-Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
-like this: it will convert the columns to the best numeric data types. Note that below
+Fortunately, the `astype` method from `pandas` provides a natural way to fix problems
+like this: it will convert the column to a selected data type. In this case, we choose the `int`
+data type to indicate that these variables contain integer counts. Note that below
 we *assign* the new numerical series to the `most_at_home` and `most_at_work` columns
 in `tidy_lang`; we have seen this syntax before in {numref}`ch1-adding-modifying`,
 and we will discuss it in more depth later in this chapter in {numref}`pandas-assign`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])
-tidy_lang["most_at_work"] = pd.to_numeric(tidy_lang["most_at_work"])
+tidy_lang["most_at_home"] = tidy_lang["most_at_home"].astype("int")
+tidy_lang["most_at_work"] = tidy_lang["most_at_work"].astype("int")
 tidy_lang
 ```
 

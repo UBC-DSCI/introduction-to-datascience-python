@@ -1470,7 +1470,7 @@ A transformation applied across many columns. The darker, top row of each table 
 
 For example, imagine that we wanted to convert all the numeric columns
 in the `region_lang` data frame from `int64` type to `int32` type
-using the `.as_type` function.
+using the `.astype` function.
 When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 

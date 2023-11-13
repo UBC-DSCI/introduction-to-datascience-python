@@ -798,7 +798,7 @@ It makes sense for `region`, `category`, and `language` to be stored as an
 `object` type. However, suppose we want to apply any functions that treat the
 `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
 above a numeric threshold of a column).
-That won't be possible if the variable is stored as a `object`.
+That won't be possible if the variable is stored as an `object`.
 Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
 like this: it will convert the columns to the best numeric data types. Note that below
 we *assign* the new numerical series to the `most_at_home` and `most_at_work` columns

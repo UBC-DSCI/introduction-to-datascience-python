@@ -1710,7 +1710,7 @@ english_lang
 
 Let's return to the situation right before we added the city populations
 of Toronto, Montréal, Vancouver, Calgary, and Edmonton to the `english_lang` data frame. Before adding the new column, we had filtered
-our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
+`region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
 of interest.
 ```{code-cell} ipython3
 :tags: ["remove-cell"]

@@ -182,10 +182,10 @@ in the clustering pipeline.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 penguins_standardized = penguins.assign(
-	bill_length_standardized = (penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std(),
-    flipper_length_standardized = (penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std()
+	bill_length_standardized=(penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std(),
+    flipper_length_standardized=(penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std()
 ).drop(
-    columns = ["bill_length_mm", "flipper_length_mm"]
+    columns=["bill_length_mm", "flipper_length_mm"]
 )
 ```
 
@@ -261,7 +261,7 @@ kmeans = KMeans(n_clusters=3)
 
 penguin_clust = kmeans.fit(penguins_standardized)
 
-penguins_clustered = penguins_standardized.assign(cluster = penguin_clust.labels_)
+penguins_clustered = penguins_standardized.assign(cluster=penguin_clust.labels_)
 
 colored_scatter_plot = alt.Chart(penguins_clustered).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),

@@ -1630,7 +1630,9 @@ five_cities
 ```
 The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
-We will first add this information to a new data frame in a new column named `city_pops` by using `assign`.
+Next, we will add this information to a new data frame column called `city_pops`.
+Once again, we will illustrate how to do this using both regular column assignment
+and the  `assign` method, starting with the latter.
 Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`,
 and finally the data in the column.
 Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.

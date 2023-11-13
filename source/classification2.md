@@ -1220,8 +1220,7 @@ accuracies_grid
 
 We can decide which number of neighbors is best by plotting the accuracy versus $K$,
 as shown in {numref}`fig:06-find-k`.
-Here we are using the shortcut `point=True`
-to layer a point and line chart.
+Here we are using the shortcut `point=True` to layer a point and line chart.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -1249,6 +1248,13 @@ glue("best_acc", "{:.1f}".format(accuracies_grid["mean_test_score"].max()*100))
 
 Plot of estimated accuracy versus the number of neighbors.
 :::
+
+We can also obtain the number of neighbours with the highest accuracy programmatically by accessing
+the `best_params_` attribute of the fit `GridSearchCV` object. Note that it is still useful to visualize
+the results as we did above since this provides additional information on how the model performance varies.
+```{code-cell} ipython3
+cancer_tune_grid.best_params_
+```
 
 +++
 

@@ -594,9 +594,10 @@ knn = KNeighborsClassifier(n_neighbors=3)
 X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
 
-knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
+knn_pipeline = make_pipeline(cancer_preprocessor, knn)
+knn_pipeline.fit(X, y)
 
-knn_fit
+knn_pipeline
 ```
 
 ### Predict the labels in the test set
@@ -614,7 +615,7 @@ variables in the output data frame.
 
 ```{code-cell} ipython3
 cancer_test_predictions = cancer_test.assign(
-    predicted = knn_fit.predict(cancer_test[["Smoothness", "Concavity"]])
+    predicted = knn_pipeline.predict(cancer_test[["Smoothness", "Concavity"]])
 )
 cancer_test_predictions[["ID", "Class", "predicted"]]
 ```
@@ -645,7 +646,7 @@ for the predictors that we originally passed into `predict` when making predicti
 and we provide the actual labels via the `cancer_test["Class"]` series.
 
 ```{code-cell} ipython3
-cancer_acc_1 = knn_fit.score(
+cancer_acc_1 = knn_pipeline.score(
     cancer_test[["Smoothness", "Concavity"]],
     cancer_test["Class"]
 )
@@ -662,11 +663,9 @@ glue("cancer_acc_1", "{:0.0f}".format(100*cancer_acc_1))
 
 The output shows that the estimated accuracy of the classifier on the test data 
 was {glue:text}`cancer_acc_1`%.
-We can also look at the *confusion matrix* for the classifier 
-using the `crosstab` function from `pandas`. A confusion matrix shows how many 
-observations of each (actual) label were classified as each (predicted) label.
-The `crosstab` function
-takes two arguments: the actual labels first, then the predicted labels second.
+We can also look at the *confusion matrix* for the classifier
+using the `crosstab` function from `pandas`. The `crosstab` function takes two
+arguments: the actual labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
 pd.crosstab(
@@ -884,10 +883,11 @@ cancer_subtrain, cancer_validation = train_test_split(
 knn = KNeighborsClassifier(n_neighbors=3) 
 X = cancer_subtrain[["Smoothness", "Concavity"]]
 y = cancer_subtrain["Class"]
-knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
+knn_pipeline = make_pipeline(cancer_preprocessor, knn)
+knn_pipeline.fit(X, y)
 
 # compute the score on validation data
-acc = knn_fit.score(
+acc = knn_pipeline.score(
     cancer_validation[["Smoothness", "Concavity"]],
     cancer_validation["Class"]
 )
@@ -908,10 +908,10 @@ for i in range(1, 5):
     knn = KNeighborsClassifier(n_neighbors=3) 
     X = cancer_subtrain[["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
-    knn_fit = make_pipeline(cancer_preprocessor, knn).fit(X, y)
+    knn_pipeline = make_pipeline(cancer_preprocessor, knn).fit(X, y)
 
     # compute the score on validation data
-    accuracies.append(knn_fit.score(
+    accuracies.append(knn_pipeline.score(
         cancer_validation[["Smoothness", "Concavity"]],
         cancer_validation["Class"]
        ))
@@ -979,7 +979,6 @@ Since the `cross_validate` function outputs a dictionary, we use `pd.DataFrame` 
 dataframe for better visualization. 
 Note that the `cross_validate` function handles stratifying the classes in
 each train and validate fold automatically. 
-We begin by importing the `cross_validate` function from `sklearn`.
 
 ```{code-cell} ipython3
 from sklearn.model_selection import cross_validate
@@ -1183,17 +1182,14 @@ format. We will wrap it in a `pd.DataFrame` to make it easier to understand,
 and print the `info` of the result.
 
 ```{code-cell} ipython3
-accuracies_grid = pd.DataFrame(
-    cancer_tune_grid.fit(
-        cancer_train[["Smoothness", "Concavity"]],
-        cancer_train["Class"]
-    ).cv_results_
+cancer_tune_grid.fit(
+    cancer_train[["Smoothness", "Concavity"]],
+    cancer_train["Class"]
 )
-```
-
-```{code-cell} ipython3
+accuracies_grid = pd.DataFrame(cancer_tune_grid.cv_results_)
 accuracies_grid.info()
 ```
+
 There is a lot of information to look at here, but we are most interested
 in three quantities: the number of neighbors (`param_kneighbors_classifier__n_neighbors`),
 the cross-validation accuracy estimate (`mean_test_score`), 
@@ -1303,12 +1299,12 @@ large_cancer_tune_grid = GridSearchCV(
     cv=10
 )
 
-large_accuracies_grid = pd.DataFrame(
-    large_cancer_tune_grid.fit(
-        cancer_train[["Smoothness", "Concavity"]],
-        cancer_train["Class"]
-    ).cv_results_
+large_cancer_tune_grid.fit(
+    cancer_train[["Smoothness", "Concavity"]],
+    cancer_train["Class"]
 )
+
+large_accuracies_grid = pd.DataFrame(large_cancer_tune_grid.cv_results_)
 
 large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
     x=alt.X("param_kneighborsclassifier__n_neighbors").title("Neighbors"),
@@ -1903,7 +1899,6 @@ n_total = len(names)
 # start with an empty list of selected predictors
 selected = []
 
-
 # create the pipeline and CV grid search objects
 param_grid = {
     "kneighborsclassifier__n_neighbors": range(1, 61, 5),
@@ -1929,8 +1924,8 @@ for i in range(1, n_total + 1):
         y = cancer_subset["Class"]
         
         # Find the best K for this set of predictors
-        cancer_model_grid = cancer_tune_grid.fit(X, y)
-        accuracies_grid = pd.DataFrame(cancer_model_grid.cv_results_)
+        cancer_tune_grid.fit(X, y)
+        accuracies_grid = pd.DataFrame(cancer_tune_grid.cv_results_)
 
         # Store the tuned accuracy for this set of predictors
         accs[j] = accuracies_grid["mean_test_score"].max()

@@ -1647,14 +1647,6 @@ english_lang.assign(
 )
 ```
 
-```{note}
-Inserting data manually in this is generally very error-prone and is not recommended.
-We do it here to demonstrate another usage of `assign` that does not involve `apply`.
-But in more advanced data wrangling,
-one would solve this problem in a less error-prone way using
-the `merge` function, which lets you combine two data frames. We will show you an
-example using `merge` at the end of the chapter!
-```
 Instead of using the `assign` method we can directly modify the `english_lang` data frame using regular column assignment.
 This would be a more natural choice in this particular case,
 since the syntax is more convenient for simple column modifications and additions.
@@ -1690,6 +1682,15 @@ For the rest of the book, we will silence that warning to help with readability.
 :tags: [remove-cell]
 # suppress for the rest of this chapter
 pd.options.mode.chained_assignment = None
+```
+
+```{note}
+Inserting the data column `[4098927, 5928040, ...]` manually as we did above is generally very error-prone and is not recommended.
+We do it here to demonstrate another usage of `assign` and regular column assignment.
+But in more advanced data wrangling,
+one would solve this problem in a less error-prone way using
+the `merge` function, which lets you combine two data frames. We will show you an
+example using `merge` at the end of the chapter!
 ```
 
 Now we have a new column with the population for each city. Finally, we calculate the

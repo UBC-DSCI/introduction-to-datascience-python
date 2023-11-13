@@ -436,14 +436,12 @@ we predict on the test data set to assess how well our model does.
 
 ```{code-cell} ipython3
 # make predictions
-sacr_preds = sacramento_test.assign(
-    predicted = lm.predict(sacramento_test[["sqft"]])
-)
+sacramento_test["predicted"] = lm.predict(sacramento_test[["sqft"]])
 
 # calculate RMSPE
 RMSPE = mean_squared_error(
-    y_true=sacr_preds["price"],
-    y_pred=sacr_preds["predicted"]
+    y_true = sacramento_test["price"],
+    y_pred = sacramento_test["predicted"]
 )**(1/2)
 
 RMSPE
@@ -478,9 +476,7 @@ so that we can qualitatively assess if the model seems to fit the data well.
 ```{code-cell} ipython3
 :tags: [remove-output]
 sqft_prediction_grid = sacramento[["sqft"]].agg(["min", "max"])
-sacr_preds = sqft_prediction_grid.assign(
-    predicted=lm.predict(sqft_prediction_grid)
-)
+sqft_prediction_grid["predicted"] = lm.predict(sqft_prediction_grid)
 
 all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
     x=alt.X("sqft")
@@ -492,7 +488,7 @@ all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
         .title("Price (USD)")
 )
 
-sacr_preds_plot = all_points + alt.Chart(sacr_preds).mark_line(
+sacr_preds_plot = all_points + alt.Chart(sqft_prediction_grid).mark_line(
     color="#ff7f0e"
 ).encode(
     x="sqft",
@@ -735,13 +731,11 @@ mlm.fit(
 Finally, we make predictions on the test data set to assess the quality of our model.
 
 ```{code-cell} ipython3
-sacr_preds = sacramento_test.assign(
-    predicted=mlm.predict(sacramento_test[["sqft","beds"]])
-)
+sacramento_test["predicted"] = mlm.predict(sacramento_test[["sqft","beds"]])
 
 lm_mult_test_RMSPE = mean_squared_error(
-    y_true=sacr_preds["price"], 
-    y_pred=sacr_preds["predicted"]
+    y_true = sacramento_test["price"], 
+    y_pred = sacramento_test["predicted"]
 )**(1/2)
 lm_mult_test_RMSPE
 ```

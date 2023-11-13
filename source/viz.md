@@ -610,7 +610,8 @@ can_lang
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
-can_lang = can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)]
+# use only nonzero entries (to avoid issues with log scale), and wrap in a pd.DataFrame to prevent copy/view warnings later
+can_lang = pd.DataFrame(can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)]) 
 ```
 
 ```{index} altair; mark_circle
@@ -831,9 +832,9 @@ in the 2016 Canadian census
 was {glue:text}`english_mother_tongue` / {glue:text}`census_popn` $\times$
 100\% = {glue:text}`result`\%
 
-Below we use `assign` to calculate the percentage of people reporting a given
-language as their mother tongue and primary language at home for all the
-languages in the `can_lang` data set. Since the new columns are appended to the
+Below we assign the percentages of people reporting a given
+language as their mother tongue and primary language at home
+to two new columns in the `can_lang` data frame. Since the new columns are appended to the
 end of the data table, we selected the new columns after the transformation so
 you can clearly see the mutated output from the table.
 Note that we formatted the number for the Canadian population
@@ -846,10 +847,8 @@ and is just added for readability.
 
 ```{code-cell} ipython3
 canadian_population = 35_151_728
-can_lang = can_lang.assign(
-    mother_tongue_percent=(can_lang["mother_tongue"] / canadian_population) * 100,
-    most_at_home_percent=(can_lang["most_at_home"] / canadian_population) * 100
-)
+can_lang["mother_tongue_percent"] = can_lang["mother_tongue"] / canadian_population * 100
+can_lang["most_at_home_percent"] = can_lang["most_at_home"] / canadian_population * 100
 can_lang[["mother_tongue_percent", "most_at_home_percent"]]
 ```
 
@@ -1637,9 +1636,8 @@ done by providing the `title` to the facet function. Finally, and perhaps most
 subtly, even though it is easy to compare the experiments on this plot to one
 another, it is hard to get a sense of just how accurate all the experiments
 were overall. For example, how accurate is the value 800 on the plot, relative
-to the true speed of light?  To answer this question, we'll use the `assign`
-function to transform our data into a relative measure of error rather than
-an absolute measurement.
+to the true speed of light?  To answer this question, we'll
+transform our data to a relative measure of error rather than an absolute measurement.
 
 ```{code-cell} ipython3
 speed_of_light = 299792.458

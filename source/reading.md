@@ -394,8 +394,8 @@ contain its own column names.
 :tags: ["output_scroll"]
 canlang_data =  pd.read_csv(
     "data/can_lang_no_names.tsv",
-    sep = "\t",
-    header = None
+    sep="\t",
+    header=None
 )
 canlang_data
 ```

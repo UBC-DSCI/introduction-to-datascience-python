@@ -904,8 +904,8 @@ sacr_preds_plot = base_plot + alt.Chart(
 ).mark_line(
 	color="#ff7f0e"
 ).encode(
-	x="sqft",
-	y="predicted"
+    x="sqft",
+    y="predicted"
 )
 
 sacr_preds_plot

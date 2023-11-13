@@ -295,13 +295,13 @@ of a house that is 2,000 square feet.
 
 ```{code-cell} ipython3
 small_sacramento["dist"] = (2000 - small_sacramento["sqft"]).abs()
-small_sacramento.nsmallest(5, "dist")
+nearest_neighbors = small_sacramento.nsmallest(5, "dist")
+nearest_neighbors
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-nearest_neighbors = small_sacramento.nsmallest(5, "dist")
 
 nn_plot = small_plot + rule
 

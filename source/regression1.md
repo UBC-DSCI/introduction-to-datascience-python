@@ -899,10 +899,10 @@ base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
 
 # Add the predictions as a line
 sacr_preds_plot = base_plot + alt.Chart(
-	sqft_prediction_grid, 
-	title=f"K = {best_k_sacr}"
+    sqft_prediction_grid, 
+    title=f"K = {best_k_sacr}"
 ).mark_line(
-	color="#ff7f0e"
+    color="#ff7f0e"
 ).encode(
     x="sqft",
     y="predicted"

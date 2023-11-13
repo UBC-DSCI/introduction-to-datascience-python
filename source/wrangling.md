@@ -1560,8 +1560,8 @@ To instead create an entirely new data frame, we can use the `assign` method and
 In this case we want to create one new column named `maximum`, so the argument
 to `assign` begins with `maximum= `.
 Then after the `=`, we specify what the contents of that new column
-should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
-Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
+should be. In this case we use `max` just as we did previously to give us the maximum values.
+Remember to specify `axis=1` in the `max` method so that we compute the row-wise maximum value.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 region_lang.assign(
@@ -1777,7 +1777,6 @@ burning data science questions!
 | Function | Description |
 | ---      | ----------- |
 | `agg` | calculates aggregated summaries of inputs |
-| `apply` | allows you to apply function(s) to multiple columns/rows  |
 | `assign` | adds or modifies columns in a data frame  |
 | `groupby` |  allows you to apply function(s) to groups of rows |
 | `iloc` | subsets columns/rows of a data frame using integer indices |

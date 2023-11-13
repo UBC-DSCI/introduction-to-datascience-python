@@ -726,7 +726,8 @@ method as usual.
 
 ```{code-cell} ipython3
 
-mlm = LinearRegression().fit(
+mlm = LinearRegression()
+mlm.fit(
     sacramento_train[["sqft", "beds"]],
     sacramento_train["price"]
 )
@@ -838,11 +839,12 @@ Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coe
 in the *same order* as the columns of the predictor data frame you used when training.
 So since we used `sacramento_train[["sqft", "beds"]]` when training, 
 we have that `mlm.coef_[0]` corresponds to `sqft`, and `mlm.coef_[1]` corresponds to `beds`.
+Once you sort out the correspondence, you can then use those slopes to write a mathematical equation to describe the prediction plane:
 
 ```{index} plane equation
 ```
 
-And then use those slopes to write a mathematical equation to describe the prediction plane:
+
 
 $$\text{house sale price} = \beta_0 + \beta_1\cdot(\text{house size}) + \beta_2\cdot(\text{number of bedrooms}),$$
 where:

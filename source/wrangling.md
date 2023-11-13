@@ -1565,7 +1565,7 @@ Remember to specify `axis=1` in the `apply` method so that we compute the row-wi
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 region_lang.assign(
-  maximum = region_lang_nums.apply(max, axis=1)
+  maximum=region_lang_nums.max(axis=1)
 )
 ```
 This data frame looks just like the previous one, except that it is a copy of `region_lang`, not `region_lang` itself; making further

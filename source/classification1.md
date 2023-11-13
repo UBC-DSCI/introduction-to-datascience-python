@@ -1834,24 +1834,24 @@ For the `y` response variable argument, we pass the `unscaled_cancer["Class"]` s
 ```{code-cell} ipython3
 from sklearn.pipeline import make_pipeline
 
-knn_fit = make_pipeline(preprocessor, knn).fit(
+knn_pipeline = make_pipeline(preprocessor, knn)
+knn_pipeline.fit(
     X=unscaled_cancer, 
     y=unscaled_cancer["Class"]
 )
-
-knn_fit
+knn_pipeline
 ```
 
 As before, the fit object lists the function that trains the model. But now the fit object also includes information about
 the overall workflow, including the standardization preprocessing step.
-In other words, when we use the `predict` function with the `knn_fit` object to make a prediction for a new
+In other words, when we use the `predict` function with the `knn_pipeline` object to make a prediction for a new
 observation, it will first apply the same preprocessing steps to the new observation. 
 As an example, we will predict the class label of two new observations:
 one with `Area = 500` and `Smoothness = 0.075`, and one with `Area = 1500` and `Smoothness = 0.1`.
 
 ```{code-cell} ipython3
 new_observation = pd.DataFrame({"Area": [500, 1500], "Smoothness": [0.075, 0.1]})
-prediction = knn_fit.predict(new_observation)
+prediction = knn_pipeline.predict(new_observation)
 prediction
 ```
 
@@ -1886,7 +1886,7 @@ asgrid = np.array(np.meshgrid(are_grid, smo_grid)).reshape(2, -1).T
 asgrid = pd.DataFrame(asgrid, columns=["Area", "Smoothness"])
 
 # use the fit workflow to make predictions at the grid points
-knnPredGrid = knn_fit.predict(asgrid)
+knnPredGrid = knn_pipeline.predict(asgrid)
 
 # bind the predictions as a new column with the grid points
 prediction_table = asgrid.copy()

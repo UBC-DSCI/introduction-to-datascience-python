@@ -752,7 +752,7 @@ total WSSD, since the cluster center (denoted by large shapes with black outline
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
-the right number of clusters ({numref}`toy-kmeans-elbow`)).
+the right number of clusters ({numref}`toy-kmeans-elbow`).
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -840,7 +840,8 @@ the random seed in the beginning of this chapter, the clustering will be reprodu
 ```{code-cell} ipython3
 from sklearn.pipeline import make_pipeline
 
-penguin_clust = make_pipeline(preprocessor, kmeans).fit(penguins)
+penguin_clust = make_pipeline(preprocessor, kmeans)
+penguin_clust.fit(penguins)
 penguin_clust
 ```
 

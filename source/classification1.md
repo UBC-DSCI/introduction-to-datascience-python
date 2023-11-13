@@ -632,9 +632,12 @@ cancer["dist_from_new"] = (
        (cancer["Perimeter"] - new_obs_Perimeter) ** 2
      + (cancer["Concavity"] - new_obs_Concavity) ** 2
 )**(1/2)
-cancer.nsmallest(5, "dist_from_new")[
-	["Perimeter", "Concavity", "Class", "dist_from_new"]
-]
+cancer.nsmallest(5, "dist_from_new")[[
+	"Perimeter", 
+	"Concavity", 
+	"Class", 
+	"dist_from_new"
+]]
 ```
 
 ```{code-cell} ipython3
@@ -754,9 +757,13 @@ cancer["dist_from_new"] = (
     + (cancer["Concavity"] - new_obs_Concavity) ** 2
     + (cancer["Symmetry"] - new_obs_Symmetry) ** 2
 )**(1/2)
-cancer.nsmallest(5, "dist_from_new")[
-    ["Perimeter", "Concavity", "Symmetry", "Class", "dist_from_new"]
-]
+cancer.nsmallest(5, "dist_from_new")[[
+    "Perimeter", 
+    "Concavity", 
+    "Symmetry", 
+    "Class", 
+    "dist_from_new"
+]]
 ```
 
 Based on $K=5$ nearest neighbors with these three predictors we would classify 

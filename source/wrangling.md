@@ -1539,7 +1539,7 @@ you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/
 When we compute summary statistics or apply functions,
 a new data frame or series is created. But what if we want to append that information
 to an existing data frame? For example, say we wanted to compute the
-maximum value in each row of the `region_lang_nums` data frame using `apply`,
+maximum value in each row of the `region_lang_nums` data frame,
 and to append that as an additional column of the `region_lang` data frame.
 In this case, we have two options: we can either  create a new column within the `region_lang` data
 frame itself, or create an entirely new data frame
@@ -1547,7 +1547,7 @@ with the `assign` method. The first option we have seen already in earlier chapt
 the more commonly used pattern in practice:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang["maximum"] = region_lang_nums.apply(max, axis=1)
+region_lang["maximum"] = region_lang_nums.max(axis=1)
 region_lang
 ```
 You can see above that the `region_lang` data frame now has an additional column named `maximum`.

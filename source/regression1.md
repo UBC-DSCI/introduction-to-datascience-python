@@ -1025,12 +1025,12 @@ sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
 sacr_results["sem_test_score"] = sacr_results["std_test_score"] / 5**(1/2)
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 sacr_results = (
-	sacr_results[[
-		"param_kneighborsregressor__n_neighbors",
-		"mean_test_score",
-		"sem_test_score"
-	]]
-	.rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
+    sacr_results[[
+        "param_kneighborsregressor__n_neighbors",
+        "mean_test_score",
+        "sem_test_score"
+    ]]
+    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
 )
 
 # show only the row of minimum RMSPE

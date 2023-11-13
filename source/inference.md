@@ -250,11 +250,11 @@ expect our sample proportions from this population to vary for samples of size 4
 
 We again use the `sample` to take samples of size 40 from our
 population of Airbnb listings. But this time we use a list comprehension
-to repeat an operation multiple time (as in the previous chapter).
-In this case we are taking 20,000 samples of size 40
-and to make it clear which rows in the data frame come
-which of the 20,000 samples,
-we also add a column called `replicate` with this information.
+to repeat the operation multiple times (as we did previously in {numref}`Chapter %s <clustering>`).
+In this case we repeat the operation 20,000 times to obtain 20,000 samples of size 40.
+To make it clear which rows in the data frame come
+which of the 20,000 samples, we also add a column called `replicate` with this information using the `assign` function,
+introduced previously in {numref}`Chapter %s <wrangling>`.
 The call to `concat` concatenates all the 20,000 data frames
 returned from the list comprehension into a single big data frame.
 

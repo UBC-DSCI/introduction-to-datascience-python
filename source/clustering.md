@@ -856,14 +856,14 @@ order to do that, we first need to augment our
 original `penguins` data frame with the cluster assignments. 
 We can access these using the `labels_` attribute of the clustering object 
 ("labels" is a common alternative term to "assignments" in clustering), and 
-add them to the data frame using `assign`.
+add them to the data frame.
 
 ```{code-cell} ipython3
-clustered_data = penguins.assign(cluster = penguin_clust[1].labels_)
-clustered_data
+penguins["cluster"] = penguin_clust[1].labels_
+penguins
 ```
 
-Now that we have the cluster assignments included in the `clustered_data` data frame, we can 
+Now that we have the cluster assignments included in the `penguins` data frame, we can 
 visualize them as shown in {numref}`cluster_plot`.
 Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
 visualize the *standardized* data, we would need to use the `fit` and `transform` functions
@@ -874,7 +874,7 @@ will treat the `cluster` variable as a nominal/categorical variable, and
 hence use a discrete color map for the visualization.
 
 ```{code-cell} ipython3
-cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
+cluster_plot=alt.Chart(penguins).mark_circle().encode(
     x=alt.X("flipper_length_mm").title("Flipper Length").scale(zero=False),
     y=alt.Y("bill_length_mm").title("Bill Length").scale(zero=False),
     color=alt.Color("cluster:N").title("Cluster"),

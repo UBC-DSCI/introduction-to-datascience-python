@@ -646,7 +646,8 @@ ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
-## Adding and modifying columns using `assign`
+(ch1-adding-modifying)=
+## Adding and modifying columns
 
 ```{index} assign
 ```
@@ -663,7 +664,7 @@ column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
 this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`. 
 Then to store the result in a new column (or
-overwrite an existing column), we use the `assign` method. We specify the name of the new
+overwrite an existing column), we specify the name of the new
 column to create (or old column to modify), then the assignment symbol `=`, 
 and then the computation to store in that column. In this case, we will opt to
 create a new column called `mother_tongue_percent`. 
@@ -677,9 +678,17 @@ although the latter is much clearer!
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+# disable setting with copy warning
+# it's not important for this chapter and just distracting
+# only occurs here because we did a much earlier .loc operation that is being picked up below by the coln assignment
+pd.options.mode.chained_assignment = None
+```
+
+```{code-cell} ipython3
 canadian_population = 35_151_728
-ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang["mother_tongue"] / canadian_population)
-ten_lang_percent
+ten_lang["mother_tongue_percent"] = 100 * ten_lang["mother_tongue"] / canadian_population
+ten_lang
 ```
 
 The `ten_lang_percent` data frame shows that

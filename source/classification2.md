@@ -606,18 +606,16 @@ knn_pipeline
 ```
 
 Now that we have a $K$-nearest neighbors classifier object, we can use it to
-predict the class labels for our test set.  We will use the `assign` method to 
-augment the original test data with a column of predictions, creating the
-`cancer_test_predictions` data frame. The `Class` variable contains the actual
+predict the class labels for our test set and
+augment the original test data with a column of predictions.
+The `Class` variable contains the actual
 diagnoses, while the `predicted` contains the predicted diagnoses from the
 classifier. Note that below we print out just the `ID`, `Class`, and `predicted`
 variables in the output data frame.
 
 ```{code-cell} ipython3
-cancer_test_predictions = cancer_test.assign(
-    predicted = knn_pipeline.predict(cancer_test[["Smoothness", "Concavity"]])
-)
-cancer_test_predictions[["ID", "Class", "predicted"]]
+cancer_test["predicted"] = knn_pipeline.predict(cancer_test[["Smoothness", "Concavity"]])
+cancer_test[["ID", "Class", "predicted"]]
 ```
 
 ### Evaluate performance
@@ -632,11 +630,11 @@ number of predictions. First we filter the rows to find the number of correct pr
 and then divide the number of rows with correct predictions by the total number of rows
 using the `shape` attribute.
 ```{code-cell} ipython3
-correct_preds = cancer_test_predictions[
-    cancer_test_predictions["Class"] == cancer_test_predictions["predicted"]
+correct_preds = cancer_test[
+    cancer_test["Class"] == cancer_test["predicted"]
 ]
 
-correct_preds.shape[0] / cancer_test_predictions.shape[0]
+correct_preds.shape[0] / cancer_test.shape[0]
 ```
 
 The `scitkit-learn` package also provides a more convenient way to do this using
@@ -669,15 +667,15 @@ arguments: the actual labels first, then the predicted labels second.
 
 ```{code-cell} ipython3
 pd.crosstab(
-    cancer_test_predictions["Class"],
-    cancer_test_predictions["predicted"]
+    cancer_test["Class"],
+    cancer_test["predicted"]
 )
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-_ctab = pd.crosstab(cancer_test_predictions["Class"],
-            cancer_test_predictions["predicted"]
+_ctab = pd.crosstab(cancer_test["Class"],
+            cancer_test["predicted"]
            )
 
 c11 = _ctab["Malignant"]["Malignant"]
@@ -1205,15 +1203,14 @@ We will also rename the parameter name column to be a bit more readable,
 and drop the now unused `std_test_score` column.
 
 ```{code-cell} ipython3
+accuracies_grid["sem_test_score"] = accuracies_grid["std_test_score"] / 10**(1/2)
 accuracies_grid = (
     accuracies_grid[[
         "param_kneighborsclassifier__n_neighbors",
         "mean_test_score",
-        "std_test_score"
+        "sem_test_score"
     ]]
-    .assign(sem_test_score=accuracies_grid["std_test_score"] / 10**(1/2))
     .rename(columns={"param_kneighborsclassifier__n_neighbors": "n_neighbors"})
-    .drop(columns=["std_test_score"])
 )
 accuracies_grid
 ```

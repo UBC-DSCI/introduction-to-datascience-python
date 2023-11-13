@@ -44,8 +44,7 @@ By the end of the chapter, readers will be able to do the following:
   - Recall and use the following functions for their
     intended data wrangling tasks:
       - `agg`
-      - `apply`
-      - `assign`
+      - `assign` (as well as regular column assignment)
       - `groupby`
       - `melt`
       - `pivot`
@@ -782,7 +781,7 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Although we can't see it in the data frame above, all of the variables are actually
-"object" data types. We can check this using the `info` method.
+`object` data types. We can check this using the `info` method.
 ```{code-cell} ipython3
 tidy_lang.info()
 ```
@@ -795,17 +794,21 @@ Python read these columns in as string types, and by default, `str.split` will
 return columns with the `object` data type.
 
 It makes sense for `region`, `category`, and `language` to be stored as an
-`object` type. However, suppose we want to apply any functions that treat the
+`object` type since they hold categorical values. However, suppose we want to apply any functions that treat the
 `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
 above a numeric threshold of a column).
-That won't be possible if the variable is stored as a `object`.
-Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
-like this: it will convert the columns to the best numeric data types.
+That won't be possible if the variable is stored as an `object`.
+Fortunately, the `astype` method from `pandas` provides a natural way to fix problems
+like this: it will convert the column to a selected data type. In this case, we choose the `int`
+data type to indicate that these variables contain integer counts. Note that below
+we *assign* the new numerical series to the `most_at_home` and `most_at_work` columns
+in `tidy_lang`; we have seen this syntax before in {numref}`ch1-adding-modifying`,
+and we will discuss it in more depth later in this chapter in {numref}`pandas-assign`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])
-tidy_lang["most_at_work"] = pd.to_numeric(tidy_lang["most_at_work"])
+tidy_lang["most_at_home"] = tidy_lang["most_at_home"].astype("int")
+tidy_lang["most_at_work"] = tidy_lang["most_at_work"].astype("int")
 tidy_lang
 ```
 
@@ -1449,46 +1452,25 @@ region_lang.value_counts("region", normalize=True)
 
 +++
 
-## Apply functions across multiple columns with `apply`
+## Apply functions across multiple columns
 
-### Apply a function to each column with `apply`
-
-An alternative to aggregating on a data frame
-for applying a function to many columns is the `apply` method.
-Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `apply` with the `max` function this time.
-We focus on the two arguments of `apply`:
-the function that you would like to apply to each column, and the `axis` along
-which the function will be applied (`0` for columns, `1` for rows).
-Note that `apply` does not have an argument
-to specify *which* columns to apply the function to.
-Therefore, we will use the `loc[]` before calling `apply`
-to choose the columns for which we want the maximum.
-
-```{code-cell} ipython3
-region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
-```
-
-We can use `apply` for much more than summary statistics.
-Sometimes we need to apply a function to many columns in a data frame.
-For example, we would need to do this when converting units of measurements across many columns.
-We illustrate such a data transformation in {numref}`fig:mutate-across`.
-
-+++ {"tags": []}
+Computing summary statistics is not the only situation in which we need
+to apply a function across columns in a data frame. There are two other
+common wrangling tasks that require the application of a function across columns.
+The first is when we want to apply a transformation, such as a conversion of measurement units, to multiple columns.
+We illustrate such a data transformation in {numref}`fig:mutate-across`; note that it does not
+change the shape of the data frame.
 
 ```{figure} img/wrangling/summarize.005.jpeg
 :name: fig:mutate-across
 :figclass: figure
 
-`apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
+A transformation applied across many columns. The darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For example,
-imagine that we wanted to convert all the numeric columns
+For example, imagine that we wanted to convert all the numeric columns
 in the `region_lang` data frame from `int64` type to `int32` type
-using the `.as_type` function.
+using the `.astype` function.
 When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 
@@ -1500,131 +1482,103 @@ region_lang
 ```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
 ```
 
-To accomplish such a task, we can use `apply`.
-As we did above,
-we again use `loc[]` to specify the columns
-as well as the `apply` to specify the function we want to apply on these columns.
-Now, we need a way to tell `apply` what function to perform to each column
-so that we can convert them from `int64` to `int32`. We will use what is called
-a `lambda` function in python; `lambda` functions are just regular functions,
-except that you don't need to give them a name.
-That means you can pass them as an argument into `apply` easily!
-Let's consider a simple example of a `lambda` function that
-multiplies a number by two.
-```{code-cell} ipython3
-lambda x: 2*x
-```
-We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word
-that tells Python "what follows is
-a function." Following this, we then state the name of the arguments of the function.
-In this case, we just have one argument named `x`. After the list of arguments, we put a
-colon `:`. And finally after the colon are the instructions: take the value provided and multiply it by 2.
-Let's call our shiny new `lambda` function with the argument `2` (so the output should be `4`).
-Just like a regular function, we pass its argument between parentheses `()` symbols.
-```{code-cell} ipython3
-(lambda x: 2*x)(2)
-```
+We can simply call the `.astype` function to apply it across the desired range of columns.
 
-```{note}
-Because we didn't give the `lambda` function a name, we have to surround it with
-parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
-and think that `(2)` was part of the instructions that comprise the `lambda` function.
-As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
-we can pass a `lambda` function as an argument to `apply` without any parentheses.
-```
-
-Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"`
-to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
-of the data frame, which we will name `col`---and apply the `astype` method to it.
-Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
 ```{code-cell} ipython3
-region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
+region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].astype("int32")
 region_lang_nums.info()
 ```
-You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`.
-You can also see that `apply` returns a data frame with the same number of columns and rows
-as the input data frame. The only thing `apply` does is use the `lambda` function argument
-on each of the specified columns.
+You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`,
+and that we have obtained a data frame with the same number of columns and rows
+as the input data frame. 
 
-### Apply a function row-wise with `apply`
-
-What if you want to apply a function across columns but within one row?
-We illustrate such a data transformation in {numref}`fig:rowwise`.
-
-+++ {"tags": []}
+The second situation occurs when you want to apply a function across columns within each individual
+row, i.e., *row-wise*. This operation, illustrated in {numref}`fig:rowwise`,
+will produce a single column whose entries summarize each row in the original data frame;
+this new column can be added back into the original data.
 
 ```{figure} img/wrangling/summarize.004.jpeg
 :name: fig:rowwise
 :figclass: figure
 
-`apply` is useful for applying functions across columns within one row. The
+A function applied row-wise across a data frame, producing a new column. The
 darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For instance, suppose we want to know the maximum value between `mother_tongue`,
-and `lang_known` for each language and region
-in the `region_lang_nums` data set.
+For example, suppose we want to know the maximum value between `mother_tongue`,
+and `lang_known` for each language and region in the `region_lang_nums` data set.
 In other words, we want to apply the `max` function *row-wise.*
-In order to tell `apply` that we want to work row-wise (as opposed to acting on each column
+In order to tell `max` that we want to work row-wise (as opposed to acting on each column
 individually, which is the default behavior), we just specify the argument `axis=1`.
-For example, in the case of the `max` function, this tells Python that we would like
-the `max` within each row of the input, as opposed to being applied on each column.
 
 ```{code-cell} ipython3
-region_lang_nums.apply(max, axis=1)
+region_lang_nums.max(axis=1)
 ```
 
-We see that we get a column, which is the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work` and `lang_known` for each language
-and region. It is often the case that we want to include a column result
-from using `apply` row-wise as a new column in the data frame, so that we can make
+We see that we obtain a series containing the maximum value between `mother_tongue`,
+`most_at_home`, `most_at_work` and `lang_known` for each row in the data frame. It
+is often the case that we want to include a column result
+from a row-wise operation as a new column in the data frame, so that we can make
 plots or continue our analysis. To make this happen,
-we will use `assign` to create a new column. This is discussed in the next section.
+we will use column assignment or the `assign` function to create a new column. 
+This is discussed in the next section.
+
+```{note}
+While `pandas` provides many methods (like `max`, `astype`, etc.) that can be applied to a data frame,
+sometimes you may want to apply your own function to multiple columns in a data frame. In this case
+you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html) method.
+```
 
 (pandas-assign)=
-## Using `assign` to modify or add columns
+## Modifying and adding columns
 
 
 ```{index} pandas.DataFrame; []
 ```
 
-### Using `assign` to create new columns
-
-When we compute summary statistics with `agg` or apply functions using `apply`
-those give us new data frames. But what if we want to append that information
-to an existing data frame? This is where we make use of the `assign` method.
-For example, say we wanted the maximum values of the `region_lang_nums` data frame,
-and to create a new data frame consisting of all the columns of `region_lang` as well as that additional column.
-To do this, we will (1) compute the maximum of those columns using `apply`,
-and (2) use `assign` to assign values to create a new column in the `region_lang` data frame.
-Note that `assign` does not by default modify the data frame itself; it creates a copy
-with the new column added to it.
-
-To use the `assign` method, we specify one argument for each column we want to create.
-In this case we want to create one new column named `maximum`, so the argument
-to `assign` begins with `maximum = `.
-Then after the `=`, we specify what the contents of that new column
-should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
-Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
+When we compute summary statistics or apply functions,
+a new data frame or series is created. But what if we want to append that information
+to an existing data frame? For example, say we wanted to compute the
+maximum value in each row of the `region_lang_nums` data frame,
+and to append that as an additional column of the `region_lang` data frame.
+In this case, we have two options: we can either  create a new column within the `region_lang` data
+frame itself, or create an entirely new data frame
+with the `assign` method. The first option we have seen already in earlier chapters, and is
+the more commonly used pattern in practice:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.assign(
-  maximum = region_lang_nums.apply(max, axis=1)
-)
+region_lang["maximum"] = region_lang_nums.max(axis=1)
+region_lang
 ```
-This gives us a new data frame that looks like the `region_lang` data frame,
-except that it has an additional column named `maximum`.
+You can see above that the `region_lang` data frame now has an additional column named `maximum`.
 The `maximum` column contains
 the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
-and region, just as we specified!
+and region, just as we specified! 
+
+To instead create an entirely new data frame, we can use the `assign` method and specify one argument for each column we want to create.
+In this case we want to create one new column named `maximum`, so the argument
+to `assign` begins with `maximum= `.
+Then after the `=`, we specify what the contents of that new column
+should be. In this case we use `max` just as we did previously to give us the maximum values.
+Remember to specify `axis=1` in the `max` method so that we compute the row-wise maximum value.
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+region_lang.assign(
+  maximum=region_lang_nums.max(axis=1)
+)
+```
+This data frame looks just like the previous one, except that it is a copy of `region_lang`, not `region_lang` itself; making further
+changes to this data frame will not impact the original `region_lang` data frame.
 
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+# remove maximum coln from region_lang
+region_lang = region_lang.drop(columns=["maximum"])
+
+# get english counts for toronto and glue
 number_most_home = int(
     official_langs[
         (official_langs["language"] == "English") &
@@ -1676,121 +1630,110 @@ five_cities
 ```
 The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
-We will add this information to our data frame in a new column named `city_pops` by using `assign`.
-Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`,
+Next, we will add this information to a new data frame column called `city_pops`.
+Once again, we will illustrate how to do this using both the `assign` method and regular column assignment.
+We specify the new column name (`city_pops`) as the argument, followed by the equals symbol `=`,
 and finally the data in the column.
 Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.
 So we will create a column called `city_pops` where we list the populations of those cities in that
 order, and add it to our data frame.
-Also note that we write `english_lang = ` on the left so that the newly created data frame overwrites our
-old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not
-modify the original data frame directly!
+And remember that by default, like other `pandas` functions, `assign` does not
+modify the original data frame directly, so the `english_lang` data frame is unchanged!
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-english_lang = english_lang.assign(
+english_lang.assign(
   city_pops=[4098927, 5928040, 1392609, 1321426, 2463431]
 )
+```
+
+Instead of using the `assign` method we can directly modify the `english_lang` data frame using regular column assignment.
+This would be a more natural choice in this particular case,
+since the syntax is more convenient for simple column modifications and additions.
+```{code-cell} ipython3
+:tags: [remove-cell]
+english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
+```
+```python
+english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
 english_lang
+```
+```text
+/tmp/ipykernel_12/2654974267.py:1: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
+```
+```{code-cell} ipython3
+:tags: [remove-input]
+english_lang
+```
+Wait a moment...what is that warning message? It seems to suggest that something went wrong, but
+if we inspect the `english_lang` data frame above, it looks like the city populations were added 
+just fine! As it turns out, this is caused by the earlier filtering we did from `region_lang` to
+produce the original `english_lang`. The details are a little bit technical, but
+`pandas` sometimes does not like it when you subset a data frame using `[]` or `loc[]` followed by
+column assignment. For the purposes of your own data analysis, if you ever see a `SettingWithCopyWarning`, just make sure
+to double check that the result of your column assignment looks the way you expect it to before proceeding.
+For the rest of the book, we will silence that warning to help with readability.
+```{code-cell} ipython3
+:tags: [remove-cell]
+# suppress for the rest of this chapter
+pd.options.mode.chained_assignment = None
 ```
 
 ```{note}
-Inserting data manually in this is generally very error-prone and is not recommended.
-We do it here to demonstrate another usage of `assign` that does not involve `apply`.
+Inserting the data column `[4098927, 5928040, ...]` manually as we did above is generally very error-prone and is not recommended.
+We do it here to demonstrate another usage of `assign` and regular column assignment.
 But in more advanced data wrangling,
 one would solve this problem in a less error-prone way using
 the `merge` function, which lets you combine two data frames. We will show you an
 example using `merge` at the end of the chapter!
 ```
 
-Now we have a new column with the population for each city. Finally, we calculate the
-proportion of people who speak English the most at home by taking the ratio of the columns
-`most_at_home` and `city_pops`. We will again add this to our data frame using `assign`.
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-english_lang.assign(
-    proportion=english_lang["most_at_home"]/english_lang["city_pops"]
-)
-```
-
-
-+++
-
-
-### Using `assign` to modify columns
-
-
-In {numref}`str-split`,
-when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-all of the variables were "object" data types.
-During the tidying process,
-we used the `pandas.to_numeric` function
-to convert the `most_at_home` and `most_at_work` columns
-to the desired integer (i.e., numeric class) data types and then used `[]` to overwrite columns.
-We can do the same thing using `assign`.
-
-Below we use `assign` to convert the columns `most_at_home` and `most_at_work`
-to numeric data types in the `official_langs` data set as described in
-{numref}`fig:img-assign`. In our example, we are naming the columns the same
-names as columns that already exist in the data frame
-(`"most_at_home"`, `"most_at_work"`)
-and this will cause `assign` to *overwrite* those columns
-(also referred to as modifying those columns *in-place*).
-If we were to give the columns a new name,
-then `assign` would create new columns with the names we specified.
-The syntax is detailed in {numref}`fig:img-assign`.
+Now we have a new column with the population for each city. Finally, we can convert all the numerical
+columns to proportions of people who speak English by taking the ratio of all the numerical columns
+with `city_pops`. Let's modify the `english_lang` column directly; in this case
+we can just assign directly to the data frame.
+This is similar to what we did in {numref}`str-split`,
+when we first read in the `"region_lang_top5_cities_messy.csv"` data and we needed to convert a few
+of the variables to numeric types. Here we assign to a range of columns simultaneously using `loc[]`.
+Note that it is again possible to instead use the `assign` function to produce a new data
+frame when modifying existing columns, although this is not commonly done.
+Note also that we use the `div` method with the argument `axis=0` to divide a range of columns in a data frame
+by the values in a single column&mdash;the basic division symbol `/` won't work in this case.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-official_langs_numeric = official_langs.assign(
-    most_at_home=pd.to_numeric(official_langs["most_at_home"]),
-    most_at_work=pd.to_numeric(official_langs["most_at_work"]),
-)
-
-official_langs_numeric
+english_lang.loc[:, "mother_tongue":"lang_known"] = english_lang.loc[
+    :,
+    "mother_tongue":"lang_known"
+    ].div(english_lang["city_pops"], axis=0)
+english_lang
 ```
-
-+++ {"tags": []}
-
-```{figure} img/wrangling/pandas_assign_args_labels.png
-:name: fig:img-assign
-:figclass: figure
-
-Syntax for the `assign` function.
-```
-
-+++
-
-
-```{code-cell} ipython3
-official_langs_numeric.info()
-```
-
-Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
-Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
-the power to overwrite the entries of a column, it is a good idea to create a new data frame object so that if
-you make a mistake, you can start again from the original data frame.
 
 +++
 
 ## Using `merge` to combine data frames
 
+Let's return to the situation right before we added the city populations
+of Toronto, Montréal, Vancouver, Calgary, and Edmonton to the `english_lang` data frame. Before adding the new column, we had filtered
+`region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
+of interest.
 ```{code-cell} ipython3
-:tags: [remove-cell]
-english_lang = region_lang[region_lang["language"] == "English"]
-five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
-english_lang = english_lang[english_lang["region"].isin(five_cities)]
-english_lang
+:tags: ["remove-cell"]
+english_lang = region_lang[
+    (region_lang["language"] == "English") &
+    (region_lang["region"].isin(five_cities["region"]))
+]
 ```
 
-Lets return to the example of wanting to compute the proportions of people who speak English
-most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
-our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
-of interest.
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang
 ```
-We then added the populations of these cities as a column using `assign`
+We then added the populations of these cities as a column 
 (Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
 Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
 right order; this is an error-prone process. An alternative approach, that we demonstrate here
@@ -1838,7 +1781,6 @@ burning data science questions!
 | Function | Description |
 | ---      | ----------- |
 | `agg` | calculates aggregated summaries of inputs |
-| `apply` | allows you to apply function(s) to multiple columns/rows  |
 | `assign` | adds or modifies columns in a data frame  |
 | `groupby` |  allows you to apply function(s) to groups of rows |
 | `iloc` | subsets columns/rows of a data frame using integer indices |

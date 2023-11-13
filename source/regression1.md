@@ -294,16 +294,14 @@ of a house that is 2,000 square feet.
 ```
 
 ```{code-cell} ipython3
-nearest_neighbors = (
-    small_sacramento.assign(diff=(2000 - small_sacramento["sqft"]).abs())
-    .nsmallest(5, "diff")
-)
-
+small_sacramento["dist"] = (2000 - small_sacramento["sqft"]).abs()
+nearest_neighbors = small_sacramento.nsmallest(5, "dist")
 nearest_neighbors
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
 
 nn_plot = small_plot + rule
 
@@ -609,16 +607,15 @@ sacr_gridsearch.fit(
 )
 
 # Retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)[[
-    "param_kneighborsregressor__n_neighbors",
-    "mean_test_score",
-    "std_test_score"
-]]
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
+sacr_results["sem_test_score"] = sacr_results["std_test_score"] / 5**(1/2)
 sacr_results = (
-    sacr_results
-    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
+    sacr_results[[
+        "param_kneighborsregressor__n_neighbors",
+        "mean_test_score",
+        "sem_test_score"
+    ]]
     .rename(columns={"param_kneighborsregressor__n_neighbors": "n_neighbors"})
-    .drop(columns=["std_test_score"])
 )
 sacr_results
 ```
@@ -834,12 +831,10 @@ model uses a different default scoring metric than the RMSPE.
 ```{code-cell} ipython3
 from sklearn.metrics import mean_squared_error
 
-sacr_preds = sacramento_test.assign(
-    predicted = sacr_gridsearch.predict(sacramento_test)
-)
+sacramento_test["predicted"] = sacr_gridsearch.predict(sacramento_test)
 RMSPE = mean_squared_error(
-    y_true = sacr_preds["price"],
-    y_pred=sacr_preds["predicted"]
+    y_true = sacramento_test["price"],
+    y_pred = sacramento_test["predicted"]
 )**(1/2)
 RMSPE
 ```
@@ -890,9 +885,7 @@ sqft_prediction_grid = pd.DataFrame({
     "sqft": np.arange(sacramento["sqft"].min(), sacramento["sqft"].max(), 10)
 })
 # Predict the price for each of the sqft values in the grid
-sacr_preds = sqft_prediction_grid.assign(
-    predicted = sacr_gridsearch.predict(sqft_prediction_grid)
-)
+sqft_prediction_grid["predicted"] = sacr_gridsearch.predict(sqft_prediction_grid)
 
 # Plot all the houses
 base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
@@ -905,7 +898,10 @@ base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
 )
 
 # Add the predictions as a line
-sacr_preds_plot = base_plot + alt.Chart(sacr_preds, title=f"K = {best_k_sacr}").mark_line(
+sacr_preds_plot = base_plot + alt.Chart(
+    sqft_prediction_grid, 
+    title=f"K = {best_k_sacr}"
+).mark_line(
     color="#ff7f0e"
 ).encode(
     x="sqft",
@@ -1018,25 +1014,24 @@ sacr_gridsearch = GridSearchCV(
     cv=5,
     scoring="neg_root_mean_squared_error"
 )
+
 sacr_gridsearch.fit(
   sacramento_train[["sqft", "beds"]],
   sacramento_train["price"]
 )
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)[[
-    "param_kneighborsregressor__n_neighbors",
-    "mean_test_score",
-    "std_test_score"
-]]
-
-sacr_results = (
-    sacr_results
-    .assign(sem_test_score=sacr_results["std_test_score"] / 5**(1/2))
-    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
-    .drop(columns=["std_test_score"])
-)
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)
+sacr_results["sem_test_score"] = sacr_results["std_test_score"] / 5**(1/2)
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
+sacr_results = (
+    sacr_results[[
+        "param_kneighborsregressor__n_neighbors",
+        "mean_test_score",
+        "sem_test_score"
+    ]]
+    .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
+)
 
 # show only the row of minimum RMSPE
 sacr_results.nsmallest(1, "mean_test_score")
@@ -1069,12 +1064,10 @@ via the `predict` method of the fit `GridSearchCV` object. Finally, we will use 
 to compute the RMSPE.
 
 ```{code-cell} ipython3
-sacr_preds = sacramento_test.assign(
-    predicted = sacr_gridsearch.predict(sacramento_test)
-)
+sacramento_test["predicted"] = sacr_gridsearch.predict(sacramento_test)
 RMSPE_mult = mean_squared_error(
-    y_true = sacr_preds["price"], 
-    y_pred=sacr_preds["predicted"]
+    y_true = sacramento_test["price"], 
+    y_pred = sacramento_test["predicted"]
 )**(1/2)
 RMSPE_mult
 

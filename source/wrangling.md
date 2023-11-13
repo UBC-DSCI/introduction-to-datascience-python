@@ -1524,7 +1524,7 @@ we will use column assignment or the `assign` function to create a new column.
 This is discussed in the next section.
 
 ```{note}
-While `pandas` provides many methods (like `max`, `as_type`, etc.) that can be applied to a data frame,
+While `pandas` provides many methods (like `max`, `astype`, etc.) that can be applied to a data frame,
 sometimes you may want to apply your own function to multiple columns in a data frame. In this case
 you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html) method.
 ```

@@ -716,9 +716,9 @@ glue(
             x="mean(price)"
         ),
         base.mark_text(align="left", color="#f58518", size=12, fontWeight="bold", dx=10).transform_aggregate(
-            mean_price = "mean(price)",
+            mean_price="mean(price)",
         ).transform_calculate(
-            label = "'Mean = ' + round(datum.mean_price * 10) / 10"
+            label="'Mean = ' + round(datum.mean_price * 10) / 10"
         ).encode(
             x=alt.X("mean_price:Q", title="Sample mean price per night (dollars)"),
             y=alt.value(10),

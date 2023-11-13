@@ -280,7 +280,7 @@ we call the `seed` function from the `numpy` package, and pass it any integer as
 Below we use the seed number `1`. At 
 that point, Python will keep track of the randomness that occurs throughout the code.
 For example, we can call the `sample` method
-on the series of numbers, passing the argument `n = 10` to indicate that we want 10 samples.
+on the series of numbers, passing the argument `n=10` to indicate that we want 10 samples.
 
 ```{code-cell} ipython3
 import numpy as np
@@ -290,7 +290,7 @@ np.random.seed(1)
 
 nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-random_numbers1 = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers1 = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers1
 ```
 You can see that `random_numbers1` is a list of 10 numbers
@@ -299,7 +299,7 @@ we run the `sample` method again,
 we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
-random_numbers2 = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers2 = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers2
 ```
 
@@ -309,12 +309,12 @@ as before---and then call the `sample` method again.
 
 ```{code-cell} ipython3
 np.random.seed(1)
-random_numbers1_again = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers1_again = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers1_again
 ```
 
 ```{code-cell} ipython3
-random_numbers2_again = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers2_again = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers2_again
 ```
 
@@ -326,12 +326,12 @@ obtain a different sequence of random numbers.
 
 ```{code-cell} ipython3
 np.random.seed(4235)
-random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers
 ```
 
 ```{code-cell} ipython3
-random_numbers = nums_0_to_9.sample(n = 10).to_numpy()
+random_numbers = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers
 ```
 
@@ -378,15 +378,15 @@ functions. Those functions will then use your `RandomState` to generate random n
 `numpy`'s default generator. For example, we can reproduce our earlier example by using a `RandomState`
 object with the `seed` value set to 1; we get the same lists of numbers once again.
 ```{code}
-rnd = np.random.RandomState(seed = 1)
-random_numbers1_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
+rnd = np.random.RandomState(seed=1)
+random_numbers1_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
 random_numbers1_third
 ``` 
 ```{code}
 array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
 ```{code}
-random_numbers2_third = nums_0_to_9.sample(n = 10, random_state = rnd).to_numpy()
+random_numbers2_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
 random_numbers2_third
 ``` 
 ```{code}
@@ -540,8 +540,8 @@ cancer_train["Class"].value_counts(normalize=True)
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("cancer_train_b_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize = True)["Benign"]*100))
-glue("cancer_train_m_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize = True)["Malignant"]*100))
+glue("cancer_train_b_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize=True)["Benign"]*100))
+glue("cancer_train_m_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(normalize=True)["Malignant"]*100))
 ```
 
 ### Preprocess the data
@@ -1620,7 +1620,7 @@ for i in range(len(ks)):
     cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
     param_grid = {
         "kneighborsclassifier__n_neighbors": range(1, 21),
-    }  ## double check: in R textbook, it is tune_grid(..., grid = 20), so I guess it matches RandomizedSearchCV
+    }  ## double check: in R textbook, it is tune_grid(..., grid=20), so I guess it matches RandomizedSearchCV
        ## instead of GridSeachCV?
     # param_grid_rand = {
     #     "kneighborsclassifier__n_neighbors": range(1, 100),

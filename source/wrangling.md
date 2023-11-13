@@ -1482,7 +1482,7 @@ region_lang
 ```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
 ```
 
-We can simply call the `.as_type` function to apply it across the desired range of columns.
+We can simply call the `.astype` function to apply it across the desired range of columns.
 
 ```{code-cell} ipython3
 region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].astype("int32")

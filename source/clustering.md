@@ -849,7 +849,8 @@ the random seed in the beginning of this chapter, the clustering will be reprodu
 ```{code-cell} ipython3
 from sklearn.pipeline import make_pipeline
 
-penguin_clust = make_pipeline(preprocessor, kmeans).fit(penguins)
+penguin_clust = make_pipeline(preprocessor, kmeans)
+penguin_clust.fit(penguins)
 penguin_clust
 ```
 

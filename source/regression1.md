@@ -603,13 +603,13 @@ and rename the parameter column to be more readable.
 
 ```{code-cell} ipython3
 # fit the GridSearchCV object
-sacr_fit = sacr_gridsearch.fit(
+sacr_gridsearch.fit(
     sacramento_train[["sqft"]],  # A single-column data frame
     sacramento_train["price"]  # A series
 )
 
 # Retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)[[
     "param_kneighborsregressor__n_neighbors",
     "mean_test_score",
     "std_test_score"
@@ -689,7 +689,7 @@ Note that it is still useful to visualize the results as we did above
 since this provides additional information on how the model performance varies.
 
 ```{code-cell} ipython3
-sacr_fit.best_params_
+sacr_gridsearch.best_params_
 ```
 
 +++
@@ -835,7 +835,7 @@ model uses a different default scoring metric than the RMSPE.
 from sklearn.metrics import mean_squared_error
 
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.predict(sacramento_test)
+    predicted = sacr_gridsearch.predict(sacramento_test)
 )
 RMSPE = mean_squared_error(
     y_true = sacr_preds["price"],
@@ -891,7 +891,7 @@ sqft_prediction_grid = pd.DataFrame({
 })
 # Predict the price for each of the sqft values in the grid
 sacr_preds = sqft_prediction_grid.assign(
-    predicted = sacr_fit.predict(sqft_prediction_grid)
+    predicted = sacr_gridsearch.predict(sqft_prediction_grid)
 )
 
 # Plot all the houses
@@ -1012,18 +1012,19 @@ param_grid = {
     "kneighborsregressor__n_neighbors": range(1, 50),
 }
 
-sacr_fit = GridSearchCV(
+sacr_gridsearch = GridSearchCV(
     estimator=sacr_pipeline,
     param_grid=param_grid,
     cv=5,
     scoring="neg_root_mean_squared_error"
-    ).fit(
-      sacramento_train[["sqft", "beds"]],
-      sacramento_train["price"]
-    )
+)
+sacr_gridsearch.fit(
+  sacramento_train[["sqft", "beds"]],
+  sacramento_train["price"]
+)
 
 # retrieve the CV scores
-sacr_results = pd.DataFrame(sacr_fit.cv_results_)[[
+sacr_results = pd.DataFrame(sacr_gridsearch.cv_results_)[[
     "param_kneighborsregressor__n_neighbors",
     "mean_test_score",
     "std_test_score"
@@ -1035,13 +1036,10 @@ sacr_results = (
     .rename(columns={"param_kneighborsregressor__n_neighbors" : "n_neighbors"})
     .drop(columns=["std_test_score"])
 )
-
 sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 
 # show only the row of minimum RMSPE
-sacr_results[
-   sacr_results["mean_test_score"] == sacr_results["mean_test_score"].min()
-]
+sacr_results.nsmallest(1, "mean_test_score")
 ```
 
 ```{code-cell} ipython3
@@ -1072,7 +1070,7 @@ to compute the RMSPE.
 
 ```{code-cell} ipython3
 sacr_preds = sacramento_test.assign(
-    predicted = sacr_fit.predict(sacramento_test)
+    predicted = sacr_gridsearch.predict(sacramento_test)
 )
 RMSPE_mult = mean_squared_error(
     y_true = sacr_preds["price"], 
@@ -1109,7 +1107,7 @@ xygrid = np.array(np.meshgrid(xvals, yvals)).reshape(2, -1).T
 xygrid = pd.DataFrame(xygrid, columns=["sqft", "beds"])
 
 # add prediction
-knnPredGrid = sacr_fit.predict(xygrid)
+knnPredGrid = sacr_gridsearch.predict(xygrid)
 
 fig = px.scatter_3d(
     sacramento_train,

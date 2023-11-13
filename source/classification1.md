@@ -633,10 +633,10 @@ cancer["dist_from_new"] = (
      + (cancer["Concavity"] - new_obs_Concavity) ** 2
 )**(1/2)
 cancer.nsmallest(5, "dist_from_new")[[
-	"Perimeter", 
-	"Concavity", 
-	"Class", 
-	"dist_from_new"
+    "Perimeter", 
+    "Concavity", 
+    "Class", 
+    "dist_from_new"
 ]]
 ```
 

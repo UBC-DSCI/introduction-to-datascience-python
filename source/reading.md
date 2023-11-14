@@ -40,29 +40,30 @@ tied well before going for a run so that you don’t trip later on!
 ## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
-- Define the following:
+- Define the types of path and use them to locate files:
     - absolute file path
     - relative file path
-    - **U**niform **R**esource **L**ocator (URL)
-- Read data into Python using an absolute path, relative path and a URL.
-- Compare and contrast the following functions:
+    - Uniform Resource Locator (URL)
+- Read data into Python from various types of path using:
     - `read_csv`
     - `read_excel`
-- Match the following `pandas` `read_csv` function arguments to their descriptions:
-    - `filepath_or_buffer`
-    - `sep`
-    - `names`
+- Compare and contrast `read_csv` and `read_excel`.
+- Describe when to use the following `read_csv` function arguments:
     - `skiprows`
+    - `sep`
+    - `header`
+    - `names`
 - Choose the appropriate `read_csv` function arguments to load a given plain text tabular data set into Python.
 - Use the `rename` function to rename columns in a data frame.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
-- Connect to a database using the `ibis` library's `connect` function.
-- List the tables in a database using the `ibis` library's `list_tables` function.
-- Create a reference to a database table using the `ibis` library's `table` function.
-- Execute queries to bring data from a database into Python using the `ibis` library's `execute` function.
+- Work with databases using functions from the `ibis` package:
+    - Connect to a database with `connect.
+    - List tables in the database with `list_tables`.
+    - Create a reference to a database table with `table`.
+    - Bring data from a database into Python with `execute`.
 - Use `to_csv` to save a data frame to a `.csv` file.
-- (*Optional*) Obtain data using **a**pplication **p**rogramming **i**nterfaces (APIs) and web scraping.
-    - Read/scrape data from an internet URL using the `BeautifulSoup` package.
+- (*Optional*) Obtain data from the web using scraping and application programming interfaces (APIs):
+    - Read HTML source code from a URL using the `BeautifulSoup` package.
     - Read data from the NASA "Astronomy Picture of the Day" using the `requests` package.
     - Compare downloading tabular data from a plain text file (e.g., `.csv`), accessing data from an API, and scraping the HTML source code from a website.
 

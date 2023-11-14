@@ -38,7 +38,7 @@ By the end of the chapter, readers will be able to do the following:
 - Download the worksheets that accompany this book.
 - Install the Docker virtualization engine.
 - Edit and run the worksheets using JupyterLab running inside a Docker container.
-- Install Git, JupyterLab Desktop, and python packages.
+- Install Git, JupyterLab Desktop, and Python packages.
 - Edit and run the worksheets using JupyterLab Desktop.
 
 ## Obtaining the worksheets for this book
@@ -73,10 +73,10 @@ all software packages needed run the worksheets that come with this book.
 A *container* is a virtualized user space within your computer.
 Within the container, you can run software in isolation without interfering with the
 other software that already exists on your machine. In this book, we use
-a container to run a specific version of the python programming
+a container to run a specific version of the Python programming
 language, as well as other necessary packages. The container ensures that
-the worksheets function correctly, even if you have a different version of python
-installed on your computer&mdash;or even if you haven't installed python at all!
+the worksheets function correctly, even if you have a different version of Python
+installed on your computer&mdash;or even if you haven't installed Python at all!
 ```
 
 ### Windows
@@ -228,12 +228,12 @@ using [JupyterLab Desktop](https://github.com/jupyterlab/jupyterlab-desktop).
 The advantage of JupyterLab Desktop over Docker is that it can be easier to install;
 Docker can sometimes run into some fairly technical issues (especially on Windows computers) 
 that require expert troubleshooting. The downside of JupyterLab Desktop is that there is a (very) small chance that 
-you may not end up with the right versions of all the python packages needed for the worksheets. Docker, on the other hand,
+you may not end up with the right versions of all the Python packages needed for the worksheets. Docker, on the other hand,
 *guarantees* that the worksheets will work exactly as intended. 
 
 In this section, we will cover how to install JupyterLab Desktop,
 Git and the JupyterLab Git extension (for version control, as discussed in {numref}`Chapter %s <getting-started-with-version-control>`), and
-all of the python packages needed to run
+all of the Python packages needed to run
 the code in this book.
 ```{index} JupyterLab Desktop, git;installation
 ```
@@ -265,8 +265,8 @@ The JupyterLab Desktop graphical user interface.
 
 Next, we need to add the JupyterLab Git extension (so that
 we can use version control directly from within JupyterLab Desktop),
-the IPython kernel (to enable the python programming language),
-and various python software packages. Click "New session..." in the JupyterLab Desktop
+the IPython kernel (to enable the Python programming language),
+and various Python software packages. Click "New session..." in the JupyterLab Desktop
 user interface, then scroll to the bottom, and click "Terminal" under the "Other" heading ({numref}`setup-jlab-gui-2`).
 
 ```{figure} img/setup/jlab-2.png
@@ -283,7 +283,7 @@ In this terminal, run the following commands:
 pip install --upgrade jupyterlab-git
 conda env update --file https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/environment.yml
 ```
-The second command installs the specific python and package versions specified in
+The second command installs the specific Python and package versions specified in
 the `environment.yml` file found in 
 [the worksheets repository](https://worksheets.python.datasciencebook.ca).
 We will always keep the versions in the `environment.yml` file updated
@@ -316,7 +316,7 @@ the icon in the Applications folder to start JupyterLab Desktop.
 **Configuring JupyterLab Desktop** From this point onward, with JupyterLab Desktop running,
 follow the instructions in the Windows section on *Configuring JupyterLab Desktop* to set up the
 environment, install the JupyterLab Git extension, and install
-the various python software packages needed for the worksheets.
+the various Python software packages needed for the worksheets.
 
 ### Ubuntu
 
@@ -340,4 +340,4 @@ jlab
 **Configuring JupyterLab Desktop** From this point onward, with JupyterLab Desktop running,
 follow the instructions in the Windows section on *Configuring JupyterLab Desktop* to set up the
 environment, install the JupyterLab Git extension, and install
-the various python software packages needed for the worksheets.
+the various Python software packages needed for the worksheets.

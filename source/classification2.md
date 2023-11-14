@@ -1527,7 +1527,7 @@ glue("n_neighbors_min", "{:0.0f}".format(accuracies_grid["n_neighbors"].min()))
 ```
 
 At first glance, this is a bit surprising: the performance of the classifier
-has not changed much at all despite tuning the number of neighbors! For example, our first model
+has not changed much despite tuning the number of neighbors! For example, our first model
 with $K =$ 3 (before we knew how to tune) had an estimated accuracy of {glue:text}`cancer_acc_1`%,
 while the tuned model with $K =$ {glue:text}`best_k_unique` had an estimated accuracy
 of {glue:text}`cancer_acc_tuned`%.

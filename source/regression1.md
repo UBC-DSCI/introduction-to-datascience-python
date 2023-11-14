@@ -818,7 +818,7 @@ chapter.
 To assess how well our model might do at predicting on unseen data, we will
 assess its RMSPE on the test data. To do this, we first need to retrain the 
 KNN regression model on the entire training data set using $K =$ {glue:text}`best_k_sacr`
-neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
+neighbors. As we saw in {numref}`Chapter %s <classification2>` we do not have to do this ourselves manually; `scikit-learn`
 does it for us automatically. To make predictions with the best model on the test data,
 we can use the `predict` method of the fit `GridSearchCV` object.
 We then use the `mean_squared_error`

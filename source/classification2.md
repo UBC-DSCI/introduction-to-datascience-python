@@ -618,6 +618,7 @@ cancer_test["predicted"] = knn_pipeline.predict(cancer_test[["Smoothness", "Conc
 cancer_test[["ID", "Class", "predicted"]]
 ```
 
+(eval-performance-clasfcn2)=
 ### Evaluate performance
 
 ```{index} scikit-learn; score
@@ -1477,6 +1478,66 @@ balance between the two. You can see these two effects in
 set the number of neighbors $K$ to 1, 7, 20, and 300.
 
 +++
+
+### Evaluating on the test set
+
+Now that we have tuned the KNN classifier and set $K =$ {glue:text}`best_k_unique`,
+we are done building the model and it is time to evaluate the quality of its predictions on the held out 
+test data, as we did earlier in {numref}`eval-performance-clasfcn2`.
+We first need to retrain the KNN classifier
+on the entire training data set using the selected number of neighbors.
+Fortunately we do not have to do this ourselves manually; `scikit-learn` does it for
+us automatically. To make predictions and assess the estimated accuracy of the best model on the test data, we can use the
+`score` and `predict` methods of the fit `GridSearchCV` object. We can then pass those predictions to
+the `crosstab` function to print a confusion matrix.
+
+```{code-cell} ipython3
+cancer_tune_grid.score(
+    cancer_test[["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+cancer_acc_tuned = cancer_tune_grid.score(
+    cancer_test[["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
+glue("cancer_acc_tuned", "{:0.0f}".format(100*cancer_acc_tuned))
+```
+
+```{code-cell} ipython3
+cancer_test["predicted"] = cancer_tune_grid.predict(
+    cancer_test[["Smoothness", "Concavity"]]
+)
+pd.crosstab(
+    cancer_test["Class"],
+    cancer_test["predicted"]
+)
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+glue("mean_acc_ks", "{:0.0f}".format(100*accuracies_grid["mean_test_score"].mean()))
+glue("std3_acc_ks", "{:0.0f}".format(3*100*accuracies_grid["mean_test_score"].std()))
+glue("mean_sem_acc_ks", "{:0.0f}".format(100*accuracies_grid["sem_test_score"].mean()))
+glue("n_neighbors_max", "{:0.0f}".format(accuracies_grid["n_neighbors"].max()))
+glue("n_neighbors_min", "{:0.0f}".format(accuracies_grid["n_neighbors"].min()))
+```
+
+At first glance, this is a bit surprising: the performance of the classifier
+has not changed much at all despite tuning the number of neighbors! For example, our first model
+with $K =$ 3 (before we knew how to tune) had an estimated accuracy of {glue:text}`cancer_acc_1`%,
+while the tuned model with $K =$ {glue:text}`best_k_unique` had an estimated accuracy
+of {glue:text}`cancer_acc_tuned`%.
+But upon examining {numref}`fig:06-find-k` again closely&mdash;to revisit the
+cross validation accuracy estimates for a range of neighbors&mdash;this result
+becomes much less surprising. From {glue:text}`n_neighbors_min` to around {glue:text}`n_neighbors_max` neighbors, the cross
+validation accuracy estimate varies only by around {glue:text}`std3_acc_ks`%, with
+each estimate having a standard error around {glue:text}`mean_sem_acc_ks`%.
+Since the cross-validation accuracy estimates the test set accuracy,
+the fact that the test set accuracy also doesn't change much is expected.
 
 ## Summary
 

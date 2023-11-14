@@ -37,11 +37,14 @@ By the end of the chapter, readers will be able to do the following:
 - Identify the different types of data analysis question and categorize a question into the correct type.
 - Load the `pandas` package into Python.
 - Read tabular data with `read_csv`.
-- Use `help()` to access help and documentation tools in Python.
 - Create new variables and objects in Python.
 - Create and organize subsets of tabular data using `[]`, `loc[]`, `sort_values`, and `head`.
+- Add and modify columns in tabular data using column assignment.
 - Chain multiple operations in sequence.
 - Visualize data with an `altair` bar plot.
+- Use `help()` and `?` to access help and documentation tools in Python.
+
+
 
 ## Canadian languages data set
 

@@ -409,6 +409,13 @@ quantitative variable.
 ```
 
 ```{code-cell} ipython3
+:tags: [remove-cell]
+# fix seed right before train/test split for reproducibility with next chapter
+# make sure this seed is always the same as the one used before the split in Regression 2
+np.random.seed(1)
+```
+
+```{code-cell} ipython3
 sacramento_train, sacramento_test = train_test_split(
     sacramento, train_size=0.75
 )
@@ -698,7 +705,7 @@ to be too small or too large, we cause the RMSPE to increase, as shown in
 
 {numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 regression model. Each plot shows the predicted values for house sale price from
-our KNN regression model for 6 different values for $K$: 1, 3, {glue:text}`best_k_sacr`, 41, 250, and 699 (i.e., all of the training data).
+our KNN regression model for 6 different values for $K$: 1, 3, 25, {glue:text}`best_k_sacr`, 250, and 699 (i.e., all of the training data).
 For each model, we predict prices for the range of possible home sizes we
 observed in the data set (here 500 to 5,000 square feet) and we plot the
 predicted prices as a orange line.
@@ -709,8 +716,8 @@ predicted prices as a orange line.
 gridvals = [
     1,
     3,
+    25,
     best_k_sacr,
-    41,
     250,
     len(sacramento_train),
 ]

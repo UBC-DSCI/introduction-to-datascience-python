@@ -46,8 +46,8 @@ By the end of the chapter, readers will be able to do the following:
 - Describe what a training data set is and how it is used in classification.
 - Interpret the output of a classifier.
 - Compute, by hand, the straight-line (Euclidean) distance between points on a graph when there are two predictor variables.
-- Explain the $K$-nearest neighbor classification algorithm.
-- Perform $K$-nearest neighbor classification in Python using `scikit-learn`.
+- Explain the K-nearest neighbors classification algorithm.
+- Perform K-nearest neighbors classification in Python using `scikit-learn`.
 - Use methods from `scikit-learn` to center, scale, balance, and impute data as a preprocessing step.
 - Combine preprocessing and model training into a `Pipeline` using `make_pipeline`.
 
@@ -88,7 +88,7 @@ the classifier to make predictions on new data for which we do not know the clas
 
 There are many possible methods that we could use to predict
 a categorical class/label for an observation. In this book, we will
-focus on the widely used **$K$-nearest neighbors** algorithm {cite:p}`knnfix,knncover`.
+focus on the widely used **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`.
 In your future studies, you might encounter decision trees, support vector machines (SVMs),
 logistic regression, neural networks, and more; see the additional resources
 section at the end of the next chapter for where to begin learning more about
@@ -317,7 +317,7 @@ tumor images with unknown diagnoses.
 
 +++
 
-## Classification with $K$-nearest neighbors
+## Classification with K-nearest neighbors
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -342,15 +342,15 @@ my_distances = euclidean_distances(perim_concav_with_new_point_df[attrs])[
 
 In order to actually make predictions for new observations in practice, we
 will need a classification algorithm. 
-In this book, we will use the $K$-nearest neighbors classification algorithm.
+In this book, we will use the K-nearest neighbors classification algorithm.
 To predict the label of a new observation (here, classify it as either benign
-or malignant), the $K$-nearest neighbors classifier generally finds the $K$
+or malignant), the K-nearest neighbors classifier generally finds the $K$
 "nearest" or "most similar" observations in our training set, and then uses
 their diagnoses to make a prediction for the new observation's diagnosis. $K$ 
 is a number that we must choose in advance; for now, we will assume that someone has chosen
 $K$ for us. We will cover how to choose $K$ ourselves in the next chapter. 
 
-To illustrate the concept of $K$-nearest neighbors classification, we 
+To illustrate the concept of K-nearest neighbors classification, we 
 will walk through an example.  Suppose we have a
 new observation, with standardized perimeter 
 of {glue:text}`new_point_1_0` and standardized concavity 
@@ -716,7 +716,7 @@ Scatter plot of concavity versus perimeter with 5 nearest neighbors circled.
 ### More than two explanatory variables 
 
 Although the above description is directed toward two predictor variables, 
-exactly the same $K$-nearest neighbors algorithm applies when you
+exactly the same K-nearest neighbors algorithm applies when you
 have a higher number of predictor variables.  Each predictor variable may give us new
 information to help create our classifier.  The only difference is the formula
 for the distance between points. Suppose we have $m$ predictor
@@ -872,9 +872,9 @@ nearest neighbors look like, for learning purposes.
 
 +++
 
-### Summary of $K$-nearest neighbors algorithm
+### Summary of K-nearest neighbors algorithm
 
-In order to classify a new observation using a $K$-nearest neighbor classifier, we have to do the following:
+In order to classify a new observation using a K-nearest neighbors classifier, we have to do the following:
 
 1. Compute the distance between the new observation and each observation in the training set.
 2. Find the $K$ rows corresponding to the $K$ smallest distances.
@@ -882,20 +882,20 @@ In order to classify a new observation using a $K$-nearest neighbor classifier, 
 
 +++
 
-## $K$-nearest neighbors with `scikit-learn`
+## K-nearest neighbors with `scikit-learn`
 
 ```{index} scikit-learn
 ```
 
-Coding the $K$-nearest neighbors algorithm in Python ourselves can get complicated,
+Coding the K-nearest neighbors algorithm in Python ourselves can get complicated,
 especially if we want to handle multiple classes, more than two variables,
 or predict the class for multiple new observations. Thankfully, in Python,
-the $K$-nearest neighbors algorithm is 
+the K-nearest neighbors algorithm is 
 implemented in [the `scikit-learn` Python package](https://scikit-learn.org/stable/index.html) {cite:p}`sklearn_api` along with 
 many [other models](https://scikit-learn.org/stable/user_guide.html) that you will encounter in this and future chapters of the book. Using the functions 
 in the `scikit-learn` package (named `sklearn` in Python) will help keep our code simple, readable and accurate; the 
 less we have to code ourselves, the fewer mistakes we will likely make. 
-Before getting started with $K$-nearest neighbors, we need to tell the `sklearn` package 
+Before getting started with K-nearest neighbors, we need to tell the `sklearn` package 
 that we prefer using `pandas` data frames over regular arrays via the `set_config` function. 
 ```{note}
 You will notice a new way of importing functions in the code below: `from ... import ...`. This lets us
@@ -913,14 +913,14 @@ from sklearn import set_config
 set_config(transform_output="pandas")
 ```
 
-We can now get started with $K$-nearest neighbors. The first step is to
+We can now get started with K-nearest neighbors. The first step is to
  import the `KNeighborsClassifier` from the `sklearn.neighbors` module.
 
 ```{code-cell} ipython3
 from sklearn.neighbors import KNeighborsClassifier
 ```
 
-Let's walk through how to use `KNeighborsClassifier` to perform $K$-nearest neighbors classification. 
+Let's walk through how to use `KNeighborsClassifier` to perform K-nearest neighbors classification. 
 We will use the `cancer` data set from above, with
 perimeter and concavity as predictors and $K = 5$ neighbors to build our classifier. Then
 we will use the classifier to predict the diagnosis label for a new observation with
@@ -935,7 +935,7 @@ cancer_train
 ```{index} scikit-learn; model object, scikit-learn; KNeighborsClassifier
 ```
 
-Next, we create a *model object* for $K$-nearest neighbors classification
+Next, we create a *model object* for K-nearest neighbors classification
 by creating a `KNeighborsClassifier` instance, specifying that we want to use $K = 5$ neighbors;
 we will discuss how to choose $K$ in the next chapter.
 
@@ -974,7 +974,7 @@ knn.fit(X=cancer_train[["Perimeter", "Concavity"]], y=cancer_train["Class"]);
 
 After using the `fit` function, we can make a prediction on a new observation
 by calling `predict` on the classifier object, passing the new observation
-itself. As above, when we ran the $K$-nearest neighbors classification
+itself. As above, when we ran the K-nearest neighbors classification
 algorithm manually, the `knn` model object classifies the new observation as
 "Malignant". Note that the `predict` function outputs an `array` with the
 model's prediction; you can actually make multiple predictions at the same
@@ -1000,7 +1000,7 @@ learn ways to quantify how accurate we think our predictions are.
 ```{index} scaling
 ```
 
-When using $K$-nearest neighbor classification, the *scale* of each variable
+When using K-nearest neighbors classification, the *scale* of each variable
 (i.e., its size and range of values) matters. Since the classifier predicts
 classes by identifying observations nearest to it, any variables with 
 a large scale will have a much larger effect than variables with a small
@@ -1026,7 +1026,7 @@ degrees Celsius, the two variables would differ by a constant shift of 273
 hypothetical job classification example, we would likely see that the center of
 the salary variable is in the tens of thousands, while the center of the years
 of education variable is in the single digits. Although this doesn't affect the
-$K$-nearest neighbor classification algorithm, this large shift can change the
+K-nearest neighbors classification algorithm, this large shift can change the
 outcome of using many other predictive models.
 
 ```{index} standardization; K-nearest neighbors
@@ -1038,8 +1038,8 @@ set of numbers) and *standard deviation* (a number quantifying how spread out va
 For each observed value of the variable, we subtract the mean (i.e., center the variable) 
 and divide by the standard deviation (i.e., scale the variable). When we do this, the data 
 is said to be *standardized*, and all variables in a data set will have a mean of 0 
-and a standard deviation of 1. To illustrate the effect that standardization can have on the $K$-nearest
-neighbor algorithm, we will read in the original, unstandardized Wisconsin breast
+and a standard deviation of 1. To illustrate the effect that standardization can have on the K-nearest
+neighbors algorithm, we will read in the original, unstandardized Wisconsin breast
 cancer data set; we have been using a standardized version of the data set up
 until now. We will apply the same initial wrangling steps as we did earlier,
 and to keep things simple we will just use the `Area`, `Smoothness`, and `Class`
@@ -1173,7 +1173,7 @@ scaled_cancer_all
 
 You may wonder why we are doing so much work just to center and
 scale our variables. Can't we just manually scale and center the `Area` and
-`Smoothness` variables ourselves before building our $K$-nearest neighbor model? Well,
+`Smoothness` variables ourselves before building our K-nearest neighbors model? Well,
 technically *yes*; but doing so is error-prone.  In particular, we might
 accidentally forget to apply the same centering / scaling when making
 predictions, or accidentally apply a *different* centering / scaling than what
@@ -1400,7 +1400,7 @@ Close-up of three nearest neighbors for unstandardized data.
 
 Another potential issue in a data set for a classifier is *class imbalance*, 
 i.e., when one label is much more common than another. Since classifiers like
-the $K$-nearest neighbor algorithm use the labels of nearby points to predict
+the K-nearest neighbors algorithm use the labels of nearby points to predict
 the label of a new point, if there are many more data points with one label
 overall, the algorithm is more likely to pick that label in general (even if
 the "pattern" of data suggests otherwise). Class imbalance is actually quite a
@@ -1451,7 +1451,7 @@ rare_cancer["Class"].value_counts()
 
 +++
 
-Suppose we now decided to use $K = 7$ in $K$-nearest neighbor classification.
+Suppose we now decided to use $K = 7$ in K-nearest neighbors classification.
 With only 3 observations of malignant tumors, the classifier 
 will *always predict that the tumor is benign, no matter what its concavity and perimeter
 are!* This is because in a majority vote of 7 observations, at most 3 will be
@@ -1525,7 +1525,7 @@ Imbalanced data with 7 nearest neighbors to a new observation highlighted.
 +++
 
 {numref}`fig:05-upsample-2` shows what happens if we set the background color of 
-each area of the plot to the predictions the $K$-nearest neighbor 
+each area of the plot to the predictions the K-nearest neighbors 
 classifier would make. We can see that the decision is 
 always "benign," corresponding to the blue color.
 
@@ -1610,7 +1610,7 @@ Despite the simplicity of the problem, solving it in a statistically sound manne
 fairly nuanced, and a careful treatment would require a lot more detail and mathematics than we will cover in this textbook.
 For the present purposes, it will suffice to rebalance the data by *oversampling* the rare class. 
 In other words, we will replicate rare observations multiple times in our data set to give them more
-voting power in the $K$-nearest neighbor algorithm. In order to do this, we will 
+voting power in the K-nearest neighbors algorithm. In order to do this, we will 
 first separate the classes out into their own data frames by filtering.
 Then, we will
 use the `sample` method on the rare class data frame to increase the number of `Malignant` observations to be the same as the number
@@ -1638,9 +1638,9 @@ upsampled_cancer = pd.concat((malignant_cancer_upsample, benign_cancer))
 upsampled_cancer["Class"].value_counts()
 ```
 
-Now suppose we train our $K$-nearest neighbor classifier with $K=7$ on this *balanced* data. 
+Now suppose we train our K-nearest neighbors classifier with $K=7$ on this *balanced* data. 
 {numref}`fig:05-upsample-plot` shows what happens now when we set the background color 
-of each area of our scatter plot to the decision the $K$-nearest neighbor 
+of each area of our scatter plot to the decision the K-nearest neighbors 
 classifier would make. We can see that the decision is more reasonable; when the points are close
 to those labeled malignant, the classifier predicts a malignant tumor, and vice versa when they are 
 closer to the benign tumor observations.
@@ -1738,13 +1738,13 @@ missing_cancer["Class"] = missing_cancer["Class"].replace({
 missing_cancer
 ```
 
-Recall that K-nearest neighbor classification makes predictions by computing
+Recall that K-nearest neighbors classification makes predictions by computing
 the straight-line distance to nearby training observations, and hence requires
 access to the values of *all* variables for *all* observations in the training
-data.  So how can we perform K-nearest neighbor classification in the presence
+data.  So how can we perform K-nearest neighbors classification in the presence
 of missing data?  Well, since there are not too many observations with missing
 entries, one option is to simply remove those observations prior to building
-the K-nearest neighbor classifier. We can accomplish this by using the
+the K-nearest neighbors classifier. We can accomplish this by using the
 `dropna` method prior to working with the data.
 
 ```{code-cell} ipython3
@@ -1809,7 +1809,7 @@ unscaled_cancer["Class"] = unscaled_cancer["Class"].replace({
 })
 unscaled_cancer
 
-# create the KNN model
+# create the K-NN model
 knn = KNeighborsClassifier(n_neighbors=7)
 
 # create the centering / scaling preprocessor
@@ -1859,7 +1859,7 @@ prediction
 
 The classifier predicts that the first observation is benign, while the second is
 malignant. {numref}`fig:05-workflow-plot` visualizes the predictions that this 
-trained $K$-nearest neighbor model will make on a large range of new observations.
+trained K-nearest neighbors model will make on a large range of new observations.
 Although you have seen colored prediction map visualizations like this a few times now,
 we have not included the code to generate them, as it is a little bit complicated.
 For the interested reader who wants a learning challenge, we now include it below. 

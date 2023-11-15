@@ -38,8 +38,8 @@ By the end of the chapter, readers will be able to do the following:
 - Describe and interpret accuracy, precision, recall, and confusion matrices.
 - Evaluate classification accuracy, precision, and recall in Python using a test set, a single validation set, or cross-validation.
 - Produce a confusion matrix in Python.
-- Choose the number of neighbors in a $K$-nearest neighbors classifier by maximizing estimated cross-validation accuracy.
-- Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
+- Choose the number of neighbors in a K-nearest neighbors classifier by maximizing estimated cross-validation accuracy.
+- Describe the advantages and disadvantages of the K-nearest neighbors classification algorithm.
 
 +++
 
@@ -401,7 +401,7 @@ array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 ```
 
 Back to evaluating classifiers now!
-In Python, we can use the `scikit-learn` package not only to perform $K$-nearest neighbors
+In Python, we can use the `scikit-learn` package not only to perform K-nearest neighbors
 classification, but also to assess how well our classification worked. 
 Let's work through an example of how to use tools from `scikit-learn` to evaluate a classifier
  using the breast cancer data set from the previous chapter.
@@ -546,7 +546,7 @@ glue("cancer_train_m_prop", "{:0.0f}".format(cancer_train["Class"].value_counts(
 
 ### Preprocess the data
 
-As we mentioned in the last chapter, $K$-nearest neighbors is sensitive to the scale of the predictors,
+As we mentioned in the last chapter, K-nearest neighbors is sensitive to the scale of the predictors,
 so we should perform some preprocessing to standardize them. An
 additional consideration we need to take when doing this is that we should
 create the standardization preprocessor using **only the training data**. This ensures that
@@ -576,7 +576,7 @@ cancer_preprocessor = make_column_transformer(
 ### Train the classifier
 
 Now that we have split our original data set into training and test sets, we
-can create our $K$-nearest neighbors classifier with only the training set using
+can create our K-nearest neighbors classifier with only the training set using
 the technique we learned in the previous chapter. For now, we will just choose
 the number $K$ of neighbors to be 3, and use only the concavity and smoothness predictors by
 selecting them from the `cancer_train` data frame. 
@@ -605,7 +605,7 @@ knn_pipeline
 ```{index} pandas.concat
 ```
 
-Now that we have a $K$-nearest neighbors classifier object, we can use it to
+Now that we have a K-nearest neighbors classifier object, we can use it to
 predict the class labels for our test set and
 augment the original test data with a column of predictions.
 The `Class` variable contains the actual
@@ -773,7 +773,7 @@ classification problem: the *majority classifier*. The majority classifier
 *always* guesses the majority class label from the training data, regardless of
 the predictor variables' values.  It helps to give you a sense of
 scale when considering accuracies. If the majority classifier obtains a 90%
-accuracy on a problem, then you might hope for your $K$-nearest neighbors
+accuracy on a problem, then you might hope for your K-nearest neighbors
 classifier to do better than that. If your classifier provides a significant
 improvement upon the majority classifier, this means that at least your method
 is extracting some useful information from your predictor variables.  Be
@@ -793,10 +793,10 @@ is benign. The estimated accuracy of the majority classifier is usually
 fairly close to the majority class proportion in the training data.
 In this case, we would suspect that the majority classifier will have 
 an accuracy of around {glue:text}`cancer_train_b_prop`%.
-The $K$-nearest neighbors classifier we built does quite a bit better than this, 
+The K-nearest neighbors classifier we built does quite a bit better than this, 
 with an accuracy of {glue:text}`cancer_acc_1`%. 
 This means that from the perspective of accuracy,
-the $K$-nearest neighbors classifier improved quite a bit on the basic
+the K-nearest neighbors classifier improved quite a bit on the basic
 majority classifier. Hooray! But we still need to be cautious; in 
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
@@ -819,7 +819,7 @@ for the application.
 The vast majority of predictive models in statistics and machine learning have
 *parameters*. A *parameter* 
 is a number you have to pick in advance that determines
-some aspect of how the model behaves. For example, in the $K$-nearest neighbors
+some aspect of how the model behaves. For example, in the K-nearest neighbors
 classification algorithm, $K$ is a parameter that we have to pick
 that determines how many neighbors participate in the class vote. 
 By picking different values of $K$, we create different classifiers 
@@ -867,7 +867,7 @@ which will lead to a better choice of the number of neighbors $K$ for the
 overall set of training data. 
 
 Let's investigate this idea in Python! In particular, we will generate five different train/validation
-splits of our overall training data, train five different $K$-nearest neighbors
+splits of our overall training data, train five different K-nearest neighbors
 models, and evaluate their accuracy. We will start with just a single
 split.
 
@@ -1042,7 +1042,7 @@ accuracy estimate will be (lower standard error). However, we are limited
 by computational power: the
 more folds we choose, the  more computation it takes, and hence the more time
 it takes to run the analysis. So when you do cross-validation, you need to
-consider the size of the data, the speed of the algorithm (e.g., $K$-nearest
+consider the size of the data, the speed of the algorithm (e.g., K-nearest
 neighbors), and the speed of your computer. In practice, this is a 
 trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
 we will try 10-fold cross-validation to see if we get a lower standard error.
@@ -1481,13 +1481,13 @@ set the number of neighbors $K$ to 1, 7, 20, and 300.
 ## Summary
 
 Classification algorithms use one or more quantitative variables to predict the
-value of another categorical variable. In particular, the $K$-nearest neighbors
+value of another categorical variable. In particular, the K-nearest neighbors
 algorithm does this by first finding the $K$ points in the training data
 nearest to the new observation, and then returning the majority class vote from
 those training observations. We can tune and evaluate a classifier by splitting
 the data randomly into a training and test data set. The training set is used
 to build the classifier, and we can tune the classifier (e.g., select the number
-of neighbors in $K$-nearest neighbors) by maximizing estimated accuracy via
+of neighbors in K-nearest neighbors) by maximizing estimated accuracy via
 cross-validation. After we have tuned the model, we can use the test set to
 estimate its accuracy.  The overall process is summarized in
 {numref}`fig:06-overview`.
@@ -1497,7 +1497,7 @@ estimate its accuracy.  The overall process is summarized in
 ```{figure} img/classification2/train-test-overview.jpeg
 :name: fig:06-overview
 
-Overview of KNN classification.
+Overview of K-NN classification.
 ```
 
 +++
@@ -1505,7 +1505,7 @@ Overview of KNN classification.
 ```{index} scikit-learn, pipeline, cross-validation, K-nearest neighbors; classification, classification
 ```
 
-The overall workflow for performing $K$-nearest neighbors classification using `scikit-learn` is as follows:
+The overall workflow for performing K-nearest neighbors classification using `scikit-learn` is as follows:
 
 1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
 2. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
@@ -1516,18 +1516,18 @@ The overall workflow for performing $K$-nearest neighbors classification using `
 7. Create a new model object for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
 
-In these last two chapters, we focused on the $K$-nearest neighbor algorithm, 
+In these last two chapters, we focused on the K-nearest neighbors algorithm, 
 but there are many other methods we could have used to predict a categorical label. 
 All algorithms have their strengths and weaknesses, and we summarize these for 
 the $K$-NN here.
 
-**Strengths:** $K$-nearest neighbors classification
+**Strengths:** K-nearest neighbors classification
 
 1. is a simple, intuitive algorithm,
 2. requires few assumptions about what the data must look like, and
 3. works for binary (two-class) and multi-class (more than 2 classes) classification problems.
 
-**Weaknesses:** $K$-nearest neighbors classification
+**Weaknesses:** K-nearest neighbors classification
 
 1. becomes very slow as the training data gets larger,
 2. may not perform well with a large number of predictors, and
@@ -1549,7 +1549,7 @@ pick a subset of useful variables to include as predictors.
 Another potentially important part of tuning your classifier is to choose which
 variables from your data will be treated as predictor variables. Technically, you can choose
 anything from using a single predictor variable to using every variable in your
-data; the $K$-nearest neighbors algorithm accepts any number of
+data; the K-nearest neighbors algorithm accepts any number of
 predictors. However, it is **not** the case that using more predictors always
 yields better predictions! In fact, sometimes including irrelevant predictors can
 actually negatively affect classifier performance.
@@ -1558,7 +1558,7 @@ actually negatively affect classifier performance.
 
 ### The effect of irrelevant predictors
 
-Let's take a look at an example where $K$-nearest neighbors performs
+Let's take a look at an example where K-nearest neighbors performs
 worse when given more predictors to work with. In this example, we modified
 the breast cancer data to have only the `Smoothness`, `Concavity`, and
 `Perimeter` variables from the original data. Then, we added irrelevant
@@ -1587,7 +1587,7 @@ cancer_irrelevant[
 ]
 ```
 
-Next, we build a sequence of KNN classifiers that include `Smoothness`,
+Next, we build a sequence of K-NN classifiers that include `Smoothness`,
 `Concavity`, and `Perimeter` as predictor variables, but also increasingly many irrelevant
 variables. In particular, we create 6 data sets with 0, 5, 10, 15, 20, and 40 irrelevant predictors.
 Then we build a model, tuned via 5-fold cross-validation, for each data set.
@@ -1696,7 +1696,7 @@ Although the accuracy decreases as expected, one surprising thing about
 still outperforms the baseline majority classifier (with about {glue:text}`cancer_train_b_prop`% accuracy) 
 even with 40 irrelevant variables.
 How could that be? {numref}`fig:06-neighbors-irrelevant-features` provides the answer:
-the tuning procedure for the $K$-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
+the tuning procedure for the K-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
 by increasing the number of neighbors. Of course, because of all the extra noise in the data from the irrelevant
 variables, the number of neighbors does not increase smoothly; but the general trend is increasing. {numref}`fig:06-fixed-irrelevant-features` corroborates
 this evidence; if we fix the number of neighbors to $K=3$, the accuracy falls off more quickly.

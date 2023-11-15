@@ -27,10 +27,10 @@ import plotly.graph_objects as go
 
 ## Overview
 Up to this point, we have solved all of our predictive problems&mdash;both classification
-and regression&mdash;using K-nearest neighbors (KNN)-based approaches. In the context of regression,
+and regression&mdash;using K-nearest neighbors (K-NN)-based approaches. In the context of regression,
 there is another commonly used method known as *linear regression*. This chapter provides an introduction
 to the basic concept of linear regression, shows how to use `scikit-learn` to perform linear regression in Python,
-and characterizes its strengths and weaknesses compared to KNN regression. The focus is, as usual,
+and characterizes its strengths and weaknesses compared to K-NN regression. The focus is, as usual,
 on the case where there is a single predictor and single response variable of interest; but the chapter
 concludes with an example using *multivariable linear regression* when there is more than one
 predictor.
@@ -40,7 +40,7 @@ By the end of the chapter, readers will be able to do the following:
 
 * Use Python and `scikit-learn` to fit a linear regression model on training data.
 * Evaluate the linear regression model on test data.
-* Compare and contrast predictions obtained from K-nearest neighbor regression to those obtained using linear regression from the same data set.
+* Compare and contrast predictions obtained from K-nearest neighbors regression to those obtained using linear regression from the same data set.
 
 +++
 
@@ -49,19 +49,19 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} regression; linear
 ```
 
-At the end of the previous chapter, we noted some limitations of KNN regression.
-While the method is simple and easy to understand, KNN regression does not
+At the end of the previous chapter, we noted some limitations of K-NN regression.
+While the method is simple and easy to understand, K-NN regression does not
 predict well beyond the range of the predictors in the training data, and
 the method gets significantly slower as the training data set grows.
-Fortunately, there is an alternative to KNN regression&mdash;*linear regression*&mdash;that addresses
+Fortunately, there is an alternative to K-NN regression&mdash;*linear regression*&mdash;that addresses
 both of these limitations. Linear regression is also very commonly
 used in practice because it provides an interpretable mathematical equation that describes
 the relationship between the predictor and response variables. In this first part of the chapter, we will focus on *simple* linear regression,
 which involves only one predictor variable and one response variable; later on, we will consider
  *multivariable* linear regression, which involves multiple predictor variables.
- Like KNN regression, simple linear regression involves
+ Like K-NN regression, simple linear regression involves
 predicting a numerical response variable (like race time, house price, or height);
-but *how* it makes those predictions for a new observation is quite different from KNN regression.
+but *how* it makes those predictions for a new observation is quite different from K-NN regression.
  Instead of looking at the K nearest neighbors and averaging
 over their values for a prediction, in simple linear regression, we create a
 straight line of best fit through the training data and then
@@ -78,8 +78,8 @@ is another popular method for classification called *logistic
 regression* (it is used for classification even though the name, somewhat confusingly,
 has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
 "fit" the model to the training data and then "look up" the prediction for each new observation.
-Logistic regression and KNN classification have an advantage/disadvantage comparison
-similar to that of linear regression and KNN
+Logistic regression and K-NN classification have an advantage/disadvantage comparison
+similar to that of linear regression and K-NN
 regression. It is useful to have a good understanding of linear regression before learning about
 logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
 classification chapters to learn more about logistic regression.
@@ -91,7 +91,7 @@ classification chapters to learn more about logistic regression.
 ```
 
 Let's return to the Sacramento housing data from {numref}`Chapter %s <regression1>` to learn
-how to apply linear regression and compare it to KNN regression. For now, we
+how to apply linear regression and compare it to K-NN regression. For now, we
 will consider
 a smaller version of the housing data to help make our visualizations clear.
 Recall our predictive question: can we use the size of a house in the Sacramento, CA area to predict
@@ -290,7 +290,7 @@ the line that minimizes the **average squared vertical distance** between itself
 each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates
 these vertical distances as red lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
-we use RMSPE&mdash;the same measure of predictive performance we used with KNN regression.
+we use RMSPE&mdash;the same measure of predictive performance we used with K-NN regression.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -337,7 +337,7 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 ```
 
 We can perform simple linear regression in Python using `scikit-learn` in a
-very similar manner to how we performed KNN regression.
+very similar manner to how we performed K-NN regression.
 To do this, instead of creating a `KNeighborsRegressor` model object,
 we use a `LinearRegression` model object;
 and as usual, we first have to import it from `sklearn`.
@@ -510,16 +510,16 @@ glue("fig:08-lm-predict-all", sacr_preds_plot)
 Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
 :::
 
-## Comparing simple linear and KNN regression
+## Comparing simple linear and K-NN regression
 
 ```{index} regression; comparison of methods
 ```
 
-Now that we have a general understanding of both simple linear and KNN
+Now that we have a general understanding of both simple linear and K-NN
 regression, we can start to compare and contrast these methods as well as the
 predictions made by them. To start, let's look at the visualization of the
 simple linear regression model predictions for the Sacramento real estate data
-(predicting price from house size) and the "best" KNN regression model
+(predicting price from house size) and the "best" K-NN regression model
 obtained from the same problem, shown in {numref}`fig:08-compareRegression`.
 
 ```{code-cell} ipython3
@@ -558,7 +558,7 @@ sacr_rmspe_knn = np.sqrt(
 
 # plot knn in-sample predictions overlaid on scatter plot
 knn_plot_final = (
-    alt.Chart(sacr_preds_knn, title="KNN regression")
+    alt.Chart(sacr_preds_knn, title="K-NN regression")
     .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
@@ -629,21 +629,21 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 :::{glue:figure} fig:08-compareRegression
 :name: fig:08-compareRegression
 
-Comparison of simple linear regression and KNN regression.
+Comparison of simple linear regression and K-NN regression.
 :::
 
 +++
 
 What differences do we observe in {numref}`fig:08-compareRegression`? One obvious
 difference is the shape of the orange lines. In simple linear regression we are
-restricted to a straight line, whereas in KNN regression our line is much more
+restricted to a straight line, whereas in K-NN regression our line is much more
 flexible and can be quite wiggly. But there is a major interpretability advantage in limiting the
 model to a straight line. A
 straight line can be defined by two numbers, the
 vertical intercept and the slope. The intercept tells us what the prediction is when
 all of the predictors are equal to 0; and the slope tells us what unit increase in the response
 variable we predict given a unit increase in the predictor
-variable. KNN regression, as simple as it is to implement and understand, has no such
+variable. K-NN regression, as simple as it is to implement and understand, has no such
 interpretability from its wiggly line.
 
 ```{index} underfitting; regression
@@ -657,14 +657,14 @@ will underfit (have high bias), meaning that model/predicted values do not
 match the actual observed values very well. Such a model would probably have a
 quite high RMSE when assessing model goodness of fit on the training data and
 a quite high RMSPE when assessing model prediction quality on a test data
-set. On such a data set, KNN regression may fare better. Additionally, there
+set. On such a data set, K-NN regression may fare better. Additionally, there
 are other types of regression you can learn about in future books that may do
 even better at predicting with such data.
 
 How do these two models compare on the Sacramento house prices data set? In
 {numref}`fig:08-compareRegression`, we also printed the RMSPE as calculated from
 predicting on the test data set that was not used to train/fit the models. The RMSPE for the simple linear
-regression model is slightly lower than the RMSPE for the KNN regression model.
+regression model is slightly lower than the RMSPE for the K-NN regression model.
 Considering that the simple linear regression model is also more interpretable,
 if we were comparing these in practice we would likely choose to use the simple
 linear regression model.
@@ -672,17 +672,17 @@ linear regression model.
 ```{index} extrapolation
 ```
 
-Finally, note that the KNN regression model becomes "flat"
+Finally, note that the K-NN regression model becomes "flat"
 at the left and right boundaries of the data, while the linear model
 predicts a constant slope. Predicting outside the range of the observed
-data is known as *extrapolation*; KNN and linear models behave quite differently
+data is known as *extrapolation*; K-NN and linear models behave quite differently
 when extrapolating. Depending on the application, the flat
 or constant slope trend may make more sense. For example, if our housing
 data were slightly different, the linear model may have actually predicted
 a *negative* price for a small house (if the intercept $\beta_0$ was negative),
 which obviously does not match reality. On the other hand, the trend of increasing
 house size corresponding to increasing house price probably continues for large houses,
-so the "flat" extrapolation of KNN likely does not match reality.
+so the "flat" extrapolation of K-NN likely does not match reality.
 
 +++
 
@@ -696,15 +696,15 @@ so the "flat" extrapolation of KNN likely does not match reality.
 ```{index} see: multivariable linear equation; plane equation
 ```
 
-As in KNN classification and KNN regression, we can move beyond the simple
+As in K-NN classification and K-NN regression, we can move beyond the simple
 case of only one predictor to the case with multiple predictors,
 known as *multivariable linear regression*.
 To do this, we follow a very similar approach to what we did for
-KNN regression: we just specify the training data by adding more predictors.
+K-NN regression: we just specify the training data by adding more predictors.
 But recall that we do not need to use cross-validation to choose any parameters,
 nor do we need to standardize (i.e., center and scale) the data for linear regression.
 Note once again that we have the same concerns regarding multiple predictors
- as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
+ as in the settings of multivariable K-NN regression and classification: having more predictors is **not** always
 better. But because the same predictor selection
 algorithm from {numref}`Chapter %s <classification2>` extends to the setting of linear regression,
 it will not be covered again in this chapter.
@@ -811,7 +811,7 @@ to illustrate what the regression plane looks like for learning purposes.
 
 We see that the predictions from linear regression with two predictors form a
 flat plane. This is the hallmark of linear regression, and differs from the
-wiggly, flexible surface we get from other methods such as KNN regression.
+wiggly, flexible surface we get from other methods such as K-NN regression.
  As discussed, this can be advantageous in one aspect, which is that for each
 predictor, we can get slopes/intercept from linear regression, and thus describe the
 plane mathematically. We can extract those slope values from the `coef_` property 
@@ -863,15 +863,15 @@ glue("bedsc", bedsc)
 
 $\text{house sale price} =$ {glue:text}`icept` $+$ {glue:text}`sqftc` $\cdot (\text{house size})$ {glue:text}`bedsc` $\cdot (\text{number of bedrooms})$
 
-This model is more interpretable than the multivariable KNN
+This model is more interpretable than the multivariable K-NN
 regression model; we can write a mathematical equation that explains how
 each predictor is affecting the predictions. But as always, we should
 question how well multivariable linear regression is doing compared to
 the other tools we have, such as simple linear regression
-and multivariable KNN regression. If this comparison is part of
+and multivariable K-NN regression. If this comparison is part of
 the model tuning process&mdash;for example, if we are trying
  out many different sets of predictors for multivariable linear
-and KNN regression&mdash;we must perform this comparison using
+and K-NN regression&mdash;we must perform this comparison using
 cross-validation on only our training data. But if we have already
 decided on a small number (e.g., 2 or 3) of tuned candidate models and
 we want to make a final comparison, we can do so by comparing the prediction
@@ -886,7 +886,7 @@ lm_mult_test_RMSPE
 
 We obtain an RMSPE for the multivariable linear regression model
 of \${glue:text}`sacr_mult_RMSPE`. This prediction error
- is less than the prediction error for the multivariable KNN regression model,
+ is less than the prediction error for the multivariable K-NN regression model,
 indicating that we should likely choose linear regression for predictions of
 house sale price on this data set. Revisiting the simple linear regression model
 with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was
@@ -1361,7 +1361,7 @@ and guidance that the worksheets provide will function as intended.
   of "informative" predictors when you have a data set with many predictors, and
   you expect only a few of them to be relevant. Chapter 7 covers regression
   models that are more flexible than linear regression models but still enjoy the
-  computational efficiency of linear regression. In contrast, the KNN methods we
+  computational efficiency of linear regression. In contrast, the K-NN methods we
   covered earlier are indeed more flexible but become very slow when given lots
   of data.
 

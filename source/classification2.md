@@ -491,7 +491,7 @@ right proportions of each category of observation.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-# seed hacking to get a split so that recall goes up when we tune later on
+# seed hacking
 np.random.seed(1)
 ```
 

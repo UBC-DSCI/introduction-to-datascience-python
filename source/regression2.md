@@ -371,7 +371,7 @@ np.random.seed(1)
 sacramento = pd.read_csv("data/sacramento.csv")
 
 sacramento_train, sacramento_test = train_test_split(
-    sacramento, train_size=0.6
+    sacramento, train_size=0.75
 )
 ```
 
@@ -533,8 +533,8 @@ from sklearn.preprocessing import StandardScaler
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline_knn = make_pipeline(
-    sacr_preprocessor, KNeighborsRegressor(n_neighbors=25)
-)  # 25 is the best parameter obtained through cross validation in regression1 chapter
+    sacr_preprocessor, KNeighborsRegressor(n_neighbors=55)
+)  # 55 is the best parameter obtained through cross validation in regression1 chapter
 
 sacr_pipeline_knn.fit(sacramento_train[["sqft"]], sacramento_train[["price"]])
 

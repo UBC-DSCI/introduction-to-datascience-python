@@ -931,7 +931,7 @@ for i in range(1, 5):
     )
 
     # fit the model on the sub-training data
-    knn = KNeighborsClassifier(n_neighbors=1) 
+    knn = KNeighborsClassifier(n_neighbors=3) 
     X = cancer_subtrain[["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
     knn_pipeline = make_pipeline(cancer_preprocessor, knn).fit(X, y)

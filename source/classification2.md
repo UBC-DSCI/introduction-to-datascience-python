@@ -492,7 +492,7 @@ right proportions of each category of observation.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 # seed hacking
-np.random.seed(1)
+np.random.seed(3)
 ```
 
 ```{code-cell} ipython3

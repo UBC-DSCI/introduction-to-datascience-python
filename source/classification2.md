@@ -36,9 +36,9 @@ By the end of the chapter, readers will be able to do the following:
 - Describe what a random seed is and its importance in reproducible data analysis.
 - Set the random seed in Python using the `numpy.random.seed` function. 
 - Describe and interpret accuracy, precision, recall, and confusion matrices.
-- Evaluate classification accuracy in Python using a validation data set.
+- Evaluate classification accuracy, precision, and recall in Python using a test set, a single validation set, or cross-validation.
 - Produce a confusion matrix in Python.
-- Execute cross-validation in Python to choose the number of neighbors in a $K$-nearest neighbors classifier.
+- Choose the number of neighbors in a $K$-nearest neighbors classifier by maximizing estimated cross-validation accuracy.
 - Describe the advantages and disadvantages of the $K$-nearest neighbors classification algorithm.
 
 +++

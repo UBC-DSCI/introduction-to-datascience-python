@@ -20,7 +20,7 @@ kernelspec:
 
 # get rid of futurewarnings from sklearn kmeans
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning) 
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from chapter_preamble import *
 ```
@@ -130,7 +130,7 @@ In this chapter we will focus on a data set from
 [the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. This
 data set was collected by Dr. Kristen Gorman and
 the Palmer Station, Antarctica Long Term Ecological Research Site, and includes
-measurements for adult penguins ({numref}`09-penguins`) found near there {cite:p}`penguinpaper`. 
+measurements for adult penguins ({numref}`09-penguins`) found near there {cite:p}`penguinpaper`.
 Our goal will be to use two
 variables&mdash;penguin bill and flipper length, both in millimeters&mdash;to determine whether
 there are distinct types of penguins in our data.
@@ -834,7 +834,7 @@ kmeans
 
 To actually run the K-means clustering, we combine the preprocessor and model object
 in a `Pipeline`, and use the `fit` function. Note that the K-means
-algorithm uses a random initialization of assignments, but since we set 
+algorithm uses a random initialization of assignments, but since we set
 the random seed in the beginning of this chapter, the clustering will be reproducible.
 
 ```{code-cell} ipython3
@@ -848,14 +848,14 @@ penguin_clust
 ```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
 ```
 
-The fit `KMeans` object&mdash;which is the second item in the 
+The fit `KMeans` object&mdash;which is the second item in the
 pipeline, and can be accessed as `penguin_clust[1]`&mdash;has a lot of information
 that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
-Let's start by visualizing the clusters as a colored scatter plot! In 
-order to do that, we first need to augment our 
-original `penguins` data frame with the cluster assignments. 
-We can access these using the `labels_` attribute of the clustering object 
-("labels" is a common alternative term to "assignments" in clustering), and 
+Let's start by visualizing the clusters as a colored scatter plot! In
+order to do that, we first need to augment our
+original `penguins` data frame with the cluster assignments.
+We can access these using the `labels_` attribute of the clustering object
+("labels" is a common alternative term to "assignments" in clustering), and
 add them to the data frame.
 
 ```{code-cell} ipython3
@@ -863,9 +863,9 @@ penguins["cluster"] = penguin_clust[1].labels_
 penguins
 ```
 
-Now that we have the cluster assignments included in the `penguins` data frame, we can 
+Now that we have the cluster assignments included in the `penguins` data frame, we can
 visualize them as shown in {numref}`cluster_plot`.
-Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
+Note that we are plotting the *un-standardized* data here; if we for some reason wanted to
 visualize the *standardized* data, we would need to use the `fit` and `transform` functions
 on the `StandardScaler` preprocessor directly to obtain that first.
 As in {numref}`Chapter %s <viz>`,
@@ -937,7 +937,7 @@ For each value of K,
 we create a new KMeans model
 and wrap it in a `scikit-learn` pipeline
 with the preprocessor we created earlier.
-We store the WSSD values in a list that we will use to create a dataframe 
+We store the WSSD values in a list that we will use to create a dataframe
 of both the K-values and their corresponding WSSDs.
 
 ```{note}
@@ -954,7 +954,7 @@ it is always the safest to assign it to a variable name for reuse.
 ks = range(1, 10)
 wssds = [
     make_pipeline(
-    	preprocessor, 
+    	preprocessor,
     	KMeans(n_clusters=k)  # Create a new KMeans model with `k` clusters
     ).fit(penguins)[1].inertia_
     for k in ks

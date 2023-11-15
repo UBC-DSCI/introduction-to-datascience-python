@@ -21,20 +21,20 @@ kernelspec:
 from chapter_preamble import *
 ```
 
-## Overview 
+## Overview
 This chapter continues the introduction to predictive modeling through
 classification. While the previous chapter covered training and data
 preprocessing, this chapter focuses on how to evaluate the performance of
 a classifier, as well as how to improve the classifier (where possible)
 to maximize its accuracy.
 
-## Chapter learning objectives 
+## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
 - Describe what training, validation, and test data sets are and how they are used in classification.
 - Split data into training, validation, and test data sets.
 - Describe what a random seed is and its importance in reproducible data analysis.
-- Set the random seed in Python using the `numpy.random.seed` function. 
+- Set the random seed in Python using the `numpy.random.seed` function.
 - Describe and interpret accuracy, precision, recall, and confusion matrices.
 - Evaluate classification accuracy, precision, and recall in Python using a test set, a single validation set, and cross-validation.
 - Produce a confusion matrix in Python.
@@ -51,7 +51,7 @@ By the end of the chapter, readers will be able to do the following:
 Sometimes our classifier might make the wrong prediction. A classifier does not
 need to be right 100\% of the time to be useful, though we don't want the
 classifier to make too many wrong predictions. How do we measure how "good" our
-classifier is? Let's revisit the 
+classifier is? Let's revisit the
 [breast cancer images data](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) {cite:p}`streetbreastcancer`
 and think about how our classifier will be used in practice. A biopsy will be
 performed on a *new* patient's tumor, the resulting image will be analyzed,
@@ -59,9 +59,9 @@ and the classifier will be asked to decide whether the tumor is benign or
 malignant. The key word here is *new*: our classifier is "good" if it provides
 accurate predictions on data *not seen during training*, as this implies that
 it has actually learned about the relationship between the predictor variables and response variable,
-as opposed to simply memorizing the labels of individual training data examples. 
+as opposed to simply memorizing the labels of individual training data examples.
 But then, how can we evaluate our classifier without visiting the hospital to collect more
-tumor images? 
+tumor images?
 
 
 ```{index} training set, test set
@@ -79,7 +79,7 @@ labels for new observations without known class labels.
 ```
 
 ```{note}
-If there were a golden rule of machine learning, it might be this: 
+If there were a golden rule of machine learning, it might be this:
 *you cannot use the test data to build the model!* If you do, the model gets to
 "see" the test data in advance, making it look more accurate than it really
 is. Imagine how bad it would be to overestimate your classifier's accuracy
@@ -106,7 +106,7 @@ How exactly can we assess how well our predictions match the actual labels for
 the observations in the test set? One way we can do this is to calculate the
 prediction **accuracy**. This is the fraction of examples for which the
 classifier made the correct prediction. To calculate this, we divide the number
-of correct predictions by the number of predictions made. 
+of correct predictions by the number of predictions made.
 The process for assessing if our predictions match the actual labels in the
 test set is illustrated in {numref}`fig:06-ML-paradigm-test`.
 
@@ -136,7 +136,7 @@ a test set of 65 observations.
 :header-rows: 1
 :name: confusion-matrix-table
 
-* - 
+* -
   - Predicted Malignant
   - Predicted Benign
 * - **Actually Malignant**
@@ -145,7 +145,7 @@ a test set of 65 observations.
 * - **Actually Benign**
   - 4
   - 57
-``` 
+```
 
 In the example in {numref}`confusion-matrix-table`, we see that there was
 1 malignant observation that was correctly classified as malignant (top left corner),
@@ -161,7 +161,7 @@ But we can also see that the classifier only identified 1 out of 4 total maligna
 tumors; in other words, it misclassified 75% of the malignant cases present in the
 data set! In this example, misclassifying a malignant tumor is a potentially
 disastrous error, since it may lead to a patient who requires treatment not receiving it.
-Since we are particularly interested in identifying malignant cases, this 
+Since we are particularly interested in identifying malignant cases, this
 classifier would likely be unacceptable even with an accuracy of 89%.
 
 Focusing more on one label than the other is
@@ -240,12 +240,12 @@ Beginning in this chapter, our data analyses will often involve the use
 of *randomness*. We use randomness any time we need to make a decision in our
 analysis that needs to be fair, unbiased, and not influenced by human input.
 For example, in this chapter, we need to split
-a data set into a training set and test set to evaluate our classifier. We 
+a data set into a training set and test set to evaluate our classifier. We
 certainly do not want to choose how to split
 the data ourselves by hand, as we want to avoid accidentally influencing the result
 of the evaluation. So instead, we let Python *randomly* split the data.
 In future chapters we will use randomness
-in many other ways, e.g., to help us select a small subset of data from a larger data set, 
+in many other ways, e.g., to help us select a small subset of data from a larger data set,
 to pick groupings of data, and more.
 
 ```{index} reproducible, seed
@@ -257,14 +257,14 @@ to pick groupings of data, and more.
 ```{index} seed; numpy.random.seed
 ```
 
-However, the use of randomness runs counter to one of the main 
+However, the use of randomness runs counter to one of the main
 tenets of good data analysis practice: *reproducibility*. Recall that a reproducible
 analysis produces the same result each time it is run; if we include randomness
 in the analysis, would we not get a different result each time?
-The trick is that in Python&mdash;and other programming languages&mdash;randomness 
+The trick is that in Python&mdash;and other programming languages&mdash;randomness
 is not actually random! Instead, Python uses a *random number generator* that
 produces a sequence of numbers that
-are completely determined by a 
+are completely determined by a
  *seed value*. Once you set the seed value, everything after that point may *look* random,
 but is actually totally reproducible. As long as you pick the same seed
 value, you get the same result!
@@ -272,12 +272,12 @@ value, you get the same result!
 ```{index} sample; numpy.random.choice
 ```
 
-Let's use an example to investigate how randomness works in Python. Say we 
+Let's use an example to investigate how randomness works in Python. Say we
 have a series object containing the integers from 0 to 9. We want
 to randomly pick 10 numbers from that list, but we want it to be reproducible.
 Before randomly picking the 10 numbers,
-we call the `seed` function from the `numpy` package, and pass it any integer as the argument. 
-Below we use the seed number `1`. At 
+we call the `seed` function from the `numpy` package, and pass it any integer as the argument.
+Below we use the seed number `1`. At
 that point, Python will keep track of the randomness that occurs throughout the code.
 For example, we can call the `sample` method
 on the series of numbers, passing the argument `n=10` to indicate that we want 10 samples.
@@ -294,8 +294,8 @@ random_numbers1 = nums_0_to_9.sample(n=10).to_numpy()
 random_numbers1
 ```
 You can see that `random_numbers1` is a list of 10 numbers
-from 0 to 9 that, from all appearances, looks random. If 
-we run the `sample` method again, 
+from 0 to 9 that, from all appearances, looks random. If
+we run the `sample` method again,
 we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
@@ -336,18 +336,18 @@ random_numbers
 ```
 
 In other words, even though the sequences of numbers that Python is generating *look*
-random, they are totally determined when we set a seed value! 
+random, they are totally determined when we set a seed value!
 
 So what does this mean for data analysis? Well, `sample` is certainly not the
 only data frame method that uses randomness in Python. Many of the functions
 that we use in `scikit-learn`, `pandas`, and beyond use randomness&mdash;many
 of them without even telling you about it.  Also note that when Python starts
-up, it creates its own seed to use. So if you do not explicitly 
-call the `np.random.seed` function, your results 
+up, it creates its own seed to use. So if you do not explicitly
+call the `np.random.seed` function, your results
 will likely not be reproducible. Finally, be careful to set the seed *only once* at
 the beginning of a data analysis. Each time you set the seed, you are inserting
 your own human input, thereby influencing the analysis. For example, if you use
-the `sample` many times throughout your analysis but set the seed each time, the 
+the `sample` many times throughout your analysis but set the seed each time, the
 randomness that Python uses will not look as random as it should.
 
 In summary: if you want your analysis to be reproducible, i.e., produce *the same result*
@@ -363,32 +363,32 @@ package's *default random number generator*. Using the global default random
 number generator is easier than other methods, but has some potential drawbacks. For example,
 other code that you may not notice (e.g., code buried inside some
 other package) could potentially *also* call `np.random.seed`, thus modifying
-your analysis in an undesirable way. Furthermore, not *all* functions use 
+your analysis in an undesirable way. Furthermore, not *all* functions use
 `numpy`'s random number generator; some may use another one entirely.
-In that case, setting `np.random.seed` may not actually make your whole analysis 
+In that case, setting `np.random.seed` may not actually make your whole analysis
 reproducible.
 
 In this book, we will generally only use packages that play nicely with `numpy`'s
-default random number generator, so we will stick with `np.random.seed`. 
-You can achieve more careful control over randomness in your analysis 
-by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html) 
-once at the beginning of your analysis, and passing it to 
+default random number generator, so we will stick with `np.random.seed`.
+You can achieve more careful control over randomness in your analysis
+by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html)
+once at the beginning of your analysis, and passing it to
 the `random_state` argument that is available in many `pandas` and `scikit-learn`
-functions. Those functions will then use your `RandomState` to generate random numbers instead of 
+functions. Those functions will then use your `RandomState` to generate random numbers instead of
 `numpy`'s default generator. For example, we can reproduce our earlier example by using a `RandomState`
 object with the `seed` value set to 1; we get the same lists of numbers once again.
 ```{code}
 rnd = np.random.RandomState(seed=1)
 random_numbers1_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
 random_numbers1_third
-``` 
+```
 ```{code}
 array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
 ```{code}
 random_numbers2_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
 random_numbers2_third
-``` 
+```
 ```{code}
 array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 ```
@@ -402,14 +402,14 @@ array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 
 Back to evaluating classifiers now!
 In Python, we can use the `scikit-learn` package not only to perform K-nearest neighbors
-classification, but also to assess how well our classification worked. 
+classification, but also to assess how well our classification worked.
 Let's work through an example of how to use tools from `scikit-learn` to evaluate a classifier
  using the breast cancer data set from the previous chapter.
 We begin the analysis by loading the packages we require,
 reading in the breast cancer data,
 and then making a quick scatter plot visualization of
 tumor cell concavity versus smoothness colored by diagnosis in {numref}`fig:06-precode`.
-You will also notice that we set the random seed using the `np.random.seed` function, 
+You will also notice that we set the random seed using the `np.random.seed` function,
 as described in {numref}`randomseeds`.
 
 ```{code-cell} ipython3
@@ -478,7 +478,7 @@ it **stratifies** the data by the class label, to ensure that roughly
 the same proportion of each class ends up in both the training and testing sets. For example,
 in our data set, roughly 63% of the
 observations are from the benign class (`Benign`), and 37% are from the malignant class (`Malignant`),
-so specifying `stratify` as the class column ensures that roughly 63% of the training data are benign, 
+so specifying `stratify` as the class column ensures that roughly 63% of the training data are benign,
 37% of the training data are malignant,
 and the same proportions exist in the testing data.
 
@@ -518,19 +518,19 @@ glue("cancer_test_nrow", "{:d}".format(len(cancer_test)))
 ```{index} info
 ```
 
-We can see from the `info` method above that the training set contains {glue:text}`cancer_train_nrow` observations, 
+We can see from the `info` method above that the training set contains {glue:text}`cancer_train_nrow` observations,
 while the test set contains {glue:text}`cancer_test_nrow` observations. This corresponds to
 a train / test split of 75% / 25%, as desired. Recall from {numref}`Chapter %s <classification1>`
-that we use the `info` method to preview the number of rows, the variable names, their data types, and 
+that we use the `info` method to preview the number of rows, the variable names, their data types, and
 missing entries of a data frame.
 
 ```{index} groupby, count
 ```
 
-We can use the `value_counts` method with the `normalize` argument set to `True` 
-to find the percentage of malignant and benign classes 
+We can use the `value_counts` method with the `normalize` argument set to `True`
+to find the percentage of malignant and benign classes
 in `cancer_train`. We see about {glue:text}`cancer_train_b_prop`% of the training
-data are benign and {glue:text}`cancer_train_m_prop`% 
+data are benign and {glue:text}`cancer_train_m_prop`%
 are malignant, indicating that our class proportions were roughly preserved when we split the data.
 
 ```{code-cell} ipython3
@@ -559,7 +559,7 @@ training and test data sets.
 ```{index} pipeline, pipeline; make_column_transformer, pipeline; StandardScaler
 ```
 
-Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our 
+Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our
 analysis steps in a `Pipeline`, as in {numref}`Chapter %s <classification1>`.
 So below we construct and prepare
 the preprocessor using `make_column_transformer` just as before.
@@ -579,8 +579,8 @@ Now that we have split our original data set into training and test sets, we
 can create our K-nearest neighbors classifier with only the training set using
 the technique we learned in the previous chapter. For now, we will just choose
 the number $K$ of neighbors to be 3, and use only the concavity and smoothness predictors by
-selecting them from the `cancer_train` data frame. 
-We will first import the `KNeighborsClassifier` model and `make_pipeline` from `sklearn`. 
+selecting them from the `cancer_train` data frame.
+We will first import the `KNeighborsClassifier` model and `make_pipeline` from `sklearn`.
 Then as before we will create a model object, combine
 the model object and preprocessor into a `Pipeline` using the `make_pipeline` function, and then finally
 use the `fit` method to build the classifier.
@@ -589,7 +589,7 @@ use the `fit` method to build the classifier.
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
 
-knn = KNeighborsClassifier(n_neighbors=3) 
+knn = KNeighborsClassifier(n_neighbors=3)
 
 X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
@@ -659,7 +659,7 @@ glue("cancer_acc_1", "{:0.0f}".format(100*cancer_acc_1))
 
 +++
 
-The output shows that the estimated accuracy of the classifier on the test data 
+The output shows that the estimated accuracy of the classifier on the test data
 was {glue:text}`cancer_acc_1`%.
 We can also look at the *confusion matrix* for the classifier
 using the `crosstab` function from `pandas`. The `crosstab` function takes two
@@ -680,7 +680,7 @@ _ctab = pd.crosstab(cancer_test["Class"],
 
 c11 = _ctab["Malignant"]["Malignant"]
 c00 = _ctab["Benign"]["Benign"]
-c10 = _ctab["Benign"]["Malignant"] # classify benign, true malignant 
+c10 = _ctab["Benign"]["Malignant"] # classify benign, true malignant
 c01 = _ctab["Malignant"]["Benign"] # classify malignant, true benign
 
 glue("confu11", "{:d}".format(c11))
@@ -697,8 +697,8 @@ glue("confu_precision_0", "{:0.0f}".format(100*c11/(c11+c01)))
 glue("confu_recall_0", "{:0.0f}".format(100*c11/(c11+c10)))
 ```
 
-The confusion matrix shows {glue:text}`confu11` observations were correctly predicted 
-as malignant, and {glue:text}`confu00` were correctly predicted as benign. 
+The confusion matrix shows {glue:text}`confu11` observations were correctly predicted
+as malignant, and {glue:text}`confu00` were correctly predicted as benign.
 It also shows that the classifier made some mistakes; in particular,
 it classified {glue:text}`confu10` observations as benign when they were actually malignant,
 and {glue:text}`confu01` observations as malignant when they were actually benign.
@@ -740,15 +740,15 @@ glue("rec_eq_math_glued", rec_eq_math)
 ### Critically analyze performance
 
 We now know that the classifier was {glue:text}`cancer_acc_1`% accurate
-on the test data set, and had a precision of {glue:text}`confu_precision_0`% and 
-a recall of {glue:text}`confu_recall_0`%. 
-That sounds pretty good! Wait, *is* it good? 
+on the test data set, and had a precision of {glue:text}`confu_precision_0`% and
+a recall of {glue:text}`confu_recall_0`%.
+That sounds pretty good! Wait, *is* it good?
 Or do we need something higher?
 
 ```{index} accuracy; assessment
 ```
 
-In general, a *good* value for accuracy (as well as precision and recall, if applicable) 
+In general, a *good* value for accuracy (as well as precision and recall, if applicable)
 depends on the application; you must critically analyze your accuracy in the context of the problem
 you are solving. For example, if we were building a classifier for a kind of tumor that is benign 99%
 of the time, a classifier with 99% accuracy is not terribly impressive (just always guess benign!).
@@ -761,7 +761,7 @@ words, in this context, we need the classifier to have a *high recall*. On the
 other hand, it might be less bad for the classifier to guess "malignant" when
 the actual class is "benign" (a false positive), as the patient will then likely see a doctor who
 can provide an expert diagnosis. In other words, we are fine with sacrificing
-some precision in the interest of achieving high recall. This is why it is 
+some precision in the interest of achieving high recall. This is why it is
 important not only to look at accuracy, but also the confusion matrix.
 
 
@@ -778,7 +778,7 @@ classifier to do better than that. If your classifier provides a significant
 improvement upon the majority classifier, this means that at least your method
 is extracting some useful information from your predictor variables.  Be
 careful though: improving on the majority classifier does not *necessarily*
-mean the classifier is working well enough for your application. 
+mean the classifier is working well enough for your application.
 
 As an example, in the breast cancer data, recall the proportions of benign and malignant
 observations in the training data are as follows:
@@ -791,16 +791,16 @@ Since the benign class represents the majority of the training data,
 the majority classifier would *always* predict that a new observation
 is benign. The estimated accuracy of the majority classifier is usually
 fairly close to the majority class proportion in the training data.
-In this case, we would suspect that the majority classifier will have 
+In this case, we would suspect that the majority classifier will have
 an accuracy of around {glue:text}`cancer_train_b_prop`%.
-The K-nearest neighbors classifier we built does quite a bit better than this, 
-with an accuracy of {glue:text}`cancer_acc_1`%. 
+The K-nearest neighbors classifier we built does quite a bit better than this,
+with an accuracy of {glue:text}`cancer_acc_1`%.
 This means that from the perspective of accuracy,
 the K-nearest neighbors classifier improved quite a bit on the basic
-majority classifier. Hooray! But we still need to be cautious; in 
+majority classifier. Hooray! But we still need to be cautious; in
 this application, it is likely very important not to misdiagnose any malignant tumors to avoid missing
 patients who actually need medical care. The confusion matrix above shows
-that the classifier does, indeed, misdiagnose a significant number of 
+that the classifier does, indeed, misdiagnose a significant number of
 malignant tumors as benign ({glue:text}`confu10` out of {glue:text}`confu10_11` malignant tumors, or {glue:text}`confu_fal_neg`%!).
 Therefore, even though the accuracy improved upon the majority classifier,
 our critical analysis suggests that this classifier may not have appropriate performance
@@ -817,23 +817,23 @@ for the application.
 ```
 
 The vast majority of predictive models in statistics and machine learning have
-*parameters*. A *parameter* 
+*parameters*. A *parameter*
 is a number you have to pick in advance that determines
 some aspect of how the model behaves. For example, in the K-nearest neighbors
 classification algorithm, $K$ is a parameter that we have to pick
-that determines how many neighbors participate in the class vote. 
-By picking different values of $K$, we create different classifiers 
+that determines how many neighbors participate in the class vote.
+By picking different values of $K$, we create different classifiers
 that make different predictions.
 
-So then, how do we pick the *best* value of $K$, i.e., *tune* the model? 
+So then, how do we pick the *best* value of $K$, i.e., *tune* the model?
 And is it possible to make this selection in a principled way?  In this book,
-we will focus on maximizing the accuracy of the classifier. Ideally, 
+we will focus on maximizing the accuracy of the classifier. Ideally,
 we want somehow to maximize the accuracy of our classifier on data *it
 hasn't seen yet*. But we cannot use our test data set in the process of building
 our model. So we will play the same trick we did before when evaluating
 our classifier: we'll split our *training data itself* into two subsets,
 use one to train the model, and then use the other to evaluate it.
-In this section, we will cover the details of this procedure, as well as 
+In this section, we will cover the details of this procedure, as well as
 how to use it to help you pick a good parameter value for your classifier.
 
 **And remember:** don't touch the test set during the tuning process. Tuning is a part of model training!
@@ -845,12 +845,12 @@ how to use it to help you pick a good parameter value for your classifier.
 ```{index} validation set
 ```
 
-The first step in choosing the parameter $K$ is to be able to evaluate the 
+The first step in choosing the parameter $K$ is to be able to evaluate the
 classifier using only the training data. If this is possible, then we can compare
-the classifier's performance for different values of $K$&mdash;and pick the best&mdash;using 
+the classifier's performance for different values of $K$&mdash;and pick the best&mdash;using
 only the training data. As suggested at the beginning of this section, we will
 accomplish this by splitting the training data, training on one subset, and evaluating
-on the other. The subset of training data used for evaluation is often called the **validation set**. 
+on the other. The subset of training data used for evaluation is often called the **validation set**.
 
 There is, however, one key difference from the train/test split
 that we performed earlier. In particular, we were forced to make only a *single split*
@@ -864,7 +864,7 @@ data *once*, our best parameter choice will depend strongly on whatever data
 was lucky enough to end up in the validation set. Perhaps using multiple
 different train/validation splits, we'll get a better estimate of accuracy,
 which will lead to a better choice of the number of neighbors $K$ for the
-overall set of training data. 
+overall set of training data.
 
 Let's investigate this idea in Python! In particular, we will generate five different train/validation
 splits of our overall training data, train five different K-nearest neighbors
@@ -878,7 +878,7 @@ cancer_subtrain, cancer_validation = train_test_split(
 )
 
 # fit the model on the sub-training data
-knn = KNeighborsClassifier(n_neighbors=3) 
+knn = KNeighborsClassifier(n_neighbors=3)
 X = cancer_subtrain[["Smoothness", "Concavity"]]
 y = cancer_subtrain["Class"]
 knn_pipeline = make_pipeline(cancer_preprocessor, knn)
@@ -903,7 +903,7 @@ for i in range(1, 5):
     )
 
     # fit the model on the sub-training data
-    knn = KNeighborsClassifier(n_neighbors=3) 
+    knn = KNeighborsClassifier(n_neighbors=3)
     X = cancer_subtrain[["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
     knn_pipeline = make_pipeline(cancer_preprocessor, knn).fit(X, y)
@@ -937,18 +937,18 @@ just five estimates of the true, underlying accuracy of our classifier built
 using our overall training data. We can combine the estimates by taking their
 average (here {glue:text}`avg_5_splits`%) to try to get a single assessment of our
 classifier's accuracy; this has the effect of reducing the influence of any one
-(un)lucky validation set on the estimate. 
+(un)lucky validation set on the estimate.
 
 ```{index} cross-validation
 ```
 
 In practice, we don't use random splits, but rather use a more structured
 splitting procedure so that each observation in the data set is used in a
-validation set only a single time. The name for this strategy is 
+validation set only a single time. The name for this strategy is
 **cross-validation**.  In **cross-validation**, we split our **overall training
 data** into $C$ evenly sized chunks. Then, iteratively use $1$ chunk as the
-**validation set** and combine the remaining $C-1$ chunks 
-as the **training set**. 
+**validation set** and combine the remaining $C-1$ chunks
+as the **training set**.
 This procedure is shown in {numref}`fig:06-cv-image`.
 Here, $C=5$ different chunks of the data set are used,
 resulting in 5 different choices for the **validation set**; we call this
@@ -969,19 +969,19 @@ resulting in 5 different choices for the **validation set**; we call this
 ```
 
 To perform 5-fold cross-validation in Python with `scikit-learn`, we use another
-function: `cross_validate`. This function requires that we specify 
+function: `cross_validate`. This function requires that we specify
 a modelling `Pipeline` as the `estimator` argument,
 the number of folds as the `cv` argument,
 and the training data predictors and labels as the `X` and `y` arguments.
 Since the `cross_validate` function outputs a dictionary, we use `pd.DataFrame` to convert it to a `pandas`
-dataframe for better visualization. 
+dataframe for better visualization.
 Note that the `cross_validate` function handles stratifying the classes in
-each train and validate fold automatically. 
+each train and validate fold automatically.
 
 ```{code-cell} ipython3
 from sklearn.model_selection import cross_validate
 
-knn = KNeighborsClassifier(n_neighbors=3) 
+knn = KNeighborsClassifier(n_neighbors=3)
 cancer_pipe = make_pipeline(cancer_preprocessor, knn)
 X = cancer_train[["Smoothness", "Concavity"]]
 y = cancer_train["Class"]
@@ -999,11 +999,11 @@ cv_5_df
 
 The validation scores we are interested in are contained in the `test_score` column.
 We can then aggregate the *mean* and *standard error*
-of the classifier's validation accuracy across the folds. 
-You should consider the mean (`mean`) to be the estimated accuracy, while the standard 
+of the classifier's validation accuracy across the folds.
+You should consider the mean (`mean`) to be the estimated accuracy, while the standard
 error (`sem`) is a measure of how uncertain we are in that mean value. A detailed treatment of this
 is beyond the scope of this chapter; but roughly, if your estimated mean is {glue:text}`cv_5_mean` and standard
-error is {glue:text}`cv_5_std`, you can expect the *true* average accuracy of the 
+error is {glue:text}`cv_5_std`, you can expect the *true* average accuracy of the
 classifier to be somewhere roughly between {glue:text}`cv_5_lower`% and {glue:text}`cv_5_upper`% (although it may
 fall outside this range). You may ignore the other columns in the metrics data frame.
 
@@ -1038,13 +1038,13 @@ glue("cv_5_lower",
 ```
 
 We can choose any number of folds, and typically the more we use the better our
-accuracy estimate will be (lower standard error). However, we are limited 
+accuracy estimate will be (lower standard error). However, we are limited
 by computational power: the
 more folds we choose, the  more computation it takes, and hence the more time
 it takes to run the analysis. So when you do cross-validation, you need to
 consider the size of the data, the speed of the algorithm (e.g., K-nearest
-neighbors), and the speed of your computer. In practice, this is a 
-trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here 
+neighbors), and the speed of your computer. In practice, this is a
+trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here
 we will try 10-fold cross-validation to see if we get a lower standard error.
 
 ```{code-cell} ipython3
@@ -1062,12 +1062,12 @@ cv_10_metrics = cv_10_df.agg(["mean", "sem"])
 cv_10_metrics
 ```
 
-In this case, using 10-fold instead of 5-fold cross validation did 
+In this case, using 10-fold instead of 5-fold cross validation did
 reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
 you might even end up with a *higher* standard error when increasing the number of folds!
-We can make the reduction in standard error more dramatic by increasing the number of folds 
-by a large amount. In the following code we show the result when $C = 50$; 
-picking such a large number of folds can take a long time to run in practice, 
+We can make the reduction in standard error more dramatic by increasing the number of folds
+by a large amount. In the following code we show the result when $C = 50$;
+picking such a large number of folds can take a long time to run in practice,
 so we usually stick to 5 or 10.
 
 ```{code-cell} ipython3
@@ -1092,19 +1092,19 @@ glue("cv_10_mean", "{:0.0f}".format(100 * cv_10_metrics.loc["mean", "test_score"
 ### Parameter value selection
 
 Using 5- and 10-fold cross-validation, we have estimated that the prediction
-accuracy of our classifier is somewhere around {glue:text}`cv_10_mean`%. 
+accuracy of our classifier is somewhere around {glue:text}`cv_10_mean`%.
 Whether that is good or not
 depends entirely on the downstream application of the data analysis. In the
 present situation, we are trying to predict a tumor diagnosis, with expensive,
 damaging chemo/radiation therapy or patient death as potential consequences of
-misprediction. Hence, we might like to 
-do better than {glue:text}`cv_10_mean`% for this application.  
+misprediction. Hence, we might like to
+do better than {glue:text}`cv_10_mean`% for this application.
 
 In order to improve our classifier, we have one choice of parameter: the number of
 neighbors, $K$. Since cross-validation helps us evaluate the accuracy of our
 classifier, we can use cross-validation to calculate an accuracy for each value
 of $K$ in a reasonable range, and then pick the value of $K$ that gives us the
-best accuracy. The `scikit-learn` package collection provides built-in 
+best accuracy. The `scikit-learn` package collection provides built-in
 functionality, named `GridSearchCV`, to automatically handle the details for us.
 Before we use `GridSearchCV`, we need to create a new pipeline
 with a `KNeighborsClassifier` that has the number of neighbors left unspecified.
@@ -1116,8 +1116,8 @@ cancer_tune_pipe = make_pipeline(cancer_preprocessor, knn)
 
 +++
 
-Next we specify the grid of parameter values that we want to try for 
-each tunable parameter. We do this in a Python dictionary: the key is 
+Next we specify the grid of parameter values that we want to try for
+each tunable parameter. We do this in a Python dictionary: the key is
 the identifier of the parameter to tune, and the value is a list of parameter values
 to try when tuning. We can find the "identifier" of a parameter by using
 the `get_params` method on the pipeline.
@@ -1140,7 +1140,7 @@ parameter_grid = {
 }
 ```
 The `range` function in Python that we used above allows us to specify a sequence of values.
-The first argument is the starting number (here, `1`), 
+The first argument is the starting number (here, `1`),
 the second argument is *one greater than* the final number (here, `100`),
 and the third argument is the number to values to skip between steps in the sequence (here, `5`).
 So in this case we generate the sequence 1, 6, 11, 16, ..., 96.
@@ -1190,13 +1190,13 @@ accuracies_grid.info()
 
 There is a lot of information to look at here, but we are most interested
 in three quantities: the number of neighbors (`param_kneighbors_classifier__n_neighbors`),
-the cross-validation accuracy estimate (`mean_test_score`), 
+the cross-validation accuracy estimate (`mean_test_score`),
 and the standard error of the accuracy estimate. Unfortunately `GridSearchCV` does
 not directly output the standard error for each cross-validation accuracy; but
 it *does* output the standard *deviation* (`std_test_score`). We can compute
 the standard error from the standard deviation by dividing it by the square
-root of the number of folds, i.e., 
-  
+root of the number of folds, i.e.,
+
 $$\text{Standard Error} = \frac{\text{Standard Deviation}}{\sqrt{\text{Number of Folds}}}.$$
 
 We will also rename the parameter name column to be a bit more readable,
@@ -1255,14 +1255,14 @@ cancer_tune_grid.best_params_
 
 +++
 
-Setting the number of 
+Setting the number of
 neighbors to $K =$ {glue:text}`best_k_unique`
 provides the highest accuracy ({glue:text}`best_acc`%). But there is no exact or perfect answer here;
 any selection from $K = 30$ to $80$ or so would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
-classifier. Although the 
-$K =$ {glue:text}`best_k_unique` value is 
+classifier. Although the
+$K =$ {glue:text}`best_k_unique` value is
 higher than the others on this plot,
 that doesn't mean the classifier is actually more accurate with this parameter
 value! Generally, when selecting $K$ (and other parameters for other predictive
@@ -1272,8 +1272,8 @@ models), we are looking for a value where:
 - changing the value to a nearby one (e.g., adding or subtracting a small number) doesn't decrease accuracy too much, so that our choice is reliable in the presence of uncertainty;
 - the cost of training the model is not prohibitive (e.g., in our situation, if $K$ is too large, predicting becomes expensive!).
 
-We know that $K =$ {glue:text}`best_k_unique` 
-provides the highest estimated accuracy. Further, {numref}`fig:06-find-k` shows that the estimated accuracy 
+We know that $K =$ {glue:text}`best_k_unique`
+provides the highest estimated accuracy. Further, {numref}`fig:06-find-k` shows that the estimated accuracy
 changes by only a small amount if we increase or decrease $K$ near $K =$ {glue:text}`best_k_unique`.
 And finally, $K =$ {glue:text}`best_k_unique` does not create a prohibitively expensive
 computational cost of training. Considering these three points, we would indeed select
@@ -1284,9 +1284,9 @@ $K =$ {glue:text}`best_k_unique` for the classifier.
 ### Under/Overfitting
 
 To build a bit more intuition, what happens if we keep increasing the number of
-neighbors $K$? In fact, the cross-validation accuracy estimate actually starts to decrease! 
-Let's specify a much larger range of values of $K$ to try in the `param_grid` 
-argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as 
+neighbors $K$? In fact, the cross-validation accuracy estimate actually starts to decrease!
+Let's specify a much larger range of values of $K$ to try in the `param_grid`
+argument of `GridSearchCV`. {numref}`fig:06-lots-of-ks` shows a plot of estimated accuracy as
 we vary $K$ from 1 to almost the number of observations in the data set.
 
 ```{code-cell} ipython3
@@ -1411,11 +1411,11 @@ plot_list = []
 for k in [1, 7, 20, 300]:
     cancer_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier(n_neighbors=k))
     cancer_pipe.fit(X, y)
-    
+
     knnPredGrid = cancer_pipe.predict(scgrid)
     prediction_table = scgrid.copy()
     prediction_table["Class"] = knnPredGrid
-    
+
     # add a prediction layer
     prediction_plot = (
         alt.Chart(
@@ -1507,18 +1507,18 @@ Overview of K-NN classification.
 
 The overall workflow for performing K-nearest neighbors classification using `scikit-learn` is as follows:
 
-1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now. 
-2. Create a `Pipeline` that specifies the preprocessing steps and the classifier. 
-3. Define the parameter grid by passing the set of $K$ values that you would like to tune. 
+1. Use the `train_test_split` function to split the data into a training and test set. Set the `stratify` argument to the class label column of the dataframe. Put the test set aside for now.
+2. Create a `Pipeline` that specifies the preprocessing steps and the classifier.
+3. Define the parameter grid by passing the set of $K$ values that you would like to tune.
 4. Use `GridSearchCV` to estimate the classifier accuracy for a range of $K$ values. Pass the pipeline and parameter grid defined in steps 2. and 3. as the `param_grid` argument and the `estimator` argument, respectively.
 5. Execute the grid search by passing the training data to the `fit` method on the `GridSearchCV` instance created in step 4.
 6. Pick a value of $K$ that yields a high cross-validation accuracy estimate that doesn't change much if you change $K$ to a nearby value.
 7. Create a new model object for the best parameter value (i.e., $K$), and retrain the classifier by calling the `fit` method.
 8. Evaluate the estimated accuracy of the classifier on the test set using the `score` method.
 
-In these last two chapters, we focused on the K-nearest neighbors algorithm, 
-but there are many other methods we could have used to predict a categorical label. 
-All algorithms have their strengths and weaknesses, and we summarize these for 
+In these last two chapters, we focused on the K-nearest neighbors algorithm,
+but there are many other methods we could have used to predict a categorical label.
+All algorithms have their strengths and weaknesses, and we summarize these for
 the $K$-NN here.
 
 **Strengths:** K-nearest neighbors classification
@@ -1538,7 +1538,7 @@ the $K$-NN here.
 ## Predictor variable selection
 
 ```{note}
-This section is not required reading for the remainder of the textbook. It is included for those readers 
+This section is not required reading for the remainder of the textbook. It is included for those readers
 interested in learning how irrelevant variables can influence the performance of a classifier, and how to
 pick a subset of useful variables to include as predictors.
 ```
@@ -1564,7 +1564,7 @@ the breast cancer data to have only the `Smoothness`, `Concavity`, and
 `Perimeter` variables from the original data. Then, we added irrelevant
 variables that we created ourselves using a random number generator.
 The irrelevant variables each take a value of 0 or 1 with equal probability for each observation, regardless
-of what the value `Class` variable takes. In other words, the irrelevant variables have 
+of what the value `Class` variable takes. In other words, the irrelevant variables have
 no meaningful relationship with the `Class` variable.
 
 ```{code-cell} ipython3
@@ -1691,12 +1691,12 @@ glue("fig:06-performance-irrelevant-features", plt_irrelevant_accuracies)
 Effect of inclusion of irrelevant predictors.
 :::
 
-Although the accuracy decreases as expected, one surprising thing about 
+Although the accuracy decreases as expected, one surprising thing about
 {numref}`fig:06-performance-irrelevant-features` is that it shows that the method
-still outperforms the baseline majority classifier (with about {glue:text}`cancer_train_b_prop`% accuracy) 
+still outperforms the baseline majority classifier (with about {glue:text}`cancer_train_b_prop`% accuracy)
 even with 40 irrelevant variables.
 How could that be? {numref}`fig:06-neighbors-irrelevant-features` provides the answer:
-the tuning procedure for the K-nearest neighbors classifier combats the extra randomness from the irrelevant variables 
+the tuning procedure for the K-nearest neighbors classifier combats the extra randomness from the irrelevant variables
 by increasing the number of neighbors. Of course, because of all the extra noise in the data from the irrelevant
 variables, the number of neighbors does not increase smoothly; but the general trend is increasing. {numref}`fig:06-fixed-irrelevant-features` corroborates
 this evidence; if we fix the number of neighbors to $K=3$, the accuracy falls off more quickly.
@@ -1759,17 +1759,17 @@ Accuracy versus number of irrelevant predictors for tuned and untuned number of 
 
 ### Finding a good subset of predictors
 
-So then, if it is not ideal to use all of our variables as predictors without consideration, how 
+So then, if it is not ideal to use all of our variables as predictors without consideration, how
 do we choose which variables we *should* use?  A simple method is to rely on your scientific understanding
 of the data to tell you which variables are not likely to be useful predictors. For example, in the cancer
 data that we have been studying, the `ID` variable is just a unique identifier for the observation.
 As it is not related to any measured property of the cells, the `ID` variable should therefore not be used
-as a predictor. That is, of course, a very clear-cut case. But the decision for the remaining variables 
-is less obvious, as all seem like reasonable candidates. It 
+as a predictor. That is, of course, a very clear-cut case. But the decision for the remaining variables
+is less obvious, as all seem like reasonable candidates. It
 is not clear which subset of them will create the best classifier. One could use visualizations and
 other exploratory analyses to try to help understand which variables are potentially relevant, but
 this process is both time-consuming and error-prone when there are many variables to consider.
-Therefore we need a more systematic and programmatic way of choosing variables. 
+Therefore we need a more systematic and programmatic way of choosing variables.
 This is a very difficult problem to solve in
 general, and there are a number of methods that have been developed that apply
 in particular cases of interest. Here we will discuss two basic
@@ -1784,13 +1784,13 @@ this chapter to find out where you can learn more about variable selection, incl
 
 The first idea you might think of for a systematic way to select predictors
 is to try all possible subsets of predictors and then pick the set that results in the "best" classifier.
-This procedure is indeed a well-known variable selection method referred to 
-as *best subset selection* {cite:p}`bealesubset,hockingsubset`. 
+This procedure is indeed a well-known variable selection method referred to
+as *best subset selection* {cite:p}`bealesubset,hockingsubset`.
 In particular, you
 
 1. create a separate model for every possible subset of predictors,
 2. tune each one using cross-validation, and
-3. pick the subset of predictors that gives you the highest cross-validation accuracy.  
+3. pick the subset of predictors that gives you the highest cross-validation accuracy.
 
 Best subset selection is applicable to any classification method ($K$-NN or otherwise).
 However, it becomes very slow when you have even a moderate
@@ -1800,17 +1800,17 @@ a slow process!) for each one. For example, if we have 2 predictors&mdash;let's 
 them A and B&mdash;then we have 3 variable sets to try: A alone, B alone, and finally A
 and B together. If we have 3 predictors&mdash;A, B, and C&mdash;then we have 7
 to try: A, B, C, AB, BC, AC, and ABC. In general, the number of models
-we have to train for $m$ predictors is $2^m-1$; in other words, when we 
-get to 10 predictors we have over *one thousand* models to train, and 
-at 20 predictors we have over *one million* models to train! 
-So although it is a simple method, best subset selection is usually too computationally 
+we have to train for $m$ predictors is $2^m-1$; in other words, when we
+get to 10 predictors we have over *one thousand* models to train, and
+at 20 predictors we have over *one million* models to train!
+So although it is a simple method, best subset selection is usually too computationally
 expensive to use in practice.
 
 ```{index} variable selection; forward
 ```
 
-Another idea is to iteratively build up a model by adding one predictor variable 
-at a time. This method&mdash;known as *forward selection* {cite:p}`forwardefroymson,forwarddraper`&mdash;is also widely 
+Another idea is to iteratively build up a model by adding one predictor variable
+at a time. This method&mdash;known as *forward selection* {cite:p}`forwardefroymson,forwarddraper`&mdash;is also widely
 applicable and fairly straightforward. It involves the following steps:
 
 1. Start with a model having no predictors.
@@ -1831,13 +1831,13 @@ training over 1000 candidate models with 10 predictors, forward selection requir
 Therefore we will continue the rest of this section using forward selection.
 
 ```{note}
-One word of caution before we move on. Every additional model that you train 
-increases the likelihood that you will get unlucky and stumble 
+One word of caution before we move on. Every additional model that you train
+increases the likelihood that you will get unlucky and stumble
 on a model that has a high cross-validation accuracy estimate, but a low true
 accuracy on the test data and other future observations.
 Since forward selection involves training a lot of models, you run a fairly
 high risk of this happening. To keep this risk low, only use forward selection
-when you have a large amount of data and a relatively small total number of 
+when you have a large amount of data and a relatively small total number of
 predictors. More advanced methods do not suffer from this
 problem as much; see the additional resources at the end of this chapter for
 where to learn more about advanced predictor selection methods.
@@ -1846,7 +1846,7 @@ where to learn more about advanced predictor selection methods.
 +++
 
 ### Forward selection in `scikit-learn`
- 
+
 We now turn to implementing forward selection in Python.
 First we will extract a smaller set of predictors to work with in this illustrative example&mdash;`Smoothness`,
 `Concavity`, `Perimeter`, `Irrelevant1`, `Irrelevant2`, and `Irrelevant3`&mdash;as well as the `Class` variable as the label.
@@ -1873,12 +1873,12 @@ cancer_subset
 ```
 
 To perform forward selection, we could use the
-[`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html) 
-from `scikit-learn`; but it is difficult to combine this approach with parameter tuning to find a good number of neighbors 
-for each set of features. Instead we will code the forward selection algorithm manually. 
-In particular, we need code that tries adding each available predictor to a model, finding the best, and iterating. 
+[`SequentialFeatureSelector`](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html)
+from `scikit-learn`; but it is difficult to combine this approach with parameter tuning to find a good number of neighbors
+for each set of features. Instead we will code the forward selection algorithm manually.
+In particular, we need code that tries adding each available predictor to a model, finding the best, and iterating.
 If you recall the end of the wrangling chapter, we mentioned
-that sometimes one needs more flexible forms of iteration than what 
+that sometimes one needs more flexible forms of iteration than what
 we have used earlier, and in these cases one typically resorts to
 a *for loop*; see
 the [control flow section](https://wesmckinney.com/book/python-basics.html#control_for) in
@@ -1888,7 +1888,7 @@ Here we will use two for loops: one over increasing predictor set sizes
 and another to check which predictor to add in each round (where you see `for j in range(len(names))` below).
 For each set of predictors to try, we extract the subset of predictors,
 pass it into a preprocessor, build a `Pipeline` that tunes
-a K-NN classifier using 10-fold cross-validation, 
+a K-NN classifier using 10-fold cross-validation,
 and finally records the estimated accuracy.
 
 ```{code-cell} ipython3
@@ -1913,19 +1913,19 @@ cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
 cancer_tune_grid = GridSearchCV(
     estimator=cancer_tune_pipe,
     param_grid=param_grid,
-    cv=10, 
+    cv=10,
     n_jobs=-1
 )
 
 # for every possible number of predictors
 for i in range(1, n_total + 1):
-    accs = np.zeros(len(names)) 
+    accs = np.zeros(len(names))
     # for every possible predictor to add
     for j in range(len(names)):
         # Add remaining predictor j to the model
         X = cancer_subset[selected + [names[j]]]
         y = cancer_subset["Class"]
-        
+
         # Find the best K for this set of predictors
         cancer_tune_grid.fit(X, y)
         accuracies_grid = pd.DataFrame(cancer_tune_grid.cv_results_)
@@ -1933,14 +1933,14 @@ for i in range(1, n_total + 1):
         # Store the tuned accuracy for this set of predictors
         accs[j] = accuracies_grid["mean_test_score"].max()
 
-    # get the best new set of predictors that maximize cv accuracy    
+    # get the best new set of predictors that maximize cv accuracy
     best_set = selected + [names[accs.argmax()]]
-    
+
     # store the results for this round of forward selection
     accuracy_dict["size"].append(i)
     accuracy_dict["selected_predictors"].append(", ".join(best_set))
     accuracy_dict["accuracy"].append(accs.max())
-    
+
     # update the selected & available sets of predictors
     selected = best_set
     del names[accs.argmax()]
@@ -1957,14 +1957,14 @@ Interesting! The forward selection procedure first added the three meaningful va
 visualizes the accuracy versus the number of predictors in the model. You can see that
 as meaningful predictors are added, the estimated accuracy increases substantially; and as you add irrelevant
 variables, the accuracy either exhibits small fluctuations or decreases as the model attempts to tune the number
-of neighbors to account for the extra noise. In order to pick the right model from the sequence, you have 
-to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting). 
-The way to find that balance is to look for the *elbow* 
+of neighbors to account for the extra noise. In order to pick the right model from the sequence, you have
+to balance high accuracy and model simplicity (i.e., having fewer predictors and a lower chance of overfitting).
+The way to find that balance is to look for the *elbow*
 in {numref}`fig:06-fwdsel-3`, i.e., the place on the plot where the accuracy stops increasing dramatically and
-levels off or begins to decrease. The elbow in {numref}`fig:06-fwdsel-3` appears to occur at the model with 
+levels off or begins to decrease. The elbow in {numref}`fig:06-fwdsel-3` appears to occur at the model with
 3 predictors; after that point the accuracy levels off. So here the right trade-off of accuracy and number of predictors
 occurs with 3 variables: `Perimeter, Concavity, Smoothness`. In other words, we have successfully removed irrelevant
-predictors from the model! It is always worth remembering, however, that what cross-validation gives you 
+predictors from the model! It is always worth remembering, however, that what cross-validation gives you
 is an *estimate* of the true accuracy; you have to use your judgement when looking at this plot to decide
 where the elbow occurs, and whether adding a variable provides a meaningful increase in accuracy.
 
@@ -1997,13 +1997,13 @@ Estimated accuracy versus the number of predictors for the sequence of models bu
 ```{note}
 Since the choice of which variables to include as predictors is
 part of tuning your classifier, you *cannot use your test data* for this
-process! 
+process!
 ```
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter 
-can be found in the accompanying 
+Practice exercises for the material covered in this chapter
+can be found in the accompanying
 [worksheets repository](https://worksheets.python.datasciencebook.ca)
 in the "Classification II: evaluation and tuning" row.
 You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
@@ -2021,15 +2021,15 @@ and guidance that the worksheets provide will function as intended.
 
 - The [`scikit-learn` website](https://scikit-learn.org/stable/) is an excellent
   reference for more details on, and advanced usage of, the functions and
-  packages in the past two chapters. Aside from that, it also offers many 
-  useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) 
-  to get you started. It's worth noting that the `scikit-learn` package 
+  packages in the past two chapters. Aside from that, it also offers many
+  useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html)
+  to get you started. It's worth noting that the `scikit-learn` package
   does a lot more than just classification, and so the
   examples on the website similarly go beyond classification as well. In the next
   two chapters, you'll learn about another kind of predictive modeling setting,
   so it might be worth visiting the website only after reading through those
-  chapters. 
-- [*An Introduction to Statistical Learning*](https://www.statlearning.com/) {cite:p}`james2013introduction` provides 
+  chapters.
+- [*An Introduction to Statistical Learning*](https://www.statlearning.com/) {cite:p}`james2013introduction` provides
   a great next stop in the process of
   learning about classification. Chapter 4 discusses additional basic techniques
   for classification that we do not cover, such as logistic regression, linear
@@ -2040,7 +2040,7 @@ and guidance that the worksheets provide will function as intended.
   variables. Note that while this book is still a very accessible introductory
   text, it requires a bit more mathematical background than we require.
 
- 
+
 ## References
 
 +++

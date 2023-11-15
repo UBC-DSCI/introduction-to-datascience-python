@@ -838,7 +838,7 @@ one can use in the `[]` to select subsets of rows.
 Recall that if we provide a list of column names, `[]` returns the subset of columns with those names as a data frame.
 Suppose we wanted to select the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in {numref}`Chapter %s <intro>`, we can pass all of these column 
+learned in {numref}`Chapter %s <intro>`, we can pass all of these column
 names into the square brackets.
 
 ```{code-cell} ipython3
@@ -1042,8 +1042,8 @@ The `[]` operation is only used when you want to either filter rows **or** selec
 it cannot be used to do both operations at the same time. This is where `loc[]`
 comes in. For the first example, recall `loc[]` from {numref}`Chapter %s <intro>`,
 which lets us create a subset of the rows and columns in the `tidy_lang` data frame.
-In the first argument to `loc[]`, we specify a logical statement that 
-filters the rows to only those pertaining to the Toronto region, 
+In the first argument to `loc[]`, we specify a logical statement that
+filters the rows to only those pertaining to the Toronto region,
 and the second argument specifies a list of columns to keep by name.
 
 ```{code-cell} ipython3
@@ -1055,11 +1055,11 @@ tidy_lang.loc[
 ```
 
 In addition to simultaneous subsetting of rows and columns, `loc[]` has two
-more special capabilities beyond those of `[]`. First, `loc[]` has the ability to specify *ranges* of rows and columns. 
-For example, note that the list of columns `language`, `region`, `most_at_home`, `most_at_work` 
+more special capabilities beyond those of `[]`. First, `loc[]` has the ability to specify *ranges* of rows and columns.
+For example, note that the list of columns `language`, `region`, `most_at_home`, `most_at_work`
 corresponds to the *range* of columns from `language` to `most_at_work`.
 Rather than explicitly listing all of the column names as we did above,
-we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax 
+we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax
 denotes a range, and is supported by the `loc[]` function, but not by `[]`.
 
 ```{code-cell} ipython3
@@ -1490,7 +1490,7 @@ region_lang_nums.info()
 ```
 You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`,
 and that we have obtained a data frame with the same number of columns and rows
-as the input data frame. 
+as the input data frame.
 
 The second situation occurs when you want to apply a function across columns within each individual
 row, i.e., *row-wise*. This operation, illustrated in {numref}`fig:rowwise`,
@@ -1520,7 +1520,7 @@ We see that we obtain a series containing the maximum value between `mother_tong
 is often the case that we want to include a column result
 from a row-wise operation as a new column in the data frame, so that we can make
 plots or continue our analysis. To make this happen,
-we will use column assignment or the `assign` function to create a new column. 
+we will use column assignment or the `assign` function to create a new column.
 This is discussed in the next section.
 
 ```{note}
@@ -1554,7 +1554,7 @@ You can see above that the `region_lang` data frame now has an additional column
 The `maximum` column contains
 the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
-and region, just as we specified! 
+and region, just as we specified!
 
 To instead create an entirely new data frame, we can use the `assign` method and specify one argument for each column we want to create.
 In this case we want to create one new column named `maximum`, so the argument
@@ -1670,7 +1670,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 english_lang
 ```
 Wait a moment...what is that warning message? It seems to suggest that something went wrong, but
-if we inspect the `english_lang` data frame above, it looks like the city populations were added 
+if we inspect the `english_lang` data frame above, it looks like the city populations were added
 just fine! As it turns out, this is caused by the earlier filtering we did from `region_lang` to
 produce the original `english_lang`. The details are a little bit technical, but
 `pandas` sometimes does not like it when you subset a data frame using `[]` or `loc[]` followed by
@@ -1733,14 +1733,14 @@ english_lang = region_lang[
 :tags: ["output_scroll"]
 english_lang
 ```
-We then added the populations of these cities as a column 
+We then added the populations of these cities as a column
 (Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
 Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
 right order; this is an error-prone process. An alternative approach, that we demonstrate here
 is to (1) create a new data frame with the city names and populations, and
 (2) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
 
-We create a new data frame by calling `pd.DataFrame` with a dictionary 
+We create a new data frame by calling `pd.DataFrame` with a dictionary
 as its argument. The dictionary associates each column name in the data frame to be created
 with a list of entries. Here we list city names in a column called `"region"`
 and their populations in a column called `"population"`.

@@ -375,7 +375,7 @@ sacramento_train, sacramento_test = train_test_split(
 )
 ```
 
-Now that we have our training data, we will create 
+Now that we have our training data, we will create
 and fit the linear regression model object.
 We will also extract the slope of the line
 via the `coef_[0]` property, as well as the
@@ -715,8 +715,8 @@ it will not be covered again in this chapter.
 We will demonstrate multivariable linear regression using the Sacramento real estate
 data with both house size
 (measured in square feet) as well as number of bedrooms as our predictors, and
-continue to use house sale price as our response variable. 
-The `scikit-learn` framework makes this easy to do: we just need to set 
+continue to use house sale price as our response variable.
+The `scikit-learn` framework makes this easy to do: we just need to set
 both the `sqft` and `beds` variables as predictors, and then use the `fit`
 method as usual.
 
@@ -814,7 +814,7 @@ flat plane. This is the hallmark of linear regression, and differs from the
 wiggly, flexible surface we get from other methods such as K-NN regression.
  As discussed, this can be advantageous in one aspect, which is that for each
 predictor, we can get slopes/intercept from linear regression, and thus describe the
-plane mathematically. We can extract those slope values from the `coef_` property 
+plane mathematically. We can extract those slope values from the `coef_` property
 of our model object, and the intercept from the `intercept_` property,
 as shown below.
 
@@ -828,10 +828,10 @@ mlm.intercept_
 
 When we have multiple predictor variables, it is not easy to
 know which variable goes with which coefficient in `mlm.coef_`. In particular,
-you will see that `mlm.coef_` above is just an array of values without any variable names. 
+you will see that `mlm.coef_` above is just an array of values without any variable names.
 Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coef_` appear
 in the *same order* as the columns of the predictor data frame you used when training.
-So since we used `sacramento_train[["sqft", "beds"]]` when training, 
+So since we used `sacramento_train[["sqft", "beds"]]` when training,
 we have that `mlm.coef_[0]` corresponds to `sqft`, and `mlm.coef_[1]` corresponds to `beds`.
 Once you sort out the correspondence, you can then use those slopes to write a mathematical equation to describe the prediction plane:
 

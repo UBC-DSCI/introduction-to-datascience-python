@@ -317,7 +317,7 @@ with the `name` parameter:
 ```
 
 Below we put everything together
-and also filter the data frame to keep only the room types 
+and also filter the data frame to keep only the room types
 that we are interested in.
 
 ```{code-cell} ipython3
@@ -776,7 +776,7 @@ How large is "large enough?" Unfortunately, it depends entirely on the problem a
 as a rule of thumb, often a sample size of at least 20 will suffice.
 ```
 
-<!--- 
+<!---
 ```{note}
 If random samples of size $n$ are taken from a population, the sample mean
 $\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation

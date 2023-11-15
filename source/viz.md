@@ -611,7 +611,7 @@ can_lang
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 # use only nonzero entries (to avoid issues with log scale), and wrap in a pd.DataFrame to prevent copy/view warnings later
-can_lang = pd.DataFrame(can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)]) 
+can_lang = pd.DataFrame(can_lang[(can_lang["most_at_home"] > 0) & (can_lang["mother_tongue"] > 0)])
 ```
 
 ```{index} altair; mark_circle

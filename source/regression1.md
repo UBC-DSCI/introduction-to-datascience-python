@@ -384,7 +384,7 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions
 about what the data must look like for it to work.
 
-+++ 
++++
 
 ## Training, evaluating, and tuning the model
 
@@ -546,10 +546,10 @@ opposed to the classification problems from the previous chapters.  The use of
 different metrics (instead of accuracy) for tuning and evaluation.  Next we
 specify a parameter grid containing numbers of neighbors
 ranging from 1 to 200.  Then we create a 5-fold `GridSearchCV` object, and
-pass in the pipeline and parameter grid. 
+pass in the pipeline and parameter grid.
 There is one additional slight complication: unlike classification models in `scikit-learn`---which
 by default use accuracy for tuning, as desired---regression models in `scikit-learn`
-do not use the RMSPE for tuning by default. 
+do not use the RMSPE for tuning by default.
 So we need to specify that we want to use the RMSPE for tuning by setting the
 `scoring` argument to `"neg_root_mean_squared_error"`.
 
@@ -587,7 +587,7 @@ on `sacr_gridsearch`. Note the use of two brackets for the input features
 (`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
 As we learned in {numref}`Chapter %s <wrangling>`, we can obtain a data frame with a
 subset of columns by passing a list of column names; `["sqft"]` is a list with one
-item, so we obtain a data frame with one column. If instead we used 
+item, so we obtain a data frame with one column. If instead we used
 just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
 In `scikit-learn`, it is easier to work with the input features as a data frame
 rather than a series, so we opt for two brackets here. On the other hand, the response variable
@@ -595,7 +595,7 @@ can be a series, so we use just one bracket there (`sacramento_train["price"]`).
 
 As in {numref}`Chapter %s <classification2>`, once the model has been fit
 we will wrap the `cv_results_` output in a data frame, extract
-only the relevant columns, compute the standard error based on 5 folds, 
+only the relevant columns, compute the standard error based on 5 folds,
 and rename the parameter column to be more readable.
 
 
@@ -623,7 +623,7 @@ sacr_results
 In the `sacr_results` results data frame, we see that the
 `n_neighbors` variable contains the values of $K$,
 and `mean_test_score` variable contains the value of the RMSPE estimated via
-cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative? 
+cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative?
 Recall that when we specified the `scoring` argument in the `GridSearchCV` object,
 we used the value `"neg_root_mean_squared_error"`. See the `neg_` at the start?
 That stands for *negative*! As it turns out, `scikit-learn` always tries to *maximize* a score
@@ -637,7 +637,7 @@ sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 sacr_results
 ```
 
-Alright, now the `mean_test_score` variable actually has values of the RMSPE 
+Alright, now the `mean_test_score` variable actually has values of the RMSPE
 for different numbers of neighbors. Finally, the `sem_test_score` variable
 contains the standard error of our cross-validation RMSPE estimate, which
 is a measure of how uncertain we are in the mean value. Roughly, if
@@ -680,7 +680,7 @@ glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
 Effect of the number of neighbors on the RMSPE.
 :::
 
-To see which parameter value corresponds to the minimum RMSPE, 
+To see which parameter value corresponds to the minimum RMSPE,
 we can also access the `best_params_` attribute of the original fit `GridSearchCV` object.
 Note that it is still useful to visualize the results as we did above
 since this provides additional information on how the model performance varies.
@@ -816,17 +816,17 @@ chapter.
 ## Evaluating on the test set
 
 To assess how well our model might do at predicting on unseen data, we will
-assess its RMSPE on the test data. To do this, we first need to retrain the 
+assess its RMSPE on the test data. To do this, we first need to retrain the
 K-NN regression model on the entire training data set using $K =$ {glue:text}`best_k_sacr`
 neighbors. Fortunately we do not have to do this ourselves manually; `scikit-learn`
 does it for us automatically. To make predictions with the best model on the test data,
 we can use the `predict` method of the fit `GridSearchCV` object.
 We then use the `mean_squared_error`
-function (with the `y_true` and `y_pred` arguments) 
+function (with the `y_true` and `y_pred` arguments)
 to compute the mean squared prediction error, and finally take the
-square root to get the RMSPE. The reason that we do not just use the `score` 
+square root to get the RMSPE. The reason that we do not just use the `score`
 method---as in {numref}`Chapter %s <classification2>`---is that the `KNeighborsRegressor`
-model uses a different default scoring metric than the RMSPE. 
+model uses a different default scoring metric than the RMSPE.
 
 ```{code-cell} ipython3
 from sklearn.metrics import mean_squared_error
@@ -899,7 +899,7 @@ base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
 
 # Add the predictions as a line
 sacr_preds_plot = base_plot + alt.Chart(
-    sqft_prediction_grid, 
+    sqft_prediction_grid,
     title=f"K = {best_k_sacr}"
 ).mark_line(
     color="#ff7f0e"

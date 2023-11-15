@@ -579,13 +579,13 @@ and wrote `pd.read_csv`. The dot means that the thing on the left (`pd`, i.e., t
 thing on the right (the `read_csv` function). In the case of `can_lang.loc[]`, the thing on the left (the `can_lang` data frame)
 *provides* the thing on the right (the `loc[]` operation). In Python,
 both packages (like `pandas`) *and* objects (like our `can_lang` data frame) can provide functions
-and other objects that we access using the dot syntax. 
+and other objects that we access using the dot syntax.
 
 ```{note}
 A note on terminology: when an object `obj` provides a function `f` with the
 dot syntax (as in `obj.f()`), sometimes we call that function `f` a *method* of `obj` or an *operation* on `obj`.
-Similarly, when an object `obj` provides another object `x` with the dot syntax (as in `obj.x`), sometimes we call the object `x` an *attribute* of `obj`. 
-We will use all of these terms throughout the book, as you will see them used commonly in the community. 
+Similarly, when an object `obj` provides another object `x` with the dot syntax (as in `obj.x`), sometimes we call the object `x` an *attribute* of `obj`.
+We will use all of these terms throughout the book, as you will see them used commonly in the community.
 And just because we programmers like to be confusing for no apparent reason: we *don't* use the "method", "operation", or "attribute" terminology
 when referring to functions and objects from packages, like `pandas`. So for example, `pd.read_csv`
 would typically just be referred to as a function, but not as a method or operation, even though it uses the dot syntax.
@@ -665,18 +665,18 @@ a first one&mdash;so fear not and explore! To answer this small
 question-along-the-way, we need to divide each count in the `mother_tongue`
 column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
-this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`. 
+this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`.
 Then to store the result in a new column (or
 overwrite an existing column), we specify the name of the new
-column to create (or old column to modify), then the assignment symbol `=`, 
+column to create (or old column to modify), then the assignment symbol `=`,
 and then the computation to store in that column. In this case, we will opt to
-create a new column called `mother_tongue_percent`. 
+create a new column called `mother_tongue_percent`.
 
 ```{note}
 You will see below that we write the Canadian population in
 Python as `35_151_728`. The underscores (`_`) are just there for readability,
-and do not affect how Python interprets the number. In other words, 
-`35151728` and `35_151_728` are treated identically in Python, 
+and do not affect how Python interprets the number. In other words,
+`35151728` and `35_151_728` are treated identically in Python,
 although the latter is much clearer!
 ```
 
@@ -695,7 +695,7 @@ ten_lang
 ```
 
 The `ten_lang_percent` data frame shows that
-the ten Aboriginal languages in the `ten_lang` data frame were spoken 
+the ten Aboriginal languages in the `ten_lang` data frame were spoken
 as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
 ## Combining analysis steps with chaining and multiline expressions
@@ -831,7 +831,7 @@ each language. When you move on to more complicated analyses, this issue only
 gets worse. In contrast, a *visualization* would convey this information in a much
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
-effectively communicate with your audience, and creating effective data visualizations 
+effectively communicate with your audience, and creating effective data visualizations
 is an essential component of any data
 analysis. In this section we will develop a visualization of the
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in

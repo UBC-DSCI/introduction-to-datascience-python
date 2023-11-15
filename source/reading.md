@@ -84,7 +84,7 @@ could live on your computer (*local*) or somewhere on the internet (*remote*).
 The place where the file lives on your computer is referred to as its "path". You can
 think of the path as directions to the file. There are two kinds of paths:
 *relative* paths and *absolute* paths. A relative path indicates where the file is
-with respect to your *working directory* (i.e., "where you are currently") on the computer. 
+with respect to your *working directory* (i.e., "where you are currently") on the computer.
 On the other hand, an absolute path indicates where the file is
 with respect to the computer's filesystem base (or *root*) folder, regardless of where you are working.
 
@@ -112,7 +112,7 @@ proceeds by listing out the sequence of folders you would have to enter to reach
 So in this case, `happiness_report.csv` would be reached by starting at the root, and entering the `home` folder,
 then the `dsci-100` folder, then the `worksheet_02` folder, and then finally the `data` folder. So its absolute
 path would be `/home/dsci-100/worksheet_02/data/happiness_report.csv`. We can load the file using its absolute path
-as a string passed to the `read_csv` function from `pandas`. 
+as a string passed to the `read_csv` function from `pandas`.
 ```python
 happy_data = pd.read_csv("/home/dsci-100/worksheet_02/data/happiness_report.csv")
 ```
@@ -127,20 +127,20 @@ Note that there is no forward slash at the beginning of a relative path; if we a
 Python would look for a folder named `data` in the root folder of the computer&mdash;but that doesn't exist!
 
 Aside from specifying places to go in a path using folder names (like `data` and `worksheet_02`), we can also specify two additional
-special places: the *current directory* and the *previous directory*. We indicate the current working directory with a single dot `.`, and 
+special places: the *current directory* and the *previous directory*. We indicate the current working directory with a single dot `.`, and
 the previous directory with two dots `..`. So for instance, if we wanted to reach the `bike_share.csv` file from the `worksheet_02` folder, we could
 use the relative path `../tutorial_01/bike_share.csv`. We can even combine these two; for example, we could reach the `bike_share.csv` file using
-the (very silly) path `../tutorial_01/../tutorial_01/./bike_share.csv` with quite a few redundant directions: it says to go back a folder, then open `tutorial_01`, 
+the (very silly) path `../tutorial_01/../tutorial_01/./bike_share.csv` with quite a few redundant directions: it says to go back a folder, then open `tutorial_01`,
 then go back a folder again, then open `tutorial_01` again, then stay in the current directory, then finally get to `bike_share.csv`. Whew, what a long trip!
 
-So which kind of path should you use: relative, or absolute? Generally speaking, you should use relative paths. 
-Using a relative path helps ensure that your code can be run 
+So which kind of path should you use: relative, or absolute? Generally speaking, you should use relative paths.
+Using a relative path helps ensure that your code can be run
 on a different computer (and as an added bonus, relative paths are often shorter&mdash;easier to type!).
 This is because a file's relative path is often the same across different computers, while a
-file's absolute path (the names of 
-all of the folders between the computer's root, represented by `/`, and the file) isn't usually the same 
-across different computers. For example, suppose Fatima and Jayden are working on a 
-project together on the `happiness_report.csv` data. Fatima's file is stored at 
+file's absolute path (the names of
+all of the folders between the computer's root, represented by `/`, and the file) isn't usually the same
+across different computers. For example, suppose Fatima and Jayden are working on a
+project together on the `happiness_report.csv` data. Fatima's file is stored at
 
 ```
 /home/Fatima/project/data/happiness_report.csv
@@ -158,7 +158,7 @@ their different usernames.  If Jayden has code that loads the
 `happiness_report.csv` data using an absolute path, the code won't work on
 Fatima's computer.  But the relative path from inside the `project` folder
 (`data/happiness_report.csv`) is the same on both computers; any code that uses
-relative paths will work on both! In the additional resources section, 
+relative paths will work on both! In the additional resources section,
 we include a link to a short video on the
 difference between absolute and relative paths.
 
@@ -382,7 +382,7 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 
 ```
 
-Data frames in Python need to have column names.  Thus if you read in data 
+Data frames in Python need to have column names.  Thus if you read in data
 without column names, Python will assign names automatically. In this example,
 Python assigns the column names `0, 1, 2, 3, 4, 5`.
 To read this data into Python, we specify the first
@@ -1237,7 +1237,7 @@ page = bs4.BeautifulSoup(wiki.content, "html.parser")
 import bs4
 
 # the above cell doesn't actually run; this one does run
-# and loads the html data from a local, static file 
+# and loads the html data from a local, static file
 
 with open("data/canada_wiki.html", "r") as f:
     wiki_hidden = f.read()
@@ -1303,7 +1303,7 @@ Using `requests` and `BeautifulSoup` to extract data based on CSS selectors is
 a very general way to scrape data from the web, albeit perhaps a little bit
 complicated.  Fortunately, `pandas` provides the
 [`read_html`](https://pandas.pydata.org/docs/reference/api/pandas.read_html.html)
-function, which is easier method to try when the data 
+function, which is easier method to try when the data
 appear on the webpage already in a tabular format.  The `read_html` function takes one
 argument&mdash;the URL of the page to scrape&mdash;and will return a list of
 data frames corresponding to all the tables it finds at that URL. We can see
@@ -1422,7 +1422,7 @@ endpoint is `https://api.nasa.gov/planetary/apod`. Second, we write `?`, which d
 list of *query parameters* will follow. And finally, we specify a list of
 query parameters of the form `parameter=value`, separated by `&` characters.  The NASA
 "Astronomy Picture of the Day" API accepts the parameters shown in
-{numref}`fig:NASA-API-parameters`. 
+{numref}`fig:NASA-API-parameters`.
 
 ```{figure} img/reading/NASA-API-parameters.png
 :name: fig:NASA-API-parameters
@@ -1433,7 +1433,7 @@ along with syntax, default settings, and a description of each.
 
 So for example, to obtain the image of the day
 from July 13, 2023, the API query would have two parameters: `api_key=YOUR_API_KEY`
-and `date=2023-07-13`. Remember to replace `YOUR_API_KEY` with the API key you 
+and `date=2023-07-13`. Remember to replace `YOUR_API_KEY` with the API key you
 received from NASA in your email! Putting it all together, the query will look like the following:
 ```
 https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13
@@ -1474,7 +1474,7 @@ you will recognize the same query URL that we pasted into the browser earlier.
 We will then obtain a JSON representation of the
 response using the `json` method.
 
-<!-- we have disabled the below code for reproducibility, with hidden setting 
+<!-- we have disabled the below code for reproducibility, with hidden setting
 of the nasa_data object. But you can reproduce this using the DEMO_KEY key -->
 ```python
 import requests
@@ -1491,14 +1491,14 @@ import json
 with open("data/nasa.json", "r") as f:
     nasa_data = json.load(f)
 # the last entry in the stored data is July 13, 2023, so print that
-nasa_data[-1] 
+nasa_data[-1]
 ```
 
 We can obtain more records at once by using the `start_date` and `end_date` parameters, as
 shown in the table of parameters in {numref}`fig:NASA-API-parameters`.
 Let's obtain all the records between May 1, 2023, and July 13, 2023, and store the result
 in an object called `nasa_data`; now the response
-will take the form of a Python list. Each item in the list will correspond to a single day's record (just like the `nasa_data_single` object), 
+will take the form of a Python list. Each item in the list will correspond to a single day's record (just like the `nasa_data_single` object),
 and there will be 74 items total, one for each day between the start and end dates:
 
 ```python

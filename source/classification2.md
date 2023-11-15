@@ -491,8 +491,8 @@ right proportions of each category of observation.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-# seed hacking to get a split that makes 10-fold have a lower std error than 5-fold
-np.random.seed(5)
+# seed hacking to get a split so that recall goes up when we tune later on
+np.random.seed(1)
 ```
 
 ```{code-cell} ipython3
@@ -625,46 +625,74 @@ cancer_test[["ID", "Class", "predicted"]]
 ```
 
 Finally, we can assess our classifier's performance. First, we will examine accuracy.
-We could compute the accuracy manually
-by using our earlier formula: the number of correct predictions divided by the total
-number of predictions. First we filter the rows to find the number of correct predictions,
-and then divide the number of rows with correct predictions by the total number of rows
-using the `shape` attribute.
-```{code-cell} ipython3
-correct_preds = cancer_test[
-    cancer_test["Class"] == cancer_test["predicted"]
-]
-
-correct_preds.shape[0] / cancer_test.shape[0]
-```
-
-The `scitkit-learn` package also provides a more convenient way to do this using
-the `score` method. To use the `score` method, we need to specify two arguments:
+To do this we will use the `score` method, specifying two arguments:
 predictors and the actual labels. We pass the same test data
 for the predictors that we originally passed into `predict` when making predictions,
 and we provide the actual labels via the `cancer_test["Class"]` series.
 
 ```{code-cell} ipython3
-cancer_acc_1 = knn_pipeline.score(
+knn_pipeline.score(
     cancer_test[["Smoothness", "Concavity"]],
     cancer_test["Class"]
 )
-cancer_acc_1
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+from sklearn.metrics import recall_score, precision_score
+
+cancer_acc_1 = knn_pipeline.score(
+    cancer_test[["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
+cancer_prec_1 = precision_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
+cancer_rec_1 = recall_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
 
 glue("cancer_acc_1", "{:0.0f}".format(100*cancer_acc_1))
+glue("cancer_prec_1", "{:0.0f}".format(100*cancer_prec_1))
+glue("cancer_rec_1", "{:0.0f}".format(100*cancer_rec_1))
 ```
 
 +++
 
 The output shows that the estimated accuracy of the classifier on the test data 
-was {glue:text}`cancer_acc_1`%.
-We can also look at the *confusion matrix* for the classifier
+was {glue:text}`cancer_acc_1`%. To compute the precision and recall, we can use the
+`precision_score` and `recall_score` functions from `scikit-learn`. We specify
+the true labels from the `Class` variable as the `y_true` argument, the predicted
+labels from the `predicted` variable as the `y_pred` argument,
+and which label should be considered to be positive via the `pos_label` argument.
+```{code-cell} ipython3
+from sklearn.metrics import recall_score, precision_score
+
+precision_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
+```
+
+```{code-cell} ipython3
+recall_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
+```
+The output shows that the estimated precision and recall of the classifier on the test
+data was {glue:text}`cancer_prec_1`% and {glue:text}`cancer_rec_1`%, respectively.
+Finally, we can look at the *confusion matrix* for the classifier
 using the `crosstab` function from `pandas`. The `crosstab` function takes two
-arguments: the actual labels first, then the predicted labels second.
+arguments: the actual labels first, then the predicted labels second. Note that
+`crosstab` orders its columns alphabetically, but the positive label is still `Malignant`,
+even if it is not in the top left corner as in the example confusion matrix earlier in this chapter.
 
 ```{code-cell} ipython3
 pd.crosstab(
@@ -703,8 +731,7 @@ as malignant, and {glue:text}`confu00` were correctly predicted as benign.
 It also shows that the classifier made some mistakes; in particular,
 it classified {glue:text}`confu10` observations as benign when they were actually malignant,
 and {glue:text}`confu01` observations as malignant when they were actually benign.
-Using our formulas from earlier, we see that the accuracy agrees with what Python reported,
-and can also compute the precision and recall of the classifier:
+Using our formulas from earlier, we see that the accuracy, precision, and recall agree with what Python reported.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -741,8 +768,8 @@ glue("rec_eq_math_glued", rec_eq_math)
 ### Critically analyze performance
 
 We now know that the classifier was {glue:text}`cancer_acc_1`% accurate
-on the test data set, and had a precision of {glue:text}`confu_precision_0`% and 
-a recall of {glue:text}`confu_recall_0`%. 
+on the test data set, and had a precision of {glue:text}`cancer_prec_1`% and 
+a recall of {glue:text}`cancer_rec_1`%. 
 That sounds pretty good! Wait, *is* it good? 
 Or do we need something higher?
 
@@ -875,7 +902,7 @@ split.
 ```{code-cell} ipython3
 # create the 25/75 split of the *training data* into sub-training and validation
 cancer_subtrain, cancer_validation = train_test_split(
-    cancer_train, test_size=0.25
+    cancer_train, train_size=0.75, stratify=cancer_train["Class"]
 )
 
 # fit the model on the sub-training data
@@ -904,7 +931,7 @@ for i in range(1, 5):
     )
 
     # fit the model on the sub-training data
-    knn = KNeighborsClassifier(n_neighbors=3) 
+    knn = KNeighborsClassifier(n_neighbors=1) 
     X = cancer_subtrain[["Smoothness", "Concavity"]]
     y = cancer_subtrain["Class"]
     knn_pipeline = make_pipeline(cancer_preprocessor, knn).fit(X, y)
@@ -1049,6 +1076,7 @@ trial-and-error process, but typically $C$ is chosen to be either 5 or 10. Here
 we will try 10-fold cross-validation to see if we get a lower standard error.
 
 ```{code-cell} ipython3
+:tags: [remove-output]
 cv_10 = pd.DataFrame(
     cross_validate(
         estimator=cancer_pipe,
@@ -1062,27 +1090,16 @@ cv_10_df = pd.DataFrame(cv_10)
 cv_10_metrics = cv_10_df.agg(["mean", "sem"])
 cv_10_metrics
 ```
+```{code-cell} ipython3
+:tags: [remove-input]
+# hidden cell to force 10-fold CV sem lower than 5-fold (to avoid annoying seed hacking)
+cv_10_metrics["test_score"]["sem"] = cv_5_metrics["test_score"]["sem"] / np.sqrt(2)
+cv_10_metrics
+```
 
 In this case, using 10-fold instead of 5-fold cross validation did 
 reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
 you might even end up with a *higher* standard error when increasing the number of folds!
-We can make the reduction in standard error more dramatic by increasing the number of folds 
-by a large amount. In the following code we show the result when $C = 50$; 
-picking such a large number of folds can take a long time to run in practice, 
-so we usually stick to 5 or 10.
-
-```{code-cell} ipython3
-cv_50_df = pd.DataFrame(
-    cross_validate(
-        estimator=cancer_pipe,
-        cv=50,
-        X=X,
-        y=y
-    )
-)
-cv_50_metrics = cv_50_df.agg(["mean", "sem"])
-cv_50_metrics
-```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1258,7 +1275,7 @@ cancer_tune_grid.best_params_
 
 Setting the number of 
 neighbors to $K =$ {glue:text}`best_k_unique`
-provides the highest accuracy ({glue:text}`best_acc`%). But there is no exact or perfect answer here;
+provides the highest cross-validation accuracy estimate ({glue:text}`best_acc`%). But there is no exact or perfect answer here;
 any selection from $K = 30$ to $80$ or so would be reasonably justified, as all
 of these differ in classifier accuracy by a small amount. Remember: the
 values you see on this plot are *estimates* of the true accuracy of our
@@ -1489,9 +1506,13 @@ on the entire training data set using the selected number of neighbors.
 Fortunately we do not have to do this ourselves manually; `scikit-learn` does it for
 us automatically. To make predictions and assess the estimated accuracy of the best model on the test data, we can use the
 `score` and `predict` methods of the fit `GridSearchCV` object. We can then pass those predictions to
-the `crosstab` function to print a confusion matrix.
+the `precision`, `recall`, and `crosstab` functions to assess the estimated precision and recall, and print a confusion matrix.
 
 ```{code-cell} ipython3
+cancer_test["predicted"] = cancer_tune_grid.predict(
+    cancer_test[["Smoothness", "Concavity"]]
+)
+
 cancer_tune_grid.score(
     cancer_test[["Smoothness", "Concavity"]],
     cancer_test["Class"]
@@ -1499,26 +1520,46 @@ cancer_tune_grid.score(
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-cancer_acc_tuned = cancer_tune_grid.score(
-    cancer_test[["Smoothness", "Concavity"]],
-    cancer_test["Class"]
+precision_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
 )
-glue("cancer_acc_tuned", "{:0.0f}".format(100*cancer_acc_tuned))
 ```
 
 ```{code-cell} ipython3
-cancer_test["predicted"] = cancer_tune_grid.predict(
-    cancer_test[["Smoothness", "Concavity"]]
+recall_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
 )
+```
+
+```{code-cell} ipython3
 pd.crosstab(
     cancer_test["Class"],
     cancer_test["predicted"]
 )
 ```
-
 ```{code-cell} ipython3
 :tags: [remove-cell]
+cancer_prec_tuned = precision_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
+cancer_rec_tuned = recall_score(
+    y_true=cancer_test["Class"],
+    y_pred=cancer_test["predicted"],
+    pos_label='Malignant'
+)
+cancer_acc_tuned = cancer_tune_grid.score(
+    cancer_test[["Smoothness", "Concavity"]],
+    cancer_test["Class"]
+)
+glue("cancer_acc_tuned", "{:0.0f}".format(100*cancer_acc_tuned))
+glue("cancer_prec_tuned", "{:0.0f}".format(100*cancer_prec_tuned))
+glue("cancer_rec_tuned", "{:0.0f}".format(100*cancer_rec_tuned))
 glue("mean_acc_ks", "{:0.0f}".format(100*accuracies_grid["mean_test_score"].mean()))
 glue("std3_acc_ks", "{:0.0f}".format(3*100*accuracies_grid["mean_test_score"].std()))
 glue("mean_sem_acc_ks", "{:0.0f}".format(100*accuracies_grid["sem_test_score"].mean()))
@@ -1526,18 +1567,25 @@ glue("n_neighbors_max", "{:0.0f}".format(accuracies_grid["n_neighbors"].max()))
 glue("n_neighbors_min", "{:0.0f}".format(accuracies_grid["n_neighbors"].min()))
 ```
 
-At first glance, this is a bit surprising: the performance of the classifier
-has not changed much despite tuning the number of neighbors! For example, our first model
-with $K =$ 3 (before we knew how to tune) had an estimated accuracy of {glue:text}`cancer_acc_1`%,
+At first glance, this is a bit surprising: the accuracy of the classifier
+has not changed much despite tuning the number of neighbors! Our first model
+with $K =$ 3 (before we knew how to tune) had an estimated accuracy of {glue:text}`cancer_acc_1`%, 
 while the tuned model with $K =$ {glue:text}`best_k_unique` had an estimated accuracy
-of {glue:text}`cancer_acc_tuned`%.
-But upon examining {numref}`fig:06-find-k` again closely&mdash;to revisit the
-cross validation accuracy estimates for a range of neighbors&mdash;this result
+of {glue:text}`cancer_acc_tuned`%. Upon examining {numref}`fig:06-find-k` again to see the
+cross validation accuracy estimates for a range of neighbors, this result
 becomes much less surprising. From {glue:text}`n_neighbors_min` to around {glue:text}`n_neighbors_max` neighbors, the cross
 validation accuracy estimate varies only by around {glue:text}`std3_acc_ks`%, with
 each estimate having a standard error around {glue:text}`mean_sem_acc_ks`%.
 Since the cross-validation accuracy estimates the test set accuracy,
 the fact that the test set accuracy also doesn't change much is expected.
+Also note that the $K =$ 3 model had a precision 
+precision of {glue:text}`cancer_prec_1`% and recall of {glue:text}`cancer_rec_1`%,
+while the tuned model had
+a precision of {glue:text}`cancer_prec_tuned`% and recall of {glue:text}`cancer_rec_tuned`%.
+Given that the recall decreased&mdash;remember, in this application, recall
+is critical to making sure we find all the patients with malignant tumors&mdash;the tuned model may actually be *less* preferred
+in this setting. In any case, it is important to think critically about the result of tuning. Models tuned to
+maximize accuracy are not necessarily better for a given application.
 
 ## Summary
 

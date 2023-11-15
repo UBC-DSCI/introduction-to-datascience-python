@@ -648,12 +648,12 @@ cancer_acc_1 = knn_pipeline.score(
 cancer_prec_1 = precision_score(
     y_true=cancer_test["Class"],
     y_pred=cancer_test["predicted"],
-    pos_label='Malignant'
+    pos_label="Malignant"
 )
 cancer_rec_1 = recall_score(
     y_true=cancer_test["Class"],
     y_pred=cancer_test["predicted"],
-    pos_label='Malignant'
+    pos_label="Malignant"
 )
 
 glue("cancer_acc_1", "{:0.0f}".format(100*cancer_acc_1))

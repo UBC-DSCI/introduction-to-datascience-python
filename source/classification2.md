@@ -675,7 +675,7 @@ from sklearn.metrics import recall_score, precision_score
 precision_score(
     y_true=cancer_test["Class"],
     y_pred=cancer_test["predicted"],
-    pos_label='Malignant'
+    pos_label="Malignant"
 )
 ```
 
@@ -683,7 +683,7 @@ precision_score(
 recall_score(
     y_true=cancer_test["Class"],
     y_pred=cancer_test["predicted"],
-    pos_label='Malignant'
+    pos_label="Malignant"
 )
 ```
 The output shows that the estimated precision and recall of the classifier on the test

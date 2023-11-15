@@ -1100,6 +1100,31 @@ cv_10_metrics
 In this case, using 10-fold instead of 5-fold cross validation did 
 reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
 you might even end up with a *higher* standard error when increasing the number of folds!
+We can make the reduction in standard error more dramatic by increasing the number of folds
+by a large amount. In the following code we show the result when $C = 50$;
+picking such a large number of folds can take a long time to run in practice,
+so we usually stick to 5 or 10.
+
+```{code-cell} ipython3
+:tags: [remove-output]
+cv_50_df = pd.DataFrame(
+    cross_validate(
+        estimator=cancer_pipe,
+        cv=50,
+        X=X,
+        y=y
+    )
+)
+cv_50_metrics = cv_50_df.agg(["mean", "sem"])
+cv_50_metrics
+```
+
+```{code-cell} ipython3
+:tags: [remove-input]
+# hidden cell to force 10-fold CV sem lower than 5-fold (to avoid annoying seed hacking)
+cv_50_metrics["test_score"]["sem"] = cv_5_metrics["test_score"]["sem"] / np.sqrt(10)
+cv_50_metrics
+```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]

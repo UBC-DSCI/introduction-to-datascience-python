@@ -41,23 +41,20 @@ By the end of the chapter, readers will be able to do the following:
   - Define what series and data frames are in Python, and describe how they relate to
     each other.
   - Describe the common types of data in Python and their uses.
-  - Recall and use the following functions for their
-    intended data wrangling tasks:
-      - `agg`
-      - `assign` (as well as regular column assignment)
-      - `groupby`
+  - Use the following functions for their intended data wrangling tasks:
       - `melt`
       - `pivot`
+      - `reset_index`
       - `str.split`
-  - Recall and use the following operators for their
-    intended data wrangling tasks:
-      - `==`, `!=`, `<`, `>`, `<=`, `>=`
-      - `in`
-      - `and`
-      - `or`
-      - `[]`
-      - `loc[]`
-      - `iloc[]`
+      - `agg`
+      - `assign` and regular column assignment
+      - `groupby`
+      - `merge`
+  - Use the following operators for their intended data wrangling tasks:
+      - `==`, `!=`, `<`, `>`, `<=`, and `>=`
+      - `isin`
+      - `&` and `|`
+      - `[]`, `loc[]`, and `iloc[]`
 
 ## Data frames and series
 

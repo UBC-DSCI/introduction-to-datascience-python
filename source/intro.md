@@ -437,7 +437,10 @@ can_lang
 
 ## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} see: []; pandas.DataFrame; [], see: loc[]; pandas.DataFrame; loc[]
+```{index} see: []; pandas.DataFrame
+```
+
+```{index} see: loc[]; pandas.DataFrame
 ```
 
 ```{index} pandas.DataFrame; [], pandas.DataFrame; loc[], selecting columns

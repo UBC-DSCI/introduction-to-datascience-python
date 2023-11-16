@@ -176,6 +176,9 @@ Restarting the Python session can be accomplished by clicking Restart Kernel and
 ```{index} kernel, Jupyter notebook; kernel
 ```
 
+```{index} see: Jupyter notebook; kernel
+```
+
 The kernel is a program that executes the code inside your notebook and
 outputs the results. Kernels for many different programming languages have
 been created for Jupyter, which means that Jupyter can interpret and execute

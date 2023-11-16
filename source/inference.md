@@ -168,7 +168,7 @@ We can find the proportion of listings for each room type
 by using the `value_counts` function with the `normalize` parameter
 as we did in previous chapters.
 
-```{index} pandas.DataFrame; df[], count, len
+```{index} pandas.DataFrame; [], pandas.DataFrame; value_counts
 ```
 
 ```{code-cell} ipython3

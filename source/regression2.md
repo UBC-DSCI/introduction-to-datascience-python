@@ -150,6 +150,9 @@ Scatter plot of sale price versus size with line of best fit for subset of the S
 ```{index} straight line; equation
 ```
 
+```{index} see: line; straight line
+```
+
 The equation for the straight line is:
 
 $$\text{house sale price} = \beta_0 + \beta_1 \cdot (\text{house size}),$$

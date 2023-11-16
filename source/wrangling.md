@@ -36,25 +36,25 @@ application, providing more practice working through a whole case study.
 
 By the end of the chapter, readers will be able to do the following:
 
-  - Define the term "tidy data".
-  - Discuss the advantages of storing data in a tidy data format.
-  - Define what series and data frames are in Python, and describe how they relate to
-    each other.
-  - Describe the common types of data in Python and their uses.
-  - Use the following functions for their intended data wrangling tasks:
-      - `melt`
-      - `pivot`
-      - `reset_index`
-      - `str.split`
-      - `agg`
-      - `assign` and regular column assignment
-      - `groupby`
-      - `merge`
-  - Use the following operators for their intended data wrangling tasks:
-      - `==`, `!=`, `<`, `>`, `<=`, and `>=`
-      - `isin`
-      - `&` and `|`
-      - `[]`, `loc[]`, and `iloc[]`
+- Define the term "tidy data".
+- Discuss the advantages of storing data in a tidy data format.
+- Define what series and data frames are in Python, and describe how they relate to
+  each other.
+- Describe the common types of data in Python and their uses.
+- Use the following functions for their intended data wrangling tasks:
+    - `melt`
+    - `pivot`
+    - `reset_index`
+    - `str.split`
+    - `agg`
+    - `assign` and regular column assignment
+    - `groupby`
+    - `merge`
+- Use the following operators for their intended data wrangling tasks:
+    - `==`, `!=`, `<`, `>`, `<=`, and `>=`
+    - `isin`
+    - `&` and `|`
+    - `[]`, `loc[]`, and `iloc[]`
 
 ## Data frames and series
 

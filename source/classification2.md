@@ -121,6 +121,9 @@ $$\mathrm{accuracy} = \frac{\mathrm{number \; of  \; correct  \; predictions}}{\
 Process for splitting the data and finding the prediction accuracy.
 ```
 
+```{index} confusion matrix
+```
+
 Accuracy is a convenient, general-purpose way to summarize the performance of a classifier with
 a single number.  But prediction accuracy by itself does not tell the whole
 story.  In particular, accuracy alone only tells us how often the classifier
@@ -165,6 +168,9 @@ disastrous error, since it may lead to a patient who requires treatment not rece
 Since we are particularly interested in identifying malignant cases, this
 classifier would likely be unacceptable even with an accuracy of 89%.
 
+```{index} positive label, negative label, true positive, true negative, false positive, false negative
+```
+
 Focusing more on one label than the other is
 common in classification problems. In such cases, we typically refer to the label we are more
 interested in identifying as the *positive* label, and the other as the
@@ -177,6 +183,9 @@ classifier can make, corresponding to the four entries in the confusion matrix:
 - **False Positive:** A benign observation that was classified as malignant (bottom left in {numref}`confusion-matrix-table`).
 - **True Negative:** A benign observation that was classified as benign (bottom right in {numref}`confusion-matrix-table`).
 - **False Negative:** A malignant observation that was classified as benign (top right in {numref}`confusion-matrix-table`).
+
+```{index} precision, recall
+```
 
 A perfect classifier would have zero false negatives and false positives (and
 therefore, 100% accuracy). However, classifiers in practice will almost always
@@ -358,6 +367,12 @@ in `np.random.seed` will lead to different patterns of randomness, but as long a
 value your analysis results will be the same. In the remainder of the textbook,
 we will set the seed once at the beginning of each chapter.
 
+```{index} RandomState
+```
+
+```{index} see: RandomState; seed
+```
+
 ````{note}
 When you use `np.random.seed`, you are really setting the seed for the `numpy`
 package's *default random number generator*. Using the global default random
@@ -393,8 +408,6 @@ random_numbers2_third
 ```{code}
 array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 ```
-
-````
 
 ## Evaluating performance with `scikit-learn`
 
@@ -516,7 +529,7 @@ glue("cancer_train_nrow", "{:d}".format(len(cancer_train)))
 glue("cancer_test_nrow", "{:d}".format(len(cancer_test)))
 ```
 
-```{index} info
+```{index} pandas.DataFrame; info
 ```
 
 We can see from the `info` method above that the training set contains {glue:text}`cancer_train_nrow` observations,
@@ -525,7 +538,7 @@ a train / test split of 75% / 25%, as desired. Recall from {numref}`Chapter %s <
 that we use the `info` method to preview the number of rows, the variable names, their data types, and
 missing entries of a data frame.
 
-```{index} groupby, count
+```{index} pandas.Series; value_counts
 ```
 
 We can use the `value_counts` method with the `normalize` argument set to `True`
@@ -557,7 +570,7 @@ training and test data sets.
 
 +++
 
-```{index} pipeline, pipeline; make_column_transformer, pipeline; StandardScaler
+```{index} Pipeline, make_column_transformer, StandardScaler
 ```
 
 Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our
@@ -603,7 +616,7 @@ knn_pipeline
 
 ### Predict the labels in the test set
 
-```{index} pandas.concat
+```{index} scikit-learn; predict
 ```
 
 Now that we have a K-nearest neighbors classifier object, we can use it to
@@ -622,7 +635,7 @@ cancer_test[["ID", "Class", "predicted"]]
 (eval-performance-clasfcn2)=
 ### Evaluate performance
 
-```{index} scikit-learn; score
+```{index} scikit-learn; score, scikit-learn; precision_score, scikit-learn; recall_score
 ```
 
 Finally, we can assess our classifier's performance. First, we will examine accuracy.
@@ -694,6 +707,9 @@ using the `crosstab` function from `pandas`. The `crosstab` function takes two
 arguments: the actual labels first, then the predicted labels second. Note that
 `crosstab` orders its columns alphabetically, but the positive label is still `Malignant`,
 even if it is not in the top left corner as in the example confusion matrix earlier in this chapter.
+
+```{index} crosstab
+```
 
 ```{code-cell} ipython3
 pd.crosstab(
@@ -774,7 +790,7 @@ a recall of {glue:text}`cancer_rec_1`%.
 That sounds pretty good! Wait, *is* it good?
 Or do we need something higher?
 
-```{index} accuracy; assessment
+```{index} accuracy;assessment, precision;assessment, recall;assessment
 ```
 
 In general, a *good* value for accuracy (as well as precision and recall, if applicable)
@@ -1026,6 +1042,12 @@ cv_5_df = pd.DataFrame(
 cv_5_df
 ```
 
+```{index} see: sem;standard error
+```
+
+```{index} standard error, pandas.DataFrame;agg
+```
+
 The validation scores we are interested in are contained in the `test_score` column.
 We can then aggregate the *mean* and *standard error*
 of the classifier's validation accuracy across the folds.
@@ -1098,6 +1120,8 @@ cv_10_metrics["test_score"]["sem"] = cv_5_metrics["test_score"]["sem"] / np.sqrt
 cv_10_metrics
 ```
 
+```{index} cross-validation; folds
+
 In this case, using 10-fold instead of 5-fold cross validation did
 reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes
 you might even end up with a *higher* standard error when increasing the number of folds!
@@ -1152,6 +1176,9 @@ best accuracy. The `scikit-learn` package collection provides built-in
 functionality, named `GridSearchCV`, to automatically handle the details for us.
 Before we use `GridSearchCV`, we need to create a new pipeline
 with a `KNeighborsClassifier` that has the number of neighbors left unspecified.
+
+```{index} make_pipeline
+```
 
 ```{code-cell} ipython3
 knn = KNeighborsClassifier()
@@ -1534,6 +1561,9 @@ us automatically. To make predictions and assess the estimated accuracy of the b
 `score` and `predict` methods of the fit `GridSearchCV` object. We can then pass those predictions to
 the `precision`, `recall`, and `crosstab` functions to assess the estimated precision and recall, and print a confusion matrix.
 
+```{index} predict, score, precision_score, recall_score, crosstab
+```
+
 ```{code-cell} ipython3
 cancer_test["predicted"] = cancer_tune_grid.predict(
     cancer_test[["Smoothness", "Concavity"]]
@@ -1755,19 +1785,7 @@ for i in range(len(ks)):
     cancer_tune_pipe = make_pipeline(cancer_preprocessor, KNeighborsClassifier())
     param_grid = {
         "kneighborsclassifier__n_neighbors": range(1, 21),
-    }  ## double check: in R textbook, it is tune_grid(..., grid=20), so I guess it matches RandomizedSearchCV
-       ## instead of GridSeachCV?
-    # param_grid_rand = {
-    #     "kneighborsclassifier__n_neighbors": range(1, 100),
-    # }
-    # cancer_tune_grid = RandomizedSearchCV(
-    #     estimator=cancer_tune_pipe,
-    #     param_distributions=param_grid_rand,
-    #     n_iter=20,
-    #     cv=5,
-    #     n_jobs=-1,
-    #     return_train_score=True,
-    # )
+    }  
     cancer_tune_grid = GridSearchCV(
         estimator=cancer_tune_pipe,
         param_grid=param_grid,
@@ -1980,7 +1998,10 @@ where to learn more about advanced predictor selection methods.
 
 +++
 
-### Forward selection in `scikit-learn`
+### Forward selection in Python
+
+```{index} variable selection; implementation
+```
 
 We now turn to implementing forward selection in Python.
 First we will extract a smaller set of predictors to work with in this illustrative example&mdash;`Smoothness`,

@@ -391,7 +391,7 @@ about what the data must look like for it to work.
 
 ## Training, evaluating, and tuning the model
 
-```{index} training data, test data
+```{index} training set, test set
 ```
 
 As usual, we must start by putting some test data away in a lock box

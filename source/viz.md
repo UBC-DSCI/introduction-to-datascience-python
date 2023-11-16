@@ -1963,7 +1963,7 @@ bad, while raster images eventually start to look "pixelated."
 ```{index} PDF
 ```
 
-```{index} see: portable document dormat; PDF
+```{index} see: portable document format; PDF
 ```
 
 ```{note}

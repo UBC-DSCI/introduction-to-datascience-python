@@ -1059,10 +1059,13 @@ predictors (colored by diagnosis) for both the unstandardized data we just
 loaded, and the standardized version of that same data. But first, we need to
 standardize the `unscaled_cancer` data set with `scikit-learn`.
 
-```{index} Pipeline, scikit-learn; make_column_transformer
+```{index} see: Pipeline; scikit-learn
 ```
 
-```{index} double: scikit-learn; Pipeline
+```{index} see: make_column_transformer; scikit-learn
+```
+
+```{index} scikit-learn;Pipeline, scikit-learn; make_column_transformer
 ```
 
 The `scikit-learn` framework provides a collection of *preprocessors* used to manipulate
@@ -1091,10 +1094,10 @@ preprocessor
 ```{index} scikit-learn; make_column_transformer, scikit-learn; StandardScaler 
 ```
 
-```{index} StandardScaler
+```{index} see: StandardScaler; scikit-learn
 ```
 
-```{index} scikit-learn; fit, scikit-learn; make_column_selector
+```{index} scikit-learn; fit, scikit-learn; make_column_selector, scikit-learn; StandardScaler
 ```
 
 You can see that the preprocessor includes a single standardization step

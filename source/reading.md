@@ -1331,7 +1331,7 @@ argument&mdash;the URL of the page to scrape&mdash;and will return a list of
 data frames corresponding to all the tables it finds at that URL. We can see
 below that `read_html` found 17 tables on the Wikipedia page for Canada.
 
-```{index} read function; read_html, read_html
+```{index} read function; read_html
 ```
 
 ```python

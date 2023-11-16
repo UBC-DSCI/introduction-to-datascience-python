@@ -531,7 +531,7 @@ glue("cancer_train_nrow", "{:d}".format(len(cancer_train)))
 glue("cancer_test_nrow", "{:d}".format(len(cancer_test)))
 ```
 
-```{index} pandas.DataFrame; info
+```{index} DataFrame; info
 ```
 
 We can see from the `info` method above that the training set contains {glue:text}`cancer_train_nrow` observations,
@@ -540,7 +540,7 @@ a train / test split of 75% / 25%, as desired. Recall from {numref}`Chapter %s <
 that we use the `info` method to preview the number of rows, the variable names, their data types, and
 missing entries of a data frame.
 
-```{index} pandas.Series; value_counts
+```{index} Series; value_counts
 ```
 
 We can use the `value_counts` method with the `normalize` argument set to `True`
@@ -572,7 +572,7 @@ training and test data sets.
 
 +++
 
-```{index} Pipeline, make_column_transformer, StandardScaler
+```{index} scikit-learn; Pipeline, scikit-learn; make_column_transformer, scikit-learn; StandardScaler
 ```
 
 Fortunately, `scikit-learn` helps us handle this properly as long as we wrap our
@@ -1047,7 +1047,7 @@ cv_5_df
 ```{index} see: sem;standard error
 ```
 
-```{index} standard error, pandas.DataFrame;agg
+```{index} standard error, DataFrame;agg
 ```
 
 The validation scores we are interested in are contained in the `test_score` column.
@@ -1564,7 +1564,7 @@ us automatically. To make predictions and assess the estimated accuracy of the b
 `score` and `predict` methods of the fit `GridSearchCV` object. We can then pass those predictions to
 the `precision`, `recall`, and `crosstab` functions to assess the estimated precision and recall, and print a confusion matrix.
 
-```{index} predict, score, precision_score, recall_score, crosstab
+```{index} scikit-learn;predict, scikit-learn;score, scikit-learn;precision_score, scikit-learn;recall_score, crosstab
 ```
 
 ```{code-cell} ipython3
@@ -1670,7 +1670,7 @@ Overview of K-NN classification.
 
 +++
 
-```{index} scikit-learn, pipeline, cross-validation, K-nearest neighbors; classification, classification
+```{index} scikit-learn, Pipeline, cross-validation, K-nearest neighbors; classification, classification
 ```
 
 The overall workflow for performing K-nearest neighbors classification using `scikit-learn` is as follows:

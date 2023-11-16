@@ -795,6 +795,9 @@ Total WSSD for K clusters ranging from 1 to 9.
 ```{index} K-means, scikit-learn; KMeans
 ```
 
+```{index} see: KMeans; scikit-learn
+```
+
 We can perform K-means in Python using a workflow similar to those
 in the earlier classification and regression chapters.
 Returning to the original (unstandardized) `penguins` data,
@@ -807,7 +810,7 @@ To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
 The `StandardScaler` function in `scikit-learn` can be used to do this.
 
-```{index} scikit-learn; StandardScaler, standardization;K-means, K-means;standardization
+```{index} scikit-learn; StandardScaler, scikit-learn;KMeans, standardization;K-means, K-means;standardization
 ```
 
 ```{code-cell} ipython3
@@ -829,6 +832,9 @@ To indicate that we are performing K-means clustering, we will create a `KMeans`
 model object. It takes at
 least one argument: the number of clusters `n_clusters`, which we set to 3.
 
+```{index} KMeans;n_clusters
+```
+
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
 
@@ -836,7 +842,7 @@ kmeans = KMeans(n_clusters=3)
 kmeans
 ```
 
-```{index} scikit-learn;Pipeline, scikit-learn;fit
+```{index} scikit-learn;make_pipeline, scikit-learn;Pipeline, scikit-learn;fit
 ```
 
 To actually run the K-means clustering, we combine the preprocessor and model object
@@ -852,7 +858,7 @@ penguin_clust.fit(penguins)
 penguin_clust
 ```
 
-```{index} KMeans; labels_, KMeans; inertia_, KMeans; cluster_centers_, , KMeans; predict
+```{index} KMeans; labels_, KMeans; inertia_
 ```
 
 The fit `KMeans` object&mdash;which is the second item in the
@@ -907,7 +913,7 @@ The data colored by the cluster assignments returned by K-means.
 ```{index} WSSD; total, KMeans; inertia_
 ```
 
-```{index} see: WSSD; K-means inertia_
+```{index} see: WSSD; KMeans
 ```
 
 As mentioned above,

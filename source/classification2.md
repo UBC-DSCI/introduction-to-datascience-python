@@ -1524,10 +1524,10 @@ set the number of neighbors $K$ to 1, 7, 20, and 300.
 
 ### Evaluating on the test set
 
-Now that we have tuned the KNN classifier and set $K =$ {glue:text}`best_k_unique`,
+Now that we have tuned the K-NN classifier and set $K =$ {glue:text}`best_k_unique`,
 we are done building the model and it is time to evaluate the quality of its predictions on the held out 
 test data, as we did earlier in {numref}`eval-performance-clasfcn2`.
-We first need to retrain the KNN classifier
+We first need to retrain the K-NN classifier
 on the entire training data set using the selected number of neighbors.
 Fortunately we do not have to do this ourselves manually; `scikit-learn` does it for
 us automatically. To make predictions and assess the estimated accuracy of the best model on the test data, we can use the
@@ -1654,7 +1654,7 @@ The overall workflow for performing K-nearest neighbors classification using `sc
 In these last two chapters, we focused on the K-nearest neighbors algorithm,
 but there are many other methods we could have used to predict a categorical label.
 All algorithms have their strengths and weaknesses, and we summarize these for
-the $K$-NN here.
+the K-NN here.
 
 **Strengths:** K-nearest neighbors classification
 
@@ -1927,7 +1927,7 @@ In particular, you
 2. tune each one using cross-validation, and
 3. pick the subset of predictors that gives you the highest cross-validation accuracy.
 
-Best subset selection is applicable to any classification method ($K$-NN or otherwise).
+Best subset selection is applicable to any classification method (K-NN or otherwise).
 However, it becomes very slow when you have even a moderate
 number of predictors to choose from (say, around 10). This is because the number of possible predictor subsets
 grows very quickly with the number of predictors, and you have to train the model (itself

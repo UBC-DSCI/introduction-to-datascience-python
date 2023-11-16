@@ -623,7 +623,7 @@ are changing, and the algorithm terminates.
 
 ### Random restarts
 
-```{index} K-means; init argument
+```{index} K-means; restart
 ```
 
 Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
@@ -792,7 +792,7 @@ Total WSSD for K clusters ranging from 1 to 9.
 
 ## K-means in Python
 
-```{index} K-means; kmeans function, scikit-learn; KMeans
+```{index} K-means, scikit-learn; KMeans
 ```
 
 We can perform K-means in Python using a workflow similar to those
@@ -806,6 +806,9 @@ effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
 The `StandardScaler` function in `scikit-learn` can be used to do this.
+
+```{index} scikit-learn; StandardScaler, standardization;K-means, K-means;standardization
+```
 
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
@@ -833,6 +836,9 @@ kmeans = KMeans(n_clusters=3)
 kmeans
 ```
 
+```{index} scikit-learn;Pipeline, scikit-learn;fit
+```
+
 To actually run the K-means clustering, we combine the preprocessor and model object
 in a `Pipeline`, and use the `fit` function. Note that the K-means
 algorithm uses a random initialization of assignments, but since we set
@@ -846,7 +852,7 @@ penguin_clust.fit(penguins)
 penguin_clust
 ```
 
-```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
+```{index} KMeans; labels_, KMeans; inertia_, KMeans; cluster_centers_, , KMeans; predict
 ```
 
 The fit `KMeans` object&mdash;which is the second item in the
@@ -874,6 +880,9 @@ adding the `:N` suffix ensures that `altair`
 will treat the `cluster` variable as a nominal/categorical variable, and
 hence use a discrete color map for the visualization.
 
+```{index} altair; :N
+```
+
 ```{code-cell} ipython3
 cluster_plot=alt.Chart(penguins).mark_circle().encode(
     x=alt.X("flipper_length_mm").title("Flipper Length").scale(zero=False),
@@ -895,10 +904,10 @@ glue("cluster_plot", cluster_plot, display=True)
 The data colored by the cluster assignments returned by K-means.
 :::
 
-```{index} WSSD; total, K-means; inertia_
+```{index} WSSD; total, KMeans; inertia_
 ```
 
-```{index} see: WSSD; K-means inertia
+```{index} see: WSSD; K-means inertia_
 ```
 
 As mentioned above,
@@ -919,6 +928,9 @@ we will use what is called a "list comprehension" in Python,
 where we repeat an operation multiple times
 and return a list with the result.
 Here is an examples of a list comprehension that stores the numbers 0-2 in a list:
+
+```{index} list comprehension
+```
 
 ```{code-cell} ipython3
 [n for n in range(3)]
@@ -992,9 +1004,6 @@ glue("elbow_plot", elbow_plot, display=True)
 A plot showing the total WSSD versus the number of clusters.
 :::
 
-```{index} K-means; init argument
-```
-
 It looks like three clusters is the right choice for this data,
 since that is where the "elbow" of the line is the most distinct.
 In the plot,
@@ -1007,6 +1016,9 @@ causing a small bump in the line.
 This is because K-means can get "stuck" in a bad solution
 due to an unlucky initialization of the initial center positions
 as we mentioned earlier in the chapter.
+
+```{index} KMeans; n_init
+```
 
 ```{note}
 It is rare that the implementation of K-means from `scikit-learn`

@@ -348,7 +348,7 @@ Below we illustrate how we can use the usual `scikit-learn` workflow to predict 
 price given house size. We use a simple linear regression approach on the full
 Sacramento real estate data set.
 
-```{index} scikit-learn; random_state
+```{index} seed; numpy.random.seed
 ```
 
 As usual, we start by loading packages, setting the seed, loading data, and
@@ -731,6 +731,9 @@ mlm.fit(
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
 
+```{index} predict, mean_squared_error
+```
+
 ```{code-cell} ipython3
 sacramento_test["predicted"] = mlm.predict(sacramento_test[["sqft","beds"]])
 
@@ -1059,10 +1062,7 @@ Scatter plot of the full data, with outlier highlighted in red.
 
 ### Multicollinearity
 
-```{index} colinear
-```
-
-```{index} see: multicolinear; colinear
+```{index} multicollinearity
 ```
 
 The second, and much more subtle, issue can occur when performing multivariable

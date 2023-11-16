@@ -38,9 +38,10 @@ predictor.
 ## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
-* Use Python and `scikit-learn` to fit a linear regression model on training data.
+* Use Python to fit simple and multivariable linear regression models on training data.
 * Evaluate the linear regression model on test data.
 * Compare and contrast predictions obtained from K-nearest neighbors regression to those obtained using linear regression from the same data set.
+* Describe how linear regression is affected by outliers and multicollinearity.
 
 +++
 

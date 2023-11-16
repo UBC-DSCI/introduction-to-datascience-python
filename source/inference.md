@@ -36,16 +36,16 @@ populations and then introduce two common techniques in statistical inference:
 
 By the end of the chapter, readers will be able to do the following:
 
-* Describe real-world examples of questions that can be answered with statistical inference.
-* Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.
-* Define the following statistical sampling terms (population, sample, population parameter, point estimate, sampling distribution).
-* Explain the difference between a population parameter and a sample point estimate.
-* Use Python to draw random samples from a finite population.
-* Use Python to create a sampling distribution from a finite population.
-* Describe how sample size influences the sampling distribution.
-* Define bootstrapping.
-* Use Python to create a bootstrap distribution to approximate a sampling distribution.
-* Contrast the bootstrap and sampling distributions.
+- Describe real-world examples of questions that can be answered with statistical inference.
+- Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.
+- Define the following statistical sampling terms: population, sample, population parameter, point estimate, and sampling distribution.
+- Explain the difference between a population parameter and a sample point estimate.
+- Use Python to draw random samples from a finite population.
+- Use Python to create a sampling distribution from a finite population.
+- Describe how sample size influences the sampling distribution.
+- Define bootstrapping.
+- Use Python to create a bootstrap distribution to approximate a sampling distribution.
+- Contrast the bootstrap and sampling distributions.
 
 +++
 
@@ -317,7 +317,7 @@ with the `name` parameter:
 ```
 
 Below we put everything together
-and also filter the data frame to keep only the room types 
+and also filter the data frame to keep only the room types
 that we are interested in.
 
 ```{code-cell} ipython3
@@ -776,7 +776,7 @@ How large is "large enough?" Unfortunately, it depends entirely on the problem a
 as a rule of thumb, often a sample size of at least 20 will suffice.
 ```
 
-<!--- 
+<!---
 ```{note}
 If random samples of size $n$ are taken from a population, the sample mean
 $\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation

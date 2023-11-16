@@ -21,8 +21,8 @@ kernelspec:
 In this chapter, you'll learn how to set up the software needed to follow along
 with this book on your own computer.  Given that installation instructions can
 vary based on computer setup, we provide instructions for
-multiple operating systems (Ubuntu Linux, MacOS, and Windows). 
-Although the instructions in this chapter will likely work on many systems, 
+multiple operating systems (Ubuntu Linux, MacOS, and Windows).
+Although the instructions in this chapter will likely work on many systems,
 we have specifically verified that they work on a computer that:
 
 - runs Windows 10 Home, MacOS 13 Ventura, or Ubuntu 22.04,
@@ -38,18 +38,18 @@ By the end of the chapter, readers will be able to do the following:
 - Download the worksheets that accompany this book.
 - Install the Docker virtualization engine.
 - Edit and run the worksheets using JupyterLab running inside a Docker container.
-- Install Git, JupyterLab Desktop, and python packages.
+- Install Git, JupyterLab Desktop, and Python packages.
 - Edit and run the worksheets using JupyterLab Desktop.
 
 ## Obtaining the worksheets for this book
 
-The worksheets containing exercises for this book 
+The worksheets containing exercises for this book
 are online at [https://worksheets.python.datasciencebook.ca](https://worksheets.python.datasciencebook.ca).
 The worksheets can be launched directly from that page using the Binder links in the rightmost
-column of the table. This is the easiest way to access the worksheets, but note that you will not 
+column of the table. This is the easiest way to access the worksheets, but note that you will not
 be able to save your work and return to it again later.
-In order to save your progress, you will need to download the worksheets to your own computer and 
-work on them locally. You can download the worksheets as a compressed zip file 
+In order to save your progress, you will need to download the worksheets to your own computer and
+work on them locally. You can download the worksheets as a compressed zip file
 using [the link at the top of the page](https://github.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/archive/refs/heads/main.zip).
 Once you unzip the downloaded file, you will have a folder containing all of the Jupyter notebook worksheets
 accompanying this book. See {numref}`Chapter %s <getting-started-with-jupyter>` for
@@ -64,7 +64,7 @@ software packages, not to mention getting the right versions of
 everything&mdash;the worksheets and autograder tests may not work unless all the versions are
 exactly right! To keep things simple, we instead recommend that you install
 [Docker](https://docker.com). Docker lets you run your Jupyter notebooks inside
-a pre-built *container* that comes with precisely the right versions of 
+a pre-built *container* that comes with precisely the right versions of
 all software packages needed run the worksheets that come with this book.
 ```{index} Docker
 ```
@@ -73,15 +73,15 @@ all software packages needed run the worksheets that come with this book.
 A *container* is a virtualized user space within your computer.
 Within the container, you can run software in isolation without interfering with the
 other software that already exists on your machine. In this book, we use
-a container to run a specific version of the python programming
+a container to run a specific version of the Python programming
 language, as well as other necessary packages. The container ensures that
-the worksheets function correctly, even if you have a different version of python
-installed on your computer&mdash;or even if you haven't installed python at all!
+the worksheets function correctly, even if you have a different version of Python
+installed on your computer&mdash;or even if you haven't installed Python at all!
 ```
 
 ### Windows
 
-**Installation** To install Docker on Windows, 
+**Installation** To install Docker on Windows,
 visit [the online Docker documentation](https://docs.docker.com/desktop/install/windows-install/),
 and download the `Docker Desktop Installer.exe` file. Double-click the file to open the installer
 and follow the instructions on the installation wizard, choosing **WSL-2** instead of **Hyper-V** when prompted.
@@ -90,27 +90,27 @@ and follow the instructions on the installation wizard, choosing **WSL-2** inste
 Occasionally, when you first run Docker on Windows, you will encounter an error message. Some common errors you may see:
 
 - If you need to update WSL, you can enter `cmd.exe` in the Start menu to run the command line. Type `wsl --update` to update WSL.
-- If the admin account on your computer is different to your user account, you must add the user to the "docker-users" group. 
-  Run Computer Management as an administrator and navigate to `Local Users` and `Groups -> Groups -> docker-users`. Right-click to 
+- If the admin account on your computer is different to your user account, you must add the user to the "docker-users" group.
+  Run Computer Management as an administrator and navigate to `Local Users` and `Groups -> Groups -> docker-users`. Right-click to
   add the user to the group. Log out and log back in for the changes to take effect.
 - If you need to enable virtualization, you will need to edit your BIOS. Restart your computer, and enter the BIOS using the hotkey
   (usually Delete, Esc, and/or one of the F# keys). Look for an "Advanced" menu, and under your CPU settings, set the "Virtualization" option
-  to "enabled". Then save the changes and reboot your machine. If you are not familiar with BIOS editing, you may want to find an expert 
-  to help you with this, as editing the BIOS can be dangerous. Detailed instructions for doing this are beyond the scope of this book. 
+  to "enabled". Then save the changes and reboot your machine. If you are not familiar with BIOS editing, you may want to find an expert
+  to help you with this, as editing the BIOS can be dangerous. Detailed instructions for doing this are beyond the scope of this book.
 ```
 
 **Running JupyterLab** Run Docker Desktop. Once it is running, you need to download and run the
-Docker *image* that we have made available for the worksheets (an *image* is like a "snapshot" of a 
+Docker *image* that we have made available for the worksheets (an *image* is like a "snapshot" of a
 computer with all the right packages pre-installed). You only need to do this step one time; the image will remain
 the next time you run Docker Desktop.
-In the Docker Desktop search bar, enter `ubcdsci/py-dsci-100`, as this is 
+In the Docker Desktop search bar, enter `ubcdsci/py-dsci-100`, as this is
 the name of the image. You will see the `ubcdsci/py-dsci-100` image in the list ({numref}`docker-desktop-search`),
 and "latest" in the Tag drop down menu. We need to change "latest" to the right image version before proceeding.
-To find the right tag, open 
+To find the right tag, open
 the [`Dockerfile` in the worksheets repository](https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/Dockerfile),
 and look for the line `FROM ubcdsci/py-dsci-100:` followed by the tag consisting of a sequence of numbers and letters.
-Back in Docker Desktop, in the "Tag" drop down menu, click that tag to select the correct image version. Then click 
-the "Pull" button to download the image. 
+Back in Docker Desktop, in the "Tag" drop down menu, click that tag to select the correct image version. Then click
+the "Pull" button to download the image.
 
 ```{figure} img/setup/docker-1.png
 ---
@@ -148,10 +148,10 @@ name: docker-desktop-runconfig
 The Docker Desktop container run configuration menu.
 ```
 
-After clicking the "Run" button, you will see a terminal. The terminal will then print 
-some text as the Docker container starts. Once the text stops scrolling, find the 
-URL in the terminal that starts 
-with `http://127.0.0.1:8888` (highlighted by the red box in {numref}`docker-desktop-url`), and paste it 
+After clicking the "Run" button, you will see a terminal. The terminal will then print
+some text as the Docker container starts. Once the text stops scrolling, find the
+URL in the terminal that starts
+with `http://127.0.0.1:8888` (highlighted by the red box in {numref}`docker-desktop-url`), and paste it
 into your browser to start JupyterLab.
 
 ```{figure} img/setup/docker-4.png
@@ -162,11 +162,11 @@ name: docker-desktop-url
 The terminal text after running the Docker container. The red box indicates the URL that you should paste into your browser to open JupyterLab.
 ```
 
-When you are done working, make sure to shut down and remove the container by 
+When you are done working, make sure to shut down and remove the container by
 clicking the red trash can symbol (in the top right corner of {numref}`docker-desktop-url`).
 You will not be able to start the container again until you do so.
 More information on installing and running
-Docker on Windows, as well as troubleshooting tips, can 
+Docker on Windows, as well as troubleshooting tips, can
 be found in [the online Docker documentation](https://docs.docker.com/desktop/install/windows-install/).
 
 ### MacOS
@@ -174,18 +174,18 @@ be found in [the online Docker documentation](https://docs.docker.com/desktop/in
 **Installation** To install Docker on MacOS,
 visit [the online Docker documentation](https://docs.docker.com/desktop/install/mac-install/), and
 download the `Docker.dmg` installation file that is appropriate for your
-computer. To know which installer is right for your machine, you need to know 
+computer. To know which installer is right for your machine, you need to know
 whether your computer has an Intel processor (older machines) or an
 Apple processor (newer machines); the [Apple support page](https://support.apple.com/en-ca/HT211814) has
-information to help you determine which processor you have. Once downloaded, double-click 
+information to help you determine which processor you have. Once downloaded, double-click
 the file to open the installer, then drag the Docker icon to the Applications folder.
-Double-click the icon in the Applications folder to start Docker. In the installation 
+Double-click the icon in the Applications folder to start Docker. In the installation
 window, use the recommended settings.
 
 **Running JupyterLab** Run Docker Desktop. Once it is running, follow the
 instructions above in the Windows section on *Running JupyterLab* (the user
 interface is the same). More information on installing and running Docker on
-MacOS, as well as troubleshooting tips, can be 
+MacOS, as well as troubleshooting tips, can be
 found in [the online Docker documentation](https://docs.docker.com/desktop/install/mac-install/).
 
 ### Ubuntu
@@ -206,8 +206,8 @@ the following command, replacing `TAG` with the *tag* you found earlier.
 ```
 docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/py-dsci-100:TAG jupyter lab
 ```
-The terminal will then print some text as the Docker container starts. Once the text stops scrolling, find the 
-URL in your terminal that starts with `http://127.0.0.1:8888` (highlighted by the 
+The terminal will then print some text as the Docker container starts. Once the text stops scrolling, find the
+URL in your terminal that starts with `http://127.0.0.1:8888` (highlighted by the
 red box in {numref}`ubuntu-docker-terminal`), and paste it into your browser to start JupyterLab.
 More information on installing and running Docker on Ubuntu, as well as troubleshooting tips, can be found in
 [the online Docker documentation](https://docs.docker.com/engine/install/ubuntu/).
@@ -226,23 +226,23 @@ The terminal text after running the Docker container in Ubuntu. The red box indi
 You can also run the worksheets accompanying this book on your computer
 using [JupyterLab Desktop](https://github.com/jupyterlab/jupyterlab-desktop).
 The advantage of JupyterLab Desktop over Docker is that it can be easier to install;
-Docker can sometimes run into some fairly technical issues (especially on Windows computers) 
-that require expert troubleshooting. The downside of JupyterLab Desktop is that there is a (very) small chance that 
-you may not end up with the right versions of all the python packages needed for the worksheets. Docker, on the other hand,
-*guarantees* that the worksheets will work exactly as intended. 
+Docker can sometimes run into some fairly technical issues (especially on Windows computers)
+that require expert troubleshooting. The downside of JupyterLab Desktop is that there is a (very) small chance that
+you may not end up with the right versions of all the Python packages needed for the worksheets. Docker, on the other hand,
+*guarantees* that the worksheets will work exactly as intended.
 
 In this section, we will cover how to install JupyterLab Desktop,
 Git and the JupyterLab Git extension (for version control, as discussed in {numref}`Chapter %s <getting-started-with-version-control>`), and
-all of the python packages needed to run
+all of the Python packages needed to run
 the code in this book.
 ```{index} JupyterLab Desktop, git;installation
 ```
 
 ### Windows
 
-**Installation** First, we will install Git for version control. 
-Go to [the Git download page](https://git-scm.com/download/win) and 
-download the Windows version of Git. Once the download has finished, run the installer and accept 
+**Installation** First, we will install Git for version control.
+Go to [the Git download page](https://git-scm.com/download/win) and
+download the Windows version of Git. Once the download has finished, run the installer and accept
 the default configuration for all pages.
 Next, visit the ["Installation" section of the JupyterLab Desktop homepage](https://github.com/jupyterlab/jupyterlab-desktop#installation).
 Download the `JupyterLab-Setup-Windows.exe` installer file for Windows.
@@ -265,8 +265,8 @@ The JupyterLab Desktop graphical user interface.
 
 Next, we need to add the JupyterLab Git extension (so that
 we can use version control directly from within JupyterLab Desktop),
-the IPython kernel (to enable the python programming language),
-and various python software packages. Click "New session..." in the JupyterLab Desktop
+the IPython kernel (to enable the Python programming language),
+and various Python software packages. Click "New session..." in the JupyterLab Desktop
 user interface, then scroll to the bottom, and click "Terminal" under the "Other" heading ({numref}`setup-jlab-gui-2`).
 
 ```{figure} img/setup/jlab-2.png
@@ -283,29 +283,29 @@ In this terminal, run the following commands:
 pip install --upgrade jupyterlab-git
 conda env update --file https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/environment.yml
 ```
-The second command installs the specific python and package versions specified in
-the `environment.yml` file found in 
+The second command installs the specific Python and package versions specified in
+the `environment.yml` file found in
 [the worksheets repository](https://worksheets.python.datasciencebook.ca).
 We will always keep the versions in the `environment.yml` file updated
 so that they are compatible with the exercise worksheets that accompany the book.
-Once all of the software installation is complete, it is a good idea to restart 
+Once all of the software installation is complete, it is a good idea to restart
 JupyterLab Desktop entirely before you proceed to doing your data analysis.
-This will ensure all the software and settings you put in place are 
+This will ensure all the software and settings you put in place are
 correctly set up and ready for use.
 
 
 ### MacOS
 
-**Installation** First, we will install Git for version control. 
-Open the terminal ([how-to video](https://youtu.be/5AJbWEWwnbY)) 
+**Installation** First, we will install Git for version control.
+Open the terminal ([how-to video](https://youtu.be/5AJbWEWwnbY))
 and type the following command:
 
 ```
 xcode-select --install
 ```
 Next, visit the ["Installation" section of the JupyterLab Desktop homepage](https://github.com/jupyterlab/jupyterlab-desktop#installation).
-Download the `JupyterLab-Setup-MacOS-x64.dmg` or `JupyterLab-Setup-MacOS-arm64.dmg` installer file. 
-To know which installer is right for your machine, you need to know 
+Download the `JupyterLab-Setup-MacOS-x64.dmg` or `JupyterLab-Setup-MacOS-arm64.dmg` installer file.
+To know which installer is right for your machine, you need to know
 whether your computer has an Intel processor (older machines) or an
 Apple processor (newer machines); the [Apple support page](https://support.apple.com/en-ca/HT211814) has
 information to help you determine which processor you have.
@@ -316,11 +316,11 @@ the icon in the Applications folder to start JupyterLab Desktop.
 **Configuring JupyterLab Desktop** From this point onward, with JupyterLab Desktop running,
 follow the instructions in the Windows section on *Configuring JupyterLab Desktop* to set up the
 environment, install the JupyterLab Git extension, and install
-the various python software packages needed for the worksheets.
+the various Python software packages needed for the worksheets.
 
 ### Ubuntu
 
-**Installation** First, we will install Git for version control. 
+**Installation** First, we will install Git for version control.
 Open the terminal and type the following commands:
 ```
 sudo apt update
@@ -340,4 +340,4 @@ jlab
 **Configuring JupyterLab Desktop** From this point onward, with JupyterLab Desktop running,
 follow the instructions in the Windows section on *Configuring JupyterLab Desktop* to set up the
 environment, install the JupyterLab Git extension, and install
-the various python software packages needed for the worksheets.
+the various Python software packages needed for the worksheets.

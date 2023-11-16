@@ -15,7 +15,7 @@ kernelspec:
 
 ![](img/frontmatter/ds-a-first-intro-graphic.jpg)
 
-# Data Science 
+# Data Science
 
 ## *A First Introduction (Python Edition)*
 

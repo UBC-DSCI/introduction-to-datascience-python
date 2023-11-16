@@ -33,7 +33,7 @@ This is unlike the past two chapters, which focused on predicting categorical
 variables via classification. However, regression does have many similarities
 to classification: for example, just as in the case of classification,
 we will split our data into training, validation, and test sets, we will
-use `scikit-learn` workflows, we will use a K-nearest neighbors (KNN)
+use `scikit-learn` workflows, we will use a K-nearest neighbors (K-NN)
 approach to make predictions, and we will use cross-validation to choose K.
 Because of how similar these procedures are, make sure to read
 {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>` before reading
@@ -51,14 +51,15 @@ however that is beyond the scope of this book.
 ## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
-* Recognize situations where a simple regression analysis would be appropriate for making predictions.
-* Explain the K-nearest neighbor (KNN) regression algorithm and describe how it differs from KNN classification.
-* Interpret the output of a KNN regression.
-* In a data set with two or more variables, perform K-nearest neighbor regression in Python using a `scikit-learn` workflow.
-* Execute cross-validation in Python to choose the number of neighbors.
-* Evaluate KNN regression prediction accuracy in Python using a test data set and the root mean squared prediction error (RMSPE).
-* In the context of KNN regression, compare and contrast goodness of fit and prediction properties (namely RMSE vs RMSPE).
-* Describe the advantages and disadvantages of K-nearest neighbors regression.
+- Recognize situations where a regression analysis would be appropriate for making predictions.
+- Explain the K-nearest neighbors (K-NN) regression algorithm and describe how it differs from K-NN classification.
+- Interpret the output of a K-NN regression.
+- In a data set with two or more variables, perform K-nearest neighbors regression in Python.
+- Evaluate K-NN regression prediction quality in Python using the root mean squared prediction error (RMSPE).
+- Estimate the RMSPE in Python using cross-validation or a test set.
+- Choose the number of neighbors in K-nearest neighbors regression by minimizing estimated cross-validation RMSPE.
+- Describe underfitting and overfitting, and relate it to the number of neighbors in K-nearest neighbors regression.
+- Describe the advantages and disadvantages of K-nearest neighbors regression.
 
 +++
 
@@ -220,10 +221,10 @@ Much like in the case of classification,
 we can use a K-nearest neighbors-based
 approach in regression to make predictions.
 Let's take a small sample of the data in {numref}`fig:07-edaRegr`
-and walk through how K-nearest neighbors (KNN) works
+and walk through how K-nearest neighbors (K-NN) works
 in a regression context before we dive in to creating our model and assessing
 how well it predicts house sale price. This subsample is taken to allow us to
-illustrate the mechanics of KNN regression with a few data points; later in
+illustrate the mechanics of K-NN regression with a few data points; later in
 this chapter we will use all the data.
 
 ```{index} pandas.DataFrame; sample
@@ -371,12 +372,12 @@ Our predicted price is \${glue:text}`knn-5-pred`
 (shown as a red point in {numref}`fig:07-predictedViz-knn`), which is much less than \$350,000; perhaps we
 might want to offer less than the list price at which the house is advertised.
 But this is only the very beginning of the story. We still have all the same
-unanswered questions here with KNN regression that we had with KNN
+unanswered questions here with K-NN regression that we had with K-NN
 classification: which $K$ do we choose, and is our model any good at making
 predictions? In the next few sections, we will address these questions in the
-context of KNN regression.
+context of K-NN regression.
 
-One strength of the KNN regression algorithm
+One strength of the K-NN regression algorithm
 that we would like to draw attention to at this point
 is its ability to work well with non-linear relationships
 (i.e., if the relationship is not a straight line).
@@ -384,7 +385,7 @@ This stems from the use of nearest neighbors to predict values.
 The algorithm really has very few assumptions
 about what the data must look like for it to work.
 
-+++ 
++++
 
 ## Training, evaluating, and tuning the model
 
@@ -427,11 +428,11 @@ sacramento_train, sacramento_test = train_test_split(
 ```{index} see: root mean square prediction error; RMSPE
 ```
 
-Next, we'll use cross-validation to choose $K$. In KNN classification, we used
+Next, we'll use cross-validation to choose $K$. In K-NN classification, we used
 accuracy to see how well our predictions matched the true labels. We cannot use
 the same metric in the regression setting, since our predictions will almost never
 *exactly* match the true response variable values. Therefore in the
-context of KNN regression we will use root mean square prediction error (RMSPE) instead.
+context of K-NN regression we will use root mean square prediction error (RMSPE) instead.
 The mathematical formula for calculating RMSPE is:
 
 $$\text{RMSPE} = \sqrt{\frac{1}{n}\sum\limits_{i=1}^{n}(y_i - \hat{y}_i)^2}$$
@@ -524,7 +525,7 @@ Scatter plot of price (USD) versus house size (square feet) with example predict
 ```{note}
 When using many code packages, the evaluation output
 we will get to assess the prediction quality of
-our KNN regression models is labeled "RMSE", or "root mean squared
+our K-NN regression models is labeled "RMSE", or "root mean squared
 error". Why is this so, and why not RMSPE?
 In statistics, we try to be very precise with our
 language to indicate whether we are calculating the prediction error on the
@@ -553,10 +554,10 @@ opposed to the classification problems from the previous chapters.  The use of
 different metrics (instead of accuracy) for tuning and evaluation.  Next we
 specify a parameter grid containing numbers of neighbors
 ranging from 1 to 200.  Then we create a 5-fold `GridSearchCV` object, and
-pass in the pipeline and parameter grid. 
+pass in the pipeline and parameter grid.
 There is one additional slight complication: unlike classification models in `scikit-learn`---which
 by default use accuracy for tuning, as desired---regression models in `scikit-learn`
-do not use the RMSPE for tuning by default. 
+do not use the RMSPE for tuning by default.
 So we need to specify that we want to use the RMSPE for tuning by setting the
 `scoring` argument to `"neg_root_mean_squared_error"`.
 
@@ -570,7 +571,7 @@ of `sacr_pipeline.get_params()`, as we did in {numref}`Chapter %s <classificatio
 ```
 
 ```{code-cell} ipython3
-# import the KNN regression model
+# import the K-NN regression model
 from sklearn.neighbors import KNeighborsRegressor
 
 # preprocess the data, make the pipeline
@@ -594,7 +595,7 @@ on `sacr_gridsearch`. Note the use of two brackets for the input features
 (`sacramento_train[["sqft"]]`), which creates a data frame with a single column.
 As we learned in {numref}`Chapter %s <wrangling>`, we can obtain a data frame with a
 subset of columns by passing a list of column names; `["sqft"]` is a list with one
-item, so we obtain a data frame with one column. If instead we used 
+item, so we obtain a data frame with one column. If instead we used
 just one bracket (`sacramento_train["sqft"]`), we would obtain a series.
 In `scikit-learn`, it is easier to work with the input features as a data frame
 rather than a series, so we opt for two brackets here. On the other hand, the response variable
@@ -602,7 +603,7 @@ can be a series, so we use just one bracket there (`sacramento_train["price"]`).
 
 As in {numref}`Chapter %s <classification2>`, once the model has been fit
 we will wrap the `cv_results_` output in a data frame, extract
-only the relevant columns, compute the standard error based on 5 folds, 
+only the relevant columns, compute the standard error based on 5 folds,
 and rename the parameter column to be more readable.
 
 
@@ -630,7 +631,7 @@ sacr_results
 In the `sacr_results` results data frame, we see that the
 `n_neighbors` variable contains the values of $K$,
 and `mean_test_score` variable contains the value of the RMSPE estimated via
-cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative? 
+cross-validation...Wait a moment! Isn't the RMSPE supposed to be nonnegative?
 Recall that when we specified the `scoring` argument in the `GridSearchCV` object,
 we used the value `"neg_root_mean_squared_error"`. See the `neg_` at the start?
 That stands for *negative*! As it turns out, `scikit-learn` always tries to *maximize* a score
@@ -644,7 +645,7 @@ sacr_results["mean_test_score"] = -sacr_results["mean_test_score"]
 sacr_results
 ```
 
-Alright, now the `mean_test_score` variable actually has values of the RMSPE 
+Alright, now the `mean_test_score` variable actually has values of the RMSPE
 for different numbers of neighbors. Finally, the `sem_test_score` variable
 contains the standard error of our cross-validation RMSPE estimate, which
 is a measure of how uncertain we are in the mean value. Roughly, if
@@ -687,7 +688,7 @@ glue("fig:07-choose-k-knn-plot", sacr_tunek_plot, display=False)
 Effect of the number of neighbors on the RMSPE.
 :::
 
-To see which parameter value corresponds to the minimum RMSPE, 
+To see which parameter value corresponds to the minimum RMSPE,
 we can also access the `best_params_` attribute of the original fit `GridSearchCV` object.
 Note that it is still useful to visualize the results as we did above
 since this provides additional information on how the model performance varies.
@@ -705,7 +706,7 @@ to be too small or too large, we cause the RMSPE to increase, as shown in
 
 {numref}`fig:07-howK` visualizes the effect of different settings of $K$ on the
 regression model. Each plot shows the predicted values for house sale price from
-our KNN regression model for 6 different values for $K$: 1, 3, 25, {glue:text}`best_k_sacr`, 250, and 699 (i.e., all of the training data).
+our K-NN regression model for 6 different values for $K$: 1, 3, 25, {glue:text}`best_k_sacr`, 250, and 699 (i.e., all of the training data).
 For each model, we predict prices for the range of possible home sizes we
 observed in the data set (here 500 to 5,000 square feet) and we plot the
 predicted prices as a orange line.
@@ -765,7 +766,7 @@ glue(
 :::{glue:figure} fig:07-howK
 :name: fig:07-howK
 
-Predicted values for house price (represented as a orange line) from KNN regression models for six different values for $K$.
+Predicted values for house price (represented as a orange line) from K-NN regression models for six different values for $K$.
 :::
 
 +++
@@ -823,17 +824,16 @@ chapter.
 ## Evaluating on the test set
 
 To assess how well our model might do at predicting on unseen data, we will
-assess its RMSPE on the test data. To do this, we first need to retrain the 
-KNN regression model on the entire training data set using $K =$ {glue:text}`best_k_sacr`
+assess its RMSPE on the test data. To do this, we first need to retrain the
+K-NN regression model on the entire training data set using $K =$ {glue:text}`best_k_sacr`
 neighbors. As we saw in {numref}`Chapter %s <classification2>` we do not have to do this ourselves manually; `scikit-learn`
 does it for us automatically. To make predictions with the best model on the test data,
 we can use the `predict` method of the fit `GridSearchCV` object.
-We then use the `mean_squared_error`
-function (with the `y_true` and `y_pred` arguments) 
+We then use the `mean_squared_error` function (with the `y_true` and `y_pred` arguments)
 to compute the mean squared prediction error, and finally take the
-square root to get the RMSPE. The reason that we do not just use the `score` 
+square root to get the RMSPE. The reason that we do not just use the `score`
 method---as in {numref}`Chapter %s <classification2>`---is that the `KNeighborsRegressor`
-model uses a different default scoring metric than the RMSPE. 
+model uses a different default scoring metric than the RMSPE.
 
 ```{code-cell} ipython3
 from sklearn.metrics import mean_squared_error
@@ -862,7 +862,7 @@ RMSPE estimate of our tuned model
 (which was \${glue:text}`cv_RMSPE`,
 so we can say that the model appears to generalize well
 to new data that it has never seen before.
-However, much like in the case of KNN classification, whether this value for RMSPE is *good*&mdash;i.e.,
+However, much like in the case of K-NN classification, whether this value for RMSPE is *good*&mdash;i.e.,
 whether an error of around \${glue:text}`test_RMSPE`
 is acceptable&mdash;depends entirely on the application.
 In this application, this error
@@ -906,7 +906,7 @@ base_plot = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
 
 # Add the predictions as a line
 sacr_preds_plot = base_plot + alt.Chart(
-    sqft_prediction_grid, 
+    sqft_prediction_grid,
     title=f"K = {best_k_sacr}"
 ).mark_line(
     color="#ff7f0e"
@@ -927,14 +927,14 @@ glue("fig:07-predict-all", sacr_preds_plot)
 :::{glue:figure} fig:07-predict-all
 :name: fig:07-predict-all
 
-Predicted values of house price (orange line) for the final KNN regression model.
+Predicted values of house price (orange line) for the final K-NN regression model.
 :::
 
 +++
 
-## Multivariable KNN regression
+## Multivariable K-NN regression
 
-As in KNN classification, we can use multiple predictors in KNN regression.
+As in K-NN classification, we can use multiple predictors in K-NN regression.
 In this setting, we have the same concerns regarding the scale of the predictors. Once again,
  predictions are made by identifying the $K$
 observations that are nearest to the new point we want to predict; any
@@ -943,16 +943,16 @@ variables on a small scale. Hence, we should re-define the preprocessor in the
 pipeline to incorporate all predictor variables.
 
 Note that we also have the same concern regarding the selection of predictors
-in KNN regression as in KNN classification: having more predictors is **not** always
+in K-NN regression as in K-NN classification: having more predictors is **not** always
 better, and the choice of which predictors to use has a potentially large influence
 on the quality of predictions. Fortunately, we can use the predictor selection
-algorithm from {numref}`Chapter %s <classification2>` in KNN regression as well.
+algorithm from {numref}`Chapter %s <classification2>` in K-NN regression as well.
 As the algorithm is the same, we will not cover it again in this chapter.
 
 ```{index} K-nearest neighbors; multivariable regression, Sacramento real estate
 ```
 
-We will now demonstrate a multivariable KNN regression analysis of the
+We will now demonstrate a multivariable K-NN regression analysis of the
 Sacramento real estate data using `scikit-learn`. This time we will use
 house size (measured in square feet) as well as number of bedrooms as our
 predictors, and continue to use house sale price as our response variable
@@ -991,7 +991,7 @@ Scatter plot of the sale price of houses versus the number of bedrooms.
 the house sale price tends to increase as well, but that the relationship
 is quite weak. Does adding the number of bedrooms
 to our model improve our ability to predict price? To answer that
-question, we will have to create a new KNN regression
+question, we will have to create a new K-NN regression
 model using house size and number of bedrooms, and then we can compare it to
 the model we previously came up with that only used house
 size. Let's do that now!
@@ -1054,7 +1054,7 @@ glue("cv_RMSPE_2pred", "{0:,.0f}".format(min_rmspe_sacr_multi))
 ```
 
 Here we see that the smallest estimated RMSPE from cross-validation occurs when $K =$ {glue:text}`best_k_sacr_multi`.
-If we want to compare this multivariable KNN regression model to the model with only a single
+If we want to compare this multivariable K-NN regression model to the model with only a single
 predictor *as part of the model tuning process* (e.g., if we are running forward selection as described
 in the chapter on evaluating and tuning classification models),
 then we must compare the RMSPE estimated using only the training data via cross-validation.
@@ -1065,7 +1065,7 @@ The estimated cross-validation RMSPE for the multivariable model is
 Thus in this case, we did not improve the model
 by a large amount by adding this additional predictor.
 
-Regardless, let's continue the analysis to see how we can make predictions with a multivariable KNN regression model
+Regardless, let's continue the analysis to see how we can make predictions with a multivariable K-NN regression model
 and evaluate its performance on test data. As previously, we will use the best model to make predictions on the test data
 via the `predict` method of the fit `GridSearchCV` object. Finally, we will use the `mean_squared_error` function
 to compute the RMSPE.
@@ -1086,7 +1086,7 @@ RMSPE_mult
 glue("RMSPE_mult", "{0:,.0f}".format(RMSPE_mult))
 ```
 
-This time, when we performed KNN regression on the same data set, but also
+This time, when we performed K-NN regression on the same data set, but also
 included number of bedrooms as a predictor, we obtained a RMSPE test error
 of \${glue:text}`RMSPE_mult`.
 {numref}`fig:07-knn-mult-viz` visualizes the model's predictions overlaid on top of the data. This
@@ -1143,7 +1143,7 @@ glue("fig:07-knn-mult-viz", fig)
 :name: fig:07-knn-mult-viz
 :figclass: caption-hack
 
-KNN regression model’s predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.
+K-NN regression model's predictions represented as a surface in 3D space overlaid on top of the data using three predictors (price, house size, and the number of bedrooms). Note that in general we recommend against using 3D visualizations; here we use a 3D visualization only to illustrate what the surface of predictions looks like for learning purposes.
 ```
 
 +++
@@ -1160,9 +1160,9 @@ bedrooms, we would predict the same price for these two houses.
 
 +++
 
-## Strengths and limitations of KNN regression
+## Strengths and limitations of K-NN regression
 
-As with KNN classification (or any prediction algorithm for that matter), KNN
+As with K-NN classification (or any prediction algorithm for that matter), K-NN
 regression has both strengths and weaknesses. Some are listed here:
 
 **Strengths:** K-nearest neighbors regression

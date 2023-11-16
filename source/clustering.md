@@ -39,16 +39,17 @@ including techniques to choose the number of clusters.
 
 By the end of the chapter, readers will be able to do the following:
 
-* Describe a case where clustering is appropriate,
+* Describe a situation in which clustering is an appropriate technique to use,
 and what insight it might extract from the data.
 * Explain the K-means clustering algorithm.
 * Interpret the output of a K-means analysis.
-* Differentiate between clustering and classification.
-* Identify when it is necessary to scale variables before clustering and do this using Python
-* Perform k-means clustering in Python using `scikit-learn`
+* Differentiate between clustering, classification, and regression.
+* Identify when it is necessary to scale variables before clustering, and do this using Python.
+* Perform K-means clustering in Python using `scikit-learn`.
 * Use the elbow method to choose the number of clusters for K-means.
-* Visualize the output of k-means clustering in Python using a coloured scatter plot
-* Describe advantages, limitations and assumptions of the kmeans clustering algorithm.
+* Visualize the output of K-means clustering in Python using a colored scatter plot.
+* Describe advantages, limitations and assumptions of the K-means clustering algorithm.
+
 
 ## Clustering
 
@@ -912,7 +913,7 @@ penguin_clust[1].inertia_
 
 To calculate the total WSSD for a variety of Ks, we will
 create a data frame that contains different values of `k`
-and the WSSD of running KMeans with each values of k.
+and the WSSD of running K-means with each values of k.
 To create this dataframe,
 we will use what is called a "list comprehension" in Python,
 where we repeat an operation multiple times
@@ -934,7 +935,7 @@ we could square all the numbers from 1-4 and store them in a list:
 
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.
 For each value of K,
-we create a new KMeans model
+we create a new `KMeans` model
 and wrap it in a `scikit-learn` pipeline
 with the preprocessor we created earlier.
 We store the WSSD values in a list that we will use to create a dataframe
@@ -1008,7 +1009,7 @@ due to an unlucky initialization of the initial center positions
 as we mentioned earlier in the chapter.
 
 ```{note}
-It is rare that the KMeans function from `scikit-learn`
+It is rare that the implementation of K-means from `scikit-learn`
 gets stuck in a bad solution, because `scikit-learn` tries to choose
 the initial centers carefully to prevent this from happening.
 If you still find yourself in a situation where you have a bump in the elbow plot,

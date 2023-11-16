@@ -144,7 +144,7 @@ In this case, the file containing the breast cancer data set is a `.csv`
 file with headers. We'll use the `read_csv` function with no additional
 arguments, and then inspect its contents:
 
-```{index} read function; read\_csv
+```{index} read function; read_csv
 ```
 
 ```{code-cell} ipython3

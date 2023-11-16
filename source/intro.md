@@ -264,7 +264,7 @@ Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
-```{index} function, argument, read function; read\_csv
+```{index} function, argument, read function; read_csv
 ```
 
 To load this data into Python so that we can do things with it (e.g., perform
@@ -437,7 +437,10 @@ can_lang
 
 ## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} pandas.DataFrame; [], pandas.DataFrame; loc[]
+```{index} see: []; pandas.DataFrame; [], see: loc[]; pandas.DataFrame; loc[]
+```
+
+```{index} pandas.DataFrame; [], pandas.DataFrame; loc[], selecting columns
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
@@ -469,7 +472,7 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category.
 
-```{index} pandas.DataFrame; [], filter, logical statement, logical statement; equivalency operator, string
+```{index} pandas.DataFrame; [], filtering rows, logical statement, logical statement; equivalency operator, string
 ```
 
 We can use the `[]` operation to obtain the subset of rows with desired values
@@ -515,7 +518,7 @@ can_lang[can_lang["category"] == "Aboriginal languages"]
 ### Using `[]` to select columns
 
 
-```{index} pandas.DataFrame; [], select;
+```{index} pandas.DataFrame; [], selecting columns
 ```
 
 We can also use the `[]` operation to select columns from a data frame.
@@ -545,7 +548,7 @@ can_lang[["language", "mother_tongue"]]
 
 ### Using `loc[]` to filter rows and select columns
 
-```{index} pandas.DataFrame; loc[]
+```{index} pandas.DataFrame; loc[], selecting columns
 ```
 
 The `[]` operation is only used when you want to filter rows *or* select columns;
@@ -652,7 +655,7 @@ ten_lang
 (ch1-adding-modifying)=
 ## Adding and modifying columns
 
-```{index} assign
+```{index} assign, adding columns, modifying columns
 ```
 
 Recall that our data analysis question referred to the *count* of Canadians
@@ -699,9 +702,6 @@ the ten Aboriginal languages in the `ten_lang` data frame were spoken
 as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
 ## Combining analysis steps with chaining and multiline expressions
-
-```{index} chaining methods
-```
 
 It took us 3 steps to find the ten Aboriginal languages most often reported in
 2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:
@@ -770,6 +770,9 @@ In both cases, Python keeps reading the next line to figure out
 what the rest of the expression is. We could, of course,
 put all of the code on one line of code, but splitting it across
 multiple lines helps a lot with code readability.
+
+```{index} chaining
+```
 
 We still have to handle the issue that each line of code---i.e., each step in the analysis---introduces
 a new temporary object. To address this issue, we can *chain* multiple operations together without
@@ -866,7 +869,9 @@ First, we need to import the `altair` package.
 
 ```{code-cell} ipython3
 import altair as alt
+```
 
+```{index} altair; mark_bar, altair; encoding channel
 ```
 
 +++
@@ -916,7 +921,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 +++
 
-```{index} see: .; chaining methods
+```{index} see: .; chaining
 ```
 
 ### Formatting `altair` charts
@@ -935,7 +940,7 @@ Canadian Residents)" would be much more informative. To make the code easier to
 read, we're spreading it out over multiple lines just as we did in the previous
 section with pandas.
 
-```{index} plot; labels, plot; axis labels
+```{index} plot; labels, plot; axis labels, altair; alt.X, altair; alt.Y, altair; title
 ```
 
 Adding additional labels to our visualizations that we create in `altair` is

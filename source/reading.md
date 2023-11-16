@@ -177,7 +177,7 @@ to where the resource is located on the remote machine.
 (readcsv)=
 ### `read_csv` to read in comma-separated values files
 
-```{index} csv, reading; separator, read function; read\_csv
+```{index} csv, reading; separator, read function; read_csv
 ```
 
 Now that we have learned about *where* data could be, we will learn about *how*

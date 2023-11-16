@@ -220,7 +220,7 @@ predict the former.
 
 ## K-nearest neighbors regression
 
-```{index} K-nearest neighbors; regression
+```{index} K-nearest neighbors, K-nearest neighbors; regression
 ```
 
 Much like in the case of classification,
@@ -540,7 +540,7 @@ training or testing data. But many people just use RMSE for both,
 and rely on context to denote which data the root mean squared error is being calculated on.
 ```
 
-```{index} scikit-learn, scikit-learn; pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
+```{index} scikit-learn, scikit-learn; Pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
 ```
 
 Now that we know how we can assess how well our model predicts a numerical

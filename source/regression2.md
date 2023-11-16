@@ -734,7 +734,11 @@ mlm.fit(
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
 
-```{index} predict, mean_squared_error
+```{index} scikit-learn;predict, scikit-learn;mean_squared_error
+```
+```{index} see: mean_squared_error;scikit-learn
+```
+```{index} see: predict;scikit-learn
 ```
 
 ```{code-cell} ipython3

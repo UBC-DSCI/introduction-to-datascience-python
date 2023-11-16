@@ -685,7 +685,10 @@ canlang_table = conn.table("can_lang")
 canlang_table
 ```
 
-```{index} count, ibis; count
+```{index} ibis; count
+```
+
+```{index} see: count; ibis
 ```
 
 Although it looks like we might have obtained the whole data frame from the database, we didn't!
@@ -721,7 +724,9 @@ the *actual* text of the SQL query that `ibis` sends to the database, you can us
 instead of `execute`. But note that you have to pass the result of `compile` to the `str` function to turn it into
 a human-readable string first.
 
-```{index} compile, ibis; compile, str
+```{index} see: compile;ibis
+```
+```{index} ibis; compile, str
 ```
 
 ```{code-cell} ipython3

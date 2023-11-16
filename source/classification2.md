@@ -1180,7 +1180,9 @@ functionality, named `GridSearchCV`, to automatically handle the details for us.
 Before we use `GridSearchCV`, we need to create a new pipeline
 with a `KNeighborsClassifier` that has the number of neighbors left unspecified.
 
-```{index} make_pipeline
+```{index} see: make_pipeline; scikit-learn
+```
+```{index} scikit-learn;make_pipeline
 ```
 
 ```{code-cell} ipython3
@@ -1670,7 +1672,7 @@ Overview of K-NN classification.
 
 +++
 
-```{index} scikit-learn, Pipeline, cross-validation, K-nearest neighbors; classification, classification
+```{index} scikit-learn;Pipeline, cross-validation, K-nearest neighbors; classification, classification
 ```
 
 The overall workflow for performing K-nearest neighbors classification using `scikit-learn` is as follows:

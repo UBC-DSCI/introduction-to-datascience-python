@@ -39,16 +39,16 @@ including techniques to choose the number of clusters.
 
 By the end of the chapter, readers will be able to do the following:
 
-* Describe a situation in which clustering is an appropriate technique to use,
+- Describe a situation in which clustering is an appropriate technique to use,
 and what insight it might extract from the data.
-* Explain the K-means clustering algorithm.
-* Interpret the output of a K-means analysis.
-* Differentiate between clustering, classification, and regression.
-* Identify when it is necessary to scale variables before clustering, and do this using Python.
-* Perform K-means clustering in Python using `scikit-learn`.
-* Use the elbow method to choose the number of clusters for K-means.
-* Visualize the output of K-means clustering in Python using a colored scatter plot.
-* Describe advantages, limitations and assumptions of the K-means clustering algorithm.
+- Explain the K-means clustering algorithm.
+- Interpret the output of a K-means analysis.
+- Differentiate between clustering, classification, and regression.
+- Identify when it is necessary to scale variables before clustering, and do this using Python.
+- Perform K-means clustering in Python using `scikit-learn`.
+- Use the elbow method to choose the number of clusters for K-means.
+- Visualize the output of K-means clustering in Python using a colored scatter plot.
+- Describe advantages, limitations and assumptions of the K-means clustering algorithm.
 
 
 ## Clustering

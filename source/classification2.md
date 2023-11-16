@@ -1123,6 +1123,7 @@ cv_10_metrics
 ```
 
 ```{index} cross-validation; folds
+```
 
 In this case, using 10-fold instead of 5-fold cross validation did
 reduce the standard error very slightly. In fact, due to the randomness in how the data are split, sometimes

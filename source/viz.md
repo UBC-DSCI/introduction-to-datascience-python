@@ -1021,15 +1021,15 @@ glue("can_lang_plot_legend", can_lang_plot_legend.properties(height=320, width=4
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with the legend edited.
 :::
 
+```{index} color palette, color blindness simulator
+```
+
 In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color scheme, which is called `"tableau10"`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
 In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
 If you are unsure about a certain color combination, you can use
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
 if your visualizations are color-blind friendly.
-
-```{index} color palette; color blindness simulator
-```
 
 All the available color schemes and information on how to create your own can be viewed [in the Altair documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
 To change the color scheme of our chart,

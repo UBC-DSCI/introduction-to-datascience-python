@@ -475,7 +475,7 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category.
 
-```{index} pandas.DataFrame; [], filtering rows, logical statement, logical operator; equivalency operator, string
+```{index} pandas.DataFrame; [], filtering rows, logical statement, logical operator; equivalency (==), string
 ```
 
 We can use the `[]` operation to obtain the subset of rows with desired values
@@ -658,7 +658,7 @@ ten_lang
 (ch1-adding-modifying)=
 ## Adding and modifying columns
 
-```{index} assign, adding columns, modifying columns
+```{index} adding columns, modifying columns
 ```
 
 Recall that our data analysis question referred to the *count* of Canadians

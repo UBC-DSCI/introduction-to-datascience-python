@@ -700,7 +700,7 @@ In `ibis`, we can do that using the `count` function from the table object.
 canlang_table.count()
 ```
 
-```{index} execute, ibis; execute
+```{index} ibis; execute
 ```
 
 Wait a second...this isn't the number of rows in the database. In fact, we haven't actually sent our

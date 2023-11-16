@@ -72,6 +72,9 @@ This knowledge will be helpful in effectively utilizing these objects in our dat
 ```{index} data frame; definition
 ```
 
+```{index} see: data frame; pandas.DataFrame
+```
+
 ```{index} pandas.DataFrame
 ```
 
@@ -1027,15 +1030,18 @@ pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 
 ### Extracting rows above or below a threshold using `>` and `<`
 
-```{index} logical operator; greater than (>, >=), logical operator; less than (<, <=)
+```{index} logical operator; greater than (> and >=), logical operator; less than (< and <=)
 ```
 
 ```{index} see: >; logical operator
 ```
+
 ```{index} see: >=; logical operator
 ```
+
 ```{index} see: <; logical operator
 ```
+
 ```{index} see: <=; logical operator
 ```
 

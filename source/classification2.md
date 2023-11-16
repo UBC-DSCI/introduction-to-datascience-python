@@ -409,6 +409,8 @@ random_numbers2_third
 array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 ```
 
+````
+
 ## Evaluating performance with `scikit-learn`
 
 ```{index} scikit-learn, visualization; scatter

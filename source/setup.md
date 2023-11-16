@@ -66,7 +66,7 @@ exactly right! To keep things simple, we instead recommend that you install
 [Docker](https://docker.com). Docker lets you run your Jupyter notebooks inside
 a pre-built *container* that comes with precisely the right versions of
 all software packages needed run the worksheets that come with this book.
-```{index} Docker
+```{index} Docker, container
 ```
 
 ```{note}
@@ -85,6 +85,8 @@ installed on your computer&mdash;or even if you haven't installed Python at all!
 visit [the online Docker documentation](https://docs.docker.com/desktop/install/windows-install/),
 and download the `Docker Desktop Installer.exe` file. Double-click the file to open the installer
 and follow the instructions on the installation wizard, choosing **WSL-2** instead of **Hyper-V** when prompted.
+```{index} Docker;installation
+```
 
 ```{note}
 Occasionally, when you first run Docker on Windows, you will encounter an error message. Some common errors you may see:
@@ -99,6 +101,8 @@ Occasionally, when you first run Docker on Windows, you will encounter an error 
   to help you with this, as editing the BIOS can be dangerous. Detailed instructions for doing this are beyond the scope of this book.
 ```
 
+```{index} Docker;image, Docker;tag
+```
 **Running JupyterLab** Run Docker Desktop. Once it is running, you need to download and run the
 Docker *image* that we have made available for the worksheets (an *image* is like a "snapshot" of a
 computer with all the right packages pre-installed). You only need to do this step one time; the image will remain

@@ -40,16 +40,18 @@ By the end of the chapter, readers will be able to do the following:
     - bar plots
     - histogram plots
 - Given a data set and a question, select from the above plot types and use Python to create a visualization that best answers the question.
-- Given a visualization and a question, evaluate the effectiveness of the visualization and suggest improvements to better answer the question.
+- Evaluate the effectiveness of a visualization and suggest improvements to better answer a given question.
 - Referring to the visualization, communicate the conclusions in non-technical terms.
 - Identify rules of thumb for creating effective visualizations.
-- Define the two key aspects of altair charts:
+- Use the `altair` library in Python to create and refine the above visualizations using:
+    - graphical marks: `mark_point`, `mark_line`, `mark_circle`, `mark_bar`, `mark_rule`
+    - encoding channels: `x`, `y`, `color`, `shape`
+    - labeling: `title`
+    - transformations: `scale`
+    - subplots: `facet`
+- Define the two key aspects of `altair` charts:
     - graphical marks
     - encoding channels
-- Use the altair library in Python to create and refine the above visualizations using:
-    - graphical marks: `mark_point`, `mark_line`, `mark_bar`
-    - encoding channels: `x`, `y`, `color`, `shape`
-    - subplots: `facet`
 - Describe the difference in raster and vector output formats.
 - Use `chart.save()` to save visualizations in `.png` and `.svg` format.
 

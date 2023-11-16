@@ -58,6 +58,7 @@ By the end of the chapter, readers will be able to do the following:
 * Evaluate K-NN regression prediction quality in Python using the root mean squared prediction error (RMSPE).
 * Estimate the RMSPE in Python using cross-validation or a test set.
 * Choose the number of neighbors in K-nearest neighbors regression by minimizing estimated cross-validation RMSPE.
+- Describe underfitting and overfitting, and relate it to the number of neighbors in K-nearest neighbors regression.
 * Describe the advantages and disadvantages of K-nearest neighbors regression.
 
 +++

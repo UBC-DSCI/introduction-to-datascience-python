@@ -39,6 +39,7 @@ By the end of the chapter, readers will be able to do the following:
 - Evaluate classification accuracy, precision, and recall in Python using a test set, a single validation set, and cross-validation.
 - Produce a confusion matrix in Python.
 - Choose the number of neighbors in a K-nearest neighbors classifier by maximizing estimated cross-validation accuracy.
+- Describe underfitting and overfitting, and relate it to the number of neighbors in K-nearest neighbors classification.
 - Describe the advantages and disadvantages of the K-nearest neighbors classification algorithm.
 
 +++

@@ -81,6 +81,9 @@ numerical, and so predicting them given past data is considered a regression pro
 ```{index} classification; comparison to regression
 ```
 
+```{index} regression; comparison to classification
+```
+
 Just like in the classification setting, there are many possible methods that we can use
 to predict numerical response variables. In this chapter we will
 focus on the **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`, and in the next chapter
@@ -135,6 +138,9 @@ a realtor advise a client as to whether the price of a particular listing
 is fair, or perhaps how to set the price of a new listing.
 We begin the analysis by loading and examining the data,
 as well as setting the seed value.
+
+```{index} seed;numpy.random.seed
+```
 
 ```{code-cell} ipython3
 import altair as alt
@@ -281,7 +287,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 
 +++
 
-```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
+```{index} pandas.DataFrame; abs, pandas.DataFrame; nsmallest
 ```
 
 We will employ the same intuition from {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`, and use the
@@ -291,9 +297,6 @@ For the example shown in {numref}`fig:07-small-eda-regr`,
 we find and label the 5 nearest neighbors to our observation
 of a house that is 2,000 square feet.
 
-```{index} nsmallest
-```
-
 ```{code-cell} ipython3
 small_sacramento["dist"] = (2000 - small_sacramento["sqft"]).abs()
 nearest_neighbors = small_sacramento.nsmallest(5, "dist")
@@ -302,7 +305,6 @@ nearest_neighbors
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 
 nn_plot = small_plot + rule
 

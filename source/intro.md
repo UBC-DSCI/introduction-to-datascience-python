@@ -437,13 +437,13 @@ can_lang
 
 ## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} see: []; pandas.DataFrame
+```{index} see: []; DataFrame
 ```
 
-```{index} see: loc[]; pandas.DataFrame
+```{index} see: loc[]; DataFrame
 ```
 
-```{index} pandas.DataFrame; [], pandas.DataFrame; loc[], selecting columns
+```{index} DataFrame; [], DataFrame; loc[], selecting columns
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
@@ -475,7 +475,7 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category.
 
-```{index} pandas.DataFrame; [], filtering rows, logical statement, logical operator; equivalency (==), string
+```{index} DataFrame; [], filtering rows, logical statement, logical operator; equivalency (==), string
 ```
 
 We can use the `[]` operation to obtain the subset of rows with desired values
@@ -521,7 +521,7 @@ can_lang[can_lang["category"] == "Aboriginal languages"]
 ### Using `[]` to select columns
 
 
-```{index} pandas.DataFrame; [], selecting columns
+```{index} DataFrame; [], selecting columns
 ```
 
 We can also use the `[]` operation to select columns from a data frame.
@@ -551,7 +551,7 @@ can_lang[["language", "mother_tongue"]]
 
 ### Using `loc[]` to filter rows and select columns
 
-```{index} pandas.DataFrame; loc[], selecting columns
+```{index} DataFrame; loc[], selecting columns
 ```
 
 The `[]` operation is only used when you want to filter rows *or* select columns;
@@ -612,7 +612,7 @@ So it looks like the `loc[]` operation gave us the result we wanted!
 
 ## Using `sort_values` and `head` to select rows by ordered values
 
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
+```{index} DataFrame; sort_values, DataFrame; head
 ```
 
 We have used the `[]` and `loc[]` operations on a data frame to obtain a table

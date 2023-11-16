@@ -72,10 +72,10 @@ This knowledge will be helpful in effectively utilizing these objects in our dat
 ```{index} data frame; definition
 ```
 
-```{index} see: data frame; pandas.DataFrame
+```{index} see: data frame; DataFrame
 ```
 
-```{index} pandas.DataFrame
+```{index} DataFrame
 ```
 
 A data frame is a table-like structure for storing data in Python. Data frames are
@@ -112,7 +112,7 @@ A data frame storing data regarding the population of various regions in Canada.
 
 ### What is a series?
 
-```{index} pandas.Series 
+```{index} Series 
 ```
 
 In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
@@ -375,7 +375,7 @@ represented as individual columns to make the data tidy.
 
 ### Tidying up: going from wide to long using `melt`
 
-```{index} pandas.DataFrame; melt
+```{index} DataFrame; melt
 ```
 
 One task that is commonly performed to get data into a tidy format
@@ -545,7 +545,7 @@ been met:
 (pivot-wider)=
 ### Tidying up: going from long to wide using `pivot`
 
-```{index} pandas.DataFrame; pivot
+```{index} DataFrame; pivot
 ```
 
 Suppose we have observations spread across multiple rows rather than in a single
@@ -651,7 +651,7 @@ lang_home_tidy.columns = [
 lang_home_tidy
 ```
 
-```{index} pandas.DataFrame; reset_index
+```{index} DataFrame; reset_index
 ```
 
 In the first step, note that we added a call to `reset_index`. When `pivot` is called with
@@ -665,7 +665,7 @@ The second operation we applied is to rename the columns. When we perform the `p
 operation, it keeps the original column name `"count"` and adds the `"type"` as a second column name.
 Having two names for a column can be confusing! So we rename giving each column only one name.
 
-```{index} pandas.DataFrame; info
+```{index} DataFrame; info
 ```
 
 We can print out some useful information about our data frame using the `info` function.
@@ -702,7 +702,7 @@ more columns, and we would see the data set "widen."
 (str-split)=
 ### Tidying up: using `str.split` to deal with multiple separators
 
-```{index} pandas.Series; str.split, separator
+```{index} Series; str.split, separator
 ```
 
 ```{index} see: delimiter; separator
@@ -834,7 +834,7 @@ This section will highlight more advanced usage of the `[]` function,
 including an in-depth treatment of the variety of logical statements
 one can use in the `[]` to select subsets of rows.
 
-```{index} pandas.DataFrame; [], logical statement
+```{index} DataFrame; [], logical statement
 ```
 
 ```{index} see: logical statement; logical operator
@@ -1093,7 +1093,7 @@ to make long chains of filtering operations a bit easier to read.
 (loc-iloc)=
 ## Using `loc[]` to filter rows and select columns
 
-```{index} pandas.DataFrame; loc[]
+```{index} DataFrame; loc[]
 ```
 
 The `[]` operation is only used when you want to either filter rows **or** select columns;
@@ -1172,7 +1172,7 @@ corresponding to the column names that start with the desired characters.
 tidy_lang.loc[:, tidy_lang.columns.str.startswith("most")]
 ```
 
-```{index} pandas.Series; str.contains
+```{index} Series; str.contains
 ```
 
 We could also have chosen the columns containing an underscore `_` by using the
@@ -1184,7 +1184,7 @@ tidy_lang.loc[:, tidy_lang.columns.str.contains("_")]
 ```
 
 ## Using `iloc[]` to extract rows and columns by position
-```{index} pandas.DataFrame; iloc[], column range
+```{index} DataFrame; iloc[], column range
 ```
 Another approach for selecting rows and columns is to use `iloc[]`,
 which provides the ability to index with the position rather than the label of the columns.
@@ -1219,7 +1219,7 @@ accidentally put in the wrong integer index! If you did not correctly remember
 that the `language` column was index `1`, and used `2` instead, your code
 might end up having a bug that is quite hard to track down.
 
-```{index} pandas.Series; str.startswith
+```{index} Series; str.startswith
 ```
 
 +++ {"tags": []}
@@ -1264,7 +1264,7 @@ region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
 ```
 
-```{index} pandas.Series; min, pandas.Series; max
+```{index} Series; min, Series; max
 ```
 
 We use `.min` to calculate the minimum
@@ -1294,7 +1294,7 @@ total number of people in the survey, we could use the `sum` summary statistic m
 region_lang["most_at_home"].sum()
 ```
 
-```{index} pandas.Series; sum, pandas.Series; mean, pandas.Series; median, pandas.Series; std, summary statistic
+```{index} Series; sum, Series; mean, Series; median, Series; std, summary statistic
 ```
 
 Other handy summary statistics include the `mean`, `median` and `std` for
@@ -1402,7 +1402,7 @@ region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 
 +++
 
-```{index} pandas.DataFrame; groupby
+```{index} DataFrame; groupby
 ```
 What happens if we want to know how languages vary by region? In this case,
 we need a new tool that lets us group rows by region. This can be achieved
@@ -1507,7 +1507,7 @@ region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].ma
 To see how many observations there are in each group,
 we can use `value_counts`.
 
-```{index} pandas.DataFrame; value_counts
+```{index} DataFrame; value_counts
 ```
 
 ```{code-cell} ipython3
@@ -1552,12 +1552,12 @@ we can see that this would be the columns from `mother_tongue` to `lang_known`.
 region_lang
 ```
 
-```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
+```{index} DataFrame; apply, DataFrame; loc[]
 ```
 
 We can simply call the `.astype` function to apply it across the desired range of columns.
 
-```{index} pandas.DataFrame; astype, pandas.Series; astype
+```{index} DataFrame; astype, Series; astype
 ```
 
 ```{code-cell} ipython3
@@ -1609,7 +1609,7 @@ you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/
 ## Modifying and adding columns
 
 
-```{index} pandas.DataFrame; [], column assignment, assign
+```{index} DataFrame; [], column assignment, assign
 ```
 
 When we compute summary statistics or apply functions,
@@ -1763,7 +1763,7 @@ For the rest of the book, we will silence that warning to help with readability.
 pd.options.mode.chained_assignment = None
 ```
 
-```{index} pandas.DataFrame; merge
+```{index} DataFrame; merge
 ```
 
 ```{note}
@@ -1800,7 +1800,7 @@ english_lang
 
 ## Using `merge` to combine data frames
 
-```{index} pandas.DataFrame; merge
+```{index} DataFrame; merge
 ```
 
 Let's return to the situation right before we added the city populations

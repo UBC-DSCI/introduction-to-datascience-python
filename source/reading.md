@@ -407,7 +407,7 @@ canlang_data = pd.read_csv(
 canlang_data
 ```
 
-```{index} pandas.DataFrame; rename, pandas
+```{index} DataFrame; rename, pandas
 ```
 
 It is best to rename your columns manually in this scenario. The current column names
@@ -790,7 +790,7 @@ that we need for analysis; we do eventually need to call `execute`.
 For example, `ibis` does not provide the `tail` function to look at the last
 rows in a database, even though `pandas` does.
 
-```{index} pandas.DataFrame; tail
+```{index} DataFrame; tail
 ```
 
 ```{code-cell} ipython3
@@ -951,7 +951,7 @@ Databases are beneficial in a large-scale setting:
 
 ## Writing data from Python to a `.csv` file
 
-```{index} write function; to_csv, pandas.DataFrame; to_csv
+```{index} write function; to_csv, DataFrame; to_csv
 ```
 
 At the middle and end of a data analysis, we often want to write a data frame

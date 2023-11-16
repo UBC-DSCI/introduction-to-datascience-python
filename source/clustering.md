@@ -308,7 +308,7 @@ have.
 clus = penguins_clustered[penguins_clustered["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
-```{index} see: within-cluster sum-of-squared-distances; WSSD
+```{index} see: within-cluster sum of squared distances; WSSD
 ```
 
 ```{index} WSSD

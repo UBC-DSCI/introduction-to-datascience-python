@@ -718,7 +718,7 @@ in the magnitude of these two numbers!
 We can confirm that the two points in the upper right-hand corner correspond
 to Canada's two official languages by filtering the data:
 
-```{index} pandas.DataFrame; loc[]
+```{index} DataFrame; loc[]
 ```
 
 ```{code-cell} ipython3
@@ -848,7 +848,7 @@ using `_` so that it is easier to read;
 this does not affect how Python interprets the number
 and is just added for readability.
 
-```{index} pandas.DataFrame; column assignment, pandas.DataFrame; []
+```{index} DataFrame; column assignment, DataFrame; []
 ```
 
 ```{code-cell} ipython3
@@ -1228,7 +1228,7 @@ as `sort_values` followed by `head`, but are slightly more efficient because the
 In general, it is good to use more specialized functions when they are available!
 ```
 
-```{index} pandas.DataFrame; nlargest, pandas.DataFrame; nsmallest
+```{index} DataFrame; nlargest, DataFrame; nsmallest
 ```
 
 ```{code-cell} ipython3

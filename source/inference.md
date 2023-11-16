@@ -168,7 +168,7 @@ We can find the proportion of listings for each room type
 by using the `value_counts` function with the `normalize` parameter
 as we did in previous chapters.
 
-```{index} pandas.DataFrame; [], pandas.DataFrame; value_counts
+```{index} DataFrame; [], DataFrame; value_counts
 ```
 
 ```{code-cell} ipython3
@@ -187,13 +187,13 @@ value, {glue:text}`population_proportion`, is the population parameter. Remember
 parameter value is usually unknown in real data analysis problems, as it is
 typically not possible to make measurements for an entire population.
 
-```{index} pandas.DataFrame; sample, seed;numpy.random.seed
+```{index} DataFrame; sample, seed;numpy.random.seed
 ```
 
 Instead, perhaps we can approximate it with a small subset of data!
 To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
 size 40 from our population), and computing the proportion for that sample.
-We will use the `sample` method of the `pandas.DataFrame`
+We will use the `sample` method of the `DataFrame`
 object to take the sample. The argument `n` of `sample` is the size of the sample to take
 and since we are starting to use randomness here,
 we are also setting the random seed via numpy to make the results reproducible.
@@ -213,7 +213,7 @@ airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 glue("sample_1_proportion", "{:.3f}".format(airbnb.sample(n=40, random_state=155)["room_type"].value_counts(normalize=True)["Entire home/apt"]))
 ```
 
-```{index} pandas.DataFrame; value_counts
+```{index} DataFrame; value_counts
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
@@ -248,7 +248,7 @@ commonly refer to as $n$) from a population is called
 a **sampling distribution**. The sampling distribution will help us see how much we would
 expect our sample proportions from this population to vary for samples of size 40.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 We again use the `sample` to take samples of size 40 from our
@@ -284,7 +284,7 @@ to compute the number of qualified observations in each sample; finally compute 
 Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
 
-```{index} pandas.DataFrame;groupby, pandas.DataFrame;reset_index
+```{index} DataFrame;groupby, DataFrame;reset_index
 ```
 
 ```{code-cell} ipython3
@@ -479,7 +479,7 @@ The price per night of all Airbnb rentals in Vancouver, BC
 is \${glue:text}`population_mean`, on average. This value is our
 population parameter since we are calculating it using the population data.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 Now suppose we did not have access to the population data (which is usually the
@@ -987,7 +987,7 @@ mean of the sample is \${glue:text}`estimate_mean`.
 Remember, in practice, we usually only have this one sample from the population. So
 this sample and estimate are the only data we can work with.
 
-```{index} bootstrap; in Python, pandas.DataFrame; sample (bootstrap)
+```{index} bootstrap; in Python, DataFrame; sample (bootstrap)
 ```
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
@@ -1106,7 +1106,7 @@ generate a bootstrap distribution of these point estimates. The bootstrap
 distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
 our point estimate to behave if we take multiple samples.
 
-```{index} pandas.DataFrame;reset_index, pandas.DataFrame;rename, pandas.DataFrame;groupby, pandas.Series;mean
+```{index} DataFrame;reset_index, DataFrame;rename, DataFrame;groupby, Series;mean
 ```
 
 ```{code-cell} ipython3
@@ -1252,7 +1252,7 @@ Quantiles are expressed in proportions rather than percentages,
 so the 2.5th and 97.5th percentiles
 would be the 0.025 and 0.975 quantiles, respectively.
 
-```{index} pandas.DataFrame; [], pandas.DataFrame;quantile
+```{index} DataFrame; [], DataFrame;quantile
 ```
 
 ```{index} percentile

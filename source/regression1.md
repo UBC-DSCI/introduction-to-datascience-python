@@ -233,7 +233,7 @@ how well it predicts house sale price. This subsample is taken to allow us to
 illustrate the mechanics of K-NN regression with a few data points; later in
 this chapter we will use all the data.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 To take a small random sample of size 30, we'll use the
@@ -287,7 +287,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 
 +++
 
-```{index} pandas.DataFrame; abs, pandas.DataFrame; nsmallest
+```{index} DataFrame; abs, DataFrame; nsmallest
 ```
 
 We will employ the same intuition from {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`, and use the

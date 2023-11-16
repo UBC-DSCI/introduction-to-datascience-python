@@ -183,7 +183,7 @@ total set of variables per image in this data set is:
 
 +++
 
-```{index} pandas.DataFrame; info
+```{index} DataFrame; info
 ```
 
 Below we use the `info` method to preview the data frame. This method can
@@ -195,7 +195,7 @@ as well as their data types and the number of non-missing entries.
 cancer.info()
 ```
 
-```{index} pandas.Series; unique
+```{index} Series; unique
 ```
 
 From the summary of the data above, we can see that `Class` is of type `object`.
@@ -213,7 +213,7 @@ method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values.
 We will verify the result using the `unique` method.
 
-```{index} pandas.Series; replace
+```{index} Series; replace
 ```
 
 ```{code-cell} ipython3
@@ -227,7 +227,7 @@ cancer["Class"].unique()
 
 ### Exploring the cancer data
 
-```{index} pandas.DataFrame; groupby, pandas.Series;size
+```{index} DataFrame; groupby, Series;size
 ```
 
 ```{code-cell} ipython3
@@ -256,7 +256,7 @@ tumor observations.
 100 * cancer.groupby("Class").size() / cancer.shape[0]
 ```
 
-```{index} pandas.Series; value_counts
+```{index} Series; value_counts
 ```
 
 The `pandas` package also has a more convenient specialized `value_counts` method for
@@ -1607,7 +1607,7 @@ Imbalanced data with background color indicating the decision of the classifier 
 
 +++
 
-```{index} oversampling, pandas.DataFrame; sample
+```{index} oversampling, DataFrame; sample
 ```
 
 Despite the simplicity of the problem, solving it in a statistically sound manner is actually

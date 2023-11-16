@@ -410,15 +410,18 @@ notebook.
 
 ## Exploring data files
 
+```{index} separator
+```
+
 It is essential to preview data files before you try to read them into Python to see
-whether or not there are column names, what the delimiters are, and if there are
+whether or not there are column names, what the separators are, and if there are
 lines you need to skip. In Jupyter, you preview data files stored as plain text
 files (e.g., comma- and tab-separated files) in their plain text format ({numref}`open-data-w-editor-2`) by
 right-clicking on the file's name in the Jupyter file explorer, selecting
 **Open with**, and then selecting **Editor** ({numref}`open-data-w-editor-1`).
 Suppose you do not specify to open
 the data file with an editor. In that case, Jupyter will render a nice table
-for you, and you will not be able to see the column delimiters, and therefore
+for you, and you will not be able to see the column separators, and therefore
 you will not know which function to use, nor which arguments to use and values
 to specify for them.
 

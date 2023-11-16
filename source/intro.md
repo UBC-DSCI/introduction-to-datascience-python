@@ -472,7 +472,7 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category.
 
-```{index} pandas.DataFrame; [], filtering rows, logical statement, logical statement; equivalency operator, string
+```{index} pandas.DataFrame; [], filtering rows, logical statement, logical operator; equivalency operator, string
 ```
 
 We can use the `[]` operation to obtain the subset of rows with desired values

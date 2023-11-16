@@ -109,7 +109,7 @@ A data frame storing data regarding the population of various regions in Canada.
 
 ### What is a series?
 
-```{index} pandas.Series
+```{index} pandas.Series 
 ```
 
 In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
@@ -117,10 +117,8 @@ They are a single column, are ordered, can be indexed, and can contain any data 
 The `pandas` package uses `Series` objects to represent the columns in a data frame.
 `Series` can contain a mix of data types, but it is good practice to only include a single type in a series
 because all observations of one variable should be the same type.
-Python
-has several different basic data types, as shown in
-{numref}`tab:datatype-table`.
-You can create a `pandas` series using the
+Python has several different basic data types, as shown in
+{numref}`tab:datatype-table`. You can create a `pandas` series using the
 `pd.Series()` function.  For example, to create the series `region` as shown
 in {numref}`fig:02-series`, you can write the following.
 
@@ -140,39 +138,29 @@ region
 Example of a `pandas` series whose type is string.
 ```
 
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The following table was taken from DSCI511 Lecture 1, credit to Arman Seyed-Ahmadi, MDS 2021
+```{index} data types; string (str), data types; integer (int), data types; floating point number (float), data types; boolean (bool), data types; NoneType (none)
 ```
 
-```{index} data types, string, integer, floating point number, boolean, list, set, dictionary, tuple, none
+```{index} see: str; data types
 ```
 
-```{index} see: str; string
+```{index} see: int; data types
 ```
 
-```{index} see: int; integer
+```{index} see: float; data types
 ```
 
-```{index} see: float; floating point number
+```{index} see: bool; data types
 ```
 
-```{index} see: bool; boolean
-```
-
-```{index} see: NoneType; none
-```
-
-```{index} see: dict; dictionary
+```{index} see: NoneType; data types
 ```
 
 ```{table} Basic data types in Python
 :name: tab:datatype-table
 | Data type             | Abbreviation | Description                                   | Example                                    |
 | :-------------------- | :----------- | :-------------------------------------------- | :----------------------------------------- |
-| integer               | `int`        | positive/negative/zero whole numbers               | `42`                                       |
+| integer               | `int`        | positive/negative/zero whole numbers          | `42`                                       |
 | floating point number | `float`      | real number in decimal form                   | `3.14159`                                  |
 | boolean               | `bool`       | true or false                                 | `True`                                     |
 | string                | `str`        | text                                          | `"Hello World"`                            |
@@ -248,6 +236,12 @@ or a `Series` depending on the operation. Because
 to both `DataFrames` and `Series` as "data frames" in the text.
 There are other types that represent data structures in Python.
 We summarize the most common ones in {numref}`tab:datastruc-table`.
+
+```{index} data structures; list, data structures; set, data structures; dictionary (dict), data structures; tuple
+```
+
+```{index} see: dict; data structures
+```
 
 ```{table} Basic data structures in Python
 :name: tab:datastruc-table
@@ -654,6 +648,9 @@ lang_home_tidy.columns = [
 lang_home_tidy
 ```
 
+```{index} pandas.DataFrame; reset_index
+```
+
 In the first step, note that we added a call to `reset_index`. When `pivot` is called with
 multiple column names passed to the `index`, those entries become the "name" of each row that
 would be used when you filter rows with `[]` or `loc` rather than just simple numbers. This
@@ -664,6 +661,9 @@ when you call `pivot`, it is a good idea to call `reset_index` afterwards.
 The second operation we applied is to rename the columns. When we perform the `pivot`
 operation, it keeps the original column name `"count"` and adds the `"type"` as a second column name.
 Having two names for a column can be confusing! So we rename giving each column only one name.
+
+```{index} pandas.DataFrame; info
+```
 
 We can print out some useful information about our data frame using the `info` function.
 In the first row it tells us the `type` of `lang_home_tidy` (it is a `pandas` `DataFrame`). The second
@@ -697,16 +697,19 @@ more columns, and we would see the data set "widen."
 +++
 
 (str-split)=
-### Tidying up: using `str.split` to deal with multiple delimiters
+### Tidying up: using `str.split` to deal with multiple separators
 
-```{index} pandas.Series; str.split, delimiter
+```{index} pandas.Series; str.split, separator
+```
+
+```{index} see: delimiter; separator
 ```
 
 Data are also not considered tidy when multiple values are stored in the same
 cell. The data set we show below is even messier than the ones we dealt with
 above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary` and `Edmonton` columns
 contain the number of Canadians reporting their primary language at home and
-work in one column separated by the delimiter (`/`). The column names are the
+work in one column separated by the separator (`/`). The column names are the
 values of a variable, *and* each value does not have its own cell! To turn this
 messy data into tidy data, we'll have to fix these issues.
 
@@ -786,7 +789,7 @@ tidy_lang.info()
 Object columns in `pandas` data frames are columns of strings or columns with
 mixed types. In the previous example in {numref}`pivot-wider`, the
 `most_at_home` and `most_at_work` variables were `int64` (integer), which is a type of numeric data.
-This change is due to the delimiter (`/`) when we read in this messy data set.
+This change is due to the separator (`/`) when we read in this messy data set.
 Python read these columns in as string types, and by default, `str.split` will
 return columns with the `object` data type.
 
@@ -828,6 +831,12 @@ This section will highlight more advanced usage of the `[]` function,
 including an in-depth treatment of the variety of logical statements
 one can use in the `[]` to select subsets of rows.
 
+```{index} pandas.DataFrame; [], logical statement
+```
+
+```{index} see: logical statement; logical operator
+```
+
 +++
 
 ### Extracting columns by name
@@ -867,6 +876,13 @@ tidy_lang["language"]
 
 
 ### Extracting rows that have a certain value with `==`
+
+```{index} logical operator; equivalency (==) 
+```
+
+```{index} see: ==; logical operator
+```
+
 Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
 official languages of Canada (English and French).
 We can extract these rows by using the *equivalency operator* (`==`)
@@ -886,6 +902,12 @@ official_langs
 
 ### Extracting rows that do not have a certain value with `!=`
 
+```{index} logical operator; inequivalency (!=) 
+```
+
+```{index} see: !=; logical operator
+```
+
 What if we want all the other language categories in the data set *except* for
 those in the `"Official languages"` category? We can accomplish this with the `!=`
 operator, which means "not equal to". So if we want to find all the rows
@@ -899,6 +921,12 @@ tidy_lang[tidy_lang["category"] != "Official languages"]
 
 (filter-and)=
 ### Extracting rows satisfying multiple conditions using `&`
+
+```{index} logical operator; and (&)
+```
+
+```{index} see: &; logical operator
+```
 
 Suppose now we want to look at only the rows
 for the French language in Montréal.
@@ -921,6 +949,12 @@ tidy_lang[
 
 ### Extracting rows satisfying at least one condition using `|`
 
+```{index} logical operator; or (|)
+```
+
+```{index} see: |; logical operator
+```
+
 Suppose we were interested in only those rows corresponding to cities in Alberta
 in the `official_langs` data set (Edmonton and Calgary).
 We can't use `&` as we did above because `region`
@@ -939,6 +973,12 @@ official_langs[
 ```
 
 ### Extracting rows with values in a list using `isin`
+
+```{index} logical operator; containment (isin) 
+```
+
+```{index} see: isin; logical operator
+```
 
 Next, suppose we want to see the populations of our five cities.
 Let's read in the `region_data.csv` file
@@ -987,6 +1027,18 @@ pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 
 ### Extracting rows above or below a threshold using `>` and `<`
 
+```{index} logical operator; greater than (>, >=), logical operator; less than (<, <=)
+```
+
+```{index} see: >; logical operator
+```
+```{index} see: >=; logical operator
+```
+```{index} see: <; logical operator
+```
+```{index} see: <=; logical operator
+```
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -1016,6 +1068,9 @@ as their primary language at home
 than French in Montréal according to the 2016 Canadian census.
 
 ### Extracting rows using `query`
+
+```{index} logical statement; query
+```
 
 You can also extract rows above, below, equal or not-equal to a threshold using the
 `query` method. For example the following gives us the same result as when we used
@@ -1203,6 +1258,9 @@ region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
 ```
 
+```{index} pandas.Series; min, pandas.Series; max
+```
+
 We use `.min` to calculate the minimum
 and `.max` to calculate maximum number of Canadians
 reporting a particular language as their primary language at home,
@@ -1228,6 +1286,9 @@ primary language at home is spoken by
 total number of people in the survey, we could use the `sum` summary statistic method.
 ```{code-cell} ipython3
 region_lang["most_at_home"].sum()
+```
+
+```{index} pandas.Series; sum, pandas.Series; mean, pandas.Series; median, pandas.Series; std, summary statistic
 ```
 
 Other handy summary statistics include the `mean`, `median` and `std` for
@@ -1272,6 +1333,12 @@ summary statistics that you can compute with `pandas`.
 
 +++
 +++
+
+```{index} see: NaN; missing data
+```
+
+```{index} missing data
+```
 
 
 ```{note}
@@ -1434,6 +1501,9 @@ region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].ma
 To see how many observations there are in each group,
 we can use `value_counts`.
 
+```{index} pandas.DataFrame; value_counts
+```
+
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 region_lang.value_counts("region")
@@ -1480,6 +1550,9 @@ region_lang
 ```
 
 We can simply call the `.astype` function to apply it across the desired range of columns.
+
+```{index} pandas.DataFrame; astype, pandas.Series; astype
+```
 
 ```{code-cell} ipython3
 region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].astype("int32")
@@ -1530,7 +1603,7 @@ you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/
 ## Modifying and adding columns
 
 
-```{index} pandas.DataFrame; []
+```{index} pandas.DataFrame; [], column assignment, assign
 ```
 
 When we compute summary statistics or apply functions,
@@ -1666,6 +1739,10 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 :tags: [remove-input]
 english_lang
 ```
+
+```{index} SettingWithCopyWarning
+```
+
 Wait a moment...what is that warning message? It seems to suggest that something went wrong, but
 if we inspect the `english_lang` data frame above, it looks like the city populations were added
 just fine! As it turns out, this is caused by the earlier filtering we did from `region_lang` to
@@ -1678,6 +1755,9 @@ For the rest of the book, we will silence that warning to help with readability.
 :tags: [remove-cell]
 # suppress for the rest of this chapter
 pd.options.mode.chained_assignment = None
+```
+
+```{index} pandas.DataFrame; merge
 ```
 
 ```{note}
@@ -1713,6 +1793,9 @@ english_lang
 +++
 
 ## Using `merge` to combine data frames
+
+```{index} pandas.DataFrame; merge
+```
 
 Let's return to the situation right before we added the city populations
 of Toronto, Montréal, Vancouver, Calgary, and Edmonton to the `english_lang` data frame. Before adding the new column, we had filtered

@@ -1348,7 +1348,7 @@ morley_df = pd.read_csv("data/morley.csv")
 morley_df
 ```
 
-```{index} distribution, altair; histogram
+```{index} distribution, altair; histogram, altair; count
 ```
 
 In this experimental data,

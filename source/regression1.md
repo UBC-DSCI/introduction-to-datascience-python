@@ -81,6 +81,9 @@ numerical, and so predicting them given past data is considered a regression pro
 ```{index} classification; comparison to regression
 ```
 
+```{index} regression; comparison to classification
+```
+
 Just like in the classification setting, there are many possible methods that we can use
 to predict numerical response variables. In this chapter we will
 focus on the **K-nearest neighbors** algorithm {cite:p}`knnfix,knncover`, and in the next chapter
@@ -135,6 +138,9 @@ a realtor advise a client as to whether the price of a particular listing
 is fair, or perhaps how to set the price of a new listing.
 We begin the analysis by loading and examining the data,
 as well as setting the seed value.
+
+```{index} seed;numpy.random.seed
+```
 
 ```{code-cell} ipython3
 import altair as alt
@@ -214,7 +220,7 @@ predict the former.
 
 ## K-nearest neighbors regression
 
-```{index} K-nearest neighbors; regression
+```{index} K-nearest neighbors, K-nearest neighbors; regression
 ```
 
 Much like in the case of classification,
@@ -227,7 +233,7 @@ how well it predicts house sale price. This subsample is taken to allow us to
 illustrate the mechanics of K-NN regression with a few data points; later in
 this chapter we will use all the data.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 To take a small random sample of size 30, we'll use the
@@ -281,7 +287,7 @@ Scatter plot of price (USD) versus house size (square feet) with vertical line i
 
 +++
 
-```{index} pandas.DataFrame; assign, pandas.DataFrame; head, pandas.DataFrame; sort_values, abs
+```{index} DataFrame; abs, DataFrame; nsmallest
 ```
 
 We will employ the same intuition from {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`, and use the
@@ -291,9 +297,6 @@ For the example shown in {numref}`fig:07-small-eda-regr`,
 we find and label the 5 nearest neighbors to our observation
 of a house that is 2,000 square feet.
 
-```{index} nsmallest
-```
-
 ```{code-cell} ipython3
 small_sacramento["dist"] = (2000 - small_sacramento["sqft"]).abs()
 nearest_neighbors = small_sacramento.nsmallest(5, "dist")
@@ -302,7 +305,6 @@ nearest_neighbors
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
 
 nn_plot = small_plot + rule
 
@@ -389,7 +391,7 @@ about what the data must look like for it to work.
 
 ## Training, evaluating, and tuning the model
 
-```{index} training data, test data
+```{index} training set, test set
 ```
 
 As usual, we must start by putting some test data away in a lock box
@@ -538,7 +540,7 @@ training or testing data. But many people just use RMSE for both,
 and rely on context to denote which data the root mean squared error is being calculated on.
 ```
 
-```{index} scikit-learn, scikit-learn; pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
+```{index} scikit-learn, scikit-learn; Pipeline, scikit-learn; make_pipeline, scikit-learn; make_column_transformer
 ```
 
 Now that we know how we can assess how well our model predicts a numerical

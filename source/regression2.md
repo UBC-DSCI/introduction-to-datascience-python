@@ -150,6 +150,9 @@ Scatter plot of sale price versus size with line of best fit for subset of the S
 ```{index} straight line; equation
 ```
 
+```{index} see: line; straight line
+```
+
 The equation for the straight line is:
 
 $$\text{house sale price} = \beta_0 + \beta_1 \cdot (\text{house size}),$$
@@ -348,7 +351,7 @@ Below we illustrate how we can use the usual `scikit-learn` workflow to predict 
 price given house size. We use a simple linear regression approach on the full
 Sacramento real estate data set.
 
-```{index} scikit-learn; random_state
+```{index} seed; numpy.random.seed
 ```
 
 As usual, we start by loading packages, setting the seed, loading data, and
@@ -731,6 +734,13 @@ mlm.fit(
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
 
+```{index} scikit-learn;predict, scikit-learn;mean_squared_error
+```
+```{index} see: mean_squared_error;scikit-learn
+```
+```{index} see: predict;scikit-learn
+```
+
 ```{code-cell} ipython3
 sacramento_test["predicted"] = mlm.predict(sacramento_test[["sqft","beds"]])
 
@@ -1059,10 +1069,7 @@ Scatter plot of the full data, with outlier highlighted in red.
 
 ### Multicollinearity
 
-```{index} colinear
-```
-
-```{index} see: multicolinear; colinear
+```{index} multicollinearity
 ```
 
 The second, and much more subtle, issue can occur when performing multivariable

@@ -15,10 +15,8 @@ kernelspec:
 
 # Preface
 
-```{index} data science, auditable, reproducible
+```{index} data science; definition, auditable, reproducible
 ```
-
-
 
 This textbook aims to be an approachable introduction to the world of data science.
 In this book, we define **data science** as the process of generating

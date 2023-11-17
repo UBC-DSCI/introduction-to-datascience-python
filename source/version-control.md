@@ -149,6 +149,9 @@ want to use one for your project.
 ```{index} repository, repository;local, repository;remote
 ```
 
+```{index} see: repository; version control
+```
+
 Typically, when we put a data analysis project under version control,
 we create two copies of the repository ({numref}`vc1-no-changes`).
 One copy we use as our primary workspace where we create, edit, and delete files.
@@ -197,8 +200,6 @@ one for each commit: `Created README.md` and `Added analysis draft`.
 ```{index} hash
 ```
 
-
-
 The hash is a string of characters consisting of about 40 letters and numbers.
 The purpose of the hash is to serve as a unique identifier for the commit,
 and is used by Git to index project history. Although hashes are quite long&mdash;imagine
@@ -233,11 +234,14 @@ name: vc2-changes
 Local repository with changes to files.
 ```
 
-```{index} git;add, staging area
+```{index} git;add, staging area, git;commit
+```
+
+```{index} see: staging area; git
 ```
 
 Once you reach a point that you want Git to keep a record
-of the current version of your work, you need to commit
+of the current version of your work, you need to **commit**
 (i.e., snapshot) your changes. A prerequisite to this is telling Git which
 files should be included in that snapshot. We call this step **adding** the
 files to the **staging area**.
@@ -255,8 +259,6 @@ name: vc-ba2-add
 ---
 Adding modified files to the staging area in the local repository.
 ```
-
-
 
 Once the files we wish to commit have been added
 to the staging area, we can then commit those files to the repository history ({numref}`vc-ba3-commit`).
@@ -281,8 +283,6 @@ Committing the modified files in the staging area to the local repository histor
 
 ```{index} git;push
 ```
-
-
 
 Once you have made one or more commits that you want to share with your collaborators,
 you need to **push** (i.e., send) those commits back to GitHub ({numref}`vc5-push`). This updates
@@ -330,14 +330,10 @@ name: vc7-pull
 Pulling changes from the remote GitHub repository to synchronize your local repository.
 ```
 
-
-
 ## Working with remote repositories using GitHub
 
 ```{index} repository;remote, GitHub, git;clone
 ```
-
-
 
 Now that you have been introduced to some of the key general concepts
 and workflows of Git version control, we will walk through the practical steps.
@@ -368,9 +364,8 @@ name: new-repository-01
 New repositories on GitHub can be created by clicking on "New Repository" from the + menu.
 ```
 
-```{index} repository;public
+```{index} repository;public, repository;private
 ```
-
 
 Repositories can be set up with a variety of configurations, including a name,
 optional description,  and the inclusion (or not) of several template files.
@@ -394,8 +389,6 @@ name: new-repository-02
 Repository configuration for a project that is public and initialized with a README.md template file.
 ```
 
-
-
 A newly created public repository with a `README.md` template file should look something
 like what is shown in {numref}`new-repository-03`.
 
@@ -405,8 +398,6 @@ name: new-repository-03
 ---
 Respository configuration for a project that is public and initialized with a README.md template file.
 ```
-
-
 
 +++
 
@@ -436,8 +427,6 @@ The text box where edits can be made after clicking on the pen tool.
 
 ```{index} GitHub; commit
 ```
-
-
 
 After you are done with your edits, they can be "saved" by *committing* your
 changes. When you *commit a file* in a repository, the version control system
@@ -470,8 +459,6 @@ Saving changes using the pen tool requires committing those changes, and an asso
 ```{index} GitHub; add file
 ```
 
-
-
 The "Add file" menu can be used to create new plain text files and upload files
 from your computer. To create a new plain text file, click the "Add file"
 drop-down menu and select the "Create new file" option
@@ -486,8 +473,6 @@ New plain text files can be created directly on GitHub.
 
 ```{index} markdown
 ```
-
-
 
 A page will open with a small text box for the file name to be entered, and a
 larger text box where the desired file content text can be entered. Note the two
@@ -573,8 +558,6 @@ to learn how to use Jupyter before reading this chapter.
 ```{index} GitHub; personal access token
 ```
 
-
-
 To send and retrieve work between your local repository
 and the remote repository on GitHub,
 you will frequently need to authenticate with GitHub
@@ -641,17 +624,10 @@ name: generate-pat-03
 Display of the newly generated personal access token.
 ```
 
-
-
 ### Cloning a repository using Jupyter
-
-<!--Now that we have everything we need for authentication,
-the next step is -->
 
 ```{index} git;clone
 ```
-
-
 
 *Cloning* a remote repository from GitHub
 to create a local repository results in a
@@ -758,8 +734,6 @@ Adding `eda.ipynb` makes it visible in the staging area.
 ```{index} git;commit
 ```
 
-
-
 To snapshot the changes with an associated commit message,
 you must put a message in the text box at the bottom of the Git pane
 and click on the blue "Commit" button ({numref}`git-commit-01`).
@@ -779,11 +753,9 @@ name: git-commit-01
 A commit message must be added into the Jupyter Git extension commit text box before the blue Commit button can be used to record the commit.
 ```
 
-
 After "committing" the file(s), you will see there are 0 "Staged" files.
 You are now ready to push your changes
 to the remote repository on GitHub ({numref}`git-commit-03`).
-
 
 ```{figure} img/version-control/git_commit_03.png
 ---
@@ -792,14 +764,10 @@ name: git-commit-03
 After recording a commit, the staging area should be empty.
 ```
 
-
-
 ### Pushing the commits to GitHub
 
 ```{index} git;push
 ```
-
-
 
 To send the committed changes back to the remote repository on
 GitHub, you need to *push* them. To do this,
@@ -813,7 +781,6 @@ name: git-push-01
 The Jupyter Git extension "push" button (circled in red).
 ```
 
-
 You will then be prompted to enter your GitHub username
 and the personal access token that you generated
 earlier (not your account password!). Click
@@ -826,7 +793,6 @@ name: git-push-02
 Enter your Git credentials to authorize the push to the remote repository.
 ```
 
-
 If the files were successfully pushed to the project repository on
 GitHub, you will be shown a success message ({numref}`git-push-03`).
 Click "Dismiss" to continue working in Jupyter.
@@ -837,7 +803,6 @@ name: git-push-03
 ---
 The prompt that the push was successful.
 ```
-
 
 If you visit the remote repository on GitHub,
 you will see that the changes now exist there too
@@ -850,15 +815,12 @@ name: git-push-04
 The GitHub web interface shows a preview of the commit message, and the time of the most recently pushed commit for each file.
 ```
 
-
 ## Collaboration
 
 ### Giving collaborators access to your project
 
 ```{index} GitHub; collaborator access
 ```
-
-
 
 As mentioned earlier, GitHub allows you to control who has access to your
 project. The default of both public and private projects are that only the
@@ -988,7 +950,6 @@ name: merge-conflict-01
 Error message that indicates that there are changes on the remote repository that you do not have locally.
 ```
 
-
 Usually, getting out of this situation is not too troublesome. First you need
 to pull the changes that exist on GitHub that you do not yet have in the local
 repository.  Usually when this happens, Git can automatically merge the changes
@@ -1010,14 +971,10 @@ same line of the same file and that Git will not be able to automatically merge
 the changes.
 ```
 
-
-
 ### Handling merge conflicts
 
 ```{index} git;merge conflict
 ```
-
-
 
 To fix the merge conflict, you need to open the offending file
 in a plain text editor and look for special marks that Git puts in the file to

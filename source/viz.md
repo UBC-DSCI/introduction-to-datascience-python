@@ -241,6 +241,9 @@ The `ppm` column holds the value of CO$_{\text{2}}$ in parts per million
 that was measured on each date, and is type `float64`; this is the usual
 type for decimal numbers.
 
+```{index} dates and times
+```
+
 ```{note}
 `read_csv` was able to parse the `date_measured` column into the
 `datetime` vector type because it was entered
@@ -267,7 +270,7 @@ and the CO$_{\text{2}}$ concentration as the `y` coordinate.
 We create a chart with the `alt.Chart()` function.
 There are a few basic aspects of a plot that we need to specify:
 
-```{index} altair; graphical mark, altair; encoding channel
+```{index} altair; graphical mark, altair; encoding channel, altair; mark_point
 ```
 
 - The name of the **data frame** to visualize.
@@ -649,9 +652,6 @@ glue("can_lang_plot", can_lang_plot, display=False)
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home
 :::
 
-```{index} escape character
-```
-
 To make an initial improvement in the interpretability
 of {numref}`can_lang_plot`, we should
 replace the default axis
@@ -662,6 +662,9 @@ To achieve this, we specify the title as a list of strings
 where each string in the list will correspond to a new line of text.
 We can also increase the font size to further
 improve readability.
+
+```{index} altair; multiline labels
+```
 
 ```{code-cell} ipython3
 can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
@@ -685,8 +688,6 @@ glue("can_lang_plot_labels", can_lang_plot_labels, display=False)
 
 Scatter plot of number of Canadians reporting a language as their mother tongue vs the primary language at home with x and y labels.
 :::
-
-
 
 
 ```{code-cell} ipython3
@@ -717,7 +718,7 @@ in the magnitude of these two numbers!
 We can confirm that the two points in the upper right-hand corner correspond
 to Canada's two official languages by filtering the data:
 
-```{index} pandas.DataFrame; loc[]
+```{index} DataFrame; loc[]
 ```
 
 ```{code-cell} ipython3
@@ -785,6 +786,9 @@ To fix these issue,
 we can limit the number of ticks and gridlines to only include the seven major ones,
 and change the number formatting to include a suffix which makes the labels shorter.
 
+```{index} altair; tick count, altair; tick formatting
+```
+
 ```{code-cell} ipython3
 can_lang_plot_log_revised = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home")
@@ -844,7 +848,7 @@ using `_` so that it is easier to read;
 this does not affect how Python interprets the number
 and is just added for readability.
 
-```{index} pandas.DataFrame; assign, pandas.DataFrame; [[]]
+```{index} DataFrame; column assignment, DataFrame; []
 ```
 
 ```{code-cell} ipython3
@@ -898,21 +902,21 @@ To fully answer the question, we need to use
  {numref}`can_lang_plot_percent`
 to assess a few key characteristics of the data:
 
-```{index} relationship; positive negative none
+```{index} relationship; positive, relationship; negative, relationship; none
 ```
 
 - **Direction:** if the y variable tends to increase when the x variable increases, then y has a **positive** relationship with x. If
   y tends to decrease when x increases, then y has a **negative** relationship with x. If y does not meaningfully increase or decrease
   as x increases, then y has **little or no** relationship with x.
 
-```{index} relationship; strong weak
+```{index} relationship; strong, relationship; weak
 ```
 
 - **Strength:** if the y variable *reliably* increases, decreases, or stays flat as x increases,
   then the relationship is **strong**. Otherwise, the relationship is **weak**. Intuitively,
   the relationship is strong when the scatter points are close together and look more like a "line" or "curve" than a "cloud."
 
-```{index} relationship; linear nonlinear
+```{index} relationship; linear, relationship; nonlinear
 ```
 
 - **Shape:** if you can draw a straight line roughly through the data points, the relationship is **linear**. Otherwise, it is **nonlinear**.
@@ -985,6 +989,9 @@ and specify that we want it on the top of the chart.
 This automatically changes the legend items to be laid out horizontally instead of vertically,
 but we could also keep the vertical layout by specifying `direction="vertical"` inside `alt.Legend`.
 
+```{index} altair; alt.Legend
+```
+
 ```{code-cell} ipython3
 can_lang_plot_legend = alt.Chart(can_lang).mark_circle().encode(
     x=alt.X("most_at_home_percent")
@@ -1014,15 +1021,15 @@ glue("can_lang_plot_legend", can_lang_plot_legend.properties(height=320, width=4
 Scatter plot of percentage of Canadians reporting a language as their mother tongue vs the primary language at home colored by language category with the legend edited.
 :::
 
+```{index} color palette, color blindness simulator
+```
+
 In {numref}`can_lang_plot_legend`, the points are colored with
 the default `altair` color scheme, which is called `"tableau10"`. This is an appropriate choice for most situations and is also easy to read for people with reduced color vision.
 In general, the color schemes that are used by default in Altair are adapted to the type of data that is displayed and selected to be easy to interpret both for people with good and reduced color vision.
 If you are unsure about a certain color combination, you can use
 this [color blindness simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/) to check
 if your visualizations are color-blind friendly.
-
-```{index} color palette; color blindness simulator
-```
 
 All the available color schemes and information on how to create your own can be viewed [in the Altair documentation](https://altair-viz.github.io/user_guide/customization.html#customizing-colors).
 To change the color scheme of our chart,
@@ -1048,7 +1055,7 @@ can_lang_plot_theme = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue (percentage of Canadian residents)"),
+        .title(["Mother tongue", "(percentage of Canadian residents)"]),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")
@@ -1081,6 +1088,9 @@ via the `Tooltip` encoding channel,
 so that text labels for each point show up once we hover over it with the mouse pointer.
 Here we also add the exact values of the variables on the x and y-axis to the tooltip.
 
+```{index} altair; alt.Tooltip
+```
+
 ```{code-cell} ipython3
 can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
     x=alt.X("most_at_home_percent")
@@ -1090,7 +1100,7 @@ can_lang_plot_tooltip = alt.Chart(can_lang).mark_point(filled=True).encode(
     y=alt.Y("mother_tongue_percent")
         .scale(type="log")
         .axis(tickCount=7)
-        .title("Mother tongue (percentage of Canadian residents)"),
+        .title(["Mother tongue", "(percentage of Canadian residents)"]),
     color=alt.Color("category")
         .legend(orient="top")
         .title("")
@@ -1218,7 +1228,7 @@ as `sort_values` followed by `head`, but are slightly more efficient because the
 In general, it is good to use more specialized functions when they are available!
 ```
 
-```{index} pandas.DataFrame; nlargest; nsmallest
+```{index} DataFrame; nlargest, DataFrame; nsmallest
 ```
 
 ```{code-cell} ipython3
@@ -1338,7 +1348,10 @@ morley_df = pd.read_csv("data/morley.csv")
 morley_df
 ```
 
-```{index} distribution, altair; histogram
+```{index} distribution, altair; histogram, altair; count
+```
+
+```{index} see: count; altair
 ```
 
 In this experimental data,
@@ -1416,7 +1429,7 @@ Histogram of Michelson's speed of light data.
 
 #### Adding layers to an `altair` chart
 
-```{index} altair; +; mark_rule
+```{index} altair; +, altair; mark_rule, altair; layers
 ```
 
 {numref}`morley_hist` is a great start.
@@ -1696,6 +1709,9 @@ When you create a histogram in `altair`, it tries to choose a reasonable number 
 We can change the number of bins by using the `maxbins` parameter
 inside the `bin` method.
 
+```{index} altair; maxbins
+```
+
 ```{code-cell} ipython3
 morley_hist_maxbins = alt.Chart(morley_df).mark_bar().encode(
     x=alt.X("RelativeError").bin(maxbins=30),
@@ -1950,7 +1966,7 @@ bad, while raster images eventually start to look "pixelated."
 ```{index} PDF
 ```
 
-```{index} see: portable document dormat; PDF
+```{index} see: portable document format; PDF
 ```
 
 ```{note}

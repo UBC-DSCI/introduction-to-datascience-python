@@ -88,9 +88,6 @@ with respect to your *working directory* (i.e., "where you are currently") on th
 On the other hand, an absolute path indicates where the file is
 with respect to the computer's filesystem base (or *root*) folder, regardless of where you are working.
 
-```{index} Happiness Report
-```
-
 Suppose our computer's filesystem looks like the picture in
 {numref}`Filesystem`. We are working in a
 file titled `worksheet_02.ipynb`, and our current working directory is `worksheet_02`;
@@ -125,6 +122,15 @@ happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 Note that there is no forward slash at the beginning of a relative path; if we accidentally typed `"/data/happiness_report.csv"`,
 Python would look for a folder named `data` in the root folder of the computer&mdash;but that doesn't exist!
+
+```{index} path; previous, path; current
+```
+
+```{index} see: ..; path
+```
+
+```{index} see: .; path
+```
 
 Aside from specifying places to go in a path using folder names (like `data` and `worksheet_02`), we can also specify two additional
 special places: the *current directory* and the *previous directory*. We indicate the current working directory with a single dot `.`, and
@@ -177,7 +183,7 @@ to where the resource is located on the remote machine.
 (readcsv)=
 ### `read_csv` to read in comma-separated values files
 
-```{index} csv, reading; separator, read function; read\_csv
+```{index} csv, reading; separator, read function; read_csv
 ```
 
 Now that we have learned about *where* data could be, we will learn about *how*
@@ -277,7 +283,7 @@ canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
 ```
 
-```{index} Error
+```{index} ParserError
 ```
 
 ```{index} read function; skiprows argument
@@ -330,7 +336,7 @@ Non-Official & Non-Aboriginal languages	Amharic	22465	12785	200	33670
 ```{index} see: tab-separated values; tsv
 ```
 
-```{index} tsv, read function; read_tsv
+```{index} tsv
 ```
 
 To read in `.tsv` (**t**ab **s**eparated **v**alues) files, we can set the `sep` argument
@@ -362,7 +368,7 @@ arguments depending on the file format, our resulting data frame
 
 ### Using the `header` argument to handle missing column names
 
-```{index} read function; header, reading; separator
+```{index} read function; header argument, reading; separator
 ```
 
 The `can_lang_no_names.tsv` file contains a slightly different version
@@ -401,7 +407,7 @@ canlang_data = pd.read_csv(
 canlang_data
 ```
 
-```{index} pandas.DataFrame; rename, pandas
+```{index} DataFrame; rename, pandas
 ```
 
 It is best to rename your columns manually in this scenario. The current column names
@@ -528,6 +534,10 @@ X?a??4VT?,D?Jq
 ```{index} read function; read_excel
 ```
 
+```{index} Excel spreadsheet; reading
+```
+
+
 This type of file representation allows Excel files to store additional things
 that you cannot store in a `.csv` file, such as fonts, text formatting,
 graphics, multiple sheets and more. And despite looking odd in a plain text
@@ -614,10 +624,13 @@ usually stored and accessed locally on one computer from
 a file with a `.db` extension (or sometimes a `.sqlite` extension).
 Similar to Excel files, these are not plain text files and cannot be read in a plain text editor.
 
-```{index} database; connect, ibis, ibis; ibis
+```{index} database; connection, ibis; connect
 ```
 
 ```{index} see: ibis; database
+```
+
+```{index} see: database; ibis
 ```
 
 The first thing you need to do to read data into Python from a database is to
@@ -642,7 +655,7 @@ import ibis
 conn = ibis.sqlite.connect("data/can_lang.db")
 ```
 
-```{index} database; tables; list_tables
+```{index} database; table, ibis; list_tables, ibis; sqlite
 ```
 
 Often relational databases have many tables; thus, in order to retrieve
@@ -656,7 +669,7 @@ tables = conn.list_tables()
 tables
 ```
 
-```{index} database; table, ibis; table
+```{index} table, ibis; table
 ```
 
 The `list_tables` function returned only one name---`"can_lang"`---which tells us
@@ -672,7 +685,10 @@ canlang_table = conn.table("can_lang")
 canlang_table
 ```
 
-```{index} database; count, ibis; count
+```{index} ibis; count
+```
+
+```{index} see: count; ibis
 ```
 
 Although it looks like we might have obtained the whole data frame from the database, we didn't!
@@ -687,7 +703,7 @@ In `ibis`, we can do that using the `count` function from the table object.
 canlang_table.count()
 ```
 
-```{index} execute, ibis; execute
+```{index} ibis; execute
 ```
 
 Wait a second...this isn't the number of rows in the database. In fact, we haven't actually sent our
@@ -708,7 +724,9 @@ the *actual* text of the SQL query that `ibis` sends to the database, you can us
 instead of `execute`. But note that you have to pass the result of `compile` to the `str` function to turn it into
 a human-readable string first.
 
-```{index} compile, ibis; compile
+```{index} see: compile;ibis
+```
+```{index} ibis; compile, str
 ```
 
 ```{code-cell} ipython3
@@ -725,7 +743,7 @@ The `ibis` package provides lots of `pandas`-like tools for working with databas
 For example, we can look at the first few rows of the table by using the `head` function,
 followed by `execute` to retrieve the response.
 
-```{index} database; head, ibis;
+```{index} ibis; head
 ```
 
 ```{code-cell} ipython3
@@ -742,7 +760,7 @@ the `language` and `mother_tongue` columns.
 We can use the `[]` operation with a logical statement
 to obtain only certain rows. Below we filter the data to include only Aboriginal languages.
 
-```{index} database; filter, ibis;
+```{index} database; filter rows, ibis; []
 ```
 
 ```{code-cell} ipython3
@@ -755,7 +773,7 @@ We didn't call `execute` because we are not ready to bring the data into Python 
 We can still use the database to do some work to obtain *only* the small amount of data we want to work with locally
 in Python. Let's add the second part of our SQL query: selecting only the `language` and `mother_tongue` columns.
 
-```{index} database; select, ibis;
+```{index} database; select columns
 ```
 
 ```{code-cell} ipython3
@@ -777,7 +795,7 @@ that we need for analysis; we do eventually need to call `execute`.
 For example, `ibis` does not provide the `tail` function to look at the last
 rows in a database, even though `pandas` does.
 
-```{index} pandas.DataFrame; tail
+```{index} DataFrame; tail
 ```
 
 ```{code-cell} ipython3
@@ -821,6 +839,9 @@ Note that the `host` (`fakeserver.stat.ubc.ca`), `user` (`user0001`), and
 `password` (`abc123`) below are *not real*; you will not actually
 be able to connect to a database using this information.
 
+```{index} ibis; postgres, ibis; connect
+```
+
 ```python
 conn = ibis.postgres.connect(
     database = "can_mov_db",
@@ -836,6 +857,9 @@ that connecting to and working with a Postgres database is identical to
 connecting to and working with an SQLite database. For example, we can again use
 `list_tables` to find out what tables are in the `can_mov_db` database:
 
+```{index} ibis; list_tables
+```
+
 ```python
 conn.list_tables()
 ```
@@ -847,6 +871,9 @@ conn.list_tables()
 We see that there are 10 tables in this database. Let's first look at the
 `"ratings"` table to find the lowest rating that exists in the `can_mov_db`
 database.
+
+```{index} ibis; table
+```
 
 ```python
 ratings_table = conn.table("ratings")
@@ -860,7 +887,7 @@ AlchemyTable: ratings
   num_votes       int64
 ```
 
-```{index} ibis; select
+```{index} ibis; []
 ```
 
 To find the lowest rating that exists in the data base, we first need to
@@ -882,7 +909,7 @@ Selection[r0]
     average_rating: r0.average_rating
 ```
 
-```{index} database; order_by, ibis; head, ibis; ibis
+```{index} database; ordering, ibis; order_by, ibis; head
 ```
 
 Next we use the `order_by` function from `ibis` order the table by `average_rating`,
@@ -929,7 +956,7 @@ Databases are beneficial in a large-scale setting:
 
 ## Writing data from Python to a `.csv` file
 
-```{index} write function; to_csv, pandas.DataFrame; to_csv
+```{index} write function; to_csv, DataFrame; to_csv
 ```
 
 At the middle and end of a data analysis, we often want to write a data frame
@@ -1309,6 +1336,9 @@ argument&mdash;the URL of the page to scrape&mdash;and will return a list of
 data frames corresponding to all the tables it finds at that URL. We can see
 below that `read_html` found 17 tables on the Wikipedia page for Canada.
 
+```{index} read function; read_html
+```
+
 ```python
 canada_wiki_tables = pd.read_html("https://en.wikipedia.org/wiki/Canada")
 len(canada_wiki_tables)
@@ -1356,16 +1386,16 @@ hope that it gives you enough of a basic idea that you can learn how to use
 another API if needed. In particular, in this book we will show you the basics
 of how to use the `requests` package in Python to access data from the NASA "Astronomy Picture
 of the Day" API (a great source of desktop backgrounds, by the way&mdash;take a look at the stunning
-picture of the Rho-Ophiuchi cloud complex in {numref}`fig:NASA-API-Rho-Ophiuchi` from July 13, 2023!).
+picture of the Rho-Ophiuchi cloud complex {cite:p}`rhoophiuchi` in {numref}`fig:NASA-API-Rho-Ophiuchi` from July 13, 2023!).
 
-```{index} API; requests, NASA, API; token; key
+```{index} requests, NASA, API; token
 ```
 
 ```{figure} img/reading/NASA-API-Rho-Ophiuchi.png
 :name: fig:NASA-API-Rho-Ophiuchi
 :width: 400px
 
-The James Webb Space Telescope's NIRCam image of the Rho Ophiuchi molecular cloud complex {cite:p}`rhoophiuchi`.
+The James Webb Space Telescope's NIRCam image of the Rho Ophiuchi molecular cloud complex.
 ```
 
 +++
@@ -1410,6 +1440,9 @@ That should be more than enough for our purposes in this section.
 +++
 
 #### Accessing the NASA API
+
+```{index} API; HTTP, API; query parameters, API; endpoint
+```
 
 The NASA API is what is known as an *HTTP API*: this is a particularly common
 kind of API, where you can obtain data simply by accessing a
@@ -1457,6 +1490,12 @@ Near some stars in the stunning image are shadows cast by their protoplanetary
 disks.","hdurl":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph.png",
 "media_type":"image","service_version":"v1","title":"Webb's
 Rho Ophiuchi","url":"https://apod.nasa.gov/apod/image/2307/STScI-01_RhoOph1024.png"}
+```
+
+```{index} see: JavaScript Object Notation; JSON
+```
+
+```{index} JSON, requests; get, requests; json
 ```
 
 Neat! There is definitely some data there, but it's a bit hard to

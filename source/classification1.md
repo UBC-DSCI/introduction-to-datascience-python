@@ -144,7 +144,7 @@ In this case, the file containing the breast cancer data set is a `.csv`
 file with headers. We'll use the `read_csv` function with no additional
 arguments, and then inspect its contents:
 
-```{index} read function; read\_csv
+```{index} read function; read_csv
 ```
 
 ```{code-cell} ipython3
@@ -183,7 +183,7 @@ total set of variables per image in this data set is:
 
 +++
 
-```{index} info
+```{index} DataFrame; info
 ```
 
 Below we use the `info` method to preview the data frame. This method can
@@ -195,7 +195,7 @@ as well as their data types and the number of non-missing entries.
 cancer.info()
 ```
 
-```{index} unique
+```{index} Series; unique
 ```
 
 From the summary of the data above, we can see that `Class` is of type `object`.
@@ -213,7 +213,7 @@ method. The `replace` method takes one argument: a dictionary that maps
 previous values to desired new values.
 We will verify the result using the `unique` method.
 
-```{index} replace
+```{index} Series; replace
 ```
 
 ```{code-cell} ipython3
@@ -227,7 +227,7 @@ cancer["Class"].unique()
 
 ### Exploring the cancer data
 
-```{index} groupby, count
+```{index} DataFrame; groupby, Series;size
 ```
 
 ```{code-cell} ipython3
@@ -239,9 +239,9 @@ glue("malignant_pct", "{:0.0f}".format(100*cancer["Class"].value_counts(normaliz
 ```
 
 Before we start doing any modeling, let's explore our data set. Below we use
-the `groupby` and `count` methods to find the number and percentage
+the `groupby` and `size` methods to find the number and percentage
 of benign and malignant tumor observations in our data set. When paired with
-`groupby`, `count` counts the number of observations for each value of the `Class`
+`groupby`, `size` counts the number of observations for each value of the `Class`
 variable. Then we calculate the percentage in each group by dividing by the total
 number of observations and multiplying by 100.
 The total number of observations equals the number of rows in the data frame,
@@ -256,7 +256,7 @@ tumor observations.
 100 * cancer.groupby("Class").size() / cancer.shape[0]
 ```
 
-```{index} value_counts
+```{index} Series; value_counts
 ```
 
 The `pandas` package also has a more convenient specialized `value_counts` method for
@@ -621,8 +621,6 @@ glue("fig:05-multiknn-1", perim_concav_with_new_point3)
 Scatter plot of concavity versus perimeter with new observation represented as a red diamond.
 :::
 
-```{index} pandas.DataFrame; assign
-```
 
 ```{code-cell} ipython3
 new_obs_Perimeter = 0
@@ -952,7 +950,7 @@ knn = KNeighborsClassifier(n_neighbors=5)
 knn
 ```
 
-```{index} scikit-learn; X & y
+```{index} scikit-learn; fit, scikit-learn; predictors, scikit-learn; response
 ```
 
 In order to fit the model on the breast cancer data, we need to call `fit` on
@@ -1061,10 +1059,13 @@ predictors (colored by diagnosis) for both the unstandardized data we just
 loaded, and the standardized version of that same data. But first, we need to
 standardize the `unscaled_cancer` data set with `scikit-learn`.
 
-```{index} pipeline, scikit-learn; make_column_transformer
+```{index} see: Pipeline; scikit-learn
 ```
 
-```{index} double: scikit-learn; pipeline
+```{index} see: make_column_transformer; scikit-learn
+```
+
+```{index} scikit-learn;Pipeline, scikit-learn; make_column_transformer
 ```
 
 The `scikit-learn` framework provides a collection of *preprocessors* used to manipulate
@@ -1090,13 +1091,13 @@ preprocessor = make_column_transformer(
 preprocessor
 ```
 
-```{index} scikit-learn; ColumnTransformer, scikit-learn; StandardScaler, scikit-learn; fit_transform
+```{index} scikit-learn; make_column_transformer, scikit-learn; StandardScaler 
 ```
 
-```{index} ColumnTransformer; StandardScaler
+```{index} see: StandardScaler; scikit-learn
 ```
 
-```{index} scikit-learn; fit, scikit-learn; transform
+```{index} scikit-learn; fit, scikit-learn; make_column_selector, scikit-learn; StandardScaler
 ```
 
 You can see that the preprocessor includes a single standardization step
@@ -1119,7 +1120,10 @@ preprocessor = make_column_transformer(
 preprocessor
 ```
 
-```{index} see: fit, transform, fit_transform; scikit-learn
+```{index} see: fit ; scikit-learn
+```
+
+```{index} scikit-learn; transform
 ```
 
 We are now ready to standardize the numerical predictor columns in the `unscaled_cancer` data frame.
@@ -1409,6 +1413,9 @@ detection, there are many cases in which the "important" class to identify
 (presence of disease, malicious email) is much rarer than the "unimportant"
 class (no disease, normal email).
 
+```{index} concat
+```
+
 To better illustrate the problem, let's revisit the scaled breast cancer data,
 `cancer`; except now we will remove many of the observations of malignant tumors, simulating
 what the data would look like if the cancer was rare. We will do this by
@@ -1603,7 +1610,7 @@ Imbalanced data with background color indicating the decision of the classifier 
 
 +++
 
-```{index} oversampling, scikit-learn; sample
+```{index} oversampling, DataFrame; sample
 ```
 
 Despite the simplicity of the problem, solving it in a statistically sound manner is actually
@@ -1747,6 +1754,9 @@ entries, one option is to simply remove those observations prior to building
 the K-nearest neighbors classifier. We can accomplish this by using the
 `dropna` method prior to working with the data.
 
+```{index} missing data; dropna
+```
+
 ```{code-cell} ipython3
 no_missing_cancer = missing_cancer.dropna()
 no_missing_cancer
@@ -1758,8 +1768,11 @@ possible approach is to *impute* the missing entries, i.e., fill in synthetic
 values based on the other observations in the data set. One reasonable choice
 is to perform *mean imputation*, where missing entries are filled in using the
 mean of the present entries in each variable. To perform mean imputation, we
-use a `SimpleImputer` transformer with the default arguments, and wrap it in a
-`ColumnTransformer` to indicate which columns need imputation.
+use a `SimpleImputer` transformer with the default arguments, and use
+`make_column_transformer` to indicate which columns need imputation.
+
+```{index} scikit-learn; SimpleImputer, missing data;mean imputation
+```
 
 ```{code-cell} ipython3
 from sklearn.impute import SimpleImputer
@@ -1792,7 +1805,7 @@ question you are answering.
 (08:puttingittogetherworkflow)=
 ## Putting it together in a `Pipeline`
 
-```{index} scikit-learn; pipeline
+```{index} scikit-learn; Pipeline
 ```
 
 The `scikit-learn` package collection also provides the [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html?highlight=pipeline#sklearn.pipeline.Pipeline),

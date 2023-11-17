@@ -1351,6 +1351,9 @@ morley_df
 ```{index} distribution, altair; histogram, altair; count
 ```
 
+```{index} see: count; altair
+```
+
 In this experimental data,
 Michelson was trying to measure just a single quantitative number
 (the speed of light).

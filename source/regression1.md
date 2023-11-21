@@ -317,7 +317,17 @@ for i in range(5):
     })
     h_lines.append(alt.Chart(h_line_df).mark_line(color="black").encode(x="sqft", y="price"))
 
-nn_plot = alt.layer(*h_lines, small_plot, rule)
+# highlight the nearest neighbors in orange
+orange_neighbrs = alt.Chart(nearest_neighbors).mark_circle(opacity=1, color="#ff7f0e").encode(
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format="$,.0f")
+        .title("Price (USD)")
+)
+
+nn_plot = alt.layer(*h_lines, small_plot, orange_neighbrs, rule)
 ```
 
 ```{code-cell} ipython3
@@ -329,7 +339,7 @@ glue("fig:07-knn5-example", nn_plot)
 :::{glue:figure} fig:07-knn5-example
 :name: fig:07-knn5-example
 
-Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors.
+Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors (highlighted in orange).
 :::
 
 +++

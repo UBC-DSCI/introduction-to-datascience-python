@@ -89,7 +89,7 @@ when predicting whether a patient's tumor is malignant or benign!
 
 +++
 
-```{figure} img/classification2/training_test.jpeg
+```{figure} img/classification2/training_test.png
 :name: fig:06-training-test
 
 Splitting the data into training and testing sets.
@@ -1664,7 +1664,7 @@ estimate its accuracy.  The overall process is summarized in
 
 +++
 
-```{figure} img/classification2/train-test-overview.jpeg
+```{figure} img/classification2/train-test-overview.png
 :name: fig:06-overview
 
 Overview of K-NN classification.

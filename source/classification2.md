@@ -1301,7 +1301,7 @@ Here we are using the shortcut `point=True` to layer a point and line chart.
 accuracy_vs_k = alt.Chart(accuracies_grid).mark_line(point=True).encode(
     x=alt.X("n_neighbors").title("Neighbors"),
     y=alt.Y("mean_test_score")
-        .scale(domain=(0.85, 0.90))
+        .scale(zero=False)
         .title("Accuracy estimate")
 )
 
@@ -1388,7 +1388,7 @@ large_accuracies_grid = pd.DataFrame(large_cancer_tune_grid.cv_results_)
 large_accuracy_vs_k = alt.Chart(large_accuracies_grid).mark_line(point=True).encode(
     x=alt.X("param_kneighborsclassifier__n_neighbors").title("Neighbors"),
     y=alt.Y("mean_test_score")
-        .scale(domain=(0.60, 0.90))
+        .scale(zero=False)
         .title("Accuracy estimate")
 )
 
@@ -1836,7 +1836,7 @@ plt_irrelevant_accuracies = (
         y=alt.Y(
             "accs",
             title="Model Accuracy Estimate",
-            scale=alt.Scale(domain=(0.80, 0.95)),
+            scale=alt.Scale(zero=False),
         ),
     )
 )
@@ -1899,7 +1899,7 @@ plt_irrelevant_nghbrs_fixed = (
         x=alt.X("ks", title="Number of Irrelevant Predictors"),
         y=alt.Y(
             "Accuracy",
-            scale=alt.Scale(domain=(0.75, 0.95)),
+            scale=alt.Scale(zero=False),
         ),
         color=alt.Color("Type"),
     )
@@ -2140,7 +2140,7 @@ fwd_sel_accuracies_plot = (
         y=alt.Y(
             "accuracy",
             title="Estimated Accuracy",
-            scale=alt.Scale(domain=(0.89, 0.935)),
+            scale=alt.Scale(zero=False),
         ),
     )
 )

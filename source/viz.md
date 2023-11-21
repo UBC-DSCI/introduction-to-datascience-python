@@ -1474,7 +1474,7 @@ so we are including it here already.
 ```
 
 ```{code-cell} ipython3
-v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[6], size=1.5).encode(
     x=alt.datum(792.458)
 )
 
@@ -1672,7 +1672,7 @@ morley_hist_rel = alt.Chart(morley_df).mark_bar().encode(
 )
 
 # Recreating v_line to indicate that the speed of light is at 0% relative error
-v_line = alt.Chart(morley_df).mark_rule(strokeDash=[5], size=2).encode(
+v_line = alt.Chart(morley_df).mark_rule(strokeDash=[6], size=1.5).encode(
     x=alt.datum(0)
 )
 

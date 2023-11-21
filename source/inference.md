@@ -694,7 +694,7 @@ reliable&mdash;is there any way to improve the estimate?  One way to improve a
 point estimate is to take a *larger* sample. To illustrate what effect this
 has, we will take many samples of size 20, 50, 100, and 500, and plot the
 sampling distribution of the sample mean. We indicate the mean of the sampling
-distribution with a orange vertical line.
+distribution with a vertical line.
 
 ```{code-cell} ipython3
 :tags: [remove-input]
@@ -721,10 +721,10 @@ glue(
             alt.X("price", bin=alt.Bin(maxbins=30)),
             alt.Y("count()")
         ),
-        base.mark_rule(color="#f58518", size=3).encode(
+        base.mark_rule(color="black", size=1.5, strokeDash=[6]).encode(
             x="mean(price)"
         ),
-        base.mark_text(align="left", color="#f58518", size=12, fontWeight="bold", dx=10).transform_aggregate(
+        base.mark_text(align="left", color="black", size=12, fontWeight="bold", dx=10).transform_aggregate(
             mean_price="mean(price)",
         ).transform_calculate(
             label="'Mean = ' + round(datum.mean_price * 10) / 10"
@@ -755,7 +755,7 @@ glue(
 :name: fig:11-example-means7
 :figclass: caption-hack
 
-Comparison of sampling distributions, with mean highlighted as a vertical orange line.
+Comparison of sampling distributions, with mean highlighted as a vertical line.
 ```
 
 +++
@@ -1154,8 +1154,8 @@ sampling_distribution.encoding.x["bin"]["extent"] = (90, 250)
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        alt.Chart(sample_estimates).mark_rule(color="#f58518", size=2).encode(x="mean(mean_price)"),
-        alt.Chart(sample_estimates).mark_text(color="#f58518", size=12, align="left", dx=16, fontWeight="bold").encode(
+        alt.Chart(sample_estimates).mark_rule(color="black", size=1.5, strokeDash=[6]).encode(x="mean(mean_price)"),
+        alt.Chart(sample_estimates).mark_text(color="black", size=12, align="left", dx=16, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
             text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
@@ -1163,8 +1163,8 @@ alt.vconcat(
     ).properties(title="Sampling distribution", height=150),
     alt.layer(
         boot_est_dist,
-        alt.Chart(boot20000_means).mark_rule(color="#f58518", size=2).encode(x="mean(mean_price)"),
-        alt.Chart(boot20000_means).mark_text(color="#f58518", size=12, align="left", dx=18, fontWeight="bold").encode(
+        alt.Chart(boot20000_means).mark_rule(color="black", size=1.5, strokeDash=[6]).encode(x="mean(mean_price)"),
+        alt.Chart(boot20000_means).mark_text(color="black", size=12, align="left", dx=18, fontWeight="bold").encode(
             x="mean(mean_price)",
             y=alt.value(7),
             text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
@@ -1275,14 +1275,15 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
+:tags: [remove-input]
 # Create the annotation for for the 2.5th percentile
-rule_025 = alt.Chart().mark_rule(color="#f58518", size=3, strokeDash=[5]).encode(
+rule_025 = alt.Chart().mark_rule(color="black", size=1.5, strokeDash=[6]).encode(
     x=alt.datum(ci_bounds[0.025])
 ).properties(
     width=500
 )
 text_025 = rule_025.mark_text(
-    color="#f58518",
+    color="black",
     size=12,
     fontWeight="bold",
     dy=-160

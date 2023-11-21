@@ -117,7 +117,7 @@ small_sacramento = sacramento.sample(n=30)
 
 small_plot = (
     alt.Chart(small_sacramento)
-    .mark_circle()
+    .mark_circle(opacity=1)
     .encode(
         x=alt.X("sqft")
             .scale(zero=False)
@@ -129,7 +129,50 @@ small_plot = (
     )
 )
 
-small_plot += small_plot.transform_regression("sqft", "price").mark_line()
+
+# create df_lines with one fake/empty line (for starting at 2nd color later)
+df_lines = {"x": [500, 500], "y": [100000, 100000], "number": ["-1", "-1"]}
+
+# set the domains (range of x values) of lines
+min_x = small_sacramento["sqft"].min()
+max_x = small_sacramento["sqft"].max()
+
+# add the line of best fit
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+lm.fit(small_sacramento[["sqft"]], small_sacramento[["price"]])
+pred_min = float(lm.predict(pd.DataFrame({"sqft": [min_x]})))
+pred_max = float(lm.predict(pd.DataFrame({"sqft": [max_x]})))
+
+df_lines["x"].extend([min_x, max_x])
+df_lines["y"].extend([pred_min, pred_max])
+df_lines["number"].extend(["0", "0"])
+
+# add other similar looking lines
+intercept_l = [-64542.23, -6900, -64542.23]
+slope_l = [190, 175, 160]
+for i in range(len(slope_l)):
+    df_lines["x"].extend([min_x, max_x])
+    df_lines["y"].extend([
+                        intercept_l[i] + slope_l[i] * min_x,
+                        intercept_l[i] + slope_l[i] * max_x,
+                    ])
+    df_lines["number"].extend([f"{i+1}", f"{i+1}"])
+
+df_lines = pd.DataFrame(df_lines)
+
+# plot the bogus line to skip the same color as the scatter
+small_plot += alt.Chart(
+    df_lines[df_lines["number"] == "-1"]
+).mark_line().encode(
+    x="x", y="y", color=alt.Color("number", legend=None)
+)
+# plot the real line with 2nd color
+small_plot += alt.Chart(
+    df_lines[df_lines["number"] == "0"]
+).mark_line().encode(
+    x="x", y="y", color=alt.Color("number", legend=None)
+)
 
 small_plot
 ```
@@ -189,11 +232,11 @@ prediction = float(lm.predict(pd.DataFrame({"sqft": [2000]})))
 
 # the vertical dotted line
 line_df = pd.DataFrame({"x": [2000]})
-rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+rule = alt.Chart(line_df).mark_rule(strokeDash=[6], size=1.5).encode(x="x")
 
 # the red point
 point_df = pd.DataFrame({"x": [2000], "y": [prediction]})
-point = alt.Chart(point_df).mark_circle(color="red", size=100).encode(x="x", y="y")
+point = alt.Chart(point_df).mark_circle(color="red", size=80, opacity=1).encode(x="x", y="y")
 
 # overlay all plots
 small_plot_2000_pred = (
@@ -204,7 +247,7 @@ small_plot_2000_pred = (
     + alt.Chart(
         pd.DataFrame(
             {
-                "x": [2350],
+                "x": [2450],
                 "y": [prediction - 41000],
                 "prediction": ["$" + "{0:,.0f}".format(prediction)],
             }
@@ -242,32 +285,11 @@ Some plausible examples are shown in {numref}`fig:08-several-lines`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-intercept_l = [-64542.23, -6900, -64542.23]
-slope_l = [190, 175, 160]
-line_color_l = ["green", "purple", "red"]
-
-# set the domains (range of x values) of lines
-min_x = small_sacramento["sqft"].min()
-max_x = small_sacramento["sqft"].max()
-
 several_lines_plot = small_plot.copy()
 
-for i in range(len(slope_l)):
-    several_lines_plot += (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [min_x, max_x],
-                    "y": [
-                        intercept_l[i] + slope_l[i] * min_x,
-                        intercept_l[i] + slope_l[i] * max_x,
-                    ],
-                }
-            )
-        )
-        .mark_line(color=line_color_l[i])
-        .encode(x="x", y="y")
-    )
+several_lines_plot += alt.Chart(
+    df_lines[df_lines["number"] != "0"]
+).mark_line().encode(x="x", y="y", color=alt.Color("number",legend=None))
 
 several_lines_plot
 ```
@@ -292,7 +314,7 @@ Scatter plot of sale price versus size with many possible lines that could be dr
 Simple linear regression chooses the straight line of best fit by choosing
 the line that minimizes the **average squared vertical distance** between itself and
 each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates
-these vertical distances as red lines. Finally, to assess the predictive
+these vertical distances as lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
 we use RMSPE&mdash;the same measure of predictive performance we used with K-NN regression.
 
@@ -313,7 +335,7 @@ v_lines = []
 for i in range(len(small_sacramento)):
     sqft_val = small_sacramento.iloc[i]["sqft"]
     line_df = small_sacramento_pred.query("sqft == @sqft_val")
-    v_lines.append(alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value"))
+    v_lines.append(alt.Chart(line_df).mark_line(color="black").encode(x="sqft", y="value"))
 
 error_plot = alt.layer(*v_lines, small_plot).configure_circle(opacity=1)
 error_plot
@@ -328,7 +350,7 @@ glue("fig:08-verticalDistToMin", error_plot)
 :::{glue:figure} fig:08-verticalDistToMin
 :name: fig:08-verticalDistToMin
 
-Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
+Scatter plot of sale price versus size with lines denoting the vertical distances between the predicted values and the observed data points.
 :::
 
 +++
@@ -482,7 +504,7 @@ so that we can qualitatively assess if the model seems to fit the data well.
 sqft_prediction_grid = sacramento[["sqft"]].agg(["min", "max"])
 sqft_prediction_grid["predicted"] = lm.predict(sqft_prediction_grid)
 
-all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
+all_points = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -966,7 +988,7 @@ lm_plot_outlier += lm_plot_outlier.transform_regression("sqft", "price").mark_li
 
 outlier_pt = (
     alt.Chart(sacramento_outlier)
-    .mark_circle(color="red", size=100)
+    .mark_circle(color="#d62728", size=100)
     .encode(x="sqft", y="price")
 )
 
@@ -987,7 +1009,7 @@ outlier_line = (
         )
     )
     .transform_regression("sqft", "price")
-    .mark_line(color="red")
+    .mark_line(color="#d62728")
 )
 
 lm_plot_outlier += outlier_pt + outlier_line
@@ -1051,7 +1073,7 @@ outlier_line = (
         )
     )
     .transform_regression("sqft", "price")
-    .mark_line(color="red")
+    .mark_line(color="#d62728")
 )
 
 lm_plot_outlier_large += outlier_pt + outlier_line

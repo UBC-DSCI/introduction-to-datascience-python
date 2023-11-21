@@ -257,7 +257,7 @@ the sale price?
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-small_plot = alt.Chart(small_sacramento).mark_circle().encode(
+small_plot = alt.Chart(small_sacramento).mark_circle(opacity=1).encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -268,7 +268,7 @@ small_plot = alt.Chart(small_sacramento).mark_circle().encode(
 
 # add an overlay to the base plot
 line_df = pd.DataFrame({"x": [2000]})
-rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+rule = alt.Chart(line_df).mark_rule(strokeDash=[6], size=1.5, color="black").encode(x="x")
 
 small_plot + rule
 ```
@@ -315,7 +315,7 @@ for i in range(5):
         "sqft": [nearest_neighbors.iloc[i, 4], 2000],
         "price": [nearest_neighbors.iloc[i, 6]] * 2
     })
-    h_lines.append(alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price"))
+    h_lines.append(alt.Chart(h_line_df).mark_line(color="black").encode(x="sqft", y="price"))
 
 nn_plot = alt.layer(*h_lines, small_plot, rule)
 ```
@@ -352,7 +352,7 @@ prediction
 
 nn_plot_pred = nn_plot + alt.Chart(
     pd.DataFrame({"sqft": [2000], "price": [prediction]})
-).mark_circle(size=40).encode(x="sqft", y="price", color=alt.value("red"))
+).mark_circle(size=80, opacity=1, color="#d62728").encode(x="sqft", y="price")
 ```
 
 ```{code-cell} ipython3
@@ -493,7 +493,7 @@ sacr_new_preds_hid = pd.concat(
 sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
 errors_plot = (
     small_plot
-    + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
+    + alt.Chart(sacr_full_preds_hid).mark_line(color="#ff7f0e").encode(x="sqft", y="predicted")
     + alt.Chart(sacr_new_preds_hid)
     .mark_circle(opacity=1)
     .encode(x="sqft", y="price")
@@ -501,7 +501,7 @@ errors_plot = (
 v_lines = []
 for i in pts["sqft"]:
     line_df = sacr_new_preds_melted_df.query("sqft == @i")
-    v_lines.append(alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value"))
+    v_lines.append(alt.Chart(line_df).mark_line(color="black").encode(x="sqft", y="value"))
 
 errors_plot = alt.layer(*v_lines, errors_plot)
 errors_plot
@@ -516,7 +516,7 @@ glue("fig:07-verticalerrors", errors_plot, display=False)
 :::{glue:figure} fig:07-verticalerrors
 :name: fig:07-verticalerrors
 
-Scatter plot of price (USD) versus house size (square feet) with example predictions (blue line) and the error in those predictions compared with true response values for three selected observations (vertical red lines).
+Scatter plot of price (USD) versus house size (square feet) with example predictions (orange line) and the error in those predictions compared with true response values for three selected observations (vertical lines).
 :::
 
 +++

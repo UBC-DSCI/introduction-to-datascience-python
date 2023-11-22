@@ -313,7 +313,7 @@ Scatter plot of sale price versus size with many possible lines that could be dr
 
 Simple linear regression chooses the straight line of best fit by choosing
 the line that minimizes the **average squared vertical distance** between itself and
-each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates
+each of the observed data points in the training data (equivalent to minimizing the RMSE). {numref}`fig:08-verticalDistToMin` illustrates
 these vertical distances as lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
 we use RMSPE&mdash;the same measure of predictive performance we used with K-NN regression.

@@ -476,8 +476,8 @@ us the smallest RMSPE.
 from sklearn.neighbors import KNeighborsRegressor
 
 # (synthetic) new prediction points
-pts = pd.DataFrame({"sqft": [1250, 1850, 2250], "price": [250000, 200000, 500000]})
-finegrid = pd.DataFrame({"sqft": np.arange(900, 3901, 10)})
+pts = pd.DataFrame({"sqft": [1200, 1850, 2250], "price": [300000, 200000, 500000]})
+finegrid = pd.DataFrame({"sqft": np.arange(600, 3901, 10)})
 
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
@@ -495,12 +495,11 @@ sacr_full_preds_hid = pd.concat(
 )
 
 sacr_new_preds_hid = pd.concat(
-    (pts, pd.DataFrame(sacr_pipeline.predict(pts), columns=["predicted"])),
+    (small_sacramento[["sqft", "price"]].reset_index(), pd.DataFrame(sacr_pipeline.predict(small_sacramento[["sqft", "price"]]), columns=["predicted"])),
     axis=1,
-)
+).drop(columns=["index"])
 
 # to make altair mark_line works, need to create separate dataframes for each vertical error line
-sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
 errors_plot = (
     small_plot
     + alt.Chart(sacr_full_preds_hid).mark_line(color="#ff7f0e").encode(x="sqft", y="predicted")
@@ -508,9 +507,10 @@ errors_plot = (
     .mark_circle(opacity=1)
     .encode(x="sqft", y="price")
 )
+sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
 v_lines = []
-for i in pts["sqft"]:
-    line_df = sacr_new_preds_melted_df.query("sqft == @i")
+for i in sacr_new_preds_hid["sqft"]:
+    line_df = sacr_new_preds_melted_df.query(f"sqft == {i}")
     v_lines.append(alt.Chart(line_df).mark_line(color="black").encode(x="sqft", y="value"))
 
 errors_plot = alt.layer(*v_lines, errors_plot)
@@ -526,7 +526,7 @@ glue("fig:07-verticalerrors", errors_plot, display=False)
 :::{glue:figure} fig:07-verticalerrors
 :name: fig:07-verticalerrors
 
-Scatter plot of price (USD) versus house size (square feet) with example predictions (orange line) and the error in those predictions compared with true response values for three selected observations (vertical lines).
+Scatter plot of price (USD) versus house size (square feet) with example predictions (orange line) and the error in those predictions compared with true response values (vertical lines).
 :::
 
 +++

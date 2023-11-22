@@ -277,10 +277,9 @@ starting at sample 0 and ending at sample 19,999.
 
 Now that we have obtained the samples, we need to compute the
 proportion of entire home/apartment listings in each sample.
-We first `query` the observations with room type of "Entire home/apt";
-group the data by the `replicate` variable&mdash;to group the
-set of listings in each sample together&mdash;and then use `count`
-to compute the number of qualified observations in each sample; finally compute the proportion.
+We first group the data by the `replicate` variable&mdash;to group the
+set of listings in each sample together&mdash;and then use `value_counts`
+with `normalize=True` to compute the proportion in each sample.
 Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
 

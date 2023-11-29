@@ -319,7 +319,6 @@ to read data into Python.
 
 ```{figure} img/intro/read_csv_function.png
 ---
-height: 220px
 name: img-read-csv
 ---
 Syntax for the `read_csv` function
@@ -504,7 +503,6 @@ Try both out for yourself!
 
 ```{figure} img/intro/filter_rows.png
 ---
-height: 220px
 name: img-filter
 ---
 Syntax for using the `[]` operation to filter rows.
@@ -536,7 +534,6 @@ containing those two column names inside the square brackets of the `[]` operati
 
 ```{figure} img/intro/select_columns.png
 ---
-height: 220px
 name: img-select
 ---
 Syntax for using the `[]` operation to select columns.
@@ -568,7 +565,6 @@ then a comma, then our list of columns to select.
 
 ```{figure} img/intro/filter_rows_and_columns.png
 ---
-height: 220px
 name: img-loc
 ---
 Syntax for using the `loc[]` operation to filter rows and select columns.
@@ -633,7 +629,6 @@ so we specify the argument `ascending` as `False`.
 
 ```{figure} img/intro/sort_values.png
 ---
-height: 220px
 name: img-sort-values
 ---
 Syntax for using `sort_values` to arrange rows in decending order.
@@ -890,7 +885,6 @@ and that the `mother_tongue` column should correspond to the y-axis.
 
 ```{figure} img/intro/altair_syntax.png
 ---
-height: 220px
 name: img-altair
 ---
 Syntax for using `altair` to make a bar chart.

@@ -13,13 +13,13 @@ kernelspec:
   name: python3
 ---
 
-# Foreword -- TBD
+# Foreword
 
 *Roger D. Peng*
 
 *Johns Hopkins Bloomberg School of Public Health*
 
-*2022-01-04*
+*2023-11-30*
 
 The field of data science has expanded and grown significantly in recent years, 
 attracting excitement and interest from many different directions. The demand for introductory
@@ -44,9 +44,10 @@ is and what the implications are for the activities in which members of the fiel
 
 The first important concept addressed by this book is tidy data, which is a format for
 tabular data formally introduced to the statistical community in a 2014 paper by Hadley
-Wickham. The tidy data organization strategy has proven a powerful abstract concept for
-conducting data analysis, in large part because of the vast toolchain implemented in the
-Tidyverse collection of R packages. The second key concept is the development of workflows
+Wickham. Although originally popularized within the R programming language community
+via the Tidyverse package collection, the tidy data format is a language-independent concept
+that facilitates the application of powerful generalized data cleaning and wrangling tools.
+The second key concept is the development of workflows
 for reproducible and auditable data analyses. Modern data analyses have only grown in
 complexity due to the availability of data and the ease with which we can implement complex
 data analysis procedures. Furthermore, these data analyses are often part of 
@@ -61,7 +62,7 @@ collaboration is a core element of data science.
 This book takes these core concepts and focuses on how one can apply them to *do* data
 science in a rigorous manner. Students who learn from this book will be well-versed in
 the techniques and principles behind producing reliable evidence from data. This book is
-centered around the use of the R programming language within the tidy data framework,
+centered around the implementation of the tidy data framework within the Python programming language,
 and as such employs the most recent advances in data analysis coding. The use of Jupyter
 notebooks for exercises immediately places the student in an environment that encourages
 auditability and reproducibility of analyses. The integration of git and GitHub into the

@@ -57,7 +57,7 @@ By the end of the chapter, readers will be able to do the following:
 - Use the `rename` function to rename columns in a data frame.
 - Use `pandas` package's `read_excel` function and arguments to load a sheet from an excel file into Python.
 - Work with databases using functions from the `ibis` package:
-    - Connect to a database with `connect.
+    - Connect to a database with `connect`.
     - List tables in the database with `list_tables`.
     - Create a reference to a database table with `table`.
     - Bring data from a database into Python with `execute`.
@@ -173,7 +173,7 @@ difference between absolute and relative paths.
 Beyond files stored on your computer (i.e., locally), we also need a way to locate resources
 stored elsewhere on the internet (i.e., remotely). For this purpose we use a
 *Uniform Resource Locator (URL)*, i.e., a web address that looks something
-like https://datasciencebook.ca/. URLs indicate the location of a resource on the internet, and
+like https://python.datasciencebook.ca/. URLs indicate the location of a resource on the internet, and
 start with a web domain, followed by a forward slash `/`, and then a path
 to where the resource is located on the remote machine.
 
@@ -433,7 +433,7 @@ col_map = {
     4 : "most_at_work",
     5 : "lang_known"
 }
-canlang_data_renamed = canlang_data.rename(columns = col_map)
+canlang_data_renamed = canlang_data.rename(columns=col_map)
 canlang_data_renamed
 ```
 
@@ -843,11 +843,11 @@ be able to connect to a database using this information.
 
 ```python
 conn = ibis.postgres.connect(
-    database = "can_mov_db",
-    host = "fakeserver.stat.ubc.ca",
-    port = 5432,
-    user = "user0001",
-    password = "abc123"
+    database="can_mov_db",
+    host="fakeserver.stat.ubc.ca",
+    port=5432,
+    user="user0001",
+    password="abc123"
 )
 ```
 
@@ -1284,7 +1284,7 @@ print only the first 5 elements for clarity.
 
 ```{code-cell} ipython3
 population_nodes = page.select(
-	"td:nth-child(8) , td:nth-child(4) , .largestCities-cell-background+ td a"
+    "td:nth-child(8) , td:nth-child(4) , .largestCities-cell-background+ td a"
 )
 population_nodes[:5]
 ```
@@ -1519,7 +1519,7 @@ import requests
 
 nasa_data_single = requests.get(
     "https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&date=2023-07-13"
-    ).json()
+).json()
 nasa_data_single
 ```
 

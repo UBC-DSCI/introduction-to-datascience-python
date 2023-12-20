@@ -352,7 +352,7 @@ toy_example_clus1_center = alt.layer(
         x=alt.X("flipper_length_standardized"),
         y=alt.Y("bill_length_standardized")
     ),
-    alt.Chart(clus).mark_circle(color='coral', size=500, opacity=1).encode(
+    alt.Chart(clus).mark_circle(color='steelblue', size=300, opacity=1, stroke='black').encode(
         x=alt.X("mean(flipper_length_standardized)")
             .scale(zero=False, padding=20)
             .title("Flipper Length (standardized)"),
@@ -373,7 +373,7 @@ in {numref}`toy-example-clus1-center`
 :figwidth: 700px
 :name: toy-example-clus1-center
 
-Cluster 0 from the `penguins_standardized` data set example. Observations are in blue, with the cluster center highlighted in orange.
+Cluster 0 from the `penguins_standardized` data set example. Observations are small blue points, with the cluster center highlighted as a large blue point with a black outline.
 :::
 
 ```{code-cell} ipython3
@@ -417,7 +417,7 @@ These distances are denoted by lines in {numref}`toy-example-clus1-dists` for th
 :figwidth: 700px
 :name: toy-example-clus1-dists
 
-Cluster 0 from the `penguins_standardized` data set example. Observations are in blue, with the cluster center highlighted in orange. The distances from the observations to the cluster center are represented as black lines.
+Cluster 0 from the `penguins_standardized` data set example. Observations are small blue points, with the cluster center highlighted as a large blue point with a black outline. The distances from the observations to the cluster center are represented as black lines.
 :::
 
 ```{code-cell} ipython3
@@ -440,14 +440,15 @@ toy_example_all_clus_dists = alt.layer(
         alt.Y("bill_length_standardized"),
         alt.Color('cluster:N')
     ),
-    alt.Chart(penguins_clustered).mark_circle(color='coral', size=200, opacity=1).encode(
+    alt.Chart(penguins_clustered).mark_circle(size=200, opacity=1, stroke = "black").encode(
         alt.X("mean(flipper_length_standardized)")
           .scale(zero=False)
           .title("Flipper Length (standardized)"),
         alt.Y("mean(bill_length_standardized)")
           .scale(zero=False)
           .title("Bill Length (standardized)"),
-        alt.Detail('cluster:N')
+        alt.Detail('cluster:N'),
+        alt.Color('cluster:N')
     )
 )
 glue('toy-example-all-clus-dists', toy_example_all_clus_dists, display=True)
@@ -468,7 +469,7 @@ These distances are denoted by black lines in
 :figwidth: 700px
 :name: toy-example-all-clus-dists
 
-All clusters from the `penguins_standardized` data set example. Observations are in blue, orange, and red with the cluster center highlighted in orange. The distances from the observations to each of the respective cluster centers are represented as black lines.
+All clusters from the `penguins_standardized` data set example. Observations are small orange, blue, and yellow points with cluster centers denoted by larger points with a black outline. The distances from the observations to each of the respective cluster centers are represented as black lines.
 :::
 
 Since K-means uses the straight-line distance to measure the quality of a clustering,

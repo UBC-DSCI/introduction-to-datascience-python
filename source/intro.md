@@ -52,7 +52,7 @@ By the end of the chapter, readers will be able to do the following:
 ```
 
 In this chapter, we will walk through a full analysis of a data set relating to
-languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada
+languages spoken at home by Canadian residents ({numref}`canadamap`). Many Indigenous peoples exist in Canada
 with their own cultures and languages; these languages are often unique to Canada and not spoken
 anywhere else in the world {cite:p}`statcan2018mothertongue`. Sadly, colonization has
 led to the loss of many of these languages. For instance, generations of
@@ -67,6 +67,13 @@ Canada" {cite:p}`walker2017`,
 peoples, and Residential Schools* {cite:p}`children2012`
 and the *Truth and Reconciliation Commission of Canada's*
 *Calls to Action* {cite:p}`calls2015`.
+
+```{figure} img/intro/canada_map.png
+---
+name: canadamap
+---
+Map of Canada
+```
 
 The data set we will study in this chapter is taken from
 [the `canlang` R data package](https://ttimbers.github.io/canlang/)
@@ -319,7 +326,6 @@ to read data into Python.
 
 ```{figure} img/intro/read_csv_function.png
 ---
-height: 220px
 name: img-read-csv
 ---
 Syntax for the `read_csv` function
@@ -504,7 +510,6 @@ Try both out for yourself!
 
 ```{figure} img/intro/filter_rows.png
 ---
-height: 220px
 name: img-filter
 ---
 Syntax for using the `[]` operation to filter rows.
@@ -536,7 +541,6 @@ containing those two column names inside the square brackets of the `[]` operati
 
 ```{figure} img/intro/select_columns.png
 ---
-height: 220px
 name: img-select
 ---
 Syntax for using the `[]` operation to select columns.
@@ -568,7 +572,6 @@ then a comma, then our list of columns to select.
 
 ```{figure} img/intro/filter_rows_and_columns.png
 ---
-height: 220px
 name: img-loc
 ---
 Syntax for using the `loc[]` operation to filter rows and select columns.
@@ -633,7 +636,6 @@ so we specify the argument `ascending` as `False`.
 
 ```{figure} img/intro/sort_values.png
 ---
-height: 220px
 name: img-sort-values
 ---
 Syntax for using `sort_values` to arrange rows in decending order.
@@ -890,7 +892,6 @@ and that the `mother_tongue` column should correspond to the y-axis.
 
 ```{figure} img/intro/altair_syntax.png
 ---
-height: 220px
 name: img-altair
 ---
 Syntax for using `altair` to make a bar chart.

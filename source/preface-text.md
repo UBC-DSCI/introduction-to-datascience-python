@@ -52,9 +52,8 @@ But if you are reading this independently, you may want to jump to these last th
 early before going on to make sure your computer is set up in such a way that you can
 try out the example code that we include throughout the book.
 
-```{figure} img/frontmatter/chapter_overview.jpeg
+```{figure} img/frontmatter/chapter_overview.png
 ---
-height: 400px
 name: preface-overview-fig
 ---
 Where are we going?

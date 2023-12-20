@@ -257,7 +257,7 @@ the sale price?
 ```{code-cell} ipython3
 :tags: [remove-output]
 
-small_plot = alt.Chart(small_sacramento).mark_circle().encode(
+small_plot = alt.Chart(small_sacramento).mark_circle(opacity=1).encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -268,7 +268,7 @@ small_plot = alt.Chart(small_sacramento).mark_circle().encode(
 
 # add an overlay to the base plot
 line_df = pd.DataFrame({"x": [2000]})
-rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+rule = alt.Chart(line_df).mark_rule(strokeDash=[6], size=1.5, color="black").encode(x="x")
 
 small_plot + rule
 ```
@@ -315,9 +315,19 @@ for i in range(5):
         "sqft": [nearest_neighbors.iloc[i, 4], 2000],
         "price": [nearest_neighbors.iloc[i, 6]] * 2
     })
-    h_lines.append(alt.Chart(h_line_df).mark_line(color="orange").encode(x="sqft", y="price"))
+    h_lines.append(alt.Chart(h_line_df).mark_line(color="black").encode(x="sqft", y="price"))
 
-nn_plot = alt.layer(*h_lines, small_plot, rule)
+# highlight the nearest neighbors in orange
+orange_neighbrs = alt.Chart(nearest_neighbors).mark_circle(opacity=1, color="#ff7f0e").encode(
+    x=alt.X("sqft")
+        .scale(zero=False)
+        .title("House size (square feet)"),
+    y=alt.Y("price")
+        .axis(format="$,.0f")
+        .title("Price (USD)")
+)
+
+nn_plot = alt.layer(*h_lines, small_plot, orange_neighbrs, rule)
 ```
 
 ```{code-cell} ipython3
@@ -329,7 +339,7 @@ glue("fig:07-knn5-example", nn_plot)
 :::{glue:figure} fig:07-knn5-example
 :name: fig:07-knn5-example
 
-Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors.
+Scatter plot of price (USD) versus house size (square feet) with lines to 5 nearest neighbors (highlighted in orange).
 :::
 
 +++
@@ -352,7 +362,7 @@ prediction
 
 nn_plot_pred = nn_plot + alt.Chart(
     pd.DataFrame({"sqft": [2000], "price": [prediction]})
-).mark_circle(size=40).encode(x="sqft", y="price", color=alt.value("red"))
+).mark_circle(size=80, opacity=1, color="#d62728").encode(x="sqft", y="price")
 ```
 
 ```{code-cell} ipython3
@@ -466,8 +476,8 @@ us the smallest RMSPE.
 from sklearn.neighbors import KNeighborsRegressor
 
 # (synthetic) new prediction points
-pts = pd.DataFrame({"sqft": [1250, 1850, 2250], "price": [250000, 200000, 500000]})
-finegrid = pd.DataFrame({"sqft": np.arange(900, 3901, 10)})
+pts = pd.DataFrame({"sqft": [1200, 1850, 2250], "price": [300000, 200000, 500000]})
+finegrid = pd.DataFrame({"sqft": np.arange(600, 3901, 10)})
 
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
@@ -485,23 +495,23 @@ sacr_full_preds_hid = pd.concat(
 )
 
 sacr_new_preds_hid = pd.concat(
-    (pts, pd.DataFrame(sacr_pipeline.predict(pts), columns=["predicted"])),
+    (small_sacramento[["sqft", "price"]].reset_index(), pd.DataFrame(sacr_pipeline.predict(small_sacramento[["sqft", "price"]]), columns=["predicted"])),
     axis=1,
-)
+).drop(columns=["index"])
 
 # to make altair mark_line works, need to create separate dataframes for each vertical error line
-sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
 errors_plot = (
     small_plot
-    + alt.Chart(sacr_full_preds_hid).mark_line().encode(x="sqft", y="predicted")
+    + alt.Chart(sacr_full_preds_hid).mark_line(color="#ff7f0e").encode(x="sqft", y="predicted")
     + alt.Chart(sacr_new_preds_hid)
     .mark_circle(opacity=1)
     .encode(x="sqft", y="price")
 )
+sacr_new_preds_melted_df = sacr_new_preds_hid.melt(id_vars=["sqft"])
 v_lines = []
-for i in pts["sqft"]:
-    line_df = sacr_new_preds_melted_df.query("sqft == @i")
-    v_lines.append(alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value"))
+for i in sacr_new_preds_hid["sqft"]:
+    line_df = sacr_new_preds_melted_df.query(f"sqft == {i}")
+    v_lines.append(alt.Chart(line_df).mark_line(color="black").encode(x="sqft", y="value"))
 
 errors_plot = alt.layer(*v_lines, errors_plot)
 errors_plot
@@ -516,7 +526,7 @@ glue("fig:07-verticalerrors", errors_plot, display=False)
 :::{glue:figure} fig:07-verticalerrors
 :name: fig:07-verticalerrors
 
-Scatter plot of price (USD) versus house size (square feet) with example predictions (blue line) and the error in those predictions compared with true response values for three selected observations (vertical red lines).
+Scatter plot of price (USD) versus house size (square feet) with example predictions (orange line) and the error in those predictions compared with true response values (vertical lines).
 :::
 
 +++

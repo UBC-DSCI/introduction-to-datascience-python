@@ -70,7 +70,7 @@ all software packages needed run the worksheets that come with this book.
 ```
 
 ```{note}
-A *container* is a virtualized user space within your computer.
+A *container* is a virtual user space within your computer.
 Within the container, you can run software in isolation without interfering with the
 other software that already exists on your machine. In this book, we use
 a container to run a specific version of the Python programming

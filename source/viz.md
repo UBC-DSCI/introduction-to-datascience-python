@@ -200,8 +200,7 @@ records the atmospheric concentration of carbon dioxide
 (CO$_{\text{2}}$, in parts per million)
 at the Mauna Loa research station in Hawaii
 from 1959 onward {cite:p}`maunadata`.
-For this book, we are going to focus on the last 40 years of the data set,
-1980-2020.
+For this book, we are going to focus on the years 1980-2020.
 
 ```{index} question; visualization
 ```
@@ -668,9 +667,8 @@ improve readability.
 
 ```{code-cell} ipython3
 can_lang_plot_labels = alt.Chart(can_lang).mark_circle().encode(
-    x=alt.X("most_at_home").title(
-        ["Language spoken most at home", "(number of Canadian residents)"]
-    ),
+    x=alt.X("most_at_home")
+        .title(["Language spoken most at home", "(number of Canadian residents)"]),
     y=alt.Y("mother_tongue")
         .scale(zero=False)
         .title(["Mother tongue", "(number of Canadian residents)"])
@@ -746,7 +744,7 @@ the values 1, 10, 100, and 1000 are all the same distance apart!
 So we see that applying this function is moving big values closer together
 and moving small values farther apart.
 Note that if your data can take the value 0, logarithmic scaling may not
-be appropriate (since `log10(0) = -inf` in Python). There are other ways to transform
+be appropriate (since `log10(0)` is `-inf` in Python). There are other ways to transform
 the data in such a case, but these are beyond the scope of the book.
 
 We can accomplish logarithmic scaling in the `altair` visualization

@@ -439,7 +439,7 @@ when we need to make the data frame longer and narrower.
 To learn how to use `melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five
-major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
+major Canadian cities (Toronto, Montréal, Vancouver, Calgary, and Edmonton) from
 the 2016 Canadian census.
 To get started,
 we will use `pd.read_csv` to load the (untidy) data.
@@ -454,7 +454,7 @@ What is wrong with the untidy format above?
 The table on the left in {numref}`fig:img-pivot-longer-with-table`
 represents the data in the "wide" (messy) format.
 From a data analysis perspective, this format is not ideal because the values of
-the variable *region* (Toronto, Montréal, Vancouver, Calgary and Edmonton)
+the variable *region* (Toronto, Montréal, Vancouver, Calgary, and Edmonton)
 are stored as column names. Thus they
 are not easily accessible to the data analysis functions we will apply
 to our data set. Additionally, the *mother tongue* variable values are
@@ -586,7 +586,7 @@ we will work through an example
 with the `region_lang_top5_cities_long.csv` data set.
 This data set contains the number of Canadians reporting
 the primary language at home and work for five
-major cities (Toronto, Montréal, Vancouver, Calgary and Edmonton).
+major cities (Toronto, Montréal, Vancouver, Calgary, and Edmonton).
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -631,7 +631,8 @@ Syntax for the `pivot` function.
 
 +++
 
-We will apply the function as detailed in {numref}`fig:img-pivot-wider`.
+We will apply the function as detailed in {numref}`fig:img-pivot-wider`, and then
+rename the columns.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -710,7 +711,7 @@ more columns, and we would see the data set "widen."
 
 Data are also not considered tidy when multiple values are stored in the same
 cell. The data set we show below is even messier than the ones we dealt with
-above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary` and `Edmonton` columns
+above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary`, and `Edmonton` columns
 contain the number of Canadians reporting their primary language at home and
 work in one column separated by the separator (`/`). The column names are the
 values of a variable, *and* each value does not have its own cell! To turn this
@@ -756,8 +757,8 @@ one containing only the counts of Canadians
 that speak each language most at home,
 and the other containing only the counts of Canadians
 that speak each language most at work for each region.
-We then drop the no-longer-needed `value` column from the `lang_messy_longer`
-data frame, and assign the two columns from `str.split` to two new columns.
+We drop the no-longer-needed `value` column from the `lang_messy_longer`
+data frame, and then assign the two columns from `str.split` to two new columns.
 {numref}`fig:img-separate`
 outlines what we need to specify to use `str.split`.
 
@@ -1191,7 +1192,7 @@ which provides the ability to index with the position rather than the label of t
 For example, the column labels of the `tidy_lang` data frame are
 `["category", "language", "region", "most_at_home", "most_at_work"]`.
 Using `iloc[]`, you can ask for the `language` column by requesting the
-column at index `1` (remember that Python starts counting at `0`, so the second item `"language"`
+column at index `1` (remember that Python starts counting at `0`, so the second column `"language"`
 has index `1`!).
 
 ```{code-cell} ipython3
@@ -1423,7 +1424,7 @@ for each of the regions in the data set.
 A summary statistic function paired with `groupby` is useful for calculating that statistic
 on one or more column(s) for each group. It
 creates a new data frame with one row for each group
-and one column for each summary statistic.The darker, top row of each table
+and one column for each summary statistic. The darker, top row of each table
 represents the column headers. The gray, blue, and green colored rows
 correspond to the rows that belong to each of the three groups being
 represented in this cartoon example.

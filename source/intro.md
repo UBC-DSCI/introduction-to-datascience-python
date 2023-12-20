@@ -52,7 +52,7 @@ By the end of the chapter, readers will be able to do the following:
 ```
 
 In this chapter, we will walk through a full analysis of a data set relating to
-languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada
+languages spoken at home by Canadian residents ({numref}`canadamap`). Many Indigenous peoples exist in Canada
 with their own cultures and languages; these languages are often unique to Canada and not spoken
 anywhere else in the world {cite:p}`statcan2018mothertongue`. Sadly, colonization has
 led to the loss of many of these languages. For instance, generations of
@@ -67,6 +67,13 @@ Canada" {cite:p}`walker2017`,
 peoples, and Residential Schools* {cite:p}`children2012`
 and the *Truth and Reconciliation Commission of Canada's*
 *Calls to Action* {cite:p}`calls2015`.
+
+```{figure} img/intro/canada_map.png
+---
+name: canadamap
+---
+Map of Canada
+```
 
 The data set we will study in this chapter is taken from
 [the `canlang` R data package](https://ttimbers.github.io/canlang/)

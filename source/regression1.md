@@ -555,7 +555,7 @@ and rely on context to denote which data the root mean squared error is being ca
 
 Now that we know how we can assess how well our model predicts a numerical
 value, let's use Python to perform cross-validation and to choose the optimal
-$K$.  First, we will create a transformer for preprocessing our data.  Note
+$K$.  First, we will create a column transformer for preprocessing our data.  Note
 that we include standardization in our preprocessing to build good habits, but
 since we only have one predictor, it is technically not necessary; there is no
 risk of comparing two predictors of different scales.  Next we create a model

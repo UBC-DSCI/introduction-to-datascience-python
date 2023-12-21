@@ -320,7 +320,7 @@ improves it by making adjustments to the assignment of data
 to clusters until it cannot improve any further. But how do we measure
 the "quality" of a clustering, and what does it mean to improve it?
 In K-means clustering, we measure the quality of a cluster by its
-*within-cluster sum-of-squared-distances* (WSSD), also called *intertia*. Computing this involves two steps.
+*within-cluster sum-of-squared-distances* (WSSD), also called *inertia*. Computing this involves two steps.
 First, we find the cluster centers by computing the mean of each variable
 over data points in the cluster. For example, suppose we have a
 cluster containing four observations, and we are using two variables, $x$ and $y$, to cluster the data.

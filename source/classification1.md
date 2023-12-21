@@ -1532,8 +1532,8 @@ Imbalanced data with 7 nearest neighbors to a new observation highlighted.
 +++
 
 {numref}`fig:05-upsample-2` shows what happens if we set the background color of
-each area of the plot to the predictions the K-nearest neighbors
-classifier would make. We can see that the decision is
+each area of the plot to the prediction the K-nearest neighbors
+classifier would make for a new observation at that location. We can see that the decision is
 always "benign," corresponding to the blue color.
 
 ```{code-cell} ipython3

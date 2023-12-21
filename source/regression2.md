@@ -679,7 +679,7 @@ There can, however, also be a disadvantage to using a simple linear regression
 model in some cases, particularly when the relationship between the response variable and
 the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
 these cases the prediction model from a simple linear regression
-will underfit (have high bias), meaning that model/predicted values do not
+will underfit, meaning that model/predicted values do not
 match the actual observed values very well. Such a model would probably have a
 quite high RMSE when assessing model goodness of fit on the training data and
 a quite high RMSPE when assessing model prediction quality on a test data

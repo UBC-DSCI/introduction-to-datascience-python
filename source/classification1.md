@@ -1359,7 +1359,7 @@ glue(
 :::{glue:figure} fig:05-scaling-plt
 :name: fig:05-scaling-plt
 
-Comparison of K = 3 nearest neighbors with standardized and unstandardized data.
+Comparison of K = 3 nearest neighbors with unstandardized and standardized data.
 :::
 
 ```{code-cell} ipython3

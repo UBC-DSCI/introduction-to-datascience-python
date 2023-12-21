@@ -608,7 +608,7 @@ First three iterations of K-means clustering on the `penguins_standardized` exam
 +++
 
 Note that at this point, we can terminate the algorithm since none of the assignments changed
-in the fourth iteration; both the centers and labels will remain the same from this point onward.
+in the third iteration; both the centers and labels will remain the same from this point onward.
 
 ```{index} K-means; termination
 ```

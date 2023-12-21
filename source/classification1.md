@@ -1421,7 +1421,7 @@ To better illustrate the problem, let's revisit the scaled breast cancer data,
 what the data would look like if the cancer was rare. We will do this by
 picking only 3 observations from the malignant group, and keeping all
 of the benign observations. We choose these 3 observations using the `.head()`
-method, which takes the number of rows to select from the top (`n`).
+method, which takes the number of rows to select from the top.
 We will then use the [`concat`](https://pandas.pydata.org/docs/reference/api/pandas.concat.html)
 function from `pandas` to glue the two resulting filtered
 data frames back together. The `concat` function *concatenates* data frames

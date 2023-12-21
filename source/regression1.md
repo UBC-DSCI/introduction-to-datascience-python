@@ -107,7 +107,7 @@ is that we are now predicting numerical variables instead of categorical variabl
 ```{note}
 You can usually tell whether a variable is numerical or
 categorical&mdash;and therefore whether you need to perform regression or
-classification&mdash;by taking two response variables X and Y from your data,
+classification&mdash;by taking the response variable for two observations X and Y from your data,
 and asking the question, "is response variable X *more* than response
 variable Y?" If the variable is categorical, the question will make no sense.
 (Is blue more than red?  Is benign more than malignant?) If the variable is
@@ -175,8 +175,8 @@ want to predict (sale price) on the y-axis.
 Given that the y-axis unit is dollars in {numref}`fig:07-edaRegr`,
 we format the axis labels to put dollar signs in front of the house prices,
 as well as commas to increase the readability of the larger numbers.
-We can do this in `altair` by passing the `axis=alt.Axis(format="$,.0f")` argument
-to the `y` encoding channel in an `altair` specification.
+We can do this in `altair` by using `.axis(format="$,.0f")` on
+the `y` encoding channel.
 ```
 
 ```{code-cell} ipython3

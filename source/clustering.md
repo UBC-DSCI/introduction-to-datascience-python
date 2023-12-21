@@ -949,7 +949,7 @@ For example,
 we could square all the numbers from 1-4 and store them in a list:
 
 ```{code-cell} ipython3
-[number ** 2 for number in range(1, 5)]
+[number**2 for number in range(1, 5)]
 ```
 
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.

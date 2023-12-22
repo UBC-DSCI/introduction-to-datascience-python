@@ -279,7 +279,7 @@ are completely determined by a
 but is actually totally reproducible. As long as you pick the same seed
 value, you get the same result!
 
-```{index} sample; numpy.random.choice
+```{index} sample, to_list
 ```
 
 Let's use an example to investigate how randomness works in Python. Say we
@@ -291,6 +291,8 @@ Below we use the seed number `1`. At
 that point, Python will keep track of the randomness that occurs throughout the code.
 For example, we can call the `sample` method
 on the series of numbers, passing the argument `n=10` to indicate that we want 10 samples.
+The `to_list` method converts the resulting series into a basic Python list to make
+the output easier to read.
 
 ```{code-cell} ipython3
 import numpy as np
@@ -300,7 +302,7 @@ np.random.seed(1)
 
 nums_0_to_9 = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-random_numbers1 = nums_0_to_9.sample(n=10).to_numpy()
+random_numbers1 = nums_0_to_9.sample(n=10).to_list()
 random_numbers1
 ```
 You can see that `random_numbers1` is a list of 10 numbers
@@ -309,7 +311,7 @@ we run the `sample` method again,
 we will get a fresh batch of 10 numbers that also look random.
 
 ```{code-cell} ipython3
-random_numbers2 = nums_0_to_9.sample(n=10).to_numpy()
+random_numbers2 = nums_0_to_9.sample(n=10).to_list()
 random_numbers2
 ```
 
@@ -319,12 +321,12 @@ as before---and then call the `sample` method again.
 
 ```{code-cell} ipython3
 np.random.seed(1)
-random_numbers1_again = nums_0_to_9.sample(n=10).to_numpy()
+random_numbers1_again = nums_0_to_9.sample(n=10).to_list()
 random_numbers1_again
 ```
 
 ```{code-cell} ipython3
-random_numbers2_again = nums_0_to_9.sample(n=10).to_numpy()
+random_numbers2_again = nums_0_to_9.sample(n=10).to_list()
 random_numbers2_again
 ```
 
@@ -336,13 +338,13 @@ obtain a different sequence of random numbers.
 
 ```{code-cell} ipython3
 np.random.seed(4235)
-random_numbers = nums_0_to_9.sample(n=10).to_numpy()
-random_numbers
+random_numbers1_different = nums_0_to_9.sample(n=10).to_list()
+random_numbers1_different
 ```
 
 ```{code-cell} ipython3
-random_numbers = nums_0_to_9.sample(n=10).to_numpy()
-random_numbers
+random_numbers2_different = nums_0_to_9.sample(n=10).to_list()
+random_numbers2_different
 ```
 
 In other words, even though the sequences of numbers that Python is generating *look*
@@ -387,22 +389,23 @@ reproducible.
 In this book, we will generally only use packages that play nicely with `numpy`'s
 default random number generator, so we will stick with `np.random.seed`.
 You can achieve more careful control over randomness in your analysis
-by creating a `numpy` [`RandomState` object](https://numpy.org/doc/1.16/reference/generated/numpy.random.RandomState.html)
+by creating a `numpy` [`Generator` object](https://numpy.org/doc/stable/reference/random/generator.html)
 once at the beginning of your analysis, and passing it to
 the `random_state` argument that is available in many `pandas` and `scikit-learn`
-functions. Those functions will then use your `RandomState` to generate random numbers instead of
-`numpy`'s default generator. For example, we can reproduce our earlier example by using a `RandomState`
+functions. Those functions will then use your `Generator` to generate random numbers instead of
+`numpy`'s default generator. For example, we can reproduce our earlier example by using a `Generator`
 object with the `seed` value set to 1; we get the same lists of numbers once again.
 ```{code}
-rnd = np.random.RandomState(seed=1)
-random_numbers1_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
+from numpy.random import Generator, PCG64
+rng = Generator(PCG64(seed=1))
+random_numbers1_third = nums_0_to_9.sample(n=10, random_state=rng).to_list()
 random_numbers1_third
 ```
 ```{code}
 array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
 ```{code}
-random_numbers2_third = nums_0_to_9.sample(n=10, random_state=rnd).to_numpy()
+random_numbers2_third = nums_0_to_9.sample(n=10, random_state=rng).to_list()
 random_numbers2_third
 ```
 ```{code}

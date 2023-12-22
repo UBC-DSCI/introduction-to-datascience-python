@@ -98,7 +98,10 @@ broader population from which it is taken is referred to as **statistical infere
 ```{figure} img/inference/population_vs_sample.png
 :name: fig:11-population-vs-sample
 
-Population versus sample.
+The process of using a sample from a broader population to obtain a point estimate of a
+population parameter. In this case, a sample of 10 individuals yielded 6 who own an iPhone, resulting
+in an estimated population proportion of 60% iPhone owners. The actual population proportion in this example
+illustration is 53.8%.
 ```
 
 +++

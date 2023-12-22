@@ -1872,7 +1872,7 @@ plt_irrelevant_nghbrs = (
         x=alt.X("ks", title="Number of Irrelevant Predictors"),
         y=alt.Y(
             "nghbrs",
-            title="Number of neighbors",
+            title="Tuned number of neighbors",
         ),
     )
 )

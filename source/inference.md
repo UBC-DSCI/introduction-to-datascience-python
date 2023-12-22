@@ -615,7 +615,7 @@ glue("quantile_3", "{:0.0f}".format(round(sample_estimates["mean_price"].quantil
 In {numref}`fig:11-example-means4`, the sampling distribution of the mean
 has one peak and is bell-shaped. Most of the estimates are between
 about  \${glue:text}`quantile_1` and
-\${glue:text}`quantile_3`; but there are
+\${glue:text}`quantile_3`; but there is
 a good fraction of cases outside this range (i.e., where the point estimate was
 not close to the population parameter). So it does indeed look like we were
 quite lucky when we estimated the population mean with only

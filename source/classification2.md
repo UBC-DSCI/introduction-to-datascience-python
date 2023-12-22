@@ -351,8 +351,8 @@ In other words, even though the sequences of numbers that Python is generating *
 random, they are totally determined when we set a seed value!
 
 So what does this mean for data analysis? Well, `sample` is certainly not the
-only data frame method that uses randomness in Python. Many of the functions
-that we use in `scikit-learn`, `pandas`, and beyond use randomness&mdash;many
+only place where randomness is used in Python. Many of the functions
+that we use in `scikit-learn` and beyond use randomness&mdash;some
 of them without even telling you about it.  Also note that when Python starts
 up, it creates its own seed to use. So if you do not explicitly
 call the `np.random.seed` function, your results

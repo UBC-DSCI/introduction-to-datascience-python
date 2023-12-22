@@ -1052,7 +1052,7 @@ boot20000 = pd.concat([
 boot20000
 ```
 
-Let's take a look at histograms of the first six replicates of our bootstrap samples.
+Let's take a look at the histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
 :tags: []
@@ -1073,7 +1073,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
 :name: fig:11-bootstrapping-six-bootstrap-samples
 :figclass: caption-hack
 
-Histograms of first six replicates of bootstrap samples.
+Histograms of the first six replicates of the bootstrap samples.
 ```
 
 +++

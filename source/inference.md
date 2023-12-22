@@ -493,7 +493,7 @@ access to the population data and simulate taking one random sample of 40
 listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
-one_sample = airbnb.sample(40)
+one_sample = airbnb.sample(n=40)
 ```
 
 We can create a histogram to visualize the distribution of observations in the

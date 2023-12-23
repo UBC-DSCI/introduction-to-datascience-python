@@ -481,8 +481,7 @@ tabs, "Edit new file" and "Preview". Toggling between them lets you enter and
 edit text and view what the text will look like when rendered, respectively
 ({numref}`create-new-file-02`).
 Note that GitHub understands and renders `.md` files using a
-[markdown syntax](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf)
-very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
+markdown syntax very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
 for checking markdown code correctness.
 
 ```{figure} img/version-control/create-new-file_02.png

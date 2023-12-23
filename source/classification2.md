@@ -1833,7 +1833,7 @@ summary_df = pd.DataFrame(
 )
 plt_irrelevant_accuracies = (
     alt.Chart(summary_df)
-    .mark_line() #point=True
+    .mark_line(point=True)
     .encode(
         x=alt.X("ks", title="Number of Irrelevant Predictors"),
         y=alt.Y(
@@ -1867,7 +1867,7 @@ this evidence; if we fix the number of neighbors to $K=3$, the accuracy falls of
 
 plt_irrelevant_nghbrs = (
     alt.Chart(summary_df)
-    .mark_line()  # point=True
+    .mark_line(point=True)
     .encode(
         x=alt.X("ks", title="Number of Irrelevant Predictors"),
         y=alt.Y(
@@ -1897,7 +1897,7 @@ plt_irrelevant_nghbrs_fixed = (
     alt.Chart(
         melted_summary_df
     )
-    .mark_line()  # point=True
+    .mark_line(point=True)
     .encode(
         x=alt.X("ks", title="Number of Irrelevant Predictors"),
         y=alt.Y(
@@ -2137,7 +2137,7 @@ where the elbow occurs, and whether adding a variable provides a meaningful incr
 
 fwd_sel_accuracies_plot = (
     alt.Chart(accuracies)
-    .mark_line()  # point=True
+    .mark_line(point=True)
     .encode(
         x=alt.X("size", title="Number of Predictors"),
         y=alt.Y(

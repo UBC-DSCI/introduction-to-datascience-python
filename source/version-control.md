@@ -183,8 +183,9 @@ a version of the project.  These records are called **commits**. They
 are a snapshot of the file contents as well
 metadata about the repository at that time the record was created (who made the
 commit, when it was made, etc.). In the local and remote repositories shown in
-{numref}`vc1-no-changes`, there are two commits represented as light blue rectangles
-inside the "Repository History" sections.
+{numref}`vc1-no-changes`, there are two commits represented as rectangles
+inside the "Repository History" sections. The white rectangle represents the most
+recent commit, while faded rectangles represent previous commits.
 Each commit can be identified by a
 human-readable **message**, which you write when you make a commit, and a
 **commit hash** that Git automatically adds for you.

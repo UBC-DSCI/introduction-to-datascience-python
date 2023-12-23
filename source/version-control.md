@@ -505,7 +505,7 @@ You can also upload files that you have created on your local machine by using
 the "Add file" drop-down menu and selecting "Upload files"
 ({numref}`upload-files-01`).
 To select the files from your local computer to upload, you can either drag and
-drop them into the gray box area shown below, or click the "choose your files"
+drop them into the gray box area shown in {numref}`upload-files-02`, or click the "choose your files"
 link to access a file browser dialog. Once the files you want to upload have
 been selected, click the green "Commit changes" button at the bottom of the
 page ({numref}`upload-files-02`).

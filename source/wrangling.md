@@ -1425,7 +1425,7 @@ A summary statistic function paired with `groupby` is useful for calculating tha
 on one or more column(s) for each group. It
 creates a new data frame with one row for each group
 and one column for each summary statistic. The darker, top row of each table
-represents the column headers. The gray, blue, and green colored rows
+represents the column headers. The orange, blue, and green colored rows
 correspond to the rows that belong to each of the three groups being
 represented in this cartoon example.
 ```

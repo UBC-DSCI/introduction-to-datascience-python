@@ -669,7 +669,7 @@ counts... But perhaps, seeing these numbers, we became curious about the
 *percentage* of the population of Canada associated with each count. It is
 common to come up with new data analysis questions in the process of answering
 a first one&mdash;so fear not and explore! To answer this small
-question-along-the-way, we need to divide each count in the `mother_tongue`
+question along the way, we need to divide each count in the `mother_tongue`
 column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
 this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`.
@@ -829,7 +829,7 @@ before moving on with further steps.
 
 ```{index} visualization
 ```
-We have now answered our initial question by generating the `ten_lang` table!
+The `ten_lang` table answers our initial data analysis question.
 Are we done? Well, not quite; tables are almost never the best way to present
 the result of your analysis to your audience. Even the `ten_lang` table with
 only two columns presents some difficulty: for example, you have to scrutinize

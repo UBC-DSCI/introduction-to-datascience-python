@@ -20,7 +20,7 @@ kernelspec:
 
 from chapter_preamble import *
 import pandas as pd
-pd.set_option('display.max_rows', 20)
+pd.set_option("display.max_rows", 20)
 ```
 
 ## Overview
@@ -36,33 +36,29 @@ application, providing more practice working through a whole case study.
 
 By the end of the chapter, readers will be able to do the following:
 
-  - Define the term "tidy data".
-  - Discuss the advantages of storing data in a tidy data format.
-  - Define what series and data frames are in Python, and describe how they relate to
-    each other.
-  - Describe the common types of data in Python and their uses.
-  - Recall and use the following functions for their
-    intended data wrangling tasks:
-      - `agg`
-      - `apply`
-      - `assign`
-      - `groupby`
-      - `melt`
-      - `pivot`
-      - `str.split`
-  - Recall and use the following operators for their
-    intended data wrangling tasks:
-      - `==`, `!=`, `<`, `>`, `<=`, `>=`
-      - `in`
-      - `and`
-      - `or`
-      - `[]`
-      - `loc[]`
-      - `iloc[]`
+- Define the term "tidy data".
+- Discuss the advantages of storing data in a tidy data format.
+- Define what series and data frames are in Python, and describe how they relate to
+  each other.
+- Describe the common types of data in Python and their uses.
+- Use the following functions for their intended data wrangling tasks:
+    - `melt`
+    - `pivot`
+    - `reset_index`
+    - `str.split`
+    - `agg`
+    - `assign` and regular column assignment
+    - `groupby`
+    - `merge`
+- Use the following operators for their intended data wrangling tasks:
+    - `==`, `!=`, `<`, `>`, `<=`, and `>=`
+    - `isin`
+    - `&` and `|`
+    - `[]`, `loc[]`, and `iloc[]`
 
 ## Data frames and series
 
-In the chapters on {ref}`intro` and {ref}`reading`, *data frames* were the focus:
+In {numref}`Chapters %s <intro>` and {numref}`%s <reading>`, *data frames* were the focus:
 we learned how to import data into Python as a data frame, and perform basic operations on data frames in Python.
 In the remainder of this book, this pattern continues. The vast majority of tools we use will require
 that data are represented as a `pandas` **data frame** in Python. Therefore, in this section,
@@ -76,7 +72,10 @@ This knowledge will be helpful in effectively utilizing these objects in our dat
 ```{index} data frame; definition
 ```
 
-```{index} pandas.DataFrame
+```{index} see: data frame; DataFrame
+```
+
+```{index} DataFrame
 ```
 
 A data frame is a table-like structure for storing data in Python. Data frames are
@@ -104,7 +103,7 @@ data set. There are 13 entities in the data set in total, corresponding to the
 
 +++
 
-```{figure} img/wrangling/data_frame_slides_cdn.004.jpeg
+```{figure} img/wrangling/data_frame_slides_cdn.004.png
 :name: fig:02-obs
 :figclass: figure
 
@@ -113,7 +112,7 @@ A data frame storing data regarding the population of various regions in Canada.
 
 ### What is a series?
 
-```{index} pandas.Series
+```{index} Series 
 ```
 
 In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
@@ -121,10 +120,8 @@ They are a single column, are ordered, can be indexed, and can contain any data 
 The `pandas` package uses `Series` objects to represent the columns in a data frame.
 `Series` can contain a mix of data types, but it is good practice to only include a single type in a series
 because all observations of one variable should be the same type.
-Python
-has several different basic data types, as shown in
-{numref}`tab:datatype-table`.
-You can create a `pandas` series using the
+Python has several different basic data types, as shown in
+{numref}`tab:datatype-table`. You can create a `pandas` series using the
 `pd.Series()` function.  For example, to create the series `region` as shown
 in {numref}`fig:02-series`, you can write the following.
 
@@ -144,39 +141,29 @@ region
 Example of a `pandas` series whose type is string.
 ```
 
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-# The following table was taken from DSCI511 Lecture 1, credit to Arman Seyed-Ahmadi, MDS 2021
+```{index} data types; string (str), data types; integer (int), data types; floating point number (float), data types; boolean (bool), data types; NoneType (none)
 ```
 
-```{index} data types, string, integer, floating point number, boolean, list, set, dictionary, tuple, none
+```{index} see: str; data types
 ```
 
-```{index} see: str; string
+```{index} see: int; data types
 ```
 
-```{index} see: int; integer
+```{index} see: float; data types
 ```
 
-```{index} see: float; floating point number
+```{index} see: bool; data types
 ```
 
-```{index} see: bool; boolean
-```
-
-```{index} see: NoneType; none
-```
-
-```{index} see: dict; dictionary
+```{index} see: NoneType; data types
 ```
 
 ```{table} Basic data types in Python
 :name: tab:datatype-table
 | Data type             | Abbreviation | Description                                   | Example                                    |
 | :-------------------- | :----------- | :-------------------------------------------- | :----------------------------------------- |
-| integer               | `int`        | positive/negative/zero whole numbers               | `42`                                       |
+| integer               | `int`        | positive/negative/zero whole numbers          | `42`                                       |
 | floating point number | `float`      | real number in decimal form                   | `3.14159`                                  |
 | boolean               | `bool`       | true or false                                 | `True`                                     |
 | string                | `str`        | text                                          | `"Hello World"`                            |
@@ -230,9 +217,11 @@ Data frame and series types.
 ```{index} type
 ```
 
->  **Note:** You can use the function `type` on a data object.
-> For example we can check the class of the Canadian languages data set,
-> `can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
+```{note}
+You can use the function `type` on a data object.
+For example we can check the class of the Canadian languages data set,
+`can_lang`, we worked with in the previous chapters and we see it is a `pandas.core.frame.DataFrame`.
+```
 
 
 ```{code-cell} ipython3
@@ -250,6 +239,12 @@ or a `Series` depending on the operation. Because
 to both `DataFrames` and `Series` as "data frames" in the text.
 There are other types that represent data structures in Python.
 We summarize the most common ones in {numref}`tab:datastruc-table`.
+
+```{index} data structures; list, data structures; set, data structures; dictionary (dict), data structures; tuple
+```
+
+```{index} see: dict; data structures
+```
 
 ```{table} Basic data structures in Python
 :name: tab:datastruc-table
@@ -340,7 +335,7 @@ three criteria.
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/tidy_data.001-cropped.jpeg
+```{figure} img/wrangling/tidy_data.001.png
 :name: fig:02-tidy-image
 :figclass: figure
 
@@ -366,19 +361,21 @@ upfront. Fortunately, there are many well-designed `pandas` data
 cleaning/wrangling tools to help you easily tidy your data. Let's explore them
 below!
 
-> **Note:** Is there only one shape for tidy data for a given data set? Not
-> necessarily! It depends on the statistical question you are asking and what
-> the variables are for that question. For tidy data, each variable should be
-> its own column. So, just as it's essential to match your statistical question
-> with the appropriate data analysis tool, it's important to match your
-> statistical question with the appropriate variables and ensure they are
-> represented as individual columns to make the data tidy.
+```{note}
+Is there only one shape for tidy data for a given data set? Not
+necessarily! It depends on the statistical question you are asking and what
+the variables are for that question. For tidy data, each variable should be
+its own column. So, just as it's essential to match your statistical question
+with the appropriate data analysis tool, it's important to match your
+statistical question with the appropriate variables and ensure they are
+represented as individual columns to make the data tidy.
+```
 
 +++
 
 ### Tidying up: going from wide to long using `melt`
 
-```{index} pandas.DataFrame; melt
+```{index} DataFrame; melt
 ```
 
 One task that is commonly performed to get data into a tidy format
@@ -421,7 +418,7 @@ for a total of 30 entries.
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/pivot_functions.001.jpeg
+```{figure} img/wrangling/pivot_functions.001.png
 :name: fig:02-wide-to-long
 :figclass: figure
 
@@ -442,7 +439,7 @@ when we need to make the data frame longer and narrower.
 To learn how to use `melt`, we will work through an example with the
 `region_lang_top5_cities_wide.csv` data set. This data set contains the
 counts of how many Canadians cited each language as their mother tongue for five
-major Canadian cities (Toronto, Montréal, Vancouver, Calgary and Edmonton) from
+major Canadian cities (Toronto, Montréal, Vancouver, Calgary, and Edmonton) from
 the 2016 Canadian census.
 To get started,
 we will use `pd.read_csv` to load the (untidy) data.
@@ -457,7 +454,7 @@ What is wrong with the untidy format above?
 The table on the left in {numref}`fig:img-pivot-longer-with-table`
 represents the data in the "wide" (messy) format.
 From a data analysis perspective, this format is not ideal because the values of
-the variable *region* (Toronto, Montréal, Vancouver, Calgary and Edmonton)
+the variable *region* (Toronto, Montréal, Vancouver, Calgary, and Edmonton)
 are stored as column names. Thus they
 are not easily accessible to the data analysis functions we will apply
 to our data set. Additionally, the *mother tongue* variable values are
@@ -521,15 +518,17 @@ lang_mother_tidy = lang_wide.melt(
 lang_mother_tidy
 ```
 
-> **Note**: In the code above, the call to the
-> `melt` function is split across several lines. Recall from
-> the {ref}`intro` chapter that this is allowed in
-> certain cases. For example, when calling a function as above, the input
-> arguments are between parentheses `()` and Python knows to keep reading on
-> the next line. Each line ends with a comma `,` making it easier to read.
-> Splitting long lines like this across multiple lines is encouraged
-> as it helps significantly with code readability. Generally speaking, you should
-> limit each line of code to about 80 characters.
+```{note}
+In the code above, the call to the
+`melt` function is split across several lines. Recall from
+{numref}`Chapter %s <intro>` that this is allowed in
+certain cases. For example, when calling a function as above, the input
+arguments are between parentheses `()` and Python knows to keep reading on
+the next line. Each line ends with a comma `,` making it easier to read.
+Splitting long lines like this across multiple lines is encouraged
+as it helps significantly with code readability. Generally speaking, you should
+limit each line of code to about 80 characters.
+```
 
 The data above is now tidy because all three criteria for tidy data have now
 been met:
@@ -546,7 +545,7 @@ been met:
 (pivot-wider)=
 ### Tidying up: going from long to wide using `pivot`
 
-```{index} pandas.DataFrame; pivot
+```{index} DataFrame; pivot
 ```
 
 Suppose we have observations spread across multiple rows rather than in a single
@@ -570,7 +569,7 @@ This is illustrated in the right table of {numref}`fig:long-to-wide`.
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/pivot_functions.002.jpeg
+```{figure} img/wrangling/pivot_functions.002.png
 :name: fig:long-to-wide
 :figclass: figure
 
@@ -587,7 +586,7 @@ we will work through an example
 with the `region_lang_top5_cities_long.csv` data set.
 This data set contains the number of Canadians reporting
 the primary language at home and work for five
-major cities (Toronto, Montréal, Vancouver, Calgary and Edmonton).
+major cities (Toronto, Montréal, Vancouver, Calgary, and Edmonton).
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -621,8 +620,6 @@ Going from long to wide with the `pivot` function.
 
 {numref}`fig:img-pivot-wider` details the arguments that we need to specify in the `pivot` function.
 
-**TODO make figure match code below**
-
 +++ {"tags": []}
 
 ```{figure} img/wrangling/pandas_pivot_args_labels.png
@@ -634,7 +631,8 @@ Syntax for the `pivot` function.
 
 +++
 
-We will apply the function as detailed in {numref}`fig:img-pivot-wider`.
+We will apply the function as detailed in {numref}`fig:img-pivot-wider`, and then
+rename the columns.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -654,6 +652,9 @@ lang_home_tidy.columns = [
 lang_home_tidy
 ```
 
+```{index} DataFrame; reset_index
+```
+
 In the first step, note that we added a call to `reset_index`. When `pivot` is called with
 multiple column names passed to the `index`, those entries become the "name" of each row that
 would be used when you filter rows with `[]` or `loc` rather than just simple numbers. This
@@ -664,6 +665,9 @@ when you call `pivot`, it is a good idea to call `reset_index` afterwards.
 The second operation we applied is to rename the columns. When we perform the `pivot`
 operation, it keeps the original column name `"count"` and adds the `"type"` as a second column name.
 Having two names for a column can be confusing! So we rename giving each column only one name.
+
+```{index} DataFrame; info
+```
 
 We can print out some useful information about our data frame using the `info` function.
 In the first row it tells us the `type` of `lang_home_tidy` (it is a `pandas` `DataFrame`). The second
@@ -697,16 +701,19 @@ more columns, and we would see the data set "widen."
 +++
 
 (str-split)=
-### Tidying up: using `str.split` to deal with multiple delimiters
+### Tidying up: using `str.split` to deal with multiple separators
 
-```{index} pandas.Series; str.split, delimiter
+```{index} Series; str.split, separator
+```
+
+```{index} see: delimiter; separator
 ```
 
 Data are also not considered tidy when multiple values are stored in the same
 cell. The data set we show below is even messier than the ones we dealt with
-above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary` and `Edmonton` columns
+above: the `Toronto`, `Montréal`, `Vancouver`, `Calgary`, and `Edmonton` columns
 contain the number of Canadians reporting their primary language at home and
-work in one column separated by the delimiter (`/`). The column names are the
+work in one column separated by the separator (`/`). The column names are the
 values of a variable, *and* each value does not have its own cell! To turn this
 messy data into tidy data, we'll have to fix these issues.
 
@@ -743,13 +750,15 @@ on the slash character `"/"`.
 ```
 
 The `pandas` package provides similar functions that we can access
-by using the `str` method. So, to split all of the entries for an entire
-column in a data frame, we would use the `str.split` method.
-Once we use this method,
-one column will contain only the counts of Canadians
+by using the `str` method. So to split all of the entries for an entire
+column in a data frame, we will use the `str.split` method.
+The output of this method is a data frame with two columns:
+one containing only the counts of Canadians
 that speak each language most at home,
-and the other will contain the counts of Canadians
+and the other containing only the counts of Canadians
 that speak each language most at work for each region.
+We drop the no-longer-needed `value` column from the `lang_messy_longer`
+data frame, and then assign the two columns from `str.split` to two new columns.
 {numref}`fig:img-separate`
 outlines what we need to specify to use `str.split`.
 
@@ -762,45 +771,12 @@ outlines what we need to specify to use `str.split`.
 Syntax for the `str.split` function.
 ```
 
-We will do this in multiple steps. First, we create a new object
-that contains two columns. We will set the `expand` argument to `True`
-to tell `pandas` that we want to expand the output into two columns.
-
 ```{code-cell} ipython3
-split_counts = lang_messy_longer["value"].str.split("/", expand=True)
-split_counts
-```
-Since we only operated on the `value` column, the `split_counts` data frame
-doesn't have the rest of the columns (`language`, `region`, etc.)
-that were in our original data frame. We don't want to lose this information, so
-we will contatenate (combine) the original data frame with `split_counts` using
-the `concat` function from `pandas`. The `concat` function *concatenates* data frames
-along an axis. By default, it concatenates the data frames vertically along `axis=0` yielding a single
-*taller* data frame. Since we want to concatenate our old columns to our
-new `split_counts` data frame (to obtain a *wider* data frame), we will specify `axis=1`.
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang = pd.concat(
-    [lang_messy_longer, split_counts],
-    axis=1,
-)
+tidy_lang = lang_messy_longer.drop(columns=["value"])
+tidy_lang[["most_at_home", "most_at_work"]] = lang_messy_longer["value"].str.split("/", expand=True)
 tidy_lang
 ```
 
-Next, we will rename our newly created columns (currently called
-`0` and `1`) to the more meaningful names `"most_at_home"` and `"most_at_work"`,
-and drop the `value` column from our data frame using the `drop` method.
-
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-tidy_lang = (
-    tidy_lang.rename(columns={0: "most_at_home", 1: "most_at_work"})
-    .drop(columns=["value"])
-)
-tidy_lang
-```
-Note that we could have chained these steps together to make our code more compact.
 Is this data set now tidy? If we recall the three criteria for tidy data:
 
   - each row is a single observation,
@@ -809,30 +785,34 @@ Is this data set now tidy? If we recall the three criteria for tidy data:
 
 We can see that this data now satisfies all three criteria, making it easier to
 analyze. But we aren't done yet! Although we can't see it in the data frame above, all of the variables are actually
-"object" data types. We can check this using the `info` method.
+`object` data types. We can check this using the `info` method.
 ```{code-cell} ipython3
 tidy_lang.info()
 ```
 
 Object columns in `pandas` data frames are columns of strings or columns with
-mixed types. In the previous example in the section on {ref}`pivot-wider`, the
+mixed types. In the previous example in {numref}`pivot-wider`, the
 `most_at_home` and `most_at_work` variables were `int64` (integer), which is a type of numeric data.
-This change is due to the delimiter (`/`) when we read in this messy data set.
+This change is due to the separator (`/`) when we read in this messy data set.
 Python read these columns in as string types, and by default, `str.split` will
 return columns with the `object` data type.
 
 It makes sense for `region`, `category`, and `language` to be stored as an
-`object` type. However, suppose we want to apply any functions that treat the
+`object` type since they hold categorical values. However, suppose we want to apply any functions that treat the
 `most_at_home` and `most_at_work` columns as a number (e.g., finding rows
 above a numeric threshold of a column).
-That won't be possible if the variable is stored as a `object`.
-Fortunately, the `pandas.to_numeric` function provides a natural way to fix problems
-like this: it will convert the columns to the best numeric data types.
+That won't be possible if the variable is stored as an `object`.
+Fortunately, the `astype` method from `pandas` provides a natural way to fix problems
+like this: it will convert the column to a selected data type. In this case, we choose the `int`
+data type to indicate that these variables contain integer counts. Note that below
+we *assign* the new numerical series to the `most_at_home` and `most_at_work` columns
+in `tidy_lang`; we have seen this syntax before in {numref}`ch1-adding-modifying`,
+and we will discuss it in more depth later in this chapter in {numref}`pandas-assign`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-tidy_lang["most_at_home"] = pd.to_numeric(tidy_lang["most_at_home"])
-tidy_lang["most_at_work"] = pd.to_numeric(tidy_lang["most_at_work"])
+tidy_lang["most_at_home"] = tidy_lang["most_at_home"].astype("int")
+tidy_lang["most_at_work"] = tidy_lang["most_at_work"].astype("int")
 tidy_lang
 ```
 
@@ -849,11 +829,17 @@ indicating they are integer data types (i.e., numbers)!
 
 Now that the `tidy_lang` data is indeed *tidy*, we can start manipulating it
 using the powerful suite of functions from the `pandas`.
-We will first revisit the `[]` from the chapter on {ref}`intro`,
+We will first revisit the `[]` from {numref}`Chapter %s <intro>`,
 which lets us obtain a subset of either the rows **or** the columns of a data frame.
 This section will highlight more advanced usage of the `[]` function,
 including an in-depth treatment of the variety of logical statements
 one can use in the `[]` to select subsets of rows.
+
+```{index} DataFrame; [], logical statement
+```
+
+```{index} see: logical statement; logical operator
+```
 
 +++
 
@@ -862,7 +848,7 @@ one can use in the `[]` to select subsets of rows.
 Recall that if we provide a list of column names, `[]` returns the subset of columns with those names as a data frame.
 Suppose we wanted to select the columns `language`, `region`,
 `most_at_home` and `most_at_work` from the `tidy_lang` data set. Using what we
-learned in the chapter on {ref}`intro`, we can pass all of these column 
+learned in {numref}`Chapter %s <intro>`, we can pass all of these column
 names into the square brackets.
 
 ```{code-cell} ipython3
@@ -894,6 +880,13 @@ tidy_lang["language"]
 
 
 ### Extracting rows that have a certain value with `==`
+
+```{index} logical operator; equivalency (==) 
+```
+
+```{index} see: ==; logical operator
+```
+
 Suppose we are only interested in the subset of rows in `tidy_lang` corresponding to the
 official languages of Canada (English and French).
 We can extract these rows by using the *equivalency operator* (`==`)
@@ -913,6 +906,12 @@ official_langs
 
 ### Extracting rows that do not have a certain value with `!=`
 
+```{index} logical operator; inequivalency (!=) 
+```
+
+```{index} see: !=; logical operator
+```
+
 What if we want all the other language categories in the data set *except* for
 those in the `"Official languages"` category? We can accomplish this with the `!=`
 operator, which means "not equal to". So if we want to find all the rows
@@ -926,6 +925,12 @@ tidy_lang[tidy_lang["category"] != "Official languages"]
 
 (filter-and)=
 ### Extracting rows satisfying multiple conditions using `&`
+
+```{index} logical operator; and (&)
+```
+
+```{index} see: &; logical operator
+```
 
 Suppose now we want to look at only the rows
 for the French language in Montréal.
@@ -948,6 +953,12 @@ tidy_lang[
 
 ### Extracting rows satisfying at least one condition using `|`
 
+```{index} logical operator; or (|)
+```
+
+```{index} see: |; logical operator
+```
+
 Suppose we were interested in only those rows corresponding to cities in Alberta
 in the `official_langs` data set (Edmonton and Calgary).
 We can't use `&` as we did above because `region`
@@ -966,6 +977,12 @@ official_langs[
 ```
 
 ### Extracting rows with values in a list using `isin`
+
+```{index} logical operator; containment (isin) 
+```
+
+```{index} see: isin; logical operator
+```
 
 Next, suppose we want to see the populations of our five cities.
 Let's read in the `region_data.csv` file
@@ -992,15 +1009,17 @@ five_cities = region_data[region_data["region"].isin(city_names)]
 five_cities
 ```
 
-> **Note:** What's the difference between `==` and `isin`? Suppose we have two
-> Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
-> will compare the series element by element. Python checks if the first element of
-> `seriesA` equals the first element of `seriesB`, the second element of
-> `seriesA` equals the second element of `seriesB`, and so on. On the other hand,
-> `seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
-> elements in `seriesB`. Then the second element of `seriesA` is compared
-> to all the elements in `seriesB`, and so on. Notice the difference between `==` and
-> `isin` in the example below.
+```{note}
+What's the difference between `==` and `isin`? Suppose we have two
+Series, `seriesA` and `seriesB`. If you type `seriesA == seriesB` into Python it
+will compare the series element by element. Python checks if the first element of
+`seriesA` equals the first element of `seriesB`, the second element of
+`seriesA` equals the second element of `seriesB`, and so on. On the other hand,
+`seriesA.isin(seriesB)` compares the first element of `seriesA` to all the
+elements in `seriesB`. Then the second element of `seriesA` is compared
+to all the elements in `seriesB`, and so on. Notice the difference between `==` and
+`isin` in the example below.
+```
 
 ```{code-cell} ipython3
 pd.Series(["Vancouver", "Toronto"]) == pd.Series(["Toronto", "Vancouver"])
@@ -1012,6 +1031,21 @@ pd.Series(["Vancouver", "Toronto"]).isin(pd.Series(["Toronto", "Vancouver"]))
 
 ### Extracting rows above or below a threshold using `>` and `<`
 
+```{index} logical operator; greater than (> and >=), logical operator; less than (< and <=)
+```
+
+```{index} see: >; logical operator
+```
+
+```{index} see: >=; logical operator
+```
+
+```{index} see: <; logical operator
+```
+
+```{index} see: <=; logical operator
+```
+
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
@@ -1019,7 +1053,7 @@ glue("census_popn", "{0:,.0f}".format(35151728))
 glue("most_french", "{0:,.0f}".format(2669195))
 ```
 
-We saw in the section on {ref}`filter-and` that
+We saw in {numref}`filter-and` that
 {glue:text}`most_french` people reported
 speaking French in Montréal as their primary language at home.
 If we are interested in finding the official languages in regions
@@ -1042,6 +1076,9 @@ than French in Montréal according to the 2016 Canadian census.
 
 ### Extracting rows using `query`
 
+```{index} logical statement; query
+```
+
 You can also extract rows above, below, equal or not-equal to a threshold using the
 `query` method. For example the following gives us the same result as when we used
 `official_langs[official_langs["most_at_home"] > 2669195]`.
@@ -1057,37 +1094,37 @@ to make long chains of filtering operations a bit easier to read.
 (loc-iloc)=
 ## Using `loc[]` to filter rows and select columns
 
-```{index} pandas.DataFrame; loc[]
+```{index} DataFrame; loc[]
 ```
 
 The `[]` operation is only used when you want to either filter rows **or** select columns;
 it cannot be used to do both operations at the same time. This is where `loc[]`
-comes in. For the first example, recall `loc[]` from Chapter {ref}`intro`,
+comes in. For the first example, recall `loc[]` from {numref}`Chapter %s <intro>`,
 which lets us create a subset of the rows and columns in the `tidy_lang` data frame.
-In the first argument to `loc[]`, we specify a logical statement that 
-filters the rows to only those pertaining to the Toronto region, 
+In the first argument to `loc[]`, we specify a logical statement that
+filters the rows to only those pertaining to the Toronto region,
 and the second argument specifies a list of columns to keep by name.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[
-    tidy_lang['region'] == 'Toronto',
+    tidy_lang["region"] == "Toronto",
     ["language", "region", "most_at_home", "most_at_work"]
 ]
 ```
 
 In addition to simultaneous subsetting of rows and columns, `loc[]` has two
-more special capabilities beyond those of `[]`. First, `loc[]` has the ability to specify *ranges* of rows and columns. 
-For example, note that the list of columns `language`, `region`, `most_at_home`, `most_at_work` 
+more special capabilities beyond those of `[]`. First, `loc[]` has the ability to specify *ranges* of rows and columns.
+For example, note that the list of columns `language`, `region`, `most_at_home`, `most_at_work`
 corresponds to the *range* of columns from `language` to `most_at_work`.
 Rather than explicitly listing all of the column names as we did above,
-we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax 
+we can ask for the range of columns `"language":"most_at_work"`; the `:`-syntax
 denotes a range, and is supported by the `loc[]` function, but not by `[]`.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 tidy_lang.loc[
-    tidy_lang['region'] == 'Toronto',
+    tidy_lang["region"] == "Toronto",
     "language":"most_at_work"
 ]
 ```
@@ -1133,10 +1170,10 @@ The `str.startswith` expression returns a list of `True` or `False` values
 corresponding to the column names that start with the desired characters.
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.startswith('most')]
+tidy_lang.loc[:, tidy_lang.columns.str.startswith("most")]
 ```
 
-```{index} pandas.Series; str.contains
+```{index} Series; str.contains
 ```
 
 We could also have chosen the columns containing an underscore `_` by using the
@@ -1144,18 +1181,18 @@ We could also have chosen the columns containing an underscore `_` by using the
 the columns we want contain underscores and the others don't.
 
 ```{code-cell} ipython3
-tidy_lang.loc[:, tidy_lang.columns.str.contains('_')]
+tidy_lang.loc[:, tidy_lang.columns.str.contains("_")]
 ```
 
 ## Using `iloc[]` to extract rows and columns by position
-```{index} pandas.DataFrame; iloc[], column range
+```{index} DataFrame; iloc[], column range
 ```
 Another approach for selecting rows and columns is to use `iloc[]`,
 which provides the ability to index with the position rather than the label of the columns.
 For example, the column labels of the `tidy_lang` data frame are
-`['category', 'language', 'region', 'most_at_home', 'most_at_work']`.
+`["category", "language", "region", "most_at_home", "most_at_work"]`.
 Using `iloc[]`, you can ask for the `language` column by requesting the
-column at index `1` (remember that Python starts counting at `0`, so the second item `'language'`
+column at index `1` (remember that Python starts counting at `0`, so the second column `"language"`
 has index `1`!).
 
 ```{code-cell} ipython3
@@ -1183,7 +1220,7 @@ accidentally put in the wrong integer index! If you did not correctly remember
 that the `language` column was index `1`, and used `2` instead, your code
 might end up having a bug that is quite hard to track down.
 
-```{index} pandas.Series; str.startswith
+```{index} Series; str.startswith
 ```
 
 +++ {"tags": []}
@@ -1208,7 +1245,7 @@ or columns, as shown in {numref}`fig:summarize`.
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/summarize.001.jpeg
+```{figure} img/wrangling/summarize.001.png
 :name: fig:summarize
 :figclass: figure
 
@@ -1226,6 +1263,9 @@ language as their primary language at home. First, a reminder of what `region_la
 :tags: ["output_scroll"]
 region_lang = pd.read_csv("data/region_lang.csv")
 region_lang
+```
+
+```{index} Series; min, Series; max
 ```
 
 We use `.min` to calculate the minimum
@@ -1255,11 +1295,14 @@ total number of people in the survey, we could use the `sum` summary statistic m
 region_lang["most_at_home"].sum()
 ```
 
+```{index} Series; sum, Series; mean, Series; median, Series; std, summary statistic
+```
+
 Other handy summary statistics include the `mean`, `median` and `std` for
 computing the mean, median, and standard deviation of observations, respectively.
 We can also compute multiple statistics at once using `agg` to "aggregate" results.
 For example, if we wanted to
-compute both the `min` and `max` at once, we could use `agg` with the argument `['min', 'max']`.
+compute both the `min` and `max` at once, we could use `agg` with the argument `["min", "max"]`.
 Note that `agg` outputs a `Series` object.
 
 ```{code-cell} ipython3
@@ -1298,12 +1341,20 @@ summary statistics that you can compute with `pandas`.
 +++
 +++
 
+```{index} see: NaN; missing data
+```
 
-> **Note:** In `pandas`, the value `NaN` is often used to denote missing data.
-> By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
-> it ignores these values. If you look at the documentation for these functions, you will
-> see an input variable `skipna`, which by default is set to `skipna=True`. This means that
-> `pandas` will skip `NaN` values when computing statistics.
+```{index} missing data
+```
+
+
+```{note}
+In `pandas`, the value `NaN` is often used to denote missing data.
+By default, when `pandas` calculates summary statistics (e.g., `max`, `min`, `sum`, etc),
+it ignores these values. If you look at the documentation for these functions, you will
+see an input variable `skipna`, which by default is set to `skipna=True`. This means that
+`pandas` will skip `NaN` values when computing statistics.
+```
 
 ### Calculating summary statistics on data frames
 
@@ -1352,7 +1403,7 @@ region_lang.loc[:, "mother_tongue":"lang_known"].agg(["mean", "std"])
 
 +++
 
-```{index} pandas.DataFrame; groupby
+```{index} DataFrame; groupby
 ```
 What happens if we want to know how languages vary by region? In this case,
 we need a new tool that lets us group rows by region. This can be achieved
@@ -1366,15 +1417,15 @@ for each of the regions in the data set.
 
 +++ {"tags": []}
 
-```{figure} img/wrangling/summarize.002.jpeg
+```{figure} img/wrangling/summarize.002.png
 :name: fig:summarize-groupby
 :figclass: figure
 
 A summary statistic function paired with `groupby` is useful for calculating that statistic
 on one or more column(s) for each group. It
 creates a new data frame with one row for each group
-and one column for each summary statistic.The darker, top row of each table
-represents the column headers. The gray, blue, and green colored rows
+and one column for each summary statistic. The darker, top row of each table
+represents the column headers. The orange, blue, and green colored rows
 correspond to the rows that belong to each of the three groups being
 represented in this cartoon example.
 ```
@@ -1400,7 +1451,7 @@ region_lang.groupby("region")["most_at_home"].agg(["min", "max"])
 
 The resulting dataframe has `region` as an index name.
 This is similar to what happened when we used the `pivot` function
-in the section on {ref}`pivot-wider`;
+in {numref}`pivot-wider`;
 and just as we did then,
 you can use `reset_index` to get back to a regular dataframe
 with `region` as a column name.
@@ -1414,14 +1465,14 @@ Non-Aboriginal, and  Official) are spoken at home in different regions, we would
 list including `region` and `category` to `groupby`.
 
 ```{code-cell} ipython3
-region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"])
+region_lang.groupby(["region", "category"])["most_at_home"].agg(["min", "max"]).reset_index()
 ```
 
 You can also ask for grouped summary statistics on the whole data frame.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.groupby("region").agg(["min", "max"])
+region_lang.groupby("region").agg(["min", "max"]).reset_index()
 ```
 
 If you want to ask for only some columns, for example
@@ -1440,7 +1491,7 @@ region_lang["most_at_home":"lang_known"].groupby("region").max()
 ```
 
 ```
-KeyError: 'region'
+KeyError: "region"
 ```
 
 This is because when we use `[]` we selected only the columns between
@@ -1451,11 +1502,14 @@ this approach always works.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max()
+region_lang.groupby("region")[["most_at_home", "most_at_work", "lang_known"]].max().reset_index()
 ```
 
 To see how many observations there are in each group,
 we can use `value_counts`.
+
+```{index} DataFrame; value_counts
+```
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
@@ -1472,46 +1526,25 @@ region_lang.value_counts("region", normalize=True)
 
 +++
 
-## Apply functions across multiple columns with `apply`
+## Apply functions across multiple columns
 
-### Apply a function to each column with `apply`
+Computing summary statistics is not the only situation in which we need
+to apply a function across columns in a data frame. There are two other
+common wrangling tasks that require the application of a function across columns.
+The first is when we want to apply a transformation, such as a conversion of measurement units, to multiple columns.
+We illustrate such a data transformation in {numref}`fig:mutate-across`; note that it does not
+change the shape of the data frame.
 
-An alternative to aggregating on a data frame
-for applying a function to many columns is the `apply` method.
-Let's again find the maximum value of each column of the
-`region_lang` data frame, but using `apply` with the `max` function this time.
-We focus on the two arguments of `apply`:
-the function that you would like to apply to each column, and the `axis` along
-which the function will be applied (`0` for columns, `1` for rows).
-Note that `apply` does not have an argument
-to specify *which* columns to apply the function to.
-Therefore, we will use the `loc[]` before calling `apply`
-to choose the columns for which we want the maximum.
-
-```{code-cell} ipython3
-region_lang.loc[:, "most_at_home":"most_at_work"].apply(max)
-```
-
-We can use `apply` for much more than summary statistics.
-Sometimes we need to apply a function to many columns in a data frame.
-For example, we would need to do this when converting units of measurements across many columns.
-We illustrate such a data transformation in {numref}`fig:mutate-across`.
-
-+++ {"tags": []}
-
-```{figure} img/wrangling/summarize.005.jpeg
+```{figure} img/wrangling/summarize.005.png
 :name: fig:mutate-across
 :figclass: figure
 
-`apply` is useful for applying functions across many columns. The darker, top row of each table represents the column headers.
+A transformation applied across many columns. The darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For example,
-imagine that we wanted to convert all the numeric columns
+For example, imagine that we wanted to convert all the numeric columns
 in the `region_lang` data frame from `int64` type to `int32` type
-using the `.as_type` function.
+using the `.astype` function.
 When we revisit the `region_lang` data frame,
 we can see that this would be the columns from `mother_tongue` to `lang_known`.
 
@@ -1520,131 +1553,109 @@ we can see that this would be the columns from `mother_tongue` to `lang_known`.
 region_lang
 ```
 
-```{index} pandas.DataFrame; apply, pandas.DataFrame; loc[]
+```{index} DataFrame; apply, DataFrame; loc[]
 ```
 
-To accomplish such a task, we can use `apply`.
-As we did above,
-we again use `loc[]` to specify the columns
-as well as the `apply` to specify the function we want to apply on these columns.
-Now, we need a way to tell `apply` what function to perform to each column
-so that we can convert them from `int64` to `int32`. We will use what is called
-a `lambda` function in python; `lambda` functions are just regular functions,
-except that you don't need to give them a name.
-That means you can pass them as an argument into `apply` easily!
-Let's consider a simple example of a `lambda` function that
-multiplies a number by two.
-```{code-cell} ipython3
-lambda x: 2*x
-```
-We define a `lambda` function in the following way. We start with the syntax `lambda`, which is a special word
-that tells Python "what follows is
-a function." Following this, we then state the name of the arguments of the function.
-In this case, we just have one argument named `x`. After the list of arguments, we put a
-colon `:`. And finally after the colon are the instructions: take the value provided and multiply it by 2.
-Let's call our shiny new `lambda` function with the argument `2` (so the output should be `4`).
-Just like a regular function, we pass its argument between parentheses `()` symbols.
-```{code-cell} ipython3
-(lambda x: 2*x)(2)
-```
-> **Note:** Because we didn't give the `lambda` function a name, we have to surround it with
-> parentheses too if we want to call it. Otherwise, if we wrote something like `lambda x: 2*x(2)`, Python would get confused
-> and think that `(2)` was part of the instructions that comprise the `lambda` function.
-> As long as we don't want to call the `lambda` function ourselves, we don't need those parentheses. For example,
-> we can pass a `lambda` function as an argument to `apply` without any parentheses.
+We can simply call the `.astype` function to apply it across the desired range of columns.
 
-Returning to our example, let's use `apply` to convert the columns `"mother_tongue":"lang_known"`
-to `int32`. To accomplish this we create a `lambda` function that takes one argument---a single column
-of the data frame, which we will name `col`---and apply the `astype` method to it.
-Then the `apply` method will use that `lambda` function on every column we specify via `loc[]`.
+```{index} DataFrame; astype, Series; astype
+```
+
 ```{code-cell} ipython3
-region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].apply(lambda col: col.astype("int32"))
+region_lang_nums = region_lang.loc[:, "mother_tongue":"lang_known"].astype("int32")
 region_lang_nums.info()
 ```
-You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`.
-You can also see that `apply` returns a data frame with the same number of columns and rows
-as the input data frame. The only thing `apply` does is use the `lambda` function argument
-on each of the specified columns.
+You can now see that the columns from `mother_tongue` to `lang_known` are type `int32`,
+and that we have obtained a data frame with the same number of columns and rows
+as the input data frame.
 
-### Apply a function row-wise with `apply`
+The second situation occurs when you want to apply a function across columns within each individual
+row, i.e., *row-wise*. This operation, illustrated in {numref}`fig:rowwise`,
+will produce a single column whose entries summarize each row in the original data frame;
+this new column can be added back into the original data.
 
-What if you want to apply a function across columns but within one row?
-We illustrate such a data transformation in {numref}`fig:rowwise`.
-
-+++ {"tags": []}
-
-```{figure} img/wrangling/summarize.004.jpeg
+```{figure} img/wrangling/summarize.004.png
 :name: fig:rowwise
 :figclass: figure
 
-`apply` is useful for applying functions across columns within one row. The
+A function applied row-wise across a data frame, producing a new column. The
 darker, top row of each table represents the column headers.
 ```
 
-+++
-
-For instance, suppose we want to know the maximum value between `mother_tongue`,
-and `lang_known` for each language and region
-in the `region_lang_nums` data set.
+For example, suppose we want to know the maximum value between `mother_tongue`,
+and `lang_known` for each language and region in the `region_lang_nums` data set.
 In other words, we want to apply the `max` function *row-wise.*
-In order to tell `apply` that we want to work row-wise (as opposed to acting on each column
+In order to tell `max` that we want to work row-wise (as opposed to acting on each column
 individually, which is the default behavior), we just specify the argument `axis=1`.
-For example, in the case of the `max` function, this tells Python that we would like
-the `max` within each row of the input, as opposed to being applied on each column.
 
 ```{code-cell} ipython3
-region_lang_nums.apply(max, axis=1)
+region_lang_nums.max(axis=1)
 ```
 
-We see that we get a column, which is the maximum value between `mother_tongue`,
-`most_at_home`, `most_at_work` and `lang_known` for each language
-and region. It is often the case that we want to include a column result
-from using `apply` row-wise as a new column in the data frame, so that we can make
+We see that we obtain a series containing the maximum value between `mother_tongue`,
+`most_at_home`, `most_at_work` and `lang_known` for each row in the data frame. It
+is often the case that we want to include a column result
+from a row-wise operation as a new column in the data frame, so that we can make
 plots or continue our analysis. To make this happen,
-we will use `assign` to create a new column. This is discussed in the next section.
+we will use column assignment or the `assign` function to create a new column.
+This is discussed in the next section.
+
+```{note}
+While `pandas` provides many methods (like `max`, `astype`, etc.) that can be applied to a data frame,
+sometimes you may want to apply your own function to multiple columns in a data frame. In this case
+you can use the more general [`apply`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html) method.
+```
 
 (pandas-assign)=
-## Using `assign` to modify or add columns
+## Modifying and adding columns
 
 
-```{index} pandas.DataFrame; []
+```{index} DataFrame; [], column assignment, assign
 ```
 
-### Using `assign` to create new columns
-
-When we compute summary statistics with `agg` or apply functions using `apply`
-those give us new data frames. But what if we want to append that information
-to an existing data frame? This is where we make use of the `assign` method.
-For example, say we wanted the maximum values of the `region_lang_nums` data frame,
-and to create a new data frame consisting of all the columns of `region_lang` as well as that additional column.
-To do this, we will (1) compute the maximum of those columns using `apply`,
-and (2) use `assign` to assign values to create a new column in the `region_lang` data frame.
-Note that `assign` does not by default modify the data frame itself; it creates a copy
-with the new column added to it.
-
-To use the `assign` method, we specify one argument for each column we want to create.
-In this case we want to create one new column named `maximum`, so the argument
-to `assign` begins with `maximum = `.
-Then after the `=`, we specify what the contents of that new column
-should be. In this case we use `apply` just as we did in the previous section to give us the maximum values.
-Remember to specify `axis=1` in the `apply` method so that we compute the row-wise maximum value.
+When we compute summary statistics or apply functions,
+a new data frame or series is created. But what if we want to append that information
+to an existing data frame? For example, say we wanted to compute the
+maximum value in each row of the `region_lang_nums` data frame,
+and to append that as an additional column of the `region_lang` data frame.
+In this case, we have two options: we can either  create a new column within the `region_lang` data
+frame itself, or create an entirely new data frame
+with the `assign` method. The first option we have seen already in earlier chapters, and is
+the more commonly used pattern in practice:
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-region_lang.assign(
-  maximum = region_lang_nums.apply(max, axis=1)
-)
+region_lang["maximum"] = region_lang_nums.max(axis=1)
+region_lang
 ```
-This gives us a new data frame that looks like the `region_lang` data frame,
-except that it has an additional column named `maximum`.
+You can see above that the `region_lang` data frame now has an additional column named `maximum`.
 The `maximum` column contains
 the maximum value between `mother_tongue`,
 `most_at_home`, `most_at_work` and `lang_known` for each language
 and region, just as we specified!
 
+To instead create an entirely new data frame, we can use the `assign` method and specify one argument for each column we want to create.
+In this case we want to create one new column named `maximum`, so the argument
+to `assign` begins with `maximum= `.
+Then after the `=`, we specify what the contents of that new column
+should be. In this case we use `max` just as we did previously to give us the maximum values.
+Remember to specify `axis=1` in the `max` method so that we compute the row-wise maximum value.
+```{code-cell} ipython3
+:tags: ["output_scroll"]
+region_lang.assign(
+  maximum=region_lang_nums.max(axis=1)
+)
+```
+This data frame looks just like the previous one, except that it is a copy of `region_lang`, not `region_lang` itself; making further
+changes to this data frame will not impact the original `region_lang` data frame.
+
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
+# remove maximum coln from region_lang
+region_lang = region_lang.drop(columns=["maximum"])
+
+# get english counts for toronto and glue
 number_most_home = int(
     official_langs[
         (official_langs["language"] == "English") &
@@ -1696,125 +1707,127 @@ five_cities
 ```
 The data frame above shows that the populations of the five cities in 2016 were
 5928040 (Toronto), 4098927 (Montréal),  2463431 (Vancouver), 1392609 (Calgary), and 1321426 (Edmonton).
-We will add this information to our data frame in a new column named `city_pops` by using `assign`.
-Once again we specify the new column name (`city_pops`) as the argument, followed by the equal symbol `=`,
+Next, we will add this information to a new data frame column called `city_pops`.
+Once again, we will illustrate how to do this using both the `assign` method and regular column assignment.
+We specify the new column name (`city_pops`) as the argument, followed by the equals symbol `=`,
 and finally the data in the column.
 Note that the order of the rows in the `english_lang` data frame is Montréal, Toronto, Calgary, Edmonton, Vancouver.
 So we will create a column called `city_pops` where we list the populations of those cities in that
 order, and add it to our data frame.
-Also note that we write `english_lang = ` on the left so that the newly created data frame overwrites our
-old `english_lang` data frame; remember that by default, like other `pandas` functions, `assign` does not
-modify the original data frame directly!
-```{code-cell} ipython3
-:tags: ["output_scroll"]
-english_lang = english_lang.assign(
-  city_pops=[4098927, 5928040, 1392609, 1321426, 2463431]
-)
-english_lang
-```
-> **Note**: Inserting data manually in this is generally very error-prone and is not recommended.
-> We do it here to demonstrate another usage of `assign` that does not involve `apply`.
-> But in more advanced data wrangling,
-> one would solve this problem in a less error-prone way using
-> the `merge` function, which lets you combine two data frames. We will show you an
-> example using `merge` at the end of the chapter!
-
-Now we have a new column with the population for each city. Finally, we calculate the
-proportion of people who speak English the most at home by taking the ratio of the columns
-`most_at_home` and `city_pops`. We will again add this to our data frame using `assign`.
+And remember that by default, like other `pandas` functions, `assign` does not
+modify the original data frame directly, so the `english_lang` data frame is unchanged!
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang.assign(
-    proportion=english_lang["most_at_home"]/english_lang["city_pops"]
+  city_pops=[4098927, 5928040, 1392609, 1321426, 2463431]
 )
 ```
 
+Instead of using the `assign` method we can directly modify the `english_lang` data frame using regular column assignment.
+This would be a more natural choice in this particular case,
+since the syntax is more convenient for simple column modifications and additions.
+```{code-cell} ipython3
+:tags: [remove-cell]
+english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
+```
+```python
+english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
+english_lang
+```
+```text
+/tmp/ipykernel_12/2654974267.py:1: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
 
-+++
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
+```
+```{code-cell} ipython3
+:tags: [remove-input]
+english_lang
+```
 
+```{index} SettingWithCopyWarning
+```
 
-### Using `assign` to modify columns
+Wait a moment...what is that warning message? It seems to suggest that something went wrong, but
+if we inspect the `english_lang` data frame above, it looks like the city populations were added
+just fine! As it turns out, this is caused by the earlier filtering we did from `region_lang` to
+produce the original `english_lang`. The details are a little bit technical, but
+`pandas` sometimes does not like it when you subset a data frame using `[]` or `loc[]` followed by
+column assignment. For the purposes of your own data analysis, if you ever see a `SettingWithCopyWarning`, just make sure
+to double check that the result of your column assignment looks the way you expect it to before proceeding.
+For the rest of the book, we will silence that warning to help with readability.
+```{code-cell} ipython3
+:tags: [remove-cell]
+# suppress for the rest of this chapter
+pd.options.mode.chained_assignment = None
+```
 
+```{index} DataFrame; merge
+```
 
-In the section on {ref}`str-split`,
-when we first read in the `"region_lang_top5_cities_messy.csv"` data,
-all of the variables were "object" data types.
-During the tidying process,
-we used the `pandas.to_numeric` function
-to convert the `most_at_home` and `most_at_work` columns
-to the desired integer (i.e., numeric class) data types and then used `[]` to overwrite columns.
-We can do the same thing using `assign`.
+```{note}
+Inserting the data column `[4098927, 5928040, ...]` manually as we did above is generally very error-prone and is not recommended.
+We do it here to demonstrate another usage of `assign` and regular column assignment.
+But in more advanced data wrangling,
+one would solve this problem in a less error-prone way using
+the `merge` function, which lets you combine two data frames. We will show you an
+example using `merge` at the end of the chapter!
+```
 
-Below we use `assign` to convert the columns `most_at_home` and `most_at_work`
-to numeric data types in the `official_langs` data set as described in
-{numref}`fig:img-assign`. In our example, we are naming the columns the same
-names as columns that already exist in the data frame
-(`"most_at_home"`, `"most_at_work"`)
-and this will cause `assign` to *overwrite* those columns
-(also referred to as modifying those columns *in-place*).
-If we were to give the columns a new name,
-then `assign` would create new columns with the names we specified.
-The syntax is detailed in {numref}`fig:img-assign`.
+Now we have a new column with the population for each city. Finally, we can convert all the numerical
+columns to proportions of people who speak English by taking the ratio of all the numerical columns
+with `city_pops`. Let's modify the `english_lang` column directly; in this case
+we can just assign directly to the data frame.
+This is similar to what we did in {numref}`str-split`,
+when we first read in the `"region_lang_top5_cities_messy.csv"` data and we needed to convert a few
+of the variables to numeric types. Here we assign to a range of columns simultaneously using `loc[]`.
+Note that it is again possible to instead use the `assign` function to produce a new data
+frame when modifying existing columns, although this is not commonly done.
+Note also that we use the `div` method with the argument `axis=0` to divide a range of columns in a data frame
+by the values in a single column&mdash;the basic division symbol `/` won't work in this case.
 
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
-official_langs_numeric = official_langs.assign(
-    most_at_home=pd.to_numeric(official_langs["most_at_home"]),
-    most_at_work=pd.to_numeric(official_langs["most_at_work"]),
-)
-
-official_langs_numeric
+english_lang.loc[:, "mother_tongue":"lang_known"] = english_lang.loc[
+    :,
+    "mother_tongue":"lang_known"
+    ].div(english_lang["city_pops"], axis=0)
+english_lang
 ```
-
-+++ {"tags": []}
-
-```{figure} img/wrangling/pandas_assign_args_labels.png
-:name: fig:img-assign
-:figclass: figure
-
-Syntax for the `assign` function.
-```
-
-+++
-
-
-```{code-cell} ipython3
-official_langs_numeric.info()
-```
-
-Now we see that the `most_at_home` and `most_at_work` columns are both `int64` (which is a numeric data type)!
-Note that we were careful here and created a new data frame object `official_langs_numeric`. Since `assign` has
-the power to overwrite the entries of a column, it is a good idea to create a new data frame object so that if
-you make a mistake, you can start again from the original data frame.
 
 +++
 
 ## Using `merge` to combine data frames
 
-```{code-cell} ipython3
-:tags: [remove-cell]
-english_lang = region_lang[region_lang["language"] == "English"]
-five_cities = ["Toronto", "Montréal", "Vancouver", "Calgary", "Edmonton"]
-english_lang = english_lang[english_lang["region"].isin(five_cities)]
-english_lang
+```{index} DataFrame; merge
 ```
 
-Lets return to the example of wanting to compute the proportions of people who speak English
-most at home in Toronto, Montréal, Vancouver, Calgary, Edmonton. Before adding new columns, we filtered
-our `region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
+Let's return to the situation right before we added the city populations
+of Toronto, Montréal, Vancouver, Calgary, and Edmonton to the `english_lang` data frame. Before adding the new column, we had filtered
+`region_lang` to create the `english_lang` data frame containing only English speakers in the five cities
 of interest.
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+english_lang = region_lang[
+    (region_lang["language"] == "English") &
+    (region_lang["region"].isin(five_cities["region"]))
+]
+```
+
 ```{code-cell} ipython3
 :tags: ["output_scroll"]
 english_lang
 ```
-We then added the populations of these cities as a column using `assign`
+We then added the populations of these cities as a column
 (Toronto: 5928040, Montréal: 4098927, Vancouver: 2463431,
 Calgary: 1392609, and Edmonton: 1321426). We had to be careful to add those populations in the
 right order; this is an error-prone process. An alternative approach, that we demonstrate here
 is to (1) create a new data frame with the city names and populations, and
 (2) use `merge` to combine the two data frames, recognizing that the "regions" are the same.
 
-We create a new data frame by calling `pd.DataFrame` with a dictionary 
+We create a new data frame by calling `pd.DataFrame` with a dictionary
 as its argument. The dictionary associates each column name in the data frame to be created
 with a list of entries. Here we list city names in a column called `"region"`
 and their populations in a column called `"population"`.
@@ -1855,7 +1868,6 @@ burning data science questions!
 | Function | Description |
 | ---      | ----------- |
 | `agg` | calculates aggregated summaries of inputs |
-| `apply` | allows you to apply function(s) to multiple columns/rows  |
 | `assign` | adds or modifies columns in a data frame  |
 | `groupby` |  allows you to apply function(s) to groups of rows |
 | `iloc` | subsets columns/rows of a data frame using integer indices |
@@ -1876,7 +1888,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the chapter on {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++ {"tags": []}
@@ -1886,9 +1898,7 @@ and guidance that the worksheets provide will function as intended.
 - The [`pandas` package documentation](https://pandas.pydata.org/docs/reference/index.html) is
   another resource to learn more about the functions in this
   chapter, the full set of arguments you can use, and other related functions.
-  The site also provides a very nice cheat sheet that summarizes many of the
-  data wrangling functions from this chapter.
-- *Python for Data Analysis* {cite:p}`mckinney2012python` has a few chapters related to
+- [*Python for Data Analysis*](https://wesmckinney.com/book/) {cite:p}`mckinney2012python` has a few chapters related to
   data wrangling that go into more depth than this book. For example, the
   [data wrangling chapter](https://wesmckinney.com/book/data-wrangling.html) covers tidy data,
   `melt` and `pivot`, but also covers missing values
@@ -1897,8 +1907,7 @@ and guidance that the worksheets provide will function as intended.
   `groupby`, aggregating functions, `apply`, etc.
 - You will occasionally encounter a case where you need to iterate over items
   in a data frame, but none of the above functions are flexible enough to do
-  what you want. In that case, you may consider using [a for
-  loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
+  what you want. In that case, you may consider using [a for loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
 
 
 ## References

@@ -37,11 +37,14 @@ By the end of the chapter, readers will be able to do the following:
 - Identify the different types of data analysis question and categorize a question into the correct type.
 - Load the `pandas` package into Python.
 - Read tabular data with `read_csv`.
-- Use `help()` to access help and documentation tools in Python.
-- Create new variables and objects in Python.
+- Create new variables and objects in Python using the assignment symbol.
 - Create and organize subsets of tabular data using `[]`, `loc[]`, `sort_values`, and `head`.
+- Add and modify columns in tabular data using column assignment.
 - Chain multiple operations in sequence.
 - Visualize data with an `altair` bar plot.
+- Use `help()` and `?` to access help and documentation tools in Python.
+
+
 
 ## Canadian languages data set
 
@@ -49,7 +52,7 @@ By the end of the chapter, readers will be able to do the following:
 ```
 
 In this chapter, we will walk through a full analysis of a data set relating to
-languages spoken at home by Canadian residents. Many Indigenous peoples exist in Canada
+languages spoken at home by Canadian residents ({numref}`canadamap`). Many Indigenous peoples exist in Canada
 with their own cultures and languages; these languages are often unique to Canada and not spoken
 anywhere else in the world {cite:p}`statcan2018mothertongue`. Sadly, colonization has
 led to the loss of many of these languages. For instance, generations of
@@ -64,6 +67,13 @@ Canada" {cite:p}`walker2017`,
 peoples, and Residential Schools* {cite:p}`children2012`
 and the *Truth and Reconciliation Commission of Canada's*
 *Calls to Action* {cite:p}`calls2015`.
+
+```{figure} img/intro/canada_map.png
+---
+name: canadamap
+---
+Map of Canada
+```
 
 The data set we will study in this chapter is taken from
 [the `canlang` R data package](https://ttimbers.github.io/canlang/)
@@ -88,22 +98,24 @@ tongues in Canada, and how many people speak each of them?*
 ```{index} data science; good practices
 ```
 
-> **Note:** Data science cannot be done without
-> a deep understanding of the data and
-> problem domain. In this book, we have simplified the data sets used in our
-> examples to concentrate on methods and fundamental concepts. But in real
-> life, you cannot and should not do data science without a domain expert.
-> Alternatively, it is common to practice data science in your own domain of
-> expertise! Remember that when you work with data, it is essential to think
-> about *how* the data were collected, which affects the conclusions you can
-> draw. If your data are biased, then your results will be biased!
+```{note}
+Data science cannot be done without
+a deep understanding of the data and
+problem domain. In this book, we have simplified the data sets used in our
+examples to concentrate on methods and fundamental concepts. But in real
+life, you cannot and should not do data science without a domain expert.
+Alternatively, it is common to practice data science in your own domain of
+expertise! Remember that when you work with data, it is essential to think
+about *how* the data were collected, which affects the conclusions you can
+draw. If your data are biased, then your results will be biased!
+```
 
 ## Asking a question
 
 Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
-descriptive, exploratory, inferential, predictive, causal, and mechanistic,
+descriptive, exploratory, predictive, inferential, causal, and mechanistic,
 all of which are defined in {numref}`questions-table`. {cite:p}`leek2015question,peng2015art`
 Carefully formulating a question as early as possible in your analysis&mdash;and
 correctly identifying which type of question it is&mdash;will guide your overall approach to
@@ -160,36 +172,36 @@ Summarization is most often used to answer descriptive questions,
 and can occasionally help with answering exploratory questions.
 For example, you might use summarization to answer the following question:
 *What is the average race time for runners in this data set?*
-Tools for summarization are covered in detail in the {ref}`reading`
-and {ref}`wrangling` chapters, but appear regularly throughout the text.
+Tools for summarization are covered in detail in {numref}`Chapters %s <reading>`
+and {numref}`%s <wrangling>`, but appear regularly throughout the text.
 1. **Visualization:** plotting data graphically.
 Visualization is typically used to answer descriptive and exploratory questions,
 but plays a critical supporting role in answering all of the types of question in {numref}`questions-table`.
 For example, you might use visualization to answer the following question:
 *Is there any relationship between race time and age for runners in this data set?*
-This is covered in detail in the {ref}`viz` chapter, but again appears regularly throughout the book.
+This is covered in detail in {numref}`Chapter %s <viz>`, but again appears regularly throughout the book.
 3. **Classification:** predicting a class or category for a new observation.
 Classification is used to answer predictive questions.
 For example, you might use classification to answer the following question:
 *Given measurements of a tumor's average cell area and perimeter, is the tumor benign or malignant?*
-Classification is covered in the {ref}`classification1` and {ref}`classification2` chapters.
+Classification is covered in {numref}`Chapters %s <classification1>` and {numref}`%s <classification2>`.
 4. **Regression:** predicting a quantitative value for a new observation.
 Regression is also used to answer predictive questions.
 For example, you might use regression to answer the following question:
 *What will be the race time for a 20-year-old runner who weighs 50kg?*
-Regression is covered in the {ref}`regression1` and {ref}`regression2` chapters.
+Regression is covered in {numref}`Chapters %s <regression1>` and {numref}`%s <regression2>`.
 5. **Clustering:** finding previously unknown/unlabeled subgroups in a
 data set. Clustering is often used to answer exploratory questions.
 For example, you might use clustering to answer the following question:
 *What products are commonly bought together on Amazon?*
-Clustering is covered in the {ref}`clustering` chapter.
+Clustering is covered in {numref}`Chapter %s <clustering>`.
 6. **Estimation:** taking measurements for a small number of items from a large group
  and making a good guess for the average or proportion for the large group. Estimation
 is used to answer inferential questions.
 For example, you might use estimation to answer the following question:
 *Given a survey of cellphone ownership of 100 Canadians, what proportion
 of the entire Canadian population own Android phones?*
-Estimation is covered in the {ref}`inference` chapter.
+Estimation is covered in {numref}`Chapter %s <inference>`.
 
 Referring to {numref}`questions-table`, our question about
 Aboriginal languages is an example of a *descriptive question*: we are
@@ -217,11 +229,10 @@ rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
 Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-data frame` shows that a Python data frame is very similar
-to a spreadsheet. We refer to the rows as **observations**; these are the things that we
-collect the data on, e.g., voters, cities, etc. We refer to the columns as
-**variables**; these are the characteristics of those observations, e.g., voters' political
-affiliations, cities' populations, etc.
-
+to a spreadsheet. We refer to the rows as **observations**; these are the individual objects
+for which we collect data. In {numref}`img-spreadsheet-vs-data frame`, the observations are
+languages. We refer to the columns as **variables**; these are the characteristics of each
+observation. In {numref}`img-spreadsheet-vs-data frame`, the variables are the the language's category, its name, the number of mother tongue speakers, etc.
 
 ```{figure} img/intro/spreadsheet_vs_df.png
 ---
@@ -259,7 +270,7 @@ Non-Official & Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
 Non-Official & Non-Aboriginal languages,Amharic,22465,12785,200,33670
 ```
 
-```{index} function, argument, read function; read\_csv
+```{index} function, argument, read function; read_csv
 ```
 
 To load this data into Python so that we can do things with it (e.g., perform
@@ -314,7 +325,6 @@ to read data into Python.
 
 ```{figure} img/intro/read_csv_function.png
 ---
-height: 220px
 name: img-read-csv
 ---
 Syntax for the `read_csv` function
@@ -432,7 +442,13 @@ can_lang
 
 ## Creating subsets of data frames with `[]` & `loc[]`
 
-```{index} pandas.DataFrame; [], pandas.DataFrame; loc[]
+```{index} see: []; DataFrame
+```
+
+```{index} see: loc[]; DataFrame
+```
+
+```{index} DataFrame; [], DataFrame; loc[], selecting columns
 ```
 
 Now that we've loaded our data into Python, we can start wrangling the data to
@@ -450,10 +466,12 @@ at the same time. We will first investigate filtering rows and selecting
 columns with the `[]` operation,
 and then use `loc[]` to do both in our analysis of the Aboriginal languages data.
 
-> **Note:** The `[]` and `loc[]` operations, and related operations, in `pandas`
-> are much more powerful than we describe in this chapter.
-> You will learn more sophisticated ways to index data frames later on
-> in the {ref}`wrangling` chapter.
+```{note}
+The `[]` and `loc[]` operations, and related operations, in `pandas`
+are much more powerful than we describe in this chapter.
+You will learn more sophisticated ways to index data frames later on
+in {numref}`Chapter %s <wrangling>`.
+```
 
 ### Using `[]` to filter rows
 Looking at the `can_lang` data above, we see the column `category` contains different
@@ -462,7 +480,7 @@ high-level categories of languages, which include "Aboriginal languages",
 our question we want to filter our data set so we restrict our attention
 to only those languages in the "Aboriginal languages" category.
 
-```{index} pandas.DataFrame; [], filter, logical statement, logical statement; equivalency operator, string
+```{index} DataFrame; [], filtering rows, logical statement, logical operator; equivalency (==), string
 ```
 
 We can use the `[]` operation to obtain the subset of rows with desired values
@@ -476,20 +494,21 @@ we are interested in keeping only languages in the `"Aboriginal languages"` high
 category. We can use the *equivalency operator* `==` to compare the values of the `category`
 column---denoted by `can_lang["category"]`---with the value `"Aboriginal languages"`.
 You will learn about many other kinds of logical
-statement in the {ref}`wrangling` chapter. Similar to when we loaded the data file and put quotes
+statement in {numref}`Chapter %s <wrangling>`. Similar to when we loaded the data file and put quotes
 around the file name, here we need to put quotes around both `"Aboriginal languages"` and `"category"`. Using
 quotes tells Python that this is a *string value* (e.g., a column name, or word data)
 and not one of the special words that make up the Python programming language,
 or one of the names we have given to objects in the code we have already written.
 
-> **Note:** In Python, single quotes (`'`) and double quotes (`"`) are generally
-> treated the same. So we could have written `'Aboriginal languages'` instead
-> of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
-> Try both out for yourself!
+```{note}
+In Python, single quotes (`'`) and double quotes (`"`) are generally
+treated the same. So we could have written `'Aboriginal languages'` instead
+of `"Aboriginal languages"` above, or `'category'` instead of `"category"`.
+Try both out for yourself!
+```
 
 ```{figure} img/intro/filter_rows.png
 ---
-height: 220px
 name: img-filter
 ---
 Syntax for using the `[]` operation to filter rows.
@@ -506,7 +525,7 @@ can_lang[can_lang["category"] == "Aboriginal languages"]
 ### Using `[]` to select columns
 
 
-```{index} pandas.DataFrame; [], select;
+```{index} DataFrame; [], selecting columns
 ```
 
 We can also use the `[]` operation to select columns from a data frame.
@@ -521,7 +540,6 @@ containing those two column names inside the square brackets of the `[]` operati
 
 ```{figure} img/intro/select_columns.png
 ---
-height: 220px
 name: img-select
 ---
 Syntax for using the `[]` operation to select columns.
@@ -536,7 +554,7 @@ can_lang[["language", "mother_tongue"]]
 
 ### Using `loc[]` to filter rows and select columns
 
-```{index} pandas.DataFrame; loc[]
+```{index} DataFrame; loc[], selecting columns
 ```
 
 The `[]` operation is only used when you want to filter rows *or* select columns;
@@ -547,13 +565,12 @@ Fortunately, `pandas` provides the `loc[]` operation, which lets us do just that
 The syntax is very similar to the `[]` operation we have already covered: we will
 essentially combine both our row filtering and column selection steps from before.
 In particular, we first write the name of the data frame---`can_lang` again---then follow
-that with the `.loc[]` method. Inside the square brackets,
+that with the `.loc[]` operation. Inside the square brackets,
 we write our row filtering logical statement,
 then a comma, then our list of columns to select.
 
 ```{figure} img/intro/filter_rows_and_columns.png
 ---
-height: 220px
 name: img-loc
 ---
 Syntax for using the `loc[]` operation to filter rows and select columns.
@@ -572,6 +589,16 @@ thing on the right (the `read_csv` function). In the case of `can_lang.loc[]`, t
 both packages (like `pandas`) *and* objects (like our `can_lang` data frame) can provide functions
 and other objects that we access using the dot syntax.
 
+```{note}
+A note on terminology: when an object `obj` provides a function `f` with the
+dot syntax (as in `obj.f()`), sometimes we call that function `f` a *method* of `obj` or an *operation* on `obj`.
+Similarly, when an object `obj` provides another object `x` with the dot syntax (as in `obj.x`), sometimes we call the object `x` an *attribute* of `obj`.
+We will use all of these terms throughout the book, as you will see them used commonly in the community.
+And just because we programmers like to be confusing for no apparent reason: we *don't* use the "method", "operation", or "attribute" terminology
+when referring to functions and objects from packages, like `pandas`. So for example, `pd.read_csv`
+would typically just be referred to as a function, but not as a method or operation, even though it uses the dot syntax.
+```
+
 At this point, if we have done everything correctly, `aboriginal_lang` should be a data frame
 containing *only* rows where the `category` is `"Aboriginal languages"`,
 and containing *only* the `language` and `mother_tongue` columns.
@@ -587,7 +614,7 @@ So it looks like the `loc[]` operation gave us the result we wanted!
 
 ## Using `sort_values` and `head` to select rows by ordered values
 
-```{index} pandas.DataFrame; sort_values, pandas.DataFrame; head
+```{index} DataFrame; sort_values, DataFrame; head
 ```
 
 We have used the `[]` and `loc[]` operations on a data frame to obtain a table
@@ -608,14 +635,13 @@ so we specify the argument `ascending` as `False`.
 
 ```{figure} img/intro/sort_values.png
 ---
-height: 220px
 name: img-sort-values
 ---
 Syntax for using `sort_values` to arrange rows in decending order.
 ```
 
 ```{code-cell} ipython3
-arranged_lang = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang = aboriginal_lang.sort_values(by="mother_tongue", ascending=False)
 arranged_lang
 ```
 
@@ -630,9 +656,10 @@ ten_lang = arranged_lang.head(10)
 ten_lang
 ```
 
-## Adding and modifying columns using `assign`
+(ch1-adding-modifying)=
+## Adding and modifying columns
 
-```{index} assign
+```{index} adding columns, modifying columns
 ```
 
 Recall that our data analysis question referred to the *count* of Canadians
@@ -642,36 +669,43 @@ counts... But perhaps, seeing these numbers, we became curious about the
 *percentage* of the population of Canada associated with each count. It is
 common to come up with new data analysis questions in the process of answering
 a first one&mdash;so fear not and explore! To answer this small
-question-along-the-way, we need to divide each count in the `mother_tongue`
+question along the way, we need to divide each count in the `mother_tongue`
 column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
-this computation using the code `100 * ten_lang['mother_tongue'] / canadian_population`. 
+this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`.
 Then to store the result in a new column (or
-overwrite an existing column), we use the `assign` method. We specify the name of the new
-column to create (or old column to modify), then the assignment symbol `=`, 
+overwrite an existing column), we specify the name of the new
+column to create (or old column to modify), then the assignment symbol `=`,
 and then the computation to store in that column. In this case, we will opt to
-create a new column called `mother_tongue_percent`. 
+create a new column called `mother_tongue_percent`.
 
-> **Note:** You will see below that we write the Canadian population in
-> Python as `35_151_728`. The underscores (`_`) are just there for readability,
-> and do not affect how Python interprets the number. In other words, 
-> `35151728` and `35_151_728` are treated identically in Python, 
-> although the latter is much clearer!
+```{note}
+You will see below that we write the Canadian population in
+Python as `35_151_728`. The underscores (`_`) are just there for readability,
+and do not affect how Python interprets the number. In other words,
+`35151728` and `35_151_728` are treated identically in Python,
+although the latter is much clearer!
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+# disable setting with copy warning
+# it's not important for this chapter and just distracting
+# only occurs here because we did a much earlier .loc operation that is being picked up below by the coln assignment
+pd.options.mode.chained_assignment = None
+```
 
 ```{code-cell} ipython3
 canadian_population = 35_151_728
-ten_lang_percent = ten_lang.assign(mother_tongue_percent=100 * ten_lang['mother_tongue'] / canadian_population)
-ten_lang_percent
+ten_lang["mother_tongue_percent"] = 100 * ten_lang["mother_tongue"] / canadian_population
+ten_lang
 ```
 
 The `ten_lang_percent` data frame shows that
-the ten Aboriginal languages in the `ten_lang` data frame were spoken 
+the ten Aboriginal languages in the `ten_lang` data frame were spoken
 as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
 ## Combining analysis steps with chaining and multiline expressions
-
-```{index} chaining methods
-```
 
 It took us 3 steps to find the ten Aboriginal languages most often reported in
 2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:
@@ -686,7 +720,7 @@ One way of performing these steps is to just write
 multiple lines of code, storing temporary, intermediate objects as you go.
 ```{code-cell} ipython3
 aboriginal_lang = can_lang.loc[can_lang["category"] == "Aboriginal languages", ["language", "mother_tongue"]]
-arranged_lang_sorted = aboriginal_lang.sort_values(by='mother_tongue', ascending=False)
+arranged_lang_sorted = aboriginal_lang.sort_values(by="mother_tongue", ascending=False)
 ten_lang = arranged_lang_sorted.head(10)
 ```
 
@@ -715,7 +749,7 @@ aboriginal_lang = can_lang.loc[
     ["language", "mother_tongue"]
 ]
 arranged_lang_sorted = aboriginal_lang.sort_values(
-    by='mother_tongue',
+    by="mother_tongue",
     ascending=False
 )
 ten_lang = arranged_lang_sorted.head(10)
@@ -740,6 +774,9 @@ In both cases, Python keeps reading the next line to figure out
 what the rest of the expression is. We could, of course,
 put all of the code on one line of code, but splitting it across
 multiple lines helps a lot with code readability.
+
+```{index} chaining
+```
 
 We still have to handle the issue that each line of code---i.e., each step in the analysis---introduces
 a new temporary object. To address this issue, we can *chain* multiple operations together without
@@ -792,7 +829,7 @@ before moving on with further steps.
 
 ```{index} visualization
 ```
-We have now answered our initial question by generating the `ten_lang` table!
+The `ten_lang` table answers our initial data analysis question.
 Are we done? Well, not quite; tables are almost never the best way to present
 the result of your analysis to your audience. Even the `ten_lang` table with
 only two columns presents some difficulty: for example, you have to scrutinize
@@ -801,7 +838,7 @@ each language. When you move on to more complicated analyses, this issue only
 gets worse. In contrast, a *visualization* would convey this information in a much
 more easily understood format.
 Visualizations are a great tool for summarizing information to help you
-effectively communicate with your audience, and creating effective data visualizations 
+effectively communicate with your audience, and creating effective data visualizations
 is an essential component of any data
 analysis. In this section we will develop a visualization of the
  ten Aboriginal languages that were most often reported in 2016 as mother tongues in
@@ -818,7 +855,7 @@ The data are, therefore, in what we call a *tidy data* format. Tidy data is a
 fundamental concept and will be a significant focus in the remainder of this
 book: many of the functions from `pandas` require tidy data, as does the
 `altair` package that we will use shortly for our visualization. We will
-formally introduce tidy data in the {ref}`wrangling` chapter.
+formally introduce tidy data in {numref}`Chapter %s <wrangling>`.
 
 ```{index} see: plot; visualization
 ```
@@ -836,7 +873,9 @@ First, we need to import the `altair` package.
 
 ```{code-cell} ipython3
 import altair as alt
+```
 
+```{index} altair; mark_bar, altair; encoding channel
 ```
 
 +++
@@ -852,7 +891,6 @@ and that the `mother_tongue` column should correspond to the y-axis.
 
 ```{figure} img/intro/altair_syntax.png
 ---
-height: 220px
 name: img-altair
 ---
 Syntax for using `altair` to make a bar chart.
@@ -873,7 +911,7 @@ barplot_mother_tongue = (
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue', barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue", barplot_mother_tongue, display=True)
 
 ```
 
@@ -886,7 +924,7 @@ Bar plot of the ten Aboriginal languages most often reported by Canadian residen
 
 +++
 
-```{index} see: .; chaining methods
+```{index} see: .; chaining
 ```
 
 ### Formatting `altair` charts
@@ -905,22 +943,22 @@ Canadian Residents)" would be much more informative. To make the code easier to
 read, we're spreading it out over multiple lines just as we did in the previous
 section with pandas.
 
-```{index} plot; labels, plot; axis labels
+```{index} plot; labels, plot; axis labels, altair; alt.X, altair; alt.Y, altair; title
 ```
 
 Adding additional labels to our visualizations that we create in `altair` is
 one common and easy way to improve and refine our data visualizations. We can add titles for the axes
 in the `altair` objects using `alt.X` and `alt.Y` with the `title` method to make
-the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in the {ref}`viz` chapter).
+the axes titles more informative (you will learn more about `alt.X` and `alt.Y` in {numref}`Chapter %s <viz>`).
 Again, since we are specifying
 words (e.g. `"Mother Tongue (Number of Canadian Residents)"`) as arguments to
 the `title` method, we surround them with quotation marks. We can do many other modifications
-to format the plot further, and we will explore these in the {ref}`viz` chapter.
+to format the plot further, and we will explore these in {numref}`Chapter %s <viz>`.
 
 ```{code-cell} ipython3
 barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('language').title('Language'),
-    y=alt.Y('mother_tongue').title('Mother Tongue (Number of Canadian Residents)')
+    x=alt.X("language").title("Language"),
+    y=alt.Y("mother_tongue").title("Mother Tongue (Number of Canadian Residents)")
 )
 ```
 
@@ -928,7 +966,7 @@ barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-labs', barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue-labs", barplot_mother_tongue, display=True)
 
 ```
 
@@ -951,15 +989,15 @@ To accomplish this, we will swap the x and y coordinate axes:
 
 ```{code-cell} ipython3
 barplot_mother_tongue_axis = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").title("Language")
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-labs-axis', barplot_mother_tongue_axis, display=True)
+glue("barplot-mother-tongue-labs-axis", barplot_mother_tongue_axis, display=True)
 
 ```
 
@@ -984,8 +1022,8 @@ values of the variable(`mother_tongue`) on the `x-axis`.
 
 ```{code-cell} ipython3
 ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').sort('x').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").sort("x").title("Language")
 )
 ```
 
@@ -994,7 +1032,7 @@ ordered_barplot_mother_tongue = alt.Chart(ten_lang).mark_bar().encode(
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('barplot-mother-tongue-reorder', ordered_barplot_mother_tongue, display=True)
+glue("barplot-mother-tongue-reorder", ordered_barplot_mother_tongue, display=True)
 
 ```
 
@@ -1013,12 +1051,14 @@ were, according to the 2016 Canadian census, and how many people speak each of t
 instance, we can see that the Aboriginal language most often reported was Cree
 n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.
 
-> **Note:** "n.o.s." means "not otherwise specified", so Cree n.o.s. refers to
-> individuals who reported Cree as their mother tongue. In this data set, the
-> Cree languages include the following categories: Cree n.o.s., Swampy Cree,
-> Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
-> includes Moose Cree, Northern East Cree and Southern East Cree)
-> {cite:p}`language2016`.
+```{note}
+"n.o.s." means "not otherwise specified", so Cree n.o.s. refers to
+individuals who reported Cree as their mother tongue. In this data set, the
+Cree languages include the following categories: Cree n.o.s., Swampy Cree,
+Plains Cree, Woods Cree, and a 'Cree not included elsewhere' category (which
+includes Moose Cree, Northern East Cree and Southern East Cree)
+{cite:p}`language2016`.
+```
 
 ### Putting it all together
 
@@ -1061,15 +1101,15 @@ ten_lang = (
 
 # create the visualization
 ten_lang_plot = alt.Chart(ten_lang).mark_bar().encode(
-    x=alt.X('mother_tongue').title('Mother Tongue (Number of Canadian Residents)'),
-    y=alt.Y('language').sort('x').title('Language')
+    x=alt.X("mother_tongue").title("Mother Tongue (Number of Canadian Residents)"),
+    y=alt.Y("language").sort("x").title("Language")
 )
 ```
 
 ```{code-cell} ipython3
 :tags: ["remove-cell"]
 
-glue('final_plot', ten_lang_plot, display=True)
+glue("final_plot", ten_lang_plot, display=True)
 
 ```
 
@@ -1190,7 +1230,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## References

@@ -40,15 +40,6 @@ used day-to-day in a standard data science project.
 There are many user interfaces for Git; in this chapter
 we will cover the Jupyter Git interface.
 
-```{note}
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on version control
-has not yet been fully updated to focus on Python; it has images and examples from
-the R version of the book. But the concepts related to version control are generally
-the same. We are currently working on producing new Python-based images and examples
-for this chapter.
-```
-
 ## Chapter learning objectives
 
 By the end of the chapter, readers will be able to do the following:
@@ -73,7 +64,7 @@ ready for the intended audience.
 Without deliberate and conscious effort towards tracking changes
 made to the analysis, projects tend to become messy.
 This mess can have serious, negative repercussions on an analysis project,
-including interesting results files that your code cannot reproduce,
+including results that your code cannot reproduce,
 temporary files with snippets of ideas that are forgotten or
 not easy to find, mind-boggling file names that make it unclear which is
 the current working version of the file (e.g., `document_final_draft_final.txt`,
@@ -138,22 +129,27 @@ additional resources section at the end of the chapter,
 we list many of the common version control systems
 and repository hosting services in use today.
 
-> **Note:** Technically you don't *have to* use a repository hosting service.
-> You can, for example, version control a project
-> that is stored only in a folder on your computer&mdash;never
-> sharing it on a repository hosting service.
-> But using a repository hosting service provides a few big benefits,
-> including managing collaborator access permissions,
-> tools to discuss and track bugs,
-> and the ability to have external collaborators contribute work,
-> not to mention the safety of having your work backed up in the cloud.
-> Since most repository hosting services now offer free accounts,
-> there are not many situations in which you wouldn't
-> want to use one for your project.
+```{note}
+Technically you don't *have to* use a repository hosting service.
+You can, for example, version control a project
+that is stored only in a folder on your computer&mdash;never
+sharing it on a repository hosting service.
+But using a repository hosting service provides a few big benefits,
+including managing collaborator access permissions,
+tools to discuss and track bugs,
+and the ability to have external collaborators contribute work,
+not to mention the safety of having your work backed up in the cloud.
+Since most repository hosting services now offer free accounts,
+there are not many situations in which you wouldn't
+want to use one for your project.
+```
 
 ## Version control repositories
 
 ```{index} repository, repository;local, repository;remote
+```
+
+```{index} see: repository; version control
 ```
 
 Typically, when we put a data analysis project under version control,
@@ -187,8 +183,10 @@ a version of the project.  These records are called **commits**. They
 are a snapshot of the file contents as well
 metadata about the repository at that time the record was created (who made the
 commit, when it was made, etc.). In the local and remote repositories shown in
-{numref}`vc1-no-changes`, there are two commits represented as gray
-circles.  Each commit can be identified by a
+{numref}`vc1-no-changes`, there are two commits represented as rectangles
+inside the "Repository History" sections. The white rectangle represents the most
+recent commit, while faded rectangles represent previous commits.
+Each commit can be identified by a
 human-readable **message**, which you write when you make a commit, and a
 **commit hash** that Git automatically adds for you.
 
@@ -203,8 +201,6 @@ one for each commit: `Created README.md` and `Added analysis draft`.
 
 ```{index} hash
 ```
-
-
 
 The hash is a string of characters consisting of about 40 letters and numbers.
 The purpose of the hash is to serve as a unique identifier for the commit,
@@ -240,11 +236,14 @@ name: vc2-changes
 Local repository with changes to files.
 ```
 
-```{index} git;add, staging area
+```{index} git;add, staging area, git;commit
+```
+
+```{index} see: staging area; git
 ```
 
 Once you reach a point that you want Git to keep a record
-of the current version of your work, you need to commit
+of the current version of your work, you need to **commit**
 (i.e., snapshot) your changes. A prerequisite to this is telling Git which
 files should be included in that snapshot. We call this step **adding** the
 files to the **staging area**.
@@ -262,8 +261,6 @@ name: vc-ba2-add
 ---
 Adding modified files to the staging area in the local repository.
 ```
-
-
 
 Once the files we wish to commit have been added
 to the staging area, we can then commit those files to the repository history ({numref}`vc-ba3-commit`).
@@ -288,8 +285,6 @@ Committing the modified files in the staging area to the local repository histor
 
 ```{index} git;push
 ```
-
-
 
 Once you have made one or more commits that you want to share with your collaborators,
 you need to **push** (i.e., send) those commits back to GitHub ({numref}`vc5-push`). This updates
@@ -337,14 +332,10 @@ name: vc7-pull
 Pulling changes from the remote GitHub repository to synchronize your local repository.
 ```
 
-
-
 ## Working with remote repositories using GitHub
 
 ```{index} repository;remote, GitHub, git;clone
 ```
-
-
 
 Now that you have been introduced to some of the key general concepts
 and workflows of Git version control, we will walk through the practical steps.
@@ -356,13 +347,13 @@ Once you have a remote repository set up, we recommend **cloning** (or copying) 
 repository to create a local repository in which you primarily work.
 You can clone the repository either
 on your own computer or in a workspace on a server (e.g., a JupyterHub server).
-Section {numref}`local-repo-jupyter` below will cover this second step in detail.
+{numref}`local-repo-jupyter` below will cover this second step in detail.
 
 ### Creating a remote repository on GitHub
 
 Before you can create remote repositories on GitHub,
 you will need a GitHub account; you can sign up for a free account
-at [https://github.com/](https://github.com/).
+at [github.com](https://github.com/).
 Once you have logged into your account, you can create a new repository to host
 your project by clicking on the "+" icon in the upper right-hand
 corner, and then on "New Repository," as shown in
@@ -375,9 +366,8 @@ name: new-repository-01
 New repositories on GitHub can be created by clicking on "New Repository" from the + menu.
 ```
 
-```{index} repository;public
+```{index} repository;public, repository;private
 ```
-
 
 Repositories can be set up with a variety of configurations, including a name,
 optional description,  and the inclusion (or not) of several template files.
@@ -401,8 +391,6 @@ name: new-repository-02
 Repository configuration for a project that is public and initialized with a README.md template file.
 ```
 
-
-
 A newly created public repository with a `README.md` template file should look something
 like what is shown in {numref}`new-repository-03`.
 
@@ -412,8 +400,6 @@ name: new-repository-03
 ---
 Respository configuration for a project that is public and initialized with a README.md template file.
 ```
-
-
 
 +++
 
@@ -443,8 +429,6 @@ The text box where edits can be made after clicking on the pen tool.
 
 ```{index} GitHub; commit
 ```
-
-
 
 After you are done with your edits, they can be "saved" by *committing* your
 changes. When you *commit a file* in a repository, the version control system
@@ -477,8 +461,6 @@ Saving changes using the pen tool requires committing those changes, and an asso
 ```{index} GitHub; add file
 ```
 
-
-
 The "Add file" menu can be used to create new plain text files and upload files
 from your computer. To create a new plain text file, click the "Add file"
 drop-down menu and select the "Create new file" option
@@ -494,16 +476,13 @@ New plain text files can be created directly on GitHub.
 ```{index} markdown
 ```
 
-
-
 A page will open with a small text box for the file name to be entered, and a
 larger text box where the desired file content text can be entered. Note the two
 tabs, "Edit new file" and "Preview". Toggling between them lets you enter and
 edit text and view what the text will look like when rendered, respectively
 ({numref}`create-new-file-02`).
 Note that GitHub understands and renders `.md` files using a
-[markdown syntax](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf)
-very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
+markdown syntax very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
 for checking markdown code correctness.
 
 ```{figure} img/version-control/create-new-file_02.png
@@ -527,7 +506,7 @@ You can also upload files that you have created on your local machine by using
 the "Add file" drop-down menu and selecting "Upload files"
 ({numref}`upload-files-01`).
 To select the files from your local computer to upload, you can either drag and
-drop them into the gray box area shown below, or click the "choose your files"
+drop them into the gray box area shown in {numref}`upload-files-02`, or click the "choose your files"
 link to access a file browser dialog. Once the files you want to upload have
 been selected, click the green "Commit changes" button at the bottom of the
 page ({numref}`upload-files-02`).
@@ -562,8 +541,6 @@ of any of the actual content of your project!
 ```{index} git;Jupyter extension
 ```
 
-
-
 Although there are several ways to create and edit files on GitHub, they are
 not quite powerful enough for efficiently creating and editing complex files,
 or files that need to be executed to assess whether they work (e.g., files
@@ -574,15 +551,13 @@ can be done by creating and working in a local copy of the repository.
 In this chapter, we focus on interacting with Git via Jupyter using
 the Jupyter Git extension. The Jupyter Git extension
 can be run by Jupyter on your local computer, or on a JupyterHub server.
-*Note: we recommend reading the {ref}`getting-started-with-jupyter` chapter*
-*to learn how to use Jupyter before reading this chapter.*
+We recommend reading {numref}`Chapter %s <getting-started-with-jupyter>`
+to learn how to use Jupyter before reading this chapter.
 
 ### Generating a GitHub personal access token
 
 ```{index} GitHub; personal access token
 ```
-
-
 
 To send and retrieve work between your local repository
 and the remote repository on GitHub,
@@ -650,17 +625,10 @@ name: generate-pat-03
 Display of the newly generated personal access token.
 ```
 
-
-
 ### Cloning a repository using Jupyter
-
-<!--Now that we have everything we need for authentication,
-the next step is -->
 
 ```{index} git;clone
 ```
-
-
 
 *Cloning* a remote repository from GitHub
 to create a local repository results in a
@@ -767,8 +735,6 @@ Adding `eda.ipynb` makes it visible in the staging area.
 ```{index} git;commit
 ```
 
-
-
 To snapshot the changes with an associated commit message,
 you must put a message in the text box at the bottom of the Git pane
 and click on the blue "Commit" button ({numref}`git-commit-01`).
@@ -788,11 +754,9 @@ name: git-commit-01
 A commit message must be added into the Jupyter Git extension commit text box before the blue Commit button can be used to record the commit.
 ```
 
-
 After "committing" the file(s), you will see there are 0 "Staged" files.
 You are now ready to push your changes
 to the remote repository on GitHub ({numref}`git-commit-03`).
-
 
 ```{figure} img/version-control/git_commit_03.png
 ---
@@ -801,14 +765,10 @@ name: git-commit-03
 After recording a commit, the staging area should be empty.
 ```
 
-
-
 ### Pushing the commits to GitHub
 
 ```{index} git;push
 ```
-
-
 
 To send the committed changes back to the remote repository on
 GitHub, you need to *push* them. To do this,
@@ -822,7 +782,6 @@ name: git-push-01
 The Jupyter Git extension "push" button (circled in red).
 ```
 
-
 You will then be prompted to enter your GitHub username
 and the personal access token that you generated
 earlier (not your account password!). Click
@@ -835,7 +794,6 @@ name: git-push-02
 Enter your Git credentials to authorize the push to the remote repository.
 ```
 
-
 If the files were successfully pushed to the project repository on
 GitHub, you will be shown a success message ({numref}`git-push-03`).
 Click "Dismiss" to continue working in Jupyter.
@@ -846,7 +804,6 @@ name: git-push-03
 ---
 The prompt that the push was successful.
 ```
-
 
 If you visit the remote repository on GitHub,
 you will see that the changes now exist there too
@@ -859,15 +816,12 @@ name: git-push-04
 The GitHub web interface shows a preview of the commit message, and the time of the most recently pushed commit for each file.
 ```
 
-
 ## Collaboration
 
 ### Giving collaborators access to your project
 
 ```{index} GitHub; collaborator access
 ```
-
-
 
 As mentioned earlier, GitHub allows you to control who has access to your
 project. The default of both public and private projects are that only the
@@ -997,7 +951,6 @@ name: merge-conflict-01
 Error message that indicates that there are changes on the remote repository that you do not have locally.
 ```
 
-
 Usually, getting out of this situation is not too troublesome. First you need
 to pull the changes that exist on GitHub that you do not yet have in the local
 repository.  Usually when this happens, Git can automatically merge the changes
@@ -1019,14 +972,10 @@ same line of the same file and that Git will not be able to automatically merge
 the changes.
 ```
 
-
-
 ### Handling merge conflicts
 
 ```{index} git;merge conflict
 ```
-
-
 
 To fix the merge conflict, you need to open the offending file
 in a plain text editor and look for special marks that Git puts in the file to
@@ -1046,8 +995,8 @@ marked by `>>>>>>>`. Between these markings, Git also inserts a separator
 (`=======`). The version of the change before the separator is your change, and
 the version that follows the separator was the change that existed on GitHub.
 In {numref}`merge-conflict-05`, you can see that in your local repository
-there is a line of code that calls `scale_color_manual` with three color values (`deeppink2`, `cyan4`, and `purple1`).
-It looks like your collaborator made an edit to that line too, except with different colors (to `blue3`, `red3`, and `black`)!
+there is a line of code that sets the axis scaling to `"sqrt"`.
+It looks like your collaborator made an edit to that line too, except with axis scaling `"log"`!
 
 ```{figure} img/version-control/merge_conflict_05.png
 ---
@@ -1156,7 +1105,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
@@ -1165,12 +1114,11 @@ Now that you've picked up the basics of version control with Git and GitHub,
 you can expand your knowledge through the resources listed below:
 
 - GitHub's [guides website](https://guides.github.com/) and [YouTube
-  channel](https://www.youtube.com/githubguides), and [*Happy Git and GitHub
-  for the useR*](https://happygitwithr.com/) are great resources to take the next steps in
+  channel](https://www.youtube.com/githubguides) are great resources to take the next steps in
   learning about Git and GitHub.
 - [Good enough practices in scientific
   computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec014)
-  [@wilson2014best] provides more advice on useful workflows and "good enough"
+  {cite:p}`wilson2014best` provides more advice on useful workflows and "good enough"
   practices in data analysis projects.
 - In addition to [GitHub](https://github.com), there are other popular Git
   repository hosting services such as [GitLab](https://gitlab.com) and
@@ -1181,3 +1129,11 @@ you can expand your knowledge through the resources listed below:
   token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   is an excellent additional resource to consult if you need help
   generating and using personal access tokens.
+
+## References
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```

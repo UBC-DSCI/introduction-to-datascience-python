@@ -21,14 +21,16 @@ kernelspec:
 from chapter_preamble import *
 from IPython.display import HTML
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 ```
 
 ## Overview
 Up to this point, we have solved all of our predictive problems&mdash;both classification
-and regression&mdash;using K-nearest neighbors (KNN)-based approaches. In the context of regression,
+and regression&mdash;using K-nearest neighbors (K-NN)-based approaches. In the context of regression,
 there is another commonly used method known as *linear regression*. This chapter provides an introduction
 to the basic concept of linear regression, shows how to use `scikit-learn` to perform linear regression in Python,
-and characterizes its strengths and weaknesses compared to KNN regression. The focus is, as usual,
+and characterizes its strengths and weaknesses compared to K-NN regression. The focus is, as usual,
 on the case where there is a single predictor and single response variable of interest; but the chapter
 concludes with an example using *multivariable linear regression* when there is more than one
 predictor.
@@ -36,9 +38,10 @@ predictor.
 ## Chapter learning objectives
 By the end of the chapter, readers will be able to do the following:
 
-* Use Python and `scikit-learn` to fit a linear regression model on training data.
-* Evaluate the linear regression model on test data.
-* Compare and contrast predictions obtained from K-nearest neighbor regression to those obtained using linear regression from the same data set.
+- Use Python to fit simple and multivariable linear regression models on training data.
+- Evaluate the linear regression model on test data.
+- Compare and contrast predictions obtained from K-nearest neighbors regression to those obtained using linear regression from the same data set.
+- Describe how linear regression is affected by outliers and multicollinearity.
 
 +++
 
@@ -47,19 +50,19 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} regression; linear
 ```
 
-At the end of the previous chapter, we noted some limitations of KNN regression.
-While the method is simple and easy to understand, KNN regression does not
+At the end of the previous chapter, we noted some limitations of K-NN regression.
+While the method is simple and easy to understand, K-NN regression does not
 predict well beyond the range of the predictors in the training data, and
 the method gets significantly slower as the training data set grows.
-Fortunately, there is an alternative to KNN regression&mdash;*linear regression*&mdash;that addresses
+Fortunately, there is an alternative to K-NN regression&mdash;*linear regression*&mdash;that addresses
 both of these limitations. Linear regression is also very commonly
 used in practice because it provides an interpretable mathematical equation that describes
 the relationship between the predictor and response variables. In this first part of the chapter, we will focus on *simple* linear regression,
 which involves only one predictor variable and one response variable; later on, we will consider
  *multivariable* linear regression, which involves multiple predictor variables.
- Like KNN regression, simple linear regression involves
+ Like K-NN regression, simple linear regression involves
 predicting a numerical response variable (like race time, house price, or height);
-but *how* it makes those predictions for a new observation is quite different from KNN regression.
+but *how* it makes those predictions for a new observation is quite different from K-NN regression.
  Instead of looking at the K nearest neighbors and averaging
 over their values for a prediction, in simple linear regression, we create a
 straight line of best fit through the training data and then
@@ -70,24 +73,26 @@ straight line of best fit through the training data and then
 ```{index} regression; logistic
 ```
 
-> **Note:** Although we did not cover it in earlier chapters, there
-> is another popular method for classification called *logistic
-> regression* (it is used for classification even though the name, somewhat confusingly,
-> has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
-> "fit" the model to the training data and then "look up" the prediction for each new observation.
-> Logistic regression and KNN classification have an advantage/disadvantage comparison
-> similar to that of linear regression and KNN
-> regression. It is useful to have a good understanding of linear regression before learning about
-> logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
-> classification chapters to learn more about logistic regression.
+```{note}
+Although we did not cover it in earlier chapters, there
+is another popular method for classification called *logistic
+regression* (it is used for classification even though the name, somewhat confusingly,
+has the word "regression" in it). In logistic regression&mdash;similar to linear regression&mdash;you
+"fit" the model to the training data and then "look up" the prediction for each new observation.
+Logistic regression and K-NN classification have an advantage/disadvantage comparison
+similar to that of linear regression and K-NN
+regression. It is useful to have a good understanding of linear regression before learning about
+logistic regression. After reading this chapter, see the "Additional Resources" section at the end of the
+classification chapters to learn more about logistic regression.
+```
 
 +++
 
 ```{index} Sacramento real estate, question; regression
 ```
 
-Let's return to the Sacramento housing data from Chapter {ref}`regression1` to learn
-how to apply linear regression and compare it to KNN regression. For now, we
+Let's return to the Sacramento housing data from {numref}`Chapter %s <regression1>` to learn
+how to apply linear regression and compare it to K-NN regression. For now, we
 will consider
 a smaller version of the housing data to help make our visualizations clear.
 Recall our predictive question: can we use the size of a house in the Sacramento, CA area to predict
@@ -112,7 +117,7 @@ small_sacramento = sacramento.sample(n=30)
 
 small_plot = (
     alt.Chart(small_sacramento)
-    .mark_circle()
+    .mark_circle(opacity=1)
     .encode(
         x=alt.X("sqft")
             .scale(zero=False)
@@ -124,7 +129,50 @@ small_plot = (
     )
 )
 
-small_plot += small_plot.transform_regression("sqft", "price").mark_line()
+
+# create df_lines with one fake/empty line (for starting at 2nd color later)
+df_lines = {"x": [500, 500], "y": [100000, 100000], "number": ["-1", "-1"]}
+
+# set the domains (range of x values) of lines
+min_x = small_sacramento["sqft"].min()
+max_x = small_sacramento["sqft"].max()
+
+# add the line of best fit
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+lm.fit(small_sacramento[["sqft"]], small_sacramento[["price"]])
+pred_min = float(lm.predict(pd.DataFrame({"sqft": [min_x]})))
+pred_max = float(lm.predict(pd.DataFrame({"sqft": [max_x]})))
+
+df_lines["x"].extend([min_x, max_x])
+df_lines["y"].extend([pred_min, pred_max])
+df_lines["number"].extend(["0", "0"])
+
+# add other similar looking lines
+intercept_l = [-64542.23, -6900, -64542.23]
+slope_l = [190, 175, 160]
+for i in range(len(slope_l)):
+    df_lines["x"].extend([min_x, max_x])
+    df_lines["y"].extend([
+                        intercept_l[i] + slope_l[i] * min_x,
+                        intercept_l[i] + slope_l[i] * max_x,
+                    ])
+    df_lines["number"].extend([f"{i+1}", f"{i+1}"])
+
+df_lines = pd.DataFrame(df_lines)
+
+# plot the bogus line to skip the same color as the scatter
+small_plot += alt.Chart(
+    df_lines[df_lines["number"] == "-1"]
+).mark_line().encode(
+    x="x", y="y", color=alt.Color("number", legend=None)
+)
+# plot the real line with 2nd color
+small_plot += alt.Chart(
+    df_lines[df_lines["number"] == "0"]
+).mark_line().encode(
+    x="x", y="y", color=alt.Color("number", legend=None)
+)
 
 small_plot
 ```
@@ -143,6 +191,9 @@ Scatter plot of sale price versus size with line of best fit for subset of the S
 +++
 
 ```{index} straight line; equation
+```
+
+```{index} see: line; straight line
 ```
 
 The equation for the straight line is:
@@ -181,11 +232,11 @@ prediction = float(lm.predict(pd.DataFrame({"sqft": [2000]})))
 
 # the vertical dotted line
 line_df = pd.DataFrame({"x": [2000]})
-rule = alt.Chart(line_df).mark_rule(strokeDash=[2, 4]).encode(x="x")
+rule = alt.Chart(line_df).mark_rule(strokeDash=[6], size=1.5).encode(x="x")
 
 # the red point
 point_df = pd.DataFrame({"x": [2000], "y": [prediction]})
-point = alt.Chart(point_df).mark_circle(color="red", size=100).encode(x="x", y="y")
+point = alt.Chart(point_df).mark_circle(color="red", size=80, opacity=1).encode(x="x", y="y")
 
 # overlay all plots
 small_plot_2000_pred = (
@@ -196,7 +247,7 @@ small_plot_2000_pred = (
     + alt.Chart(
         pd.DataFrame(
             {
-                "x": [2350],
+                "x": [2450],
                 "y": [prediction - 41000],
                 "prediction": ["$" + "{0:,.0f}".format(prediction)],
             }
@@ -234,32 +285,11 @@ Some plausible examples are shown in {numref}`fig:08-several-lines`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-intercept_l = [-64542.23, -6900, -64542.23]
-slope_l = [190, 175, 160]
-line_color_l = ["green", "purple", "red"]
-
-# set the domains (range of x values) of lines
-min_x = small_sacramento["sqft"].min()
-max_x = small_sacramento["sqft"].max()
-
 several_lines_plot = small_plot.copy()
 
-for i in range(len(slope_l)):
-    several_lines_plot += (
-        alt.Chart(
-            pd.DataFrame(
-                {
-                    "x": [min_x, max_x],
-                    "y": [
-                        intercept_l[i] + slope_l[i] * min_x,
-                        intercept_l[i] + slope_l[i] * max_x,
-                    ],
-                }
-            )
-        )
-        .mark_line(color=line_color_l[i])
-        .encode(x="x", y="y")
-    )
+several_lines_plot += alt.Chart(
+    df_lines[df_lines["number"] != "0"]
+).mark_line().encode(x="x", y="y", color=alt.Color("number",legend=None))
 
 several_lines_plot
 ```
@@ -283,10 +313,10 @@ Scatter plot of sale price versus size with many possible lines that could be dr
 
 Simple linear regression chooses the straight line of best fit by choosing
 the line that minimizes the **average squared vertical distance** between itself and
-each of the observed data points in the training data. {numref}`fig:08-verticalDistToMin` illustrates
-these vertical distances as red lines. Finally, to assess the predictive
+each of the observed data points in the training data (equivalent to minimizing the RMSE). {numref}`fig:08-verticalDistToMin` illustrates
+these vertical distances as lines. Finally, to assess the predictive
 accuracy of a simple linear regression model,
-we use RMSPE&mdash;the same measure of predictive performance we used with KNN regression.
+we use RMSPE&mdash;the same measure of predictive performance we used with K-NN regression.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -301,13 +331,13 @@ small_sacramento_pred = small_sacramento_pred[["sqft", "price", "predicted"]].me
     id_vars=["sqft"]
 )
 
-error_plot = small_plot.copy()
-
+v_lines = []
 for i in range(len(small_sacramento)):
     sqft_val = small_sacramento.iloc[i]["sqft"]
     line_df = small_sacramento_pred.query("sqft == @sqft_val")
-    error_plot += alt.Chart(line_df).mark_line(color="red").encode(x="sqft", y="value")
+    v_lines.append(alt.Chart(line_df).mark_line(color="black").encode(x="sqft", y="value"))
 
+error_plot = alt.layer(*v_lines, small_plot).configure_circle(opacity=1)
 error_plot
 ```
 
@@ -320,7 +350,7 @@ glue("fig:08-verticalDistToMin", error_plot)
 :::{glue:figure} fig:08-verticalDistToMin
 :name: fig:08-verticalDistToMin
 
-Scatter plot of sale price versus size with red lines denoting the vertical distances between the predicted values and the observed data points.
+Scatter plot of sale price versus size with lines denoting the vertical distances between the predicted values and the observed data points.
 :::
 
 +++
@@ -333,7 +363,7 @@ Scatter plot of sale price versus size with red lines denoting the vertical dist
 ```
 
 We can perform simple linear regression in Python using `scikit-learn` in a
-very similar manner to how we performed KNN regression.
+very similar manner to how we performed K-NN regression.
 To do this, instead of creating a `KNeighborsRegressor` model object,
 we use a `LinearRegression` model object;
 and as usual, we first have to import it from `sklearn`.
@@ -343,7 +373,7 @@ Below we illustrate how we can use the usual `scikit-learn` workflow to predict 
 price given house size. We use a simple linear regression approach on the full
 Sacramento real estate data set.
 
-```{index} scikit-learn; random_state
+```{index} seed; numpy.random.seed
 ```
 
 As usual, we start by loading packages, setting the seed, loading data, and
@@ -367,11 +397,11 @@ np.random.seed(1)
 sacramento = pd.read_csv("data/sacramento.csv")
 
 sacramento_train, sacramento_test = train_test_split(
-    sacramento, train_size=0.6
+    sacramento, train_size=0.75
 )
 ```
 
-Now that we have our training data, we will create 
+Now that we have our training data, we will create
 and fit the linear regression model object.
 We will also extract the slope of the line
 via the `coef_[0]` property, as well as the
@@ -395,8 +425,8 @@ pd.DataFrame({"slope": [lm.coef_[0]], "intercept": [lm.intercept_]})
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("train_lm_slope", round(lm.coef_[0]))
-glue("train_lm_intercept", round(lm.intercept_))
+glue("train_lm_slope", "{:0.0f}".format(lm.coef_[0]))
+glue("train_lm_intercept", "{:0.0f}".format(lm.intercept_))
 glue("train_lm_slope_f", "{0:,.0f}".format(lm.coef_[0]))
 glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```
@@ -404,23 +434,25 @@ glue("train_lm_intercept_f", "{0:,.0f}".format(lm.intercept_))
 ```{index} standardization
 ```
 
-> **Note:** An additional difference that you will notice here is that we do
-> not standardize (i.e., scale and center) our
-> predictors. In K-nearest neighbors models, recall that the model fit changes
-> depending on whether we standardize first or not. In linear regression,
-> standardization does not affect the fit (it *does* affect the coefficients in
-> the equation, though!).  So you can standardize if you want&mdash;it won't
-> hurt anything&mdash;but if you leave the predictors in their original form,
-> the best fit coefficients are usually easier to interpret afterward.
+```{note}
+An additional difference that you will notice here is that we do
+not standardize (i.e., scale and center) our
+predictors. In K-nearest neighbors models, recall that the model fit changes
+depending on whether we standardize first or not. In linear regression,
+standardization does not affect the fit (it *does* affect the coefficients in
+the equation, though!).  So you can standardize if you want&mdash;it won't
+hurt anything&mdash;but if you leave the predictors in their original form,
+the best fit coefficients are usually easier to interpret afterward.
+```
 
 +++
 
 Our coefficients are
-(intercept) $\beta_0=$ {glue:}`train_lm_intercept`
-and (slope) $\beta_1=$ {glue:}`train_lm_slope`.
+(intercept) $\beta_0=$ {glue:text}`train_lm_intercept`
+and (slope) $\beta_1=$ {glue:text}`train_lm_slope`.
 This means that the equation of the line of best fit is
 
-$\text{house sale price} =$ {glue:}`train_lm_intercept` $+$ {glue:}`train_lm_slope` $\cdot (\text{house size}).$
+$\text{house sale price} =$ {glue:text}`train_lm_intercept` $+$ {glue:text}`train_lm_slope` $\cdot (\text{house size}).$
 
 In other words, the model predicts that houses
 start at \${glue:text}`train_lm_intercept_f` for 0 square feet, and that
@@ -430,14 +462,12 @@ we predict on the test data set to assess how well our model does.
 
 ```{code-cell} ipython3
 # make predictions
-sacr_preds = sacramento_test.assign(
-    predicted = lm.predict(sacramento_test[["sqft"]])
-)
+sacramento_test["predicted"] = lm.predict(sacramento_test[["sqft"]])
 
 # calculate RMSPE
 RMSPE = mean_squared_error(
-    y_true=sacr_preds["price"],
-    y_pred=sacr_preds["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 
 RMSPE
@@ -453,7 +483,7 @@ glue("sacr_RMSPE", "{0:,.0f}".format(RMSPE))
 ```
 
 Our final model's test error as assessed by RMSPE
-is {glue:text}`sacr_RMSPE`.
+is \${glue:text}`sacr_RMSPE`.
 Remember that this is in units of the response variable, and here that
 is US Dollars (USD). Does this mean our model is "good" at predicting house
 sale price based off of the predictor of home size? Again, answering this is
@@ -471,12 +501,10 @@ so that we can qualitatively assess if the model seems to fit the data well.
 
 ```{code-cell} ipython3
 :tags: [remove-output]
-sqft_prediction_grid = sacramento[['sqft']].agg(['min', 'max'])
-sacr_preds = sqft_prediction_grid.assign(
-    predicted=lm.predict(sqft_prediction_grid)
-)
+sqft_prediction_grid = sacramento[["sqft"]].agg(["min", "max"])
+sqft_prediction_grid["predicted"] = lm.predict(sqft_prediction_grid)
 
-all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
+all_points = alt.Chart(sacramento).mark_circle().encode(
     x=alt.X("sqft")
         .scale(zero=False)
         .title("House size (square feet)"),
@@ -486,7 +514,7 @@ all_points = alt.Chart(sacramento).mark_circle(opacity=0.4).encode(
         .title("Price (USD)")
 )
 
-sacr_preds_plot = all_points + alt.Chart(sacr_preds).mark_line(
+sacr_preds_plot = all_points + alt.Chart(sqft_prediction_grid).mark_line(
     color="#ff7f0e"
 ).encode(
     x="sqft",
@@ -508,16 +536,16 @@ glue("fig:08-lm-predict-all", sacr_preds_plot)
 Scatter plot of sale price versus size with line of best fit for the full Sacramento housing data.
 :::
 
-## Comparing simple linear and KNN regression
+## Comparing simple linear and K-NN regression
 
 ```{index} regression; comparison of methods
 ```
 
-Now that we have a general understanding of both simple linear and KNN
+Now that we have a general understanding of both simple linear and K-NN
 regression, we can start to compare and contrast these methods as well as the
 predictions made by them. To start, let's look at the visualization of the
 simple linear regression model predictions for the Sacramento real estate data
-(predicting price from house size) and the "best" KNN regression model
+(predicting price from house size) and the "best" K-NN regression model
 obtained from the same problem, shown in {numref}`fig:08-compareRegression`.
 
 ```{code-cell} ipython3
@@ -531,8 +559,8 @@ from sklearn.preprocessing import StandardScaler
 # preprocess the data, make the pipeline
 sacr_preprocessor = make_column_transformer((StandardScaler(), ["sqft"]))
 sacr_pipeline_knn = make_pipeline(
-    sacr_preprocessor, KNeighborsRegressor(n_neighbors=25)
-)  # 25 is the best parameter obtained through cross validation in regression1 chapter
+    sacr_preprocessor, KNeighborsRegressor(n_neighbors=55)
+)  # 55 is the best parameter obtained through cross validation in regression1 chapter
 
 sacr_pipeline_knn.fit(sacramento_train[["sqft"]], sacramento_train[["price"]])
 
@@ -556,7 +584,7 @@ sacr_rmspe_knn = np.sqrt(
 
 # plot knn in-sample predictions overlaid on scatter plot
 knn_plot_final = (
-    alt.Chart(sacr_preds_knn, title="KNN regression")
+    alt.Chart(sacr_preds_knn, title="K-NN regression")
     .mark_circle()
     .encode(
         x=alt.X("sqft", title="House size (square feet)", scale=alt.Scale(zero=False)),
@@ -627,21 +655,21 @@ glue("fig:08-compareRegression", (lm_plot_final | knn_plot_final))
 :::{glue:figure} fig:08-compareRegression
 :name: fig:08-compareRegression
 
-Comparison of simple linear regression and KNN regression.
+Comparison of simple linear regression and K-NN regression.
 :::
 
 +++
 
 What differences do we observe in {numref}`fig:08-compareRegression`? One obvious
 difference is the shape of the orange lines. In simple linear regression we are
-restricted to a straight line, whereas in KNN regression our line is much more
+restricted to a straight line, whereas in K-NN regression our line is much more
 flexible and can be quite wiggly. But there is a major interpretability advantage in limiting the
 model to a straight line. A
 straight line can be defined by two numbers, the
 vertical intercept and the slope. The intercept tells us what the prediction is when
 all of the predictors are equal to 0; and the slope tells us what unit increase in the response
 variable we predict given a unit increase in the predictor
-variable. KNN regression, as simple as it is to implement and understand, has no such
+variable. K-NN regression, as simple as it is to implement and understand, has no such
 interpretability from its wiggly line.
 
 ```{index} underfitting; regression
@@ -651,18 +679,18 @@ There can, however, also be a disadvantage to using a simple linear regression
 model in some cases, particularly when the relationship between the response variable and
 the predictor is not linear, but instead some other shape (e.g., curved or oscillating). In
 these cases the prediction model from a simple linear regression
-will underfit (have high bias), meaning that model/predicted values do not
+will underfit, meaning that model/predicted values do not
 match the actual observed values very well. Such a model would probably have a
 quite high RMSE when assessing model goodness of fit on the training data and
 a quite high RMSPE when assessing model prediction quality on a test data
-set. On such a data set, KNN regression may fare better. Additionally, there
+set. On such a data set, K-NN regression may fare better. Additionally, there
 are other types of regression you can learn about in future books that may do
 even better at predicting with such data.
 
 How do these two models compare on the Sacramento house prices data set? In
 {numref}`fig:08-compareRegression`, we also printed the RMSPE as calculated from
 predicting on the test data set that was not used to train/fit the models. The RMSPE for the simple linear
-regression model is slightly lower than the RMSPE for the KNN regression model.
+regression model is slightly lower than the RMSPE for the K-NN regression model.
 Considering that the simple linear regression model is also more interpretable,
 if we were comparing these in practice we would likely choose to use the simple
 linear regression model.
@@ -670,17 +698,17 @@ linear regression model.
 ```{index} extrapolation
 ```
 
-Finally, note that the KNN regression model becomes "flat"
+Finally, note that the K-NN regression model becomes "flat"
 at the left and right boundaries of the data, while the linear model
 predicts a constant slope. Predicting outside the range of the observed
-data is known as *extrapolation*; KNN and linear models behave quite differently
+data is known as *extrapolation*; K-NN and linear models behave quite differently
 when extrapolating. Depending on the application, the flat
 or constant slope trend may make more sense. For example, if our housing
 data were slightly different, the linear model may have actually predicted
 a *negative* price for a small house (if the intercept $\beta_0$ was negative),
 which obviously does not match reality. On the other hand, the trend of increasing
 house size corresponding to increasing house price probably continues for large houses,
-so the "flat" extrapolation of KNN likely does not match reality.
+so the "flat" extrapolation of K-NN likely does not match reality.
 
 +++
 
@@ -694,17 +722,17 @@ so the "flat" extrapolation of KNN likely does not match reality.
 ```{index} see: multivariable linear equation; plane equation
 ```
 
-As in KNN classification and KNN regression, we can move beyond the simple
+As in K-NN classification and K-NN regression, we can move beyond the simple
 case of only one predictor to the case with multiple predictors,
 known as *multivariable linear regression*.
 To do this, we follow a very similar approach to what we did for
-KNN regression: we just specify the training data by adding more predictors.
+K-NN regression: we just specify the training data by adding more predictors.
 But recall that we do not need to use cross-validation to choose any parameters,
 nor do we need to standardize (i.e., center and scale) the data for linear regression.
 Note once again that we have the same concerns regarding multiple predictors
- as in the settings of multivariable KNN regression and classification: having more predictors is **not** always
+ as in the settings of multivariable K-NN regression and classification: having more predictors is **not** always
 better. But because the same predictor selection
-algorithm from the classification chapter extends to the setting of linear regression,
+algorithm from {numref}`Chapter %s <classification2>` extends to the setting of linear regression,
 it will not be covered again in this chapter.
 
 ```{index} Sacramento real estate
@@ -713,28 +741,34 @@ it will not be covered again in this chapter.
 We will demonstrate multivariable linear regression using the Sacramento real estate
 data with both house size
 (measured in square feet) as well as number of bedrooms as our predictors, and
-continue to use house sale price as our response variable. 
-The `scikit-learn` framework makes this easy to do: we just need to set 
+continue to use house sale price as our response variable.
+The `scikit-learn` framework makes this easy to do: we just need to set
 both the `sqft` and `beds` variables as predictors, and then use the `fit`
 method as usual.
 
 ```{code-cell} ipython3
 
-mlm = LinearRegression().fit(
+mlm = LinearRegression()
+mlm.fit(
     sacramento_train[["sqft", "beds"]],
     sacramento_train["price"]
 )
 ```
 Finally, we make predictions on the test data set to assess the quality of our model.
 
+```{index} scikit-learn;predict, scikit-learn;mean_squared_error
+```
+```{index} see: mean_squared_error;scikit-learn
+```
+```{index} see: predict;scikit-learn
+```
+
 ```{code-cell} ipython3
-sacr_preds = sacramento_test.assign(
-    predicted=mlm.predict(sacramento_test[["sqft","beds"]])
-)
+sacramento_test["predicted"] = mlm.predict(sacramento_test[["sqft","beds"]])
 
 lm_mult_test_RMSPE = mean_squared_error(
-    y_true=sacr_preds["price"], 
-    y_pred=sacr_preds["predicted"]
+    y_true=sacramento_test["price"],
+    y_pred=sacramento_test["predicted"]
 )**(1/2)
 lm_mult_test_RMSPE
 ```
@@ -746,12 +780,12 @@ glue("sacr_mult_RMSPE", "{0:,.0f}".format(lm_mult_test_RMSPE))
 ```
 
 Our model's test error as assessed by RMSPE
-is {glue:text}`sacr_mult_RMSPE`.
+is \${glue:text}`sacr_mult_RMSPE`.
 In the case of two predictors, we can plot the predictions made by our linear regression creates a *plane* of best fit, as
 shown in {numref}`fig:08-3DlinReg`.
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
+:tags: [remove-input]
 
 # create a prediction pt grid
 xvals = np.linspace(
@@ -793,13 +827,7 @@ fig.update_layout(
     template="plotly_white",
 )
 
-plot(fig, filename="img/regression2/fig08-3DlinReg.html", auto_open=False)
-```
-
-```{code-cell} ipython3
-:tags: [remove-input]
-
-display(HTML("img/regression2/fig08-3DlinReg.html"))
+glue("fig:08-3DlinReg", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -816,10 +844,10 @@ to illustrate what the regression plane looks like for learning purposes.
 
 We see that the predictions from linear regression with two predictors form a
 flat plane. This is the hallmark of linear regression, and differs from the
-wiggly, flexible surface we get from other methods such as KNN regression.
+wiggly, flexible surface we get from other methods such as K-NN regression.
  As discussed, this can be advantageous in one aspect, which is that for each
 predictor, we can get slopes/intercept from linear regression, and thus describe the
-plane mathematically. We can extract those slope values from the `coef_` property 
+plane mathematically. We can extract those slope values from the `coef_` property
 of our model object, and the intercept from the `intercept_` property,
 as shown below.
 
@@ -833,16 +861,17 @@ mlm.intercept_
 
 When we have multiple predictor variables, it is not easy to
 know which variable goes with which coefficient in `mlm.coef_`. In particular,
-you will see that `mlm.coef_` above is just an array of values without any variable names. 
+you will see that `mlm.coef_` above is just an array of values without any variable names.
 Unfortunately you have to do this mapping yourself: the coefficients in `mlm.coef_` appear
 in the *same order* as the columns of the predictor data frame you used when training.
-So since we used `sacramento_train[["sqft", "beds"]]` when training, 
+So since we used `sacramento_train[["sqft", "beds"]]` when training,
 we have that `mlm.coef_[0]` corresponds to `sqft`, and `mlm.coef_[1]` corresponds to `beds`.
+Once you sort out the correspondence, you can then use those slopes to write a mathematical equation to describe the prediction plane:
 
 ```{index} plane equation
 ```
 
-And then use those slopes to write a mathematical equation to describe the prediction plane:
+
 
 $$\text{house sale price} = \beta_0 + \beta_1\cdot(\text{house size}) + \beta_2\cdot(\text{number of bedrooms}),$$
 where:
@@ -867,15 +896,15 @@ glue("bedsc", bedsc)
 
 $\text{house sale price} =$ {glue:text}`icept` $+$ {glue:text}`sqftc` $\cdot (\text{house size})$ {glue:text}`bedsc` $\cdot (\text{number of bedrooms})$
 
-This model is more interpretable than the multivariable KNN
+This model is more interpretable than the multivariable K-NN
 regression model; we can write a mathematical equation that explains how
 each predictor is affecting the predictions. But as always, we should
 question how well multivariable linear regression is doing compared to
 the other tools we have, such as simple linear regression
-and multivariable KNN regression. If this comparison is part of
+and multivariable K-NN regression. If this comparison is part of
 the model tuning process&mdash;for example, if we are trying
  out many different sets of predictors for multivariable linear
-and KNN regression&mdash;we must perform this comparison using
+and K-NN regression&mdash;we must perform this comparison using
 cross-validation on only our training data. But if we have already
 decided on a small number (e.g., 2 or 3) of tuned candidate models and
 we want to make a final comparison, we can do so by comparing the prediction
@@ -889,12 +918,12 @@ lm_mult_test_RMSPE
 ```
 
 We obtain an RMSPE for the multivariable linear regression model
-of {glue:text}`sacr_mult_RMSPE`. This prediction error
- is less than the prediction error for the multivariable KNN regression model,
+of \${glue:text}`sacr_mult_RMSPE`. This prediction error
+ is less than the prediction error for the multivariable K-NN regression model,
 indicating that we should likely choose linear regression for predictions of
 house sale price on this data set. Revisiting the simple linear regression model
 with only a single predictor from earlier in this chapter, we see that the RMSPE for that model was
-{glue:text}`sacr_RMSPE`,
+\${glue:text}`sacr_RMSPE`,
 which is slightly higher than that of our more complex model. Our model with two predictors
 provided a slightly better fit on test data than our model with just one.
 As mentioned earlier, this is not always the case: sometimes including more
@@ -959,7 +988,7 @@ lm_plot_outlier += lm_plot_outlier.transform_regression("sqft", "price").mark_li
 
 outlier_pt = (
     alt.Chart(sacramento_outlier)
-    .mark_circle(color="red", size=100)
+    .mark_circle(color="#d62728", size=100)
     .encode(x="sqft", y="price")
 )
 
@@ -980,7 +1009,7 @@ outlier_line = (
         )
     )
     .transform_regression("sqft", "price")
-    .mark_line(color="red")
+    .mark_line(color="#d62728")
 )
 
 lm_plot_outlier += outlier_pt + outlier_line
@@ -1044,7 +1073,7 @@ outlier_line = (
         )
     )
     .transform_regression("sqft", "price")
-    .mark_line(color="red")
+    .mark_line(color="#d62728")
 )
 
 lm_plot_outlier_large += outlier_pt + outlier_line
@@ -1062,10 +1091,7 @@ Scatter plot of the full data, with outlier highlighted in red.
 
 ### Multicollinearity
 
-```{index} colinear
-```
-
-```{index} see: multicolinear; colinear
+```{index} multicollinearity
 ```
 
 The second, and much more subtle, issue can occur when performing multivariable
@@ -1307,10 +1333,12 @@ a deep understanding of the problem&mdash;as well as the wrangling tools
 from previous chapters&mdash;to engineer useful new features that improve
 predictive performance.
 
-> **Note:** Feature engineering
-> is *part of tuning your model*, and as such you must not use your test data
-> to evaluate the quality of the features you produce. You are free to use
-> cross-validation, though!
+```{note}
+Feature engineering
+is *part of tuning your model*, and as such you must not use your test data
+to evaluate the quality of the features you produce. You are free to use
+cross-validation, though!
+```
 
 +++
 
@@ -1342,7 +1370,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
@@ -1355,14 +1383,6 @@ and guidance that the worksheets provide will function as intended.
   useful [tutorials](https://scikit-learn.org/stable/tutorial/index.html) and [an extensive list
   of more advanced examples](https://scikit-learn.org/stable/auto_examples/index.html#general-examples)
   that you can use to continue learning beyond the scope of this book.
-- *Modern Dive* {cite:p}`moderndive` is another textbook that uses the
-  `tidyverse` / `tidymodels` framework. Chapter 6 complements the material in
-  the current chapter well; it covers some slightly more advanced concepts than
-  we do without getting mathematical. Give this chapter a read before moving on
-  to the next reference. It is also worth noting that this book takes a more
-  "explanatory" / "inferential" approach to regression in general (in Chapters 5,
-  6, and 10), which provides a nice complement to the predictive tack we take in
-  the present book.
 - *An Introduction to Statistical Learning* {cite:p}`james2013introduction` provides
   a great next stop in the process of
   learning about regression. Chapter 3 covers linear regression at a slightly
@@ -1371,7 +1391,7 @@ and guidance that the worksheets provide will function as intended.
   of "informative" predictors when you have a data set with many predictors, and
   you expect only a few of them to be relevant. Chapter 7 covers regression
   models that are more flexible than linear regression models but still enjoy the
-  computational efficiency of linear regression. In contrast, the KNN methods we
+  computational efficiency of linear regression. In contrast, the K-NN methods we
   covered earlier are indeed more flexible but become very slow when given lots
   of data.
 

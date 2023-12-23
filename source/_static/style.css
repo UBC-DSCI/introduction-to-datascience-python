@@ -25,3 +25,7 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+
+span.pasted-text {
+	font-weight: normal;
+}

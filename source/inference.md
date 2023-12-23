@@ -36,16 +36,16 @@ populations and then introduce two common techniques in statistical inference:
 
 By the end of the chapter, readers will be able to do the following:
 
-* Describe real-world examples of questions that can be answered with statistical inference.
-* Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.
-* Define the following statistical sampling terms (population, sample, population parameter, point estimate, sampling distribution).
-* Explain the difference between a population parameter and a sample point estimate.
-* Use Python to draw random samples from a finite population.
-* Use Python to create a sampling distribution from a finite population.
-* Describe how sample size influences the sampling distribution.
-* Define bootstrapping.
-* Use Python to create a bootstrap distribution to approximate a sampling distribution.
-* Contrast the bootstrap and sampling distributions.
+- Describe real-world examples of questions that can be answered with statistical inference.
+- Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.
+- Define the following statistical sampling terms: population, sample, population parameter, point estimate, and sampling distribution.
+- Explain the difference between a population parameter and a sample point estimate.
+- Use Python to draw random samples from a finite population.
+- Use Python to create a sampling distribution from a finite population.
+- Describe how sample size influences the sampling distribution.
+- Define bootstrapping.
+- Use Python to create a bootstrap distribution to approximate a sampling distribution.
+- Contrast the bootstrap and sampling distributions.
 
 +++
 
@@ -98,7 +98,10 @@ broader population from which it is taken is referred to as **statistical infere
 ```{figure} img/inference/population_vs_sample.png
 :name: fig:11-population-vs-sample
 
-Population versus sample.
+The process of using a sample from a broader population to obtain a point estimate of a
+population parameter. In this case, a sample of 10 individuals yielded 6 who own an iPhone, resulting
+in an estimated population proportion of 60% iPhone owners. The actual population proportion in this example
+illustration is 53.8%.
 ```
 
 +++
@@ -168,32 +171,32 @@ We can find the proportion of listings for each room type
 by using the `value_counts` function with the `normalize` parameter
 as we did in previous chapters.
 
-```{index} pandas.DataFrame; df[], count, len
+```{index} DataFrame; [], DataFrame; value_counts
 ```
 
 ```{code-cell} ipython3
-airbnb['room_type'].value_counts(normalize=True)
+airbnb["room_type"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_proportion", airbnb['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
+glue("population_proportion", "{:.3f}".format(airbnb["room_type"].value_counts(normalize=True)["Entire home/apt"]))
 ```
 
 We can see that the proportion of `Entire home/apt` listings in
-the data set is {glue:}`population_proportion`. This
-value, {glue:}`population_proportion`, is the population parameter. Remember, this
+the data set is {glue:text}`population_proportion`. This
+value, {glue:text}`population_proportion`, is the population parameter. Remember, this
 parameter value is usually unknown in real data analysis problems, as it is
 typically not possible to make measurements for an entire population.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample, seed;numpy.random.seed
 ```
 
 Instead, perhaps we can approximate it with a small subset of data!
 To investigate this idea, let's try randomly selecting 40 listings (*i.e.,* taking a random sample of
 size 40 from our population), and computing the proportion for that sample.
-We will use the `sample` method of the `pandas.DataFrame`
+We will use the `sample` method of the `DataFrame`
 object to take the sample. The argument `n` of `sample` is the size of the sample to take
 and since we are starting to use randomness here,
 we are also setting the random seed via numpy to make the results reproducible.
@@ -204,17 +207,20 @@ import numpy as np
 
 np.random.seed(155)
 
-airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
+airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 ```
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_1_proportion", airbnb.sample(n=40, random_state=155)['room_type'].value_counts(normalize=True)['Entire home/apt'].round(3))
+glue("sample_1_proportion", "{:.3f}".format(airbnb.sample(n=40, random_state=155)["room_type"].value_counts(normalize=True)["Entire home/apt"]))
+```
+
+```{index} DataFrame; value_counts
 ```
 
 Here we see that the proportion of entire home/apartment listings in this
-random sample is {glue:}`sample_1_proportion`. Wow&mdash;that's close to our
+random sample is {glue:text}`sample_1_proportion`. Wow&mdash;that's close to our
 true population value! But remember, we computed the proportion using a random sample of size 40.
 This has two consequences. First, this value is only an *estimate*, i.e., our best guess
 of our population parameter using this sample.
@@ -224,7 +230,7 @@ if we were to take *another* random sample of size 40 and compute the proportion
 we would not get the same answer:
 
 ```{code-cell} ipython3
-airbnb.sample(n=40)['room_type'].value_counts(normalize=True)
+airbnb.sample(n=40)["room_type"].value_counts(normalize=True)
 ```
 
 Confirmed! We get a different value for our estimate this time.
@@ -245,16 +251,16 @@ commonly refer to as $n$) from a population is called
 a **sampling distribution**. The sampling distribution will help us see how much we would
 expect our sample proportions from this population to vary for samples of size 40.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 We again use the `sample` to take samples of size 40 from our
 population of Airbnb listings. But this time we use a list comprehension
-to repeat an operation multiple time (as in the previous chapter).
-In this case we are taking 20,000 samples of size 40
-and to make it clear which rows in the data frame come
-which of the 20,000 samples,
-we also add a column called `replicate` with this information.
+to repeat the operation multiple times (as we did previously in {numref}`Chapter %s <clustering>`).
+In this case we repeat the operation 20,000 times to obtain 20,000 samples of size 40.
+To make it clear which rows in the data frame come
+which of the 20,000 samples, we also add a column called `replicate` with this information using the `assign` function,
+introduced previously in {numref}`Chapter %s <wrangling>`.
 The call to `concat` concatenates all the 20,000 data frames
 returned from the list comprehension into a single big data frame.
 
@@ -274,18 +280,20 @@ starting at sample 0 and ending at sample 19,999.
 
 Now that we have obtained the samples, we need to compute the
 proportion of entire home/apartment listings in each sample.
-We first `query` the observations with room type of 'Entire home/apt';
-group the data by the `replicate` variable&mdash;to group the
-set of listings in each sample together&mdash;and then use `count`
-to compute the number of qualified observations in each sample; finally compute the proportion.
+We first group the data by the `replicate` variable&mdash;to group the
+set of listings in each sample together&mdash;and then use `value_counts`
+with `normalize=True` to compute the proportion in each sample.
 Both the first and last few entries of the resulting data frame are printed
 below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.
+
+```{index} DataFrame;groupby, DataFrame;reset_index
+```
 
 ```{code-cell} ipython3
 (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
 )
 ```
@@ -309,27 +317,27 @@ with the `name` parameter:
 ```{code-cell} ipython3
 (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
-    .reset_index(name='sample_proportion')
+    .reset_index(name="sample_proportion")
 )
 ```
 
 Below we put everything together
-and also filter the data frame to keep only the room types 
+and also filter the data frame to keep only the room types
 that we are interested in.
 
 ```{code-cell} ipython3
 sample_estimates = (
     samples
-    .groupby('replicate')
-    ['room_type']
+    .groupby("replicate")
+    ["room_type"]
     .value_counts(normalize=True)
-    .reset_index(name='sample_proportion')
+    .reset_index(name="sample_proportion")
 )
 
-sample_estimates = sample_estimates[sample_estimates['room_type'] == 'Entire home/apt']
+sample_estimates = sample_estimates[sample_estimates["room_type"] == "Entire home/apt"]
 sample_estimates
 ```
 
@@ -369,9 +377,9 @@ Sampling distribution of the sample proportion for sample size 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_proportion_center", round(sample_estimates["sample_proportion"].mean(), 2))
-glue("sample_proportion_min", round(sample_estimates["sample_proportion"].quantile(0.004), 2))
-glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quantile(0.9997), 2))
+glue("sample_proportion_center", "{:.2f}".format(sample_estimates["sample_proportion"].mean()))
+glue("sample_proportion_min", "{:.2f}".format(sample_estimates["sample_proportion"].quantile(0.004)))
+glue("sample_proportion_max", "{:.2f}".format(sample_estimates["sample_proportion"].quantile(0.9997)))
 ```
 
 ```{index} sampling distribution; shape
@@ -379,9 +387,9 @@ glue("sample_proportion_max", round(sample_estimates["sample_proportion"].quanti
 
 The sampling distribution in {numref}`fig:11-example-proportions7` appears
 to be bell-shaped, is roughly symmetric, and has one peak. It is centered
-around {glue:}`sample_proportion_center` and the sample proportions
-range from about {glue:}`sample_proportion_min` to about
-{glue:}`sample_proportion_max`. In fact, we can
+around {glue:text}`sample_proportion_center` and the sample proportions
+range from about {glue:text}`sample_proportion_min` to about
+{glue:text}`sample_proportion_max`. In fact, we can
 calculate the mean of the sample proportions.
 
 ```{code-cell} ipython3
@@ -391,11 +399,11 @@ sample_estimates["sample_proportion"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("sample_proportion_mean", round(sample_estimates["sample_proportion"].mean(), 3))
+glue("sample_proportion_mean", "{:.3f}".format(sample_estimates["sample_proportion"].mean()))
 ```
 
 We notice that the sample proportions are centered around the population
-proportion value, {glue:}`sample_proportion_mean`! In general, the mean of
+proportion value, {glue:text}`sample_proportion_mean`! In general, the mean of
 the sampling distribution should be equal to the population proportion.
 This is great news because it means that the sample proportion is neither an overestimate nor an
 underestimate of the population proportion.
@@ -463,17 +471,17 @@ airbnb["price"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("population_mean", airbnb["price"].mean().round(2))
+glue("population_mean", "{:.2f}".format(airbnb["price"].mean()))
 ```
 
 ```{index} population; parameter
 ```
 
 The price per night of all Airbnb rentals in Vancouver, BC
-is \${glue:}`population_mean`, on average. This value is our
+is \${glue:text}`population_mean`, on average. This value is our
 population parameter since we are calculating it using the population data.
 
-```{index} pandas.DataFrame; sample
+```{index} DataFrame; sample
 ```
 
 Now suppose we did not have access to the population data (which is usually the
@@ -485,12 +493,15 @@ access to the population data and simulate taking one random sample of 40
 listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
-one_sample = airbnb.sample(40)
+one_sample = airbnb.sample(n=40)
 ```
 
 We can create a histogram to visualize the distribution of observations in the
 sample ({numref}`fig:11-example-means-sample-hist`), and calculate the mean
 of our sample.
+
+```{index} altair;mark_bar
+```
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -524,17 +535,17 @@ one_sample["price"].mean()
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("estimate_mean", one_sample["price"].mean().round(2))
-glue("diff_perc", round(100 * abs(1 - (one_sample['price'].mean() / airbnb['price'].mean())), 1))
+glue("estimate_mean", "{:.2f}".format(one_sample["price"].mean()))
+glue("diff_perc", "{:.1f}".format(100 * abs(1 - (one_sample["price"].mean() / airbnb["price"].mean()))))
 ```
 
 The average value of the sample of size 40
-is \${glue:}`estimate_mean`.  This
+is \${glue:text}`estimate_mean`.  This
 number is a point estimate for the mean of the full population.
 Recall that the population mean was
-\${glue:}`population_mean`. So our estimate was fairly close to
+\${glue:text}`population_mean`. So our estimate was fairly close to
 the population parameter: the mean was about
-{glue:}`diff_perc`%
+{glue:text}`diff_perc`%
 off.  Note that we usually cannot compute the estimate's accuracy in practice
 since we do not have access to the population parameter; if we did, we wouldn't
 need to estimate it!
@@ -557,11 +568,11 @@ distribution of sample means for samples of size 40.
 ```{code-cell} ipython3
 sample_estimates = (
     samples
-    .groupby('replicate')
-    ['price']
+    .groupby("replicate")
+    ["price"]
     .mean()
     .reset_index()
-    .rename(columns={'price': 'mean_price'})
+    .rename(columns={"price": "mean_price"})
 )
 sample_estimates
 ```
@@ -594,8 +605,8 @@ Sampling distribution of the sample means for sample size of 40.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("quantile_1", round(int(sample_estimates["mean_price"].quantile(0.25)), - 1))
-glue("quantile_3", round(int(sample_estimates["mean_price"].quantile(0.75)), - 1))
+glue("quantile_1", "{:0.0f}".format(round(sample_estimates["mean_price"].quantile(0.25), -1)))
+glue("quantile_3", "{:0.0f}".format(round(sample_estimates["mean_price"].quantile(0.75), -1)))
 ```
 
 ```{index} sampling distribution; shape
@@ -603,12 +614,12 @@ glue("quantile_3", round(int(sample_estimates["mean_price"].quantile(0.75)), - 1
 
 In {numref}`fig:11-example-means4`, the sampling distribution of the mean
 has one peak and is bell-shaped. Most of the estimates are between
-about  \${glue:}`quantile_1` and
-\${glue:}`quantile_3`; but there are
+about  \${glue:text}`quantile_1` and
+\${glue:text}`quantile_3`; but there is
 a good fraction of cases outside this range (i.e., where the point estimate was
 not close to the population parameter). So it does indeed look like we were
 quite lucky when we estimated the population mean with only
-{glue:}`diff_perc`% error.
+{glue:text}`diff_perc`% error.
 
 ```{index} sampling distribution; compared to population distribution
 ```
@@ -647,7 +658,7 @@ glue(
                 #scale=alt.Scale(domainMax=700)
             )
         ).properties(
-            title='Population', height=150
+            title="Population", height=150
         ),
         sample_distribution.encode(
             x=alt.X("price")
@@ -665,7 +676,7 @@ glue(
             )
         ).properties(height=150)
     ).resolve_scale(
-        x='shared'
+        x="shared"
     )
 )
 ```
@@ -685,7 +696,7 @@ reliable&mdash;is there any way to improve the estimate?  One way to improve a
 point estimate is to take a *larger* sample. To illustrate what effect this
 has, we will take many samples of size 20, 50, 100, and 500, and plot the
 sampling distribution of the sample mean. We indicate the mean of the sampling
-distribution with a orange vertical line.
+distribution with a vertical line.
 
 ```{code-cell} ipython3
 :tags: [remove-input]
@@ -699,7 +710,7 @@ base = alt.Chart(
         ])
         for replicate in range(20_000)
     ]).groupby(
-        ["sample_size", 'replicate'],
+        ["sample_size", "replicate"],
         as_index=False
     )["price"].mean(),
     height=150
@@ -709,27 +720,27 @@ glue(
     "fig:11-example-means7",
     alt.layer(
         base.mark_bar().encode(
-            alt.X('price', bin=alt.Bin(maxbins=30)),
-            alt.Y('count()')
+            alt.X("price", bin=alt.Bin(maxbins=30)),
+            alt.Y("count()")
         ),
-        base.mark_rule(color='#f58518', size=3).encode(
-            x='mean(price)'
+        base.mark_rule(color="black", size=1.5, strokeDash=[6]).encode(
+            x="mean(price)"
         ),
-        base.mark_text(align='left', color='#f58518', size=12, fontWeight='bold', dx=10).transform_aggregate(
-            mean_price = 'mean(price)',
+        base.mark_text(align="left", color="black", size=12, fontWeight="bold", dx=10).transform_aggregate(
+            mean_price="mean(price)",
         ).transform_calculate(
-            label = "'Mean = ' + round(datum.mean_price * 10) / 10"
+            label="'Mean = ' + round(datum.mean_price * 10) / 10"
         ).encode(
-            x=alt.X('mean_price:Q', title="Sample mean price per night (dollars)"),
+            x=alt.X("mean_price:Q", title="Sample mean price per night (dollars)"),
             y=alt.value(10),
-            text='label:N'
+            text="label:N"
         )
     ).facet(
         alt.Facet(
-            'sample_size:N',
+            "sample_size:N",
             header=alt.Header(
-                title='',
-                labelFontWeight='bold',
+                title="",
+                labelFontWeight="bold",
                 labelFontSize=12,
                 labelPadding=3,
                 labelExpr='"Sample size = " + datum.value'
@@ -737,7 +748,7 @@ glue(
         ),
         columns=1,
     ).resolve_scale(
-        y='independent'
+        y="independent"
     )
 )
 ```
@@ -746,7 +757,7 @@ glue(
 :name: fig:11-example-means7
 :figclass: caption-hack
 
-Comparison of sampling distributions, with mean highlighted as a vertical orange line.
+Comparison of sampling distributions, with mean highlighted as a vertical line.
 ```
 
 +++
@@ -766,16 +777,30 @@ about the sample mean become clear:
    estimate of the population parameter.
 3. The distribution of the sample mean is roughly bell-shaped.
 
-> **Note:** You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
-> the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
-> You might also notice that in the `n = 50` case and larger, that skew seems to disappear.
-> In general, the sampling distribution&mdash;for both means and proportions&mdash;only
-> becomes bell-shaped *once the sample size is large enough*.
-> How large is "large enough?" Unfortunately, it depends entirely on the problem at hand. But
-> as a rule of thumb, often a sample size of at least 20 will suffice.
+```{note}
+You might notice that in the `n = 20` case in {numref}`fig:11-example-means7`,
+the distribution is not *quite* bell-shaped. There is a bit of skew towards the right!
+You might also notice that in the `n = 50` case and larger, that skew seems to disappear.
+In general, the sampling distribution&mdash;for both means and proportions&mdash;only
+becomes bell-shaped *once the sample size is large enough*.
+How large is "large enough?" Unfortunately, it depends entirely on the problem at hand. But
+as a rule of thumb, often a sample size of at least 20 will suffice.
+```
 
-<!--- > **Note:** If random samples of size $n$ are taken from a population, the sample mean $\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation $\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$ is the population mean, $\sigma$ is the population standard deviation, $\bar{x}$ is the sample mean, and $n$ is the sample size.
-> If samples are selected from a finite population as we are doing in this chapter, we should apply a finite population correction. We multiply $\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the population size and $n$ is the sample size. If our sample size, $n$, is small relative to the population size, this finite correction factor is less important.
+<!---
+```{note}
+If random samples of size $n$ are taken from a population, the sample mean
+$\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation
+$\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$
+is the population mean, $\sigma$ is the population standard deviation,
+$\bar{x}$ is the sample mean, and $n$ is the sample size.
+If samples are selected from a finite population as we are doing in this
+chapter, we should apply a finite population correction. We multiply
+$\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the
+population size and $n$ is the sample size. If our sample size, $n$, is small
+relative to the population size, this finite correction factor is less
+important.
+```
 --->
 
 +++
@@ -893,9 +918,11 @@ called **the bootstrap**.  Note that by taking many samples from our single, obs
 sample, we do not obtain the true sampling distribution, but rather an
 approximation that we call **the bootstrap distribution**.
 
-> **Note:** We must sample *with* replacement when using the bootstrap.
-> Otherwise, if we had a sample of size $n$, and obtained a sample from it of
-> size $n$ *without* replacement, it would just return our original sample!
+```{note}
+We must sample *with* replacement when using the bootstrap.
+Otherwise, if we had a sample of size $n$, and obtained a sample from it of
+size $n$ *without* replacement, it would just return our original sample!
+```
 
 This section will explore how to create a bootstrap distribution from a single
 sample using Python.  The process is visualized in {numref}`fig:11-intro-bootstrap-image`.
@@ -928,7 +955,7 @@ and use a bootstrap distribution using just a single sample from the population.
 Once again, suppose we are
 interested in estimating the population mean price per night of all Airbnb
 listings in Vancouver, Canada, using a single sample size of 40.
-Recall our point estimate was \${glue:}`estimate_mean`. The
+Recall our point estimate was \${glue:text}`estimate_mean`. The
 histogram of prices in the sample is displayed in {numref}`fig:11-bootstrapping1`.
 
 ```{code-cell} ipython3
@@ -958,11 +985,11 @@ Histogram of price per night (dollars) for one sample of size 40.
 +++
 
 The histogram for the sample is skewed, with a few observations out to the right. The
-mean of the sample is \${glue:}`estimate_mean`.
+mean of the sample is \${glue:text}`estimate_mean`.
 Remember, in practice, we usually only have this one sample from the population. So
 this sample and estimate are the only data we can work with.
 
-```{index} bootstrap; in Python, scikit-learn; resample (bootstrap)
+```{index} bootstrap; in Python, DataFrame; sample (bootstrap)
 ```
 
 We now perform steps 1&ndash;5 listed above to generate a single bootstrap
@@ -1025,7 +1052,7 @@ boot20000 = pd.concat([
 boot20000
 ```
 
-Let's take a look at histograms of the first six replicates of our bootstrap samples.
+Let's take a look at the histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
 :tags: []
@@ -1046,7 +1073,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
 :name: fig:11-bootstrapping-six-bootstrap-samples
 :figclass: caption-hack
 
-Histograms of first six replicates of bootstrap samples.
+Histograms of the first six replicates of the bootstrap samples.
 ```
 
 +++
@@ -1080,6 +1107,9 @@ We will now calculate point estimates of the mean for our 20,000 bootstrap sampl
 generate a bootstrap distribution of these point estimates. The bootstrap
 distribution ({numref}`fig:11-bootstrapping5`) suggests how we might expect
 our point estimate to behave if we take multiple samples.
+
+```{index} DataFrame;reset_index, DataFrame;rename, DataFrame;groupby, Series;mean
+```
 
 ```{code-cell} ipython3
 boot20000_means = (
@@ -1122,26 +1152,26 @@ the true sampling distribution&mdash;which corresponds to taking many samples fr
 ```{code-cell} ipython3
 :tags: [remove-input]
 
-sampling_distribution.encoding.x['bin']['extent'] = (90, 250)
+sampling_distribution.encoding.x["bin"]["extent"] = (90, 250)
 alt.vconcat(
     alt.layer(
         sampling_distribution,
-        alt.Chart(sample_estimates).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
-        alt.Chart(sample_estimates).mark_text(color='#f58518', size=12, align='left', dx=16, fontWeight='bold').encode(
-            x='mean(mean_price)',
+        alt.Chart(sample_estimates).mark_rule(color="black", size=1.5, strokeDash=[6]).encode(x="mean(mean_price)"),
+        alt.Chart(sample_estimates).mark_text(color="black", size=12, align="left", dx=16, fontWeight="bold").encode(
+            x="mean(mean_price)",
             y=alt.value(7),
             text=alt.value(f"Mean = {sampling_distribution['data']['mean_price'].mean().round(1)}")
         )
-    ).properties(title='Sampling distribution', height=150),
+    ).properties(title="Sampling distribution", height=150),
     alt.layer(
         boot_est_dist,
-        alt.Chart(boot20000_means).mark_rule(color='#f58518', size=2).encode(x='mean(mean_price)'),
-        alt.Chart(boot20000_means).mark_text(color='#f58518', size=12, align='left', dx=18, fontWeight='bold').encode(
-            x='mean(mean_price)',
+        alt.Chart(boot20000_means).mark_rule(color="black", size=1.5, strokeDash=[6]).encode(x="mean(mean_price)"),
+        alt.Chart(boot20000_means).mark_text(color="black", size=12, align="left", dx=18, fontWeight="bold").encode(
+            x="mean(mean_price)",
             y=alt.value(7),
             text=alt.value(f"Mean = {boot_est_dist['data']['mean_price'].mean().round(1)}")
         )
-    ).properties(title='Bootstrap distribution', height=150)
+    ).properties(title="Bootstrap distribution", height=150)
 )
 ```
 
@@ -1155,7 +1185,7 @@ Comparison of the distribution of the bootstrap sample means and sampling distri
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("one_sample_mean", round(one_sample["price"].mean(), 2))
+glue("one_sample_mean", "{:.2f}".format(one_sample["price"].mean()))
 ```
 
 ```{index} sampling distribution; compared to bootstrap distribution
@@ -1167,9 +1197,9 @@ distribution and the bootstrap distribution are similar; the bootstrap
 distribution lets us get a sense of the point estimate's variability. The
 second important point is that the means of these two distributions are
 slightly different. The sampling distribution is centered at
-\${glue:}`population_mean`, the population mean value. However, the bootstrap
+\${glue:text}`population_mean`, the population mean value. However, the bootstrap
 distribution is centered at the original sample's mean price per night,
-\${glue:}`one_sample_mean`. Because we are resampling from the
+\${glue:text}`one_sample_mean`. Because we are resampling from the
 original sample repeatedly, we see that the bootstrap distribution is centered
 at the original sample's mean value (unlike the sampling distribution of the
 sample mean, which is centered at the population parameter value).
@@ -1180,12 +1210,6 @@ approximate the sampling distribution of the sample means when we only have one
 sample. Since the bootstrap distribution pretty well approximates the sampling
 distribution spread, we can use the bootstrap spread to help us develop a
 plausible range for our population parameter along with our estimate!
-
-```{code-cell} ipython3
-:tags: [remove-cell]
-
-!wget -O img/inference/11-bootstrapping7-1.png https://datasciencebook.ca/_main_files/figure-html/11-bootstrapping7-1.png
-```
 
 ```{figure} img/inference/11-bootstrapping7-1.png
 :name: fig:11-bootstrapping7
@@ -1228,9 +1252,12 @@ To calculate a 95\% percentile bootstrap confidence interval, we will do the fol
 To do this in Python, we can use the `quantile` function of our DataFrame.
 Quantiles are expressed in proportions rather than percentages,
 so the 2.5th and 97.5th percentiles
-would be quantiles 0.025 and 0.975, respectively.
+would be the 0.025 and 0.975 quantiles, respectively.
 
-```{index} numpy; percentile, pandas.DataFrame; df[]
+```{index} DataFrame; [], DataFrame;quantile
+```
+
+```{index} percentile
 ```
 
 ```{code-cell} ipython3
@@ -1241,34 +1268,35 @@ ci_bounds
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue("ci_lower", round(ci_bounds[0.025], 1))
-glue("ci_upper", round(ci_bounds[0.975], 1))
+glue("ci_lower", "{:.2f}".format(ci_bounds[0.025]))
+glue("ci_upper", "{:.2f}".format(ci_bounds[0.975]))
 ```
 
-Our interval, \${glue:}`ci_lower` to \${glue:}`ci_upper`, captures
+Our interval, \${glue:text}`ci_lower` to \${glue:text}`ci_upper`, captures
 the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
+:tags: [remove-input]
 # Create the annotation for for the 2.5th percentile
-rule_025 = alt.Chart().mark_rule(color='#f58518', size=3, strokeDash=[5]).encode(
+rule_025 = alt.Chart().mark_rule(color="black", size=1.5, strokeDash=[6]).encode(
     x=alt.datum(ci_bounds[0.025])
 ).properties(
     width=500
 )
 text_025 = rule_025.mark_text(
-    color='#f58518',
+    color="black",
     size=12,
-    fontWeight='bold',
+    fontWeight="bold",
     dy=-160
 ).encode(
-    text=alt.datum(f'2.5th percentile ({ci_bounds[0.025].round(1)})')
+    text=alt.datum(f"2.5th percentile ({ci_bounds[0.025].round(1)})")
 )
 
 # Create the annotation for for the 97.5th percentile
 text_975 = text_025.encode(
     x=alt.datum(ci_bounds[0.975]),
-    text=alt.datum(f'97.5th percentile ({ci_bounds[0.975].round(1)})')
+    text=alt.datum(f"97.5th percentile ({ci_bounds[0.975].round(1)})")
 )
 rule_975 = rule_025.encode(x=alt.datum(ci_bounds[0.975]))
 
@@ -1288,11 +1316,11 @@ Distribution of the bootstrap sample means with percentile lower and upper bound
 To finish our estimation of the population parameter, we would report the point
 estimate and our confidence interval's lower and upper bounds. Here the sample
 mean price-per-night of 40 Airbnb listings was
-\${glue:}`one_sample_mean`, and we are 95\% "confident" that the true
+\${glue:text}`one_sample_mean`, and we are 95\% "confident" that the true
 population mean price-per-night for all Airbnb listings in Vancouver is between
-\$({glue:}`ci_lower`, {glue:}`ci_upper`).
+\${glue:text}`ci_lower` and \${glue:text}`ci_upper`.
 Notice that our interval does indeed contain the true
-population mean value, \${glue:}`population_mean`\! However, in
+population mean value, \${glue:text}`population_mean`\! However, in
 practice, we would not know whether our interval captured the population
 parameter or not because we usually only have a single sample, not the entire
 population. This is the best we can do when we only have one sample!
@@ -1317,24 +1345,15 @@ You can launch an interactive version of each worksheet in your browser by click
 You can also preview a non-interactive version of each worksheet by clicking "view worksheet."
 If you instead decide to download the worksheets and run them on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 +++
 
 ## Additional resources
 
-- Chapters 7 to 10 of *Modern Dive* {cite:p}`moderndive` provide a great
-  next step in learning about inference. In particular, Chapters 7 and 8 cover
-  sampling and bootstrapping using `tidyverse` and `infer` in a slightly more
-  in-depth manner than the present chapter. Chapters 9 and 10 take the next step
-  beyond the scope of this chapter and begin to provide some of the initial
-  mathematical underpinnings of inference and more advanced applications of the
-  concept of inference in testing hypotheses and performing regression. This
-  material offers a great starting point for getting more into the technical side
-  of statistics.
 - Chapters 4 to 7 of *OpenIntro Statistics* {cite:p}`openintro`
-  provide a good next step after *Modern Dive*. Although it is still certainly
+  provide a good next step in learning about inference. Although it is still certainly
   an introductory text, things get a bit more mathematical here. Depending on
   your background, you may actually want to start going through Chapters 1 to 3
   first, where you will learn some fundamental concepts in probability theory.

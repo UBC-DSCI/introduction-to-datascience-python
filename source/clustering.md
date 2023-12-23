@@ -5,7 +5,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.5
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -17,6 +17,10 @@ kernelspec:
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+
+# get rid of futurewarnings from sklearn kmeans
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from chapter_preamble import *
 ```
@@ -35,16 +39,17 @@ including techniques to choose the number of clusters.
 
 By the end of the chapter, readers will be able to do the following:
 
-* Describe a case where clustering is appropriate,
+- Describe a situation in which clustering is an appropriate technique to use,
 and what insight it might extract from the data.
-* Explain the K-means clustering algorithm.
-* Interpret the output of a K-means analysis.
-* Differentiate between clustering and classification.
-* Identify when it is necessary to scale variables before clustering and do this using Python
-* Perform k-means clustering in Python using `scikit-learn`
-* Use the elbow method to choose the number of clusters for K-means.
-* Visualize the output of k-means clustering in Python using a coloured scatter plot
-* Describe advantages, limitations and assumptions of the kmeans clustering algorithm.
+- Explain the K-means clustering algorithm.
+- Interpret the output of a K-means analysis.
+- Differentiate between clustering, classification, and regression.
+- Identify when it is necessary to scale variables before clustering, and do this using Python.
+- Perform K-means clustering in Python using `scikit-learn`.
+- Use the elbow method to choose the number of clusters for K-means.
+- Visualize the output of K-means clustering in Python using a colored scatter plot.
+- Describe advantages, limitations and assumptions of the K-means clustering algorithm.
+
 
 ## Clustering
 
@@ -117,37 +122,30 @@ but one is willing to provide a few informative example labels as a "seed"
 to guess the labels for all the data.
 ```
 
-**An illustrative example**
+## An illustrative example
 
 ```{index} Palmer penguins
 ```
 
-Here we will present an illustrative example using a data set from
+In this chapter we will focus on a data set from
 [the `palmerpenguins` R package](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. This
 data set was collected by Dr. Kristen Gorman and
 the Palmer Station, Antarctica Long Term Ecological Research Site, and includes
-measurements for adult penguins found near there {cite:p}`penguinpaper`. We have
-modified the data set for use in this chapter. Here we will focus on using two
+measurements for adult penguins ({numref}`09-penguins`) found near there {cite:p}`penguinpaper`.
+Our goal will be to use two
 variables&mdash;penguin bill and flipper length, both in millimeters&mdash;to determine whether
 there are distinct types of penguins in our data.
 Understanding this might help us with species discovery and classification in a data-driven
-way.
+way. Note that we have reduced the size of the data set to 18 observations and 2 variables;
+this will help us make clear visualizations that illustrate how clustering works for learning purposes.
 
 ```{figure} img/clustering/gentoo.jpg
 ---
 height: 400px
 name: 09-penguins
 ---
-Gentoo penguin.
+A Gentoo penguin.
 ```
-
-To learn about K-means clustering
-we will work with `penguin_data` in this chapter.
-`penguin_data` is a subset of 18 observations of the original data,
-which has already been standardized
-(remember from Chapter {ref}`classification1`
-that scaling is part of the standardization process).
-We will discuss scaling for K-means in more detail later in this chapter.
 
 Before we get started, we will set a random seed.
 This will ensure that our analysis will be reproducible.
@@ -162,32 +160,38 @@ when choosing a starting position for each cluster.
 ```{code-cell} ipython3
 import numpy as np
 
-np.random.seed(149)
+np.random.seed(6)
 ```
 
 ```{index} read function; read_csv
 ```
 
-Now we can load and preview the data.
+Now we can load and preview the `penguins` data.
+
+```{code-cell} ipython3
+import pandas as pd
+
+penguins = pd.read_csv("data/penguins.csv")
+penguins
+```
+
+We will begin by using a version of the data that we have standardized, `penguins_standardized`,
+to illustrate how K-means clustering works (recall standardization from {numref}`Chapter %s <classification1>`).
+Later in this chapter, we will return to the original `penguins` data to see how to include standardization automatically
+in the clustering pipeline.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-
-import pandas as pd
-
-data = pd.read_csv(
-    'data/penguins_toy.csv'
-).replace(
-    [2, 3],
-    [0, 2]
+penguins_standardized = penguins.assign(
+	bill_length_standardized=(penguins["bill_length_mm"] - penguins["bill_length_mm"].mean())/penguins["bill_length_mm"].std(),
+    flipper_length_standardized=(penguins["flipper_length_mm"] - penguins["flipper_length_mm"].mean())/penguins["flipper_length_mm"].std()
+).drop(
+    columns=["bill_length_mm", "flipper_length_mm"]
 )
 ```
 
 ```{code-cell} ipython3
-import pandas as pd
-
-penguin_data = pd.read_csv("data/penguins_standardized.csv")
-penguin_data
+penguins_standardized
 ```
 
 Next, we can create a scatter plot using this data set
@@ -196,7 +200,7 @@ to see if we can detect subtypes or groups in our data set.
 ```{code-cell} ipython3
 import altair as alt
 
-scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
+scatter_plot = alt.Chart(penguins_standardized).mark_circle().encode(
     x=alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized").title("Bill Length (standardized)")
 )
@@ -205,7 +209,7 @@ scatter_plot = alt.Chart(penguin_data).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('scatter_plot', scatter_plot, display=True)
+glue("scatter_plot", scatter_plot, display=True)
 ```
 
 :::{glue:figure} scatter_plot
@@ -218,8 +222,7 @@ Scatter plot of standardized bill length versus standardized flipper length.
 ```{index} altair, altair; mark_circle
 ```
 
-Based on the visualization
-in {numref}`scatter_plot`,
+Based on the visualization in {numref}`scatter_plot`,
 we might suspect there are a few subtypes of penguins within our data set.
 We can see roughly 3 groups of observations in {numref}`scatter_plot`,
 including:
@@ -249,14 +252,25 @@ denoted by colored scatter points.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
+from sklearn import set_config
+from sklearn.cluster import KMeans
 
-colored_scatter_plot = alt.Chart(data).mark_circle().encode(
+# Output dataframes instead of arrays
+set_config(transform_output="pandas")
+
+kmeans = KMeans(n_clusters=3)
+
+penguin_clust = kmeans.fit(penguins_standardized)
+
+penguins_clustered = penguins_standardized.assign(cluster=penguin_clust.labels_)
+
+colored_scatter_plot = alt.Chart(penguins_clustered).mark_circle().encode(
     x=alt.X("flipper_length_standardized", title="Flipper Length (standardized)"),
     y=alt.Y("bill_length_standardized", title="Bill Length (standardized)"),
-    color=alt.Color('cluster:N')
+    color=alt.Color("cluster:N")
 )
 
-glue('colored_scatter_plot', colored_scatter_plot, display=True)
+glue("colored_scatter_plot", colored_scatter_plot, display=True)
 ```
 
 :::{glue:figure} colored_scatter_plot
@@ -291,10 +305,10 @@ have.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-clus = data[data["cluster"] == 2][["bill_length_standardized", "flipper_length_standardized"]]
+clus = penguins_clustered[penguins_clustered["cluster"] == 0][["bill_length_standardized", "flipper_length_standardized"]]
 ```
 
-```{index} see: within-cluster sum-of-squared-distances; WSSD
+```{index} see: within-cluster sum of squared distances; WSSD
 ```
 
 ```{index} WSSD
@@ -306,40 +320,79 @@ improves it by making adjustments to the assignment of data
 to clusters until it cannot improve any further. But how do we measure
 the "quality" of a clustering, and what does it mean to improve it?
 In K-means clustering, we measure the quality of a cluster by its
-*within-cluster sum-of-squared-distances* (WSSD), also called *intertia*. Computing this involves two steps.
+*within-cluster sum-of-squared-distances* (WSSD), also called *inertia*. Computing this involves two steps.
 First, we find the cluster centers by computing the mean of each variable
 over data points in the cluster. For example, suppose we have a
 cluster containing four observations, and we are using two variables, $x$ and $y$, to cluster the data.
 Then we would compute the coordinates, $\mu_x$ and $\mu_y$, of the cluster center via
 
 
-
-$\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)$
+$$
+\mu_x = \frac{1}{4}(x_1+x_2+x_3+x_4) \quad \mu_y = \frac{1}{4}(y_1+y_2+y_3+y_4)
+$$
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
 clus_rows = clus.shape[0]
 
-mean_flipper_len_std = round(np.mean(clus['flipper_length_standardized']),2)
-mean_bill_len_std = round(np.mean(clus['bill_length_standardized']),2)
+mean_flipper_len_std = round(np.mean(clus["flipper_length_standardized"]),2)
+mean_bill_len_std = round(np.mean(clus["bill_length_standardized"]),2)
 
-glue("clus_rows_glue", clus_rows)
-glue("mean_flipper_len_std_glue",mean_flipper_len_std)
-glue("mean_bill_len_std_glue", mean_bill_len_std)
+glue("clus_rows_glue", "{:d}".format(clus_rows))
+glue("mean_flipper_len_std_glue","{:.2f}".format(mean_flipper_len_std))
+glue("mean_bill_len_std_glue", "{:.2f}".format(mean_bill_len_std))
 ```
 
-In the first cluster from the example, there are {glue:}`clus_rows_glue` data points. These are shown with their cluster center
-(flipper_length_standardized = {glue:}`mean_flipper_len_std_glue` and bill_length_standardized = {glue:}`mean_bill_len_std_glue`) highlighted
-in {numref}`toy-example-clus1-center-1`
+```{code-cell} ipython3
+:tags: [remove-cell]
 
+toy_example_clus1_center = alt.layer(
+    alt.Chart(clus).mark_circle(size=75, opacity=1, color='steelblue').encode(
+        x=alt.X("flipper_length_standardized"),
+        y=alt.Y("bill_length_standardized")
+    ),
+    alt.Chart(clus).mark_circle(color='steelblue', size=300, opacity=1, stroke='black').encode(
+        x=alt.X("mean(flipper_length_standardized)")
+            .scale(zero=False, padding=20)
+            .title("Flipper Length (standardized)"),
+        y=alt.Y("mean(bill_length_standardized)")
+            .scale(zero=False, padding=30)
+            .title("Bill Length (standardized)"),
+    )
+)
 
-```{figure} img/clustering/toy-example-clus1-center-1.png
----
-height: 400px
-name: toy-example-clus1-center-1
----
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red.
+glue('toy-example-clus1-center', toy_example_clus1_center, display=True)
+```
+
+In the first cluster from the example, there are {glue:text}`clus_rows_glue` data points. These are shown with their cluster center
+(standardized flipper length {glue:text}`mean_flipper_len_std_glue`, standardized bill length {glue:text}`mean_bill_len_std_glue`) highlighted
+in {numref}`toy-example-clus1-center`
+
+:::{glue:figure} toy-example-clus1-center
+:figwidth: 700px
+:name: toy-example-clus1-center
+
+Cluster 0 from the `penguins_standardized` data set example. Observations are small blue points, with the cluster center highlighted as a large blue point with a black outline.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+centroid_lines = alt.Chart(
+    clus.assign(
+        mean_bill_length=clus['bill_length_standardized'].mean(),
+        mean_flipper_length=clus['flipper_length_standardized'].mean()
+    )
+).mark_rule(size=1.5).encode(
+    alt.Y('bill_length_standardized'),
+    alt.Y2('mean_bill_length'),
+    alt.X('flipper_length_standardized'),
+    alt.X2('mean_flipper_length')
+)
+toy_example_clus1_dists = centroid_lines + toy_example_clus1_center
+
+glue('toy-example-clus1-dists', toy_example_clus1_dists, display=True)
 ```
 
 ```{index} distance; K-means
@@ -349,46 +402,109 @@ The second step in computing the WSSD is to add up the squared distance
 between each point in the cluster
 and the cluster center.
 We use the straight-line / Euclidean distance formula
-that we learned about in Chapter {ref}`classification1`.
-In the {glue:}`clus_rows_glue`-observation cluster example above,
+that we learned about in {numref}`Chapter %s <classification1>`.
+In the {glue:text}`clus_rows_glue`-observation cluster example above,
 we would compute the WSSD $S^2$ via
 
+$$
+S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right)\\
+ + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)
+$$
 
-$S^2 = \left((x_1 - \mu_x)^2 + (y_1 - \mu_y)^2\right) + \left((x_2 - \mu_x)^2 + (y_2 - \mu_y)^2\right) + \left((x_3 - \mu_x)^2 + (y_3 - \mu_y)^2\right)  +  \left((x_4 - \mu_x)^2 + (y_4 - \mu_y)^2\right)$
+These distances are denoted by lines in {numref}`toy-example-clus1-dists` for the first cluster of the penguin data example.
 
-These distances are denoted by lines in {numref}`toy-example-clus1-dists-1` for the first cluster of the penguin data example.
+:::{glue:figure} toy-example-clus1-dists
+:figwidth: 700px
+:name: toy-example-clus1-dists
 
-```{figure} img/clustering/toy-example-clus1-dists-1.png
----
-height: 400px
-name: toy-example-clus1-dists-1
----
-Cluster 1 from the penguin_data data set example. Observations are in blue, with the cluster center highlighted in red. The distances from the observations to the cluster center are represented as black lines.
+Cluster 0 from the `penguins_standardized` data set example. Observations are small blue points, with the cluster center highlighted as a large blue point with a black outline. The distances from the observations to the cluster center are represented as black lines.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+toy_example_all_clus_dists = alt.layer(
+    alt.Chart(
+        penguins_clustered.assign(
+            mean_bill_length=penguins_clustered.groupby('cluster')['bill_length_standardized'].transform('mean'),
+            mean_flipper_length=penguins_clustered.groupby('cluster')['flipper_length_standardized'].transform('mean')
+        )
+    ).mark_rule(size=1.25).encode(
+        alt.Y('bill_length_standardized'),
+        alt.Y2('mean_bill_length'),
+        alt.X('flipper_length_standardized'),
+        alt.X2('mean_flipper_length')
+    ),
+    alt.Chart(penguins_clustered).mark_circle(size=40, opacity=1).encode(
+        alt.X("flipper_length_standardized"),
+        alt.Y("bill_length_standardized"),
+        alt.Color('cluster:N')
+    ),
+    alt.Chart(penguins_clustered).mark_circle(size=200, opacity=1, stroke = "black").encode(
+        alt.X("mean(flipper_length_standardized)")
+          .scale(zero=False)
+          .title("Flipper Length (standardized)"),
+        alt.Y("mean(bill_length_standardized)")
+          .scale(zero=False)
+          .title("Bill Length (standardized)"),
+        alt.Detail('cluster:N'),
+        alt.Color('cluster:N')
+    )
+)
+glue('toy-example-all-clus-dists', toy_example_all_clus_dists, display=True)
 ```
 
-The larger the value of $S^2$, the more spread out the cluster is, since large $S^2$ means that points are far from the cluster center.
-Note, however, that "large" is relative to *both* the scale of the variables for clustering *and* the number of points in the cluster. A cluster where points are very close to the center might still have a large $S^2$ if there are many data points in the cluster.
+The larger the value of $S^2$, the more spread out the cluster is, since large $S^2$ means
+that points are far from the cluster center. Note, however, that "large" is relative to *both* the
+scale of the variables for clustering *and* the number of points in the cluster. A cluster where points
+are very close to the center might still have a large $S^2$ if there are many data points in the cluster.
 
 After we have calculated the WSSD for all the clusters,
-we sum them together to get the *total WSSD*.
-For our example,
+we sum them together to get the *total WSSD*. For our example,
 this means adding up all the squared distances for the 18 observations.
 These distances are denoted by black lines in
-{numref}`toy-example-all-clus-dists-1`
+{numref}`toy-example-all-clus-dists`.
 
-```{figure} img/clustering/toy-example-all-clus-dists-1.png
----
-height: 400px
-name: toy-example-all-clus-dists-1
----
-All clusters from the penguin_data data set example. Observations are in orange, blue, and yellow with the cluster center highlighted in red. The distances from the observations to each of the respective cluster centers are represented as black lines.
+:::{glue:figure} toy-example-all-clus-dists
+:figwidth: 700px
+:name: toy-example-all-clus-dists
 
+All clusters from the `penguins_standardized` data set example. Observations are small orange, blue, and yellow points with cluster centers denoted by larger points with a black outline. The distances from the observations to each of the respective cluster centers are represented as black lines.
+:::
 
-```
+Since K-means uses the straight-line distance to measure the quality of a clustering,
+it is limited to clustering based on quantitative variables.
+However, note that there are variants of the K-means algorithm,
+as well as other clustering algorithms entirely,
+that use other distance metrics
+to allow for non-quantitative data to be clustered.
+These are beyond the scope of this book.
+
++++
 
 ### The clustering algorithm
 
 ```{index} K-means; algorithm
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Set up the initial "random" label assignment the same as in the R book
+penguins_standardized['label'] = [
+    2, 2, 1, 1, 0, 0, 0, 1,
+    2, 2, 1, 2, 1, 2,
+    0, 1, 2, 2
+]
+points_kmeans_init = alt.Chart(penguins_standardized).mark_point(size=75, filled=True, opacity=1).encode(
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+)
+
+glue('toy-kmeans-init-1', points_kmeans_init, display=True)
 ```
 
 We begin the K-means algorithm by picking K,
@@ -397,14 +513,74 @@ to each of the K clusters.
 An example random initialization is shown in {numref}`toy-kmeans-init-1`
 
 
+:::{glue:figure} toy-kmeans-init-1
+:figwidth: 700px
+:name: toy-kmeans-init-1
 
-```{figure} img/clustering/toy-kmeans-init-1.png
----
-height: 400px
-name: toy-kmeans-init-1
----
 Random initialization of labels.
+Each cluster is depicted as a different color and shape.
+:::
 
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+from sklearn.metrics import euclidean_distances
+
+def plot_kmean_iterations(iterations, data, centroid_init):
+    """Plot kmeans cluster and label updates for multiple iterations"""
+    dfs = []
+    centroid_inits = []
+    for i in range(1, iterations+1):
+        data['iteration'] = f'Iteration {i}'
+        data['update_type'] = 'Center Update'
+        data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
+        data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
+        dfs.append(data.copy())
+
+        data['iteration'] = f'Iteration {i}'
+        data['update_type'] = 'Label Update'
+        cluster_columns = ['bill_length_standardized', 'flipper_length_standardized']
+        data['label'] = np.argmin(euclidean_distances(data[cluster_columns], centroid_init), axis=1)
+        data['flipper_centroid'] = data['label'].map(centroid_init['flipper_length_standardized'])
+        data['bill_centroid'] = data['label'].map(centroid_init['bill_length_standardized'])
+        dfs.append(data.copy())
+
+        centroid_init = data.groupby('label')[cluster_columns].mean()
+
+    points = alt.Chart(
+        pd.concat(dfs),
+        width=200,
+        height=200
+    ).mark_point(filled=True, size=50, opacity=1).encode(
+        alt.X("flipper_length_standardized").scale(domain=(-2, 2)),
+        alt.Y("bill_length_standardized").scale(domain=(-2, 2)),
+        alt.Color('label:N').legend(None),
+        alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+        alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+    )
+
+    centroids = points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
+        alt.X("mean(flipper_centroid)")
+            .scale(domain=(-2, 2))
+            .title("Flipper Length (standardized)"),
+        alt.Y("mean(bill_centroid)")
+            .scale(domain=(-2, 2))
+            .title("Bill Length (standardized)"),
+        size=alt.value(200)
+    )
+
+    return (points + centroids).facet(
+        row=alt.Row('iteration', header=alt.Header(title='', labelFontSize=18)),
+        column=alt.Column('update_type', header=alt.Header(title='', labelFontSize=18))
+    )
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+centroid_init = penguins_standardized.groupby('label').mean()
+
+glue('toy-kmeans-iter-1', plot_kmean_iterations(3, penguins_standardized.copy(), centroid_init.copy()), display=True)
 ```
 
 ```{index} WSSD; total
@@ -417,23 +593,22 @@ sum of WSSDs over all the clusters, i.e., the *total WSSD*:
 2. **Label update:** Reassign each data point to the cluster with the nearest center.
 
 These two steps are repeated until the cluster assignments no longer change.
-We show what the first four iterations of K-means would look like in
-{numref}`toy-kmeans-iter-1`
-There each row corresponds to an iteration,
+We show what the first three iterations of K-means would look like in
+{numref}`toy-kmeans-iter-1`. Each row corresponds to an iteration,
 where the left column depicts the center update,
-and the right column depicts the reassignment of data to clusters.
+and the right column depicts the label update (i.e., the reassignment of data to clusters).
 
-```{figure} img/clustering/toy-kmeans-iter-1.png
----
-height: 400px
-name: toy-kmeans-iter-1
----
-First four iterations of K-means clustering on the penguin_data example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+:::{glue:figure} toy-kmeans-iter-1
+:figwidth: 700px
+:name: toy-kmeans-iter-1
 
-```
+First three iterations of K-means clustering on the `penguins_standardized` example data set. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+:::
+
++++
 
 Note that at this point, we can terminate the algorithm since none of the assignments changed
-in the fourth iteration; both the centers and labels will remain the same from this point onward.
+in the third iteration; both the centers and labels will remain the same from this point onward.
 
 ```{index} K-means; termination
 ```
@@ -447,46 +622,54 @@ ways to assign the data to clusters. So at some point, the total WSSD must stop 
 are changing, and the algorithm terminates.
 ```
 
-What kind of data is suitable for K-means clustering?
-In the simplest version of K-means clustering that we have presented here,
-the straight-line distance is used to measure the
-distance between observations and cluster centers.
-This means that only quantitative data should be used with this algorithm.
-There are variants on the K-means algorithm,
-as well as other clustering algorithms entirely,
-that use other distance metrics
-to allow for non-quantitative data to be clustered.
-These, however, are beyond the scope of this book.
-
 ### Random restarts
 
-```{index} K-means; init argument
+```{index} K-means; restart
 ```
 
 Unlike the classification and regression models we studied in previous chapters, K-means can get "stuck" in a bad solution.
 For example, {numref}`toy-kmeans-bad-init-1` illustrates an unlucky random initialization by K-means.
 
-```{figure} img/clustering/toy-kmeans-bad-init-1.png
----
-height: 400px
-name: toy-kmeans-bad-init-1
----
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# Set up the initial "random" label assignment the same as in the R book
+penguins_standardized['label'] = [1, 1, 2, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 1, 1, 1]
+centroid_init = penguins_standardized.groupby('label').mean()
+
+points_kmeans_init = alt.Chart(penguins_standardized).mark_point(size=75, filled=True, opacity=1).encode(
+    alt.X("flipper_length_standardized").title("Flipper Length (standardized)"),
+    alt.Y("bill_length_standardized").title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100]),
+)
+
+glue('toy-kmeans-bad-init-1', points_kmeans_init, display=True)
+```
+
+:::{glue:figure} toy-kmeans-bad-init-1
+:figwidth: 700px
+:name: toy-kmeans-bad-init-1
+
 Random initialization of labels.
+:::
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+glue('toy-kmeans-bad-iter-1', plot_kmean_iterations(4, penguins_standardized.copy(), centroid_init.copy()), display=True)
 ```
 
 {numref}`toy-kmeans-bad-iter-1` shows what the iterations of K-means would look like with the unlucky random initialization shown in {numref}`toy-kmeans-bad-init-1`
 
 
+:::{glue:figure} toy-kmeans-bad-iter-1
+:figwidth: 700px
+:name: toy-kmeans-bad-iter-1
 
-```{figure} img/clustering/toy-kmeans-bad-iter-1.png
----
-height: 700px
-name: toy-kmeans-bad-iter-1
----
-First five iterations of K-means clustering on the penguin_data example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
-```
-
-
+First four iterations of K-means clustering on the `penguins_standardized` example data set with a poor random initialization. Each pair of plots corresponds to an iteration. Within the pair, the first plot depicts the center update, and the second plot depicts the reassignment of data to clusters. Cluster centers are indicated by larger points that are outlined in black.
+:::
 
 This looks like a relatively bad clustering of the data, but K-means cannot improve it.
 To solve this problem when clustering data using K-means, we should randomly re-initialize the labels a few times, run K-means for each initialization,
@@ -505,56 +688,121 @@ In both cases, we will potentially miss interesting structure in the data.
 on K-means clustering of our penguin flipper and bill length data
 by showing the different clusterings for K's ranging from 1 to 9.
 
-```{figure} img/clustering/toy-kmeans-vary-k-1.png
----
-height: 700px
-name: toy-kmeans-vary-k-1
----
-Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+from sklearn.cluster import KMeans
+
+penguins_standardized = penguins_standardized.drop(columns=["label"])
+
+dfs = []
+inertias = []
+for i in range(1, 10):
+    data = penguins_standardized.copy()
+    knn = KMeans(n_clusters=i, n_init='auto')
+    knn.fit(data)
+    data['n_clusters'] = f'{i} Cluster' + ('' if i == 1 else 's')
+    data['label'] = knn.labels_
+    dfs.append(data)
+    inertias.append(knn.inertia_)
+
+points = alt.Chart(pd.concat(dfs), width=200, height=200).mark_point(filled=True, opacity=1).encode(
+    alt.X('bill_length_standardized')
+        .scale(zero=False)
+        .title("Flipper Length (standardized)"),
+    alt.Y('flipper_length_standardized')
+        .scale(zero=False)
+        .title("Bill Length (standardized)"),
+    alt.Color('label:N').legend(None),
+    alt.Shape('label:N').legend(None).scale(range=['square', 'circle', 'triangle', 'cross', 'diamond', 'triangle-right', 'triangle-down', 'triangle-left']),
+    alt.Size('label:O').legend(None).scale(type='ordinal', range=[50, 50, 100, 100, 100, 100, 100, 100]),
+    # alt.Shape('label:N').legend(None),
+)
+
+vary_k = alt.layer(
+    points,
+    points.mark_point(filled=True, stroke='black', strokeWidth=1.25).encode(
+        alt.X('mean(bill_length_standardized)'),
+        alt.Y('mean(flipper_length_standardized)'),
+        size=alt.value(200)
+    )
+).facet(
+    alt.Facet(
+        'n_clusters:N',
+        header=alt.Header(title='', labelFontSize=16)
+    ),
+    columns=3
+)
+glue('toy-kmeans-vary-k-1', vary_k, display=True)
 ```
+
+
+
+:::{glue:figure} toy-kmeans-vary-k-1
+:figwidth: 700px
+:name: toy-kmeans-vary-k-1
+
+Clustering of the penguin data for K clusters ranging from 1 to 9. Cluster centers are indicated by larger points that are outlined in black.
+:::
+
 
 ```{index} elbow method
 ```
 
 If we set K less than 3, then the clustering merges separate groups of data; this causes a large
-total WSSD, since the cluster center (denoted by an "x") is not close to any of the data in the cluster. On
+total WSSD, since the cluster center (denoted by large shapes with black outlines) is not close to any of the data in the cluster. On
 the other hand, if we set K greater than 3, the clustering subdivides subgroups of data; this does indeed still
 decrease the total WSSD, but by only a *diminishing amount*. If we plot the total WSSD versus the number of
 clusters, we see that the decrease in total WSSD levels off (or forms an "elbow shape") when we reach roughly
-the right number of clusters ({numref}`toy-kmeans-elbow-1`)).
-
-```{figure} img/clustering/toy-kmeans-elbow-1.png
----
-height: 400px
-name: toy-kmeans-elbow-1
----
-Total WSSD for K clusters ranging from 1 to 9.
-```
-
-## K-means in Python
-
-```{index} K-means; kmeans function, scikit-learn; KMeans
-```
-
-We can perform K-means in Python using a workflow similar to those
-in the earlier classification and regression chapters. We will begin
-by reading the original (i.e., unstandardized) subset of 18 observations
-from the penguins dataset.
+the right number of clusters ({numref}`toy-kmeans-elbow`).
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-unstandardized_data = pd.read_csv("data/penguins_toy.csv", usecols=["bill_length_mm", "flipper_length_mm"])
-unstandardized_data.to_csv("data/penguins.csv", index=False)
+elbow_plot = alt.layer(
+    alt.Chart(
+        pd.DataFrame({
+            'wssd': inertias,
+            'k': range(1, len(inertias) + 1)
+        })
+    ).mark_line(point=True).encode(
+        x=alt.X("k").title("Number of clusters"),
+        y=alt.Y("wssd").title("Total within-cluster sum of squares"),
+    ),
+    alt.Chart().mark_text(size=22, align='left', baseline='bottom').encode(
+        x=alt.datum(3.3),
+        y=alt.datum(9.8),
+        text=alt.datum('Elbow')
+    ),
+    alt.Chart().mark_text(size=50, align='left', baseline='bottom', fontWeight=100, angle=25).encode(
+        x=alt.datum(2.8),
+        y=alt.datum(5),
+        text=alt.datum('🠃')
+    )
+)
+
+glue('toy-kmeans-elbow', elbow_plot, display=True)
 ```
 
-```{code-cell} ipython3
-penguins = pd.read_csv("data/penguins.csv")
-penguins
+:::{glue:figure} toy-kmeans-elbow
+:figwidth: 700px
+:name: toy-kmeans-elbow
+
+Total WSSD for K clusters ranging from 1 to 9.
+:::
+
+## K-means in Python
+
+```{index} K-means, scikit-learn; KMeans
 ```
 
+```{index} see: KMeans; scikit-learn
+```
 
-Recall that K-means clustering uses straight-line distance to decide which points are similar to
+We can perform K-means in Python using a workflow similar to those
+in the earlier classification and regression chapters.
+Returning to the original (unstandardized) `penguins` data,
+recall that K-means clustering uses straight-line distance to decide which points are similar to
 each other. Therefore, the *scale* of each of the variables in the data
 will influence which cluster data points end up being assigned.
 Variables with a large scale will have a much larger
@@ -562,6 +810,9 @@ effect on deciding cluster assignment than variables with a small scale.
 To address this problem, we typically standardize our data before clustering,
 which ensures that each variable has a mean of 0 and standard deviation of 1.
 The `StandardScaler` function in `scikit-learn` can be used to do this.
+
+```{index} scikit-learn; StandardScaler, scikit-learn;KMeans, standardization;K-means, K-means;standardization
+```
 
 ```{code-cell} ipython3
 from sklearn.preprocessing import StandardScaler
@@ -572,7 +823,7 @@ from sklearn import set_config
 set_config(transform_output="pandas")
 
 preprocessor = make_column_transformer(
-    (StandardScaler(), ['bill_length_mm', 'flipper_length_mm']),
+    (StandardScaler(), ["bill_length_mm", "flipper_length_mm"]),
     verbose_feature_names_out=False,
 )
 preprocessor
@@ -582,6 +833,9 @@ To indicate that we are performing K-means clustering, we will create a `KMeans`
 model object. It takes at
 least one argument: the number of clusters `n_clusters`, which we set to 3.
 
+```{index} KMeans;n_clusters
+```
+
 ```{code-cell} ipython3
 from sklearn.cluster import KMeans
 
@@ -589,54 +843,55 @@ kmeans = KMeans(n_clusters=3)
 kmeans
 ```
 
+```{index} scikit-learn;make_pipeline, scikit-learn;Pipeline, scikit-learn;fit
+```
+
 To actually run the K-means clustering, we combine the preprocessor and model object
 in a `Pipeline`, and use the `fit` function. Note that the K-means
-algorithm uses a random initialization of assignments, but since we set 
+algorithm uses a random initialization of assignments, but since we set
 the random seed in the beginning of this chapter, the clustering will be reproducible.
 
 ```{code-cell} ipython3
 from sklearn.pipeline import make_pipeline
 
-penguin_clust = make_pipeline(preprocessor, kmeans).fit(penguins)
+penguin_clust = make_pipeline(preprocessor, kmeans)
+penguin_clust.fit(penguins)
 penguin_clust
 ```
 
-```{index} K-means; inertia_, K-means; cluster_centers_, K-means; labels_, K-means; predict
+```{index} KMeans; labels_, KMeans; inertia_
 ```
 
-The fit `KMeans` object&mdash;which is the second item in the 
+The fit `KMeans` object&mdash;which is the second item in the
 pipeline, and can be accessed as `penguin_clust[1]`&mdash;has a lot of information
 that can be used to visualize the clusters, pick K, and evaluate the total WSSD.
-Let's start by visualizing the clusters as a colored scatter plot! In 
-order to do that, we first need to augment our 
-original `penguins` data frame with the cluster assignments. 
-We can access these using the `labels_` attribute of the clustering object 
-("labels" is a common alternative term to "assignments" in clustering), and 
-add them to the data frame using `assign`.
+Let's start by visualizing the clusters as a colored scatter plot! In
+order to do that, we first need to augment our
+original `penguins` data frame with the cluster assignments.
+We can access these using the `labels_` attribute of the clustering object
+("labels" is a common alternative term to "assignments" in clustering), and
+add them to the data frame.
 
 ```{code-cell} ipython3
-clustered_data = penguins.assign(cluster = penguin_clust[1].labels_)
-clustered_data
+penguins["cluster"] = penguin_clust[1].labels_
+penguins
 ```
 
-Let's start by visualizing the clustering
-as a colored scatter plot. To do that,
-we will add a new column and store assign the above predictions to that. The final
-data frame will contain the data and the cluster assignments for
-each point:
-
-Now that we have the cluster assignments included in the `clustered_data` data frame, we can 
+Now that we have the cluster assignments included in the `penguins` data frame, we can
 visualize them as shown in {numref}`cluster_plot`.
-Note that we are plotting the *un-standardized* data here; if we for some reason wanted to 
+Note that we are plotting the *un-standardized* data here; if we for some reason wanted to
 visualize the *standardized* data, we would need to use the `fit` and `transform` functions
 on the `StandardScaler` preprocessor directly to obtain that first.
-As in Chapter {ref}`viz`,
+As in {numref}`Chapter %s <viz>`,
 adding the `:N` suffix ensures that `altair`
 will treat the `cluster` variable as a nominal/categorical variable, and
 hence use a discrete color map for the visualization.
 
+```{index} altair; :N
+```
+
 ```{code-cell} ipython3
-cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
+cluster_plot=alt.Chart(penguins).mark_circle().encode(
     x=alt.X("flipper_length_mm").title("Flipper Length").scale(zero=False),
     y=alt.Y("bill_length_mm").title("Bill Length").scale(zero=False),
     color=alt.Color("cluster:N").title("Cluster"),
@@ -646,7 +901,7 @@ cluster_plot=alt.Chart(clustered_data).mark_circle().encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('cluster_plot', cluster_plot, display=True)
+glue("cluster_plot", cluster_plot, display=True)
 ```
 
 :::{glue:figure} cluster_plot
@@ -656,10 +911,10 @@ glue('cluster_plot', cluster_plot, display=True)
 The data colored by the cluster assignments returned by K-means.
 :::
 
-```{index} WSSD; total, K-means; inertia_
+```{index} WSSD; total, KMeans; inertia_
 ```
 
-```{index} see: WSSD; K-means inertia
+```{index} see: WSSD; KMeans
 ```
 
 As mentioned above,
@@ -674,12 +929,15 @@ penguin_clust[1].inertia_
 
 To calculate the total WSSD for a variety of Ks, we will
 create a data frame that contains different values of `k`
-and the WSSD of running KMeans with each values of k.
+and the WSSD of running K-means with each values of k.
 To create this dataframe,
 we will use what is called a "list comprehension" in Python,
 where we repeat an operation multiple times
 and return a list with the result.
 Here is an examples of a list comprehension that stores the numbers 0-2 in a list:
+
+```{index} list comprehension
+```
 
 ```{code-cell} ipython3
 [n for n in range(3)]
@@ -691,15 +949,15 @@ For example,
 we could square all the numbers from 1-4 and store them in a list:
 
 ```{code-cell} ipython3
-[number ** 2 for number in range(1, 5)]
+[number**2 for number in range(1, 5)]
 ```
 
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.
 For each value of K,
-we create a new KMeans model
+we create a new `KMeans` model
 and wrap it in a `scikit-learn` pipeline
 with the preprocessor we created earlier.
-We store the WSSD values in a list that we will use to create a dataframe 
+We store the WSSD values in a list that we will use to create a dataframe
 of both the K-values and their corresponding WSSDs.
 
 ```{note}
@@ -716,15 +974,15 @@ it is always the safest to assign it to a variable name for reuse.
 ks = range(1, 10)
 wssds = [
     make_pipeline(
-    	preprocessor, 
+    	preprocessor,
     	KMeans(n_clusters=k)  # Create a new KMeans model with `k` clusters
     ).fit(penguins)[1].inertia_
     for k in ks
 ]
 
 penguin_clust_ks = pd.DataFrame({
-    'k': ks,
-    'wssd': wssds,
+    "k": ks,
+    "wssd": wssds,
 })
 
 penguin_clust_ks
@@ -743,7 +1001,7 @@ elbow_plot = alt.Chart(penguin_clust_ks).mark_line(point=True).encode(
 ```{code-cell} ipython3
 :tags: [remove-cell]
 
-glue('elbow_plot', elbow_plot, display=True)
+glue("elbow_plot", elbow_plot, display=True)
 ```
 
 :::{glue:figure} elbow_plot
@@ -752,9 +1010,6 @@ glue('elbow_plot', elbow_plot, display=True)
 
 A plot showing the total WSSD versus the number of clusters.
 :::
-
-```{index} K-means; init argument
-```
 
 It looks like three clusters is the right choice for this data,
 since that is where the "elbow" of the line is the most distinct.
@@ -766,17 +1021,19 @@ it is possible to have an elbow plot
 where the WSSD increases at one of the steps,
 causing a small bump in the line.
 This is because K-means can get "stuck" in a bad solution
-due to an unlucky initialization of the initial centroid positions
+due to an unlucky initialization of the initial center positions
 as we mentioned earlier in the chapter.
 
+```{index} KMeans; n_init
+```
+
 ```{note}
-It is rare that the KMeans function from `scikit-learn`
-gets stuck in a bad solution,
-because the selection of the centroid starting points
-is optimized to prevent this from happening.
+It is rare that the implementation of K-means from `scikit-learn`
+gets stuck in a bad solution, because `scikit-learn` tries to choose
+the initial centers carefully to prevent this from happening.
 If you still find yourself in a situation where you have a bump in the elbow plot,
 you can increase the `n_init` parameter
-to try more different starting points for the centroids.
+when creating the `KMeans` object, e.g., `KMeans(n_clusters=k, n_init=10)`, to try more different random center initializations.
 The larger the value the better from an analysis perspective,
 but there is a trade-off that doing many clusterings could take a long time.
 ```
@@ -791,7 +1048,7 @@ You can launch an interactive version of the worksheet in your browser by clicki
 You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in Chapter {ref}`move-to-your-own-machine`. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
 ## Additional resources
@@ -804,7 +1061,7 @@ and guidance that the worksheets provide will function as intended.
   clustering for when you expect there to be subgroups, and then subgroups within
   subgroups, etc., in your data. In the realm of more general unsupervised
   learning, it covers *principal components analysis (PCA)*, which is a very
-  popular technique for reducing the number of predictors in a dataset.
+  popular technique for reducing the number of predictors in a data set.
 
 ## References
 

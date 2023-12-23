@@ -27,6 +27,8 @@ list of topics in this book. We would especially like to thank Matías
 Salibían-Barrera for his mentorship during the initial development and roll-out
 of both DSCI 100 and this book. His door was always open when
 we needed to chat about how to best introduce and teach data science to our first-year students.
+We would also like to thank Gabriela Cohen Freue for her DSCI 561 (Regression I) teaching materials
+from the UBC Master of Data Science program, as some of our linear regression figures were inspired from these.
 
 We would also like to thank all those who contributed to the process of
 publishing this book. In particular, we would like to thank all of our reviewers for their feedback and suggestions:
@@ -49,9 +51,12 @@ is reflected in the content of this book.
 
 We'd like to thank everyone that has contributed to the development of
 [*Data Science: A First Introduction (Python Edition)*](https://python.datasciencebook.ca).
-This is an open source Python translation of the original [*Data Science: A First Introduction*](https://datasciencebook.ca)
+This is an open source Python translation of the original
 book, which focused on the R programming language. Both of these books are
 used to teach DSCI 100 at the University of British Columbia (UBC).
 We would like to give special thanks to Navya Dahiya and Gloria Ye
 for completing the first round of translation of the R material to Python,
 and to Philip Austin for his leadership and guidance throughout the translation process.
+We also gratefully acknowledge the UBC Open Educational Resources Fund, the UBC Department of Statistics,
+and the UBC Department of Earth, Ocean, and Atmospheric Sciences for supporting the translation of
+the original R textbook and exercises to the Python programming language.

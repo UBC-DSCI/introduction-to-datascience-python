@@ -15,10 +15,8 @@ kernelspec:
 
 # Preface
 
-```{index} data science, auditable, reproducible
+```{index} data science; definition, auditable, reproducible
 ```
-
-
 
 This textbook aims to be an approachable introduction to the world of data science.
 In this book, we define **data science** as the process of generating
@@ -54,9 +52,8 @@ But if you are reading this independently, you may want to jump to these last th
 early before going on to make sure your computer is set up in such a way that you can
 try out the example code that we include throughout the book.
 
-```{figure} img/frontmatter/chapter_overview.jpeg
+```{figure} img/frontmatter/chapter_overview.png
 ---
-height: 400px
 name: preface-overview-fig
 ---
 Where are we going?
@@ -75,5 +72,5 @@ For each worksheet, you can either launch an interactive version of the workshee
 or preview a non-interactive version of the worksheet by clicking "view worksheet."
 If you instead decide to download the worksheet and run it on your own machine,
 make sure to follow the instructions for computer setup
-found in the {ref}`move-to-your-own-machine` chapter. This will ensure that the automated feedback
+found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.

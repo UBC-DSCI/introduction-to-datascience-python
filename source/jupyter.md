@@ -27,17 +27,8 @@ document. In this chapter, we will focus on the *use* of Jupyter notebooks to pr
 text via a web interface.
 These skills are essential to getting your analysis running; think of it like getting dressed in the morning!
 Note that we assume that you already have Jupyter set up and ready to use. If that is not the case, please first read
-the {ref}`move-to-your-own-machine` chapter to learn how to install and configure Jupyter on your own
+{numref}`Chapter %s <move-to-your-own-machine>` to learn how to install and configure Jupyter on your own
 computer.
-
-```{note}
-This book was originally written for the R programming language, and
-has been edited to focus instead on Python. This chapter on Jupyter notebooks
-has not yet been fully updated to focus on Python; it has images and examples from
-the R version of the book. But the concepts related to Jupyter notebooks are generally
-the same. We are currently working on producing new Python-based images and examples
-for this chapter.
-```
 
 ## Chapter learning objectives
 
@@ -54,7 +45,7 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} Jupyter notebook, reproducible
 ```
 
-Jupyter is a web-based interactive development environment for creating, editing,
+Jupyter {cite:p}`kluyver2016jupyter` is a web-based interactive development environment for creating, editing,
 and executing documents called Jupyter notebooks. Jupyter notebooks are
 documents that contain a mix of computer code (and its output) and formattable
 text. Given that they combine these two analysis artifacts in a single
@@ -90,7 +81,7 @@ this book as part of a course, your instructor may have a JupyterHub
 already set up for you to use! <!--- Insert link to public JupyterHub here if we can get
 access/permission (either 2i2c collaboration, or
 https://notebooks.gesis.org/hub/home) --> Jupyter can also be installed on your
-own computer; see the {ref}`move-to-your-own-machine` chapter for instructions.
+own computer; see {numref}`Chapter %s <move-to-your-own-machine>` for instructions.
 
 ## Code cells
 
@@ -419,15 +410,18 @@ notebook.
 
 ## Exploring data files
 
+```{index} separator
+```
+
 It is essential to preview data files before you try to read them into Python to see
-whether or not there are column names, what the delimiters are, and if there are
+whether or not there are column names, what the separators are, and if there are
 lines you need to skip. In Jupyter, you preview data files stored as plain text
 files (e.g., comma- and tab-separated files) in their plain text format ({numref}`open-data-w-editor-2`) by
 right-clicking on the file's name in the Jupyter file explorer, selecting
 **Open with**, and then selecting **Editor** ({numref}`open-data-w-editor-1`).
 Suppose you do not specify to open
 the data file with an editor. In that case, Jupyter will render a nice table
-for you, and you will not be able to see the column delimiters, and therefore
+for you, and you will not be able to see the column separators, and therefore
 you will not know which function to use, nor which arguments to use and values
 to specify for them.
 

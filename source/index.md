@@ -13,7 +13,15 @@ kernelspec:
   name: python3
 ---
 
-# Welcome!
+![](img/frontmatter/ds-a-first-intro-graphic.jpg)
+
+# Data Science
+
+## *A First Introduction (Python Edition)*
+
+*Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, Lindsey Heagy*
+
+### Welcome!
 
 This is the [website](https://python.datasciencebook.ca) for *Data Science: A First Introduction (Python Edition)*.
 You can read the web version of the book on this site. Click a section in the table of contents
@@ -22,17 +30,13 @@ you may need to open the table of contents first by clicking the menu button on
 the top left of the page.
 
 For the R version of the textbook, please visit https://datasciencebook.ca.
-You can purchase a PDF or print copy of the R version of the book
-on the [CRC Press website](https://www.routledge.com/Data-Science-A-First-Introduction/Timbers-Campbell-Lee/p/book/9780367524685) or
-on [Amazon](https://www.amazon.com/Data-Science-First-Introduction-Chapman/dp/0367532174/ref=sr_[…]qid=1644637450&sprefix=data+science+timber%2Caps%2C166&sr=8-1).
 
 <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
 
 This work by [Tiffany Timbers](https://www.tiffanytimbers.com/),
 [Trevor Campbell](https://trevorcampbell.me/),
 [Melissa Lee](https://www.stat.ubc.ca/users/melissa-lee),
-[Lindsay Heagy](https://lindseyjh.ca/),
-and [Joel Ostblom](https://joelostblom.com/)
+[Joel Ostblom](https://joelostblom.com/),
+and [Lindsey Heagy](https://lindseyjh.ca/)
 is licensed under
 a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
-

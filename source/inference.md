@@ -98,7 +98,10 @@ broader population from which it is taken is referred to as **statistical infere
 ```{figure} img/inference/population_vs_sample.png
 :name: fig:11-population-vs-sample
 
-Population versus sample.
+The process of using a sample from a broader population to obtain a point estimate of a
+population parameter. In this case, a sample of 10 individuals yielded 6 who own an iPhone, resulting
+in an estimated population proportion of 60% iPhone owners. The actual population proportion in this example
+illustration is 53.8%.
 ```
 
 +++
@@ -490,7 +493,7 @@ access to the population data and simulate taking one random sample of 40
 listings in Python, again using `sample`.
 
 ```{code-cell} ipython3
-one_sample = airbnb.sample(40)
+one_sample = airbnb.sample(n=40)
 ```
 
 We can create a histogram to visualize the distribution of observations in the
@@ -612,7 +615,7 @@ glue("quantile_3", "{:0.0f}".format(round(sample_estimates["mean_price"].quantil
 In {numref}`fig:11-example-means4`, the sampling distribution of the mean
 has one peak and is bell-shaped. Most of the estimates are between
 about  \${glue:text}`quantile_1` and
-\${glue:text}`quantile_3`; but there are
+\${glue:text}`quantile_3`; but there is
 a good fraction of cases outside this range (i.e., where the point estimate was
 not close to the population parameter). So it does indeed look like we were
 quite lucky when we estimated the population mean with only
@@ -1049,7 +1052,7 @@ boot20000 = pd.concat([
 boot20000
 ```
 
-Let's take a look at histograms of the first six replicates of our bootstrap samples.
+Let's take a look at the histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
 :tags: []
@@ -1070,7 +1073,7 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
 :name: fig:11-bootstrapping-six-bootstrap-samples
 :figclass: caption-hack
 
-Histograms of first six replicates of bootstrap samples.
+Histograms of the first six replicates of the bootstrap samples.
 ```
 
 +++

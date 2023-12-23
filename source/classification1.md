@@ -1359,7 +1359,7 @@ glue(
 :::{glue:figure} fig:05-scaling-plt
 :name: fig:05-scaling-plt
 
-Comparison of K = 3 nearest neighbors with standardized and unstandardized data.
+Comparison of K = 3 nearest neighbors with unstandardized and standardized data.
 :::
 
 ```{code-cell} ipython3
@@ -1421,7 +1421,7 @@ To better illustrate the problem, let's revisit the scaled breast cancer data,
 what the data would look like if the cancer was rare. We will do this by
 picking only 3 observations from the malignant group, and keeping all
 of the benign observations. We choose these 3 observations using the `.head()`
-method, which takes the number of rows to select from the top (`n`).
+method, which takes the number of rows to select from the top.
 We will then use the [`concat`](https://pandas.pydata.org/docs/reference/api/pandas.concat.html)
 function from `pandas` to glue the two resulting filtered
 data frames back together. The `concat` function *concatenates* data frames
@@ -1532,8 +1532,8 @@ Imbalanced data with 7 nearest neighbors to a new observation highlighted.
 +++
 
 {numref}`fig:05-upsample-2` shows what happens if we set the background color of
-each area of the plot to the predictions the K-nearest neighbors
-classifier would make. We can see that the decision is
+each area of the plot to the prediction the K-nearest neighbors
+classifier would make for a new observation at that location. We can see that the decision is
 always "benign," corresponding to the blue color.
 
 ```{code-cell} ipython3

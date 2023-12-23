@@ -320,7 +320,7 @@ improves it by making adjustments to the assignment of data
 to clusters until it cannot improve any further. But how do we measure
 the "quality" of a clustering, and what does it mean to improve it?
 In K-means clustering, we measure the quality of a cluster by its
-*within-cluster sum-of-squared-distances* (WSSD), also called *intertia*. Computing this involves two steps.
+*within-cluster sum-of-squared-distances* (WSSD), also called *inertia*. Computing this involves two steps.
 First, we find the cluster centers by computing the mean of each variable
 over data points in the cluster. For example, suppose we have a
 cluster containing four observations, and we are using two variables, $x$ and $y$, to cluster the data.
@@ -608,7 +608,7 @@ First three iterations of K-means clustering on the `penguins_standardized` exam
 +++
 
 Note that at this point, we can terminate the algorithm since none of the assignments changed
-in the fourth iteration; both the centers and labels will remain the same from this point onward.
+in the third iteration; both the centers and labels will remain the same from this point onward.
 
 ```{index} K-means; termination
 ```
@@ -949,7 +949,7 @@ For example,
 we could square all the numbers from 1-4 and store them in a list:
 
 ```{code-cell} ipython3
-[number ** 2 for number in range(1, 5)]
+[number**2 for number in range(1, 5)]
 ```
 
 Next, we will use this approach to compute the WSSD for the K-values 1 through 9.

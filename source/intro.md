@@ -115,7 +115,7 @@ draw. If your data are biased, then your results will be biased!
 Every good data analysis begins with a *question*&mdash;like the
 above&mdash;that you aim to answer using data. As it turns out, there
 are actually a number of different *types* of question regarding data:
-descriptive, exploratory, inferential, predictive, causal, and mechanistic,
+descriptive, exploratory, predictive, inferential, causal, and mechanistic,
 all of which are defined in {numref}`questions-table`. {cite:p}`leek2015question,peng2015art`
 Carefully formulating a question as early as possible in your analysis&mdash;and
 correctly identifying which type of question it is&mdash;will guide your overall approach to
@@ -229,11 +229,10 @@ rectangular-shaped and spreadsheet-like, as shown in {numref}`img-spreadsheet-vs
 Since we are using Python for data analysis in this book, the first step for us is to
 load the data into Python. When we load tabular data into
 Python, it is represented as a *data frame* object. {numref}`img-spreadsheet-vs-data frame` shows that a Python data frame is very similar
-to a spreadsheet. We refer to the rows as **observations**; these are the things that we
-collect the data on, e.g., voters, cities, etc. We refer to the columns as
-**variables**; these are the characteristics of those observations, e.g., voters' political
-affiliations, cities' populations, etc.
-
+to a spreadsheet. We refer to the rows as **observations**; these are the individual objects
+for which we collect data. In {numref}`img-spreadsheet-vs-data frame`, the observations are
+languages. We refer to the columns as **variables**; these are the characteristics of each
+observation. In {numref}`img-spreadsheet-vs-data frame`, the variables are the the language's category, its name, the number of mother tongue speakers, etc.
 
 ```{figure} img/intro/spreadsheet_vs_df.png
 ---
@@ -670,7 +669,7 @@ counts... But perhaps, seeing these numbers, we became curious about the
 *percentage* of the population of Canada associated with each count. It is
 common to come up with new data analysis questions in the process of answering
 a first one&mdash;so fear not and explore! To answer this small
-question-along-the-way, we need to divide each count in the `mother_tongue`
+question along the way, we need to divide each count in the `mother_tongue`
 column by the total Canadian population according to the 2016
 census&mdash;i.e., 35,151,728&mdash;and multiply it by 100. We can perform
 this computation using the code `100 * ten_lang["mother_tongue"] / canadian_population`.
@@ -830,7 +829,7 @@ before moving on with further steps.
 
 ```{index} visualization
 ```
-We have now answered our initial question by generating the `ten_lang` table!
+The `ten_lang` table answers our initial data analysis question.
 Are we done? Well, not quite; tables are almost never the best way to present
 the result of your analysis to your audience. Even the `ten_lang` table with
 only two columns presents some difficulty: for example, you have to scrutinize

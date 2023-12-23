@@ -64,7 +64,7 @@ ready for the intended audience.
 Without deliberate and conscious effort towards tracking changes
 made to the analysis, projects tend to become messy.
 This mess can have serious, negative repercussions on an analysis project,
-including interesting results files that your code cannot reproduce,
+including results that your code cannot reproduce,
 temporary files with snippets of ideas that are forgotten or
 not easy to find, mind-boggling file names that make it unclear which is
 the current working version of the file (e.g., `document_final_draft_final.txt`,
@@ -183,8 +183,10 @@ a version of the project.  These records are called **commits**. They
 are a snapshot of the file contents as well
 metadata about the repository at that time the record was created (who made the
 commit, when it was made, etc.). In the local and remote repositories shown in
-{numref}`vc1-no-changes`, there are two commits represented as gray
-circles.  Each commit can be identified by a
+{numref}`vc1-no-changes`, there are two commits represented as rectangles
+inside the "Repository History" sections. The white rectangle represents the most
+recent commit, while faded rectangles represent previous commits.
+Each commit can be identified by a
 human-readable **message**, which you write when you make a commit, and a
 **commit hash** that Git automatically adds for you.
 
@@ -480,8 +482,7 @@ tabs, "Edit new file" and "Preview". Toggling between them lets you enter and
 edit text and view what the text will look like when rendered, respectively
 ({numref}`create-new-file-02`).
 Note that GitHub understands and renders `.md` files using a
-[markdown syntax](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf)
-very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
+markdown syntax very similar to Jupyter notebooks, so the "Preview" tab is especially helpful
 for checking markdown code correctness.
 
 ```{figure} img/version-control/create-new-file_02.png
@@ -505,7 +506,7 @@ You can also upload files that you have created on your local machine by using
 the "Add file" drop-down menu and selecting "Upload files"
 ({numref}`upload-files-01`).
 To select the files from your local computer to upload, you can either drag and
-drop them into the gray box area shown below, or click the "choose your files"
+drop them into the gray box area shown in {numref}`upload-files-02`, or click the "choose your files"
 link to access a file browser dialog. Once the files you want to upload have
 been selected, click the green "Commit changes" button at the bottom of the
 page ({numref}`upload-files-02`).

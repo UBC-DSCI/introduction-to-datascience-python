@@ -45,7 +45,7 @@ By the end of the chapter, readers will be able to do the following:
 ```{index} Jupyter notebook, reproducible
 ```
 
-Jupyter is a web-based interactive development environment for creating, editing,
+Jupyter {cite:p}`kluyver2016jupyter` is a web-based interactive development environment for creating, editing,
 and executing documents called Jupyter notebooks. Jupyter notebooks are
 documents that contain a mix of computer code (and its output) and formattable
 text. Given that they combine these two analysis artifacts in a single

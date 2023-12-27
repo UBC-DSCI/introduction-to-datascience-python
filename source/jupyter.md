@@ -515,3 +515,10 @@ underscore (`_`).
   formatting, two good places to start are CommonMark's [Markdown
   cheatsheet](https://commonmark.org/help/) and [Markdown
   tutorial](https://commonmark.org/help/tutorial/).
+
++++
+
+```{bibliography}
+:filter: docname in docnames
+```
+

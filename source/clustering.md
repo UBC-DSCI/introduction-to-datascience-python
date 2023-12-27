@@ -1063,8 +1063,6 @@ and guidance that the worksheets provide will function as intended.
   learning, it covers *principal components analysis (PCA)*, which is a very
   popular technique for reducing the number of predictors in a data set.
 
-## References
-
 +++
 
 ```{bibliography}

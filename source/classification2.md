@@ -2205,8 +2205,6 @@ and guidance that the worksheets provide will function as intended.
   text, it requires a bit more mathematical background than we require.
 
 
-## References
-
 +++
 
 ```{bibliography}

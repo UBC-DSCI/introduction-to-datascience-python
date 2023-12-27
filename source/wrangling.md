@@ -1910,8 +1910,6 @@ and guidance that the worksheets provide will function as intended.
   what you want. In that case, you may consider using [a for loop](https://wesmckinney.com/book/python-basics.html#control_for) {cite:p}`mckinney2012python`.
 
 
-## References
-
 +++
 
 ```{bibliography}

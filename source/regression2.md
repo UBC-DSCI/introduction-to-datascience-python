@@ -1395,8 +1395,6 @@ and guidance that the worksheets provide will function as intended.
   covered earlier are indeed more flexible but become very slow when given lots
   of data.
 
-## References
-
 +++
 
 ```{bibliography}

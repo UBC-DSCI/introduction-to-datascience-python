@@ -1974,7 +1974,6 @@ found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that 
 and guidance that the worksheets provide will function as intended.
 
 +++
-## References
 
 ```{bibliography}
 :filter: docname in docnames

@@ -1233,8 +1233,6 @@ make sure to follow the instructions for computer setup
 found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-## References
-
 +++
 
 ```{bibliography}

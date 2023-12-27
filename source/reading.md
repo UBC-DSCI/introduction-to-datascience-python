@@ -1626,8 +1626,6 @@ and guidance that the worksheets provide will function as intended.
     - [extracting the data for apartment listings on Craigslist](https://www.youtube.com/embed/YdIWI6K64zo), and
     - [extracting Canadian city names and populations from Wikipedia](https://www.youtube.com/embed/O9HKbdhqYzk).
 
-## References
-
 +++
 
 ```{bibliography}

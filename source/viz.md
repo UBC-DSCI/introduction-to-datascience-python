@@ -2063,8 +2063,6 @@ and guidance that the worksheets provide will function as intended.
   is where you should look if you want to learn about `date` and `time`, including
   how to create them, and how to use them to effectively handle durations, etc
 
-## References
-
 +++
 
 ```{bibliography}

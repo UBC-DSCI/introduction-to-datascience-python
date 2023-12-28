@@ -16,6 +16,7 @@ kernelspec:
 :tags: [remove-cell]
 from chapter_preamble import *
 from IPython.display import HTML
+from IPython.display import Image
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 import plotly.express as px
@@ -860,7 +861,11 @@ for neighbor_df in neighbor_df_list:
 # tight layout
 fig.update_layout(margin=dict(l=0, r=0, b=0, t=1), template="plotly_white")
 
-glue("fig:05-more", fig)
+# if HTML, use the plotly 3d image; if PDF, use static image
+if "BOOK_BUILD_TYPE" in os.environ and os.environ["BOOK_BUILD_TYPE"] == "PDF":
+    glue("fig:05-more", Image("img/classification1/plot3d_knn_classification.png"))
+else:
+    glue("fig:05-more", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7

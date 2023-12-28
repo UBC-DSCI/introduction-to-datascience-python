@@ -367,7 +367,6 @@ and we set `name` to the string `"Alice"`.
 
 ```{code-cell} ipython3
 my_number = 1 + 2
-
 name = "Alice"
 ```
 

@@ -705,7 +705,7 @@ The `ten_lang_percent` data frame shows that
 the ten Aboriginal languages in the `ten_lang` data frame were spoken
 as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
-## Combining analysis steps with chaining and multiline expressions
+## Combining steps with chaining and multiline expressions
 
 It took us 3 steps to find the ten Aboriginal languages most often reported in
 2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:

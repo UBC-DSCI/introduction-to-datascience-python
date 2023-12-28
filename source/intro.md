@@ -397,12 +397,13 @@ Other symbols won't work since they have their own meanings in Python. For examp
 `-` is the subtraction symbol; if we try to assign a name with
 the `-` symbol, Python will complain and we will get an error!
 
-```
+```{code-cell} ipython3
+:tags: ["remove-output"]
 my-number = 1
 ```
-
-```
-SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?")
 ```
 
 ```{index} object; naming convention

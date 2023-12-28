@@ -395,20 +395,20 @@ the `random_state` argument that is available in many `pandas` and `scikit-learn
 functions. Those functions will then use your `Generator` to generate random numbers instead of
 `numpy`'s default generator. For example, we can reproduce our earlier example by using a `Generator`
 object with the `seed` value set to 1; we get the same lists of numbers once again.
-```{code}
+```python
 from numpy.random import Generator, PCG64
 rng = Generator(PCG64(seed=1))
 random_numbers1_third = nums_0_to_9.sample(n=10, random_state=rng).to_list()
 random_numbers1_third
 ```
-```{code}
+```text
 array([2, 9, 6, 4, 0, 3, 1, 7, 8, 5])
 ```
-```{code}
+```python
 random_numbers2_third = nums_0_to_9.sample(n=10, random_state=rng).to_list()
 random_numbers2_third
 ```
-```{code}
+```text
 array([9, 5, 3, 0, 8, 4, 2, 1, 6, 7])
 ```
 

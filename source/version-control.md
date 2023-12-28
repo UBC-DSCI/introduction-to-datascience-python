@@ -1130,9 +1130,9 @@ you can expand your knowledge through the resources listed below:
   is an excellent additional resource to consult if you need help
   generating and using personal access tokens.
 
-## References
-
 +++
+
+## References
 
 ```{bibliography}
 :filter: docname in docnames

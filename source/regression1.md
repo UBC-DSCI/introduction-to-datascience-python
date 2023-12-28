@@ -20,6 +20,7 @@ kernelspec:
 
 from chapter_preamble import *
 from IPython.display import HTML
+from IPython.display import Image
 import plotly.express as px
 import plotly.graph_objects as go
 ```
@@ -1148,7 +1149,11 @@ fig.update_layout(
     template="plotly_white",
 )
 
-glue("fig:07-knn-mult-viz", fig)
+# if HTML, use the plotly 3d image; if PDF, use static image
+if "BOOK_BUILD_TYPE" in os.environ and os.environ["BOOK_BUILD_TYPE"] == "PDF":
+    glue("fig:07-knn-mult-viz", Image("img/regression1/plot3d_knn_regression.png"))
+else:
+    glue("fig:07-knn-mult-viz", fig)
 ```
 
 ```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
@@ -1207,8 +1212,6 @@ and guidance that the worksheets provide will function as intended.
 +++
 
 ## References
-
-+++
 
 ```{bibliography}
 :filter: docname in docnames

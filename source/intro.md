@@ -367,7 +367,6 @@ and we set `name` to the string `"Alice"`.
 
 ```{code-cell} ipython3
 my_number = 1 + 2
-
 name = "Alice"
 ```
 
@@ -397,12 +396,13 @@ Other symbols won't work since they have their own meanings in Python. For examp
 `-` is the subtraction symbol; if we try to assign a name with
 the `-` symbol, Python will complain and we will get an error!
 
-```
+```{code-cell} ipython3
+:tags: ["remove-output"]
 my-number = 1
 ```
-
-```
-SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?")
 ```
 
 ```{index} object; naming convention
@@ -705,7 +705,7 @@ The `ten_lang_percent` data frame shows that
 the ten Aboriginal languages in the `ten_lang` data frame were spoken
 as a mother tongue by between 0.008% and 0.18% of the Canadian population.
 
-## Combining analysis steps with chaining and multiline expressions
+## Combining steps with chaining and multiline expressions
 
 It took us 3 steps to find the ten Aboriginal languages most often reported in
 2016 as mother tongues in Canada. Starting from the `can_lang` data frame, we:
@@ -1233,9 +1233,9 @@ make sure to follow the instructions for computer setup
 found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
 and guidance that the worksheets provide will function as intended.
 
-## References
-
 +++
+
+## References
 
 ```{bibliography}
 :filter: docname in docnames

@@ -109,14 +109,16 @@ So in this case, `happiness_report.csv` would be reached by starting at the root
 then the `dsci-100` folder, then the `project3` folder, and then finally the `data` folder. So its absolute
 path would be `/home/dsci-100/project3/data/happiness_report.csv`. We can load the file using its absolute path
 as a string passed to the `read_csv` function from `pandas`.
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 happy_data = pd.read_csv("/home/dsci-100/project3/data/happiness_report.csv")
 ```
 If we instead wanted to use a relative path, we would need to list out the sequence of steps needed to get from our current
 working directory to the file, with slashes `/` separating each step. Since we are currently in the `project3` folder,
 we just need to enter the `data` folder to reach our desired file. Hence the relative path is `data/happiness_report.csv`,
 and we can load the file using its relative path as a string passed to `read_csv`.
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 happy_data = pd.read_csv("data/happiness_report.csv")
 ```
 Note that there is no forward slash at the beginning of a relative path; if we accidentally typed `"/data/happiness_report.csv"`,
@@ -147,13 +149,13 @@ all of the folders between the computer's root, represented by `/`, and the file
 across different computers. For example, suppose Fatima and Jayden are working on a
 project together on the `happiness_report.csv` data. Fatima's file is stored at
 
-```
+```text
 /home/Fatima/project3/data/happiness_report.csv
 ```
 
 while Jayden's is stored at
 
-```
+```text
 /home/Jayden/project3/data/happiness_report.csv
 ```
 
@@ -275,11 +277,13 @@ With this extra information being present at the top of the file, using
 into Python. In the case of this file, Python just prints a `ParserError`
 message, indicating that it wasn't able to read the file.
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 canlang_data = pd.read_csv("data/can_lang_meta-data.csv")
 ```
-```text
-ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("ParserError: Error tokenizing data. C error: Expected 1 fields in line 4, saw 6")
 ```
 
 ```{index} ParserError
@@ -841,7 +845,8 @@ be able to connect to a database using this information.
 ```{index} ibis; postgres, ibis; connect
 ```
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 conn = ibis.postgres.connect(
     database="can_mov_db",
     host="fakeserver.stat.ubc.ca",
@@ -859,12 +864,14 @@ connecting to and working with an SQLite database. For example, we can again use
 ```{index} ibis; list_tables
 ```
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 conn.list_tables()
 ```
 
-```text
-["themes", "medium", "titles", "title_aliases", "forms", "episodes", "names", "names_occupations", "occupation", "ratings"]
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print('["themes", "medium", "titles", "title_aliases", "forms", "episodes", "names", "names_occupations", "occupation", "ratings"]')
 ```
 
 We see that there are 10 tables in this database. Let's first look at the
@@ -874,16 +881,20 @@ database.
 ```{index} ibis; table
 ```
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 ratings_table = conn.table("ratings")
 ratings_table
 ```
 
-```text
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("""
 AlchemyTable: ratings
   title           string
   average_rating  float64
   num_votes       int64
+""")
 ```
 
 ```{index} ibis; []
@@ -892,12 +903,15 @@ AlchemyTable: ratings
 To find the lowest rating that exists in the data base, we first need to
 select the `average_rating` column:
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 avg_rating = ratings_table[["average_rating"]]
 avg_rating
 ```
 
-```text
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("""
 r0 := AlchemyTable: ratings
   title           string
   average_rating  float64
@@ -906,6 +920,7 @@ r0 := AlchemyTable: ratings
 Selection[r0]
   selections:
     average_rating: r0.average_rating
+""")
 ```
 
 ```{index} database; ordering, ibis; order_by, ibis; head
@@ -914,7 +929,8 @@ Selection[r0]
 Next we use the `order_by` function from `ibis` order the table by `average_rating`,
 and then the `head` function to select the first row (i.e., the lowest score).
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 lowest = avg_rating.order_by("average_rating").head(1)
 lowest.execute()
 ```
@@ -924,7 +940,6 @@ lowest.execute()
 lowest = pd.DataFrame({"average_rating" : [1.0]})
 lowest
 ```
-
 
 We see the lowest rating given to a movie is 1, indicating that it must have
 been a really bad movie...
@@ -1250,7 +1265,8 @@ page we want to scrape by providing its URL in quotations to the `requests.get`
 function. This function obtains the raw HTML of the page, which we then
 pass to the `BeautifulSoup` function for parsing:
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 import requests
 import bs4
 
@@ -1338,7 +1354,8 @@ below that `read_html` found 17 tables on the Wikipedia page for Canada.
 ```{index} read function; read_html
 ```
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 canada_wiki_tables = pd.read_html("https://en.wikipedia.org/wiki/Canada")
 len(canada_wiki_tables)
 ```
@@ -1514,7 +1531,8 @@ response using the `json` method.
 
 <!-- we have disabled the below code for reproducibility, with hidden setting
 of the nasa_data object. But you can reproduce this using the DEMO_KEY key -->
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 import requests
 
 nasa_data_single = requests.get(
@@ -1539,7 +1557,8 @@ in an object called `nasa_data`; now the response
 will take the form of a Python list. Each item in the list will correspond to a single day's record (just like the `nasa_data_single` object),
 and there will be 74 items total, one for each day between the start and end dates:
 
-```python
+```{code-cell} ipython3
+:tags: ["remove-output"]
 nasa_data = requests.get(
     "https://api.nasa.gov/planetary/apod?api_key=YOUR_API_KEY&start_date=2023-05-01&end_date=2023-07-13"
     ).json()
@@ -1548,6 +1567,10 @@ len(nasa_data)
 
 ```{code-cell} ipython3
 :tags: [remove-input]
+# need to secretly re-load the nasa data again because the above running code destroys it
+# see PR 341 for why we need to do things this way (essentially due to PDF build)
+with open("data/nasa.json", "r") as f:
+    nasa_data = json.load(f)
 len(nasa_data)
 ```
 

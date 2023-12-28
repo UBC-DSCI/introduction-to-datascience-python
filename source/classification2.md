@@ -432,6 +432,7 @@ You will also notice that we set the random seed using the `np.random.seed` func
 as described in {numref}`randomseeds`.
 
 ```{code-cell} ipython3
+:tags: ["remove-output"]
 # load packages
 import altair as alt
 import pandas as pd
@@ -462,11 +463,18 @@ perim_concav = alt.Chart(cancer).mark_circle().encode(
 perim_concav
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("fig:06-precode", perim_concav)
+```
+
+:::{glue:figure} fig:06-precode
 :name: fig:06-precode
 
 Scatter plot of tumor cell concavity versus smoothness colored by diagnosis label.
-```
+:::
+
+
 
 +++
 

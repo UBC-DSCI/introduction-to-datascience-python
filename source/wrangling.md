@@ -1490,8 +1490,9 @@ in our case, we get an error.
 region_lang["most_at_home":"lang_known"].groupby("region").max()
 ```
 
-```
-KeyError: "region"
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print('KeyError: "region"')
 ```
 
 This is because when we use `[]` we selected only the columns between
@@ -1727,23 +1728,20 @@ Instead of using the `assign` method we can directly modify the `english_lang` d
 This would be a more natural choice in this particular case,
 since the syntax is more convenient for simple column modifications and additions.
 ```{code-cell} ipython3
-:tags: [remove-cell]
-english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
-```
-```python
+:tags: [remove-output]
 english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
 english_lang
 ```
-```text
+```{code-cell} ipython3
+:tags: ["remove-input"]
+print("""
 /tmp/ipykernel_12/2654974267.py:1: SettingWithCopyWarning:
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
   english_lang["city_pops"] = [4098927, 5928040, 1392609, 1321426, 2463431]
-```
-```{code-cell} ipython3
-:tags: [remove-input]
+""")
 english_lang
 ```
 

@@ -281,6 +281,7 @@ perimeter and concavity variables. Recall that the default palette in `altair`
 is colorblind-friendly, so we can stick with that here.
 
 ```{code-cell} ipython3
+:tags: ["remove-output"]
 perim_concav = alt.Chart(cancer).mark_circle().encode(
     x=alt.X("Perimeter").title("Perimeter (standardized)"),
     y=alt.Y("Concavity").title("Concavity (standardized)"),
@@ -289,12 +290,16 @@ perim_concav = alt.Chart(cancer).mark_circle().encode(
 perim_concav
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("fig:05-scatter", perim_concav)
+```
+
+:::{glue:figure} fig:05-scatter
 :name: fig:05-scatter
-:figclass: caption-hack
 
 Scatter plot of concavity versus perimeter colored by diagnosis label.
-```
+:::
 
 +++
 
@@ -1432,6 +1437,7 @@ The new imbalanced data is shown in {numref}`fig:05-unbalanced`,
 and we print the counts of the classes using the `value_counts` function.
 
 ```{code-cell} ipython3
+:tags: ["remove-output"]
 rare_cancer = pd.concat((
     cancer[cancer["Class"] == "Benign"],
     cancer[cancer["Class"] == "Malignant"].head(3)
@@ -1445,12 +1451,16 @@ rare_plot = alt.Chart(rare_cancer).mark_circle().encode(
 rare_plot
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+glue("fig:05-unbalanced", rare_plot)
+```
+
+:::{glue:figure} fig:05-unbalanced
 :name: fig:05-unbalanced
-:figclass: caption-hack
 
 Imbalanced data.
-```
+:::
 
 ```{code-cell} ipython3
 rare_cancer["Class"].value_counts()
@@ -1947,16 +1957,15 @@ unscaled_plot + prediction_plot
 ```
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: [remove-cell]
 glue("fig:05-workflow-plot", (unscaled_plot + prediction_plot))
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:::{glue:figure} fig:05-workflow-plot
 :name: fig:05-workflow-plot
-:figclass: caption-hack
 
 Scatter plot of smoothness versus area where background color indicates the decision of the classifier.
-```
+:::
 
 +++
 

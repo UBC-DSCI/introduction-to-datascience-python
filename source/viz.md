@@ -851,8 +851,8 @@ and is just added for readability.
 
 ```{code-cell} ipython3
 canadian_population = 35_151_728
-can_lang["mother_tongue_percent"] = can_lang["mother_tongue"] / canadian_population * 100
-can_lang["most_at_home_percent"] = can_lang["most_at_home"] / canadian_population * 100
+can_lang["mother_tongue_percent"] = can_lang["mother_tongue"]/canadian_population*100
+can_lang["most_at_home_percent"] = can_lang["most_at_home"]/canadian_population*100
 can_lang[["mother_tongue_percent", "most_at_home_percent"]]
 ```
 

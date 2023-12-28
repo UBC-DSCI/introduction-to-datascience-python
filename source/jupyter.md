@@ -518,6 +518,8 @@ underscore (`_`).
 
 +++
 
+## References
+
 ```{bibliography}
 :filter: docname in docnames
 ```

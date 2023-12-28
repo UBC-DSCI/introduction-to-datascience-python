@@ -1132,6 +1132,8 @@ you can expand your knowledge through the resources listed below:
 
 +++
 
+## References
+
 ```{bibliography}
 :filter: docname in docnames
 ```

@@ -645,7 +645,7 @@ was \$`r round(mean(airbnb$price),2)`.
 -->
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: ["remove-cell"]
 
 glue(
     "fig:11-example-means5",
@@ -681,12 +681,12 @@ glue(
 )
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:::{glue:figure} fig:11-example-means5
 :name: fig:11-example-means5
-:figclass: caption-hack
 
 Comparison of population distribution, sample distribution, and sampling distribution.
-```
+:::
+
 
 +++
 
@@ -699,7 +699,7 @@ sampling distribution of the sample mean. We indicate the mean of the sampling
 distribution with a vertical line.
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: ["remove-cell"]
 
 # Plot sampling distributions for multiple sample sizes
 base = alt.Chart(
@@ -753,12 +753,11 @@ glue(
 )
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+:::{glue:figure} fig:11-example-means7
 :name: fig:11-example-means7
-:figclass: caption-hack
 
 Comparison of sampling distributions, with mean highlighted as a vertical line.
-```
+:::
 
 +++
 
@@ -963,8 +962,7 @@ one_sample
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
+:tags: ["remove-output"]
 one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
     x=alt.X("price")
         .bin(maxbins=30)
@@ -975,12 +973,17 @@ one_sample_dist = alt.Chart(one_sample).mark_bar().encode(
 one_sample_dist
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping1", one_sample_dist)
+```
+
+:::{glue:figure} fig:11-bootstrapping1
 :name: fig:11-bootstrapping1
-:figclass: caption-hack
 
 Histogram of price per night (dollars) for one sample of size 40.
-```
+:::
 
 +++
 
@@ -1002,7 +1005,7 @@ Since we need to sample with replacement when bootstrapping,
 we change the `replace` parameter to `True`.
 
 ```{code-cell} ipython3
-:tags: []
+:tags: ["remove-output"]
 
 boot1 = one_sample.sample(frac=1, replace=True)
 boot1_dist = alt.Chart(boot1).mark_bar().encode(
@@ -1015,12 +1018,17 @@ boot1_dist = alt.Chart(boot1).mark_bar().encode(
 boot1_dist
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping3", boot1_dist)
+```
+
+:::{glue:figure} fig:11-bootstrapping3
 :name: fig:11-bootstrapping3
-:figclass: caption-hack
 
 Bootstrap distribution.
-```
+:::
 
 ```{code-cell} ipython3
 boot1["price"].mean()
@@ -1055,10 +1063,10 @@ boot20000
 Let's take a look at the histograms of the first six replicates of our bootstrap samples.
 
 ```{code-cell} ipython3
-:tags: []
+:tags: ["remove-output"]
 
 six_bootstrap_samples = boot20000.query("replicate < 6")
-alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
+six_bootstrap_fig = alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
     x=alt.X("price")
         .bin(maxbins=20)
         .title("Price per night (dollars)"),
@@ -1067,14 +1075,20 @@ alt.Chart(six_bootstrap_samples, height=150).mark_bar().encode(
     "replicate:N",  # Recall that `:N` converts the variable to a categorical type
     columns=2
 )
+six_bootstrap_fig
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping-six-bootstrap-samples", six_bootstrap_fig)
+```
+
+:::{glue:figure} fig:11-bootstrapping-six-bootstrap-samples
 :name: fig:11-bootstrapping-six-bootstrap-samples
-:figclass: caption-hack
 
 Histograms of the first six replicates of the bootstrap samples.
-```
+:::
 
 +++
 
@@ -1125,7 +1139,7 @@ boot20000_means
 ```
 
 ```{code-cell} ipython3
-:tags: []
+:tags: ["remove-output"]
 
 boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
     x=alt.X("mean_price")
@@ -1137,12 +1151,17 @@ boot_est_dist = alt.Chart(boot20000_means).mark_bar().encode(
 boot_est_dist
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping5", boot_est_dist)
+```
+
+:::{glue:figure} fig:11-bootstrapping5
 :name: fig:11-bootstrapping5
-:figclass: caption-hack
 
 Distribution of the bootstrap sample means.
-```
+:::
 
 +++
 
@@ -1150,10 +1169,10 @@ Let's compare the bootstrap distribution&mdash;which we construct by taking many
 the true sampling distribution&mdash;which corresponds to taking many samples from the population.
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: [remove-cell]
 
 sampling_distribution.encoding.x["bin"]["extent"] = (90, 250)
-alt.vconcat(
+bootstr6fig = alt.vconcat(
     alt.layer(
         sampling_distribution,
         alt.Chart(sample_estimates).mark_rule(color="black", size=1.5, strokeDash=[6]).encode(x="mean(mean_price)"),
@@ -1175,12 +1194,19 @@ alt.vconcat(
 )
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping6", bootstr6fig)
+```
+
+:::{glue:figure} fig:11-bootstrapping6
 :name: fig:11-bootstrapping6
-:figclass: caption-hack
 
 Comparison of the distribution of the bootstrap sample means and sampling distribution.
-```
+:::
+
+
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -1277,7 +1303,7 @@ the middle 95\% of the sample mean prices in the bootstrap distribution. We can
 visualize the interval on our distribution in {numref}`fig:11-bootstrapping9`.
 
 ```{code-cell} ipython3
-:tags: [remove-input]
+:tags: [remove-cell]
 # Create the annotation for for the 2.5th percentile
 rule_025 = alt.Chart().mark_rule(color="black", size=1.5, strokeDash=[6]).encode(
     x=alt.datum(ci_bounds[0.025])
@@ -1301,15 +1327,22 @@ text_975 = text_025.encode(
 rule_975 = rule_025.encode(x=alt.datum(ci_bounds[0.975]))
 
 # Layer the annotations on top of the distribution plot
-boot_est_dist + rule_025 + text_025 + rule_975 + text_975
+bootstr9fig = boot_est_dist + rule_025 + text_025 + rule_975 + text_975
 ```
 
-```{figure} data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+```{code-cell} ipython3
+:tags: ["remove-cell"]
+
+glue("fig:11-bootstrapping9", bootstr9fig)
+```
+
+:::{glue:figure} fig:11-bootstrapping9
 :name: fig:11-bootstrapping9
-:figclass: caption-hack
 
 Distribution of the bootstrap sample means with percentile lower and upper bounds.
-```
+:::
+
+
 
 +++
 
@@ -1364,8 +1397,6 @@ and guidance that the worksheets provide will function as intended.
 +++
 
 ## References
-
-+++
 
 ```{bibliography}
 :filter: docname in docnames

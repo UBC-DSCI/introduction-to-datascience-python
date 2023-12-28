@@ -195,7 +195,8 @@ found in [the online Docker documentation](https://docs.docker.com/desktop/insta
 ### Ubuntu
 
 **Installation** To install Docker on Ubuntu, open the terminal and enter the following five commands.
-```
+```{code-cell}
+:tags: ["remove-output"]
 sudo apt update
 sudo apt install ca-certificates curl gnupg
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -207,7 +208,8 @@ sudo sh get-docker.sh
 and look for the line `FROM ubcdsci/py-dsci-100:` followed by a tag consisting of a sequence of numbers and letters.
 Then in the terminal, navigate to the directory where you want to run JupyterLab, and run
 the following command, replacing `TAG` with the *tag* you found earlier.
-```
+```{code-cell}
+:tags: ["remove-output"]
 docker run --rm -v $(pwd):/home/jovyan/work -p 8888:8888 ubcdsci/py-dsci-100:TAG jupyter lab
 ```
 The terminal will then print some text as the Docker container starts. Once the text stops scrolling, find the
@@ -283,7 +285,8 @@ A JupyterLab Desktop session, showing the Terminal option at the bottom.
 
 
 In this terminal, run the following commands:
-```
+```{code-cell}
+:tags: ["remove-output"]
 pip install --upgrade jupyterlab-git
 conda env update --file https://raw.githubusercontent.com/UBC-DSCI/data-science-a-first-intro-python-worksheets/main/environment.yml
 ```
@@ -304,7 +307,8 @@ correctly set up and ready for use.
 Open the terminal ([how-to video](https://youtu.be/5AJbWEWwnbY))
 and type the following command:
 
-```
+```{code-cell}
+:tags: ["remove-output"]
 xcode-select --install
 ```
 Next, visit the ["Installation" section of the JupyterLab Desktop homepage](https://github.com/jupyterlab/jupyterlab-desktop#installation).
@@ -326,18 +330,21 @@ the various Python software packages needed for the worksheets.
 
 **Installation** First, we will install Git for version control.
 Open the terminal and type the following commands:
-```
+```{code-cell}
+:tags: ["remove-output"]
 sudo apt update
 sudo apt install git
 ```
 Next, visit the ["Installation" section of the JupyterLab Desktop homepage](https://github.com/jupyterlab/jupyterlab-desktop#installation).
 Download the `JupyterLab-Setup-Debian.deb` installer file for Ubuntu/Debian.
 Open a terminal, navigate to where the installer file was downloaded, and run the command
-```
+```{code-cell}
+:tags: ["remove-output"]
 sudo dpkg -i JupyterLab-Setup-Debian.deb
 ```
 Run JupyterLab Desktop using the command
-```
+```{code-cell}
+:tags: ["remove-output"]
 jlab
 ```
 

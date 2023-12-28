@@ -134,7 +134,7 @@ To run a code cell independently, the cell needs to first be activated. This
 is done by clicking on it with the cursor. Jupyter will indicate a cell has been
 activated by highlighting it with a blue rectangle to its left. After the cell
 has been activated ({numref}`activate-and-run-button`), the cell can be run by either pressing
-the **Run** (&blacktriangleright;) button in the toolbar, or by using a keyboard shortcut of
+the **Run** (&#x23F5;) button in the toolbar, or by using a keyboard shortcut of
 `Shift + Enter`.
 
 ```{figure} img/jupyter/activate-and-run-button-annotated.png
@@ -231,7 +231,7 @@ To edit a Markdown cell in Jupyter, you need to double click on the cell. Once
 you do this,  the unformatted (or *unrendered*) version of the text will be
 shown ({numref}`markdown-cell-not-run`). You
 can then use your keyboard to edit the text. To view the formatted
-(or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (&blacktriangleright;) button in the toolbar,
+(or *rendered*) text ({numref}`markdown-cell-run`), click the **Run** (&#x23F5;) button in the toolbar,
 or use the `Shift + Enter` keyboard shortcut.
 
 ```{figure} img/jupyter/markdown-cell-not-run.png
@@ -285,7 +285,7 @@ As you might know (or at least imagine) by now, Jupyter notebooks are great for
 interactively editing, writing and running Python code; this is what they were
 designed for! Consequently, Jupyter notebooks are flexible in regards to code
 cell execution order. This flexibility means that code cells can be run in any
-arbitrary order using the **Run** (&blacktriangleright;) button. But this flexibility has a downside:
+arbitrary order using the **Run** (&#x23F5;) button. But this flexibility has a downside:
 it can lead to Jupyter notebooks whose code cannot be executed in a linear
 order (from top to bottom of the notebook). A nonlinear notebook is problematic
 because a linear order is the conventional way code documents are run, and
@@ -294,7 +294,7 @@ code is used in some automated process, it will need to run in a linear order,
 from top to bottom of the notebook.
 
 The most common way to inadvertently create a nonlinear notebook is to rely solely
-on using the (&blacktriangleright;) button to execute cells. For example,
+on using the (&#x23F5;) button to execute cells. For example,
 suppose you write some Python code that creates a Python object, say a variable named
 `y`. When you execute that cell and create `y`, it will continue
 to exist until it is deliberately deleted with Python code, or when the Jupyter
@@ -515,3 +515,12 @@ underscore (`_`).
   formatting, two good places to start are CommonMark's [Markdown
   cheatsheet](https://commonmark.org/help/) and [Markdown
   tutorial](https://commonmark.org/help/tutorial/).
+
++++
+
+## References
+
+```{bibliography}
+:filter: docname in docnames
+```
+

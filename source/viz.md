@@ -1549,7 +1549,7 @@ To fix this issue we can convert the `Expt` variable into a `nominal`
 to the `Expt` variable. Adding the `:N` suffix ensures that `altair`
 will treat a variable as a categorical variable, and
 hence use a discrete color map in visualizations
-([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encoding.html#encoding-data-types)).
+([read more about data types in the altair documentation](https://altair-viz.github.io/user_guide/encodings/index.html#encoding-data-types)).
 We also add the `stack(False)` method on the `y` encoding so
 that the bars are not stacked on top of each other,
 but instead share the same baseline.

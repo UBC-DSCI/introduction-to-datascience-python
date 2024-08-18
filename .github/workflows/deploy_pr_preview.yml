@@ -65,6 +65,7 @@ jobs:
       - name: Run website diff
         run: |
           rustup update
+          pip install --upgrade pip
           pip install website_diff
           website_diff --old dev --new pull${{ github.event.number }} --diff diff${{ github.event.number }}
 

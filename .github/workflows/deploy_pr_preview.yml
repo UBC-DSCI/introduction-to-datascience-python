@@ -44,11 +44,34 @@ jobs:
           destination_dir: pull${{ github.event.number }}
           # force_orphan: true # once peaceiris updates to v4, change this to true and keep_files: true for the PR / main branch deploy previews
 
+      - name: Checkout the gh-pages branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+          ref: 'gh-pages'
+
+      - name: Run website diff
+        run: |
+          rustup update
+          pip install website_diff
+          website_diff --old dev --new pull${{ github.event.number }} --diff diff${{ github.event.number }}
+
+      - name: GitHub Pages action to push diff
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: diff${{ github.event.number }}
+          keep_files: true
+          destination_dir: diff${{ github.event.number }}
+          # force_orphan: true # once peaceiris updates to v4, change this to true and keep_files: true for the PR / main branch deploy previews
+
+
       - name: Post URLS to PR thread
         uses: mshick/add-pr-comment@v2.8.1
         with:
           message: |
               Hello! I've built a preview of your PR so that you can compare it to the current `main` branch.
               * PR deploy preview available [here](https://python.datasciencebook.ca/pull${{ github.event.number }}/index.html)
+              * PR diff with `main` available [here](https://python.datasciencebook.ca/diff${{ github.event.number }}/index.html)
               * Current `main` deploy preview available [here](https://python.datasciencebook.ca/dev/index.html)
               * Public production build available [here](https://python.datasciencebook.ca)

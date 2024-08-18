@@ -1113,9 +1113,8 @@ and guidance that the worksheets provide will function as intended.
 Now that you've picked up the basics of version control with Git and GitHub,
 you can expand your knowledge through the resources listed below:
 
-- GitHub's [guides website](https://guides.github.com/) and [YouTube
-  channel](https://www.youtube.com/githubguides) are great resources to take the next steps in
-  learning about Git and GitHub.
+- GitHub's [guides website](https://docs.github.com/) is a great additional resource
+  for learning about Git and GitHub.
 - [Good enough practices in scientific
   computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec014)
   {cite:p}`wilson2014best` provides more advice on useful workflows and "good enough"

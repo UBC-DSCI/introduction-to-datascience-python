@@ -17,19 +17,28 @@ kernelspec:
 
 # Data Science
 
-## *A First Introduction (Python Edition)*
+## *A First Introduction with Python*
 
 *Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, Lindsey Heagy*
 
 ### Welcome!
 
-This is the [website](https://python.datasciencebook.ca) for *Data Science: A First Introduction (Python Edition)*.
+This is the [website](https://python.datasciencebook.ca) for *Data Science: A First Introduction with Python*.
 You can read the web version of the book on this site. Click a section in the table of contents
 on the left side of the page to navigate to it. If you are on a mobile device,
 you may need to open the table of contents first by clicking the menu button on
-the top left of the page.
+the top left of the page. You can purchase a PDF or print copy of the book
+on the [CRC Press website](https://www.routledge.com/Data-Science-A-First-Introduction-with-Python/Timbers-Campbell-Lee-Ostblom-Heagy/p/book/9781032572239)
+or on [Amazon](https://www.amazon.com/Data-Science-Introduction-Python-Chapman/dp/103257223X).
 
-For the R version of the textbook, please visit https://datasciencebook.ca.
+For the R version of the textbook, please visit [https://datasciencebook.ca](https://datasciencebook.ca).
+
+This book is listed in a number of open educational resource (OER) collections:
+- [The University of British Columbia OER collection](https://oer.open.ubc.ca/data-science-a-first-introduction-python-version/)
+- [The OER Commons](https://oercommons.org/courses/data-science-a-first-introduction-with-python)
+- [MERLOT](https://merlot.org/merlot/viewMaterial.htm?id=773420157)
+
+![](img/frontmatter/ds-a-first-intro-cover.jpg)
 
 <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
 

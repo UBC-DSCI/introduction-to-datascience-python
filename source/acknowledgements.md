@@ -50,7 +50,7 @@ is reflected in the content of this book.
 ## Acknowledgments for the Python Edition
 
 We'd like to thank everyone that has contributed to the development of
-[*Data Science: A First Introduction (Python Edition)*](https://python.datasciencebook.ca).
+[*Data Science: A First Introduction with Python*](https://python.datasciencebook.ca).
 This is an open source Python translation of the original
 book, which focused on the R programming language. Both of these books are
 used to teach DSCI 100 at the University of British Columbia (UBC).

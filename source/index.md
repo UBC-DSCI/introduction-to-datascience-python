@@ -34,6 +34,7 @@ or on [Amazon](https://www.amazon.com/Data-Science-Introduction-Python-Chapman/d
 For the R version of the textbook, please visit [https://datasciencebook.ca](https://datasciencebook.ca).
 
 This book is listed in a number of open educational resource (OER) collections:
+
 - [The University of British Columbia OER collection](https://oer.open.ubc.ca/data-science-a-first-introduction-python-version/)
 - [The OER Commons](https://oercommons.org/courses/data-science-a-first-introduction-with-python)
 - [MERLOT](https://merlot.org/merlot/viewMaterial.htm?id=773420157)

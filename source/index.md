@@ -39,7 +39,7 @@ This book is listed in a number of open educational resource (OER) collections:
 - [The OER Commons](https://oercommons.org/courses/data-science-a-first-introduction-with-python)
 - [MERLOT](https://merlot.org/merlot/viewMaterial.htm?id=773420157)
 
-![](img/frontmatter/ds-a-first-intro-cover.jpg)
+<img src="img/frontmatter/ds-a-first-intro-cover.jpg" width="400">
 
 <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
 

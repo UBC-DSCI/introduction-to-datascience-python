@@ -1,0 +1,2186 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; Data Science: A First Introduction with Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-7XBFF4RSN2"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-7XBFF4RSN2');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Science: A First Introduction with Python</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Front Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preface-text.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foreword-text.html">Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">About the authors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Python and Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reading.html">2. Reading in data locally and from the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wrangling.html">3. Cleaning and wrangling data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">4. Effective data visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classification1.html">5. Classification I: training &amp; predicting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classification2.html">6. Classification II: evaluation &amp; tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression1.html">7. Regression I: K-nearest neighbors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression2.html">8. Regression II: linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">9. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">10. Statistical inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jupyter.html">11. Combining code and text with Jupyter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-control.html">12. Collaboration with version control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">13. Setting up your computer</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#Symbols"><strong>Symbols</strong></a>
+ | <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ 
+</div>
+<h2 id="Symbols">Symbols</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    !=
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    #
+
+      <ul>
+        <li>
+    see comment
+</li>
+      </ul></li>
+      <li>
+    &amp;
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    .
+
+      <ul>
+        <li>
+    see chaining
+</li>
+        <li>
+    see path
+</li>
+      </ul></li>
+      <li>
+    ..
+
+      <ul>
+        <li>
+    see path
+</li>
+      </ul></li>
+      <li>
+    :
+
+      <ul>
+        <li>
+    see column range
+</li>
+      </ul></li>
+      <li>
+    &lt;
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    &lt;=
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    =
+
+      <ul>
+        <li>
+    see assignment symbol
+</li>
+      </ul></li>
+      <li>
+    ==
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    &gt;
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    &gt;=
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li>
+    []
+
+      <ul>
+        <li>
+    see DataFrame
+</li>
+      </ul></li>
+      <li>
+    |
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    __doc__
+
+      <ul>
+        <li>
+    see documentation
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification2.html#index-4">accuracy</a>
+
+      <ul>
+        <li><a href="classification2.html#index-23">assessment</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-23">adding columns</a>
+</li>
+      <li><a href="inference.html#index-3">Airbnb</a>
+</li>
+      <li><a href="clustering.html#index-7">altair</a>, <a href="intro.html#index-27">[1]</a>, <a href="viz.html#index-2">[2]</a>
+
+      <ul>
+        <li><a href="viz.html#index-36">+</a>
+</li>
+        <li><a href="clustering.html#index-23">:N</a>, <a href="viz.html#index-38">[1]</a>
+</li>
+        <li><a href="viz.html#index-24">alt.Legend</a>
+</li>
+        <li><a href="viz.html#index-10">alt.Scale</a>
+</li>
+        <li><a href="viz.html#index-26">alt.Tooltip</a>
+</li>
+        <li><a href="intro.html#index-32">alt.X</a>, <a href="viz.html#index-40">[1]</a>, <a href="viz.html#index-9">[2]</a>
+</li>
+        <li><a href="intro.html#index-32">alt.Y</a>, <a href="viz.html#index-40">[1]</a>, <a href="viz.html#index-9">[2]</a>
+</li>
+        <li><a href="viz.html#index-40">configure_axis</a>, <a href="viz.html#index-9">[1]</a>
+</li>
+        <li><a href="viz.html#index-34">count</a>
+</li>
+        <li><a href="intro.html#index-30">encoding channel</a>, <a href="viz.html#index-6">[1]</a>
+</li>
+        <li><a href="viz.html#index-39">facet</a>
+</li>
+        <li><a href="viz.html#index-6">graphical mark</a>
+</li>
+        <li><a href="viz.html#index-34">histogram</a>
+</li>
+        <li><a href="viz.html#index-36">layers</a>
+</li>
+        <li><a href="viz.html#index-18">logarithmic scaling</a>
+</li>
+        <li><a href="inference.html#index-14">mark_bar</a>, <a href="intro.html#index-30">[1]</a>, <a href="viz.html#index-29">[2]</a>
+</li>
+        <li><a href="clustering.html#index-7">mark_circle</a>, <a href="regression1.html#index-6">[1]</a>, <a href="viz.html#index-15">[2]</a>
+</li>
+        <li><a href="viz.html#index-7">mark_line</a>
+</li>
+        <li><a href="viz.html#index-6">mark_point</a>
+</li>
+        <li><a href="viz.html#index-36">mark_rule</a>
+</li>
+        <li><a href="viz.html#index-41">maxbins</a>
+</li>
+        <li><a href="viz.html#index-16">multiline labels</a>
+</li>
+        <li><a href="intro.html#index-33">sort</a>, <a href="viz.html#index-31">[1]</a>
+</li>
+        <li><a href="viz.html#index-19">tick count</a>
+</li>
+        <li><a href="viz.html#index-19">tick formatting</a>
+</li>
+        <li><a href="intro.html#index-32">title</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reading.html#index-51">API</a>, <a href="reading.html#index-61">[1]</a>
+
+      <ul>
+        <li><a href="reading.html#index-63">endpoint</a>
+</li>
+        <li><a href="reading.html#index-63">HTTP</a>
+</li>
+        <li><a href="reading.html#index-63">query parameters</a>
+</li>
+        <li><a href="reading.html#index-62">token</a>
+</li>
+      </ul></li>
+      <li>
+    application programming interface
+
+      <ul>
+        <li>
+    see API
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-10">argument</a>
+</li>
+      <li><a href="wrangling.html#index-57">assign</a>
+</li>
+      <li><a href="intro.html#index-13">assignment symbol</a>
+</li>
+      <li><a href="preface-text.html#index-0">auditable</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification1.html#index-31">balance</a>
+</li>
+      <li><a href="reading.html#index-59">BeautifulSoup</a>
+</li>
+      <li>
+    bitmap
+
+      <ul>
+        <li>
+    see raster graphics
+</li>
+      </ul></li>
+      <li>
+    bool
+
+      <ul>
+        <li>
+    see data types
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="inference.html#index-19">bootstrap</a>
+
+      <ul>
+        <li><a href="inference.html#index-21">distribution</a>
+</li>
+        <li><a href="inference.html#index-22">in Python</a>
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-4">breast cancer</a>, <a href="classification2.html#index-0">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#index-0">Canadian languages</a>, <a href="viz.html#index-13">[1]</a>, <a href="wrangling.html#index-18">[2]</a>
+
+      <ul>
+        <li><a href="reading.html#index-9">canlang data</a>
+</li>
+      </ul></li>
+      <li>
+    cascading style sheet
+
+      <ul>
+        <li>
+    see CSS
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-0">categorical variable</a>, <a href="regression1.html#index-3">[1]</a>
+</li>
+      <li>
+    causal question
+
+      <ul>
+        <li><a href="intro.html#index-3">definition</a>
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-21">centering</a>
+</li>
+      <li><a href="intro.html#index-25">chaining</a>
+</li>
+      <li><a href="classification1.html#index-0">class</a>
+</li>
+      <li><a href="classification1.html#index-0">classification</a>, <a href="classification2.html#index-39">[1]</a>, <a href="clustering.html#index-1">[2]</a>
+
+      <ul>
+        <li><a href="classification1.html#index-3">binary</a>
+</li>
+        <li><a href="regression1.html#index-1">comparison to regression</a>
+</li>
+        <li><a href="classification2.html#index-24">majority</a>
+</li>
+        <li><a href="intro.html#index-4">overview</a>
+</li>
+      </ul></li>
+      <li><a href="clustering.html#index-0">clustering</a>
+
+      <ul>
+        <li><a href="intro.html#index-5">overview</a>
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-25">color blindness simulator</a>
+</li>
+      <li><a href="viz.html#index-25">color palette</a>
+</li>
+      <li><a href="wrangling.html#index-57">column assignment</a>
+</li>
+      <li><a href="wrangling.html#index-19">column range</a>, <a href="wrangling.html#index-46">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    comma-separated values
+
+      <ul>
+        <li>
+    see csv
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-34">comment</a>
+</li>
+      <li>
+    compile
+
+      <ul>
+        <li>
+    see ibis
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-32">concat</a>
+</li>
+      <li><a href="inference.html#index-19">confidence interval</a>, <a href="inference.html#index-25">[1]</a>
+</li>
+      <li><a href="classification2.html#index-5">confusion matrix</a>
+</li>
+      <li><a href="setup.html#index-0">container</a>
+</li>
+      <li>
+    count
+
+      <ul>
+        <li>
+    see altair
+</li>
+        <li>
+    see ibis
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-55">Craiglist</a>
+</li>
+      <li><a href="classification2.html#index-28">cross-validation</a>, <a href="classification2.html#index-39">[1]</a>, <a href="regression1.html#index-11">[2]</a>
+
+      <ul>
+        <li><a href="classification2.html#index-29">cross_validate</a>
+</li>
+        <li><a href="classification2.html#index-32">folds</a>
+</li>
+        <li><a href="classification2.html#index-35">GridSearchCV</a>
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-22">crosstab</a>, <a href="classification2.html#index-38">[1]</a>
+</li>
+      <li><a href="reading.html#index-52">CSS</a>
+
+      <ul>
+        <li><a href="reading.html#index-55">selector</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-9">csv</a>, <a href="reading.html#index-8">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    data frame
+
+      <ul>
+        <li><a href="wrangling.html#index-0">definition</a>, <a href="wrangling.html#index-11">[1]</a>
+</li>
+        <li><a href="intro.html#index-7">overview</a>
+</li>
+        <li>
+    see DataFrame
+</li>
+      </ul></li>
+      <li>
+    data science
+
+      <ul>
+        <li><a href="preface-text.html#index-0">definition</a>
+</li>
+        <li><a href="intro.html#index-1">good practices</a>
+</li>
+      </ul></li>
+      <li>
+    data structures
+
+      <ul>
+        <li><a href="wrangling.html#index-13">dictionary (dict)</a>
+</li>
+        <li><a href="wrangling.html#index-13">list</a>
+</li>
+        <li><a href="wrangling.html#index-13">set</a>
+</li>
+        <li><a href="wrangling.html#index-13">tuple</a>
+</li>
+      </ul></li>
+      <li>
+    data types
+
+      <ul>
+        <li><a href="wrangling.html#index-5">boolean (bool)</a>
+</li>
+        <li><a href="wrangling.html#index-5">floating point number (float)</a>
+</li>
+        <li><a href="wrangling.html#index-5">integer (int)</a>
+</li>
+        <li><a href="wrangling.html#index-5">NoneType (none)</a>
+</li>
+        <li><a href="wrangling.html#index-5">string (str)</a>
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-26">database</a>
+
+      <ul>
+        <li><a href="reading.html#index-28">connection</a>
+</li>
+        <li><a href="reading.html#index-39">filter rows</a>
+</li>
+        <li><a href="reading.html#index-47">ordering</a>
+</li>
+        <li><a href="reading.html#index-42">PostgreSQL</a>
+</li>
+        <li><a href="reading.html#index-48">reasons to use</a>
+</li>
+        <li>
+    see ibis
+</li>
+        <li><a href="reading.html#index-40">select columns</a>
+</li>
+        <li><a href="reading.html#index-27">SQLite</a>
+</li>
+        <li><a href="reading.html#index-31">table</a>
+</li>
+      </ul></li>
+      <li><a href="wrangling.html#index-2">DataFrame</a>
+
+      <ul>
+        <li><a href="inference.html#index-26">[]</a>, <a href="inference.html#index-4">[1]</a>, <a href="intro.html#index-18">[2]</a>, <a href="intro.html#index-19">[3]</a>, <a href="intro.html#index-20">[4]</a>, <a href="viz.html#index-20">[5]</a>, <a href="wrangling.html#index-26">[6]</a>, <a href="wrangling.html#index-57">[7]</a>
+</li>
+        <li><a href="regression1.html#index-9">abs</a>
+</li>
+        <li><a href="classification2.html#index-31">agg</a>
+</li>
+        <li><a href="wrangling.html#index-55">apply</a>
+</li>
+        <li><a href="wrangling.html#index-56">astype</a>
+</li>
+        <li><a href="viz.html#index-20">column assignment</a>
+</li>
+        <li><a href="classification1.html#index-9">groupby</a>, <a href="inference.html#index-23">[1]</a>, <a href="inference.html#index-9">[2]</a>, <a href="wrangling.html#index-53">[3]</a>
+</li>
+        <li><a href="intro.html#index-22">head</a>
+</li>
+        <li><a href="wrangling.html#index-46">iloc[]</a>
+</li>
+        <li><a href="classification1.html#index-6">info</a>, <a href="classification2.html#index-17">[1]</a>, <a href="wrangling.html#index-23">[2]</a>
+</li>
+        <li><a href="intro.html#index-18">loc[]</a>, <a href="intro.html#index-21">[1]</a>, <a href="viz.html#index-17">[2]</a>, <a href="wrangling.html#index-44">[3]</a>, <a href="wrangling.html#index-55">[4]</a>
+</li>
+        <li><a href="wrangling.html#index-17">melt</a>
+</li>
+        <li><a href="wrangling.html#index-59">merge</a>, <a href="wrangling.html#index-60">[1]</a>
+</li>
+        <li><a href="viz.html#index-30">nlargest</a>
+</li>
+        <li><a href="regression1.html#index-9">nsmallest</a>, <a href="viz.html#index-30">[1]</a>
+</li>
+        <li><a href="wrangling.html#index-21">pivot</a>
+</li>
+        <li><a href="inference.html#index-26">quantile</a>
+</li>
+        <li><a href="inference.html#index-23">rename</a>, <a href="reading.html#index-18">[1]</a>
+</li>
+        <li><a href="inference.html#index-23">reset_index</a>, <a href="inference.html#index-9">[1]</a>, <a href="wrangling.html#index-22">[2]</a>
+</li>
+        <li><a href="classification1.html#index-33">sample</a>, <a href="inference.html#index-13">[1]</a>, <a href="inference.html#index-5">[2]</a>, <a href="inference.html#index-8">[3]</a>, <a href="regression1.html#index-8">[4]</a>
+</li>
+        <li><a href="inference.html#index-22">sample (bootstrap)</a>
+</li>
+        <li><a href="intro.html#index-22">sort_values</a>
+</li>
+        <li><a href="reading.html#index-41">tail</a>
+</li>
+        <li><a href="reading.html#index-49">to_csv</a>
+</li>
+        <li><a href="inference.html#index-4">value_counts</a>, <a href="inference.html#index-6">[1]</a>, <a href="wrangling.html#index-54">[2]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="viz.html#index-5">dates and times</a>
+</li>
+      <li>
+    delimiter
+
+      <ul>
+        <li>
+    see separator
+</li>
+      </ul></li>
+      <li>
+    descriptive question
+
+      <ul>
+        <li><a href="intro.html#index-2">definition</a>
+</li>
+      </ul></li>
+      <li>
+    dict
+
+      <ul>
+        <li>
+    see data structures
+</li>
+      </ul></li>
+      <li>
+    distance
+
+      <ul>
+        <li><a href="clustering.html#index-11">K-means</a>
+</li>
+        <li><a href="classification1.html#index-13">K-nearest neighbors</a>
+</li>
+        <li><a href="classification1.html#index-15">more than two variables</a>
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-1">distribution</a>, <a href="viz.html#index-34">[1]</a>
+</li>
+      <li><a href="setup.html#index-0">Docker</a>
+
+      <ul>
+        <li><a href="setup.html#index-2">image</a>
+</li>
+        <li><a href="setup.html#index-1">installation</a>
+</li>
+        <li><a href="setup.html#index-2">tag</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-36">documentation</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="clustering.html#index-16">elbow method</a>, <a href="clustering.html#index-8">[1]</a>
+</li>
+      <li><a href="reading.html#index-16">escape character</a>
+</li>
+      <li>
+    estimation
+
+      <ul>
+        <li><a href="intro.html#index-5">overview</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reading.html#index-21">Excel spreadsheet</a>
+
+      <ul>
+        <li><a href="reading.html#index-25">reading</a>
+</li>
+      </ul></li>
+      <li>
+    exploratory question
+
+      <ul>
+        <li><a href="intro.html#index-2">definition</a>
+</li>
+      </ul></li>
+      <li><a href="regression2.html#index-13">extrapolation</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification2.html#index-6">false negative</a>
+</li>
+      <li><a href="classification2.html#index-6">false positive</a>
+</li>
+      <li>
+    feature
+
+      <ul>
+        <li>
+    see predictor
+</li>
+      </ul></li>
+      <li>
+    feature engineering
+
+      <ul>
+        <li>
+    see predictor design
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#index-19">filtering rows</a>
+</li>
+      <li>
+    fit
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li>
+    float
+
+      <ul>
+        <li>
+    see data types
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-10">function</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="version-control.html#index-0">git</a>
+
+      <ul>
+        <li><a href="version-control.html#index-20">add</a>, <a href="version-control.html#index-7">[1]</a>
+</li>
+        <li><a href="version-control.html#index-11">clone</a>, <a href="version-control.html#index-19">[1]</a>
+</li>
+        <li><a href="version-control.html#index-21">commit</a>, <a href="version-control.html#index-5">[1]</a>, <a href="version-control.html#index-7">[2]</a>
+</li>
+        <li><a href="setup.html#index-3">installation</a>
+</li>
+        <li><a href="version-control.html#index-17">Jupyter extension</a>
+</li>
+        <li><a href="version-control.html#index-25">merge conflict</a>
+</li>
+        <li><a href="version-control.html#index-10">pull</a>, <a href="version-control.html#index-24">[1]</a>
+</li>
+        <li><a href="version-control.html#index-22">push</a>, <a href="version-control.html#index-9">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="version-control.html#index-0">GitHub</a>, <a href="version-control.html#index-11">[1]</a>
+
+      <ul>
+        <li><a href="version-control.html#index-15">add file</a>
+</li>
+        <li><a href="version-control.html#index-23">collaborator access</a>
+</li>
+        <li><a href="version-control.html#index-14">commit</a>
+</li>
+        <li><a href="version-control.html#index-26">issues</a>
+</li>
+        <li><a href="version-control.html#index-13">pen tool</a>
+</li>
+        <li><a href="version-control.html#index-18">personal access token</a>
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-2">golden rule of machine learning</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="version-control.html#index-6">hash</a>
+</li>
+      <li>
+    help
+
+      <ul>
+        <li>
+    see documentation
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-52">HTML</a>
+
+      <ul>
+        <li><a href="reading.html#index-55">selector</a>
+</li>
+        <li><a href="reading.html#index-56">tag</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    hypertext markup language
+
+      <ul>
+        <li>
+    see HTML
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    ibis
+
+      <ul>
+        <li><a href="reading.html#index-39">[]</a>, <a href="reading.html#index-46">[1]</a>
+</li>
+        <li><a href="reading.html#index-37">compile</a>
+</li>
+        <li><a href="reading.html#index-28">connect</a>, <a href="reading.html#index-43">[1]</a>
+</li>
+        <li><a href="reading.html#index-33">count</a>
+</li>
+        <li><a href="reading.html#index-35">execute</a>
+</li>
+        <li><a href="reading.html#index-38">head</a>, <a href="reading.html#index-47">[1]</a>
+</li>
+        <li><a href="reading.html#index-31">list_tables</a>, <a href="reading.html#index-44">[1]</a>
+</li>
+        <li><a href="reading.html#index-47">order_by</a>
+</li>
+        <li><a href="reading.html#index-43">postgres</a>
+</li>
+        <li>
+    see database
+</li>
+        <li><a href="reading.html#index-31">sqlite</a>
+</li>
+        <li><a href="reading.html#index-32">table</a>, <a href="reading.html#index-45">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification1.html#index-31">imbalance</a>
+</li>
+      <li><a href="intro.html#index-11">import</a>
+</li>
+      <li><a href="inference.html#index-1">inference</a>
+</li>
+      <li>
+    inferential question
+
+      <ul>
+        <li><a href="intro.html#index-3">definition</a>
+</li>
+      </ul></li>
+      <li>
+    int
+
+      <ul>
+        <li>
+    see data types
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-37">integer</a>
+</li>
+      <li>
+    interval
+
+      <ul>
+        <li>
+    see confidence interval
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-40">irrelevant predictors</a>
+</li>
+      <li>
+    isin
+
+      <ul>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-27">Island landmasses</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    JavaScript Object Notation
+
+      <ul>
+        <li>
+    see JSON
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-65">JSON</a>
+</li>
+      <li><a href="jupyter.html#index-0">Jupyter notebook</a>
+
+      <ul>
+        <li><a href="jupyter.html#index-7">best practices</a>
+</li>
+        <li><a href="jupyter.html#index-3">cell execution</a>
+</li>
+        <li><a href="jupyter.html#index-2">code cell</a>
+</li>
+        <li><a href="jupyter.html#index-9">export</a>
+</li>
+        <li><a href="jupyter.html#index-4">kernel</a>
+</li>
+        <li><a href="jupyter.html#index-6">markdown cell</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jupyter.html#index-1">JupyterHub</a>
+</li>
+      <li><a href="setup.html#index-3">JupyterLab Desktop</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="clustering.html#index-17">K-means</a>, <a href="clustering.html#index-2">[1]</a>, <a href="clustering.html#index-8">[2]</a>
+
+      <ul>
+        <li><a href="clustering.html#index-12">algorithm</a>
+</li>
+        <li><a href="clustering.html#index-15">restart</a>
+</li>
+        <li><a href="clustering.html#index-19">standardization</a>
+</li>
+        <li><a href="clustering.html#index-14">termination</a>
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-3">K-nearest neighbors</a>, <a href="regression1.html#index-7">[1]</a>
+
+      <ul>
+        <li><a href="classification1.html#index-12">classification</a>, <a href="classification2.html#index-39">[1]</a>
+</li>
+        <li><a href="regression1.html#index-18">multivariable regression</a>
+</li>
+        <li><a href="regression1.html#index-7">regression</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="jupyter.html#index-4">kernel</a>
+
+      <ul>
+        <li><a href="jupyter.html#index-5">interrupt</a>
+</li>
+        <li><a href="jupyter.html#index-5">restart</a>
+</li>
+      </ul></li>
+      <li>
+    KMeans
+
+      <ul>
+        <li><a href="clustering.html#index-22">inertia_</a>, <a href="clustering.html#index-24">[1]</a>
+</li>
+        <li><a href="clustering.html#index-22">labels_</a>
+</li>
+        <li><a href="clustering.html#index-20">n_clusters</a>
+</li>
+        <li><a href="clustering.html#index-27">n_init</a>
+</li>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    line
+
+      <ul>
+        <li>
+    see straight line
+</li>
+      </ul></li>
+      <li><a href="clustering.html#index-26">list comprehension</a>
+</li>
+      <li>
+    loading
+
+      <ul>
+        <li>
+    see reading
+</li>
+      </ul></li>
+      <li>
+    loc[]
+
+      <ul>
+        <li>
+    see DataFrame
+</li>
+      </ul></li>
+      <li>
+    location
+
+      <ul>
+        <li>
+    see path
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-18">logarithmic scale</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    logical operator
+
+      <ul>
+        <li><a href="wrangling.html#index-32">and (&amp;)</a>
+</li>
+        <li><a href="wrangling.html#index-36">containment (isin)</a>
+</li>
+        <li><a href="intro.html#index-19">equivalency (==)</a>, <a href="wrangling.html#index-28">[1]</a>
+</li>
+        <li><a href="wrangling.html#index-38">greater than (&gt; and &gt;=)</a>
+</li>
+        <li><a href="wrangling.html#index-30">inequivalency (!=)</a>
+</li>
+        <li><a href="wrangling.html#index-38">less than (&lt; and &lt;=)</a>
+</li>
+        <li><a href="wrangling.html#index-34">or (|)</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-19">logical statement</a>, <a href="wrangling.html#index-26">[1]</a>
+
+      <ul>
+        <li><a href="wrangling.html#index-43">query</a>
+</li>
+        <li>
+    see logical operator
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    make_column_transformer
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li>
+    make_pipeline
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li><a href="jupyter.html#index-6">markdown</a>, <a href="version-control.html#index-16">[1]</a>
+</li>
+      <li><a href="viz.html#index-3">Mauna Loa</a>, <a href="viz.html#index-43">[1]</a>
+</li>
+      <li>
+    mean_squared_error
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li>
+    mechanistic question
+
+      <ul>
+        <li><a href="intro.html#index-3">definition</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="viz.html#index-32">Michelson speed of light</a>, <a href="viz.html#index-44">[1]</a>
+</li>
+      <li>
+    Microsoft Excel
+
+      <ul>
+        <li>
+    see Excel spreadsheet
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-34">missing data</a>, <a href="wrangling.html#index-52">[1]</a>
+
+      <ul>
+        <li><a href="classification1.html#index-35">dropna</a>
+</li>
+        <li><a href="classification1.html#index-36">mean imputation</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-23">modifying columns</a>
+</li>
+      <li><a href="intro.html#index-24">multi-line expression</a>
+</li>
+      <li><a href="regression2.html#index-23">multicollinearity</a>
+</li>
+      <li>
+    multivariable linear equation
+
+      <ul>
+        <li>
+    see plane equation
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    NaN
+
+      <ul>
+        <li>
+    see missing data
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-62">NASA</a>
+</li>
+      <li><a href="classification2.html#index-6">negative label</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="viz.html#index-38">nominal</a>
+</li>
+      <li>
+    NoneType
+
+      <ul>
+        <li>
+    see data types
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-14">nsmallest</a>
+</li>
+      <li><a href="regression1.html#index-3">numerical variable</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#index-14">object</a>
+
+      <ul>
+        <li><a href="intro.html#index-15">naming convention</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-7">observation</a>, <a href="wrangling.html#index-3">[1]</a>
+</li>
+      <li><a href="viz.html#index-11">Old Faithful</a>
+</li>
+      <li><a href="regression2.html#index-22">outliers</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    overfitting
+
+      <ul>
+        <li><a href="classification2.html#index-37">classification</a>
+</li>
+        <li><a href="regression1.html#index-16">regression</a>
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-8">overplotting</a>
+</li>
+      <li><a href="classification1.html#index-33">oversampling</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#index-11">package</a>
+</li>
+      <li><a href="clustering.html#index-4">Palmer penguins</a>
+</li>
+      <li><a href="intro.html#index-11">pandas</a>, <a href="reading.html#index-10">[1]</a>, <a href="reading.html#index-18">[2]</a>
+</li>
+      <li><a href="classification2.html#index-25">parameter</a>
+</li>
+      <li><a href="reading.html#index-11">ParserError</a>
+</li>
+      <li>
+    path
+
+      <ul>
+        <li><a href="reading.html#index-3">absolute</a>
+</li>
+        <li><a href="reading.html#index-4">current</a>
+</li>
+        <li><a href="reading.html#index-3">local</a>
+</li>
+        <li><a href="reading.html#index-4">previous</a>
+</li>
+        <li><a href="reading.html#index-3">relative</a>
+</li>
+        <li><a href="reading.html#index-3">remote</a>
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-49">PDF</a>
+</li>
+      <li><a href="inference.html#index-27">percentile</a>
+</li>
+      <li>
+    Pipeline
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li><a href="regression2.html#index-20">plane equation</a>
+</li>
+      <li>
+    plot
+
+      <ul>
+        <li><a href="intro.html#index-32">axis labels</a>
+</li>
+        <li><a href="intro.html#index-32">labels</a>
+</li>
+        <li>
+    see visualization
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="inference.html#index-0">population</a>
+
+      <ul>
+        <li><a href="inference.html#index-11">distribution</a>
+</li>
+        <li><a href="inference.html#index-0">parameter</a>, <a href="inference.html#index-12">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    portable document format
+
+      <ul>
+        <li>
+    see PDF
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-6">positive label</a>
+</li>
+      <li><a href="classification2.html#index-7">precision</a>
+
+      <ul>
+        <li><a href="classification2.html#index-23">assessment</a>
+</li>
+      </ul></li>
+      <li>
+    predict
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li>
+    prediction accuracy
+
+      <ul>
+        <li>
+    see accuracy
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-0">predictive question</a>, <a href="regression1.html#index-0">[1]</a>
+
+      <ul>
+        <li><a href="intro.html#index-3">definition</a>
+</li>
+      </ul></li>
+      <li><a href="regression2.html#index-24">predictor design</a>
+</li>
+      <li>
+    predictor selection
+
+      <ul>
+        <li>
+    see variable selection
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    question
+
+      <ul>
+        <li><a href="classification1.html#index-4">classification</a>
+</li>
+        <li><a href="intro.html#index-2">data analysis</a>
+</li>
+        <li><a href="regression1.html#index-4">regression</a>, <a href="regression2.html#index-2">[1]</a>
+</li>
+        <li><a href="viz.html#index-0">visualization</a>, <a href="viz.html#index-12">[1]</a>, <a href="viz.html#index-14">[2]</a>, <a href="viz.html#index-28">[3]</a>, <a href="viz.html#index-33">[4]</a>, <a href="viz.html#index-4">[5]</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification2.html#index-8">random</a>
+</li>
+      <li>
+    random seed
+
+      <ul>
+        <li>
+    see seed
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-13">RandomState</a>
+
+      <ul>
+        <li>
+    see seed
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-46">raster graphics</a>
+
+      <ul>
+        <li><a href="viz.html#index-47">file types</a>
+</li>
+      </ul></li>
+      <li>
+    read function
+
+      <ul>
+        <li><a href="reading.html#index-17">header argument</a>
+</li>
+        <li><a href="reading.html#index-19">names argument</a>
+</li>
+        <li><a href="classification1.html#index-5">read_csv</a>, <a href="clustering.html#index-6">[1]</a>, <a href="intro.html#index-10">[2]</a>, <a href="reading.html#index-8">[3]</a>
+</li>
+        <li><a href="reading.html#index-24">read_excel</a>
+</li>
+        <li><a href="reading.html#index-60">read_html</a>
+</li>
+        <li><a href="reading.html#index-13">sep argument</a>
+</li>
+        <li><a href="reading.html#index-12">skiprows argument</a>
+</li>
+      </ul></li>
+      <li>
+    reading
+
+      <ul>
+        <li><a href="reading.html#index-1">definition</a>
+</li>
+        <li><a href="reading.html#index-17">separator</a>, <a href="reading.html#index-8">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-7">recall</a>
+
+      <ul>
+        <li><a href="classification2.html#index-23">assessment</a>
+</li>
+      </ul></li>
+      <li><a href="clustering.html#index-1">regression</a>
+
+      <ul>
+        <li><a href="regression2.html#index-11">comparison of methods</a>
+</li>
+        <li><a href="regression1.html#index-2">comparison to classification</a>
+</li>
+        <li><a href="regression2.html#index-0">linear</a>
+</li>
+        <li><a href="regression2.html#index-1">logistic</a>
+</li>
+        <li><a href="regression2.html#index-14">multivariable linear</a>
+</li>
+        <li><a href="regression2.html#index-14">multivariable linear equation</a>
+</li>
+        <li><a href="intro.html#index-4">overview</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    relationship
+
+      <ul>
+        <li><a href="viz.html#index-23">linear</a>
+</li>
+        <li><a href="viz.html#index-21">negative</a>
+</li>
+        <li><a href="viz.html#index-21">none</a>
+</li>
+        <li><a href="viz.html#index-23">nonlinear</a>
+</li>
+        <li><a href="viz.html#index-21">positive</a>
+</li>
+        <li><a href="viz.html#index-22">strong</a>
+</li>
+        <li><a href="viz.html#index-22">weak</a>
+</li>
+      </ul></li>
+      <li><a href="version-control.html#index-3">repository</a>
+
+      <ul>
+        <li><a href="version-control.html#index-3">local</a>
+</li>
+        <li><a href="version-control.html#index-12">private</a>
+</li>
+        <li><a href="version-control.html#index-12">public</a>
+</li>
+        <li><a href="version-control.html#index-11">remote</a>, <a href="version-control.html#index-3">[1]</a>
+</li>
+        <li>
+    see version control
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-9">reproducible</a>, <a href="jupyter.html#index-0">[1]</a>, <a href="preface-text.html#index-0">[2]</a>
+</li>
+      <li><a href="reading.html#index-59">requests</a>, <a href="reading.html#index-62">[1]</a>
+
+      <ul>
+        <li><a href="reading.html#index-65">get</a>
+</li>
+        <li><a href="reading.html#index-65">json</a>
+</li>
+      </ul></li>
+      <li><a href="regression1.html#index-0">response variable</a>
+</li>
+      <li><a href="regression1.html#index-11">RMSPE</a>, <a href="regression2.html#index-10">[1]</a>, <a href="regression2.html#index-21">[2]</a>, <a href="regression2.html#index-5">[3]</a>
+
+      <ul>
+        <li><a href="regression1.html#index-13">comparison with RMSE</a>
+</li>
+      </ul></li>
+      <li>
+    root mean square prediction error
+
+      <ul>
+        <li>
+    see RMSPE
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="regression1.html#index-18">Sacramento real estate</a>, <a href="regression1.html#index-4">[1]</a>, <a href="regression2.html#index-16">[2]</a>, <a href="regression2.html#index-2">[3]</a>
+</li>
+      <li><a href="classification2.html#index-12">sample</a>, <a href="inference.html#index-1">[1]</a>
+
+      <ul>
+        <li><a href="inference.html#index-1">estimate</a>
+</li>
+      </ul></li>
+      <li><a href="inference.html#index-15">sampling distribution</a>, <a href="inference.html#index-7">[1]</a>
+
+      <ul>
+        <li><a href="inference.html#index-24">compared to bootstrap distribution</a>
+</li>
+        <li><a href="inference.html#index-17">compared to population distribution</a>
+</li>
+        <li><a href="inference.html#index-18">effect of sample size</a>
+</li>
+        <li><a href="inference.html#index-10">shape</a>, <a href="inference.html#index-16">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="classification1.html#index-20">scaling</a>
+</li>
+      <li><a href="classification1.html#index-16">scikit-learn</a>, <a href="classification2.html#index-15">[1]</a>, <a href="regression1.html#index-14">[2]</a>, <a href="regression2.html#index-6">[3]</a>
+
+      <ul>
+        <li><a href="classification2.html#index-29">cross_validate</a>
+</li>
+        <li><a href="classification1.html#index-18">fit</a>, <a href="classification1.html#index-28">[1]</a>, <a href="classification1.html#index-38">[2]</a>, <a href="clustering.html#index-21">[3]</a>, <a href="regression2.html#index-8">[4]</a>
+</li>
+        <li><a href="classification2.html#index-35">GridSearchCV</a>, <a href="regression1.html#index-15">[1]</a>
+</li>
+        <li><a href="clustering.html#index-17">KMeans</a>, <a href="clustering.html#index-19">[1]</a>
+</li>
+        <li><a href="classification1.html#index-17">KNeighborsClassifier</a>
+</li>
+        <li><a href="classification1.html#index-28">make_column_selector</a>
+</li>
+        <li><a href="classification1.html#index-25">make_column_transformer</a>, <a href="classification1.html#index-26">[1]</a>, <a href="classification2.html#index-19">[2]</a>, <a href="regression1.html#index-14">[3]</a>
+</li>
+        <li><a href="classification1.html#index-38">make_pipeline</a>, <a href="classification2.html#index-34">[1]</a>, <a href="clustering.html#index-21">[2]</a>, <a href="regression1.html#index-14">[3]</a>
+</li>
+        <li><a href="regression2.html#index-17">mean_squared_error</a>
+</li>
+        <li><a href="classification1.html#index-17">model object</a>
+</li>
+        <li><a href="classification1.html#index-25">Pipeline</a>, <a href="classification1.html#index-37">[1]</a>, <a href="classification2.html#index-19">[2]</a>, <a href="classification2.html#index-39">[3]</a>, <a href="clustering.html#index-21">[4]</a>, <a href="regression1.html#index-14">[5]</a>
+</li>
+        <li><a href="classification2.html#index-21">precision_score</a>, <a href="classification2.html#index-38">[1]</a>
+</li>
+        <li><a href="classification1.html#index-19">predict</a>, <a href="classification2.html#index-20">[1]</a>, <a href="classification2.html#index-38">[2]</a>, <a href="regression2.html#index-17">[3]</a>
+</li>
+        <li><a href="classification1.html#index-18">predictors</a>
+</li>
+        <li><a href="classification2.html#index-35">RandomizedSearchCV</a>
+</li>
+        <li><a href="classification2.html#index-21">recall_score</a>, <a href="classification2.html#index-38">[1]</a>
+</li>
+        <li><a href="classification1.html#index-18">response</a>
+</li>
+        <li><a href="classification2.html#index-21">score</a>, <a href="classification2.html#index-38">[1]</a>
+</li>
+        <li><a href="classification1.html#index-36">SimpleImputer</a>
+</li>
+        <li><a href="classification1.html#index-26">StandardScaler</a>, <a href="classification1.html#index-28">[1]</a>, <a href="classification2.html#index-19">[2]</a>, <a href="clustering.html#index-19">[3]</a>
+</li>
+        <li><a href="classification2.html#index-16">train_test_split</a>
+</li>
+        <li><a href="classification1.html#index-30">transform</a>
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-9">seed</a>
+
+      <ul>
+        <li><a href="classification2.html#index-11">numpy.random.seed</a>, <a href="clustering.html#index-5">[1]</a>, <a href="inference.html#index-5">[2]</a>, <a href="regression1.html#index-5">[3]</a>, <a href="regression2.html#index-7">[4]</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-18">selecting columns</a>, <a href="intro.html#index-20">[1]</a>, <a href="intro.html#index-21">[2]</a>
+</li>
+      <li>
+    sem
+
+      <ul>
+        <li>
+    see standard error
+</li>
+      </ul></li>
+      <li><a href="clustering.html#index-3">semisupervised</a>
+</li>
+      <li><a href="jupyter.html#index-8">separator</a>, <a href="wrangling.html#index-24">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="wrangling.html#index-4">Series</a>
+
+      <ul>
+        <li><a href="wrangling.html#index-56">astype</a>
+</li>
+        <li><a href="wrangling.html#index-49">max</a>
+</li>
+        <li><a href="inference.html#index-23">mean</a>, <a href="wrangling.html#index-50">[1]</a>
+</li>
+        <li><a href="wrangling.html#index-50">median</a>
+</li>
+        <li><a href="wrangling.html#index-49">min</a>
+</li>
+        <li><a href="classification1.html#index-8">replace</a>
+</li>
+        <li><a href="classification1.html#index-9">size</a>
+</li>
+        <li><a href="wrangling.html#index-50">std</a>
+</li>
+        <li><a href="wrangling.html#index-45">str.contains</a>
+</li>
+        <li><a href="wrangling.html#index-24">str.split</a>
+</li>
+        <li><a href="wrangling.html#index-47">str.startswith</a>
+</li>
+        <li><a href="wrangling.html#index-50">sum</a>
+</li>
+        <li><a href="classification1.html#index-7">unique</a>
+</li>
+        <li><a href="classification1.html#index-10">value_counts</a>, <a href="classification2.html#index-18">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="wrangling.html#index-58">SettingWithCopyWarning</a>
+</li>
+      <li><a href="classification2.html#index-16">shuffling</a>
+</li>
+      <li><a href="version-control.html#index-7">staging area</a>
+
+      <ul>
+        <li>
+    see git
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-31">standard error</a>
+</li>
+      <li><a href="regression2.html#index-9">standardization</a>
+
+      <ul>
+        <li><a href="clustering.html#index-19">K-means</a>
+</li>
+        <li><a href="classification1.html#index-22">K-nearest neighbors</a>
+</li>
+      </ul></li>
+      <li>
+    StandardScaler
+
+      <ul>
+        <li>
+    see scikit-learn
+</li>
+      </ul></li>
+      <li>
+    statistical inference
+
+      <ul>
+        <li>
+    see inference
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-37">str</a>
+
+      <ul>
+        <li>
+    see data types
+</li>
+      </ul></li>
+      <li>
+    straight line
+
+      <ul>
+        <li><a href="classification1.html#index-13">distance</a>
+</li>
+        <li><a href="regression2.html#index-3">equation</a>
+</li>
+      </ul></li>
+      <li><a href="classification2.html#index-16">stratification</a>
+</li>
+      <li><a href="intro.html#index-13">string</a>, <a href="intro.html#index-19">[1]</a>
+</li>
+      <li>
+    summarization
+
+      <ul>
+        <li><a href="intro.html#index-4">overview</a>
+</li>
+      </ul></li>
+      <li><a href="wrangling.html#index-48">summarize</a>
+</li>
+      <li><a href="wrangling.html#index-50">summary statistic</a>
+</li>
+      <li><a href="clustering.html#index-1">supervised</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    tab-separated values
+
+      <ul>
+        <li>
+    see tsv
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-32">table</a>
+</li>
+      <li><a href="intro.html#index-6">tabular data</a>
+</li>
+      <li><a href="classification2.html#index-1">test set</a>, <a href="regression1.html#index-10">[1]</a>
+</li>
+      <li>
+    tidy data
+
+      <ul>
+        <li><a href="wrangling.html#index-16">arguments for</a>
+</li>
+        <li><a href="wrangling.html#index-15">definition</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification2.html#index-12">to_list</a>
+</li>
+      <li><a href="classification1.html#index-2">training set</a>, <a href="classification2.html#index-1">[1]</a>, <a href="regression1.html#index-10">[2]</a>
+</li>
+      <li><a href="classification2.html#index-6">true negative</a>
+</li>
+      <li><a href="classification2.html#index-6">true positive</a>
+</li>
+      <li><a href="reading.html#index-15">tsv</a>
+</li>
+      <li>
+    tuning parameter
+
+      <ul>
+        <li>
+    see parameter
+</li>
+      </ul></li>
+      <li><a href="wrangling.html#index-12">type</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    underfitting
+
+      <ul>
+        <li><a href="classification2.html#index-36">classification</a>
+</li>
+        <li><a href="regression1.html#index-17">regression</a>, <a href="regression2.html#index-12">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="clustering.html#index-1">unsupervised</a>
+</li>
+      <li><a href="reading.html#index-7">URL</a>
+
+      <ul>
+        <li><a href="reading.html#index-20">reading from</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="classification2.html#index-27">validation set</a>
+</li>
+      <li><a href="wrangling.html#index-3">value</a>
+</li>
+      <li><a href="intro.html#index-7">variable</a>, <a href="wrangling.html#index-3">[1]</a>
+</li>
+      <li>
+    variable selection
+
+      <ul>
+        <li><a href="classification2.html#index-41">best subset</a>
+</li>
+        <li><a href="classification2.html#index-45">elbow method</a>
+</li>
+        <li><a href="classification2.html#index-43">forward</a>
+</li>
+        <li><a href="classification2.html#index-44">implementation</a>
+</li>
+      </ul></li>
+      <li><a href="viz.html#index-46">vector graphics</a>
+
+      <ul>
+        <li><a href="viz.html#index-48">file types</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="version-control.html#index-1">version control</a>
+
+      <ul>
+        <li><a href="version-control.html#index-2">repository hosting</a>
+</li>
+        <li><a href="version-control.html#index-2">system</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#index-26">visualization</a>
+
+      <ul>
+        <li><a href="intro.html#index-27">bar</a>, <a href="viz.html#index-1">[1]</a>
+</li>
+        <li><a href="viz.html#index-42">explanation</a>
+</li>
+        <li><a href="viz.html#index-1">histogram</a>
+</li>
+        <li><a href="viz.html#index-1">line</a>
+</li>
+        <li><a href="intro.html#index-4">overview</a>
+</li>
+        <li><a href="classification1.html#index-11">scatter</a>, <a href="classification2.html#index-15">[1]</a>, <a href="regression1.html#index-6">[2]</a>, <a href="viz.html#index-1">[3]</a>
+</li>
+        <li>
+    see altair
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reading.html#index-52">web scraping</a>, <a href="reading.html#index-55">[1]</a>
+
+      <ul>
+        <li><a href="reading.html#index-57">permission</a>
+</li>
+      </ul></li>
+      <li><a href="reading.html#index-58">Wikipedia</a>
+</li>
+      <li>
+    within-cluster sum of squared distances
+
+      <ul>
+        <li>
+    see WSSD
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="version-control.html#index-5">working directory</a>
+</li>
+      <li>
+    write function
+
+      <ul>
+        <li><a href="reading.html#index-49">to_csv</a>
+</li>
+      </ul></li>
+      <li><a href="clustering.html#index-10">WSSD</a>
+
+      <ul>
+        <li>
+    see KMeans
+</li>
+        <li><a href="clustering.html#index-13">total</a>, <a href="clustering.html#index-24">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    xlsx
+
+      <ul>
+        <li>
+    see Excel spreadsheet
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, and Lindsey Heagy
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,807 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<title>11. Combining code and text with Jupyter — Data Science: A First Introduction with Python</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!-- Loaded before other Sphinx assets -->
+<link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
+<link href="_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/copybutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+<link href="_static/style.css" rel="stylesheet" type="text/css"/>
+<link href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<link as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/clipboard.min.js"></script>
+<script src="_static/copybutton.js"></script>
+<script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+<script>let toggleHintShow = 'Click to show';</script>
+<script>let toggleHintHide = 'Click to hide';</script>
+<script>let toggleOpenOnPrint = 'true';</script>
+<script src="_static/togglebutton.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+<script src="_static/design-tabs.js"></script>
+<script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-7XBFF4RSN2"></script>
+<script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-7XBFF4RSN2');
+            </script>
+<script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+<script async="async" src="_static/sphinx-thebe.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'jupyter';</script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="version-control.html" rel="next" title="12. Collaboration with version control"/>
+<link href="inference.html" rel="prev" title="10. Statistical inference"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<script src="website_diff.js"></script><link href="website_diff.css" rel="stylesheet" type="text/css"/></head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+</div>
+<nav class="bd-header navbar navbar-expand-lg bd-navbar">
+</nav>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="index.html">
+<p class="title logo__title">Data Science: A First Introduction with Python</p>
+</a></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Front Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="preface-text.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foreword-text.html">Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">About the authors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="intro.html">1. Python and Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="reading.html">2. Reading in data locally and from the web</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="wrangling.html">3. Cleaning and wrangling data</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="viz.html">4. Effective data visualization</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification1.html">5. Classification I: training &amp; predicting</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification2.html">6. Classification II: evaluation &amp; tuning</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression1.html">7. Regression I: K-nearest neighbors</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression2.html">8. Regression II: linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="clustering.html">9. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="inference.html">10. Statistical inference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Combining code and text with Jupyter</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="version-control.html">12. Collaboration with version control</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="setup.html">13. Setting up your computer</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
+</label></div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<div class="dropdown dropdown-download-buttons">
+<button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fas fa-download"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="_sources/jupyter.md" target="_blank" title="Download source file">
+<span class="btn__icon-container">
+<i class="fas fa-file"></i>
+</span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+<li>
+<button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
+<span class="btn__icon-container">
+<i class="fas fa-file-pdf"></i>
+</span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+</ul>
+</div>
+<button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+<span class="btn__icon-container">
+<i class="fas fa-expand"></i>
+</span>
+</button>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Combining code and text with Jupyter</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">11.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">11.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">11.3. Jupyter</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-jupyter">11.3.1. Accessing Jupyter</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-cells">11.4. Code cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-code-cells">11.4.1. Executing code cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kernel">11.4.2. The Kernel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-code-cells">11.4.3. Creating new code cells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown-cells">11.5. Markdown cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-markdown-cells">11.5.1. Editing Markdown cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-markdown-cells">11.5.2. Creating new Markdown cells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-your-work">11.6. Saving your work</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-running-a-notebook">11.7. Best practices for running a notebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-executing-code-cells">11.7.1. Best practices for executing code cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-including-python-packages-in-notebooks">11.7.2. Best practices for including Python packages in notebooks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-best-practices-for-running-a-notebook">11.7.3. Summary of best practices for running a notebook</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-data-files">11.8. Exploring data files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-a-different-file-format">11.9. Exporting to a different file format</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-html">11.9.1. Exporting to HTML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-pdf">11.9.2. Exporting to PDF</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-new-jupyter-notebook">11.10. Creating a new Jupyter notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">11.11. Additional resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">11.12. References</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article" role="main">
+<section class="tex2jax_ignore mathjax_ignore" id="combining-code-and-text-with-jupyter">
+<span id="getting-started-with-jupyter"></span><h1><span class="section-number">11. </span>Combining code and text with Jupyter<a class="headerlink" href="#combining-code-and-text-with-jupyter" title="Permalink to this heading">#</a></h1>
+<section id="overview">
+<h2><span class="section-number">11.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>A typical data analysis involves not only writing and executing code, but also writing text and displaying images
+that help tell the story of the analysis. In fact, ideally, we would like to <em>interleave</em> these three media,
+with the text and images serving as narration for the code and its output.
+In this chapter we will show you how to accomplish this using Jupyter notebooks, a common coding platform in
+data science. Jupyter notebooks do precisely what we need: they let you combine text, images, and (executable!) code in a single
+document. In this chapter, we will focus on the <em>use</em> of Jupyter notebooks to program in Python and write
+text via a web interface.
+These skills are essential to getting your analysis running; think of it like getting dressed in the morning!
+Note that we assume that you already have Jupyter set up and ready to use. If that is not the case, please first read
+<a class="reference internal link-to-diff" href="setup.html#move-to-your-own-machine"><span class="std std-numref">Chapter 13</span></a> to learn how to install and configure Jupyter on your own
+computer.</p>
+</section>
+<section id="chapter-learning-objectives">
+<h2><span class="section-number">11.2. </span>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul class="simple">
+<li><p>Create new Jupyter notebooks.</p></li>
+<li><p>Write, edit, and execute Python code in a Jupyter notebook.</p></li>
+<li><p>Write, edit, and view text in a Jupyter notebook.</p></li>
+<li><p>Open and view plain text data files in Jupyter.</p></li>
+<li><p>Export Jupyter notebooks to other standard file types (e.g., <code class="docutils literal notranslate"><span class="pre">.html</span></code>, <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>).</p></li>
+</ul>
+</section>
+<section id="jupyter">
+<h2><span class="section-number">11.3. </span>Jupyter<a class="headerlink" href="#jupyter" title="Permalink to this heading">#</a></h2>
+<p id="index-0">Jupyter <span id="id1">[<a class="reference internal" href="#id46" title="Thomas Kluyver, Benjamin Ragan-Kelley, Fernando Pérez, Brian Granger, Matthias Bussonnier, Jonathan Frederic, Kyle Kelley, Jessica Hamrick, Jason Grout, Sylvain Corlay, Paul Ivanov, Damián Avila, Safia Abdalla, Carol Willing, and Jupyter Development Team. Jupyter notebooks: a publishing format for reproducible computational workflows. In Positioning and Power in Academic Publishing: Players, Agents and Agendas: Proceedings of the 20th international conference on electronic publishing, volume 87. Amsterdam, 2016. IOS Press.">Kluyver <em>et al.</em>, 2016</a>]</span> is a web-based interactive development environment for creating, editing,
+and executing documents called Jupyter notebooks. Jupyter notebooks are
+documents that contain a mix of computer code (and its output) and formattable
+text. Given that they combine these two analysis artifacts in a single
+document—code is not separate from the output or written report—notebooks are
+one of the leading tools to create reproducible data analyses. Reproducible data
+analysis is one where you can reliably and easily re-create the same results when
+analyzing the same data. Although this sounds like something that should always
+be true of any data analysis, in reality, this is not often the case; one needs
+to make a conscious effort to perform data analysis in a reproducible manner.
+An example of what a Jupyter notebook looks like is shown in
+<a class="reference internal" href="#img-jupyter"><span class="std std-numref">Fig. 11.1</span></a>.</p>
+<figure class="align-default" id="img-jupyter">
+<img alt="_images/jupyter.png" src="_images/jupyter.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.1 </span><span class="caption-text">A screenshot of a Jupyter Notebook.</span><a class="headerlink" href="#img-jupyter" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<section id="accessing-jupyter">
+<h3><span class="section-number">11.3.1. </span>Accessing Jupyter<a class="headerlink" href="#accessing-jupyter" title="Permalink to this heading">#</a></h3>
+<p id="index-1">One of the easiest ways to start working with Jupyter is to use a
+web-based platform called JupyterHub. JupyterHubs often have Jupyter, Python, a number of Python
+packages, and collaboration tools installed, configured and ready to use.
+JupyterHubs are usually created and provisioned by organizations,
+and require authentication to gain access. For example, if you are reading
+this book as part of a course, your instructor may have a JupyterHub
+already set up for you to use! <!--- Insert link to public JupyterHub here if we can get
+access/permission (either 2i2c collaboration, or
+https://notebooks.gesis.org/hub/home) --> Jupyter can also be installed on your
+own computer; see <a class="reference internal link-to-diff" href="setup.html#move-to-your-own-machine"><span class="std std-numref">Chapter 13</span></a> for instructions.</p>
+</section>
+</section>
+<section id="code-cells">
+<h2><span class="section-number">11.4. </span>Code cells<a class="headerlink" href="#code-cells" title="Permalink to this heading">#</a></h2>
+<p id="index-2">The sections of a Jupyter notebook that contain code are referred to as code cells.
+A code cell that has not yet been
+executed has no number inside the square brackets to the left of the cell
+(<a class="reference internal" href="#code-cell-not-run"><span class="std std-numref">Fig. 11.2</span></a>). Running a code cell will execute all of
+the code it contains, and the output (if any exists) will be displayed directly
+underneath the code that generated it. Outputs may include printed text or
+numbers, data frames and data visualizations. Cells that have been executed
+also have a number inside the square brackets to the left of the cell.
+This number indicates the order in which the cells were run
+(<a class="reference internal" href="#code-cell-run"><span class="std std-numref">Fig. 11.3</span></a>).</p>
+<figure class="align-default" id="code-cell-not-run">
+<img alt="_images/code-cell-not-run.png" src="_images/code-cell-not-run.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.2 </span><span class="caption-text">A code cell in Jupyter that has not yet been executed.</span><a class="headerlink" href="#code-cell-not-run" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="code-cell-run">
+<img alt="_images/code-cell-run.png" src="_images/code-cell-run.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.3 </span><span class="caption-text">A code cell in Jupyter that has been executed.</span><a class="headerlink" href="#code-cell-run" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<section id="executing-code-cells">
+<h3><span class="section-number">11.4.1. </span>Executing code cells<a class="headerlink" href="#executing-code-cells" title="Permalink to this heading">#</a></h3>
+<p id="index-3">Code cells can be run independently or as part of executing the entire notebook
+using one of the “<strong>Run all</strong>” commands found in the <strong>Run</strong> or <strong>Kernel</strong> menus
+in Jupyter. Running a single code cell independently is a workflow typically
+used when editing or writing your own Python code. Executing an entire notebook is a
+workflow typically used to ensure that your analysis runs in its entirety before
+sharing it with others, and when using a notebook as part of an automated
+process.</p>
+<p>To run a code cell independently, the cell needs to first be activated. This
+is done by clicking on it with the cursor. Jupyter will indicate a cell has been
+activated by highlighting it with a blue rectangle to its left. After the cell
+has been activated (<a class="reference internal" href="#activate-and-run-button"><span class="std std-numref">Fig. 11.4</span></a>), the cell can be run by either pressing
+the <strong>Run</strong> (⏵) button in the toolbar, or by using a keyboard shortcut of
+<code class="docutils literal notranslate"><span class="pre">Shift</span> <span class="pre">+</span> <span class="pre">Enter</span></code>.</p>
+<figure class="align-default" id="activate-and-run-button">
+<img alt="_images/activate-and-run-button-annotated.png" src="_images/activate-and-run-button-annotated.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.4 </span><span class="caption-text">An activated cell that is ready to be run. The red arrow points to the blue
+rectangle to the cell’s left. The blue rectangle indicates that it is ready to
+be run. This can be done by clicking the run button (circled in red).</span><a class="headerlink" href="#activate-and-run-button" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>To execute all of the code cells in an entire notebook, you have three options:</p>
+<ol class="arabic simple">
+<li><p>Select <strong>Run</strong> &gt;&gt; <strong>Run All Cells</strong> from the menu.</p></li>
+<li><p>Select <strong>Kernel</strong> &gt;&gt; <strong>Restart Kernel and Run All Cells…</strong> from the menu (<a class="reference internal" href="#restart-kernel-run-all"><span class="std std-numref">Fig. 11.5</span></a>).</p></li>
+<li><p>Click the (⏭) button in the tool bar.</p></li>
+</ol>
+<p>All of these commands result in all of the code cells in a notebook being run.
+However, there is a slight difference between them.  In particular, only
+options 2 and 3 above will restart the Python session before running all of the
+cells; option 1 will not restart the session. Restarting the Python session means
+that all previous objects that were created from running cells before this
+command was run will be deleted. In other words, restarting the session and
+then running all cells (options 2 or 3) emulates how your notebook code would
+run if you completely restarted Jupyter before executing your entire notebook.</p>
+<figure class="align-default" id="restart-kernel-run-all">
+<img alt="_images/restart-kernel-run-all.png" src="_images/restart-kernel-run-all.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.5 </span><span class="caption-text">Restarting the Python session can be accomplished by clicking Restart Kernel and Run All Cells…</span><a class="headerlink" href="#restart-kernel-run-all" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="the-kernel">
+<h3><span class="section-number">11.4.2. </span>The Kernel<a class="headerlink" href="#the-kernel" title="Permalink to this heading">#</a></h3>
+<p id="index-4">The kernel is a program that executes the code inside your notebook and
+outputs the results. Kernels for many different programming languages have
+been created for Jupyter, which means that Jupyter can interpret and execute
+the code of many different programming languages. To run Python code, your notebook
+will need a Python kernel. In the top right of your window, you can see a circle
+that indicates the status of your kernel. If the circle is empty
+(◯), the kernel is idle and ready to execute code. If the circle is filled in
+(⬤), the kernel is busy running some code.</p>
+<p id="index-5">You may run into problems where your kernel is stuck for an excessive amount
+of time, your notebook is very slow and unresponsive, or your kernel loses its
+connection. If this happens, try the following steps:</p>
+<ol class="arabic simple">
+<li><p>At the top of your screen, click <strong>Kernel</strong>, then <strong>Interrupt Kernel</strong>.</p></li>
+<li><p>If that doesn’t help, click <strong>Kernel</strong>, then <strong>Restart Kernel…</strong> If you do this, you will have to run your code cells from the start of your notebook up until where you paused your work.</p></li>
+<li><p>If that still doesn’t help, restart Jupyter. First, save your work by clicking <strong>File</strong> at the top left of your screen, then <strong>Save Notebook</strong>. Next, if you are accessing Jupyter using a JupyterHub server, from the <strong>File</strong> menu click <strong>Hub Control Panel</strong>. Choose <strong>Stop My Server</strong> to shut it down, then the <strong>My Server</strong> button to start it back up. If you are running Jupyter on your own computer, from the <strong>File</strong> menu click <strong>Shut Down</strong>, then start Jupyter again. Finally, navigate back to the notebook you were working on.</p></li>
+</ol>
+</section>
+<section id="creating-new-code-cells">
+<h3><span class="section-number">11.4.3. </span>Creating new code cells<a class="headerlink" href="#creating-new-code-cells" title="Permalink to this heading">#</a></h3>
+<p>To create a new code cell in Jupyter (<a class="reference internal" href="#create-new-code-cell"><span class="std std-numref">Fig. 11.6</span></a>), click the <code class="docutils literal notranslate"><span class="pre">+</span></code> button in the
+toolbar. By default, all new cells in Jupyter start out as code cells,
+so after this, all you have to do is write Python code within the new cell you just
+created!</p>
+<figure class="align-default" id="create-new-code-cell">
+<img alt="_images/create-new-code-cell.png" src="_images/create-new-code-cell.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.6 </span><span class="caption-text">New cells can be created by clicking the + button, and are by default code cells.</span><a class="headerlink" href="#create-new-code-cell" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="markdown-cells">
+<h2><span class="section-number">11.5. </span>Markdown cells<a class="headerlink" href="#markdown-cells" title="Permalink to this heading">#</a></h2>
+<p id="index-6">Text cells inside a Jupyter notebook are called Markdown cells. Markdown cells
+are rich formatted text cells, which means you can <strong>bold</strong> and <em>italicize</em>
+text, create subject headers, create bullet and numbered lists, and more. These cells are
+given the name “Markdown” because they use <em>Markdown language</em> to specify the rich text formatting.
+You do not need to learn Markdown to write text in the Markdown cells in
+Jupyter; plain text will work just fine. However, you might want to learn a bit
+about Markdown eventually to enable you to create nicely formatted analyses.
+See the additional resources at the end of this chapter to find out
+where you can start learning Markdown.</p>
+<section id="editing-markdown-cells">
+<h3><span class="section-number">11.5.1. </span>Editing Markdown cells<a class="headerlink" href="#editing-markdown-cells" title="Permalink to this heading">#</a></h3>
+<p>To edit a Markdown cell in Jupyter, you need to double click on the cell. Once
+you do this,  the unformatted (or <em>unrendered</em>) version of the text will be
+shown (<a class="reference internal" href="#markdown-cell-not-run"><span class="std std-numref">Fig. 11.7</span></a>). You
+can then use your keyboard to edit the text. To view the formatted
+(or <em>rendered</em>) text (<a class="reference internal" href="#markdown-cell-run"><span class="std std-numref">Fig. 11.8</span></a>), click the <strong>Run</strong> (⏵) button in the toolbar,
+or use the <code class="docutils literal notranslate"><span class="pre">Shift</span> <span class="pre">+</span> <span class="pre">Enter</span></code> keyboard shortcut.</p>
+<figure class="align-default" id="markdown-cell-not-run">
+<img alt="_images/markdown-cell-not-run.png" src="_images/markdown-cell-not-run.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.7 </span><span class="caption-text">A Markdown cell in Jupyter that has not yet been rendered and can be edited.</span><a class="headerlink" href="#markdown-cell-not-run" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="markdown-cell-run">
+<img alt="_images/markdown-cell-run.png" src="_images/markdown-cell-run.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.8 </span><span class="caption-text">A Markdown cell in Jupyter that has been rendered and exhibits rich text formatting.</span><a class="headerlink" href="#markdown-cell-run" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="creating-new-markdown-cells">
+<h3><span class="section-number">11.5.2. </span>Creating new Markdown cells<a class="headerlink" href="#creating-new-markdown-cells" title="Permalink to this heading">#</a></h3>
+<p>To create a new Markdown cell in Jupyter, click the <code class="docutils literal notranslate"><span class="pre">+</span></code> button in the toolbar.
+By default, all new cells in Jupyter start as code cells, so
+the cell format needs to be changed to be recognized and rendered as a Markdown
+cell. To do this, click on the cell with your cursor to
+ensure it is activated.  Then click on the drop-down box on the toolbar that says “Code” (it
+is next to the ⏭ button), and change it from “<strong>Code</strong>” to “<strong>Markdown</strong>” (<a class="reference internal" href="#convert-to-markdown-cell"><span class="std std-numref">Fig. 11.9</span></a>).</p>
+<figure class="align-default" id="convert-to-markdown-cell">
+<img alt="_images/convert-to-markdown-cell.png" src="_images/convert-to-markdown-cell.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.9 </span><span class="caption-text">New cells are by default code cells. To create Markdown cells, the cell format must be changed.</span><a class="headerlink" href="#convert-to-markdown-cell" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="saving-your-work">
+<h2><span class="section-number">11.6. </span>Saving your work<a class="headerlink" href="#saving-your-work" title="Permalink to this heading">#</a></h2>
+<p>As with any file you work on, it is critical to save your work often so you
+don’t lose your progress! Jupyter has an autosave feature, where open files are
+saved periodically. The default for this is every two minutes. You can also
+manually save a Jupyter notebook by selecting <strong>Save Notebook</strong> from the
+<strong>File</strong> menu, by clicking the disk icon on the toolbar,
+or by using a keyboard shortcut (<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">+</span> <span class="pre">S</span></code> for Windows, or <code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">+</span> <span class="pre">S</span></code> for
+Mac OS).</p>
+</section>
+<section id="best-practices-for-running-a-notebook">
+<h2><span class="section-number">11.7. </span>Best practices for running a notebook<a class="headerlink" href="#best-practices-for-running-a-notebook" title="Permalink to this heading">#</a></h2>
+<section id="best-practices-for-executing-code-cells">
+<h3><span class="section-number">11.7.1. </span>Best practices for executing code cells<a class="headerlink" href="#best-practices-for-executing-code-cells" title="Permalink to this heading">#</a></h3>
+<p id="index-7">As you might know (or at least imagine) by now, Jupyter notebooks are great for
+interactively editing, writing and running Python code; this is what they were
+designed for! Consequently, Jupyter notebooks are flexible in regards to code
+cell execution order. This flexibility means that code cells can be run in any
+arbitrary order using the <strong>Run</strong> (⏵) button. But this flexibility has a downside:
+it can lead to Jupyter notebooks whose code cannot be executed in a linear
+order (from top to bottom of the notebook). A nonlinear notebook is problematic
+because a linear order is the conventional way code documents are run, and
+others will have this expectation when running your notebook. Finally, if the
+code is used in some automated process, it will need to run in a linear order,
+from top to bottom of the notebook.</p>
+<p>The most common way to inadvertently create a nonlinear notebook is to rely solely
+on using the (⏵) button to execute cells. For example,
+suppose you write some Python code that creates a Python object, say a variable named
+<code class="docutils literal notranslate"><span class="pre">y</span></code>. When you execute that cell and create <code class="docutils literal notranslate"><span class="pre">y</span></code>, it will continue
+to exist until it is deliberately deleted with Python code, or when the Jupyter
+notebook Python session (<em>i.e.</em>, kernel) is stopped or restarted. It can also be
+referenced in another distinct code cell (<a class="reference internal" href="#out-of-order-1"><span class="std std-numref">Fig. 11.10</span></a>).
+Together, this means that you could then write a code cell further above in the
+notebook that references <code class="docutils literal notranslate"><span class="pre">y</span></code> and execute it without error in the current session
+(<a class="reference internal" href="#out-of-order-2"><span class="std std-numref">Fig. 11.11</span></a>). This could also be done successfully in
+future sessions if, and only if, you run the cells in the same unconventional
+order. However, it is difficult to remember this unconventional order, and it
+is not the order that others would expect your code to be executed in. Thus, in
+the future, this would lead
+to errors when the notebook is run in the conventional
+linear order (<a class="reference internal" href="#out-of-order-3"><span class="std std-numref">Fig. 11.12</span></a>).</p>
+<figure class="align-default" id="out-of-order-1">
+<img alt="_images/out-of-order-1.png" src="_images/out-of-order-1.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.10 </span><span class="caption-text">Code that was written out of order, but not yet executed.</span><a class="headerlink" href="#out-of-order-1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="out-of-order-2">
+<img alt="_images/out-of-order-2.png" src="_images/out-of-order-2.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.11 </span><span class="caption-text">Code that was written out of order, and was executed using the run button in a
+nonlinear order without error. The order of execution can be traced by
+following the numbers to the left of the code cells; their order indicates the
+order in which the cells were executed.</span><a class="headerlink" href="#out-of-order-2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="out-of-order-3">
+<img alt="_images/out-of-order-3.png" src="_images/out-of-order-3.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.12 </span><span class="caption-text">Code that was written out of order, and was executed in a linear order using
+“Restart Kernel and Run All Cells…” This resulted in an error at the
+execution of the second code cell and it failed to run all code cells in the
+notebook.</span><a class="headerlink" href="#out-of-order-3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>You can also accidentally create a nonfunctioning notebook by
+creating an object in a cell that later gets deleted. In such a
+scenario, that object only exists for that one particular Python session and will
+not exist once the notebook is restarted and run again. If that
+object was referenced in another cell in that notebook, an error
+would occur when the notebook was run again in a new session.</p>
+<p>These events may not negatively affect the current Python session when
+the code is being written; but as you might now see, they will likely lead to
+errors when that notebook is run in a future session. Regularly executing
+the entire notebook in a fresh Python session will help guard
+against this. If you restart your session and new errors seem to pop up when
+you run all of your cells in linear order, you can at least be aware that there
+is an issue. Knowing this sooner rather than later will allow you to
+fix the issue and ensure your notebook can be run linearly from start to finish.</p>
+<p>We recommend as a best practice to run the entire notebook in a fresh Python session
+at least 2–3 times within any period of work. Note that,
+critically, you <em>must do this in a fresh Python session</em> by restarting your kernel.
+We recommend using either the <strong>Kernel</strong> &gt;&gt;
+<strong>Restart Kernel and Run All Cells…</strong> command from the menu or the ⏭
+button in the toolbar. Note that the <strong>Run</strong> &gt;&gt; <strong>Run All Cells</strong>
+menu item will not restart the kernel, and so it is not sufficient
+to guard against these errors.</p>
+</section>
+<section id="best-practices-for-including-python-packages-in-notebooks">
+<h3><span class="section-number">11.7.2. </span>Best practices for including Python packages in notebooks<a class="headerlink" href="#best-practices-for-including-python-packages-in-notebooks" title="Permalink to this heading">#</a></h3>
+<p>Most data analyses these days depend on functions from external Python packages that
+are not built into Python. One example is the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package that we
+heavily rely on in this book. This package provides us access to functions like
+<code class="docutils literal notranslate"><span class="pre">read_csv</span></code> for reading data, and <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> for subsetting rows and columns.
+We also use the <code class="docutils literal notranslate"><span class="pre">altair</span></code> package for  creating high-quality graphics.</p>
+<p>As mentioned earlier in the book, external Python packages need to be loaded before
+the functions they contain can be used. Our recommended way to do this is via
+<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">package_name</span></code>, and perhaps also to give it a shorter alias like
+<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">package_name</span> <span class="pre">as</span> <span class="pre">pn</span></code>. But where should this line of code be written in a
+Jupyter notebook? One idea could be to load the library right before the
+function is used in the notebook. However, although this technically works, this
+causes hidden, or at least non-obvious, Python package dependencies when others view
+or try to run the notebook. These hidden dependencies can lead to errors when
+the notebook is executed on another computer if the needed Python packages are not
+installed. Additionally, if the data analysis code takes a long time to run,
+uncovering the hidden dependencies that need to be installed so that the
+analysis can run without error can take a great deal of time to uncover.</p>
+<p>Therefore, we recommend you load all Python packages in a code cell near the top of
+the Jupyter notebook. Loading all your packages at the start ensures that all
+packages are loaded before their functions are called, assuming the notebook is
+run in a linear order from top to bottom as recommended above. It also makes it
+easy for others viewing or running the notebook to see what external Python packages
+are used in the analysis, and hence, what packages they should install on
+their computer to run the analysis successfully.</p>
+</section>
+<section id="summary-of-best-practices-for-running-a-notebook">
+<h3><span class="section-number">11.7.3. </span>Summary of best practices for running a notebook<a class="headerlink" href="#summary-of-best-practices-for-running-a-notebook" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Write code so that it can be executed in a linear order.</p></li>
+<li><p>As you write code in a Jupyter notebook, run the notebook in a linear order
+and in its entirety often (2–3 times every work session) via the <strong>Kernel</strong> &gt;&gt;
+<strong>Restart Kernel and Run All Cells…</strong> command from the Jupyter menu or the ⏭
+button in the toolbar.</p></li>
+<li><p>Write the code that loads external Python packages near the top of the Jupyter
+notebook.</p></li>
+</ol>
+</section>
+</section>
+<section id="exploring-data-files">
+<h2><span class="section-number">11.8. </span>Exploring data files<a class="headerlink" href="#exploring-data-files" title="Permalink to this heading">#</a></h2>
+<p id="index-8">It is essential to preview data files before you try to read them into Python to see
+whether or not there are column names, what the separators are, and if there are
+lines you need to skip. In Jupyter, you preview data files stored as plain text
+files (e.g., comma- and tab-separated files) in their plain text format (<a class="reference internal" href="#open-data-w-editor-2"><span class="std std-numref">Fig. 11.14</span></a>) by
+right-clicking on the file’s name in the Jupyter file explorer, selecting
+<strong>Open with</strong>, and then selecting <strong>Editor</strong> (<a class="reference internal" href="#open-data-w-editor-1"><span class="std std-numref">Fig. 11.13</span></a>).
+Suppose you do not specify to open
+the data file with an editor. In that case, Jupyter will render a nice table
+for you, and you will not be able to see the column separators, and therefore
+you will not know which function to use, nor which arguments to use and values
+to specify for them.</p>
+<figure class="align-default" id="open-data-w-editor-1">
+<img alt="_images/open_data_w_editor_01.png" src="_images/open_data_w_editor_01.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.13 </span><span class="caption-text">Opening data files with an editor in Jupyter.</span><a class="headerlink" href="#open-data-w-editor-1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="open-data-w-editor-2">
+<img alt="_images/open_data_w_editor_02.png" src="_images/open_data_w_editor_02.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.14 </span><span class="caption-text">A data file as viewed in an editor in Jupyter.</span><a class="headerlink" href="#open-data-w-editor-2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="exporting-to-a-different-file-format">
+<h2><span class="section-number">11.9. </span>Exporting to a different file format<a class="headerlink" href="#exporting-to-a-different-file-format" title="Permalink to this heading">#</a></h2>
+<p id="index-9">In Jupyter, viewing, editing and running Python code is done in the Jupyter notebook
+file format with file extension <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>. This file format is not easy to open and
+view outside of Jupyter. Thus, to share your analysis with people who do not
+commonly use Jupyter, it is recommended that you export your executed analysis
+as a more common file type, such as an <code class="docutils literal notranslate"><span class="pre">.html</span></code> file, or a <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>. We recommend
+exporting the Jupyter notebook after executing the analysis so that you can
+also share the outputs of your code. Note, however, that your audience will not be
+able to <em>run</em> your analysis using a <code class="docutils literal notranslate"><span class="pre">.html</span></code> or <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> file. If you want your audience
+to be able to reproduce the analysis, you must provide them with the <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> Jupyter notebook file.</p>
+<section id="exporting-to-html">
+<h3><span class="section-number">11.9.1. </span>Exporting to HTML<a class="headerlink" href="#exporting-to-html" title="Permalink to this heading">#</a></h3>
+<p>Exporting to <code class="docutils literal notranslate"><span class="pre">.html</span></code> will result in a shareable file that anyone can open
+using a web browser (e.g., Firefox, Safari, Chrome, or Edge). The <code class="docutils literal notranslate"><span class="pre">.html</span></code>
+output will produce a document that is visually similar to what the Jupyter notebook
+looked like inside Jupyter. One point of caution here is that if there are
+images in your Jupyter notebook, you will need to share the image files and the
+<code class="docutils literal notranslate"><span class="pre">.html</span></code> file to see them.</p>
+</section>
+<section id="exporting-to-pdf">
+<h3><span class="section-number">11.9.2. </span>Exporting to PDF<a class="headerlink" href="#exporting-to-pdf" title="Permalink to this heading">#</a></h3>
+<p>Exporting to <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> will result in a shareable file that anyone can open
+using many programs, including Adobe Acrobat, Preview, web browsers and many
+more. The benefit of exporting to PDF is that it is a standalone document,
+even if the Jupyter notebook included references to image files.
+Unfortunately, the default settings will result in a document
+that visually looks quite different from what the Jupyter notebook looked
+like. The font, page margins, and other details will appear different in the <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> output.</p>
+</section>
+</section>
+<section id="creating-a-new-jupyter-notebook">
+<h2><span class="section-number">11.10. </span>Creating a new Jupyter notebook<a class="headerlink" href="#creating-a-new-jupyter-notebook" title="Permalink to this heading">#</a></h2>
+<p>At some point, you will want to create a new, fresh Jupyter notebook for your
+own project instead of viewing, running or editing a notebook that was started
+by someone else. To do this, navigate to the <strong>Launcher</strong> tab, and click on
+the Python icon under the <strong>Notebook</strong> heading. If no <strong>Launcher</strong> tab is visible,
+you can get a new one via clicking the <strong>+</strong> button at the top of the Jupyter
+file explorer (<a class="reference internal" href="#launcher"><span class="std std-numref">Fig. 11.15</span></a>).</p>
+<figure class="align-default" id="launcher">
+<img alt="_images/launcher-annotated.png" src="_images/launcher-annotated.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 11.15 </span><span class="caption-text">Clicking on the Python icon under the Notebook heading will create a new Jupyter notebook with a Python kernel.</span><a class="headerlink" href="#launcher" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Once you have created a new Jupyter notebook, be sure to give it a descriptive
+name, as the default file name is <code class="docutils literal notranslate"><span class="pre">Untitled.ipynb</span></code>. You can rename files by
+first right-clicking on the file name of the notebook you just created, and
+then clicking <strong>Rename</strong>. This will make
+the file name editable. Use your keyboard to
+change the name. Pressing <code class="docutils literal notranslate"><span class="pre">Enter</span></code> or clicking anywhere else in the Jupyter
+interface will save the changed file name.</p>
+<p>We recommend not using white space or non-standard characters in file names.
+Doing so will not prevent you from using that file in Jupyter. However, these
+sorts of things become troublesome as you start to do more advanced data
+science projects that involve repetition and automation. We recommend naming
+files using lower case characters and separating words by a dash (<code class="docutils literal notranslate"><span class="pre">-</span></code>) or an
+underscore (<code class="docutils literal notranslate"><span class="pre">_</span></code>).</p>
+</section>
+<section id="additional-resources">
+<h2><span class="section-number">11.11. </span>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://jupyterlab.readthedocs.io/en/latest/">JupyterLab Documentation</a>
+is a good next place to look for more information about working in Jupyter
+notebooks. This documentation goes into significantly more detail about all of
+the topics we covered in this chapter, and covers more advanced topics as well.</p></li>
+<li><p>If you are keen to learn about the Markdown language for rich text
+formatting, two good places to start are CommonMark’s <a class="reference external" href="https://commonmark.org/help/">Markdown
+cheatsheet</a> and <a class="reference external" href="https://commonmark.org/help/tutorial/">Markdown
+tutorial</a>.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">11.12. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<div class="docutils container" id="id2">
+<dl class="citation">
+<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id1">KRKPerez+16</a></span></dt>
+<dd><p>Thomas Kluyver, Benjamin Ragan-Kelley, Fernando Pérez, Brian Granger, Matthias Bussonnier, Jonathan Frederic, Kyle Kelley, Jessica Hamrick, Jason Grout, Sylvain Corlay, Paul Ivanov, Damián Avila, Safia Abdalla, Carol Willing, and Jupyter Development Team. Jupyter notebooks: a publishing format for reproducible computational workflows. In <em>Positioning and Power in Academic Publishing: Players, Agents and Agendas: Proceedings of the 20th international conference on electronic publishing</em>, volume 87. Amsterdam, 2016. IOS Press.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+<script>kernelName = 'python3'</script>
+</article>
+<footer class="prev-next-footer">
+<!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev link-to-diff" href="inference.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title"><span class="section-number">10. </span>Statistical inference</p>
+</div>
+</a>
+<a class="right-next link-to-diff" href="version-control.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title"><span class="section-number">12. </span>Collaboration with version control</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">11.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">11.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">11.3. Jupyter</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-jupyter">11.3.1. Accessing Jupyter</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-cells">11.4. Code cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-code-cells">11.4.1. Executing code cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kernel">11.4.2. The Kernel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-code-cells">11.4.3. Creating new code cells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown-cells">11.5. Markdown cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-markdown-cells">11.5.1. Editing Markdown cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-markdown-cells">11.5.2. Creating new Markdown cells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-your-work">11.6. Saving your work</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-running-a-notebook">11.7. Best practices for running a notebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-executing-code-cells">11.7.1. Best practices for executing code cells</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-including-python-packages-in-notebooks">11.7.2. Best practices for including Python packages in notebooks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-best-practices-for-running-a-notebook">11.7.3. Summary of best practices for running a notebook</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-data-files">11.8. Exploring data files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-a-different-file-format">11.9. Exporting to a different file format</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-html">11.9.1. Exporting to HTML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-to-pdf">11.9.2. Exporting to PDF</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-new-jupyter-notebook">11.10. Creating a new Jupyter notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">11.11. Additional resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">11.12. References</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+By Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, and Lindsey Heagy
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+<footer class="bd-footer">
+</footer>
+</body>
+</html>

@@ -1097,16 +1097,15 @@ The "Closed" issues tab on the GitHub web interface.
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter
-can be found in the accompanying
-[worksheets repository](https://worksheets.python.datasciencebook.ca)
-in the "Collaboration with version control" row.
-You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
-You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
-If you instead decide to download the worksheet and run it on your own machine,
-make sure to follow the instructions for computer setup
-found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
-and guidance that the worksheets provide will function as intended.
+Practice exercises for the material covered in this chapter can be found in the
+accompanying [worksheets repository](https://worksheets.python.datasciencebook.ca) in
+the "Collaboration with version control" row. You can preview a
+non-interactive version of the worksheet for this chapter by clicking "view
+worksheet." To work on the exercises interactively, follow the instructions in
+the worksheets repository to download all worksheets, and follow the
+instructions for computer setup found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure
+that the automated feedback and guidance that the worksheets provide will
+function as intended.
 
 ## Additional resources
 

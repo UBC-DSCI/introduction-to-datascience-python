@@ -1651,7 +1651,7 @@ each estimate having a standard error around {glue:text}`mean_sem_acc_ks`%.
 Since the cross-validation accuracy estimates the test set accuracy,
 the fact that the test set accuracy also doesn't change much is expected.
 Also note that the $K =$ 3 model had a precision 
-precision of {glue:text}`cancer_prec_1`% and recall of {glue:text}`cancer_rec_1`%,
+of {glue:text}`cancer_prec_1`% and recall of {glue:text}`cancer_rec_1`%,
 while the tuned model had
 a precision of {glue:text}`cancer_prec_tuned`% and recall of {glue:text}`cancer_rec_tuned`%.
 Given that the recall decreased&mdash;remember, in this application, recall

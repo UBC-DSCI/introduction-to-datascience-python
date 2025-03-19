@@ -1,0 +1,2377 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<title>1. Python and Pandas — Data Science: A First Introduction with Python</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!-- Loaded before other Sphinx assets -->
+<link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
+<link href="_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/copybutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+<link href="_static/style.css" rel="stylesheet" type="text/css"/>
+<link href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<link as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/clipboard.min.js"></script>
+<script src="_static/copybutton.js"></script>
+<script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+<script>let toggleHintShow = 'Click to show';</script>
+<script>let toggleHintHide = 'Click to hide';</script>
+<script>let toggleOpenOnPrint = 'true';</script>
+<script src="_static/togglebutton.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+<script src="_static/design-tabs.js"></script>
+<script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-7XBFF4RSN2"></script>
+<script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-7XBFF4RSN2');
+            </script>
+<script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+<script async="async" src="_static/sphinx-thebe.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="reading.html" rel="next" title="2. Reading in data locally and from the web"/>
+<link href="authors.html" rel="prev" title="About the authors"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<script src="website_diff.js"></script><link href="website_diff.css" rel="stylesheet" type="text/css"/></head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+</div>
+<nav class="bd-header navbar navbar-expand-lg bd-navbar">
+</nav>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="index.html">
+<p class="title logo__title">Data Science: A First Introduction with Python</p>
+</a></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Front Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preface-text.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foreword-text.html">Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">About the authors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Python and Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reading.html">2. Reading in data locally and from the web</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="wrangling.html">3. Cleaning and wrangling data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">4. Effective data visualization</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification1.html">5. Classification I: training &amp; predicting</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification2.html">6. Classification II: evaluation &amp; tuning</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression1.html">7. Regression I: K-nearest neighbors</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression2.html">8. Regression II: linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">9. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">10. Statistical inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jupyter.html">11. Combining code and text with Jupyter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-control.html">12. Collaboration with version control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">13. Setting up your computer</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
+</label></div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<div class="dropdown dropdown-download-buttons">
+<button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fas fa-download"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="_sources/intro.md" target="_blank" title="Download source file">
+<span class="btn__icon-container">
+<i class="fas fa-file"></i>
+</span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+<li>
+<button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
+<span class="btn__icon-container">
+<i class="fas fa-file-pdf"></i>
+</span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+</ul>
+</div>
+<button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+<span class="btn__icon-container">
+<i class="fas fa-expand"></i>
+</span>
+</button>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Python and Pandas</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">1.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">1.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canadian-languages-data-set">1.3. Canadian languages data set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asking-a-question">1.4. Asking a question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-a-tabular-data-set">1.5. Loading a tabular data set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-things-in-python">1.6. Naming things in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-subsets-of-data-frames-with-loc">1.7. Creating subsets of data frames with <code class="docutils literal notranslate"><span class="pre">[]</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">loc[]</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-to-filter-rows">1.7.1. Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to filter rows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-to-select-columns">1.7.2. Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to select columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loc-to-filter-rows-and-select-columns">1.7.3. Using <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> to filter rows and select columns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-sort-values-and-head-to-select-rows-by-ordered-values">1.8. Using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> and <code class="docutils literal notranslate"><span class="pre">head</span></code> to select rows by ordered values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-and-modifying-columns">1.9. Adding and modifying columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-steps-with-chaining-and-multiline-expressions">1.10. Combining steps with chaining and multiline expressions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-data-with-visualizations">1.11. Exploring data with visualizations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-altair-to-create-a-bar-plot">1.11.1. Using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to create a bar plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formatting-altair-charts">1.11.2. Formatting <code class="docutils literal notranslate"><span class="pre">altair</span></code> charts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">1.11.3. Putting it all together</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-documentation">1.12. Accessing documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">1.13. Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">1.14. References</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article" role="main">
+<section class="tex2jax_ignore mathjax_ignore" id="python-and-pandas">
+<span id="intro"></span><h1><span class="section-number">1. </span>Python and Pandas<a class="headerlink" href="#python-and-pandas" title="Permalink to this heading">#</a></h1>
+<section id="overview">
+<h2><span class="section-number">1.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>This chapter provides an introduction to data science and the Python programming language.
+The goal here is to get your hands dirty right from the start! We will walk through an entire data analysis,
+and along the way introduce different types of data analysis question, some fundamental programming
+concepts in Python, and the basics of loading, cleaning, and visualizing data. In the following chapters, we will
+dig into each of these steps in much more detail; but for now, let’s jump in to see how much we can do
+with data science!</p>
+</section>
+<section id="chapter-learning-objectives">
+<h2><span class="section-number">1.2. </span>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul class="simple">
+<li><p>Identify the different types of data analysis question and categorize a question into the correct type.</p></li>
+<li><p>Load the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package into Python.</p></li>
+<li><p>Read tabular data with <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>.</p></li>
+<li><p>Create new variables and objects in Python using the assignment symbol.</p></li>
+<li><p>Create and organize subsets of tabular data using <code class="docutils literal notranslate"><span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">loc[]</span></code>, <code class="docutils literal notranslate"><span class="pre">sort_values</span></code>, and <code class="docutils literal notranslate"><span class="pre">head</span></code>.</p></li>
+<li><p>Add and modify columns in tabular data using column assignment.</p></li>
+<li><p>Chain multiple operations in sequence.</p></li>
+<li><p>Visualize data with an <code class="docutils literal notranslate"><span class="pre">altair</span></code> bar plot.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">help()</span></code> and <code class="docutils literal notranslate"><span class="pre">?</span></code> to access help and documentation tools in Python.</p></li>
+</ul>
+</section>
+<section id="canadian-languages-data-set">
+<h2><span class="section-number">1.3. </span>Canadian languages data set<a class="headerlink" href="#canadian-languages-data-set" title="Permalink to this heading">#</a></h2>
+<p id="index-0">In this chapter, we will walk through a full analysis of a data set relating to
+languages spoken at home by Canadian residents (<a class="reference internal" href="#canadamap"><span class="std std-numref">Fig. 1.1</span></a>). Many Indigenous peoples exist in Canada
+with their own cultures and languages; these languages are often unique to Canada and not spoken
+anywhere else in the world <span id="id1">[<a class="reference internal" href="#id43" title="Statistics Canada. The evolution of language populations in Canada, by mother tongue, from 1901 to 2016. 2018. URL: https://www150.statcan.gc.ca/n1/pub/11-630-x/11-630-x2018001-eng.htm (visited on 2021-05-27).">Statistics Canada, 2018</a>]</span>. Sadly, colonization has
+led to the loss of many of these languages. For instance, generations of
+children were not allowed to speak their mother tongue (the first language an
+individual learns in childhood) in Canadian residential schools. Colonizers
+also renamed places they had “discovered” <span id="id2">[<a class="reference internal" href="#id44" title="Kory Wilson. Pulling Together: Foundations Guide. BCcampus, 2018. URL: https://opentextbc.ca/indigenizationfoundations/ (visited on 2021-05-27).">Wilson, 2018</a>]</span>.  Acts such as these
+have significantly harmed the continuity of Indigenous languages in Canada, and
+some languages are considered “endangered” as few people report speaking them.
+To learn more, please see <em>Canadian Geographic</em>’s article, “Mapping Indigenous Languages in
+Canada” <span id="id3">[<a class="reference internal" href="#id45" title="Nick Walker. Mapping indigenous languages in Canada. Canadian Geographic, 2017. URL: https://www.canadiangeographic.ca/article/mapping-indigenous-languages-canada (visited on 2021-05-27).">Walker, 2017</a>]</span>,
+<em>They Came for the Children: Canada, Aboriginal
+peoples, and Residential Schools</em> <span id="id4">[<a class="reference internal" href="#id48" title="Truth and Reconciliation Commission of Canada. They Came for the Children: Canada, Aboriginal Peoples, and the Residential Schools. Public Works &amp; Government Services Canada, 2012.">Truth and Reconciliation Commission of Canada, 2012</a>]</span>
+and the <em>Truth and Reconciliation Commission of Canada’s</em>
+<em>Calls to Action</em> <span id="id5">[<a class="reference internal" href="#id49" title="Truth and Reconciliation Commission of Canada. Calls to Action. 2015. URL: https://www2.gov.bc.ca/assets/gov/british-columbians-our-governments/indigenous-people/aboriginal-peoples-documents/calls_to_action_english2.pdf.">Truth and Reconciliation Commission of Canada, 2015</a>]</span>.</p>
+<figure class="align-default" id="canadamap">
+<img alt="_images/canada_map.png" src="_images/canada_map.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.1 </span><span class="caption-text">Map of Canada</span><a class="headerlink" href="#canadamap" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The data set we will study in this chapter is taken from
+<a class="reference external" href="https://ttimbers.github.io/canlang/">the <code class="docutils literal notranslate"><span class="pre">canlang</span></code> R data package</a>
+<span id="id6">[<a class="reference internal" href="viz.html#id31" title="Tiffany Timbers. canlang: Canadian Census language data. 2020. R package version 0.0.9. URL: https://ttimbers.github.io/canlang/.">Timbers, 2020</a>]</span>, which has
+population language data collected during the 2016 Canadian census <span id="id7">[<a class="reference internal" href="#id24" title="Statistics Canada. Population census. 2016. URL: https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/index-eng.cfm.">Statistics Canada, 2016</a>]</span>.
+In this data, there are 214 languages recorded, each having six different properties:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code>: Higher-level language category, describing whether the language is an Official Canadian language, an Aboriginal (i.e., Indigenous) language, or a Non-Official and Non-Aboriginal language.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">language</span></code>: The name of the language.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code>: Number of Canadian residents who reported the language as their mother tongue. Mother tongue is generally defined as the language someone was exposed to since birth.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">most_at_home</span></code>: Number of Canadian residents who reported the language as being spoken most often at home.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">most_at_work</span></code>: Number of Canadian residents who reported the language as being used most often at work.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lang_known</span></code>: Number of Canadian residents who reported knowledge of the language.</p></li>
+</ol>
+<p>According to the census, more than 60 Aboriginal languages were reported
+as being spoken in Canada. Suppose we want to know which are the most common;
+then we might ask the following question, which we wish to answer using our data:</p>
+<p><em>Which ten Aboriginal languages were most often reported in 2016 as mother
+tongues in Canada, and how many people speak each of them?</em></p>
+<div class="admonition note" id="index-1">
+<p class="admonition-title">Note</p>
+<p>Data science cannot be done without
+a deep understanding of the data and
+problem domain. In this book, we have simplified the data sets used in our
+examples to concentrate on methods and fundamental concepts. But in real
+life, you cannot and should not do data science without a domain expert.
+Alternatively, it is common to practice data science in your own domain of
+expertise! Remember that when you work with data, it is essential to think
+about <em>how</em> the data were collected, which affects the conclusions you can
+draw. If your data are biased, then your results will be biased!</p>
+</div>
+</section>
+<section id="asking-a-question">
+<h2><span class="section-number">1.4. </span>Asking a question<a class="headerlink" href="#asking-a-question" title="Permalink to this heading">#</a></h2>
+<p>Every good data analysis begins with a <em>question</em>—like the
+above—that you aim to answer using data. As it turns out, there
+are actually a number of different <em>types</em> of question regarding data:
+descriptive, exploratory, predictive, inferential, causal, and mechanistic,
+all of which are defined in <a class="reference internal" href="#questions-table"><span class="std std-numref">Table 1.1</span></a>. <span id="id8">[<a class="reference internal" href="#id27" title="Jeffrey Leek and Roger Peng. What is the question? Science, 347(6228):1314–1315, 2015.">Leek and Peng, 2015</a>, <a class="reference internal" href="#id28" title="Roger D Peng and Elizabeth Matsui. The Art of Data Science: A Guide for Anyone Who Works with Data. Skybrude Consulting, LLC, 2015. URL: https://bookdown.org/rdpeng/artofdatascience/.">Peng and Matsui, 2015</a>]</span>
+Carefully formulating a question as early as possible in your analysis—and
+correctly identifying which type of question it is—will guide your overall approach to
+the analysis as well as the selection of appropriate tools.</p>
+<span class="target" id="index-2"></span><span id="index-3"></span><table class="table" id="questions-table">
+<caption><span class="caption-number">Table 1.1 </span><span class="caption-text">Types of data analysis question.</span><a class="headerlink" href="#questions-table" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Question type</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Descriptive</p></td>
+<td><p>A question that asks about summarized characteristics of a data set without interpretation (i.e., report a fact).</p></td>
+<td><p>How many people live in each province and territory in Canada?</p></td>
+</tr>
+<tr class="row-odd"><td><p>Exploratory</p></td>
+<td><p>A question that asks if there are patterns, trends, or relationships within a single data set. Often used to propose hypotheses for future study.</p></td>
+<td><p>Does political party voting change with indicators of wealth in a set of data collected on 2,000 people living in Canada?</p></td>
+</tr>
+<tr class="row-even"><td><p>Predictive</p></td>
+<td><p>A question that asks about predicting measurements or labels for individuals (people or things). The focus is on what things predict some outcome, but not what causes the outcome.</p></td>
+<td><p>What political party will someone vote for in the next Canadian election?</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inferential</p></td>
+<td><p>A question that looks for patterns, trends, or relationships in a single data set <strong>and</strong> also asks for quantification of how applicable these findings are to the wider population.</p></td>
+<td><p>Does political party voting change with indicators of wealth for all people living in Canada?</p></td>
+</tr>
+<tr class="row-even"><td><p>Causal</p></td>
+<td><p>A question that asks about whether changing one factor will lead to a change in another factor, on average, in the wider population.</p></td>
+<td><p>Does wealth lead to voting for a certain political party in Canadian elections?</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mechanistic</p></td>
+<td><p>A question that asks about the underlying mechanism of the observed patterns, trends, or relationships (i.e., how does it happen?)</p></td>
+<td><p>How does wealth lead to voting for a certain political party in Canadian elections?</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this book, you will learn techniques to answer the
+first four types of question: descriptive, exploratory, predictive, and inferential;
+causal and mechanistic questions are beyond the scope of this book.
+In particular, you will learn how to apply the following analysis tools:</p>
+<span class="target" id="index-4"></span><ol class="arabic simple" id="index-5">
+<li><p><strong>Summarization:</strong> computing and reporting aggregated values pertaining to a data set.
+Summarization is most often used to answer descriptive questions,
+and can occasionally help with answering exploratory questions.
+For example, you might use summarization to answer the following question:
+<em>What is the average race time for runners in this data set?</em>
+Tools for summarization are covered in detail in <a class="reference internal" href="reading.html#reading"><span class="std std-numref">Chapters 2</span></a>
+and <a class="reference internal link-to-diff" href="wrangling.html#wrangling"><span class="std std-numref">3</span></a>, but appear regularly throughout the text.</p></li>
+<li><p><strong>Visualization:</strong> plotting data graphically.
+Visualization is typically used to answer descriptive and exploratory questions,
+but plays a critical supporting role in answering all of the types of question in <a class="reference internal" href="#questions-table"><span class="std std-numref">Table 1.1</span></a>.
+For example, you might use visualization to answer the following question:
+<em>Is there any relationship between race time and age for runners in this data set?</em>
+This is covered in detail in <a class="reference internal" href="viz.html#viz"><span class="std std-numref">Chapter 4</span></a>, but again appears regularly throughout the book.</p></li>
+<li><p><strong>Classification:</strong> predicting a class or category for a new observation.
+Classification is used to answer predictive questions.
+For example, you might use classification to answer the following question:
+<em>Given measurements of a tumor’s average cell area and perimeter, is the tumor benign or malignant?</em>
+Classification is covered in <a class="reference internal link-to-diff" href="classification1.html#classification1"><span class="std std-numref">Chapters 5</span></a> and <a class="reference internal link-to-diff" href="classification2.html#classification2"><span class="std std-numref">6</span></a>.</p></li>
+<li><p><strong>Regression:</strong> predicting a quantitative value for a new observation.
+Regression is also used to answer predictive questions.
+For example, you might use regression to answer the following question:
+<em>What will be the race time for a 20-year-old runner who weighs 50kg?</em>
+Regression is covered in <a class="reference internal link-to-diff" href="regression1.html#regression1"><span class="std std-numref">Chapters 7</span></a> and <a class="reference internal link-to-diff" href="regression2.html#regression2"><span class="std std-numref">8</span></a>.</p></li>
+<li><p><strong>Clustering:</strong> finding previously unknown/unlabeled subgroups in a
+data set. Clustering is often used to answer exploratory questions.
+For example, you might use clustering to answer the following question:
+<em>What products are commonly bought together on Amazon?</em>
+Clustering is covered in <a class="reference internal" href="clustering.html#clustering"><span class="std std-numref">Chapter 9</span></a>.</p></li>
+<li><p><strong>Estimation:</strong> taking measurements for a small number of items from a large group
+and making a good guess for the average or proportion for the large group. Estimation
+is used to answer inferential questions.
+For example, you might use estimation to answer the following question:
+<em>Given a survey of cellphone ownership of 100 Canadians, what proportion
+of the entire Canadian population own Android phones?</em>
+Estimation is covered in <a class="reference internal" href="inference.html#inference"><span class="std std-numref">Chapter 10</span></a>.</p></li>
+</ol>
+<p>Referring to <a class="reference internal" href="#questions-table"><span class="std std-numref">Table 1.1</span></a>, our question about
+Aboriginal languages is an example of a <em>descriptive question</em>: we are
+summarizing the characteristics of a data set without further interpretation.
+And referring to the list above, it looks like we should use visualization
+and perhaps some summarization to answer the question. So in the remainder
+of this chapter, we will work towards making a visualization that shows
+us the ten most common Aboriginal languages in Canada and their associated counts,
+according to the 2016 census.</p>
+</section>
+<section id="loading-a-tabular-data-set">
+<h2><span class="section-number">1.5. </span>Loading a tabular data set<a class="headerlink" href="#loading-a-tabular-data-set" title="Permalink to this heading">#</a></h2>
+<p id="index-6">A data set is, at its core essence, a structured collection of numbers and characters.
+Aside from that, there are really no strict rules; data sets can come in
+many different forms! Perhaps the most common form of data set that you will
+find in the wild, however, is <em>tabular data</em>. Think spreadsheets in Microsoft Excel: tabular data are
+rectangular-shaped and spreadsheet-like, as shown in <a class="reference internal" href="#img-spreadsheet-vs-data-frame"><span class="std std-numref">Fig. 1.2</span></a>. In this book, we will focus primarily on tabular data.</p>
+<p id="index-7">Since we are using Python for data analysis in this book, the first step for us is to
+load the data into Python. When we load tabular data into
+Python, it is represented as a <em>data frame</em> object. <a class="reference internal" href="#img-spreadsheet-vs-data-frame"><span class="std std-numref">Fig. 1.2</span></a> shows that a Python data frame is very similar
+to a spreadsheet. We refer to the rows as <strong>observations</strong>; these are the individual objects
+for which we collect data. In <a class="reference internal" href="#img-spreadsheet-vs-data-frame"><span class="std std-numref">Fig. 1.2</span></a>, the observations are
+languages. We refer to the columns as <strong>variables</strong>; these are the characteristics of each
+observation. In <a class="reference internal" href="#img-spreadsheet-vs-data-frame"><span class="std std-numref">Fig. 1.2</span></a>, the variables are the the language’s category, its name, the number of mother tongue speakers, etc.</p>
+<figure class="align-default" id="img-spreadsheet-vs-data-frame">
+<a class="reference internal image-reference" href="_images/spreadsheet_vs_df.png"><img alt="_images/spreadsheet_vs_df.png" src="_images/spreadsheet_vs_df.png" style="height: 500px;"/></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1.2 </span><span class="caption-text">A spreadsheet versus a data frame in Python</span><a class="headerlink" href="#img-spreadsheet-vs-data-frame" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<span class="target" id="index-8"></span><p id="index-9">The first kind of data file that we will learn how to load into Python as a data
+frame is the <em>comma-separated values</em> format (<code class="docutils literal notranslate"><span class="pre">.csv</span></code> for short).  These files
+have names ending in <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, and can be opened and saved using common
+spreadsheet programs like Microsoft Excel and Google Sheets.  For example, the
+<code class="docutils literal notranslate"><span class="pre">.csv</span></code> file named <code class="docutils literal notranslate"><span class="pre">can_lang.csv</span></code>
+is included with <a class="reference external" href="https://github.com/UBC-DSCI/introduction-to-datascience-python/tree/main/source/data">the code for this book</a>.
+If we were to open this data in a plain text editor (a program like Notepad that just shows
+text with no formatting), we would see each row on its own line, and each entry in the table separated by a comma:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>category,language,mother_tongue,most_at_home,most_at_work,lang_known
+Aboriginal languages,"Aboriginal languages, n.o.s.",590,235,30,665
+Non-Official &amp; Non-Aboriginal languages,Afrikaans,10260,4785,85,23415
+Non-Official &amp; Non-Aboriginal languages,"Afro-Asiatic languages, n.i.e.",1150,44
+Non-Official &amp; Non-Aboriginal languages,Akan (Twi),13460,5985,25,22150
+Non-Official &amp; Non-Aboriginal languages,Albanian,26895,13135,345,31930
+Aboriginal languages,"Algonquian languages, n.i.e.",45,10,0,120
+Aboriginal languages,Algonquin,1260,370,40,2480
+Non-Official &amp; Non-Aboriginal languages,American Sign Language,2685,3020,1145,21
+Non-Official &amp; Non-Aboriginal languages,Amharic,22465,12785,200,33670
+</pre></div>
+</div>
+<p id="index-10">To load this data into Python so that we can do things with it (e.g., perform
+analyses or create data visualizations), we will need to use a <em>function.</em> A
+function is a special word in Python that takes instructions (we call these
+<em>arguments</em>) and does something. The function we will use to load a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file
+into Python is called <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>. In its most basic
+use-case, <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> expects that the data file:</p>
+<ul class="simple">
+<li><p>has column names (or <em>headers</em>),</p></li>
+<li><p>uses a comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>) to separate the columns, and</p></li>
+<li><p>does not have row names.</p></li>
+</ul>
+<p id="index-11">Below you’ll see the code used to load the data into Python using the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>
+function. Note that the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function is not included in the base
+installation of Python, meaning that it is not one of the primary functions ready to
+use when you install Python. Therefore, you need to load it from somewhere else
+before you can use it. The place from which we will load it is called a Python <em>package</em>.
+A Python package is a collection of functions that can be used in addition to the
+built-in Python package functions once loaded. The <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function, in
+particular, can be made accessible by loading
+<a class="reference external" href="https://pypi.org/project/pandas/">the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> Python package</a> <span id="id9">[<a class="reference internal" href="#id72" title="The Pandas Development Team. pandas-dev/pandas: Pandas. February 2020. URL: https://doi.org/10.5281/zenodo.3509134, doi:10.5281/zenodo.3509134.">The Pandas Development Team, 2020</a>, <a class="reference internal" href="#id73" title="Wes McKinney. Data Structures for Statistical Computing in Python. In Stéfan van der Walt and Jarrod Millman, editors, Proceedings of the 9th Python in Science Conference, 56 - 61. 2010. doi:10.25080/Majora-92bf1922-00a.">Wes McKinney, 2010</a>]</span>
+using the <code class="docutils literal notranslate"><span class="pre">import</span></code> command. The <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package contains many
+functions that we will use throughout this book to load, clean, wrangle,
+and visualize data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This command has two parts. The first is <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pandas</span></code>, which loads the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package.
+The second is <code class="docutils literal notranslate"><span class="pre">as</span> <span class="pre">pd</span></code>, which give the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package the much shorter <em>alias</em> (another name) <code class="docutils literal notranslate"><span class="pre">pd</span></code>.
+We can now use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function by writing <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code>, i.e., the package name, then a dot, then the function name.
+You can see why we gave <code class="docutils literal notranslate"><span class="pre">pandas</span></code> a shorter alias; if we had to type <code class="docutils literal notranslate"><span class="pre">pandas.</span></code> before every function we wanted to use,
+our code would become much longer and harder to read!</p>
+<p>Now that the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package is loaded, we can use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function by passing
+it a single argument: the name of the file, <code class="docutils literal notranslate"><span class="pre">"can_lang.csv"</span></code>. We have to
+put quotes around file names and other letters and words that we use in our
+code to distinguish it from the special words (like functions!) that make up the Python programming
+language.  The file’s name is the only argument we need to provide because our
+file satisfies everything else that the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function expects in the default
+use-case. <a class="reference internal" href="#img-read-csv"><span class="std std-numref">Fig. 1.3</span></a> describes how we use the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>
+to read data into Python.</p>
+<figure class="align-default" id="img-read-csv">
+<img alt="_images/read_csv_function.png" src="_images/read_csv_function.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.3 </span><span class="caption-text">Syntax for the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function</span><a class="headerlink" href="#img-read-csv" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell tag_output_scroll docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/can_lang.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>category</th>
+<th>language</th>
+<th>mother_tongue</th>
+<th>most_at_home</th>
+<th>most_at_work</th>
+<th>lang_known</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Aboriginal languages</td>
+<td>Aboriginal languages, n.o.s.</td>
+<td>590</td>
+<td>235</td>
+<td>30</td>
+<td>665</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Afrikaans</td>
+<td>10260</td>
+<td>4785</td>
+<td>85</td>
+<td>23415</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Afro-Asiatic languages, n.i.e.</td>
+<td>1150</td>
+<td>445</td>
+<td>10</td>
+<td>2775</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Akan (Twi)</td>
+<td>13460</td>
+<td>5985</td>
+<td>25</td>
+<td>22150</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Albanian</td>
+<td>26895</td>
+<td>13135</td>
+<td>345</td>
+<td>31930</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>209</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Wolof</td>
+<td>3990</td>
+<td>1385</td>
+<td>10</td>
+<td>8240</td>
+</tr>
+<tr>
+<th>210</th>
+<td>Aboriginal languages</td>
+<td>Woods Cree</td>
+<td>1840</td>
+<td>800</td>
+<td>75</td>
+<td>2665</td>
+</tr>
+<tr>
+<th>211</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Wu (Shanghainese)</td>
+<td>12915</td>
+<td>7650</td>
+<td>105</td>
+<td>16530</td>
+</tr>
+<tr>
+<th>212</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Yiddish</td>
+<td>13555</td>
+<td>7085</td>
+<td>895</td>
+<td>20985</td>
+</tr>
+<tr>
+<th>213</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Yoruba</td>
+<td>9080</td>
+<td>2615</td>
+<td>15</td>
+<td>22415</td>
+</tr>
+</tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="naming-things-in-python">
+<h2><span class="section-number">1.6. </span>Naming things in Python<a class="headerlink" href="#naming-things-in-python" title="Permalink to this heading">#</a></h2>
+<p>When we loaded the 2016 Canadian census language data
+using <code class="docutils literal notranslate"><span class="pre">read_csv</span></code>, we did not give this data frame a name.
+Therefore the data was just printed on the screen,
+and we cannot do anything else with it. That isn’t very useful.
+What would be more useful would be to give a name
+to the data frame that <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> outputs,
+so that we can refer to it later for analysis and visualization.</p>
+<span class="target" id="index-12"></span><p id="index-13">The way to assign a name to a value in Python is via the <em>assignment symbol</em> <code class="docutils literal notranslate"><span class="pre">=</span></code>.
+On the left side of the assignment symbol you put the name that you want
+to use, and on the right side of the assignment symbol
+you put the value that you want the name to refer to.
+Names can be used to refer to almost anything in Python, such as numbers,
+words (also known as <em>strings</em> of characters), and data frames!
+Below, we set <code class="docutils literal notranslate"><span class="pre">my_number</span></code> to <code class="docutils literal notranslate"><span class="pre">3</span></code> (the result of <code class="docutils literal notranslate"><span class="pre">1+2</span></code>)
+and we set <code class="docutils literal notranslate"><span class="pre">name</span></code> to the string <code class="docutils literal notranslate"><span class="pre">"Alice"</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_number</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s2">"Alice"</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that when
+we name something in Python using the assignment symbol, <code class="docutils literal notranslate"><span class="pre">=</span></code>,
+we do not need to surround the name we are creating  with quotes. This is
+because we are formally telling Python that this special word denotes
+the value of whatever is on the right-hand side.
+Only characters and words that act as <em>values</em> on the right-hand side of the assignment
+symbol—e.g., the file name <code class="docutils literal notranslate"><span class="pre">"data/can_lang.csv"</span></code> that we specified before, or <code class="docutils literal notranslate"><span class="pre">"Alice"</span></code> above—need
+to be surrounded by quotes.</p>
+<p>After making the assignment, we can use the special name words we have created in
+place of their values. For example, if we want to do something with the value <code class="docutils literal notranslate"><span class="pre">3</span></code> later on,
+we can just use <code class="docutils literal notranslate"><span class="pre">my_number</span></code> instead. Let’s try adding 2 to <code class="docutils literal notranslate"><span class="pre">my_number</span></code>; you will see that
+Python just interprets this as adding 2 and 3:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_number</span> <span class="o">+</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-14">Object names can consist of letters, numbers, and underscores (<code class="docutils literal notranslate"><span class="pre">_</span></code>).
+Other symbols won’t work since they have their own meanings in Python. For example,
+<code class="docutils literal notranslate"><span class="pre">-</span></code> is the subtraction symbol; if we try to assign a name with
+the <code class="docutils literal notranslate"><span class="pre">-</span></code> symbol, Python will complain and we will get an error!</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my</span><span class="o">-</span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SyntaxError: cannot assign to expression here. Maybe you meant '==' instead of '='?
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-15">There are certain conventions for naming objects in Python.
+When naming an object we
+suggest using only lowercase letters, numbers and underscores <code class="docutils literal notranslate"><span class="pre">_</span></code> to separate
+the words in a name.  Python is case sensitive, which means that <code class="docutils literal notranslate"><span class="pre">Letter</span></code> and
+<code class="docutils literal notranslate"><span class="pre">letter</span></code> would be two different objects in Python.  You should also try to give your
+objects meaningful names.  For instance, you <em>can</em> name a data frame <code class="docutils literal notranslate"><span class="pre">x</span></code>.
+However, using more meaningful terms, such as <code class="docutils literal notranslate"><span class="pre">language_data</span></code>, will help you
+remember what each name in your code represents.  We recommend following the
+<strong>PEP 8</strong> naming conventions outlined in the <em><a class="reference external" href="https://peps.python.org/pep-0008/">PEP 8</a></em> <span id="id10">[<a class="reference internal" href="#id74" title="Nick Coghlan Guido van Rossum, Barry Warsaw. PEP 8 – Style Guide for Python Code. 2001. URL: https://peps.python.org/pep-0008/.">Guido van Rossum, 2001</a>]</span>.  Let’s
+now use the assignment symbol to give the name
+<code class="docutils literal notranslate"><span class="pre">can_lang</span></code> to the 2016 Canadian census language data frame that we get from
+<code class="docutils literal notranslate"><span class="pre">read_csv</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">can_lang</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/can_lang.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Wait a minute, nothing happened this time! Where’s our data?
+Actually, something did happen: the data was loaded in
+and now has the name <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> associated with it.
+And we can use that name to access the data frame and do things with it.
+For example, we can type the name of the data frame to print both the first few rows
+and the last few rows. The three dots (<code class="docutils literal notranslate"><span class="pre">...</span></code>) indicate that there are additional rows that are not printed.
+You will also see that the number of observations (i.e., rows) and
+variables (i.e., columns) are printed just underneath the data frame (214 rows and 6 columns in this case).
+Printing a few rows from data frame like this is a handy way to get a quick sense for what is contained in it.</p>
+<div class="cell tag_output_scroll docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">can_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>category</th>
+<th>language</th>
+<th>mother_tongue</th>
+<th>most_at_home</th>
+<th>most_at_work</th>
+<th>lang_known</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Aboriginal languages</td>
+<td>Aboriginal languages, n.o.s.</td>
+<td>590</td>
+<td>235</td>
+<td>30</td>
+<td>665</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Afrikaans</td>
+<td>10260</td>
+<td>4785</td>
+<td>85</td>
+<td>23415</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Afro-Asiatic languages, n.i.e.</td>
+<td>1150</td>
+<td>445</td>
+<td>10</td>
+<td>2775</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Akan (Twi)</td>
+<td>13460</td>
+<td>5985</td>
+<td>25</td>
+<td>22150</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Albanian</td>
+<td>26895</td>
+<td>13135</td>
+<td>345</td>
+<td>31930</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>209</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Wolof</td>
+<td>3990</td>
+<td>1385</td>
+<td>10</td>
+<td>8240</td>
+</tr>
+<tr>
+<th>210</th>
+<td>Aboriginal languages</td>
+<td>Woods Cree</td>
+<td>1840</td>
+<td>800</td>
+<td>75</td>
+<td>2665</td>
+</tr>
+<tr>
+<th>211</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Wu (Shanghainese)</td>
+<td>12915</td>
+<td>7650</td>
+<td>105</td>
+<td>16530</td>
+</tr>
+<tr>
+<th>212</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Yiddish</td>
+<td>13555</td>
+<td>7085</td>
+<td>895</td>
+<td>20985</td>
+</tr>
+<tr>
+<th>213</th>
+<td>Non-Official &amp; Non-Aboriginal languages</td>
+<td>Yoruba</td>
+<td>9080</td>
+<td>2615</td>
+<td>15</td>
+<td>22415</td>
+</tr>
+</tbody>
+</table>
+<p>214 rows × 6 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="creating-subsets-of-data-frames-with-loc">
+<h2><span class="section-number">1.7. </span>Creating subsets of data frames with <code class="docutils literal notranslate"><span class="pre">[]</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">loc[]</span></code><a class="headerlink" href="#creating-subsets-of-data-frames-with-loc" title="Permalink to this heading">#</a></h2>
+<span class="target" id="index-16"></span><span class="target" id="index-17"></span><p id="index-18">Now that we’ve loaded our data into Python, we can start wrangling the data to
+find the ten Aboriginal languages that were most often reported
+in 2016 as mother tongues in Canada. In particular, we want to construct
+a table with the ten Aboriginal languages that have the largest
+counts in the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> column. The first step is to extract
+from our <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data only those rows that correspond to Aboriginal languages,
+and then the second step is to keep only the <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns.
+The <code class="docutils literal notranslate"><span class="pre">[]</span></code> and <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operations on the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> data frame will help us
+here. The <code class="docutils literal notranslate"><span class="pre">[]</span></code> allows you to obtain a subset of (i.e., <em>filter</em>) the rows of a data frame,
+or to obtain a subset of (i.e., <em>select</em>) the columns of a data frame.
+The <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation allows you to both filter rows <em>and</em> select columns
+at the same time. We will first investigate filtering rows and selecting
+columns with the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation,
+and then use <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> to do both in our analysis of the Aboriginal languages data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">[]</span></code> and <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operations, and related operations, in <code class="docutils literal notranslate"><span class="pre">pandas</span></code>
+are much more powerful than we describe in this chapter.
+You will learn more sophisticated ways to index data frames later on
+in <a class="reference internal link-to-diff" href="wrangling.html#wrangling"><span class="std std-numref">Chapter 3</span></a>.</p>
+</div>
+<section id="using-to-filter-rows">
+<h3><span class="section-number">1.7.1. </span>Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to filter rows<a class="headerlink" href="#using-to-filter-rows" title="Permalink to this heading">#</a></h3>
+<p>Looking at the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data above, we see the column <code class="docutils literal notranslate"><span class="pre">category</span></code> contains different
+high-level categories of languages, which include “Aboriginal languages”,
+“Non-Official &amp; Non-Aboriginal languages” and “Official languages”.  To answer
+our question we want to filter our data set so we restrict our attention
+to only those languages in the “Aboriginal languages” category.</p>
+<p id="index-19">We can use the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation to obtain the subset of rows with desired values
+from a data frame. <a class="reference internal" href="#img-filter"><span class="std std-numref">Fig. 1.4</span></a> shows the syntax we need to use to filter
+rows with the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation. First, we type the name of the data frame—here, <code class="docutils literal notranslate"><span class="pre">can_lang</span></code>—followed
+by square brackets. Inside the square brackets, we write a <em>logical statement</em> to
+use when filtering the rows. A logical statement evaluates to either <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>
+for each row in the data frame; the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation keeps only those rows
+for which the logical statement evaluates to <code class="docutils literal notranslate"><span class="pre">True</span></code>. For example, in our analysis,
+we are interested in keeping only languages in the <code class="docutils literal notranslate"><span class="pre">"Aboriginal</span> <span class="pre">languages"</span></code> higher-level
+category. We can use the <em>equivalency operator</em> <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare the values of the <code class="docutils literal notranslate"><span class="pre">category</span></code>
+column—denoted by <code class="docutils literal notranslate"><span class="pre">can_lang["category"]</span></code>—with the value <code class="docutils literal notranslate"><span class="pre">"Aboriginal</span> <span class="pre">languages"</span></code>.
+You will learn about many other kinds of logical
+statement in <a class="reference internal link-to-diff" href="wrangling.html#wrangling"><span class="std std-numref">Chapter 3</span></a>. Similar to when we loaded the data file and put quotes
+around the file name, here we need to put quotes around both <code class="docutils literal notranslate"><span class="pre">"Aboriginal</span> <span class="pre">languages"</span></code> and <code class="docutils literal notranslate"><span class="pre">"category"</span></code>. Using
+quotes tells Python that this is a <em>string value</em> (e.g., a column name, or word data)
+and not one of the special words that make up the Python programming language,
+or one of the names we have given to objects in the code we have already written.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Python, single quotes (<code class="docutils literal notranslate"><span class="pre">'</span></code>) and double quotes (<code class="docutils literal notranslate"><span class="pre">"</span></code>) are generally
+treated the same. So we could have written <code class="docutils literal notranslate"><span class="pre">'Aboriginal</span> <span class="pre">languages'</span></code> instead
+of <code class="docutils literal notranslate"><span class="pre">"Aboriginal</span> <span class="pre">languages"</span></code> above, or <code class="docutils literal notranslate"><span class="pre">'category'</span></code> instead of <code class="docutils literal notranslate"><span class="pre">"category"</span></code>.
+Try both out for yourself!</p>
+</div>
+<figure class="align-default" id="img-filter">
+<img alt="_images/filter_rows.png" src="_images/filter_rows.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.4 </span><span class="caption-text">Syntax for using the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation to filter rows.</span><a class="headerlink" href="#img-filter" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This operation returns a data frame that has all the columns of the input data frame,
+but only those rows corresponding to Aboriginal languages that we asked for in the logical statement.</p>
+<div class="cell tag_output_scroll docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">can_lang</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>category</th>
+<th>language</th>
+<th>mother_tongue</th>
+<th>most_at_home</th>
+<th>most_at_work</th>
+<th>lang_known</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Aboriginal languages</td>
+<td>Aboriginal languages, n.o.s.</td>
+<td>590</td>
+<td>235</td>
+<td>30</td>
+<td>665</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Aboriginal languages</td>
+<td>Algonquian languages, n.i.e.</td>
+<td>45</td>
+<td>10</td>
+<td>0</td>
+<td>120</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Aboriginal languages</td>
+<td>Algonquin</td>
+<td>1260</td>
+<td>370</td>
+<td>40</td>
+<td>2480</td>
+</tr>
+<tr>
+<th>12</th>
+<td>Aboriginal languages</td>
+<td>Athabaskan languages, n.i.e.</td>
+<td>50</td>
+<td>10</td>
+<td>0</td>
+<td>85</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Aboriginal languages</td>
+<td>Atikamekw</td>
+<td>6150</td>
+<td>5465</td>
+<td>1100</td>
+<td>6645</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>191</th>
+<td>Aboriginal languages</td>
+<td>Thompson (Ntlakapamux)</td>
+<td>335</td>
+<td>20</td>
+<td>0</td>
+<td>450</td>
+</tr>
+<tr>
+<th>195</th>
+<td>Aboriginal languages</td>
+<td>Tlingit</td>
+<td>95</td>
+<td>0</td>
+<td>10</td>
+<td>260</td>
+</tr>
+<tr>
+<th>196</th>
+<td>Aboriginal languages</td>
+<td>Tsimshian</td>
+<td>200</td>
+<td>30</td>
+<td>10</td>
+<td>410</td>
+</tr>
+<tr>
+<th>206</th>
+<td>Aboriginal languages</td>
+<td>Wakashan languages, n.i.e.</td>
+<td>10</td>
+<td>0</td>
+<td>0</td>
+<td>25</td>
+</tr>
+<tr>
+<th>210</th>
+<td>Aboriginal languages</td>
+<td>Woods Cree</td>
+<td>1840</td>
+<td>800</td>
+<td>75</td>
+<td>2665</td>
+</tr>
+</tbody>
+</table>
+<p>67 rows × 6 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="using-to-select-columns">
+<h3><span class="section-number">1.7.2. </span>Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to select columns<a class="headerlink" href="#using-to-select-columns" title="Permalink to this heading">#</a></h3>
+<p id="index-20">We can also use the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation to select columns from a data frame.
+<a class="reference internal" href="#img-select"><span class="std std-numref">Fig. 1.5</span></a> displays the syntax needed to select columns.
+We again first type the name of the data frame—here, <code class="docutils literal notranslate"><span class="pre">can_lang</span></code>—followed
+by square brackets. Inside the square brackets, we provide a <em>list</em> of
+column names. In Python, we denote a <em>list</em> using square brackets, where
+each item is separated by a comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>). So if we are interested in
+selecting only the <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns from our original
+<code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data frame, we put the list <code class="docutils literal notranslate"><span class="pre">["language",</span> <span class="pre">"mother_tongue"]</span></code>
+containing those two column names inside the square brackets of the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation.</p>
+<figure class="align-default" id="img-select">
+<img alt="_images/select_columns.png" src="_images/select_columns.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.5 </span><span class="caption-text">Syntax for using the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation to select columns.</span><a class="headerlink" href="#img-select" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This operation returns a data frame that has all the rows of the input data frame,
+but only those columns that we named in the selection list.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">can_lang</span><span class="p">[[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Aboriginal languages, n.o.s.</td>
+<td>590</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Afrikaans</td>
+<td>10260</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Afro-Asiatic languages, n.i.e.</td>
+<td>1150</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Akan (Twi)</td>
+<td>13460</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Albanian</td>
+<td>26895</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>209</th>
+<td>Wolof</td>
+<td>3990</td>
+</tr>
+<tr>
+<th>210</th>
+<td>Woods Cree</td>
+<td>1840</td>
+</tr>
+<tr>
+<th>211</th>
+<td>Wu (Shanghainese)</td>
+<td>12915</td>
+</tr>
+<tr>
+<th>212</th>
+<td>Yiddish</td>
+<td>13555</td>
+</tr>
+<tr>
+<th>213</th>
+<td>Yoruba</td>
+<td>9080</td>
+</tr>
+</tbody>
+</table>
+<p>214 rows × 2 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="using-loc-to-filter-rows-and-select-columns">
+<h3><span class="section-number">1.7.3. </span>Using <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> to filter rows and select columns<a class="headerlink" href="#using-loc-to-filter-rows-and-select-columns" title="Permalink to this heading">#</a></h3>
+<p id="index-21">The <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation is only used when you want to filter rows <em>or</em> select columns;
+it cannot be used to do both operations at the same time. But in order to answer
+our original data analysis question in this chapter, we need to <em>both</em> filter the rows
+for Aboriginal languages, <em>and</em> select the <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns.
+Fortunately, <code class="docutils literal notranslate"><span class="pre">pandas</span></code> provides the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation, which lets us do just that.
+The syntax is very similar to the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operation we have already covered: we will
+essentially combine both our row filtering and column selection steps from before.
+In particular, we first write the name of the data frame—<code class="docutils literal notranslate"><span class="pre">can_lang</span></code> again—then follow
+that with the <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code> operation. Inside the square brackets,
+we write our row filtering logical statement,
+then a comma, then our list of columns to select.</p>
+<figure class="align-default" id="img-loc">
+<img alt="_images/filter_rows_and_columns.png" src="_images/filter_rows_and_columns.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.6 </span><span class="caption-text">Syntax for using the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation to filter rows and select columns.</span><a class="headerlink" href="#img-loc" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang</span> <span class="o">=</span> <span class="n">can_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>There is one very important thing to notice in this code example.
+The first is that we used the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation on the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data frame by
+writing <code class="docutils literal notranslate"><span class="pre">can_lang.loc[]</span></code>—first the data frame name, then a dot, then <code class="docutils literal notranslate"><span class="pre">loc[]</span></code>.
+There’s that dot again! If you recall, earlier in this chapter we used the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function from <code class="docutils literal notranslate"><span class="pre">pandas</span></code> (aliased as <code class="docutils literal notranslate"><span class="pre">pd</span></code>),
+and wrote <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code>. The dot means that the thing on the left (<code class="docutils literal notranslate"><span class="pre">pd</span></code>, i.e., the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package) <em>provides</em> the
+thing on the right (the <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> function). In the case of <code class="docutils literal notranslate"><span class="pre">can_lang.loc[]</span></code>, the thing on the left (the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data frame)
+<em>provides</em> the thing on the right (the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation). In Python,
+both packages (like <code class="docutils literal notranslate"><span class="pre">pandas</span></code>) <em>and</em> objects (like our <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data frame) can provide functions
+and other objects that we access using the dot syntax.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A note on terminology: when an object <code class="docutils literal notranslate"><span class="pre">obj</span></code> provides a function <code class="docutils literal notranslate"><span class="pre">f</span></code> with the
+dot syntax (as in <code class="docutils literal notranslate"><span class="pre">obj.f()</span></code>), sometimes we call that function <code class="docutils literal notranslate"><span class="pre">f</span></code> a <em>method</em> of <code class="docutils literal notranslate"><span class="pre">obj</span></code> or an <em>operation</em> on <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+Similarly, when an object <code class="docutils literal notranslate"><span class="pre">obj</span></code> provides another object <code class="docutils literal notranslate"><span class="pre">x</span></code> with the dot syntax (as in <code class="docutils literal notranslate"><span class="pre">obj.x</span></code>), sometimes we call the object <code class="docutils literal notranslate"><span class="pre">x</span></code> an <em>attribute</em> of <code class="docutils literal notranslate"><span class="pre">obj</span></code>.
+We will use all of these terms throughout the book, as you will see them used commonly in the community.
+And just because we programmers like to be confusing for no apparent reason: we <em>don’t</em> use the “method”, “operation”, or “attribute” terminology
+when referring to functions and objects from packages, like <code class="docutils literal notranslate"><span class="pre">pandas</span></code>. So for example, <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code>
+would typically just be referred to as a function, but not as a method or operation, even though it uses the dot syntax.</p>
+</div>
+<p>At this point, if we have done everything correctly, <code class="docutils literal notranslate"><span class="pre">aboriginal_lang</span></code> should be a data frame
+containing <em>only</em> rows where the <code class="docutils literal notranslate"><span class="pre">category</span></code> is <code class="docutils literal notranslate"><span class="pre">"Aboriginal</span> <span class="pre">languages"</span></code>,
+and containing <em>only</em> the <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns.
+Any time you take a step in a data analysis, it’s good practice to check the output
+by printing the result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Aboriginal languages, n.o.s.</td>
+<td>590</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Algonquian languages, n.i.e.</td>
+<td>45</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Algonquin</td>
+<td>1260</td>
+</tr>
+<tr>
+<th>12</th>
+<td>Athabaskan languages, n.i.e.</td>
+<td>50</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Atikamekw</td>
+<td>6150</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>191</th>
+<td>Thompson (Ntlakapamux)</td>
+<td>335</td>
+</tr>
+<tr>
+<th>195</th>
+<td>Tlingit</td>
+<td>95</td>
+</tr>
+<tr>
+<th>196</th>
+<td>Tsimshian</td>
+<td>200</td>
+</tr>
+<tr>
+<th>206</th>
+<td>Wakashan languages, n.i.e.</td>
+<td>10</td>
+</tr>
+<tr>
+<th>210</th>
+<td>Woods Cree</td>
+<td>1840</td>
+</tr>
+</tbody>
+</table>
+<p>67 rows × 2 columns</p>
+</div></div></div>
+</div>
+<p>We can see the original <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data set contained 214 rows
+with multiple kinds of <code class="docutils literal notranslate"><span class="pre">category</span></code>. The data frame
+<code class="docutils literal notranslate"><span class="pre">aboriginal_lang</span></code> contains only 67 rows, and looks like it only contains Aboriginal languages.
+So it looks like the <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operation gave us the result we wanted!</p>
+</section>
+</section>
+<section id="using-sort-values-and-head-to-select-rows-by-ordered-values">
+<h2><span class="section-number">1.8. </span>Using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> and <code class="docutils literal notranslate"><span class="pre">head</span></code> to select rows by ordered values<a class="headerlink" href="#using-sort-values-and-head-to-select-rows-by-ordered-values" title="Permalink to this heading">#</a></h2>
+<p id="index-22">We have used the <code class="docutils literal notranslate"><span class="pre">[]</span></code> and <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> operations on a data frame to obtain a table
+with only the Aboriginal languages in the data set and their associated counts.
+However, we want to know the <strong>ten</strong> languages that are spoken most often. As a
+next step, we will order the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> column from largest to smallest
+value and then extract only the top ten rows. This is where the <code class="docutils literal notranslate"><span class="pre">sort_values</span></code>
+and <code class="docutils literal notranslate"><span class="pre">head</span></code> functions come to the rescue!</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> function allows us to order the rows of a data frame by the
+values of a particular column.  We need to specify the column name
+by which we want to sort the data frame by passing it to the argument <code class="docutils literal notranslate"><span class="pre">by</span></code>.
+Since we want to choose the ten Aboriginal languages most often reported as a mother tongue
+language, we will use the <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> function to order the rows in our
+<code class="docutils literal notranslate"><span class="pre">selected_lang</span></code> data frame by the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> column. We want to
+arrange the rows in descending order (from largest to smallest),
+so we specify the argument <code class="docutils literal notranslate"><span class="pre">ascending</span></code> as <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<figure class="align-default" id="img-sort-values">
+<img alt="_images/sort_values.png" src="_images/sort_values.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.7 </span><span class="caption-text">Syntax for using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> to arrange rows in decending order.</span><a class="headerlink" href="#img-sort-values" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arranged_lang</span> <span class="o">=</span> <span class="n">aboriginal_lang</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">arranged_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>40</th>
+<td>Cree, n.o.s.</td>
+<td>64050</td>
+</tr>
+<tr>
+<th>89</th>
+<td>Inuktitut</td>
+<td>35210</td>
+</tr>
+<tr>
+<th>138</th>
+<td>Ojibway</td>
+<td>17885</td>
+</tr>
+<tr>
+<th>137</th>
+<td>Oji-Cree</td>
+<td>12855</td>
+</tr>
+<tr>
+<th>48</th>
+<td>Dene</td>
+<td>10700</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Algonquian languages, n.i.e.</td>
+<td>45</td>
+</tr>
+<tr>
+<th>32</th>
+<td>Cayuga</td>
+<td>45</td>
+</tr>
+<tr>
+<th>179</th>
+<td>Squamish</td>
+<td>40</td>
+</tr>
+<tr>
+<th>90</th>
+<td>Iroquoian languages, n.i.e.</td>
+<td>35</td>
+</tr>
+<tr>
+<th>206</th>
+<td>Wakashan languages, n.i.e.</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<p>67 rows × 2 columns</p>
+</div></div></div>
+</div>
+<p>Next, we will obtain the ten most common Aboriginal languages by selecting only
+the first ten rows of the <code class="docutils literal notranslate"><span class="pre">arranged_lang</span></code> data frame.
+We do this using the <code class="docutils literal notranslate"><span class="pre">head</span></code> function, and specifying the argument
+<code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ten_lang</span> <span class="o">=</span> <span class="n">arranged_lang</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ten_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>40</th>
+<td>Cree, n.o.s.</td>
+<td>64050</td>
+</tr>
+<tr>
+<th>89</th>
+<td>Inuktitut</td>
+<td>35210</td>
+</tr>
+<tr>
+<th>138</th>
+<td>Ojibway</td>
+<td>17885</td>
+</tr>
+<tr>
+<th>137</th>
+<td>Oji-Cree</td>
+<td>12855</td>
+</tr>
+<tr>
+<th>48</th>
+<td>Dene</td>
+<td>10700</td>
+</tr>
+<tr>
+<th>125</th>
+<td>Montagnais (Innu)</td>
+<td>10235</td>
+</tr>
+<tr>
+<th>119</th>
+<td>Mi'kmaq</td>
+<td>6690</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Atikamekw</td>
+<td>6150</td>
+</tr>
+<tr>
+<th>149</th>
+<td>Plains Cree</td>
+<td>3065</td>
+</tr>
+<tr>
+<th>180</th>
+<td>Stoney</td>
+<td>3025</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="adding-and-modifying-columns">
+<span id="ch1-adding-modifying"></span><h2><span class="section-number">1.9. </span>Adding and modifying columns<a class="headerlink" href="#adding-and-modifying-columns" title="Permalink to this heading">#</a></h2>
+<p id="index-23">Recall that our data analysis question referred to the <em>count</em> of Canadians
+that speak each of the top ten most commonly reported Aboriginal languages as
+their mother tongue, and the <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> data frame indeed contains those
+counts… But perhaps, seeing these numbers, we became curious about the
+<em>percentage</em> of the population of Canada associated with each count. It is
+common to come up with new data analysis questions in the process of answering
+a first one—so fear not and explore! To answer this small
+question along the way, we need to divide each count in the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code>
+column by the total Canadian population according to the 2016
+census—i.e., 35,151,728—and multiply it by 100. We can perform
+this computation using the code <code class="docutils literal notranslate"><span class="pre">100</span> <span class="pre">*</span> <span class="pre">ten_lang["mother_tongue"]</span> <span class="pre">/</span> <span class="pre">canadian_population</span></code>.
+Then to store the result in a new column (or
+overwrite an existing column), we specify the name of the new
+column to create (or old column to modify), then the assignment symbol <code class="docutils literal notranslate"><span class="pre">=</span></code>,
+and then the computation to store in that column. In this case, we will opt to
+create a new column called <code class="docutils literal notranslate"><span class="pre">mother_tongue_percent</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You will see below that we write the Canadian population in
+Python as <code class="docutils literal notranslate"><span class="pre">35_151_728</span></code>. The underscores (<code class="docutils literal notranslate"><span class="pre">_</span></code>) are just there for readability,
+and do not affect how Python interprets the number. In other words,
+<code class="docutils literal notranslate"><span class="pre">35151728</span></code> and <code class="docutils literal notranslate"><span class="pre">35_151_728</span></code> are treated identically in Python,
+although the latter is much clearer!</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">canadian_population</span> <span class="o">=</span> <span class="mi">35_151_728</span>
+<span class="n">ten_lang</span><span class="p">[</span><span class="s2">"mother_tongue_percent"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">ten_lang</span><span class="p">[</span><span class="s2">"mother_tongue"</span><span class="p">]</span> <span class="o">/</span> <span class="n">canadian_population</span>
+<span class="n">ten_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+<th>mother_tongue_percent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>40</th>
+<td>Cree, n.o.s.</td>
+<td>64050</td>
+<td>0.182210</td>
+</tr>
+<tr>
+<th>89</th>
+<td>Inuktitut</td>
+<td>35210</td>
+<td>0.100166</td>
+</tr>
+<tr>
+<th>138</th>
+<td>Ojibway</td>
+<td>17885</td>
+<td>0.050879</td>
+</tr>
+<tr>
+<th>137</th>
+<td>Oji-Cree</td>
+<td>12855</td>
+<td>0.036570</td>
+</tr>
+<tr>
+<th>48</th>
+<td>Dene</td>
+<td>10700</td>
+<td>0.030439</td>
+</tr>
+<tr>
+<th>125</th>
+<td>Montagnais (Innu)</td>
+<td>10235</td>
+<td>0.029117</td>
+</tr>
+<tr>
+<th>119</th>
+<td>Mi'kmaq</td>
+<td>6690</td>
+<td>0.019032</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Atikamekw</td>
+<td>6150</td>
+<td>0.017496</td>
+</tr>
+<tr>
+<th>149</th>
+<td>Plains Cree</td>
+<td>3065</td>
+<td>0.008719</td>
+</tr>
+<tr>
+<th>180</th>
+<td>Stoney</td>
+<td>3025</td>
+<td>0.008606</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ten_lang_percent</span></code> data frame shows that
+the ten Aboriginal languages in the <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> data frame were spoken
+as a mother tongue by between 0.008% and 0.18% of the Canadian population.</p>
+</section>
+<section id="combining-steps-with-chaining-and-multiline-expressions">
+<h2><span class="section-number">1.10. </span>Combining steps with chaining and multiline expressions<a class="headerlink" href="#combining-steps-with-chaining-and-multiline-expressions" title="Permalink to this heading">#</a></h2>
+<p>It took us 3 steps to find the ten Aboriginal languages most often reported in
+2016 as mother tongues in Canada. Starting from the <code class="docutils literal notranslate"><span class="pre">can_lang</span></code> data frame, we:</p>
+<ol class="arabic simple">
+<li><p>used <code class="docutils literal notranslate"><span class="pre">loc</span></code> to filter the rows so that only the
+<code class="docutils literal notranslate"><span class="pre">Aboriginal</span> <span class="pre">languages</span></code> category remained, and selected the
+<code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> columns,</p></li>
+<li><p>used <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> to sort the rows by <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> in descending order, and</p></li>
+<li><p>obtained only the top 10 values using <code class="docutils literal notranslate"><span class="pre">head</span></code>.</p></li>
+</ol>
+<p>One way of performing these steps is to just write
+multiple lines of code, storing temporary, intermediate objects as you go.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang</span> <span class="o">=</span> <span class="n">can_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]]</span>
+<span class="n">arranged_lang_sorted</span> <span class="o">=</span> <span class="n">aboriginal_lang</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ten_lang</span> <span class="o">=</span> <span class="n">arranged_lang_sorted</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-24">You might find that code hard to read. You’re not wrong; it is!
+There are two main issues with readability here. First, each line of code is quite long.
+It is hard to keep track of what methods are being called, and what arguments were used.
+Second, each line introduces a new temporary object. In this case, both <code class="docutils literal notranslate"><span class="pre">aboriginal_lang</span></code> and <code class="docutils literal notranslate"><span class="pre">arranged_lang_sorted</span></code>
+are just temporary results on the way to producing the <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> data frame.
+This makes the code hard to read, as one has to trace where each temporary object
+goes, and hard to understand, since introducing many named objects also suggests that they
+are of some importance, when really they are just intermediates.
+The need to call multiple methods in a sequence to process a data frame is
+quite common, so this is an important issue to address!</p>
+<p>To solve the first problem, we can actually split the long expressions above across
+multiple lines. Although in most cases, a single expression in Python must be contained
+in a single line of code, there are a small number of situations where lets us do this.
+Let’s rewrite this code in a more readable format using multiline expressions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aboriginal_lang</span> <span class="o">=</span> <span class="n">can_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">arranged_lang_sorted</span> <span class="o">=</span> <span class="n">aboriginal_lang</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">by</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">,</span>
+    <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">ten_lang</span> <span class="o">=</span> <span class="n">arranged_lang_sorted</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This code is the same as the code we showed earlier; you can see the same
+sequence of methods and arguments is used. But long expressions are split
+across multiple lines when they would otherwise get long and unwieldy,
+improving the readability of the code.
+How does Python know when to keep
+reading on the next line for a single expression?
+For the line starting with <code class="docutils literal notranslate"><span class="pre">aboriginal_lang</span> <span class="pre">=</span> <span class="pre">...</span></code>, Python sees that the line ends with a left
+bracket symbol <code class="docutils literal notranslate"><span class="pre">[</span></code>, and knows that our
+expression cannot end until we close it with an appropriate corresponding right bracket symbol <code class="docutils literal notranslate"><span class="pre">]</span></code>.
+We put the same two arguments as we did before, and then
+the corresponding right bracket appears after <code class="docutils literal notranslate"><span class="pre">["language",</span> <span class="pre">"mother_tongue"]</span></code>).
+For the line starting with <code class="docutils literal notranslate"><span class="pre">arranged_lang_sorted</span> <span class="pre">=</span> <span class="pre">...</span></code>, Python sees that the line ends with a left parenthesis symbol <code class="docutils literal notranslate"><span class="pre">(</span></code>,
+and knows the expression cannot end until we close it with the corresponding right parenthesis symbol <code class="docutils literal notranslate"><span class="pre">)</span></code>.
+Again we use the same two arguments as before, and then the
+corresponding right parenthesis appears right after <code class="docutils literal notranslate"><span class="pre">ascending=False</span></code>.
+In both cases, Python keeps reading the next line to figure out
+what the rest of the expression is. We could, of course,
+put all of the code on one line of code, but splitting it across
+multiple lines helps a lot with code readability.</p>
+<p id="index-25">We still have to handle the issue that each line of code—i.e., each step in the analysis—introduces
+a new temporary object. To address this issue, we can <em>chain</em> multiple operations together without
+assigning intermediate objects. The key idea of chaining is that the <em>output</em> of
+each step in the analysis is a data frame, which means that you can just directly keep calling methods
+that operate on the output of each step in a sequence! This simplifies the code and makes it
+easier to read. The code below demonstrates the use of both multiline expressions and chaining together.
+The code is now much cleaner, and the <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> data frame that we get is equivalent to the one
+from the messy code above!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># obtain the 10 most common Aboriginal languages</span>
+<span class="n">ten_lang</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">can_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+       <span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">,</span>
+       <span class="p">[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ten_lang</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>language</th>
+<th>mother_tongue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>40</th>
+<td>Cree, n.o.s.</td>
+<td>64050</td>
+</tr>
+<tr>
+<th>89</th>
+<td>Inuktitut</td>
+<td>35210</td>
+</tr>
+<tr>
+<th>138</th>
+<td>Ojibway</td>
+<td>17885</td>
+</tr>
+<tr>
+<th>137</th>
+<td>Oji-Cree</td>
+<td>12855</td>
+</tr>
+<tr>
+<th>48</th>
+<td>Dene</td>
+<td>10700</td>
+</tr>
+<tr>
+<th>125</th>
+<td>Montagnais (Innu)</td>
+<td>10235</td>
+</tr>
+<tr>
+<th>119</th>
+<td>Mi'kmaq</td>
+<td>6690</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Atikamekw</td>
+<td>6150</td>
+</tr>
+<tr>
+<th>149</th>
+<td>Plains Cree</td>
+<td>3065</td>
+</tr>
+<tr>
+<th>180</th>
+<td>Stoney</td>
+<td>3025</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+</div>
+<p>Let’s parse this new block of code piece by piece.
+The code above starts with a left parenthesis, <code class="docutils literal notranslate"><span class="pre">(</span></code>, and so Python
+knows to keep reading to subsequent lines until it finds the corresponding
+right parenthesis symbol <code class="docutils literal notranslate"><span class="pre">)</span></code>. The <code class="docutils literal notranslate"><span class="pre">loc</span></code> method performs the filtering and selecting steps as before. The line after this
+starts with a period (<code class="docutils literal notranslate"><span class="pre">.</span></code>) that “chains” the output of the <code class="docutils literal notranslate"><span class="pre">loc</span></code> step with the next operation,
+<code class="docutils literal notranslate"><span class="pre">sort_values</span></code>. Since the output of <code class="docutils literal notranslate"><span class="pre">loc</span></code> is a data frame, we can use the <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> method on it
+without first giving it a name! That is what the <code class="docutils literal notranslate"><span class="pre">.sort_values</span></code> does on the next line.
+Finally, we once again “chain” together the output of <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> with <code class="docutils literal notranslate"><span class="pre">head</span></code> to ask for the 10
+most common languages. Finally, the right parenthesis <code class="docutils literal notranslate"><span class="pre">)</span></code> corresponding to the very first left parenthesis
+appears on the second last line, completing the multiline expression.
+Instead of creating intermediate objects, with chaining, we take the output of
+one operation and use that to perform the next operation. In doing so, we remove the need to create and
+store intermediates. This can help with readability by simplifying the code.</p>
+<p>Now that we’ve shown you chaining as an alternative to storing
+temporary objects and composing code, does this mean you should <em>never</em> store
+temporary objects or compose code? Not necessarily!
+There are times when temporary objects are handy to keep around.
+For example, you might store a temporary object before feeding it into a plot function
+so you can iteratively change the plot without having to
+redo all of your data transformations.
+Chaining many functions can be overwhelming and difficult to debug;
+you may want to store a temporary object midway through to inspect your result
+before moving on with further steps.</p>
+</section>
+<section id="exploring-data-with-visualizations">
+<h2><span class="section-number">1.11. </span>Exploring data with visualizations<a class="headerlink" href="#exploring-data-with-visualizations" title="Permalink to this heading">#</a></h2>
+<p id="index-26">The <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> table answers our initial data analysis question.
+Are we done? Well, not quite; tables are almost never the best way to present
+the result of your analysis to your audience. Even the <code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> table with
+only two columns presents some difficulty: for example, you have to scrutinize
+the table quite closely to get a sense for the relative numbers of speakers of
+each language. When you move on to more complicated analyses, this issue only
+gets worse. In contrast, a <em>visualization</em> would convey this information in a much
+more easily understood format.
+Visualizations are a great tool for summarizing information to help you
+effectively communicate with your audience, and creating effective data visualizations
+is an essential component of any data
+analysis. In this section we will develop a visualization of the
+ten Aboriginal languages that were most often reported in 2016 as mother tongues in
+Canada, as well as the number of people that speak each of them.</p>
+<section id="using-altair-to-create-a-bar-plot">
+<h3><span class="section-number">1.11.1. </span>Using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to create a bar plot<a class="headerlink" href="#using-altair-to-create-a-bar-plot" title="Permalink to this heading">#</a></h3>
+<p id="index-27">In our data set, we can see that <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> are in separate
+columns (or variables). In addition, there is a single row (or observation) for each language.
+The data are, therefore, in what we call a <em>tidy data</em> format. Tidy data is a
+fundamental concept and will be a significant focus in the remainder of this
+book: many of the functions from <code class="docutils literal notranslate"><span class="pre">pandas</span></code> require tidy data, as does the
+<code class="docutils literal notranslate"><span class="pre">altair</span></code> package that we will use shortly for our visualization. We will
+formally introduce tidy data in <a class="reference internal link-to-diff" href="wrangling.html#wrangling"><span class="std std-numref">Chapter 3</span></a>.</p>
+<span class="target" id="index-28"></span><p id="index-29">We will make a bar plot to visualize our data. A bar plot is a chart where the
+lengths of the bars represent certain values, like counts or proportions. We
+will make a bar plot using the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> and <code class="docutils literal notranslate"><span class="pre">language</span></code> columns from our
+<code class="docutils literal notranslate"><span class="pre">ten_lang</span></code> data frame. To create a bar plot of these two variables using the
+<code class="docutils literal notranslate"><span class="pre">altair</span></code> package, we must specify the data frame, which variables
+to put on the x and y axes, and what kind of plot to create.
+First, we need to import the <code class="docutils literal notranslate"><span class="pre">altair</span></code> package.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-30">The fundamental object in <code class="docutils literal notranslate"><span class="pre">altair</span></code> is the <code class="docutils literal notranslate"><span class="pre">Chart</span></code>, which takes a data frame as an argument: <code class="docutils literal notranslate"><span class="pre">alt.Chart(ten_lang)</span></code>.
+With a chart object in hand, we can now specify how we would like the data to be visualized.
+We first indicate what kind of graphical <em>mark</em> we want to use to represent the data. Here we set the mark attribute
+of the chart object using the <code class="docutils literal notranslate"><span class="pre">Chart.mark_bar</span></code> function, because we want to create a bar chart.
+Next, we need to <em>encode</em> the variables of the data frame using
+the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> <em>channels</em> (which represent the x-axis and y-axis position of the points). We use the <code class="docutils literal notranslate"><span class="pre">encode()</span></code>
+function to handle this: we specify that the <code class="docutils literal notranslate"><span class="pre">language</span></code> column should correspond to the x-axis,
+and that the <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> column should correspond to the y-axis.</p>
+<figure class="align-default" id="img-altair">
+<img alt="_images/altair_syntax.png" src="_images/altair_syntax.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 1.8 </span><span class="caption-text">Syntax for using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to make a bar chart.</span><a class="headerlink" href="#img-altair" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">barplot_mother_tongue</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">"language"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="barplot-mother-tongue" style="width: 700px">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-b84d808c703f4a609cd73628ce522def.vega-embed</del><ins>#altair-viz-efa1b2de01fe48fe83ccf3d9363d2618.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-b84d808c703f4a609cd73628ce522def.vega-embed</del><ins>#altair-viz-efa1b2de01fe48fe83ccf3d9363d2618.vega-embed</ins> details,
+  <del>#altair-viz-b84d808c703f4a609cd73628ce522def.vega-embed</del><ins>#altair-viz-efa1b2de01fe48fe83ccf3d9363d2618.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-b84d808c703f4a609cd73628ce522def"><div id="altair-viz-efa1b2de01fe48fe83ccf3d9363d2618"></div><img src="prerendered/barplot-mother-tongue.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 1.9 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#barplot-mother-tongue" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+</section>
+<section id="formatting-altair-charts">
+<span id="index-31"></span><h3><span class="section-number">1.11.2. </span>Formatting <code class="docutils literal notranslate"><span class="pre">altair</span></code> charts<a class="headerlink" href="#formatting-altair-charts" title="Permalink to this heading">#</a></h3>
+<p>It is exciting that we can already visualize our data to help answer our
+question, but we are not done yet! We can (and should) do more to improve the
+interpretability of the data visualization that we created. For example, by
+default, Python uses the column names as the axis labels. Usually these
+column names do not have enough information about the variable in the column.
+We really should replace this default with a more informative label. For the
+example above, Python uses the column name <code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code> as the label for the
+y axis, but most people will not know what that is. And even if they did, they
+will not know how we measured this variable, or the group of people on which the
+measurements were taken. An axis label that reads “Mother Tongue (Number of
+Canadian Residents)” would be much more informative. To make the code easier to
+read, we’re spreading it out over multiple lines just as we did in the previous
+section with pandas.</p>
+<p id="index-32">Adding additional labels to our visualizations that we create in <code class="docutils literal notranslate"><span class="pre">altair</span></code> is
+one common and easy way to improve and refine our data visualizations. We can add titles for the axes
+in the <code class="docutils literal notranslate"><span class="pre">altair</span></code> objects using <code class="docutils literal notranslate"><span class="pre">alt.X</span></code> and <code class="docutils literal notranslate"><span class="pre">alt.Y</span></code> with the <code class="docutils literal notranslate"><span class="pre">title</span></code> method to make
+the axes titles more informative (you will learn more about <code class="docutils literal notranslate"><span class="pre">alt.X</span></code> and <code class="docutils literal notranslate"><span class="pre">alt.Y</span></code> in <a class="reference internal" href="viz.html#viz"><span class="std std-numref">Chapter 4</span></a>).
+Again, since we are specifying
+words (e.g. <code class="docutils literal notranslate"><span class="pre">"Mother</span> <span class="pre">Tongue</span> <span class="pre">(Number</span> <span class="pre">of</span> <span class="pre">Canadian</span> <span class="pre">Residents)"</span></code>) as arguments to
+the <code class="docutils literal notranslate"><span class="pre">title</span></code> method, we surround them with quotation marks. We can do many other modifications
+to format the plot further, and we will explore these in <a class="reference internal" href="viz.html#viz"><span class="std std-numref">Chapter 4</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">barplot_mother_tongue</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"language"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Language"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"mother_tongue"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Mother Tongue (Number of Canadian Residents)"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="barplot-mother-tongue-labs" style="width: 700px">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-cb7bab9572a0469ca0cffd73b2a38eba.vega-embed</del><ins>#altair-viz-1722adb1066d4dd2a97cd2aaa01ed546.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-cb7bab9572a0469ca0cffd73b2a38eba.vega-embed</del><ins>#altair-viz-1722adb1066d4dd2a97cd2aaa01ed546.vega-embed</ins> details,
+  <del>#altair-viz-cb7bab9572a0469ca0cffd73b2a38eba.vega-embed</del><ins>#altair-viz-1722adb1066d4dd2a97cd2aaa01ed546.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-cb7bab9572a0469ca0cffd73b2a38eba"><div id="altair-viz-1722adb1066d4dd2a97cd2aaa01ed546"></div><img src="prerendered/barplot-mother-tongue-labs.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 1.10 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with x and y labels. Note that this visualization is not done yet; there are still improvements to be made.</span><a class="headerlink" href="#barplot-mother-tongue-labs" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>The result is shown in <a class="reference internal" href="#barplot-mother-tongue-labs"><span class="std std-numref">Fig. 1.10</span></a>.
+This is already quite an improvement! Let’s tackle the next major issue with the visualization
+in <a class="reference internal" href="#barplot-mother-tongue-labs"><span class="std std-numref">Fig. 1.10</span></a>: the vertical x axis labels, which are
+currently making it difficult to read the different language names.
+One solution is to rotate the plot such that the bars are horizontal rather than vertical.
+To accomplish this, we will swap the x and y coordinate axes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">barplot_mother_tongue_axis</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"mother_tongue"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Mother Tongue (Number of Canadian Residents)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"language"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Language"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="barplot-mother-tongue-labs-axis" style="width: 700px">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-aa01a860d2704eaea6aada76866f9fd9.vega-embed</del><ins>#altair-viz-25b9af7e19704f08b397a19508574107.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-aa01a860d2704eaea6aada76866f9fd9.vega-embed</del><ins>#altair-viz-25b9af7e19704f08b397a19508574107.vega-embed</ins> details,
+  <del>#altair-viz-aa01a860d2704eaea6aada76866f9fd9.vega-embed</del><ins>#altair-viz-25b9af7e19704f08b397a19508574107.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-aa01a860d2704eaea6aada76866f9fd9"><div id="altair-viz-25b9af7e19704f08b397a19508574107"></div><img src="prerendered/barplot-mother-tongue-labs-axis.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 1.11 </span><span class="caption-text">Horizontal bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue. There are no more serious issues with this visualization, but it could be refined further.</span><a class="headerlink" href="#barplot-mother-tongue-labs-axis" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-33">Another big step forward, as shown in <a class="reference internal" href="#barplot-mother-tongue-labs-axis"><span class="std std-numref">Fig. 1.11</span></a>! There
+are no more serious issues with the visualization. Now comes time to refine
+the visualization to make it even more well-suited to answering the question
+we asked earlier in this chapter. For example, the visualization could be made more transparent by
+organizing the bars according to the number of Canadian residents reporting
+each language, rather than in alphabetical order. We can reorder the bars using
+the <code class="docutils literal notranslate"><span class="pre">sort</span></code> method, which orders a variable (here <code class="docutils literal notranslate"><span class="pre">language</span></code>) based on the
+values of the variable(<code class="docutils literal notranslate"><span class="pre">mother_tongue</span></code>) on the <code class="docutils literal notranslate"><span class="pre">x-axis</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ordered_barplot_mother_tongue</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"mother_tongue"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Mother Tongue (Number of Canadian Residents)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"language"</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Language"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="barplot-mother-tongue-reorder" style="width: 700px">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-1071b247653643ca8d62737890a53e19.vega-embed</del><ins>#altair-viz-a23f4927f5014953834e0494fd09f640.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-1071b247653643ca8d62737890a53e19.vega-embed</del><ins>#altair-viz-a23f4927f5014953834e0494fd09f640.vega-embed</ins> details,
+  <del>#altair-viz-1071b247653643ca8d62737890a53e19.vega-embed</del><ins>#altair-viz-a23f4927f5014953834e0494fd09f640.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-1071b247653643ca8d62737890a53e19"><div id="altair-viz-a23f4927f5014953834e0494fd09f640"></div><img src="prerendered/barplot-mother-tongue-reorder.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 1.12 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue with bars reordered.</span><a class="headerlink" href="#barplot-mother-tongue-reorder" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p><a class="reference internal" href="#barplot-mother-tongue-reorder"><span class="std std-numref">Fig. 1.12</span></a> provides a very clear and well-organized
+answer to our original question; we can see what the ten most often reported Aboriginal languages
+were, according to the 2016 Canadian census, and how many people speak each of them. For
+instance, we can see that the Aboriginal language most often reported was Cree
+n.o.s. with over 60,000 Canadian residents reporting it as their mother tongue.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>“n.o.s.” means “not otherwise specified”, so Cree n.o.s. refers to
+individuals who reported Cree as their mother tongue. In this data set, the
+Cree languages include the following categories: Cree n.o.s., Swampy Cree,
+Plains Cree, Woods Cree, and a ‘Cree not included elsewhere’ category (which
+includes Moose Cree, Northern East Cree and Southern East Cree)
+<span id="id11">[<a class="reference internal" href="#id26" title="Statistics Canada. The Aboriginal languages of First Nations people, Métis and Inuit. 2016. URL: https://www12.statcan.gc.ca/census-recensement/2016/as-sa/98-200-x/2016022/98-200-x2016022-eng.cfm.">Statistics Canada, 2016</a>]</span>.</p>
+</div>
+</section>
+<section id="putting-it-all-together">
+<h3><span class="section-number">1.11.3. </span>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this heading">#</a></h3>
+<span class="target" id="index-34"></span><p id="index-35">In the block of code below, we put everything from this chapter together, with a few
+modifications. In particular, we have combined all of our steps into one expression
+split across multiple lines using the left and right parenthesis symbols <code class="docutils literal notranslate"><span class="pre">(</span></code> and <code class="docutils literal notranslate"><span class="pre">)</span></code>.
+We have also provided <em>comments</em> next to
+many of the lines of code below using the
+hash symbol <code class="docutils literal notranslate"><span class="pre">#</span></code>. When Python sees a <code class="docutils literal notranslate"><span class="pre">#</span></code> sign, it
+will ignore all of the text that
+comes after the symbol on that line. So you can use comments to explain lines
+of code for others, and perhaps more importantly, your future self!
+It’s good practice to get in the habit of
+commenting your code to improve its readability.</p>
+<p>This exercise demonstrates the power of Python. In relatively few lines of code, we
+performed an entire data science workflow with a highly effective data
+visualization! We asked a question, loaded the data into Python, wrangled the data
+(using <code class="docutils literal notranslate"><span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">loc[]</span></code>, <code class="docutils literal notranslate"><span class="pre">sort_values</span></code>, and <code class="docutils literal notranslate"><span class="pre">head</span></code>) and created a data visualization to
+help answer our question. In this chapter, you got a quick taste of the data
+science workflow; continue on with the next few chapters to learn each of
+these steps in much more detail!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load the data set</span>
+<span class="n">can_lang</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/can_lang.csv"</span><span class="p">)</span>
+
+<span class="c1"># obtain the 10 most common Aboriginal languages</span>
+<span class="n">ten_lang</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">can_lang</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">can_lang</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Aboriginal languages"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"language"</span><span class="p">,</span> <span class="s2">"mother_tongue"</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"mother_tongue"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># create the visualization</span>
+<span class="n">ten_lang_plot</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">ten_lang</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"mother_tongue"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Mother Tongue (Number of Canadian Residents)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"language"</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Language"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="final-plot" style="width: 700px">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-5b0d2c981b28452ea1bb81e02fffe7d6.vega-embed</del><ins>#altair-viz-63c5ec6458d145b19b3546aebcda51c4.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-5b0d2c981b28452ea1bb81e02fffe7d6.vega-embed</del><ins>#altair-viz-63c5ec6458d145b19b3546aebcda51c4.vega-embed</ins> details,
+  <del>#altair-viz-5b0d2c981b28452ea1bb81e02fffe7d6.vega-embed</del><ins>#altair-viz-63c5ec6458d145b19b3546aebcda51c4.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-5b0d2c981b28452ea1bb81e02fffe7d6"><div id="altair-viz-63c5ec6458d145b19b3546aebcda51c4"></div><img src="prerendered/final-plot.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 1.13 </span><span class="caption-text">Bar plot of the ten Aboriginal languages most often reported by Canadian residents as their mother tongue</span><a class="headerlink" href="#final-plot" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+</section>
+</section>
+<section id="accessing-documentation">
+<h2><span class="section-number">1.12. </span>Accessing documentation<a class="headerlink" href="#accessing-documentation" title="Permalink to this heading">#</a></h2>
+<span class="target" id="index-36"></span><span class="target" id="index-37"></span><p id="index-38">There are many Python functions in the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package (and beyond!), and
+nobody can be expected to remember what every one of them does
+or all of the arguments we have to give them. Fortunately, Python provides
+the <code class="docutils literal notranslate"><span class="pre">help</span></code> function, which
+provides an easy way to pull up the documentation for
+most functions quickly. To use the <code class="docutils literal notranslate"><span class="pre">help</span></code> function to access the documentation, you
+just put the name of the function you are curious about as an argument inside the <code class="docutils literal notranslate"><span class="pre">help</span></code> function.
+For example, if you had forgotten what the <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> function
+did or exactly what arguments to pass in, you could run the following
+code:</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference internal" href="#help-read-csv"><span class="std std-numref">Fig. 1.14</span></a> shows the documentation that will pop up,
+including a high-level description of the function, its arguments,
+a description of each, and more. Note that you may find some of the
+text in the documentation a bit too technical right now.
+Fear not: as you work through this book, many of these terms will be introduced
+to you, and slowly but surely you will become more adept at understanding and navigating
+documentation like that shown in <a class="reference internal" href="#help-read-csv"><span class="std std-numref">Fig. 1.14</span></a>. But do keep in mind that the documentation
+is not written to <em>teach</em> you about a function; it is just there as a reference to <em>remind</em>
+you about the different arguments and usage of functions that you have already learned about elsewhere.</p>
+<figure class="align-default" id="help-read-csv">
+<a class="reference internal image-reference" href="_images/help_read_csv.png"><img alt="_images/help_read_csv.png" src="_images/help_read_csv.png" style="height: 700px;"/></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1.14 </span><span class="caption-text">The documentation for the read_csv function including a high-level description, a list of arguments and their meanings, and more.</span><a class="headerlink" href="#help-read-csv" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>If you are working in a Jupyter Lab environment, there are some conveniences that will help you lookup function names
+and access the documentation. First, rather than <code class="docutils literal notranslate"><span class="pre">help</span></code>, you can use the more concise <code class="docutils literal notranslate"><span class="pre">?</span></code> character. So for example,
+to read the documentation for the <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> function, you can run the following code:</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">?</span>pd.read_csv
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can also type the first characters of the function you want to use,
+and then press <kbd>Tab</kbd> to bring up small menu
+that shows you all the available functions
+that starts with those characters.
+This is helpful both for remembering function names
+and to prevent typos.</p>
+<figure class="align-default" id="completion-menu">
+<a class="reference internal image-reference" href="_images/completion_menu.png"><img alt="_images/completion_menu.png" src="_images/completion_menu.png" style="height: 400px;"/></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1.15 </span><span class="caption-text">The suggestions that are shown after typing <code class="docutils literal notranslate"><span class="pre">pd.read</span></code> and pressing <kbd>Tab</kbd>.</span><a class="headerlink" href="#completion-menu" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>To get more info on the function you want to use,
+you can type out the full name
+and then hold <kbd>Shift</kbd> while pressing <kbd>Tab</kbd>
+to bring up a help dialogue including the same information as when using <code class="docutils literal notranslate"><span class="pre">help()</span></code>.</p>
+<figure class="align-default" id="help-dialog">
+<a class="reference internal image-reference" href="_images/help_dialog.png"><img alt="_images/help_dialog.png" src="_images/help_dialog.png" style="height: 400px;"/></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1.16 </span><span class="caption-text">The help dialog that is shown after typing <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> and then pressing <kbd>Shift</kbd> + <kbd>Tab</kbd>.</span><a class="headerlink" href="#help-dialog" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Finally,
+it can be helpful to have this help dialog open at all times,
+especially when you start out learning about programming and data science.
+You can achieve this by clicking on the <code class="docutils literal notranslate"><span class="pre">Help</span></code> text
+in the menu bar at the top
+and then selecting <code class="docutils literal notranslate"><span class="pre">Show</span> <span class="pre">Contextual</span> <span class="pre">Help</span></code>.</p>
+</section>
+<section id="exercises">
+<h2><span class="section-number">1.13. </span>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+<p>Practice exercises for the material covered in this chapter
+can be found in the accompanying
+<a class="reference external" href="https://worksheets.python.datasciencebook.ca">worksheets repository</a>
+in the “Python and Pandas” row.
+You can launch an interactive version of the worksheet in your browser by clicking the “launch binder” button.
+You can also preview a non-interactive version of the worksheet by clicking “view worksheet.”
+If you instead decide to download the worksheet and run it on your own machine,
+make sure to follow the instructions for computer setup
+found in <a class="reference internal" href="setup.html#move-to-your-own-machine"><span class="std std-numref">Chapter 13</span></a>. This will ensure that the automated feedback
+and guidance that the worksheets provide will function as intended.</p>
+</section>
+<section id="references">
+<h2><span class="section-number">1.14. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<div class="docutils container" id="id12">
+<dl class="citation">
+<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id10">GvR01</a></span></dt>
+<dd><p>Nick Coghlan Guido van Rossum, Barry Warsaw. <em>PEP 8 – Style Guide for Python Code</em>. 2001. URL: <a class="reference external" href="https://peps.python.org/pep-0008/">https://peps.python.org/pep-0008/</a>.</p>
+</dd>
+<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id8">LP15</a></span></dt>
+<dd><p>Jeffrey Leek and Roger Peng. What is the question? <em>Science</em>, 347(6228):1314–1315, 2015.</p>
+</dd>
+<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id8">PM15</a></span></dt>
+<dd><p>Roger D Peng and Elizabeth Matsui. <em>The Art of Data Science: A Guide for Anyone Who Works with Data</em>. Skybrude Consulting, LLC, 2015. URL: <a class="reference external" href="https://bookdown.org/rdpeng/artofdatascience/">https://bookdown.org/rdpeng/artofdatascience/</a>.</p>
+</dd>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id6">Tim20</a></span></dt>
+<dd><p>Tiffany Timbers. <em>canlang: Canadian Census language data</em>. 2020. R package version 0.0.9. URL: <a class="reference external" href="https://ttimbers.github.io/canlang/">https://ttimbers.github.io/canlang/</a>.</p>
+</dd>
+<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id3">Wal17</a></span></dt>
+<dd><p>Nick Walker. Mapping indigenous languages in Canada. <em>Canadian Geographic</em>, 2017. URL: <a class="reference external" href="https://www.canadiangeographic.ca/article/mapping-indigenous-languages-canada">https://www.canadiangeographic.ca/article/mapping-indigenous-languages-canada</a> (visited on 2021-05-27).</p>
+</dd>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id2">Wil18</a></span></dt>
+<dd><p>Kory Wilson. <em>Pulling Together: Foundations Guide</em>. BCcampus, 2018. URL: <a class="reference external" href="https://opentextbc.ca/indigenizationfoundations/">https://opentextbc.ca/indigenizationfoundations/</a> (visited on 2021-05-27).</p>
+</dd>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id7">StatisticsCanada16a</a></span></dt>
+<dd><p>Statistics Canada. Population census. 2016. URL: <a class="reference external" href="https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/index-eng.cfm">https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/index-eng.cfm</a>.</p>
+</dd>
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id11">StatisticsCanada16b</a></span></dt>
+<dd><p>Statistics Canada. The Aboriginal languages of First Nations people, Métis and Inuit. 2016. URL: <a class="reference external" href="https://www12.statcan.gc.ca/census-recensement/2016/as-sa/98-200-x/2016022/98-200-x2016022-eng.cfm">https://www12.statcan.gc.ca/census-recensement/2016/as-sa/98-200-x/2016022/98-200-x2016022-eng.cfm</a>.</p>
+</dd>
+<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id1">StatisticsCanada18</a></span></dt>
+<dd><p>Statistics Canada. The evolution of language populations in Canada, by mother tongue, from 1901 to 2016. 2018. URL: <a class="reference external" href="https://www150.statcan.gc.ca/n1/pub/11-630-x/11-630-x2018001-eng.htm">https://www150.statcan.gc.ca/n1/pub/11-630-x/11-630-x2018001-eng.htm</a> (visited on 2021-05-27).</p>
+</dd>
+<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id9">ThePDTeam20</a></span></dt>
+<dd><p>The Pandas Development Team. <em>pandas-dev/pandas: Pandas</em>. February 2020. URL: <a class="reference external" href="https://doi.org/10.5281/zenodo.3509134">https://doi.org/10.5281/zenodo.3509134</a>, <a class="reference external" href="https://doi.org/10.5281/zenodo.3509134">doi:10.5281/zenodo.3509134</a>.</p>
+</dd>
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id4">TruthaRCoCanada12</a></span></dt>
+<dd><p>Truth and Reconciliation Commission of Canada. <em>They Came for the Children: Canada, Aboriginal Peoples, and the Residential Schools</em>. Public Works &amp; Government Services Canada, 2012.</p>
+</dd>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id5">TruthaRCoCanada15</a></span></dt>
+<dd><p>Truth and Reconciliation Commission of Canada. Calls to Action. 2015. URL: <a class="reference external" href="https://www2.gov.bc.ca/assets/gov/british-columbians-our-governments/indigenous-people/aboriginal-peoples-documents/calls_to_action_english2.pdf">https://www2.gov.bc.ca/assets/gov/british-columbians-our-governments/indigenous-people/aboriginal-peoples-documents/calls_to_action_english2.pdf</a>.</p>
+</dd>
+<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id9">WesMcKinney10</a></span></dt>
+<dd><p>Wes McKinney. Data Structures for Statistical Computing in Python. In Stéfan van der Walt and Jarrod Millman, editors, <em>Proceedings of the 9th Python in Science Conference</em>, 56 – 61. 2010. <a class="reference external" href="https://doi.org/10.25080/Majora-92bf1922-00a">doi:10.25080/Majora-92bf1922-00a</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+<script>kernelName = 'python3'</script>
+</article>
+<footer class="prev-next-footer">
+<!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev" href="authors.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">About the authors</p>
+</div>
+</a>
+<a class="right-next" href="reading.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title"><span class="section-number">2. </span>Reading in data locally and from the web</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">1.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">1.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canadian-languages-data-set">1.3. Canadian languages data set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asking-a-question">1.4. Asking a question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-a-tabular-data-set">1.5. Loading a tabular data set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-things-in-python">1.6. Naming things in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-subsets-of-data-frames-with-loc">1.7. Creating subsets of data frames with <code class="docutils literal notranslate"><span class="pre">[]</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">loc[]</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-to-filter-rows">1.7.1. Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to filter rows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-to-select-columns">1.7.2. Using <code class="docutils literal notranslate"><span class="pre">[]</span></code> to select columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loc-to-filter-rows-and-select-columns">1.7.3. Using <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> to filter rows and select columns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-sort-values-and-head-to-select-rows-by-ordered-values">1.8. Using <code class="docutils literal notranslate"><span class="pre">sort_values</span></code> and <code class="docutils literal notranslate"><span class="pre">head</span></code> to select rows by ordered values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-and-modifying-columns">1.9. Adding and modifying columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-steps-with-chaining-and-multiline-expressions">1.10. Combining steps with chaining and multiline expressions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-data-with-visualizations">1.11. Exploring data with visualizations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-altair-to-create-a-bar-plot">1.11.1. Using <code class="docutils literal notranslate"><span class="pre">altair</span></code> to create a bar plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formatting-altair-charts">1.11.2. Formatting <code class="docutils literal notranslate"><span class="pre">altair</span></code> charts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">1.11.3. Putting it all together</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-documentation">1.12. Accessing documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">1.13. Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">1.14. References</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+By Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, and Lindsey Heagy
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+<footer class="bd-footer">
+</footer>
+</body>
+</html>

@@ -1,0 +1,2906 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<title>10. Statistical inference — Data Science: A First Introduction with Python</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!-- Loaded before other Sphinx assets -->
+<link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
+<link href="_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/copybutton.css" rel="stylesheet" type="text/css"/>
+<link href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+<link href="_static/style.css" rel="stylesheet" type="text/css"/>
+<link href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<link as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" rel="preload"/>
+<script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/clipboard.min.js"></script>
+<script src="_static/copybutton.js"></script>
+<script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+<script>let toggleHintShow = 'Click to show';</script>
+<script>let toggleHintHide = 'Click to hide';</script>
+<script>let toggleOpenOnPrint = 'true';</script>
+<script src="_static/togglebutton.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+<script src="_static/design-tabs.js"></script>
+<script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-7XBFF4RSN2"></script>
+<script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-7XBFF4RSN2');
+            </script>
+<script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+<script async="async" src="_static/sphinx-thebe.js"></script>
+<script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'inference';</script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="jupyter.html" rel="next" title="11. Combining code and text with Jupyter"/>
+<link href="clustering.html" rel="prev" title="9. Clustering"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<script src="website_diff.js"></script><link href="website_diff.css" rel="stylesheet" type="text/css"/></head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+</div>
+<nav class="bd-header navbar navbar-expand-lg bd-navbar">
+</nav>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="index.html">
+<p class="title logo__title">Data Science: A First Introduction with Python</p>
+</a></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Front Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preface-text.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foreword-text.html">Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">About the authors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Python and Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reading.html">2. Reading in data locally and from the web</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="wrangling.html">3. Cleaning and wrangling data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">4. Effective data visualization</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification1.html">5. Classification I: training &amp; predicting</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="classification2.html">6. Classification II: evaluation &amp; tuning</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression1.html">7. Regression I: K-nearest neighbors</a></li>
+<li class="toctree-l1"><a class="reference internal link-to-diff" href="regression2.html">8. Regression II: linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">9. Clustering</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Statistical inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jupyter.html">11. Combining code and text with Jupyter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-control.html">12. Collaboration with version control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">13. Setting up your computer</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
+</label></div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<div class="dropdown dropdown-download-buttons">
+<button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fas fa-download"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="_sources/inference.md" target="_blank" title="Download source file">
+<span class="btn__icon-container">
+<i class="fas fa-file"></i>
+</span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+<li>
+<button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
+<span class="btn__icon-container">
+<i class="fas fa-file-pdf"></i>
+</span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+</ul>
+</div>
+<button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+<span class="btn__icon-container">
+<i class="fas fa-expand"></i>
+</span>
+</button>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Statistical inference</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">10.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">10.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-sampling">10.3. Why do we need sampling?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions">10.4. Sampling distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-for-proportions">10.4.1. Sampling distributions for proportions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-for-means">10.4.2. Sampling distributions for means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">10.4.3. Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapping">10.5. Bootstrapping</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.5.1. Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapping-in-python">10.5.2. Bootstrapping in Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-bootstrap-to-calculate-a-plausible-range">10.5.3. Using the bootstrap to calculate a plausible range</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">10.6. Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">10.7. Additional resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">10.8. References</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article" role="main">
+<section class="tex2jax_ignore mathjax_ignore" id="statistical-inference">
+<span id="inference"></span><h1><span class="section-number">10. </span>Statistical inference<a class="headerlink" href="#statistical-inference" title="Permalink to this heading">#</a></h1>
+<section id="overview">
+<h2><span class="section-number">10.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>A typical data analysis task in practice is to draw conclusions about some
+unknown aspect of a population of interest based on observed data sampled from
+that population; we typically do not get data on the <em>entire</em> population.  Data
+analysis questions regarding how summaries, patterns, trends, or relationships
+in a data set extend to the wider population are called <em>inferential
+questions</em>. This chapter will start with the fundamental ideas of sampling from
+populations and then introduce two common techniques in statistical inference:
+<em>point estimation</em> and <em>interval estimation</em>.</p>
+</section>
+<section id="chapter-learning-objectives">
+<h2><span class="section-number">10.2. </span>Chapter learning objectives<a class="headerlink" href="#chapter-learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of the chapter, readers will be able to do the following:</p>
+<ul class="simple">
+<li><p>Describe real-world examples of questions that can be answered with statistical inference.</p></li>
+<li><p>Define common population parameters (e.g., mean, proportion, standard deviation) that are often estimated using sampled data, and estimate these from a sample.</p></li>
+<li><p>Define the following statistical sampling terms: population, sample, population parameter, point estimate, and sampling distribution.</p></li>
+<li><p>Explain the difference between a population parameter and a sample point estimate.</p></li>
+<li><p>Use Python to draw random samples from a finite population.</p></li>
+<li><p>Use Python to create a sampling distribution from a finite population.</p></li>
+<li><p>Describe how sample size influences the sampling distribution.</p></li>
+<li><p>Define bootstrapping.</p></li>
+<li><p>Use Python to create a bootstrap distribution to approximate a sampling distribution.</p></li>
+<li><p>Contrast the bootstrap and sampling distributions.</p></li>
+</ul>
+</section>
+<section id="why-do-we-need-sampling">
+<h2><span class="section-number">10.3. </span>Why do we need sampling?<a class="headerlink" href="#why-do-we-need-sampling" title="Permalink to this heading">#</a></h2>
+<p>We often need to understand how quantities we observe in a subset
+of data relate to the same quantities in the broader population. For example, suppose a
+retailer is considering selling iPhone accessories, and they want to estimate
+how big the market might be. Additionally, they want to strategize how they can
+market their products on North American college and university campuses. This
+retailer might formulate the following question:</p>
+<p><em>What proportion of all undergraduate students in North America own an iPhone?</em></p>
+<p id="index-0">In the above question, we are interested in making a conclusion about <em>all</em>
+undergraduate students in North America; this is referred to as the <strong>population</strong>. In
+general, the population is the complete collection of individuals or cases we
+are interested in studying.  Further, in the above question, we are interested
+in computing a quantity—the proportion of iPhone owners—based on
+the entire population. This proportion is referred to as a <strong>population parameter</strong>. In
+general, a population parameter is a numerical characteristic of the entire
+population. To compute this number in the example above, we would need to ask
+every single undergraduate in North America whether they own an iPhone. In
+practice, directly computing population parameters is often time-consuming and
+costly, and sometimes impossible.</p>
+<span class="target" id="index-1"></span><p id="index-2">A more practical approach would be to make measurements for a <strong>sample</strong>, i.e., a
+subset of individuals collected from the population. We can then compute a
+<strong>sample estimate</strong>—a numerical characteristic of the sample—that
+estimates the population parameter. For example, suppose we randomly selected
+ten undergraduate students across North America (the sample) and computed the
+proportion of those students who own an iPhone (the sample estimate). In that
+case, we might suspect that proportion is a reasonable estimate of the
+proportion of students who own an iPhone in the entire population.
+<a class="reference internal" href="#fig-11-population-vs-sample"><span class="std std-numref">Fig. 10.1</span></a> illustrates this process.
+In general, the process of using a sample to make a conclusion about the
+broader population from which it is taken is referred to as <strong>statistical inference</strong>.</p>
+<figure class="align-default" id="fig-11-population-vs-sample">
+<img alt="_images/population_vs_sample.png" src="_images/population_vs_sample.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 10.1 </span><span class="caption-text">The process of using a sample from a broader population to obtain a point estimate of a
+population parameter. In this case, a sample of 10 individuals yielded 6 who own an iPhone, resulting
+in an estimated population proportion of 60% iPhone owners. The actual population proportion in this example
+illustration is 53.8%.</span><a class="headerlink" href="#fig-11-population-vs-sample" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Note that proportions are not the <em>only</em> kind of population parameter we might
+be interested in. For example, suppose an undergraduate student studying at the University
+of British Columbia in Canada is looking for an apartment
+to rent. They need to create a budget, so they want to know something about
+studio apartment rental prices in Vancouver, BC. This student might
+formulate the following question:</p>
+<p><em>What is the average price-per-month of studio apartment rentals in Vancouver, Canada?</em></p>
+<p>In this case, the population consists of all studio apartment rentals in Vancouver, and the
+population parameter is the <em>average price-per-month</em>. Here we used the average
+as a measure of the center to describe the “typical value” of studio apartment
+rental prices. But even within this one example, we could also be interested in
+many other population parameters. For instance, we know that not every studio
+apartment rental in Vancouver will have the same price per month. The student
+might be interested in how much monthly prices vary and want to find a measure
+of the rentals’ spread (or variability), such as the standard deviation. Or perhaps the
+student might be interested in the fraction of studio apartment rentals that
+cost more than $1000 per month. The question we want to answer will help us
+determine the parameter we want to estimate. If we were somehow able to observe
+the whole population of studio apartment rental offerings in Vancouver, we
+could compute each of these numbers exactly; therefore, these are all
+population parameters. There are many kinds of observations and population
+parameters that you will run into in practice, but in this chapter, we will
+focus on two settings:</p>
+<ol class="arabic simple">
+<li><p>Using categorical observations to estimate the proportion of a category</p></li>
+<li><p>Using quantitative observations to estimate the average (or mean)</p></li>
+</ol>
+</section>
+<section id="sampling-distributions">
+<h2><span class="section-number">10.4. </span>Sampling distributions<a class="headerlink" href="#sampling-distributions" title="Permalink to this heading">#</a></h2>
+<section id="sampling-distributions-for-proportions">
+<h3><span class="section-number">10.4.1. </span>Sampling distributions for proportions<a class="headerlink" href="#sampling-distributions-for-proportions" title="Permalink to this heading">#</a></h3>
+<p id="index-3">We will look at an example using data from
+<a class="reference external" href="http://insideairbnb.com/">Inside Airbnb</a> <span id="id1">[<a class="reference internal" href="#id47" title="Murray Cox. Inside Airbnb. n.d. URL: http://insideairbnb.com/ (visited on 2020-09-01).">Cox, n.d.</a>]</span>. Airbnb is an online
+marketplace for arranging vacation rentals and places to stay. The data set
+contains listings for Vancouver, Canada, in September 2020. Our data
+includes an ID number, neighborhood, type of room, the number of people the
+rental accommodates, number of bathrooms, bedrooms, beds, and the price per
+night.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">airbnb</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/listings.csv"</span><span class="p">)</span>
+<span class="n">airbnb</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>id</th>
+<th>neighbourhood</th>
+<th>room_type</th>
+<th>accommodates</th>
+<th>bathrooms</th>
+<th>bedrooms</th>
+<th>beds</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>5</td>
+<td>2 baths</td>
+<td>2</td>
+<td>2</td>
+<td>150.00</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>Downtown Eastside</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>2 baths</td>
+<td>2</td>
+<td>2</td>
+<td>132.00</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>West End</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>85.00</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>Kensington-Cedar Cottage</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>0</td>
+<td>146.00</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>Kensington-Cedar Cottage</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>110.00</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>4589</th>
+<td>4590</td>
+<td>Downtown Eastside</td>
+<td>Entire home/apt</td>
+<td>5</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>99.00</td>
+</tr>
+<tr>
+<th>4590</th>
+<td>4591</td>
+<td>Oakridge</td>
+<td>Private room</td>
+<td>2</td>
+<td>1.5 baths</td>
+<td>1</td>
+<td>1</td>
+<td>42.51</td>
+</tr>
+<tr>
+<th>4591</th>
+<td>4592</td>
+<td>Dunbar Southlands</td>
+<td>Private room</td>
+<td>2</td>
+<td>1.5 shared baths</td>
+<td>1</td>
+<td>1</td>
+<td>53.29</td>
+</tr>
+<tr>
+<th>4592</th>
+<td>4593</td>
+<td>West End</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>145.00</td>
+</tr>
+<tr>
+<th>4593</th>
+<td>4594</td>
+<td>Shaughnessy</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>1 bath</td>
+<td>3</td>
+<td>4</td>
+<td>135.00</td>
+</tr>
+</tbody>
+</table>
+<p>4594 rows × 8 columns</p>
+</div></div></div>
+</div>
+<p>Suppose the city of Vancouver wants information about Airbnb rentals to help
+plan city bylaws, and they want to know how many Airbnb places are listed as
+entire homes and apartments (rather than as private or shared rooms). Therefore
+they may want to estimate the true proportion of all Airbnb listings where the
+room type is listed as “entire home or apartment.” Of course, we usually
+do not have access to the true population, but here let’s imagine (for learning
+purposes) that our data set represents the population of all Airbnb rental
+listings in Vancouver, Canada.
+We can find the proportion of listings for each room type
+by using the <code class="docutils literal notranslate"><span class="pre">value_counts</span></code> function with the <code class="docutils literal notranslate"><span class="pre">normalize</span></code> parameter
+as we did in previous chapters.</p>
+<div class="cell docutils container" id="index-4">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">airbnb</span><span class="p">[</span><span class="s2">"room_type"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>room_type
+Entire home/apt    0.747497
+Private room       0.246408
+Shared room        0.005224
+Hotel room         0.000871
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see that the proportion of <code class="docutils literal notranslate"><span class="pre">Entire</span> <span class="pre">home/apt</span></code> listings in
+the data set is <span class="pasted-text">0.747</span>. This
+value, <span class="pasted-text">0.747</span>, is the population parameter. Remember, this
+parameter value is usually unknown in real data analysis problems, as it is
+typically not possible to make measurements for an entire population.</p>
+<p id="index-5">Instead, perhaps we can approximate it with a small subset of data!
+To investigate this idea, let’s try randomly selecting 40 listings (<em>i.e.,</em> taking a random sample of
+size 40 from our population), and computing the proportion for that sample.
+We will use the <code class="docutils literal notranslate"><span class="pre">sample</span></code> method of the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>
+object to take the sample. The argument <code class="docutils literal notranslate"><span class="pre">n</span></code> of <code class="docutils literal notranslate"><span class="pre">sample</span></code> is the size of the sample to take
+and since we are starting to use randomness here,
+we are also setting the random seed via numpy to make the results reproducible.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">155</span><span class="p">)</span>
+
+<span class="n">airbnb</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)[</span><span class="s2">"room_type"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>room_type
+Entire home/apt    0.725
+Private room       0.250
+Shared room        0.025
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-6">Here we see that the proportion of entire home/apartment listings in this
+random sample is <span class="pasted-text">0.725</span>. Wow—that’s close to our
+true population value! But remember, we computed the proportion using a random sample of size 40.
+This has two consequences. First, this value is only an <em>estimate</em>, i.e., our best guess
+of our population parameter using this sample.
+Given that we are estimating a single value here, we often
+refer to it as a <strong>point estimate</strong>.  Second, since the sample was random,
+if we were to take <em>another</em> random sample of size 40 and compute the proportion for that sample,
+we would not get the same answer:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">airbnb</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)[</span><span class="s2">"room_type"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>room_type
+Entire home/apt    0.625
+Private room       0.350
+Shared room        0.025
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Confirmed! We get a different value for our estimate this time.
+That means that our point estimate might be unreliable. Indeed, estimates vary from sample to
+sample due to <strong>sampling variability</strong>. But just how much
+should we expect the estimates of our random samples to vary?
+Or in other words, how much can we really trust our point estimate based on a single sample?</p>
+<p id="index-7">To understand this, we will simulate many samples (much more than just two)
+of size 40 from our population of listings and calculate the proportion of
+entire home/apartment listings in each sample. This simulation will create
+many sample proportions, which we can visualize using a histogram. The
+distribution of the estimate for all possible samples of a given size (which we
+commonly refer to as <span class="math notranslate nohighlight">\(n\)</span>) from a population is called
+a <strong>sampling distribution</strong>. The sampling distribution will help us see how much we would
+expect our sample proportions from this population to vary for samples of size 40.</p>
+<p id="index-8">We again use the <code class="docutils literal notranslate"><span class="pre">sample</span></code> to take samples of size 40 from our
+population of Airbnb listings. But this time we use a list comprehension
+to repeat the operation multiple times (as we did previously in <a class="reference internal" href="clustering.html#clustering"><span class="std std-numref">Chapter 9</span></a>).
+In this case we repeat the operation 20,000 times to obtain 20,000 samples of size 40.
+To make it clear which rows in the data frame come
+which of the 20,000 samples, we also add a column called <code class="docutils literal notranslate"><span class="pre">replicate</span></code> with this information using the <code class="docutils literal notranslate"><span class="pre">assign</span></code> function,
+introduced previously in <a class="reference internal link-to-diff" href="wrangling.html#wrangling"><span class="std std-numref">Chapter 3</span></a>.
+The call to <code class="docutils literal notranslate"><span class="pre">concat</span></code> concatenates all the 20,000 data frames
+returned from the list comprehension into a single big data frame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">airbnb</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">replicate</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20_000</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">samples</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>id</th>
+<th>neighbourhood</th>
+<th>room_type</th>
+<th>accommodates</th>
+<th>bathrooms</th>
+<th>bedrooms</th>
+<th>beds</th>
+<th>price</th>
+<th>replicate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>605</th>
+<td>606</td>
+<td>Marpole</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>91.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>4579</th>
+<td>4580</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>160.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>1739</th>
+<td>1740</td>
+<td>West End</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>151.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>3904</th>
+<td>3905</td>
+<td>Oakridge</td>
+<td>Private room</td>
+<td>6</td>
+<td>1 private bath</td>
+<td>3</td>
+<td>3</td>
+<td>185.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>1596</th>
+<td>1597</td>
+<td>Kitsilano</td>
+<td>Entire home/apt</td>
+<td>1</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>99.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>3060</th>
+<td>3061</td>
+<td>Hastings-Sunrise</td>
+<td>Private room</td>
+<td>2</td>
+<td>3.5 shared baths</td>
+<td>1</td>
+<td>1</td>
+<td>78.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>527</th>
+<td>528</td>
+<td>Kitsilano</td>
+<td>Private room</td>
+<td>4</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>99.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>1587</th>
+<td>1588</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>1 bath</td>
+<td>1</td>
+<td>3</td>
+<td>169.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>3860</th>
+<td>3861</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>100.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>2747</th>
+<td>2748</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>285.0</td>
+<td>19999</td>
+</tr>
+</tbody>
+</table>
+<p>800000 rows × 9 columns</p>
+</div></div></div>
+</div>
+<p>Since the column <code class="docutils literal notranslate"><span class="pre">replicate</span></code> indicates the replicate/sample number,
+we can verify that we indeed seem to have 20,0000 samples
+starting at sample 0 and ending at sample 19,999.</p>
+<p>Now that we have obtained the samples, we need to compute the
+proportion of entire home/apartment listings in each sample.
+We first group the data by the <code class="docutils literal notranslate"><span class="pre">replicate</span></code> variable—to group the
+set of listings in each sample together—and then use <code class="docutils literal notranslate"><span class="pre">value_counts</span></code>
+with <code class="docutils literal notranslate"><span class="pre">normalize=True</span></code> to compute the proportion in each sample.
+Both the first and last few entries of the resulting data frame are printed
+below to show that we end up with 20,000 point estimates, one for each of the 20,000 samples.</p>
+<div class="cell docutils container" id="index-9">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">samples</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"room_type"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>replicate  room_type      
+0          Entire home/apt    0.750
+           Private room       0.250
+1          Entire home/apt    0.775
+           Private room       0.225
+2          Entire home/apt    0.750
+                              ...  
+19998      Entire home/apt    0.700
+           Private room       0.275
+           Shared room        0.025
+19999      Entire home/apt    0.750
+           Private room       0.250
+Name: proportion, Length: 44552, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The returned object is a series,
+and as we have previously learned
+we can use <code class="docutils literal notranslate"><span class="pre">reset_index</span></code> to change it to a data frame.
+However,
+there is one caveat here:
+when we use the <code class="docutils literal notranslate"><span class="pre">value_counts</span></code> function
+on a grouped series and try to <code class="docutils literal notranslate"><span class="pre">reset_index</span></code>
+we will end up with two columns with the same name
+and therefore get an error
+(in this case, <code class="docutils literal notranslate"><span class="pre">room_type</span></code> will occur twice).
+Fortunately,
+there is a simple solution:
+when we call <code class="docutils literal notranslate"><span class="pre">reset_index</span></code>,
+we can specify the name of the new column
+with the <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">samples</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"room_type"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"sample_proportion"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>replicate</th>
+<th>room_type</th>
+<th>sample_proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0</td>
+<td>Private room</td>
+<td>0.250</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1</td>
+<td>Entire home/apt</td>
+<td>0.775</td>
+</tr>
+<tr>
+<th>3</th>
+<td>1</td>
+<td>Private room</td>
+<td>0.225</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>44547</th>
+<td>19998</td>
+<td>Entire home/apt</td>
+<td>0.700</td>
+</tr>
+<tr>
+<th>44548</th>
+<td>19998</td>
+<td>Private room</td>
+<td>0.275</td>
+</tr>
+<tr>
+<th>44549</th>
+<td>19998</td>
+<td>Shared room</td>
+<td>0.025</td>
+</tr>
+<tr>
+<th>44550</th>
+<td>19999</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>44551</th>
+<td>19999</td>
+<td>Private room</td>
+<td>0.250</td>
+</tr>
+</tbody>
+</table>
+<p>44552 rows × 3 columns</p>
+</div></div></div>
+</div>
+<p>Below we put everything together
+and also filter the data frame to keep only the room types
+that we are interested in.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_estimates</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">samples</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"room_type"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"sample_proportion"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">sample_estimates</span> <span class="o">=</span> <span class="n">sample_estimates</span><span class="p">[</span><span class="n">sample_estimates</span><span class="p">[</span><span class="s2">"room_type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Entire home/apt"</span><span class="p">]</span>
+<span class="n">sample_estimates</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>replicate</th>
+<th>room_type</th>
+<th>sample_proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1</td>
+<td>Entire home/apt</td>
+<td>0.775</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>6</th>
+<td>3</td>
+<td>Entire home/apt</td>
+<td>0.675</td>
+</tr>
+<tr>
+<th>8</th>
+<td>4</td>
+<td>Entire home/apt</td>
+<td>0.725</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>44541</th>
+<td>19995</td>
+<td>Entire home/apt</td>
+<td>0.775</td>
+</tr>
+<tr>
+<th>44543</th>
+<td>19996</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+<tr>
+<th>44545</th>
+<td>19997</td>
+<td>Entire home/apt</td>
+<td>0.725</td>
+</tr>
+<tr>
+<th>44547</th>
+<td>19998</td>
+<td>Entire home/apt</td>
+<td>0.700</td>
+</tr>
+<tr>
+<th>44550</th>
+<td>19999</td>
+<td>Entire home/apt</td>
+<td>0.750</td>
+</tr>
+</tbody>
+</table>
+<p>20000 rows × 3 columns</p>
+</div></div></div>
+</div>
+<p>We can now visualize the sampling distribution of sample proportions
+for samples of size 40 using a histogram in <a class="reference internal" href="#fig-11-example-proportions7"><span class="std std-numref">Fig. 10.2</span></a>. Keep in mind: in the real world,
+we don’t have access to the full population. So we
+can’t take many samples and can’t actually construct or visualize the sampling distribution.
+We have created this particular example
+such that we <em>do</em> have access to the full population, which lets us visualize the
+sampling distribution directly for learning purposes.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sampling_distribution</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">sample_estimates</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"sample_proportion"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Sample proportions"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">sampling_distribution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-example-proportions7">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-e2ee067252a34c429fd781544e9157f9.vega-embed</del><ins>#altair-viz-7910ac70922e4264bc193f6bc40256d9.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-e2ee067252a34c429fd781544e9157f9.vega-embed</del><ins>#altair-viz-7910ac70922e4264bc193f6bc40256d9.vega-embed</ins> details,
+  <del>#altair-viz-e2ee067252a34c429fd781544e9157f9.vega-embed</del><ins>#altair-viz-7910ac70922e4264bc193f6bc40256d9.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-e2ee067252a34c429fd781544e9157f9"><div id="altair-viz-7910ac70922e4264bc193f6bc40256d9"></div><img src="prerendered/fig-11-example-proportions7.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.2 </span><span class="caption-text">Sampling distribution of the sample proportion for sample size 40.</span><a class="headerlink" href="#fig-11-example-proportions7" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-10">The sampling distribution in <a class="reference internal" href="#fig-11-example-proportions7"><span class="std std-numref">Fig. 10.2</span></a> appears
+to be bell-shaped, is roughly symmetric, and has one peak. It is centered
+around <span class="pasted-text">0.75</span> and the sample proportions
+range from about <span class="pasted-text">0.55</span> to about
+<span class="pasted-text">0.95</span>. In fact, we can
+calculate the mean of the sample proportions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_estimates</span><span class="p">[</span><span class="s2">"sample_proportion"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.74848375
+</pre></div>
+</div>
+</div>
+</div>
+<p>We notice that the sample proportions are centered around the population
+proportion value, <span class="pasted-text">0.748</span>! In general, the mean of
+the sampling distribution should be equal to the population proportion.
+This is great news because it means that the sample proportion is neither an overestimate nor an
+underestimate of the population proportion.
+In other words, if you were to take many samples as we did above, there is no tendency
+towards over or underestimating the population proportion.
+In a real data analysis setting where you just have access to your single
+sample, this implies that you would suspect that your sample point estimate is
+roughly equally likely to be above or below the true population proportion.</p>
+</section>
+<section id="sampling-distributions-for-means">
+<h3><span class="section-number">10.4.2. </span>Sampling distributions for means<a class="headerlink" href="#sampling-distributions-for-means" title="Permalink to this heading">#</a></h3>
+<p>In the previous section, our variable of interest—<code class="docutils literal notranslate"><span class="pre">room_type</span></code>—was
+<em>categorical</em>, and the population parameter was a proportion. As mentioned in
+the chapter introduction, there are many choices of the population parameter
+for each type of variable. What if we wanted to infer something about a
+population of <em>quantitative</em> variables instead? For instance, a traveler
+visiting Vancouver, Canada may wish to estimate the
+population <em>mean</em> (or average) price per night of Airbnb listings. Knowing
+the average could help them tell whether a particular listing is overpriced.
+We can visualize the population distribution of the price per night with a histogram.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">population_distribution</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">airbnb</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">population_distribution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-example-means2">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-b7d71be48b6b48a5890e942e8ddeaff0.vega-embed</del><ins>#altair-viz-cc301502ae95414a95217a4ca7fab5ed.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-b7d71be48b6b48a5890e942e8ddeaff0.vega-embed</del><ins>#altair-viz-cc301502ae95414a95217a4ca7fab5ed.vega-embed</ins> details,
+  <del>#altair-viz-b7d71be48b6b48a5890e942e8ddeaff0.vega-embed</del><ins>#altair-viz-cc301502ae95414a95217a4ca7fab5ed.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-b7d71be48b6b48a5890e942e8ddeaff0"><div id="altair-viz-cc301502ae95414a95217a4ca7fab5ed"></div><img src="prerendered/fig-11-example-means2.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.3 </span><span class="caption-text">Population distribution of price per night (dollars) for all Airbnb listings in Vancouver, Canada.</span><a class="headerlink" href="#fig-11-example-means2" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-11">In <a class="reference internal" href="#fig-11-example-means2"><span class="std std-numref">Fig. 10.3</span></a>, we see that the population distribution
+has one peak. It is also skewed (i.e., is not symmetric): most of the listings are
+less than $250 per night, but a small number of listings cost much more,
+creating a long tail on the histogram’s right side.
+Along with visualizing the population, we can calculate the population mean,
+the average price per night for all the Airbnb listings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">airbnb</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>154.5109773617762
+</pre></div>
+</div>
+</div>
+</div>
+<p id="index-12">The price per night of all Airbnb rentals in Vancouver, BC
+is $<span class="pasted-text">154.51</span>, on average. This value is our
+population parameter since we are calculating it using the population data.</p>
+<p id="index-13">Now suppose we did not have access to the population data (which is usually the
+case!), yet we wanted to estimate the mean price per night. We could answer
+this question by taking a random sample of as many Airbnb listings as our time
+and resources allow. Let’s say we could do this for 40 listings. What would
+such a sample look like?  Let’s take advantage of the fact that we do have
+access to the population data and simulate taking one random sample of 40
+listings in Python, again using <code class="docutils literal notranslate"><span class="pre">sample</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">one_sample</span> <span class="o">=</span> <span class="n">airbnb</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can create a histogram to visualize the distribution of observations in the
+sample (<a class="reference internal" href="#fig-11-example-means-sample-hist"><span class="std std-numref">Fig. 10.4</span></a>), and calculate the mean
+of our sample.</p>
+<div class="cell tag_remove-output docutils container" id="index-14">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_distribution</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">one_sample</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">sample_distribution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-example-means-sample-hist">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-b8e060de223542649613ef10056af46c.vega-embed</del><ins>#altair-viz-9f60bf46a36541a3b47863662e23bcdf.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-b8e060de223542649613ef10056af46c.vega-embed</del><ins>#altair-viz-9f60bf46a36541a3b47863662e23bcdf.vega-embed</ins> details,
+  <del>#altair-viz-b8e060de223542649613ef10056af46c.vega-embed</del><ins>#altair-viz-9f60bf46a36541a3b47863662e23bcdf.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-b8e060de223542649613ef10056af46c"><div id="altair-viz-9f60bf46a36541a3b47863662e23bcdf"></div><img src="prerendered/fig-11-example-means-sample-hist.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.4 </span><span class="caption-text">Distribution of price per night (dollars) for sample of 40 Airbnb listings.</span><a class="headerlink" href="#fig-11-example-means-sample-hist" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">one_sample</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>153.48225
+</pre></div>
+</div>
+</div>
+</div>
+<p>The average value of the sample of size 40
+is $<span class="pasted-text">153.48</span>.  This
+number is a point estimate for the mean of the full population.
+Recall that the population mean was
+$<span class="pasted-text">154.51</span>. So our estimate was fairly close to
+the population parameter: the mean was about
+<span class="pasted-text">0.7</span>%
+off.  Note that we usually cannot compute the estimate’s accuracy in practice
+since we do not have access to the population parameter; if we did, we wouldn’t
+need to estimate it!</p>
+<p id="index-15">Also, recall from the previous section that the point estimate can vary; if we
+took another random sample from the population, our estimate’s value might
+change. So then, did we just get lucky with our point estimate above?  How much
+does our estimate vary across different samples of size 40 in this example?
+Again, since we have access to the population, we can take many samples and
+plot the sampling distribution of sample means to get a sense for this variation.
+In this case, we’ll use the 20,000 samples of size
+40 that we already stored in the <code class="docutils literal notranslate"><span class="pre">samples</span></code> variable.
+First we will calculate the sample mean for each replicate
+and then plot the sampling
+distribution of sample means for samples of size 40.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_estimates</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">samples</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"price"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"price"</span><span class="p">:</span> <span class="s2">"mean_price"</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">sample_estimates</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>replicate</th>
+<th>mean_price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>187.00000</td>
+</tr>
+<tr>
+<th>1</th>
+<td>1</td>
+<td>148.56075</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2</td>
+<td>165.50500</td>
+</tr>
+<tr>
+<th>3</th>
+<td>3</td>
+<td>140.93925</td>
+</tr>
+<tr>
+<th>4</th>
+<td>4</td>
+<td>139.14650</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19995</th>
+<td>19995</td>
+<td>198.50000</td>
+</tr>
+<tr>
+<th>19996</th>
+<td>19996</td>
+<td>192.66425</td>
+</tr>
+<tr>
+<th>19997</th>
+<td>19997</td>
+<td>144.88600</td>
+</tr>
+<tr>
+<th>19998</th>
+<td>19998</td>
+<td>146.08800</td>
+</tr>
+<tr>
+<th>19999</th>
+<td>19999</td>
+<td>156.25000</td>
+</tr>
+</tbody>
+</table>
+<p>20000 rows × 2 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sampling_distribution</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">sample_estimates</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"mean_price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Sample mean price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">sampling_distribution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-example-means4">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-e54c8980daad4c44afa7a4ae653d7978.vega-embed</del><ins>#altair-viz-e9f97b025f6545c8add365346776c308.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-e54c8980daad4c44afa7a4ae653d7978.vega-embed</del><ins>#altair-viz-e9f97b025f6545c8add365346776c308.vega-embed</ins> details,
+  <del>#altair-viz-e54c8980daad4c44afa7a4ae653d7978.vega-embed</del><ins>#altair-viz-e9f97b025f6545c8add365346776c308.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-e54c8980daad4c44afa7a4ae653d7978"><div id="altair-viz-e9f97b025f6545c8add365346776c308"></div><img src="prerendered/fig-11-example-means4.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.5 </span><span class="caption-text">Sampling distribution of the sample means for sample size of 40.</span><a class="headerlink" href="#fig-11-example-means4" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-16">In <a class="reference internal" href="#fig-11-example-means4"><span class="std std-numref">Fig. 10.5</span></a>, the sampling distribution of the mean
+has one peak and is bell-shaped. Most of the estimates are between
+about  $<span class="pasted-text">140</span> and
+$<span class="pasted-text">170</span>; but there is
+a good fraction of cases outside this range (i.e., where the point estimate was
+not close to the population parameter). So it does indeed look like we were
+quite lucky when we estimated the population mean with only
+<span class="pasted-text">0.7</span>% error.</p>
+<p id="index-17">Let’s visualize the population distribution, distribution of the sample, and
+the sampling distribution on one plot to compare them in <a class="reference internal" href="#fig-11-example-means5"><span class="std std-numref">Fig. 10.6</span></a>. Comparing these three distributions, the centers
+of the distributions are all around the same price (around $150). The original
+population distribution has a long right tail, and the sample distribution has
+a similar shape to that of the population distribution. However, the sampling
+distribution is not shaped like the population or sample distribution. Instead,
+it has a bell shape, and it has a lower spread than the population or sample
+distributions. The sample means vary less than the individual observations
+because there will be some high values and some small values in any random
+sample, which will keep the average from being too extreme.</p>
+<!---
+```{r 11-example-means4.5}
+sample_estimates |>
+  summarize(mean_of_sample_means = mean(sample_mean))
+```
+Notice that the mean of the sample means is \$`r round(mean(sample_estimates$sample_mean),2)`. Recall that the population mean
+was \$`r round(mean(airbnb$price),2)`.
+--><figure class="align-default" id="fig-11-example-means5">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-a2b1d70759594470b889926f176833d7.vega-embed</del><ins>#altair-viz-458515d6c5a54639b88631fb8bc1e186.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-a2b1d70759594470b889926f176833d7.vega-embed</del><ins>#altair-viz-458515d6c5a54639b88631fb8bc1e186.vega-embed</ins> details,
+  <del>#altair-viz-a2b1d70759594470b889926f176833d7.vega-embed</del><ins>#altair-viz-458515d6c5a54639b88631fb8bc1e186.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-a2b1d70759594470b889926f176833d7"><div id="altair-viz-458515d6c5a54639b88631fb8bc1e186"></div><img src="prerendered/fig-11-example-means5.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.6 </span><span class="caption-text">Comparison of population distribution, sample distribution, and sampling distribution.</span><a class="headerlink" href="#fig-11-example-means5" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>Given that there is quite a bit of variation in the sampling distribution of
+the sample mean—i.e., the point estimate that we obtain is not very
+reliable—is there any way to improve the estimate?  One way to improve a
+point estimate is to take a <em>larger</em> sample. To illustrate what effect this
+has, we will take many samples of size 20, 50, 100, and 500, and plot the
+sampling distribution of the sample mean. We indicate the mean of the sampling
+distribution with a vertical line.</p>
+<figure class="align-default" id="fig-11-example-means7">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-05bdf608174442f3975f5f9294ac9de0.vega-embed</del><ins>#altair-viz-548ff3abf468473688337e26ec10f132.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-05bdf608174442f3975f5f9294ac9de0.vega-embed</del><ins>#altair-viz-548ff3abf468473688337e26ec10f132.vega-embed</ins> details,
+  <del>#altair-viz-05bdf608174442f3975f5f9294ac9de0.vega-embed</del><ins>#altair-viz-548ff3abf468473688337e26ec10f132.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-05bdf608174442f3975f5f9294ac9de0"><div id="altair-viz-548ff3abf468473688337e26ec10f132"></div><img src="prerendered/fig-11-example-means7.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.7 </span><span class="caption-text">Comparison of sampling distributions, with mean highlighted as a vertical line.</span><a class="headerlink" href="#fig-11-example-means7" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-18">Based on the visualization in <a class="reference internal" href="#fig-11-example-means7"><span class="std std-numref">Fig. 10.7</span></a>, three points
+about the sample mean become clear:</p>
+<ol class="arabic simple">
+<li><p>The mean of the sample mean (across
+samples) is equal to the population mean. In other words, the sampling
+distribution is centered at the population mean.</p></li>
+<li><p>Increasing the size of
+the sample decreases the spread (i.e., the variability) of the sampling
+distribution. Therefore, a larger sample size results in a more reliable point
+estimate of the population parameter.</p></li>
+<li><p>The distribution of the sample mean is roughly bell-shaped.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might notice that in the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">20</span></code> case in <a class="reference internal" href="#fig-11-example-means7"><span class="std std-numref">Fig. 10.7</span></a>,
+the distribution is not <em>quite</em> bell-shaped. There is a bit of skew towards the right!
+You might also notice that in the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">50</span></code> case and larger, that skew seems to disappear.
+In general, the sampling distribution—for both means and proportions—only
+becomes bell-shaped <em>once the sample size is large enough</em>.
+How large is “large enough?” Unfortunately, it depends entirely on the problem at hand. But
+as a rule of thumb, often a sample size of at least 20 will suffice.</p>
+</div>
+<!---
+```{note}
+If random samples of size $n$ are taken from a population, the sample mean
+$\bar{x}$ will be approximately Normal with mean $\mu$ and standard deviation
+$\frac{\sigma}{\sqrt{n}}$ as long as the sample size $n$ is large enough. $\mu$
+is the population mean, $\sigma$ is the population standard deviation,
+$\bar{x}$ is the sample mean, and $n$ is the sample size.
+If samples are selected from a finite population as we are doing in this
+chapter, we should apply a finite population correction. We multiply
+$\frac{\sigma}{\sqrt{n}}$ by $\sqrt{\frac{N - n}{N - 1}}$ where $N$ is the
+population size and $n$ is the sample size. If our sample size, $n$, is small
+relative to the population size, this finite correction factor is less
+important.
+```
+---></section>
+<section id="summary">
+<h3><span class="section-number">10.4.3. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>A point estimate is a single value computed using a sample from a population (e.g., a mean or proportion).</p></li>
+<li><p>The sampling distribution of an estimate is the distribution of the estimate for all possible samples of a fixed size from the same population.</p></li>
+<li><p>The shape of the sampling distribution is usually bell-shaped with one peak and centered at the population mean or proportion.</p></li>
+<li><p>The spread of the sampling distribution is related to the sample size. As the sample size increases, the spread of the sampling distribution decreases.</p></li>
+</ol>
+</section>
+</section>
+<section id="bootstrapping">
+<h2><span class="section-number">10.5. </span>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this heading">#</a></h2>
+<section id="id2">
+<h3><span class="section-number">10.5.1. </span>Overview<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p><em>Why all this emphasis on sampling distributions?</em></p>
+<p>We saw in the previous section that we could compute a <strong>point estimate</strong> of a
+population parameter using a sample of observations from the population. And
+since we constructed examples where we had access to the population, we could
+evaluate how accurate the estimate was, and even get a sense of how much the
+estimate would vary for different samples from the population.  But in real
+data analysis settings, we usually have <em>just one sample</em> from our population
+and do not have access to the population itself. Therefore we cannot construct
+the sampling distribution as we did in the previous section. And as we saw, our
+sample estimate’s value can vary significantly from the population parameter.
+So reporting the point estimate from a single sample alone may not be enough.
+We also need to report some notion of <em>uncertainty</em> in the value of the point
+estimate.</p>
+<span class="target" id="index-19"></span><p id="index-20">Unfortunately, we cannot construct the exact sampling distribution without
+full access to the population. However, if we could somehow <em>approximate</em> what
+the sampling distribution would look like for a sample, we could
+use that approximation to then report how uncertain our sample
+point estimate is (as we did above with the <em>exact</em> sampling
+distribution). There are several methods to accomplish this; in this book, we
+will use the <em>bootstrap</em>. We will discuss <strong>interval estimation</strong> and
+construct
+<strong>confidence intervals</strong> using just a single sample from a population. A
+confidence interval is a range of plausible values for our population parameter.</p>
+<p>Here is the key idea. First, if you take a big enough sample, it <em>looks like</em>
+the population. Notice the histograms’ shapes for samples of different sizes
+taken from the population in <a class="reference internal" href="#fig-11-example-bootstrapping0"><span class="std std-numref">Fig. 10.8</span></a>. We
+see that the sample’s distribution looks like that of the population for a
+large enough sample.</p>
+<figure class="align-default" id="fig-11-example-bootstrapping0">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-47768491d0324c1197d17e38aa67974e.vega-embed</del><ins>#altair-viz-31a221a91abc4dff81066b523291a88d.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-47768491d0324c1197d17e38aa67974e.vega-embed</del><ins>#altair-viz-31a221a91abc4dff81066b523291a88d.vega-embed</ins> details,
+  <del>#altair-viz-47768491d0324c1197d17e38aa67974e.vega-embed</del><ins>#altair-viz-31a221a91abc4dff81066b523291a88d.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-47768491d0324c1197d17e38aa67974e"><div id="altair-viz-31a221a91abc4dff81066b523291a88d"></div><img src="prerendered/fig-11-example-bootstrapping0.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.8 </span><span class="caption-text">Comparison of samples of different sizes from the population.</span><a class="headerlink" href="#fig-11-example-bootstrapping0" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-21">In the previous section, we took many samples of the same size <em>from our
+population</em> to get a sense of the variability of a sample estimate. But if our
+sample is big enough that it looks like our population, we can pretend that our
+sample <em>is</em> the population, and take more samples (with replacement) of the
+same size from it instead! This very clever technique is
+called <strong>the bootstrap</strong>.  Note that by taking many samples from our single, observed
+sample, we do not obtain the true sampling distribution, but rather an
+approximation that we call <strong>the bootstrap distribution</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We must sample <em>with</em> replacement when using the bootstrap.
+Otherwise, if we had a sample of size <span class="math notranslate nohighlight">\(n\)</span>, and obtained a sample from it of
+size <span class="math notranslate nohighlight">\(n\)</span> <em>without</em> replacement, it would just return our original sample!</p>
+</div>
+<p>This section will explore how to create a bootstrap distribution from a single
+sample using Python.  The process is visualized in <a class="reference internal" href="#fig-11-intro-bootstrap-image"><span class="std std-numref">Fig. 10.9</span></a>.
+For a sample of size <span class="math notranslate nohighlight">\(n\)</span>, you would do the following:</p>
+<ol class="arabic simple">
+<li><p>Randomly select an observation from the original sample, which was drawn from the population.</p></li>
+<li><p>Record the observation’s value.</p></li>
+<li><p>Replace that observation.</p></li>
+<li><p>Repeat steps 1–3 (sampling <em>with</em> replacement) until you have <span class="math notranslate nohighlight">\(n\)</span> observations, which form a bootstrap sample.</p></li>
+<li><p>Calculate the bootstrap point estimate (e.g., mean, median, proportion, slope, etc.) of the <span class="math notranslate nohighlight">\(n\)</span> observations in your bootstrap sample.</p></li>
+<li><p>Repeat steps 1–5 many times to create a distribution of point estimates (the bootstrap distribution).</p></li>
+<li><p>Calculate the plausible range of values around our observed point estimate.</p></li>
+</ol>
+<figure class="align-default" id="fig-11-intro-bootstrap-image">
+<img alt="_images/intro-bootstrap.jpeg" src="_images/intro-bootstrap.jpeg"/>
+<figcaption>
+<p><span class="caption-number">Fig. 10.9 </span><span class="caption-text">Overview of the bootstrap process.</span><a class="headerlink" href="#fig-11-intro-bootstrap-image" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="bootstrapping-in-python">
+<h3><span class="section-number">10.5.2. </span>Bootstrapping in Python<a class="headerlink" href="#bootstrapping-in-python" title="Permalink to this heading">#</a></h3>
+<p>Let’s continue working with our Airbnb example to illustrate how we might create
+and use a bootstrap distribution using just a single sample from the population.
+Once again, suppose we are
+interested in estimating the population mean price per night of all Airbnb
+listings in Vancouver, Canada, using a single sample size of 40.
+Recall our point estimate was $<span class="pasted-text">153.48</span>. The
+histogram of prices in the sample is displayed in <a class="reference internal" href="#fig-11-bootstrapping1"><span class="std std-numref">Fig. 10.10</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">one_sample</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>id</th>
+<th>neighbourhood</th>
+<th>room_type</th>
+<th>accommodates</th>
+<th>bathrooms</th>
+<th>bedrooms</th>
+<th>beds</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4025</th>
+<td>4026</td>
+<td>Renfrew-Collingwood</td>
+<td>Private room</td>
+<td>1</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>40.00</td>
+</tr>
+<tr>
+<th>1977</th>
+<td>1978</td>
+<td>Fairview</td>
+<td>Private room</td>
+<td>1</td>
+<td>2 baths</td>
+<td>3</td>
+<td>1</td>
+<td>70.00</td>
+</tr>
+<tr>
+<th>4008</th>
+<td>4009</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>269.00</td>
+</tr>
+<tr>
+<th>1543</th>
+<td>1544</td>
+<td>Kensington-Cedar Cottage</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>2 baths</td>
+<td>3</td>
+<td>5</td>
+<td>320.00</td>
+</tr>
+<tr>
+<th>3350</th>
+<td>3351</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>140.00</td>
+</tr>
+<tr>
+<th>804</th>
+<td>805</td>
+<td>Mount Pleasant</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>77.00</td>
+</tr>
+<tr>
+<th>2286</th>
+<td>2287</td>
+<td>Marpole</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>105.00</td>
+</tr>
+<tr>
+<th>1010</th>
+<td>1011</td>
+<td>Strathcona</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>120.00</td>
+</tr>
+<tr>
+<th>1878</th>
+<td>1879</td>
+<td>Fairview</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>175.00</td>
+</tr>
+<tr>
+<th>1644</th>
+<td>1645</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>2 baths</td>
+<td>2</td>
+<td>1</td>
+<td>150.00</td>
+</tr>
+<tr>
+<th>4579</th>
+<td>4580</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>160.00</td>
+</tr>
+<tr>
+<th>2771</th>
+<td>2772</td>
+<td>Dunbar Southlands</td>
+<td>Entire home/apt</td>
+<td>5</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>130.00</td>
+</tr>
+<tr>
+<th>4151</th>
+<td>4152</td>
+<td>Kitsilano</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>289.00</td>
+</tr>
+<tr>
+<th>4495</th>
+<td>4496</td>
+<td>Riley Park</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>115.00</td>
+</tr>
+<tr>
+<th>1308</th>
+<td>1309</td>
+<td>Riley Park</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>105.00</td>
+</tr>
+<tr>
+<th>2246</th>
+<td>2247</td>
+<td>Mount Pleasant</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>105.00</td>
+</tr>
+<tr>
+<th>2335</th>
+<td>2336</td>
+<td>Kensington-Cedar Cottage</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>85.00</td>
+</tr>
+<tr>
+<th>4059</th>
+<td>4060</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>5</td>
+<td>2 baths</td>
+<td>2</td>
+<td>3</td>
+<td>250.00</td>
+</tr>
+<tr>
+<th>1280</th>
+<td>1281</td>
+<td>Hastings-Sunrise</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>1 bath</td>
+<td>2</td>
+<td>3</td>
+<td>100.00</td>
+</tr>
+<tr>
+<th>4324</th>
+<td>4325</td>
+<td>Renfrew-Collingwood</td>
+<td>Private room</td>
+<td>1</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>0</td>
+<td>25.00</td>
+</tr>
+<tr>
+<th>3403</th>
+<td>3404</td>
+<td>Arbutus Ridge</td>
+<td>Entire home/apt</td>
+<td>15</td>
+<td>4 baths</td>
+<td>6</td>
+<td>8</td>
+<td>664.00</td>
+</tr>
+<tr>
+<th>1729</th>
+<td>1730</td>
+<td>Renfrew-Collingwood</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>1 bath</td>
+<td>2</td>
+<td>3</td>
+<td>93.00</td>
+</tr>
+<tr>
+<th>3722</th>
+<td>3723</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>3</td>
+<td>6</td>
+<td>275.00</td>
+</tr>
+<tr>
+<th>241</th>
+<td>242</td>
+<td>Hastings-Sunrise</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>50.00</td>
+</tr>
+<tr>
+<th>3955</th>
+<td>3956</td>
+<td>Dunbar Southlands</td>
+<td>Private room</td>
+<td>2</td>
+<td>1.5 shared baths</td>
+<td>1</td>
+<td>1</td>
+<td>60.00</td>
+</tr>
+<tr>
+<th>1042</th>
+<td>1043</td>
+<td>Kitsilano</td>
+<td>Private room</td>
+<td>1</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>66.00</td>
+</tr>
+<tr>
+<th>649</th>
+<td>650</td>
+<td>Sunset</td>
+<td>Entire home/apt</td>
+<td>5</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>196.00</td>
+</tr>
+<tr>
+<th>1995</th>
+<td>1996</td>
+<td>Riley Park</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>70.00</td>
+</tr>
+<tr>
+<th>363</th>
+<td>364</td>
+<td>Kensington-Cedar Cottage</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>120.00</td>
+</tr>
+<tr>
+<th>1783</th>
+<td>1784</td>
+<td>Downtown Eastside</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>60.00</td>
+</tr>
+<tr>
+<th>805</th>
+<td>806</td>
+<td>Mount Pleasant</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>150.00</td>
+</tr>
+<tr>
+<th>254</th>
+<td>255</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1.5 baths</td>
+<td>2</td>
+<td>2</td>
+<td>300.00</td>
+</tr>
+<tr>
+<th>3365</th>
+<td>3366</td>
+<td>Sunset</td>
+<td>Private room</td>
+<td>1</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>100.00</td>
+</tr>
+<tr>
+<th>4562</th>
+<td>4563</td>
+<td>Downtown</td>
+<td>Private room</td>
+<td>1</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>64.29</td>
+</tr>
+<tr>
+<th>2124</th>
+<td>2125</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>2</td>
+<td>3</td>
+<td>200.00</td>
+</tr>
+<tr>
+<th>18</th>
+<td>19</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>2 baths</td>
+<td>2</td>
+<td>2</td>
+<td>200.00</td>
+</tr>
+<tr>
+<th>1997</th>
+<td>1998</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>2 baths</td>
+<td>3</td>
+<td>3</td>
+<td>257.00</td>
+</tr>
+<tr>
+<th>4329</th>
+<td>4330</td>
+<td>West End</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>0</td>
+<td>92.00</td>
+</tr>
+<tr>
+<th>3408</th>
+<td>3409</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>2 baths</td>
+<td>2</td>
+<td>2</td>
+<td>189.00</td>
+</tr>
+<tr>
+<th>635</th>
+<td>636</td>
+<td>Grandview-Woodland</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>2 baths</td>
+<td>1</td>
+<td>2</td>
+<td>103.00</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">one_sample_dist</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">one_sample</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">one_sample_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-bootstrapping1">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-06176cb820f64e9ba1433e13f7a227f1.vega-embed</del><ins>#altair-viz-e5b6317bb7c44fbf928b948e8283eed5.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-06176cb820f64e9ba1433e13f7a227f1.vega-embed</del><ins>#altair-viz-e5b6317bb7c44fbf928b948e8283eed5.vega-embed</ins> details,
+  <del>#altair-viz-06176cb820f64e9ba1433e13f7a227f1.vega-embed</del><ins>#altair-viz-e5b6317bb7c44fbf928b948e8283eed5.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-06176cb820f64e9ba1433e13f7a227f1"><div id="altair-viz-e5b6317bb7c44fbf928b948e8283eed5"></div><img src="prerendered/fig-11-bootstrapping1.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.10 </span><span class="caption-text">Histogram of price per night (dollars) for one sample of size 40.</span><a class="headerlink" href="#fig-11-bootstrapping1" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>The histogram for the sample is skewed, with a few observations out to the right. The
+mean of the sample is $<span class="pasted-text">153.48</span>.
+Remember, in practice, we usually only have this one sample from the population. So
+this sample and estimate are the only data we can work with.</p>
+<p id="index-22">We now perform steps 1–5 listed above to generate a single bootstrap
+sample in Python and calculate a point estimate from that bootstrap sample. We will
+continue using the <code class="docutils literal notranslate"><span class="pre">sample</span></code> function of our dataframe,
+Critically, note that we now
+set <code class="docutils literal notranslate"><span class="pre">frac=1</span></code> (“fraction”) to indicate that we want to draw as many samples as there are rows in the dataframe
+(we could also have set <code class="docutils literal notranslate"><span class="pre">n=40</span></code> but then we would need to manually keep track of how many rows there are).
+Since we need to sample with replacement when bootstrapping,
+we change the <code class="docutils literal notranslate"><span class="pre">replace</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">boot1</span> <span class="o">=</span> <span class="n">one_sample</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">boot1_dist</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">boot1</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">boot1_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-bootstrapping3">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-58da48ec300e4dbd9b5dd85a343c28c4.vega-embed</del><ins>#altair-viz-b97fa8bec97f475aaa28368420beb1eb.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-58da48ec300e4dbd9b5dd85a343c28c4.vega-embed</del><ins>#altair-viz-b97fa8bec97f475aaa28368420beb1eb.vega-embed</ins> details,
+  <del>#altair-viz-58da48ec300e4dbd9b5dd85a343c28c4.vega-embed</del><ins>#altair-viz-b97fa8bec97f475aaa28368420beb1eb.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-58da48ec300e4dbd9b5dd85a343c28c4"><div id="altair-viz-b97fa8bec97f475aaa28368420beb1eb"></div><img src="prerendered/fig-11-bootstrapping3.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.11 </span><span class="caption-text">Bootstrap distribution.</span><a class="headerlink" href="#fig-11-bootstrapping3" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">boot1</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>132.65
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice in <a class="reference internal" href="#fig-11-bootstrapping3"><span class="std std-numref">Fig. 10.11</span></a> that the histogram of our bootstrap sample
+has a similar shape to the original sample histogram. Though the shapes of
+the distributions are similar, they are not identical. You’ll also notice that
+the original sample mean and the bootstrap sample mean differ. How might that
+happen? Remember that we are sampling with replacement from the original
+sample, so we don’t end up with the same sample values again. We are <em>pretending</em>
+that our single sample is close to the population, and we are trying to
+mimic drawing another sample from the population by drawing one from our original
+sample.</p>
+<p>Let’s now take 20,000 bootstrap samples from the original sample (<code class="docutils literal notranslate"><span class="pre">one_sample</span></code>)
+and calculate the means for
+each of those replicates. Recall that this assumes that <code class="docutils literal notranslate"><span class="pre">one_sample</span></code> <em>looks like</em>
+our original population; but since we do not have access to the population itself,
+this is often the best we can do.
+Note that here we break the list comprehension over multiple lines
+so that it is easier to read.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">boot20000</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">one_sample</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">replicate</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20_000</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">boot20000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>id</th>
+<th>neighbourhood</th>
+<th>room_type</th>
+<th>accommodates</th>
+<th>bathrooms</th>
+<th>bedrooms</th>
+<th>beds</th>
+<th>price</th>
+<th>replicate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>2286</th>
+<td>2287</td>
+<td>Marpole</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>2</td>
+<td>2</td>
+<td>105.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>254</th>
+<td>255</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1.5 baths</td>
+<td>2</td>
+<td>2</td>
+<td>300.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>2246</th>
+<td>2247</td>
+<td>Mount Pleasant</td>
+<td>Entire home/apt</td>
+<td>4</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>105.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>4579</th>
+<td>4580</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>3</td>
+<td>1 bath</td>
+<td>1</td>
+<td>2</td>
+<td>160.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>4495</th>
+<td>4496</td>
+<td>Riley Park</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>115.0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>1997</th>
+<td>1998</td>
+<td>Downtown</td>
+<td>Entire home/apt</td>
+<td>6</td>
+<td>2 baths</td>
+<td>3</td>
+<td>3</td>
+<td>257.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>241</th>
+<td>242</td>
+<td>Hastings-Sunrise</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 shared bath</td>
+<td>1</td>
+<td>1</td>
+<td>50.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>1878</th>
+<td>1879</td>
+<td>Fairview</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>175.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>1783</th>
+<td>1784</td>
+<td>Downtown Eastside</td>
+<td>Private room</td>
+<td>2</td>
+<td>1 private bath</td>
+<td>1</td>
+<td>1</td>
+<td>60.0</td>
+<td>19999</td>
+</tr>
+<tr>
+<th>4495</th>
+<td>4496</td>
+<td>Riley Park</td>
+<td>Entire home/apt</td>
+<td>2</td>
+<td>1 bath</td>
+<td>1</td>
+<td>1</td>
+<td>115.0</td>
+<td>19999</td>
+</tr>
+</tbody>
+</table>
+<p>800000 rows × 9 columns</p>
+</div></div></div>
+</div>
+<p>Let’s take a look at the histograms of the first six replicates of our bootstrap samples.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">six_bootstrap_samples</span> <span class="o">=</span> <span class="n">boot20000</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"replicate &lt; 6"</span><span class="p">)</span>
+<span class="n">six_bootstrap_fig</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">six_bootstrap_samples</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">facet</span><span class="p">(</span>
+    <span class="s2">"replicate:N"</span><span class="p">,</span>  <span class="c1"># Recall that `:N` converts the variable to a categorical type</span>
+    <span class="n">columns</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+<span class="n">six_bootstrap_fig</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-bootstrapping-six-bootstrap-samples">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-f1fc3131fbd94f51a8509193bbc15435.vega-embed</del><ins>#altair-viz-73e4eb9429af4e83ae74e34fe33002fc.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-f1fc3131fbd94f51a8509193bbc15435.vega-embed</del><ins>#altair-viz-73e4eb9429af4e83ae74e34fe33002fc.vega-embed</ins> details,
+  <del>#altair-viz-f1fc3131fbd94f51a8509193bbc15435.vega-embed</del><ins>#altair-viz-73e4eb9429af4e83ae74e34fe33002fc.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-f1fc3131fbd94f51a8509193bbc15435"><div id="altair-viz-73e4eb9429af4e83ae74e34fe33002fc"></div><img src="prerendered/fig-11-bootstrapping-six-bootstrap-samples.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.12 </span><span class="caption-text">Histograms of the first six replicates of the bootstrap samples.</span><a class="headerlink" href="#fig-11-bootstrapping-six-bootstrap-samples" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>We see in <a class="reference internal" href="#fig-11-bootstrapping-six-bootstrap-samples"><span class="std std-numref">Fig. 10.12</span></a> how the distributions of the
+bootstrap samples differ. If we calculate the sample mean for each of
+these six samples, we can see that these are also different between samples.
+To compute the mean for each sample,
+we first group by the “replicate” which is the column containing the sample/replicate number.
+Then we compute the mean of the <code class="docutils literal notranslate"><span class="pre">price</span></code> column and rename it to <code class="docutils literal notranslate"><span class="pre">mean_price</span></code>
+for it to be more descriptive.
+Finally we use <code class="docutils literal notranslate"><span class="pre">reset_index</span></code> to get the <code class="docutils literal notranslate"><span class="pre">replicate</span></code> values back as a column in the dataframe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">six_bootstrap_samples</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"price"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"price"</span><span class="p">:</span> <span class="s2">"mean_price"</span><span class="p">})</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>replicate</th>
+<th>mean_price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>155.67175</td>
+</tr>
+<tr>
+<th>1</th>
+<td>1</td>
+<td>154.42500</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2</td>
+<td>149.35000</td>
+</tr>
+<tr>
+<th>3</th>
+<td>3</td>
+<td>169.13225</td>
+</tr>
+<tr>
+<th>4</th>
+<td>4</td>
+<td>179.79675</td>
+</tr>
+<tr>
+<th>5</th>
+<td>5</td>
+<td>188.28225</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+</div>
+<p>The distributions and the means differ between the bootstrapped samples
+because we are sampling <em>with replacement</em>.
+If we instead would have sampled <em>without replacement</em>,
+we would end up with the exact same values in the sample each time.</p>
+<p>We will now calculate point estimates of the mean for our 20,000 bootstrap samples and
+generate a bootstrap distribution of these point estimates. The bootstrap
+distribution (<a class="reference internal" href="#fig-11-bootstrapping5"><span class="std std-numref">Fig. 10.13</span></a>) suggests how we might expect
+our point estimate to behave if we take multiple samples.</p>
+<div class="cell docutils container" id="index-23">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">boot20000_means</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">boot20000</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"replicate"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"price"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"price"</span><span class="p">:</span> <span class="s2">"mean_price"</span><span class="p">})</span>
+<span class="p">)</span>
+
+<span class="n">boot20000_means</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>replicate</th>
+<th>mean_price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>155.67175</td>
+</tr>
+<tr>
+<th>1</th>
+<td>1</td>
+<td>154.42500</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2</td>
+<td>149.35000</td>
+</tr>
+<tr>
+<th>3</th>
+<td>3</td>
+<td>169.13225</td>
+</tr>
+<tr>
+<th>4</th>
+<td>4</td>
+<td>179.79675</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>19995</th>
+<td>19995</td>
+<td>159.29675</td>
+</tr>
+<tr>
+<th>19996</th>
+<td>19996</td>
+<td>137.20000</td>
+</tr>
+<tr>
+<th>19997</th>
+<td>19997</td>
+<td>136.55725</td>
+</tr>
+<tr>
+<th>19998</th>
+<td>19998</td>
+<td>161.93950</td>
+</tr>
+<tr>
+<th>19999</th>
+<td>19999</td>
+<td>170.22500</td>
+</tr>
+</tbody>
+</table>
+<p>20000 rows × 2 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">boot_est_dist</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">boot20000_means</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"mean_price"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">bin</span><span class="p">(</span><span class="n">maxbins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Sample mean price per night (dollars)"</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"count()"</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Count"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">boot_est_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="fig-11-bootstrapping5">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-9ac2a0bdbf674830aa58182eb0241f89.vega-embed</del><ins>#altair-viz-fc25115d190543c7a6c65481781af906.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-9ac2a0bdbf674830aa58182eb0241f89.vega-embed</del><ins>#altair-viz-fc25115d190543c7a6c65481781af906.vega-embed</ins> details,
+  <del>#altair-viz-9ac2a0bdbf674830aa58182eb0241f89.vega-embed</del><ins>#altair-viz-fc25115d190543c7a6c65481781af906.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-9ac2a0bdbf674830aa58182eb0241f89"><div id="altair-viz-fc25115d190543c7a6c65481781af906"></div><img src="prerendered/fig-11-bootstrapping5.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.13 </span><span class="caption-text">Distribution of the bootstrap sample means.</span><a class="headerlink" href="#fig-11-bootstrapping5" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>Let’s compare the bootstrap distribution—which we construct by taking many samples from our original sample of size 40—with
+the true sampling distribution—which corresponds to taking many samples from the population.</p>
+<figure class="align-default" id="fig-11-bootstrapping6">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-fb371024543c4864a0e56de4b8021335.vega-embed</del><ins>#altair-viz-ad691d1bf2084b2f8934f2140559d812.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-fb371024543c4864a0e56de4b8021335.vega-embed</del><ins>#altair-viz-ad691d1bf2084b2f8934f2140559d812.vega-embed</ins> details,
+  <del>#altair-viz-fb371024543c4864a0e56de4b8021335.vega-embed</del><ins>#altair-viz-ad691d1bf2084b2f8934f2140559d812.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-fb371024543c4864a0e56de4b8021335"><div id="altair-viz-ad691d1bf2084b2f8934f2140559d812"></div><img src="prerendered/fig-11-bootstrapping6.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.14 </span><span class="caption-text">Comparison of the distribution of the bootstrap sample means and sampling distribution.</span><a class="headerlink" href="#fig-11-bootstrapping6" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p id="index-24">There are two essential points that we can take away from
+<a class="reference internal" href="#fig-11-bootstrapping6"><span class="std std-numref">Fig. 10.14</span></a>. First, the shape and spread of the true sampling
+distribution and the bootstrap distribution are similar; the bootstrap
+distribution lets us get a sense of the point estimate’s variability. The
+second important point is that the means of these two distributions are
+slightly different. The sampling distribution is centered at
+$<span class="pasted-text">154.51</span>, the population mean value. However, the bootstrap
+distribution is centered at the original sample’s mean price per night,
+$<span class="pasted-text">153.48</span>. Because we are resampling from the
+original sample repeatedly, we see that the bootstrap distribution is centered
+at the original sample’s mean value (unlike the sampling distribution of the
+sample mean, which is centered at the population parameter value).</p>
+<p><a class="reference internal" href="#fig-11-bootstrapping7"><span class="std std-numref">Fig. 10.15</span></a> summarizes the bootstrapping process.
+The idea here is that we can use this distribution of bootstrap sample means to
+approximate the sampling distribution of the sample means when we only have one
+sample. Since the bootstrap distribution pretty well approximates the sampling
+distribution spread, we can use the bootstrap spread to help us develop a
+plausible range for our population parameter along with our estimate!</p>
+<figure class="align-default" id="fig-11-bootstrapping7">
+<img alt="_images/11-bootstrapping7-1.png" src="_images/11-bootstrapping7-1.png"/>
+<figcaption>
+<p><span class="caption-number">Fig. 10.15 </span><span class="caption-text">Summary of bootstrapping process.</span><a class="headerlink" href="#fig-11-bootstrapping7" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="using-the-bootstrap-to-calculate-a-plausible-range">
+<h3><span class="section-number">10.5.3. </span>Using the bootstrap to calculate a plausible range<a class="headerlink" href="#using-the-bootstrap-to-calculate-a-plausible-range" title="Permalink to this heading">#</a></h3>
+<p id="index-25">Now that we have constructed our bootstrap distribution, let’s use it to create
+an approximate 95% percentile bootstrap confidence interval.
+A <strong>confidence interval</strong> is a range of plausible values for the population parameter. We will
+find the range of values covering the middle 95% of the bootstrap
+distribution, giving us a 95% confidence interval.  You may be wondering, what
+does “95% confidence” mean? If we took 100 random samples and calculated 100
+95% confidence intervals, then about 95% of the ranges would capture the
+population parameter’s value.  Note there’s nothing special about 95%. We
+could have used other levels, such as 90% or 99%. There is a balance between
+our level of confidence and precision. A higher confidence level corresponds to
+a wider range of the interval, and a lower confidence level corresponds to a
+narrower range. Therefore the level we choose is based on what chance we are
+willing to take of being wrong based on the implications of being wrong for our
+application. In general, we choose confidence levels to be comfortable with our
+level of uncertainty but not so strict that the interval is unhelpful. For
+instance, if our decision impacts human life and the implications of being
+wrong are deadly, we may want to be very confident and choose a higher
+confidence level.</p>
+<p>To calculate a 95% percentile bootstrap confidence interval, we will do the following:</p>
+<ol class="arabic simple">
+<li><p>Arrange the observations in the bootstrap distribution in ascending order.</p></li>
+<li><p>Find the value such that 2.5% of observations fall below it (the 2.5% percentile). Use that value as the lower bound of the interval.</p></li>
+<li><p>Find the value such that 97.5% of observations fall below it (the 97.5% percentile). Use that value as the upper bound of the interval.</p></li>
+</ol>
+<p>To do this in Python, we can use the <code class="docutils literal notranslate"><span class="pre">quantile</span></code> function of our DataFrame.
+Quantiles are expressed in proportions rather than percentages,
+so the 2.5th and 97.5th percentiles
+would be the 0.025 and 0.975 quantiles, respectively.</p>
+<span class="target" id="index-26"></span><div class="cell docutils container" id="index-27">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_bounds</span> <span class="o">=</span> <span class="n">boot20000_means</span><span class="p">[</span><span class="s2">"mean_price"</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">([</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">])</span>
+<span class="n">ci_bounds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.025    121.607069
+0.975    191.525362
+Name: mean_price, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Our interval, $<span class="pasted-text">121.61</span> to $<span class="pasted-text">191.53</span>, captures
+the middle 95% of the sample mean prices in the bootstrap distribution. We can
+visualize the interval on our distribution in <a class="reference internal" href="#fig-11-bootstrapping9"><span class="std std-numref">Fig. 10.16</span></a>.</p>
+<figure class="align-default" id="fig-11-bootstrapping9">
+<div class="output text_html">
+<style>
+  <del>#altair-viz-dd4d14de961545a9b0662228f2365932.vega-embed</del><ins>#altair-viz-b6f8cfc75ace4c76ac97511e44db0e65.vega-embed</ins> {
+    width: 100%;
+    display: flex;
+  }
+
+  <del>#altair-viz-dd4d14de961545a9b0662228f2365932.vega-embed</del><ins>#altair-viz-b6f8cfc75ace4c76ac97511e44db0e65.vega-embed</ins> details,
+  <del>#altair-viz-dd4d14de961545a9b0662228f2365932.vega-embed</del><ins>#altair-viz-b6f8cfc75ace4c76ac97511e44db0e65.vega-embed</ins> details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-dd4d14de961545a9b0662228f2365932"><div id="altair-viz-b6f8cfc75ace4c76ac97511e44db0e65"></div><img src="prerendered/fig-11-bootstrapping9.png"/>
+</div><figcaption>
+<p><span class="caption-number">Fig. 10.16 </span><span class="caption-text">Distribution of the bootstrap sample means with percentile lower and upper bounds.</span><a class="headerlink" href="#fig-11-bootstrapping9" title="Permalink to this image">#</a></p>
+</figcaption>
+</div></figure>
+<p>To finish our estimation of the population parameter, we would report the point
+estimate and our confidence interval’s lower and upper bounds. Here the sample
+mean price-per-night of 40 Airbnb listings was
+$<span class="pasted-text">153.48</span>, and we are 95% “confident” that the true
+population mean price-per-night for all Airbnb listings in Vancouver is between
+$<span class="pasted-text">121.61</span> and $<span class="pasted-text">191.53</span>.
+Notice that our interval does indeed contain the true
+population mean value, $<span class="pasted-text">154.51</span>! However, in
+practice, we would not know whether our interval captured the population
+parameter or not because we usually only have a single sample, not the entire
+population. This is the best we can do when we only have one sample!</p>
+<p>This chapter is only the beginning of the journey into statistical inference.
+We can extend the concepts learned here to do much more than report point
+estimates and confidence intervals, such as testing for real differences
+between populations, tests for associations between variables, and so much
+more. We have just scratched the surface of statistical inference; however, the
+material presented here will serve as the foundation for more advanced
+statistical techniques you may learn about in the future!</p>
+</section>
+</section>
+<section id="exercises">
+<h2><span class="section-number">10.6. </span>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+<p>Practice exercises for the material covered in this chapter
+can be found in the accompanying
+<a class="reference external" href="https://worksheets.python.datasciencebook.ca">worksheets repository</a>
+in the two “Statistical inference” rows.
+You can launch an interactive version of each worksheet in your browser by clicking the “launch binder” button.
+You can also preview a non-interactive version of each worksheet by clicking “view worksheet.”
+If you instead decide to download the worksheets and run them on your own machine,
+make sure to follow the instructions for computer setup
+found in <a class="reference internal" href="setup.html#move-to-your-own-machine"><span class="std std-numref">Chapter 13</span></a>. This will ensure that the automated feedback
+and guidance that the worksheets provide will function as intended.</p>
+</section>
+<section id="additional-resources">
+<h2><span class="section-number">10.7. </span>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Chapters 4 to 7 of <em>OpenIntro Statistics</em> <span id="id3">[<a class="reference internal" href="#id62" title="David Diez, Mine Çetinkaya-Rundel, and Christopher Barr. OpenIntro Statistics. OpenIntro, Inc., 2019. URL: https://openintro.org/book/os/.">Diez <em>et al.</em>, 2019</a>]</span>
+provide a good next step in learning about inference. Although it is still certainly
+an introductory text, things get a bit more mathematical here. Depending on
+your background, you may actually want to start going through Chapters 1 to 3
+first, where you will learn some fundamental concepts in probability theory.
+Although it may seem like a diversion, probability theory is <em>the language of
+statistics</em>; if you have a solid grasp of probability, more advanced statistics
+will come naturally to you!</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">10.8. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<div class="docutils container" id="id4">
+<dl class="citation">
+<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id1">Coxd.</a></span></dt>
+<dd><p>Murray Cox. Inside Airbnb. n.d. URL: <a class="reference external" href="http://insideairbnb.com/">http://insideairbnb.com/</a> (visited on 2020-09-01).</p>
+</dd>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id3">DcCetinkayaRB19</a></span></dt>
+<dd><p>David Diez, Mine Çetinkaya-Rundel, and Christopher Barr. <em>OpenIntro Statistics</em>. OpenIntro, Inc., 2019. URL: <a class="reference external" href="https://openintro.org/book/os/">https://openintro.org/book/os/</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+<script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+<script>kernelName = 'python3'</script>
+</article>
+<footer class="prev-next-footer">
+<!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev" href="clustering.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title"><span class="section-number">9. </span>Clustering</p>
+</div>
+</a>
+<a class="right-next" href="jupyter.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title"><span class="section-number">11. </span>Combining code and text with Jupyter</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">10.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-learning-objectives">10.2. Chapter learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-sampling">10.3. Why do we need sampling?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions">10.4. Sampling distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-for-proportions">10.4.1. Sampling distributions for proportions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-for-means">10.4.2. Sampling distributions for means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">10.4.3. Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapping">10.5. Bootstrapping</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.5.1. Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapping-in-python">10.5.2. Bootstrapping in Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-bootstrap-to-calculate-a-plausible-range">10.5.3. Using the bootstrap to calculate a plausible range</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">10.6. Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">10.7. Additional resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">10.8. References</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+By Tiffany Timbers, Trevor Campbell, Melissa Lee, Joel Ostblom, and Lindsey Heagy
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+<footer class="bd-footer">
+</footer>
+</body>
+</html>

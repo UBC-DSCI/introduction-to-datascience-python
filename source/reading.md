@@ -1137,7 +1137,7 @@ these. Tags are keywords that tell the web browser how to display or format
 the content. Above you can see that the information we want (`$800`) is stored
 between an opening and closing tag (`<span>` and `</span>`). In the opening
 tag, you can also see a very useful "class" (a special word that is sometimes
-included with opening tags): `class="result-price"`. Since we want R to
+included with opening tags): `class="result-price"`. Since we want Python to
 programmatically sort through all of the source code for the website to find
 apartment prices, maybe we can look for all the tags with the `"result-price"`
 class, and grab the information between the opening and closing tag. Indeed,

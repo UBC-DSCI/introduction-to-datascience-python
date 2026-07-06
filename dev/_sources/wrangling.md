@@ -115,7 +115,7 @@ A data frame storing data regarding the population of various regions in Canada.
 ```{index} Series 
 ```
 
-In Python, `pandas` **series** are are objects that can contain one or more elements (like a list).
+In Python, `pandas` **series** are objects that can contain one or more elements (like a list).
 They are a single column, are ordered, can be indexed, and can contain any data type.
 The `pandas` package uses `Series` objects to represent the columns in a data frame.
 `Series` can contain a mix of data types, but it is good practice to only include a single type in a series

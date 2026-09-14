@@ -1651,7 +1651,7 @@ each estimate having a standard error around {glue:text}`mean_sem_acc_ks`%.
 Since the cross-validation accuracy estimates the test set accuracy,
 the fact that the test set accuracy also doesn't change much is expected.
 Also note that the $K =$ 3 model had a precision 
-precision of {glue:text}`cancer_prec_1`% and recall of {glue:text}`cancer_rec_1`%,
+of {glue:text}`cancer_prec_1`% and recall of {glue:text}`cancer_rec_1`%,
 while the tuned model had
 a precision of {glue:text}`cancer_prec_tuned`% and recall of {glue:text}`cancer_rec_tuned`%.
 Given that the recall decreased&mdash;remember, in this application, recall
@@ -2174,16 +2174,15 @@ process!
 
 ## Exercises
 
-Practice exercises for the material covered in this chapter
-can be found in the accompanying
-[worksheets repository](https://worksheets.python.datasciencebook.ca)
-in the "Classification II: evaluation and tuning" row.
-You can launch an interactive version of the worksheet in your browser by clicking the "launch binder" button.
-You can also preview a non-interactive version of the worksheet by clicking "view worksheet."
-If you instead decide to download the worksheet and run it on your own machine,
-make sure to follow the instructions for computer setup
-found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure that the automated feedback
-and guidance that the worksheets provide will function as intended.
+Practice exercises for the material covered in this chapter can be found in the
+accompanying [worksheets repository](https://worksheets.python.datasciencebook.ca) in
+the "Classification II: evaluation and tuning" row. You can preview a
+non-interactive version of the worksheet for this chapter by clicking "view
+worksheet." To work on the exercises interactively, follow the instructions in
+the worksheets repository to download all worksheets, and follow the
+instructions for computer setup found in {numref}`Chapter %s <move-to-your-own-machine>`. This will ensure
+that the automated feedback and guidance that the worksheets provide will
+function as intended.
 
 +++
 

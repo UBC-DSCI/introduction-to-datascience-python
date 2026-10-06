@@ -473,6 +473,27 @@ Unfortunately, the default settings will result in a document
 that visually looks quite different from what the Jupyter notebook looked
 like. The font, page margins, and other details will appear different in the `.pdf` output.
 
+For command-line export, `nbconvert` offers two routes. The LaTeX route is:
+
+```bash
+jupyter nbconvert --to pdf notebook.ipynb
+```
+
+This requires a LaTeX installation, including XeLaTeX. If LaTeX is not installed,
+the `webpdf` exporter renders the notebook with headless Chromium:
+
+```bash
+pip install "nbconvert[webpdf]"
+jupyter nbconvert --to webpdf --allow-chromium-download notebook.ipynb
+```
+
+The first `webpdf` run may download Chromium and requires an internet connection.
+Both commands use outputs already saved in the notebook, so run the cells you need
+and save the notebook first if you want current results in the PDF. See the
+[nbconvert usage guide](https://nbconvert.readthedocs.io/en/latest/usage.html)
+for more options. For a comparison of GUI and command-line workflows, see this
+[Jupyter notebook to PDF guide](https://ipynbtopdf.xyz/how-to-convert-jupyter-notebook-to-pdf).
+
 ## Creating a new Jupyter notebook
 
 At some point, you will want to create a new, fresh Jupyter notebook for your
